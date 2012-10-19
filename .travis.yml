@@ -16,7 +16,7 @@ before_install:
  - pear install pear.phpunit.de/PHP_Invoker
  - pear install pear.phpunit.de/DbUnit
  - wget http://getcomposer.org/composer.phar
- - php composer.phar update
+ - php composer.phar install
 
 script:
  - phpunit --coverage-text
