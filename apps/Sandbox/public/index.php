@@ -6,7 +6,7 @@ use Ray\Di\Exception\NotReadable as NotFound;
 use BEAR\Resource\Exception\Parameter as BadRequest;
 
 // Profile
-require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
+// require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
 
 // Clear
 
