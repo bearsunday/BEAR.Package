@@ -35,7 +35,7 @@ Console
 
     $ php web.php get /index
     $ php api.php get page://self/index
-    $ get app://self/first/greeting?name=World
+    $ php api.php get 'app://self/first/greeting?name=World'
     $ php api.php get app://self/blog/posts
 
 ### Try HATEOAS application (See [how to GET a cup of coffee](http://www.infoq.com/articles/webber-rest-workflow))
