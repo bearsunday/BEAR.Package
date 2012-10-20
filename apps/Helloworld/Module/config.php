@@ -9,8 +9,8 @@ $config = [
     // constants
     'app_name' => 'Helloworld',
     'app_dir' => $appDir,
-    'tmp_dir' => $appDir . '/tmp',
-    'log_dir' => $appDir . '/log'
+    'tmp_dir' => $appDir . '/data/tmp',
+    'log_dir' => $appDir . '/data/log'
 ];
 
 return $config;
