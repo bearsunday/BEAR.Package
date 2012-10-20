@@ -8,6 +8,8 @@
 use Helloworld\Module\AppModule;
 use Ray\Di\Injector;
 
+require_once __DIR__ . '/load.php';
+
 $app = apc_fetch('app-helloworld');
 if ($app) {
     return $app;
