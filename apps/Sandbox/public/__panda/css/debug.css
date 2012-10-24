@@ -1,0 +1,154 @@
+@CHARSET "UTF-8";
+
+.section {
+	margin: 0;
+}
+
+div.panda {
+	background-color: #fefefe;
+	border: 1px solid #ADAAAD;
+	margin: 20px 1em;
+	padding: 0;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana,
+		sans-serif;
+	text-align: left;
+	text-indent: 0.7em;
+}
+
+div.panda div.panda-header {
+	color: black;
+	background-color: #EEEEEE;
+	border-left: 20px solid {         header_color
+}
+
+div.panda div.panda-body {
+	border-top: 1px solid darkgray;
+	padding: 4px 24px;
+}
+
+div.panda div.panda-header h1 {
+	color: gray;
+	display: block;
+	font-size: 30px;
+	font-weight: bold;
+	pading: 4px 0px;
+	margin-bottom: -15px;
+	text-align: left;
+}
+
+div.panda div.panda-header a {
+	color: gray;
+	font-size: 14px;
+}
+
+div.panda .panda-cmd {
+	font-size: 9px;
+	position: absolute;
+	top: 2px;
+	right: 8px;
+}
+
+div.panda div.panda-header  h2 {
+	color: #000000;
+	display: block;
+	font-size: 18px;
+	margin: 14px 0;
+}
+
+div.panda div h3 {
+	display: block;
+}
+
+div.panda code {
+	color: black;
+	font-size: 14px;
+	font-family: monospace;
+}
+
+div.panda a.file {
+	color: black;
+	font-size: 0.9em;
+	text-decoration: none;
+}
+
+div.panda code {
+	color: black;
+	font-size: 14px;
+	font-family: monospace;
+}
+
+div.panda .short-list {
+	background: #F2F9FF url("data:image/png;base64,") no-repeat scroll 0 0;
+	position: realative;
+	width: 800px;
+	height: 400px;
+	color: gray;
+	font-size: 14px;
+	margin: 10px;
+	padding: 20px 70px 8px 20px;
+	text-decoration: none;
+}
+
+div.panda  a {
+	text-decoration: none;
+}
+
+div.panda ol.timeline li {
+	font-size: 16px;
+	list-style-position: outside;
+	list-style-type: none;
+	list-style-image: none;
+	border-bottom: 1px dashed #D2DADA;
+	line-height: 1.1em;
+	padding: 0.7em 0 0.6em;
+	position: relative;
+}
+
+div.panda ol.timeline li span.timeline-num {
+	font-size: 150%;
+	font-weight: bold;
+	font-color: blue;
+	color: #0084B4;
+	padding: 0px 4px 2px 0px;
+	margin: 0px 0px 20px 0px;
+}
+
+div.panda ol.timeline li span.timeline-body {
+	font-family: monospace;
+	font-size: 16px;;
+}
+
+div.panda ol.timeline li span.timeline-info {
+	display: block;
+	color: gray;
+	font-family: georgia;
+	font-size: 0.8em;
+	font-style: italic;
+}
+
+div.panda a .hit-line {
+	background-color: yellow;
+	color: black;
+	text-decoration: none;
+}
+
+div.panda #hit-info {
+	color: black;
+	font-size: 0.8em;
+	font-family: mono;
+	color: gray;
+	font-style: italic;
+}
+
+#editor {
+	background-color: #FEF49C;
+	width: 800px;
+	hieight: 400px;
+	color: black;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	padding: 4px;
+	position: relative;
+	right: 0;
+	top: 0;
+}
