@@ -17,12 +17,16 @@
             padding-bottom: 40px;
 
         }
-        .effect{
+
+        .effect {
             color: white;
-            text-shadow: 3px 3px 8px #BF7F00, -3px -3px 8px #BF7F00 }
+            text-shadow: 3px 3px 8px #BF7F00, -3px -3px 8px #BF7F00
+        }
+
         .sub-title {
             font-family: "Montserrat Subrayada" sans-serif;
         }
+
         .hero-unit h1 {
             color: white;
         }
@@ -140,13 +144,15 @@
             <h2>Tools</h2>
 
             <p>
+                <a class="btn" href="_dev/ide/index.php"
+                   id="dev" rel="tooltip" title="Web IDE">Web IDE &raquo;</a>
 
             <p>
                 <a class="btn btn-success" href="/_dev/apc.php?SCOPE=A&SORT1=H&SORT2=D&COUNT=20&OB=3&object_only"
                    id="apc" rel="tooltip" title="APC stored object">APC
                     Objects &raquo;</a>
             </p>
-            <a class="btn" href="/_dev/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC
+            <a class="btn" href="_dev/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC
                 Admin &raquo;</a>
             </p>
             <p><a class="btn" href="_dev/memcache.php" id="memcache" rel="tooltip"
@@ -160,6 +166,7 @@
                 <li><i class="icon-book"></i><a href="http://code.google.com/p/rayphp/wiki/Motivation?tm=6">Ray.Di /
                     Ray.AOP Manual</a></li>
                 <li><i class="icon-fire"></i><a href="https://github.com/koriym/BEAR.Sunday/issues">Issues</a></li>
+                <li><i class="icon-wrench"></i><a href="_dev/index.html">Dev Tools</a></li>
         </div>
     </div>
 

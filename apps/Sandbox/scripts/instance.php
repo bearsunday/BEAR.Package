@@ -44,7 +44,7 @@ $injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(ne
 // log binding info
 $log = (string)$injector;
 file_put_contents(dirname(__DIR__) . "/data/log/module.{$cacheKey}.log", $log);
-file_put_contents(dirname(__DIR__) . "/data/log/di.log", $log);
+file_put_contents(dirname(__DIR__) . "/data/log/di.log.txt", $log);
 try {
     $app = $injector->getInstance('BEAR\Sunday\Application\Context');
 } catch (\Exception $e) {
