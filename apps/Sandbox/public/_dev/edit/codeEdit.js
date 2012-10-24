@@ -13,13 +13,13 @@ $.codeEdit = {
 		editor.setHighlightActiveLine(true);
 		return editor;
 	},
-	save : function(file_path, data) {
+	save : function(file_path, data, save_url) {
+        if(typeof save_url === 'undefined') save_url = "save.php";
 		if ($.codeEdit.changed == false) {
 			return;
 		}
 		$.codeEdit.changed = false;
-		var url = 'save.php';
-		jQuery.post(url, {
+		jQuery.post(save_url, {
 			file : file_path,
 			contents : data
 		}, this.label('save'), 'html')
