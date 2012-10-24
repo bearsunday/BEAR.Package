@@ -15,7 +15,8 @@
 <body>
     <div id="label" class="editor_label">
     <!-- <span class="editor_file"><?php echo $view['file_path']?> -->
-    </span><span class="editor_file_save" id="save_now">Save</span></div>
+    </span>
+    <span class="editor_file_save" id="save_now">Save</span></div>
     <pre id="editor"><?php echo htmlspecialchars($view['file_contents']); ?></pre>
     <script>
     $(function(){
@@ -24,9 +25,12 @@
         editor.setReadOnly(<?php echo ($view['is_writable'] ? 'false' : 'true');?>);
         <?php echo ($view['is_writable']) ? "$.codeEdit.label('reset');" : "$.codeEdit.label('readonly');"; ?>
         var save = function() {$.codeEdit.save("<?php echo $view['file_path'] ?>", editor.getSession().getValue());};
-		editor.commands.addCommand({
+        editor.commands.addCommand({
 		    name: 'Save',
-		    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+		    bindKey: {
+                win: 'Ctrl-S',
+                mac: 'Command-S'
+            },
 		    exec: save
 		});
          $('#save_now').click(save);

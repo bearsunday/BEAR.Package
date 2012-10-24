@@ -15,12 +15,16 @@ use BEAR\Sunday\Resource\AbstractPage as Page;
  */
 class World extends Page
 {
+    public $body = [
+        'greeting' => ''
+    ];
+    
     /**
      * @return World
      */
-    public function onGet()
+    public function onGet($name = "BEAR")
     {
-        $this['greeting'] = 'Hello, World !';
+        $this['greeting'] = "Hello " . $name;
         return $this;
     }
 }

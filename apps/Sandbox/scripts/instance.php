@@ -42,7 +42,9 @@ $moduleName = __NAMESPACE__ . '\Module\\' . $mode . 'Module';
 $module = new $moduleName;
 $injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(new Definition, new AnnotationReader)))), new $module);
 // log binding info
-file_put_contents(dirname(__DIR__) . "/data/log/module.{$cacheKey}.log", (string)$injector);
+$log = (string)$injector;
+file_put_contents(dirname(__DIR__) . "/data/log/module.{$cacheKey}.log", $log);
+file_put_contents(dirname(__DIR__) . "/data/log/di.log", $log);
 try {
     $app = $injector->getInstance('BEAR\Sunday\Application\Context');
 } catch (\Exception $e) {
