@@ -16,8 +16,7 @@
 // Output a list of files for jQuery File Tree
 //
 
-require_once '../ini.php';
-$root = _BEAR_EDIT_ROOT_PATH;
+$root = require __DIR__ . '/../ini.php';
 
 $_POST['dir'] = urldecode($_POST['dir']);
 

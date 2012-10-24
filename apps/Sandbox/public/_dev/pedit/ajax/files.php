@@ -13,8 +13,7 @@
 // 1.00 - released (24 March 2008)
 //
 //
-require_once '../ini.php';
-$root = _BEAR_EDIT_ROOT_PATH;
+$root = require __DIR__ . '/../ini.php';
 
 $files = unserialize(urldecode($_POST['dir']));
 echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";

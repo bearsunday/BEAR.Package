@@ -2,11 +2,19 @@
 
 namespace pedit;
 
-require __DIR__ . '/ini.php';
-$projectDir = '/Users/akihito/git/BEAR.Resource';
+$root = require __DIR__ . '/ini.php';
 
 class FileTree
 {
+    private $root;
+
+    /**
+     * @param $root
+     */
+    public function __construct($root)
+    {
+        $this->root = $root;
+    }
 
     /**
      * Cmd
@@ -27,15 +35,15 @@ class FileTree
         if (is_array($path)) {
             $isDir = 'false';
             foreach ($path as &$file) {
-                if (strpos($file, _BEAR_EDIT_ROOT_PATH, 0) === 0) {
-                    $file = substr($file, strlen(_BEAR_EDIT_ROOT_PATH));
+                if (strpos($file, $this->root, 0) === 0) {
+                    $file = substr($file, strlen($this->root));
                 }
             }
             $path = serialize($path);
         } else {
             $isDir = 'true';
-            if (strpos($path, _BEAR_EDIT_ROOT_PATH, 0) === 0) {
-                $path = substr($path, strlen(_BEAR_EDIT_ROOT_PATH));
+            if (strpos($path, $this->root, 0) === 0) {
+                $path = substr($path, strlen($this->root));
             }
         }
         $this->_cmd .= "addTree('{$placeholder}', '{$path}/', {$isDir}, '{$label}');";
@@ -53,8 +61,10 @@ class FileTree
     }
 }
 
+$projectDir = '';
+
 // Treeを描画
-$tree = new FileTree;
+$tree = new FileTree($root);
 //$tree->tree('#container_id1', $files['page'], '<span class=\"tree_label\">Page</span>');
 //$tree->tree('#container_id2', $files['ro'], '<span class=\"tree_label\">Resource</span>');
 //$tree->tree('#container_id3', $files['view'], '<span class=\"tree_label\">View template</span>');

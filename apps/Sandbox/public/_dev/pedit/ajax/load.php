@@ -1,6 +1,5 @@
 <?php
-require_once '../ini.php';
-$root = _BEAR_EDIT_ROOT_PATH;
+$root = require __DIR__ . '/../ini.php';
 
 $path = $_POST['path'];
 $file = file_get_contents($root. $path, FILE_USE_INCLUDE_PATH);
