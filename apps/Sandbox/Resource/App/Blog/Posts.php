@@ -5,7 +5,7 @@
  */
 namespace Sandbox\Resource\App\Blog;
 
-use BEAR\Sunday\Interceptor\Setter\DbSetter;
+use BEAR\Package\Interceptor\Setter\DbSetter;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Link;
 use BEAR\Resource\Code;

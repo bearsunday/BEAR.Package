@@ -16,7 +16,7 @@
  *   http://localhost:8080/helloresource
  *
  * @package BEAR.Framework
- *
+ * @global  $mode
  */
 namespace Sandbox;
 
@@ -26,6 +26,8 @@ use BEAR\Sunday\Framework\Globals;
 use BEAR\Sunday\Web;
 use Exception;
 
+global $mode;
+
 if (PHP_SAPI == 'cli-server') {
     if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico)$/', $_SERVER["REQUEST_URI"])) {
         return false;
@@ -33,22 +35,21 @@ if (PHP_SAPI == 'cli-server') {
 }
 
 // Clear
-//$app = require dirname(__DIR__) . '/scripts/clear.php';
+$app = require dirname(__DIR__) . '/scripts/clear.php';
 
 // Application
 $mode = 'Api';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 
-try {
     // Dispatch
-    $globals = (PHP_SAPI === 'cli') ? new Globals($argv) : $GLOBALS;
+    $globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
     $pathInfo = isset($globals['_SERVER']['PATH_INFO']) ? $globals['_SERVER']['PATH_INFO'] : '/index';
     $uri = (PHP_SAPI === 'cli') ? $argv[2] : 'app://self' . $pathInfo;
+try {
     // Router
-    list($method, $query) = (new Router)->getMethodQuery($globals);
-    list($resource, $page) = (new Dispatcher($app))->getInstance($uri);
+    list($method, $query) = $app->router->getMethodQuery($globals);
     // Request
-    $page = $app->resource->$method->object($page)->withQuery($globals['_GET'])->eager->request();
+    $page = $app->resource->$method->uri($uri)->withQuery($globals['_GET'])->eager->request();
 } catch (Exception $e) {
     $page = $app->exceptionHandler->handle($e);
 }

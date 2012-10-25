@@ -5,18 +5,18 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Resource;
+namespace BEAR\Package\Module\Web;
 
 use Ray\Di\AbstractModule;
 
 
 /**
- * Resource null cache module
+ * Router module
  *
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class NullCacheModule extends AbstractModule
+class RouterModule extends AbstractModule
 {
     /**
      * (non-PHPdoc)
@@ -24,8 +24,6 @@ class NullCacheModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Guzzle\Common\Cache\CacheAdapterInterface')->annotatedWith('resource_cache')->to(
-            'Guzzle\Common\Cache\NullCacheAdapter'
-        );
+        $this->bind('BEAR\Sunday\Web\RouterInterface')->to('BEAR\Package\Web\Router');
     }
 }

@@ -14,6 +14,8 @@ use Ray\Di\Di\Named;
 use BEAR\Sunday\Web\ResponseInterface;
 use BEAR\Sunday\Exception\ExceptionHandlerInterface;
 use BEAR\Sunday\Application\Logger as ApplicationLogger;
+use BEAR\Sunday\Web\RouterInterface;
+use BEAR\Sunday\Web\GlobalsInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
 use Guzzle\Common\Cache\CacheAdapterInterface;
@@ -41,7 +43,7 @@ final class App implements Context
     /**
      * Dependency injector
      *
-     * @var \Ray\Di\Injector
+     * @var \Ray\Di\InjectorInterface
      */
     public $injector;
 
@@ -55,23 +57,30 @@ final class App implements Context
     /**
      * Response
      *
-     * @var ResponseInterface
+     * @var \BEAR\Sunday\Web\ResponseInterface
      */
     public $response;
 
     /**
-     * Cache
-     *
-     * @var unknown_type
-     */
-    private $cache;
-
-    /**
      * Exception handler
      *
-     * @var ExceptionHandle
+     * @var \BEAR\Sunday\Exception\ExceptionHandlerInterface
      */
     public $exceptionHandler;
+
+    /**
+     * Router
+     *
+     * @var \BEAR\Sunday\Web\RouterInterface
+     */
+    public $router;
+
+    /**
+     * Global
+     *
+     * @var \BEAR\Sunday\Web\GlobalsInterface
+     */
+    public $globals;
 
     /**
      * Resource logger
@@ -83,28 +92,32 @@ final class App implements Context
     /**
      * Constructor
      *
-     * @param InjectorInterface         $injector         Dependency Injector
-     * @param ResourceInterface         $resource         Resource client
-     * @param ExceptionHandlerInterface $exceptionHandler Exception handler
-     * @param ResponseInterface         $response         Web / Console response
-     * @param CacheAdapterInterface     $cache            Resource cache adapter
-     * @param ApplicationLogger         $logger           Application logger
+     * @param \Ray\Di\InjectorInterface                        $injector         Dependency Injector
+     * @param \BEAR\Resource\ResourceInterface                 $resource         Resource client
+     * @param \BEAR\Sunday\Exception\ExceptionHandlerInterface $exceptionHandler Exception handler
+     * @param \BEAR\Sunday\Application\Logger                  $logger           Application logger
+     * @param \BEAR\Sunday\Web\ResponseInterface               $response         Web / Console response
+     * @param \BEAR\Sunday\Web\RouterInterface                 $router           Resource cache adapter
+     * @param \BEAR\Sunday\Web\GlobalsInterface                $globals          GLOBALS value
      *
      * @Inject
-     * @Named("cache=resource_cache")
      */
     public function __construct(
         InjectorInterface $injector,
         ResourceInterface $resource,
         ExceptionHandlerInterface $exceptionHandler,
+        ApplicationLogger $logger,
         ResponseInterface $response,
-        ApplicationLogger $logger = null
+        RouterInterface $router,
+        GlobalsInterface $globals
     ) {
         $this->injector = $injector;
         $this->resource = $resource;
         $this->response = $response;
         $this->exceptionHandler = $exceptionHandler;
         $this->logger = $logger;
+        $this->router = $router;
+        $this->globals = $globals;
         $resource->attachParamProvider('Provides', new Provides);
     }
 }

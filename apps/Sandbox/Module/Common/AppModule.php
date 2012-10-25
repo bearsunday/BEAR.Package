@@ -29,15 +29,13 @@ class AppModule extends AbstractModule
         $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
         $this->bind('BEAR\Sunday\Application\Context')->to('Sandbox\App');
         // di - Package
-        $this->install(new PackageModule\Package\PackageModule);
+        $this->install(new PackageModule\Package\PackageModule($this));
         // di - Sunday
         $this->install(new SundayModule\Resource\ApcModule);
         $this->install(new SundayModule\Resource\HalModule);
-        $this->install(new SundayModule\SchemeModule(__NAMESPACE__ . '\SchemeCollectionProvider'));
         $this->install(new SundayModule\WebContext\AuraWebModule);
-        $this->install(new SundayModule\TemplateEngine\SmartyModule\SmartyModule);
+        $this->install(new SundayModule\SchemeModule(__NAMESPACE__ . '\SchemeCollectionProvider'));
         $this->install(new SundayModule\Cqrs\CacheModule($this));
-        $this->install(new SundayModule\Database\DoctrineDbalModule($this));
         $this->bindAppResourceHalRender();
         // aop
         $this->installTimeMessage();

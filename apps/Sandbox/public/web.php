@@ -52,13 +52,11 @@ $app = require dirname(__DIR__) . '/scripts/instance.php';
 $app->logger->register($app);
 
 // Route
-$globals = (PHP_SAPI === 'cli') ? new Globals($argv) : $GLOBALS;
+$globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
 // or use router
 // $router = require dirname(__DIR__) . '/scripts/router/standard_router.php';
-$router = new Router;
-
 // Dispatch
-list($method, $pagePath, $query) = $router->match($globals);
+list($method, $pagePath, $query) = $app->router->match($globals);
 
 // Request
 try {

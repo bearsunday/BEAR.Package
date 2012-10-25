@@ -7,6 +7,7 @@
  */
 namespace BEAR\Package\Module\Package;
 
+use BEAR\Package\Module;
 use Ray\Di\AbstractModule;
 
 /**
@@ -25,5 +26,11 @@ class PackageModule extends AbstractModule
     {
         $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
         $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
+        $this->install(new Module\TemplateEngine\SmartyModule\SmartyModule);
+        $this->install(new Module\Database\DoctrineDbalModule($this));
+        $this->install(new Module\Log\ZfLogModule);
+        $this->install(new Module\Output\WebResponseModule);
+        $this->install(new Module\Web\RouterModule);
+        $this->install(new Module\Web\GlobalsModule);
     }
 }
