@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Ray.Di" default="build">
+<project name="BEAR.Package" default="build">
+    <target name="composer" description="Installing dependencies">
+        <exec executable="composer.phar" failonerror="true">
+            <arg value="install" />
+        </exec>
+    </target>
     <target name="build"
-            depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,apigen"/>
+            depends="composer,prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,apigen"/>
 
     <target name="build-parallel"
-            depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
+            depends="composer,prepare,lint,tools-parallel,phpunit,phpcb"/>
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">
@@ -137,12 +142,12 @@
 
     <target name="phpdoc" description="Generate API documentation using Docblox">
         <exec executable="docblox">
-            <arg line="-d src,apps -t ${basedir}/build/docblox" />
+            <arg line="-d src -t ${basedir}/build/docblox" />
         </exec>
     </target>
     <target name="apigen" description="Generate API documentation using ApiGen">
         <exec executable="apigen">
-            <arg line="--source src,apps --destination ${basedir}/build/apigen --title 'BEAR.Package'" />
+            <arg line="--source src --destination ${basedir}/build/apigen --title 'BEAR.Package'" />
         </exec>
     </target>
 

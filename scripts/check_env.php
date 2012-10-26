@@ -24,8 +24,8 @@ $apcEnableCli =  ini_get('apc.enable_cli') ? $ok : $ng;
 echo "{$apcEnableCli}apc.enable_cli" . PHP_EOL;
 
 // DB
-$id = isset($_ENV['BEAR_DB_ID']) ? $_ENV['BEAR_DB_ID'] : 'root';
-$password = isset($_ENV['BEAR_DB_PASSWORD']) ? $_ENV['BEAR_DB_PASSWORD'] : '';
+$id = isset($_SERVER['BEAR_DB_ID']) ? $_SERVER['BEAR_DB_ID'] : 'root';
+$password = isset($_SERVER['BEAR_DB_PASSWORD']) ? $_SERVER['BEAR_DB_PASSWORD'] : '';
 try {
     $pdo = new \PDO("mysql:host=localhost; dbname=blogbeartest", $id, $password);
     $isDbConnectionOk = $ok;

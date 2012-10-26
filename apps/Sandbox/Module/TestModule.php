@@ -7,8 +7,8 @@ namespace Sandbox\Module;
 
 use Sandbox\Module\ProdModule;
 use BEAR\Sunday\Module;
-use BEAR\Sunday\Module\Constant\NamedModule;
-use BEAR\Package\Module\Resource\NullCacheModule;
+use BEAR\Sunday\Module\Constant;
+use BEAR\Package\Module\Resource;
 /**
  * Production module
  *
@@ -26,8 +26,8 @@ class TestModule extends ProdModule
         $config = require __DIR__ . '/config.php';
         $config['master_db']['dbname'] = 'blogbeartest';
         $config['slave_db'] = $config['master_db'];
-        $this->install(new NamedModule($config));
-        $this->install(new NullCacheModule);
+        $this->install(new Constant\NamedModule($config));
+        $this->install(new Resource\NullCacheModule);
         $this->install(new ProdModule($this));
     }
 }
