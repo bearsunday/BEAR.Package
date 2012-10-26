@@ -9,6 +9,7 @@ nbproject
 vendor
 cache.properties
 build
+tmp
 *.log
 *.tpl.php
-tmp
+di.log.txt
