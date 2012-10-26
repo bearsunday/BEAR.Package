@@ -14,13 +14,11 @@ use BEAR\Resource\Exception\Parameter as BadRequest;
 $mode = 'Prod';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 
-// Route
-$router = new Router; // page controller only.
 // $router = dirname(__DIR__) . '/scripts/router/standard_router.php'
 
 // Dispatch
 $globals = $GLOBALS;
-list($method, $pagePath, $query) = $router->match($globals);
+list($method, $pagePath, $query) = $app->router->match($globals);
 
 // Request
 try {
@@ -37,12 +35,15 @@ try {
     goto ERROR;
 }
 
-OK:
 // Transfer
-$app->response->setResource($page)->render()->prepare()->send();
-    exit(0);
 
-ERROR:
+OK: {
+    $app->response->setResource($page)->render()->prepare()->send();
+    exit(0);
+}
+
+ERROR: {
     http_response_code($code);
     require dirname(__DIR__) . "/http/{$code}.php";
     exit(1);
+}
