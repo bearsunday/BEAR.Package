@@ -73,30 +73,30 @@ class Posts extends ResourceObject
         return $this;
     }
 
-    /**
-     * @param string $title
-     * @param string $body
-     *
-     * @return Posts
-     * @Time
-     * @Transactional
-     * @CacheUpdate
-     */
-    public function onPost($title, $body)
-    {
-        $values = [
-            'title' => $title,
-            'body' => $body,
-            'created' => $this->time
-        ];
-        $this->db->insert($this->table, $values);
-        //
-        $lastId = $this->db->lastInsertId('id');
-        $this->code = Code::CREATED;
-        $this->links['new_post'] = [Link::HREF => "app://self/posts/post?id={$lastId}"];
-        $this->links['page_new_post'] = [Link::HREF => "page://self/blog/posts/post?id={$lastId}"];
-        return $this;
-    }
+        /**
+         * @param string $title
+         * @param string $body
+         *
+         * @return Posts
+         * @Time
+         * @Transactional
+         * @CacheUpdate
+         */
+        public function onPost($title, $body)
+        {
+            $values = [
+                'title' => $title,
+                'body' => $body,
+                'created' => $this->time
+            ];
+            $this->db->insert($this->table, $values);
+            //
+            $lastId = $this->db->lastInsertId('id');
+            $this->code = Code::CREATED;
+            $this->links['new_post'] = [Link::HREF => "app://self/posts/post?id={$lastId}"];
+            $this->links['page_new_post'] = [Link::HREF => "page://self/blog/posts/post?id={$lastId}"];
+            return $this;
+        }
 
     /**
      * @param int    $id
