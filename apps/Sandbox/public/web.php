@@ -60,11 +60,11 @@ list($method, $pagePath, $query) = $app->router->match($globals);
 
 // Request
 try {
-    $page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
+    $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 } catch (Exception $e) {
-    $page = $app->exceptionHandler->handle($e);
+    $app->page = $app->exceptionHandler->handle($e);
 }
 
 // Transfer
-$app->response->setResource($page)->render()->prepare()->outputWebConsoleLog()->send();
+$app->response->setResource($app->page)->render()->prepare()->outputWebConsoleLog()->send();
 exit(0);
