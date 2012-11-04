@@ -1,18 +1,18 @@
 <?php
 /**
- * @package    Helloworld
+ * @package    Sandbox
  * @subpackage Module
  */
 namespace Helloworld\Module;
 
-use BEAR\Sunday\Module\FrameworkModule;
-use BEAR\Sunday\Module;
+use BEAR\Sunday\Module as SundayModule;
+use BEAR\Package\Module as PackageModule;
 use Ray\Di\AbstractModule;
 
 /**
- * Application module
+ * Production module
  *
- * @package    Helloworld
+ * @package    Sandbox
  * @subpackage Module
  */
 class AppModule extends AbstractModule
@@ -23,22 +23,18 @@ class AppModule extends AbstractModule
      */
     protected function configure()
     {
-        $config = require __DIR__ . '/config.php';
+        // di - application
         $this->bind('BEAR\Sunday\Application\Context')->to('Helloworld\App');
-        $this->install(new Module\Constant\NamedModule($config));
-        $this->installResourceCache();
-        $this->install(new Module\Framework\FrameworkModule($this));
-        $this->install(new Module\SchemeModule(__NAMESPACE__ . '\SchemeCollectionProvider'));
-    }
+        $config = include __DIR__ . '/config.php';
+        $this->install(new SundayModule\Constant\NamedModule($config));
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
+        $this->install(new SundayModule\TemplateEngine\ProdRendererModule);
+        $this->install(new SundayModule\Resource\ApcModule);
+        $this->install(new SundayModule\SchemeModule(__NAMESPACE__ . '\SchemeCollectionProvider'));
+        $this->install(new PackageModule\Output\WebResponseModule);
+        $this->install(new PackageModule\Log\ZfLogModule);
+        $this->install(new PackageModule\TemplateEngine\SmartyModule\SmartyModule);
+//
 
-    /**
-     * Bind resource_cache to APC
-     */
-    private function installResourceCache()
-    {
-        $this
-            ->bind('Guzzle\Common\Cache\CacheAdapterInterface')
-            ->annotatedWith('resource_cache')
-            ->toProvider('BEAR\Sunday\Module\Provider\ApcCacheProvider');
     }
 }
