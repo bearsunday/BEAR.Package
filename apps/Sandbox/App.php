@@ -87,7 +87,14 @@ final class App implements Context
      *
      * @var \BEAR\Resource\LoggerInterface
      */
-    public $logger = [];
+    public $logger;
+
+    /**
+     * Response page object
+     *
+     * @var \BEAR\Resource\Object
+     */
+    public $page;
 
     /**
      * Constructor
