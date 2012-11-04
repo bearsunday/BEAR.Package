@@ -1,5 +1,5 @@
 {
-    "hash": "4926c338437c814f26f1292361d2b887",
+    "hash": "f9dff059ac8dbc133e0863d45c3b1df1",
     "packages": [
         {
             "name": "aura/di",
@@ -269,16 +269,16 @@
         },
         {
             "name": "bear/sunday",
-            "version": "dev-develop",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "c76baa1a6236d409e4551e5b561617439ec746e5"
+                "reference": "e6da884a6d08b4d7504d1b6f37b01512ccd862d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Sunday/zipball/c76baa1a6236d409e4551e5b561617439ec746e5",
-                "reference": "c76baa1a6236d409e4551e5b561617439ec746e5",
+                "url": "https://github.com/koriym/BEAR.Sunday/zipball/e6da884a6d08b4d7504d1b6f37b01512ccd862d9",
+                "reference": "e6da884a6d08b4d7504d1b6f37b01512ccd862d9",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
                 "nocarrier/hal": "dev-master",
                 "zendframework/zend-log": "2.0.*"
             },
-            "time": "1351181572",
+            "time": "1351220117",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -600,18 +600,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal",
-                "reference": "8ff62c71e029cc3490ba6e4d89689828b9192919"
+                "reference": "a18cb20817572f522ab698d943a8aa50e70f4e42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/blongden/hal/zipball/8ff62c71e029cc3490ba6e4d89689828b9192919",
-                "reference": "8ff62c71e029cc3490ba6e4d89689828b9192919",
+                "url": "https://github.com/blongden/hal/zipball/a18cb20817572f522ab698d943a8aa50e70f4e42",
+                "reference": "a18cb20817572f522ab698d943a8aa50e70f4e42",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "1351088306",
+            "time": "1351517455",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -691,18 +691,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/print_o.git",
-                "reference": "0cd9c846a68655122bfcef7d79e2e893329eaecf"
+                "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/print_o/zipball/0cd9c846a68655122bfcef7d79e2e893329eaecf",
-                "reference": "0cd9c846a68655122bfcef7d79e2e893329eaecf",
+                "url": "https://github.com/koriym/print_o/zipball/abd0d6b68d00dc98a71124215780b57ec3ede268",
+                "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
-            "time": "1345448885",
+            "time": "1351096296",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -970,18 +970,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation",
-                "reference": "v2.0.18"
+                "reference": "e2739a9a9426ce6273d5e880c284790bca7e2cd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpFoundation/zipball/v2.0.18",
-                "reference": "v2.0.18",
+                "url": "https://github.com/symfony/HttpFoundation/zipball/e2739a9a9426ce6273d5e880c284790bca7e2cd8",
+                "reference": "e2739a9a9426ce6273d5e880c284790bca7e2cd8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1350386896",
+            "time": "1351366080",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -1134,7 +1134,6 @@
     "stability-flags": {
         "ray/aop": 10,
         "ray/di": 10,
-        "bear/sunday": 20,
         "aura/di": 20,
         "aura/router": 20,
         "aura/signal": 20,
