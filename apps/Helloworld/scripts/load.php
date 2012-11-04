@@ -9,8 +9,6 @@ $packageDir = dirname(dirname(dirname(__DIR__)));
 // Auto loader
 require_once $packageDir . '/vendor/autoload.php';
 
-// Core file loader
-require_once $packageDir . '/scripts/core_loader.php';
 
 // Annotation auto loader
 AnnotationRegistry::registerAutoloadNamespace(__NAMESPACE__ . '\Annotation\\', dirname(__DIR__));

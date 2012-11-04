@@ -15,7 +15,7 @@ if ($app) {
     return $app;
 }
 
-$injector = Injector::create([new AppModule], true);
+$injector = Injector::create([new AppModule]);
 $app = $injector->getInstance('BEAR\Sunday\Application\Context');
 
 apc_store('app-helloworld', $app);
