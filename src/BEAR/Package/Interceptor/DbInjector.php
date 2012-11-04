@@ -74,7 +74,7 @@ class DbInjector implements MethodInterceptor
         $connectionParams = ($method->name !== 'onGet') ? $this->slaveDb : $this->masterDb;
         $pagerAnnotation = $this->reader->getMethodAnnotation($method, 'BEAR\Sunday\Annotation\DbPager');
         if ($pagerAnnotation) {
-            $connectionParams['wrapperClass'] = 'BEAR\Sunday\Module\Database\DoctrineDbalModule\Connection';
+            $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\DoctrineDbalModule\Connection';
             $db = DriverManager::getConnection($connectionParams);
             $db->setMaxPerPage($pagerAnnotation->limit);
         } else {
