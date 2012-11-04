@@ -7,7 +7,7 @@
  */
 namespace BEAR\Package\Module\Database\DoctrineDbalModule;
 
-use BEAR\Sunday\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapter;
+use BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapter;
 
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
