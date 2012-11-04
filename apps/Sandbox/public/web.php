@@ -42,7 +42,7 @@ ob_start();
 require_once dirname(dirname(dirname(__DIR__))) . '/scripts/debug_load.php';
 
 // Clear
-//$app = require dirname(__DIR__) . '/scripts/clear.php';
+$app = require dirname(__DIR__) . '/scripts/clear.php';
 
 // Application
 $mode = 'Dev';
@@ -60,11 +60,11 @@ list($method, $pagePath, $query) = $app->router->match($globals);
 
 // Request
 try {
-    $page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
+    $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 } catch (Exception $e) {
-    $page = $app->exceptionHandler->handle($e);
+    $app->page = $app->exceptionHandler->handle($e);
 }
 
 // Transfer
-$app->response->setResource($page)->render()->prepare()->outputWebConsoleLog()->send();
+$app->response->setResource($app->page)->render()->prepare()->outputWebConsoleLog()->send();
 exit(0);
