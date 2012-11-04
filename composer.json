@@ -2,7 +2,7 @@
     "name":"bear/package",
     "type":"library",
     "description":"BEAR.Sunday sandbox application package",
-    "version":"0.5.3",
+    "version":"0.5.4",
     "keywords":[
         "BEAR.Sunday",
         "framework",
