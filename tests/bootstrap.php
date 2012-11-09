@@ -23,7 +23,6 @@ ob_end_clean();
 // loader
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-require 'PHPUnit/Extensions/Database/TestCase.php';
 AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di\\', dirname(__DIR__) . '/vendor/ray/di/src');
 AnnotationRegistry::registerAutoloadNamespace('BEAR\Resource\Annotation\\', dirname(__DIR__) . '/vendor/bear/resource/src/');
 AnnotationRegistry::registerAutoloadNamespace('BEAR\Sunday\Annotation\\', dirname(__DIR__) . '/src/');
