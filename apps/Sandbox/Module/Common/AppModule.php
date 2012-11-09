@@ -10,7 +10,7 @@ use BEAR\Package\Module as PackageModule;
 use Sandbox\Interceptor\PostFormValidator;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 /**
  * Application module
  *
