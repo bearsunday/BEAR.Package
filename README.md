@@ -19,7 +19,7 @@ Here's how to install sandbox application using BEAR.Sunday:
     php scripts/check_env.php
     chmod -R 777 apps/Sandbox/data
 
-buil-in web server for development
+built-in web server for development
 ------------------
 
     cd apps/Sandbox/public
