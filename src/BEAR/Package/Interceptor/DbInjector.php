@@ -22,6 +22,11 @@ use Ray\Di\Di\Named;
 class DbInjector implements MethodInterceptor
 {
     /**
+     * @var Reader
+     */
+    private $reader;
+
+    /**
      * DSN for master
      *
      * @var array
@@ -76,11 +81,12 @@ class DbInjector implements MethodInterceptor
         if ($pagerAnnotation) {
             $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\DoctrineDbalModule\Connection';
             $db = DriverManager::getConnection($connectionParams);
+            /** @var $db  \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
             $db->setMaxPerPage($pagerAnnotation->limit);
         } else {
             $db = DriverManager::getConnection($connectionParams);
         }
-        /* @var $db \BEAR\Sunday\Module\Database\DoctrineDbalModule\Connection */
+        /* @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
         $object->setDb($db);
         $result = $invocation->proceed();
         if ($pagerAnnotation) {
