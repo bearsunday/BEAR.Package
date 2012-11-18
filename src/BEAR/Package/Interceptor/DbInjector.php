@@ -7,6 +7,7 @@
 namespace BEAR\Package\Interceptor;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\SQLLogger;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
@@ -19,12 +20,17 @@ use Ray\Di\Di\Named;
  * @package    BEAR.Sunday
  * @subpackage Intercetor
  */
-class DbInjector implements MethodInterceptor
+final class DbInjector implements MethodInterceptor
 {
     /**
      * @var Reader
      */
     private $reader;
+
+    /**
+     * @var SqlLogger
+     */
+    private $sqlLogger;
 
     /**
      * DSN for master
@@ -39,6 +45,31 @@ class DbInjector implements MethodInterceptor
      * @var array
      */
     private $slaveDb;
+
+    /**
+     * Set annotation reader
+     *
+     * @param Reader $reader
+     *
+     * @return void
+     * @Inject
+     */
+    public function setReader(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
+
+    /**
+     * Set SqlLogger
+     *
+     * @param \Doctrine\DBAL\Logging\SQLLogger $sqlLogger
+     *
+     * @Inject(optional = true)
+     */
+    public function setSqlLogger(SQLLogger $sqlLogger)
+    {
+        $this->sqlLogger = $sqlLogger;
+    }
 
     /**
      * Constructor
@@ -56,19 +87,6 @@ class DbInjector implements MethodInterceptor
     }
 
     /**
-     * Set annotation reader
-     *
-     * @param Reader $reader
-     *
-     * @return void
-     * @Inject
-     */
-    public function setReader(Reader $reader)
-    {
-        $this->reader = $reader;
-    }
-
-    /**
      * (non-PHPdoc)
      * @see Ray\Aop.MethodInterceptor::invoke()
      */
@@ -81,12 +99,15 @@ class DbInjector implements MethodInterceptor
         if ($pagerAnnotation) {
             $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\DoctrineDbalModule\Connection';
             $db = DriverManager::getConnection($connectionParams);
-            /** @var $db  \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
             $db->setMaxPerPage($pagerAnnotation->limit);
         } else {
             $db = DriverManager::getConnection($connectionParams);
         }
         /* @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
+
+        if ($this->sqlLogger instanceof SQLLogger) {
+            $db->getConfiguration()->setSQLLogger($this->sqlLogger);
+        }
         $object->setDb($db);
         $result = $invocation->proceed();
         if ($pagerAnnotation) {
