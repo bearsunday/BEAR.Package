@@ -9,9 +9,7 @@ use BEAR\Package\Interceptor\Setter\DbSetter;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Link;
 use BEAR\Resource\Code;
-use Doctrine\DBAL\Connection;
 use PDO;
-use Doctrine\DBAL\Driver\Connection as DriverConnection;
 
 use BEAR\Sunday\Annotation\Db;
 use BEAR\Sunday\Annotation\Time;
