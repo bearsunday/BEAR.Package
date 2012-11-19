@@ -52,7 +52,7 @@ class AppModule extends AbstractModule
         $checker = $this->requestInjection('\Sandbox\Interceptor\Checker');
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Sandbox\Resource\Page\Index'),
-            $this->matcher->startWith('onGet'),
+            $this->matcher->startWith('on'),
             [$checker]
         );
     }
