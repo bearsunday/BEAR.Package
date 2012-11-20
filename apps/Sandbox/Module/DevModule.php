@@ -6,6 +6,7 @@
 namespace Sandbox\Module;
 
 use BEAR\Sunday\Module as SundayModule;
+use BEAR\Package\Module as PackageModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
@@ -24,9 +25,9 @@ class DevModule extends AbstractModule
     protected function configure()
     {
         $config = include __DIR__ . '/config.php';
-        $this->bind('Doctrine\DBAL\Logging\SQLLogger')->to('Doctrine\DBAL\Logging\DebugStack')->in(Scope::SINGLETON);
         $this->install(new SundayModule\Constant\NamedModule($config));
-        $this->install(new SundayModule\Framework\DevToolModule);
+        $this->install(new PackageModule\Resource\DevResourceModule($this));
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
         $this->install(new Common\AppModule($this));
     }
 }
