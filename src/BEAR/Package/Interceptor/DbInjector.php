@@ -110,6 +110,10 @@ final class DbInjector implements MethodInterceptor
         }
         $object->setDb($db);
         $result = $invocation->proceed();
+        if ($this->sqlLogger instanceof SQLLogger) {
+            $this->sqlLogger->stopQuery();
+            $object->headers['x-sql'] = [$this->sqlLogger->queries];
+        }
         if ($pagerAnnotation) {
             $pagerData = $db->getPager();
             if ($pagerData) {
