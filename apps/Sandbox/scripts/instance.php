@@ -10,7 +10,12 @@
  */
 namespace Sandbox;
 
-use Ray\Di;
+use Ray\Di\Injector;
+use Ray\Di\Container;
+use Ray\Di\Forge;
+use Ray\Di\ApcConfig;
+use Ray\Di\Annotation;
+use Ray\Di\Definition;
 use Doctrine\Common\Annotations\AnnotationReader;
 use BEAR\Sunday\Output\Console;
 use BEAR\Package\Web\SymfonyResponse;
@@ -40,9 +45,8 @@ if (! class_exists($moduleName)) {
 }
 
 // create injector with mode module
-$module = new $moduleName;
-$injector = new Di\Injector(new Di\Container(new Di\Forge(new Di\ApcConfig(new Di\Annotation(new Di\Definition, new AnnotationReader)))), new $module);
-
+$injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(new Definition, new AnnotationReader)))), new $moduleName);
+//
 // log binding info
 $log = (string)$injector;
 file_put_contents(dirname(__DIR__) . "/data/log/module.{$cacheKey}.log", $log);
