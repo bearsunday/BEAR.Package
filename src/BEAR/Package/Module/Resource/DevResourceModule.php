@@ -28,7 +28,7 @@ class DevResourceModule extends AbstractModule
         $this->bind('Doctrine\DBAL\Logging\SQLLogger')->to('Doctrine\DBAL\Logging\DebugStack')->in(Scope::SINGLETON);
         // Common debug
         $this->bind('BEAR\Resource\InvokerInterface')->to('BEAR\Package\Resource\DevInvoker')->in(Scope::SINGLETON);
-        $this->install(new SundayModule\TemplateEngine\DevRendererModule);
+        $this->install(new SundayModule\TemplateEngine\DevRendererModule($this));
         $this->installDevLogger();
     }
 
