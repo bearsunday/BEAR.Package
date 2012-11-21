@@ -26,8 +26,8 @@ class DevModule extends AbstractModule
     {
         $config = include __DIR__ . '/config.php';
         $this->install(new SundayModule\Constant\NamedModule($config));
-        $this->install(new PackageModule\Resource\DevResourceModule($this));
         $this->install(new SundayModule\Framework\FrameworkModule($this));
         $this->install(new Common\AppModule($this));
+        $this->install(new PackageModule\Resource\DevResourceModule($this));
     }
 }
