@@ -27,7 +27,7 @@ class TestModule extends ProdModule
         $config['master_db']['dbname'] = 'blogbeartest';
         $config['slave_db'] = $config['master_db'];
         $this->install(new Constant\NamedModule($config));
-        $this->install(new Resource\NullCacheModule);
         $this->install(new ProdModule($this));
+        $this->install(new Resource\NullCacheModule($this));
     }
 }

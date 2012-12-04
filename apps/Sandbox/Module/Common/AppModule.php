@@ -11,6 +11,7 @@ use Sandbox\Interceptor\PostFormValidator;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+
 /**
  * Application module
  *
@@ -39,28 +40,13 @@ class AppModule extends AbstractModule
         $this->bindAppResourceHalRender();
         // aop
         $this->installTimeMessage();
-        $this->installWritableChecker();
-        $this->installNewpostFormValidator();
-    }
-
-    /**
-     * Check writable directory
-     */
-    private function installWritableChecker()
-    {
-        // bind tmp writable checker
-        $checker = $this->requestInjection('\Sandbox\Interceptor\Checker');
-        $this->bindInterceptor(
-            $this->matcher->subclassesOf('Sandbox\Resource\Page\Index'),
-            $this->matcher->startWith('on'),
-            [$checker]
-        );
+        $this->installNewPostFormValidator();
     }
 
     /**
      * @Form - bind form validator
      */
-    private function installNewpostFormValidator()
+    private function installNewPostFormValidator()
     {
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Sandbox\Resource\Page\Blog\Posts\Newpost'),
@@ -87,9 +73,8 @@ class AppModule extends AbstractModule
      */
     private function bindAppResourceHalRender()
     {
-        $this->bind('BEAR\Resource\Renderable')
-             ->annotatedWith('hal')
-             ->to('BEAR\Sunday\Resource\View\HalRenderer')
-             ->in(Scope::SINGLETON);
+        $this->bind('BEAR\Resource\Renderable')->annotatedWith('hal')->to('BEAR\Sunday\Resource\View\HalRenderer')->in(
+            Scope::SINGLETON
+        );
     }
 }
