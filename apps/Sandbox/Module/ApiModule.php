@@ -21,7 +21,7 @@ class ApiModule extends ProdModule
      */
     protected function configure()
     {
-        $this->install(new SundayModule\Resource\HalModule);
         $this->install(new ProdModule);
+        $this->install(new SundayModule\Resource\HalModule($this));
     }
 }

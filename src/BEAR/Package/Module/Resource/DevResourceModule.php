@@ -10,8 +10,13 @@ namespace BEAR\Package\Module\Resource;
 use Ray\Di\AbstractModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\Scope;
+
 /**
- * Package module
+ * DevResource Module
+ *
+ * + SQL Log
+ * + Resource log
+ * + Resource dev rendering
  *
  * @package    Sandbox
  * @subpackage Module

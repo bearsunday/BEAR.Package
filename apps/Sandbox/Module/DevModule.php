@@ -24,10 +24,22 @@ class DevModule extends AbstractModule
      */
     protected function configure()
     {
-        $config = include __DIR__ . '/config.php';
-        $this->install(new SundayModule\Constant\NamedModule($config));
-        $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new Common\AppModule($this));
+        $this->install(new ProdModule);
         $this->install(new PackageModule\Resource\DevResourceModule($this));
+        $this->installWritableChecker();
+    }
+
+    /**
+     * Check writable directory
+     */
+    private function installWritableChecker()
+    {
+        // bind tmp writable checker
+        $checker = $this->requestInjection('\Sandbox\Interceptor\Checker');
+        $this->bindInterceptor(
+            $this->matcher->subclassesOf('Sandbox\Resource\Page\Index'),
+            $this->matcher->startWith('on'),
+            [$checker]
+        );
     }
 }
