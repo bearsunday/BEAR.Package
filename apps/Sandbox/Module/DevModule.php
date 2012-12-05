@@ -24,6 +24,7 @@ class DevModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->bind('Doctrine\DBAL\Logging\SQLLogger')->to('Doctrine\DBAL\Logging\DebugStack')->in(Scope::SINGLETON);
         $this->install(new ProdModule);
         $this->install(new PackageModule\Resource\DevResourceModule($this));
         $this->installWritableChecker();
