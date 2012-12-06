@@ -49,10 +49,8 @@ $app = $injector->getInstance('BEAR\Sunday\Application\Context');
 // log binding info
 $logFile = dirname(__DIR__) . "/data/log/module.{$cacheKey}.log";
 file_put_contents($logFile, (string)$injector);
-error_log($logFile);
+
 // store
 apc_store($cacheKey, $app);
 apc_store($cacheKey . '-injector', $injector);
-
 return $app;
-
