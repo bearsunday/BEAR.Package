@@ -39,14 +39,24 @@ ini_set('display_errors', 1);
 ob_start();
 
 // Load
-require_once dirname(dirname(dirname(__DIR__))) . '/scripts/debug_load.php';
+$packageDir = dirname(dirname(dirname(__DIR__)));
+require_once  $packageDir . '/scripts/debug_load.php';
+
+// profiler for exception
+require_once  $packageDir . '/scripts/profile.php';
+
+// set exception handler for development
+set_exception_handler(include $packageDir . '/scripts/exception_handler.php');
 
 // Clear
-$app = require dirname(__DIR__) . '/scripts/clear.php';
+require dirname(__DIR__) . '/scripts/clear.php';
+
+restore_exception_handler();
 
 // Application
 $mode = 'Dev';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
+/** @var $app \Sandbox\App */
 
 // Log
 $app->logger->register($app);
@@ -58,13 +68,14 @@ $globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
 // Dispatch
 list($method, $pagePath, $query) = $app->router->match($globals);
 
-// Request
 try {
+    // Request
     $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
-} catch (Exception $e) {
-    $app->page = $app->exceptionHandler->handle($e);
-}
 
-// Transfer
-$app->response->setResource($app->page)->render()->prepare()->outputWebConsoleLog()->send();
-exit(0);
+    // Transfer
+    $app->response->setResource($app->page)->render()->prepare()->outputWebConsoleLog()->send();
+    exit(0);
+} catch(Exception $e) {
+    $app->exceptionHandler->handle($e);
+    exit(1);
+}
