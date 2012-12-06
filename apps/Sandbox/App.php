@@ -12,10 +12,10 @@ use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Named;
 use BEAR\Sunday\Web\ResponseInterface;
-use BEAR\Sunday\Exception\ExceptionHandlerInterface;
 use BEAR\Sunday\Application\Logger as ApplicationLogger;
 use BEAR\Sunday\Web\RouterInterface;
 use BEAR\Sunday\Web\GlobalsInterface;
+use BEAR\Package\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
 use Guzzle\Common\Cache\CacheAdapterInterface;
@@ -64,7 +64,7 @@ final class App implements Context
     /**
      * Exception handler
      *
-     * @var \BEAR\Sunday\Exception\ExceptionHandlerInterface
+     * @var \BEAR\Package\ExceptionHandle\ExceptionHandlerInterface
      */
     public $exceptionHandler;
 
@@ -99,13 +99,13 @@ final class App implements Context
     /**
      * Constructor
      *
-     * @param \Ray\Di\InjectorInterface                        $injector         Dependency Injector
-     * @param \BEAR\Resource\ResourceInterface                 $resource         Resource client
-     * @param \BEAR\Sunday\Exception\ExceptionHandlerInterface $exceptionHandler Exception handler
-     * @param \BEAR\Sunday\Application\Logger                  $logger           Application logger
-     * @param \BEAR\Sunday\Web\ResponseInterface               $response         Web / Console response
-     * @param \BEAR\Sunday\Web\RouterInterface                 $router           Resource cache adapter
-     * @param \BEAR\Sunday\Web\GlobalsInterface                $globals          GLOBALS value
+     * @param \Ray\Di\InjectorInterface                               $injector         Dependency Injector
+     * @param \BEAR\Resource\ResourceInterface                        $resource         Resource client
+     * @param \BEAR\Package\ExceptionHandle\ExceptionHandlerInterface $exceptionHandler Exception handler
+     * @param \BEAR\Sunday\Application\Logger                         $logger           Application logger
+     * @param \BEAR\Sunday\Web\ResponseInterface                      $response         Web / Console response
+     * @param \BEAR\Sunday\Web\RouterInterface                        $router           Resource cache adapter
+     * @param \BEAR\Sunday\Web\GlobalsInterface                       $globals          GLOBALS value
      *
      * @Inject
      */

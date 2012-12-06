@@ -32,5 +32,6 @@ class PackageModule extends AbstractModule
         $this->install(new Module\Output\WebResponseModule);
         $this->install(new Module\Web\RouterModule);
         $this->install(new Module\Web\GlobalsModule);
+        $this->install(new Module\ExceptionHandle\HandleModule);
     }
 }
