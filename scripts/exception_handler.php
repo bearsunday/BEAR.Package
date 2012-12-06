@@ -7,15 +7,15 @@
  *
  */
 
-use BEAR\Sunday\Exception\ExceptionHandler;
+use BEAR\Package\ExceptionHandle\ExceptionHandler;
 use BEAR\Package\Web\SymfonyResponse;
 use BEAR\Sunday\Output\Console;
 
 
 return function ($e) {
     $handler = new ExceptionHandler(
-        new SymfonyResponse(new Console),
-        __DIR__ . '/template/exception.tpl.php'
+        dirname(__DIR__) . '/src/BEAR/Package/Module/ExceptionHandle/template/exception.tpl.php',
+        new SymfonyResponse(new Console)
     );
     $handler->setLogDir(dirname(__DIR__) . '/data/log');
     $handler->handle($e);
