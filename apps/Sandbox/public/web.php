@@ -39,7 +39,14 @@ ini_set('display_errors', 1);
 ob_start();
 
 // Load
-require_once dirname(dirname(dirname(__DIR__))) . '/scripts/debug_load.php';
+$packageDir = dirname(dirname(dirname(__DIR__)));
+require_once  $packageDir . '/scripts/debug_load.php';
+
+// profiler for exception
+require_once  $packageDir . '/scripts/profile.php';
+
+// set exception handler for development
+set_exception_handler(include $packageDir . '/scripts/exception_handler.php');
 
 // Clear
 $app = require dirname(__DIR__) . '/scripts/clear.php';
@@ -59,11 +66,7 @@ $globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
 list($method, $pagePath, $query) = $app->router->match($globals);
 
 // Request
-try {
-    $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
-} catch (Exception $e) {
-    $app->page = $app->exceptionHandler->handle($e);
-}
+$app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 
 // Transfer
 $app->response->setResource($app->page)->render()->prepare()->outputWebConsoleLog()->send();
