@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title><?php echo $view['file_path'] . " ({$view['mod_date']})" . " {$view['is_writable_label']}" ?></title>
+    <title><?php echo $view['file_path'] ?></title>
     <link rel="stylesheet" href="codeEdit.css" media="screen" type="text/css" />
     <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+    <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
     <script src="codeEdit.js"></script>
 </head>
 <body>
