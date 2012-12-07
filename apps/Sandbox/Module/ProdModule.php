@@ -6,6 +6,7 @@
 namespace Sandbox\Module;
 
 use BEAR\Sunday\Module as SundayModule;
+use BEAR\Package\Module\Package as PackageModule;
 use Ray\Di\AbstractModule;
 
 /**
@@ -23,8 +24,9 @@ class ProdModule extends AbstractModule
     protected function configure()
     {
         $config = include __DIR__ . '/config.php';
-        $this->install(new SundayModule\Constant\NamedModule($config));
-        $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new Common\AppModule($this));
+        // dependency binding (DI)
+        $this->install(new Common\AppModule($config, $this));
+        // aspect weaving (AOP)
+        $this->install(new PackageModule\Package\AspectModule($this));
     }
 }

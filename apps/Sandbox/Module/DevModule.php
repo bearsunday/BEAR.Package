@@ -24,9 +24,12 @@ class DevModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Doctrine\DBAL\Logging\SQLLogger')->to('Doctrine\DBAL\Logging\DebugStack')->in(Scope::SINGLETON);
-        $this->install(new ProdModule);
+        $config = include __DIR__ . '/config.php';
+        // dependency bindings (DI)
+        $this->install(new Common\AppModule($config));
         $this->install(new PackageModule\Resource\DevResourceModule($this));
+        // aspect weaving (AOP)
+        $this->install(new PackageModule\Package\AspectModule($this));
         $this->installWritableChecker();
     }
 
