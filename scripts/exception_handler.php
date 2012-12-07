@@ -11,7 +11,6 @@ use BEAR\Package\ExceptionHandle\ExceptionHandler;
 use BEAR\Package\Web\SymfonyResponse;
 use BEAR\Sunday\Output\Console;
 
-
 return function ($e) {
     $handler = new ExceptionHandler(
         dirname(__DIR__) . '/src/BEAR/Package/Module/ExceptionHandle/template/exception.tpl.php',

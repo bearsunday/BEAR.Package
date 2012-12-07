@@ -20,6 +20,7 @@
 namespace Sandbox;
 
 use BEAR\Sunday\Router\Router;
+use Pagerfanta\Exception\LogicException;
 use BEAR\Sunday\Framework\Globals;
 use Exception;
 
@@ -51,7 +52,6 @@ set_exception_handler(include $packageDir . '/scripts/exception_handler.php');
 // Clear
 require dirname(__DIR__) . '/scripts/clear.php';
 
-restore_exception_handler();
 
 // Application
 $mode = 'Dev';
@@ -67,6 +67,8 @@ $globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
 // $router = require dirname(__DIR__) . '/scripts/router/standard_router.php';
 // Dispatch
 list($method, $pagePath, $query) = $app->router->match($globals);
+
+restore_exception_handler();
 
 try {
     // Request
