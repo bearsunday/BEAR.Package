@@ -35,6 +35,14 @@ body {
 	padding: 4px;
 }
 
+.error {
+    background-color: red;
+    color: white;
+    font-family: arial, sans-serif;
+    font-size: 12px;
+    padding: 4px;
+}
+
 .editor_file_save {
 	background-color: grey;
 	color: white;

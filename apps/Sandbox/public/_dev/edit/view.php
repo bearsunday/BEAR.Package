@@ -13,10 +13,10 @@
 </head>
 <body>
     <div id="label" class="editor_label">
-    <!-- <span class="editor_file"><?php echo $view['file_path']?> -->
+    <?php if ($view['error']) {echo "<span class=\"error\">{$view['error']}</span>";}?><span class="editor_file"><?php echo "{$view['file_path']} ({$view['line']})"?>
     </span>
     <span class="editor_file_save" id="save_now">Save</span></div>
-    <pre id="editor"><?php echo htmlspecialchars($view['file_contents']); ?></pre>
+    <pre id="editor"><?php echo $view['file_contents']; ?></pre>
     <script>
     $(function(){
         editor = $.codeEdit.factory();
