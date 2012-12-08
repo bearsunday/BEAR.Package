@@ -13,7 +13,7 @@ use BEAR\Sunday\Output\Console;
 
 return function ($e) {
     $handler = new ExceptionHandler(
-        dirname(__DIR__) . '/src/BEAR/Package/Module/ExceptionHandle/template/exception.tpl.php',
+        dirname(dirname(__DIR__))RR . '/src/BEAR/Package/Module/ExceptionHandle/template/exception.tpl.php',
         new SymfonyResponse(new Console)
     );
     $handler->setLogDir(dirname(__DIR__) . '/data/log');
