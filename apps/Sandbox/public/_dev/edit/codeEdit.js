@@ -15,15 +15,15 @@ $.codeEdit = {
 	},
 	save : function(file_path, data, save_url) {
         if(typeof save_url === 'undefined') save_url = "save.php";
-		if ($.codeEdit.changed == false) {
-			return;
-		}
-		$.codeEdit.changed = false;
-		jQuery.post(save_url, {
+        if ($.codeEdit.changed == false) {
+            return;
+        }
+        $.codeEdit.changed = false;
+        jQuery.post(save_url, {
 			file : file_path,
 			contents : data
 		}, this.label('save'), 'html')
-	},
+    },
 	change : function() {
 		if ($.codeEdit.changed == true) {
 			return;
