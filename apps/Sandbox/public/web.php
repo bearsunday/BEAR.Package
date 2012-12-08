@@ -38,6 +38,7 @@ if (php_sapi_name() == "cli-server") {
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ob_start();
+ini_set('xdebug.collect_params', '0');
 
 // Load
 $packageDir = dirname(dirname(dirname(__DIR__)));
@@ -47,11 +48,13 @@ require_once  $packageDir . '/scripts/debug_load.php';
 require_once  $packageDir . '/scripts/profile.php';
 
 // set exception handler for development
-set_exception_handler(include $packageDir . '/scripts/exception_handler.php');
+set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler.php');
+
+// set fatal error handler
+register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_error_handler.php');
 
 // Clear
 require dirname(__DIR__) . '/scripts/clear.php';
-
 
 // Application
 $mode = 'Dev';
