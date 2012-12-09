@@ -1,7 +1,5 @@
 <?php
-
-
-return function () use ($getFile, $getTraceList) {
+return function() {
     $xstack = (function_exists('xdebug_get_function_stack')) ? xdebug_get_function_stack() : [];
     if (PHP_SAPI === 'cli') {
         return;
@@ -23,7 +21,7 @@ return function () use ($getFile, $getTraceList) {
     }
     error_log(ob_get_clean());
     http_response_code(500);
-    $html = include __DIR__ . '/shutdown_error_handler/error.tpl.php';
+    $html = include __DIR__ . '/shutdown_error_handler/view.php';
     echo $html;
     exit(1);
 };
