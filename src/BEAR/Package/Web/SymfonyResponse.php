@@ -12,6 +12,7 @@ use BEAR\Sunday\Inject\LogInject;
 use BEAR\Sunday\Application\LoggerInterface as AppLogger;
 use BEAR\Sunday\Output\ConsoleInterface;
 use BEAR\Sunday\Web\ResponseInterface;
+use BEAR\Sunday\Output\Console;
 use BEAR\Resource\Logger;
 use BEAR\Resource\Object as ResourceObject;
 use BEAR\Sunday\Resource\AbstractPage as Page;
@@ -180,7 +181,7 @@ final class SymfonyResponse implements ResponseInterface
                 $this->resource->headers = $this->response->headers->all();
             }
             $statusText = Response::$statusTexts[$this->resource->code];
-            $this->consoleOutput->send($this->resource, $this->e, $statusText);
+            $this->consoleOutput->send($this->resource, $this->e, $statusText, Console::MODE_REQUEST);
         } else {
             $this->response->send();
         }

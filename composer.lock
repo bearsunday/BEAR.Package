@@ -1,5 +1,5 @@
 {
-    "hash": "f9dff059ac8dbc133e0863d45c3b1df1",
+    "hash": "0c91c607f3200b4cfb50d63d1460ebe5",
     "packages": [
         {
             "name": "aura/di",
@@ -223,12 +223,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.5.2"
+                "reference": "d613e5dc3fd3cdd3c15a7f863077e87098eb5bc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Resource/zipball/0.5.2",
-                "reference": "0.5.2",
+                "url": "https://github.com/koriym/BEAR.Resource/archive/d613e5dc3fd3cdd3c15a7f863077e87098eb5bc6.zip",
+                "reference": "d613e5dc3fd3cdd3c15a7f863077e87098eb5bc6",
                 "shasum": ""
             },
             "require": {
@@ -241,7 +241,7 @@
                 "ray/aop": ">=1.0.0-beta2",
                 "ray/di": ">=1.0.0-beta2"
             },
-            "time": "1350581382",
+            "time": "1352003872",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -273,12 +273,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "e6da884a6d08b4d7504d1b6f37b01512ccd862d9"
+                "reference": "82962c0476a77d73c1f96494a1b8a8eb95d9e517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Sunday/zipball/e6da884a6d08b4d7504d1b6f37b01512ccd862d9",
-                "reference": "e6da884a6d08b4d7504d1b6f37b01512ccd862d9",
+                "url": "https://github.com/koriym/BEAR.Sunday/archive/82962c0476a77d73c1f96494a1b8a8eb95d9e517.zip",
+                "reference": "82962c0476a77d73c1f96494a1b8a8eb95d9e517",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
                 "nocarrier/hal": "dev-master",
                 "zendframework/zend-log": "2.0.*"
             },
-            "time": "1351220117",
+            "time": "1352008493",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -390,7 +390,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -412,19 +412,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal",
-                "reference": "9395ca33971c0ff875d71a0271e6c0d5b0f01508"
+                "reference": "292d5edd17e0a9b9a7ee9eb20d6ae1033059153f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/zipball/9395ca33971c0ff875d71a0271e6c0d5b0f01508",
-                "reference": "9395ca33971c0ff875d71a0271e6c0d5b0f01508",
+                "url": "https://github.com/doctrine/dbal/archive/292d5edd17e0a9b9a7ee9eb20d6ae1033059153f.zip",
+                "reference": "292d5edd17e0a9b9a7ee9eb20d6ae1033059153f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "1350419590",
+            "time": "1352716871",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -874,18 +874,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console",
-                "reference": "v2.0.18"
+                "reference": "29e0ef35b1cf4e030db5c3a6bff067a44fc2c8c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Console/zipball/v2.0.18",
-                "reference": "v2.0.18",
+                "url": "https://github.com/symfony/Console/archive/29e0ef35b1cf4e030db5c3a6bff067a44fc2c8c5.zip",
+                "reference": "29e0ef35b1cf4e030db5c3a6bff067a44fc2c8c5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1348842106",
+            "time": "1352145123",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -916,12 +916,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher",
-                "reference": "24a1039d52b6b9f533cb73dcb96c7748262db686"
+                "reference": "eb290a447c0af5bea0d3de5d95d498afd8c82f89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/EventDispatcher/zipball/24a1039d52b6b9f533cb73dcb96c7748262db686",
-                "reference": "24a1039d52b6b9f533cb73dcb96c7748262db686",
+                "url": "https://github.com/symfony/EventDispatcher/archive/eb290a447c0af5bea0d3de5d95d498afd8c82f89.zip",
+                "reference": "eb290a447c0af5bea0d3de5d95d498afd8c82f89",
                 "shasum": ""
             },
             "require": {
@@ -934,7 +934,7 @@
                 "symfony/dependency-injection": "2.2.*",
                 "symfony/http-kernel": "2.2.*"
             },
-            "time": "1349553479",
+            "time": "1352815684",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -970,18 +970,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation",
-                "reference": "e2739a9a9426ce6273d5e880c284790bca7e2cd8"
+                "reference": "d58222ab34924ecef1958720ad860025585c1553"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpFoundation/zipball/e2739a9a9426ce6273d5e880c284790bca7e2cd8",
-                "reference": "e2739a9a9426ce6273d5e880c284790bca7e2cd8",
+                "url": "https://github.com/symfony/HttpFoundation/archive/d58222ab34924ecef1958720ad860025585c1553.zip",
+                "reference": "d58222ab34924ecef1958720ad860025585c1553",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1351366080",
+            "time": "1352723952",
             "type": "library",
             "installation-source": "source",
             "autoload": {

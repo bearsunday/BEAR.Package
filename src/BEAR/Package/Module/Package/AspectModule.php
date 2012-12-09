@@ -1,19 +1,23 @@
 <?php
 /**
- * @package    Sandbox
- * @subpackage Module
- */
-namespace Sandbox\Module;
-
-use BEAR\Sunday\Module as SundayModule;
-
-/**
- * Application module for API
+ * Module
  *
  * @package    Sandbox
  * @subpackage Module
  */
-class ApiModule extends ProdModule
+namespace BEAR\Package\Module\Package;
+
+use BEAR\Sunday\Module as SundayModule;
+use BEAR\Package\Module;
+use Ray\Di\AbstractModule;
+
+/**
+ * Package module
+ *
+ * @package    Sandbox
+ * @subpackage Module
+ */
+class AspectModule extends AbstractModule
 {
     /**
      * (non-PHPdoc)
@@ -21,7 +25,6 @@ class ApiModule extends ProdModule
      */
     protected function configure()
     {
-        $this->install(new ProdModule);
-        $this->install(new SundayModule\Resource\HalModule($this));
+        $this->install(new Module\Database\DoctrineDbalModule($this));
     }
 }

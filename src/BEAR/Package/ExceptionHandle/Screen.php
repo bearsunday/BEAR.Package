@@ -1,0 +1,196 @@
+<?php
+
+namespace BEAR\Package\ExceptionHandle;
+
+class Screen
+{
+    private $e;
+
+    private $propTables = [];
+
+    public function setException(Exception $e)
+    {
+        $this->e = $e;
+    }
+
+    public function getTraceAsJsString(array $trace)
+    {
+        $stack = $this->getStack($trace);
+        $cnt = 0;
+        $html = '';
+        foreach ($stack as $key => $row) {
+            $cnt++;
+            foreach ($row as &$value) {
+                if (is_object($value)) {
+                    $value = get_class($value);
+                }
+            }
+            $strValue = print_r($value, true);
+            if (isset($row['file']) && is_file($row['file'])) {
+                $html .= "<li>";
+                $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#source{$cnt}\"><i class=\"icon-zoom-in\"></i>";
+                $html .= "<code>{$row['statement']}</code>";
+                $html .= "</a>";
+                $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#args{$cnt}\">";
+                $html .= "<span class=\"params\">[params]</span>";
+                $html .= "</a>";
+                $html .= "{$row['file']} : {$row['line']}  ";
+                $html .= "<a target=\"code_edit\" href=\"/_dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
+                $args = $this->getArgsAsString($row['args']);
+                $html .= "</li>";
+                $html .= "<div id=\"source{$cnt}\" class=\"collapse out\">{$row['source']}</div>";
+                $html .= "<div id=\"args{$cnt}\" class=\"collapse out\">{$args}</div>";
+            }
+        }
+
+        return $html;
+    }
+
+    public function getHeader(\Exception $e, $type = "error")
+    {
+        $title = get_class($e);
+        $subTitle = $e->getMessage();
+        $file = $e->getFile();
+        $line = $e->getLine();
+
+        return <<<EOT
+      <div class="alert alert-block alert-{$type} fade in">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <h2 class="alert-heading">{$title}</h2>
+        <h3>{$subTitle}</h3>
+        <p>in {$file} on line {$line}</p>
+        <a class="btn" rel="tooltip" title="" href="/_dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
+      </div>
+EOT;
+    }
+
+    public function getEditorLink($file, $line, $systemRoot = null)
+    {
+        $href = '/_dev/edit/index.php?file=';
+        $href .= $systemRoot ? str_replace($systemRoot, '', $file) : $file;
+        $href .= "&line={$line}";
+        $link = "<a target=\"code_edit\" href=\"{$href}\" >{$file} : {$line}</a>";
+        return $link;
+    }
+
+    private function getStack($trace)
+    {
+        $stack = [];
+        foreach ($trace as $row) {
+            if (isset($row['class'])) {
+                $row['type'] = isset($row['type']) && $row['type'] === 'dynamic' ? '->' : '::';
+            }
+            if (isset($row['params'])) {
+                $row['args'] = $row['params'];
+            }
+            if (isset($row['class'])) {
+                $row['statement'] = "{$row['class']}{$row['type']}{$row['function']}()";
+            } elseif (isset($row['function'])) {
+                $row['statement'] = "{$row['function']}()";
+            } elseif (isset($row['include_filename'])) {
+                $row['statement'] = "include_filename {$row['include_filename']}";
+            } else {
+                $row['statement'] = "...";
+            }
+            $row['source'] = isset($row['file']) ? $this->getFiles($row['file'], $row['line']) : 'n/a';
+            $stack[] = $row;
+        }
+
+        return $stack;
+    }
+
+    private function getFiles($file, $line, $num = 6)
+    {
+
+        if (!file_exists($file) || $line === 0) {
+            return '<pre>n/a</pre>';
+        }
+        $result = '<div class="file-summary">';
+        $files = file($file);
+        $fileArray = array_map('htmlspecialchars', $files);
+        $hitLineOriginal = $fileArray[$line - 1];
+        $fileArray[$line - 1] = "<span class=\"hit-line\">{$fileArray[$line - 1]}</span>";
+        $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
+        $shortListArray[$num - 1] = '<strong>' . $fileArray[$line - 1] . '</strong>';
+        $shortList = implode('', $shortListArray);
+        $shortList = '<pre class="short-list" style="background-color: #F0F0F9;">' . $shortList . '</pre>';
+        $hitLine = $fileArray[$line - 1];
+        $result .= $shortList . '</div>';
+
+        return $result;
+    }
+
+    private function getArgsAsString(array &$args)
+    {
+        if (! $args) {
+            return '<i>(void)</i>';
+        }
+        $html = '<table class="table table-condensed table-bordered params-table">';
+        foreach ($args as $index => $arg) {
+            $type = gettype($arg);
+            $divObject = '';
+            if (is_object($arg)) {
+                $divObject = $this->divObject($arg);
+                $objHash =  spl_object_hash($arg);
+                $link = "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#obj{$objHash}\">";
+                $arg = $link . '(object) ' . $this->getObjectName($arg) . '</a>';
+            }
+            if (! is_scalar($arg)) {
+                $this->makeArgsElementsScalar($arg);
+                $arg = var_export($arg, true);
+            }
+            $html .= "<tr><td>{$index}</td><td>{$type}</td></td><td>{$arg}</td></tr>";
+        }
+        $html .= '</table>';
+        return $html . $divObject;
+    }
+
+    private function getObjectName($obj)
+    {
+        return '<strong>' . get_class($obj). '</strong><span class="weak">#' . spl_object_hash($obj) . '</span>';
+    }
+
+    private function makeArgsElementsScalar(array &$args)
+    {
+        $params = [];
+        foreach ($args as &$arg) {
+            if (is_object($arg)) {
+                $arg = $this->getObjectName($arg);
+            }
+            if (is_array($arg)) {
+                $this->makeArgsElementsScalar($arg);
+            }
+            $params[] = $arg;
+        }
+        $args = $params;
+    }
+
+    private function divObject($obj)
+    {
+        $props = (new \ReflectionObject($obj))->getProperties();
+        $index = spl_object_hash($obj);
+        $propTables = "<div id=\"obj{$index}\" class=\"collapse out\">";
+        $propTables .= $this->getObjectName($obj);
+        $propTables .= '<table class="table table-condensed table-bordered params-table">';
+        foreach ($props as $prop) {
+            $modifier = \Reflection::getModifierNames($prop->getModifiers())[0];
+            $name = $prop->getName();
+            $prop->setAccessible(true);
+            $value = $prop->getValue($obj);
+            if (is_object($value) || 1 && ! isset($this->propTables[$index])) {
+                $this->propTables[$index] = '';
+                //$this->divObject($value);
+                $value = $this->getObjectName($obj);
+            }
+            if (is_array($value)) {
+                $this->makeArgsElementsScalar($value);
+                $value = var_export($value, true);
+            }
+            $propTables .= "<tr><td>{$modifier}</td><td>\${$name}</td><td>{$value}</td></tr>";
+        }
+        $propTables .= "</table>";
+        $propTables .= "</div>";
+        $this->propTables[$index] = $propTables;
+        return $propTables;
+    }
+}

@@ -14,15 +14,12 @@ use BEAR\Resource\Exception\Parameter as BadRequest;
 $mode = 'Prod';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 
-// $router = dirname(__DIR__) . '/scripts/router/standard_router.php'
-
 // Dispatch
-$globals = $GLOBALS;
-list($method, $pagePath, $query) = $app->router->match($globals);
+list($method, $pagePath, $query) = $app->router->match($GLOBALS);
 
 // Request
 try {
-    $page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
+    $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 } catch (NotFound $e) {
     $code = 404;
     goto ERROR;
@@ -38,7 +35,7 @@ try {
 // Transfer
 
 OK: {
-    $app->response->setResource($page)->render()->prepare()->send();
+    $app->response->setResource($app->page)->render()->prepare()->send();
     exit(0);
 }
 

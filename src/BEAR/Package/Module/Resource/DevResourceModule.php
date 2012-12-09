@@ -1,22 +1,27 @@
 <?php
 /**
- * Module
+ * This file is part of the BEAR.Packages package
  *
- * @package    Sandbox
- * @subpackage Module
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Develop;
+namespace BEAR\Package\Module\Resource;
 
 use Ray\Di\AbstractModule;
 use BEAR\Sunday\Module as SundayModule;
+use Ray\Di\Scope;
 
 /**
- * Package module
+ * DevResource Module
+ *
+ * + SQL Log
+ * + Resource log
+ * + Resource dev rendering
  *
  * @package    Sandbox
  * @subpackage Module
  */
-class DevFrameworkModule extends AbstractModule
+class DevResourceModule extends AbstractModule
 {
     /**
      * (non-PHPdoc)
@@ -24,8 +29,11 @@ class DevFrameworkModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->install(new SundayModule\TemplateEngine\DevRendererModule);
-        $this->install(new SundayModule\FrameworkModule($this));
+        // DBAL debug
+        $this->bind('Doctrine\DBAL\Logging\SQLLogger')->to('Doctrine\DBAL\Logging\DebugStack')->in(Scope::SINGLETON);
+        // Common debug
+        $this->bind('BEAR\Resource\InvokerInterface')->to('BEAR\Resource\DevInvoker')->in(Scope::SINGLETON);
+        $this->install(new SundayModule\TemplateEngine\DevRendererModule($this));
         $this->installDevLogger();
     }
 

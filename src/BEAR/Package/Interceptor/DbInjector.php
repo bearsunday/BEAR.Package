@@ -7,6 +7,7 @@
 namespace BEAR\Package\Interceptor;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\SQLLogger;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
@@ -19,8 +20,18 @@ use Ray\Di\Di\Named;
  * @package    BEAR.Sunday
  * @subpackage Intercetor
  */
-class DbInjector implements MethodInterceptor
+final class DbInjector implements MethodInterceptor
 {
+    /**
+     * @var Reader
+     */
+    private $reader;
+
+    /**
+     * @var SqlLogger
+     */
+    private $sqlLogger;
+
     /**
      * DSN for master
      *
@@ -36,6 +47,31 @@ class DbInjector implements MethodInterceptor
     private $slaveDb;
 
     /**
+     * Set annotation reader
+     *
+     * @param Reader $reader
+     *
+     * @return void
+     * @Inject
+     */
+    public function setReader(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
+
+    /**
+     * Set SqlLogger
+     *
+     * @param \Doctrine\DBAL\Logging\SQLLogger $sqlLogger
+     *
+     * @Inject(optional = true)
+     */
+    public function setSqlLogger(SQLLogger $sqlLogger)
+    {
+        $this->sqlLogger = $sqlLogger;
+    }
+
+    /**
      * Constructor
      *
      * @param  array $masterDb
@@ -48,19 +84,6 @@ class DbInjector implements MethodInterceptor
     {
         $this->masterDb = $masterDb;
         $this->slaveDb = $slaveDb;
-    }
-
-    /**
-     * Set annotation reader
-     *
-     * @param Reader $reader
-     *
-     * @return void
-     * @Inject
-     */
-    public function setReader(Reader $reader)
-    {
-        $this->reader = $reader;
     }
 
     /**
@@ -80,9 +103,17 @@ class DbInjector implements MethodInterceptor
         } else {
             $db = DriverManager::getConnection($connectionParams);
         }
-        /* @var $db \BEAR\Sunday\Module\Database\DoctrineDbalModule\Connection */
+        /* @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
+
+        if ($this->sqlLogger instanceof SQLLogger) {
+            $db->getConfiguration()->setSQLLogger($this->sqlLogger);
+        }
         $object->setDb($db);
         $result = $invocation->proceed();
+        if ($this->sqlLogger instanceof SQLLogger) {
+            $this->sqlLogger->stopQuery();
+            $object->headers['x-sql'] = [$this->sqlLogger->queries];
+        }
         if ($pagerAnnotation) {
             $pagerData = $db->getPager();
             if ($pagerData) {
