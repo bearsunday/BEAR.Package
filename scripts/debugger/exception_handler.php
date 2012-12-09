@@ -8,12 +8,13 @@
  */
 
 use BEAR\Package\ExceptionHandle\ExceptionHandler;
+use Aura\Di\Exception;
 use BEAR\Package\Web\SymfonyResponse;
 use BEAR\Sunday\Output\Console;
 
-return function ($e) {
+return function (\Exception $e) {
     $handler = new ExceptionHandler(
-        dirname(dirname(__DIR__))RR . '/src/BEAR/Package/Module/ExceptionHandle/template/exception.tpl.php',
+        dirname(dirname(__DIR__)) . '/src/BEAR/Package/Module/ExceptionHandle/template/view.php',
         new SymfonyResponse(new Console)
     );
     $handler->setLogDir(dirname(__DIR__) . '/data/log');
