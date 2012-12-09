@@ -196,7 +196,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         return $response;
     }
 
-    private function getView($e)
+    private function getView(\Exception $e)
     {
         // exception screen in develop
         if (isset($this->injector)) {
@@ -210,7 +210,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             $modules = 'n/a';
         }
         return include $this->viewTemplate;
-
     }
 
     /**
