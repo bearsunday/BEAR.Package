@@ -1,31 +1,33 @@
 {
-    "hash": "0c91c607f3200b4cfb50d63d1460ebe5",
+    "hash": "09ef81bf83a745977d1b1f04147f2e26",
     "packages": [
         {
             "name": "aura/di",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Di",
-                "reference": "ab76ec847533fc97d5239f4444b54c3dd4c9a67e"
+                "reference": "1.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Di/zipball/ab76ec847533fc97d5239f4444b54c3dd4c9a67e",
-                "reference": "ab76ec847533fc97d5239f4444b54c3dd4c9a67e",
+                "url": "https://github.com/auraphp/Aura.Di/archive/1.0.1.zip",
+                "reference": "1.0.1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "aura/installer-default": ">=1.0.0"
             },
-            "time": "1350360847",
-            "type": "library",
+            "time": "2012-11-28 00:00:00",
+            "type": "aura-package",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Di": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -60,30 +62,74 @@
             ]
         },
         {
-            "name": "aura/router",
-            "version": "dev-master",
+            "name": "aura/installer-default",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/auraphp/Aura.Router",
-                "reference": "1.0.0-beta3"
+                "url": "https://github.com/auraphp/installer-default",
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Router/zipball/1.0.0-beta3",
-                "reference": "1.0.0-beta3",
+                "url": "https://github.com/auraphp/installer-default/archive/1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": ""
+            },
+            "time": "2012-11-26 21:35:57",
+            "type": "composer-installer",
+            "extra": {
+                "class": "Aura\\Composer\\DefaultInstaller"
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Aura\\Composer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Paul M. Jones",
+                    "email": "pmjones88@gmail.com",
+                    "homepage": "http://paul-m-jones.com"
+                }
+            ],
+            "description": "Installs Aura packages using the Composer defaults.",
+            "keywords": [
+                "installer",
+                "aura"
+            ]
+        },
+        {
+            "name": "aura/router",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/auraphp/Aura.Router",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/auraphp/Aura.Router/archive/1.0.0.zip",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "aura/installer-default": ">=1.0.0"
             },
-            "time": "1343710018",
-            "type": "library",
+            "time": "2012-11-28 00:00:00",
+            "type": "aura-package",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Router": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -113,31 +159,33 @@
         },
         {
             "name": "aura/signal",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Signal",
-                "reference": "1.0.0-beta3"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Signal/zipball/1.0.0-beta3",
-                "reference": "1.0.0-beta3",
+                "url": "https://github.com/auraphp/Aura.Signal/archive/1.0.0.zip",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "aura/installer-default": ">=1.0.0"
             },
-            "time": "1343710041",
-            "type": "library",
+            "time": "2012-11-28 00:00:00",
+            "type": "aura-package",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Signal": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -167,31 +215,33 @@
         },
         {
             "name": "aura/web",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web",
-                "reference": "1.0.0-beta3"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Web/zipball/1.0.0-beta3",
-                "reference": "1.0.0-beta3",
+                "url": "https://github.com/auraphp/Aura.Web/archive/1.0.0.zip",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "aura/installer-default": ">=1.0.0"
             },
-            "time": "1343710300",
-            "type": "library",
+            "time": "2012-11-30 00:00:00",
+            "type": "aura-package",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Web": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -223,25 +273,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "d613e5dc3fd3cdd3c15a7f863077e87098eb5bc6"
+                "reference": "3ca644bc29de4257ec9165ce1c9745150dc231dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Resource/archive/d613e5dc3fd3cdd3c15a7f863077e87098eb5bc6.zip",
-                "reference": "d613e5dc3fd3cdd3c15a7f863077e87098eb5bc6",
+                "url": "https://github.com/koriym/BEAR.Resource/archive/3ca644bc29de4257ec9165ce1c9745150dc231dd.zip",
+                "reference": "3ca644bc29de4257ec9165ce1c9745150dc231dd",
                 "shasum": ""
             },
             "require": {
-                "aura/di": "dev-master",
-                "aura/signal": "dev-master",
                 "php": ">=5.4.0",
                 "facebook/xhprof": "0.9.2",
                 "guzzle/guzzle": "2.7.*",
                 "doctrine/common": "2.3.*-dev",
                 "ray/aop": ">=1.0.0-beta2",
-                "ray/di": ">=1.0.0-beta2"
+                "ray/di": ">=1.0.0-beta3",
+                "aura/di": "1.0.*",
+                "aura/signal": "1.0.*",
+                "aura/installer-default": "1.0.*"
             },
-            "time": "1352003872",
+            "time": "2012-12-10 13:33:47",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -249,6 +300,7 @@
                     "BEAR\\Resource": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -273,12 +325,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "82962c0476a77d73c1f96494a1b8a8eb95d9e517"
+                "reference": "8a6d2e55878afceb763bdd58cb357b6df26eb2ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Sunday/archive/82962c0476a77d73c1f96494a1b8a8eb95d9e517.zip",
-                "reference": "82962c0476a77d73c1f96494a1b8a8eb95d9e517",
+                "url": "https://github.com/koriym/BEAR.Sunday/archive/8a6d2e55878afceb763bdd58cb357b6df26eb2ac.zip",
+                "reference": "8a6d2e55878afceb763bdd58cb357b6df26eb2ac",
                 "shasum": ""
             },
             "require": {
@@ -286,14 +338,9 @@
                 "ext-apc": "*",
                 "ext-curl": "*",
                 "ray/aop": ">=1.0.0-beta2",
-                "ray/di": ">=1.0.0-beta2",
                 "bear/resource": ">=0.5.1",
                 "vdump/vdump": "*",
                 "printo/printo": "*",
-                "aura/di": "dev-master",
-                "aura/router": "dev-master",
-                "aura/signal": "dev-master",
-                "aura/web": "dev-master",
                 "doctrine/common": "2.3.*-dev",
                 "doctrine/dbal": "2.3.*-dev",
                 "facebook/xhprof": "0.9.*",
@@ -305,9 +352,14 @@
                 "firephp/firephp-core": "dev-master",
                 "twitter/bootstrap": "dev-master",
                 "nocarrier/hal": "dev-master",
-                "zendframework/zend-log": "2.0.*"
+                "zendframework/zend-log": "2.0.*",
+                "ray/di": ">=1.0.0-beta3",
+                "aura/di": "1.0.*",
+                "aura/router": "1.0.*",
+                "aura/signal": "1.0.*",
+                "aura/web": "1.0.*"
             },
-            "time": "1352008493",
+            "time": "2012-12-10 13:51:31",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -315,6 +367,7 @@
                     "BEAR\\Sunday": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -347,14 +400,14 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/common/zipball/bb0aebbf234db52df476a2b473d434745b34221c",
+                "url": "https://github.com/doctrine/common/archive/bb0aebbf234db52df476a2b473d434745b34221c.zip",
                 "reference": "bb0aebbf234db52df476a2b473d434745b34221c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1348120518",
+            "time": "2012-09-20 05:55:18",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -367,6 +420,7 @@
                     "Doctrine\\Common": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -392,7 +446,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -412,19 +466,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal",
-                "reference": "292d5edd17e0a9b9a7ee9eb20d6ae1033059153f"
+                "reference": "f63af1948a609a96b8ea1c1302c7cdf2f9f51468"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/archive/292d5edd17e0a9b9a7ee9eb20d6ae1033059153f.zip",
-                "reference": "292d5edd17e0a9b9a7ee9eb20d6ae1033059153f",
+                "url": "https://github.com/doctrine/dbal/archive/f63af1948a609a96b8ea1c1302c7cdf2f9f51468.zip",
+                "reference": "f63af1948a609a96b8ea1c1302c7cdf2f9f51468",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "1352716871",
+            "time": "2012-12-04 21:06:56",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -437,6 +491,7 @@
                     "Doctrine\\DBAL": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -500,7 +555,7 @@
                 "reference": "c26d972dcb28fd483fa193512091df7b3c85e450",
                 "shasum": ""
             },
-            "time": "1338250094",
+            "time": "2012-05-29 00:08:14",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -509,6 +564,7 @@
                     "lib/FirePHPCore/fb.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -568,6 +624,7 @@
                     "Guzzle": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -600,18 +657,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal",
-                "reference": "a18cb20817572f522ab698d943a8aa50e70f4e42"
+                "reference": "cc466546c6ca5df3e806cd91258cdf194518a12f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/blongden/hal/zipball/a18cb20817572f522ab698d943a8aa50e70f4e42",
-                "reference": "a18cb20817572f522ab698d943a8aa50e70f4e42",
+                "url": "https://github.com/blongden/hal/archive/cc466546c6ca5df3e806cd91258cdf194518a12f.zip",
+                "reference": "cc466546c6ca5df3e806cd91258cdf194518a12f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "1351517455",
+            "time": "2012-11-20 14:48:17",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -619,6 +676,7 @@
                     "Nocarrier": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -649,7 +707,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/whiteoctober/Pagerfanta/zipball/12f71d99457b018fb80746f84514dd5b495c5789",
+                "url": "https://github.com/whiteoctober/Pagerfanta/archive/12f71d99457b018fb80746f84514dd5b495c5789.zip",
                 "reference": "12f71d99457b018fb80746f84514dd5b495c5789",
                 "shasum": ""
             },
@@ -661,7 +719,7 @@
                 "doctrine/mongodb-odm": "2.*",
                 "solarium/solarium": "2.*"
             },
-            "time": "1345672591",
+            "time": "2012-08-22 21:56:31",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -669,6 +727,7 @@
                     "Pagerfanta\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -695,14 +754,14 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/print_o/zipball/abd0d6b68d00dc98a71124215780b57ec3ede268",
+                "url": "https://github.com/koriym/print_o/archive/abd0d6b68d00dc98a71124215780b57ec3ede268.zip",
                 "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
-            "time": "1351096296",
+            "time": "2012-10-24 16:31:36",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -711,6 +770,7 @@
                     "src/Printo/print_o.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -730,30 +790,31 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0-beta2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0-beta2"
+                "reference": "3edfe6ba6b52e8d3190da62c14479ff7cce2377f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/Ray.Aop/zipball/1.0.0-beta2",
-                "reference": "1.0.0-beta2",
+                "url": "https://github.com/koriym/Ray.Aop/archive/3edfe6ba6b52e8d3190da62c14479ff7cce2377f.zip",
+                "reference": "3edfe6ba6b52e8d3190da62c14479ff7cce2377f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "doctrine/common": "2.3.*-dev"
             },
-            "time": "2012-10-17 00:13:53",
+            "time": "2012-10-29 02:17:20",
             "type": "library",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Ray\\Aop": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -775,32 +836,34 @@
         },
         {
             "name": "ray/di",
-            "version": "1.0.0-beta2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.0-beta2"
+                "reference": "1.0.0-beta3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/Ray.Di/zipball/1.0.0-beta2",
-                "reference": "1.0.0-beta2",
+                "url": "https://github.com/koriym/Ray.Di/archive/1.0.0-beta3.zip",
+                "reference": "1.0.0-beta3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "doctrine/common": "2.3.*-dev",
-                "ray/aop": "*",
-                "aura/di": ">=1.0.*-dev"
+                "aura/di": "1.0.*",
+                "ray/aop": ">=1.0.0-beta2",
+                "aura/installer-default": "1.0.*"
             },
-            "time": "2012-10-17 13:20:13",
+            "time": "2012-12-10 12:57:46",
             "type": "library",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Ray\\Di": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -844,6 +907,7 @@
                     "distribution/libs/Smarty.class.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL-3.0"
             ],
@@ -874,18 +938,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console",
-                "reference": "29e0ef35b1cf4e030db5c3a6bff067a44fc2c8c5"
+                "reference": "v2.0.19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Console/archive/29e0ef35b1cf4e030db5c3a6bff067a44fc2c8c5.zip",
-                "reference": "29e0ef35b1cf4e030db5c3a6bff067a44fc2c8c5",
+                "url": "https://github.com/symfony/Console/archive/v2.0.19.zip",
+                "reference": "v2.0.19",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1352145123",
+            "time": "2012-11-05 19:52:03",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -893,6 +957,7 @@
                     "Symfony\\Component\\Console": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -934,7 +999,7 @@
                 "symfony/dependency-injection": "2.2.*",
                 "symfony/http-kernel": "2.2.*"
             },
-            "time": "1352815684",
+            "time": "2012-11-13 14:08:04",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -947,6 +1012,7 @@
                     "Symfony\\Component\\EventDispatcher\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -970,18 +1036,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation",
-                "reference": "d58222ab34924ecef1958720ad860025585c1553"
+                "reference": "9de3cbad3add71e8cd8a74642b2d757fe8047135"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpFoundation/archive/d58222ab34924ecef1958720ad860025585c1553.zip",
-                "reference": "d58222ab34924ecef1958720ad860025585c1553",
+                "url": "https://github.com/symfony/HttpFoundation/archive/9de3cbad3add71e8cd8a74642b2d757fe8047135.zip",
+                "reference": "9de3cbad3add71e8cd8a74642b2d757fe8047135",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1352723952",
+            "time": "2012-12-07 09:39:50",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -989,6 +1055,7 @@
                     "Symfony\\Component\\HttpFoundation": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1021,7 +1088,7 @@
             },
             "type": "library",
             "installation-source": "source",
-            "time": "1350539452"
+            "time": "2012-12-10 08:21:35"
         },
         {
             "name": "vdump/vdump",
@@ -1043,11 +1110,11 @@
         },
         {
             "name": "zendframework/zend-log",
-            "version": "2.0.3",
+            "version": "2.0.5",
             "target-dir": "Zend/Log",
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.3.zip",
+                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.5.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1088,11 +1155,11 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.0.3",
+            "version": "2.0.5",
             "target-dir": "Zend/Stdlib",
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.3.zip",
+                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.5.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1132,12 +1199,6 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "ray/aop": 10,
-        "ray/di": 10,
-        "aura/di": 20,
-        "aura/router": 20,
-        "aura/signal": 20,
-        "aura/web": 20,
         "doctrine/common": 20,
         "doctrine/dbal": 20,
         "pagerfanta/pagerfanta": 20,
