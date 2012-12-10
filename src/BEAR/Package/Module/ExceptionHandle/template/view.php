@@ -42,19 +42,19 @@ $html = <<<EOT
             padding-bottom: 40px;
         }
         .hit-line {
-	        background-color: yellow;
-	        color: black;
-	        text-decoration: none;
-	    }
-	    .params {
-    	    background-color: #eeeeee;
-	    }
-	    .params-table {
-    	    font-size: 12px;
-	    }
-	    .weak {
-	        color: gray;
-	    }
+            background-color: yellow;
+            color: black;
+            text-decoration: none;
+        }
+        .params {
+            background-color: #eeeeee;
+        }
+        .params-table {
+            font-size: 12px;
+        }
+        .weak {
+            color: gray;
+        }
     </style>
     <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet">
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
