@@ -37,6 +37,11 @@ class SmartyAdapter implements TemplateEngineAdapter
     private $template;
 
     /**
+     * @var bool
+     */
+    private $isProd;
+
+    /**
      * File extension
      *
      * @var string
