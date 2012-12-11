@@ -2,6 +2,9 @@
 
 namespace BEAR\Package\ExceptionHandle;
 
+/**
+ * Development screen helper
+ */
 class Screen
 {
     /**
@@ -9,7 +12,13 @@ class Screen
      */
     private $propTables = [];
 
-    
+    /**
+     * Return trace array as string
+     *
+     * @param array $trace
+     *
+     * @return string
+     */
     public function getTraceAsJsString(array $trace)
     {
         $stack = $this->getStack($trace);
