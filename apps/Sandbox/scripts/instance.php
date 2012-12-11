@@ -6,7 +6,7 @@
  * create application object using apc cache
  *
  * @return $app  application
- * @global $mode configuration mode
+ * @global $mode string configuration mode
  */
 namespace Sandbox;
 
@@ -17,7 +17,6 @@ use Ray\Di\Forge;
 use Ray\Di\ApcConfig;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
-use Ray\Di\Exception\NotBound;
 use Doctrine\Common\Annotations\AnnotationReader;
 use BEAR\Package\Exception\InvalidMode;
 
