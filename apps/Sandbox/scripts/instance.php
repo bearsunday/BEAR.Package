@@ -19,7 +19,6 @@ use Ray\Di\Annotation;
 use Ray\Di\Definition;
 use Ray\Di\Exception\NotBound;
 use Doctrine\Common\Annotations\AnnotationReader;
-use BEAR\Package\Exception\NotBoundHandler;
 use BEAR\Package\Exception\InvalidMode;
 
 // init
