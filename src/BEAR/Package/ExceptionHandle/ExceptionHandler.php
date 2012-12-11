@@ -144,10 +144,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             $response->code = 404;
             $response->view = $this->message['ResourceNotFound'];
             goto NOT_FOUND;
-        } catch (BadRequest $e) {
-            $response->code = 400;
-            $response->view = $this->message['BadRequest'];
-            goto METHOD_NOT_ALLOWED;
         } catch (Parameter $e) {
             $response->code = 400;
             $response->view = $this->message['Parameter'];
@@ -165,6 +161,10 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         } catch (Uri $e) {
             $response->code = 400;
             goto INVALID_URI;
+        } catch (BadRequest $e) {
+            $response->code = 400;
+            $response->view = $this->message['BadRequest'];
+            goto METHOD_NOT_ALLOWED;
         } catch (Exception $e) {
             goto SERVER_ERROR;
         }
