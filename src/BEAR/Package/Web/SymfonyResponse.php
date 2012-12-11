@@ -15,6 +15,8 @@ use BEAR\Sunday\Web\ResponseInterface;
 use BEAR\Sunday\Output\Console;
 use BEAR\Resource\Logger;
 use BEAR\Resource\Object as ResourceObject;
+use BEAR\Resource\Abject;
+
 use BEAR\Sunday\Resource\AbstractPage as Page;
 use Symfony\Component\HttpFoundation\Response;
 use Ray\Aop\Weave;
@@ -41,7 +43,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Resource object
      *
-     * @var BResourceObject
+     * @var \BEAR\Resource\AbstractObject
      */
     private $resource;
 
@@ -52,14 +54,35 @@ final class SymfonyResponse implements ResponseInterface
      */
     private $response;
 
+    /**
+     * @var int
+     */
     private $code;
+
+    /**
+     * @var array
+     */
     private $headers;
+
+    /**
+     * @var string
+     */
+    private $body;
+
+    /**
+     * @var string
+     */
     private $view;
 
     /**
-     * @var ConsoleOutput
+     * @var ConsoleInterface
      */
     private $consoleOutput;
+
+    /**
+     * @var AppLogger
+     */
+    private $appLogger;
 
     /**
      * Set application logger
@@ -91,7 +114,7 @@ final class SymfonyResponse implements ResponseInterface
      * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
      *
      * @throws InvalidResourceType
-     * @return \BEAR\Sunday\Web\SymfonyResponse
+     * @return \BEAR\Sunday\Web\ResponseInterface
      */
     public function setResource($resource)
     {
@@ -146,7 +169,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Make response object with RFC 2616 compliant HTTP header
      *
-     * @return \BEAR\Sunday\Web\SymfonyResponse
+     * @return \BEAR\Sunday\Web\ResponseInterface
      */
     public function prepare()
     {
@@ -160,7 +183,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Output web console log (FireBug + FirePHP)
      *
-     * @return \BEAR\Sunday\Web\SymfonyResponse
+     * @return \BEAR\Sunday\Web\ResponseInterface
      */
     public function outputWebConsoleLog()
     {
@@ -172,7 +195,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Transfer representational state to http client (or console output)
      *
-     * @return \BEAR\Sunday\Web\SymfonyResponse
+     * @return \BEAR\Sunday\Web\ResponseInterface
      */
     public function send()
     {
