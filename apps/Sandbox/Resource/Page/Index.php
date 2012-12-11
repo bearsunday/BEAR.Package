@@ -54,10 +54,6 @@ class Index extends Page
             'Xdebug' => extension_loaded('Xdebug') ? phpversion('Xdebug') : 'n/a',
             'xhprof' => extension_loaded('xhprof') ? phpversion('xhprof') : 'n/a'
         ];
-        $loadedExtensions = get_loaded_extensions();
-        foreach ($loadedExtensions as $extension) {
-            $this->body['loaded_extensions'][$extension] = phpversion($extension);
-        }
     }
 
     /**
