@@ -85,7 +85,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Set Injector for logging
      *
-     * @param array $message
+     * @param \Ray\Di\InjectorInterface $injector
      *
      * @Inject(optional = true);
      */
@@ -97,7 +97,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Set response
      *
-     * @param ResponseInterface $response
+     * @param null                               $exceptionTpl
+     * @param \BEAR\Sunday\Web\ResponseInterface $response
+     * @param \BEAR\Resource\AbstractObject      $errorPage
      *
      * @Inject
      * @Named("exceptionTpl=exceptionTpl,errorPage=errorPage")
@@ -130,10 +132,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Return error page
      *
-     * @param $e
-     * @param $exceptionId
+     * @param                               $e
+     * @param                               $exceptionId
+     * @param \BEAR\Resource\AbstractObject $response
      *
-     * @return \BEAR\Sunday\Resource\Page\Error
+     * @return \BEAR\Resource\AbstractObject
      * @throws
      */
     private function buildErrorPage($e, $exceptionId, ResourceObject $response)
@@ -200,15 +203,22 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     {
         // exception screen in develop
         if (isset($this->injector)) {
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $dependencyBindings = (string) $this->injector;
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $modules = $this->injector->getModule()->modules;
         } elseif (isset($e->module)) {
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $dependencyBindings = (string) $e->module;
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $modules = $e->module->modules;
         } else {
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $dependencyBindings = 'n/a';
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $modules = 'n/a';
         }
+        /** @noinspection PhpIncludeInspection */
         return include $this->viewTemplate;
     }
 
