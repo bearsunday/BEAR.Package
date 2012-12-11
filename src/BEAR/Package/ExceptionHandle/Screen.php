@@ -4,15 +4,12 @@ namespace BEAR\Package\ExceptionHandle;
 
 class Screen
 {
-    private $e;
-
+    /**
+     * @var array
+     */
     private $propTables = [];
 
-    public function setException(Exception $e)
-    {
-        $this->e = $e;
-    }
-
+    
     public function getTraceAsJsString(array $trace)
     {
         $stack = $this->getStack($trace);
