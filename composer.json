@@ -1,23 +1,20 @@
 {
     "name":"bear/package",
     "type":"library",
-    "description":"BEAR.Sunday sandbox application package",
+    "description":"BEAR.Sunday application package",
     "version":"0.5.5",
     "keywords":[
         "BEAR.Sunday",
-        "framework",
-        "application",
-        "rest",
-        "di",
-        "aop",
-        "hypermedia"
+        "application skeleton",
+        "Smarty3",
+        "Doctrine DBAL"
     ],
     "homepage":"https://github.com/koriym/BEAR.Sunday",
     "license":"BSD-3-Clause",
     "authors":[
         {
-            "name":"-",
-            "email":"-"
+            "name":"Akihito Koriyama",
+            "email":"akihito.koriyama@gmail.com"
         }
     ],
     "minimum-stability":"dev",
@@ -27,8 +24,8 @@
         "ext-curl"                :"*",
         "ray/aop"                 :">=1.0.0",
         "ray/di"                  :">=1.0.0",
-        "bear/resource"           :">=0.5.1",
-        "bear/sunday"             :">=0.5.3",
+        "bear/resource"           :">=0.5.5",
+        "bear/sunday"             :">=0.5.5",
         "printo/printo"           :"*",
         "aura/di"                 :"1.0.*",
         "aura/router"             :"1.0.*",
@@ -73,23 +70,6 @@
                 },
                 "source":{
                     "url":"https://github.com/crodas/Haanga.git",
-                    "type":"git",
-                    "reference":"master"
-                }
-            }
-        },
-        {
-            "type":"package",
-            "package":{
-                "name":"vdump/vdump",
-                "version":"0.1.0",
-                "target-dir":"vdump",
-                "dist":{
-                    "url":"https://github.com/koriym/vdump/zipball/master",
-                    "type":"zip"
-                },
-                "source":{
-                    "url":"https://github.com/koriym/vdump.git",
                     "type":"git",
                     "reference":"master"
                 }
