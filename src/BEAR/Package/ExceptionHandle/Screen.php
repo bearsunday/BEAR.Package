@@ -18,14 +18,13 @@ class Screen
         $stack = $this->getStack($trace);
         $cnt = 0;
         $html = '';
-        foreach ($stack as $key => $row) {
+        foreach ($stack as $row) {
             $cnt++;
             foreach ($row as &$value) {
                 if (is_object($value)) {
                     $value = get_class($value);
                 }
             }
-            $strValue = print_r($value, true);
             if (isset($row['file']) && is_file($row['file'])) {
                 $html .= "<li>";
                 $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#source{$cnt}\"><i class=\"icon-zoom-in\"></i>";
@@ -108,13 +107,11 @@ EOT;
         $result = '<div class="file-summary">';
         $files = file($file);
         $fileArray = array_map('htmlspecialchars', $files);
-        $hitLineOriginal = $fileArray[$line - 1];
         $fileArray[$line - 1] = "<span class=\"hit-line\">{$fileArray[$line - 1]}</span>";
         $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
         $shortListArray[$num - 1] = '<strong>' . $fileArray[$line - 1] . '</strong>';
         $shortList = implode('', $shortListArray);
         $shortList = '<pre class="short-list" style="background-color: #F0F0F9;">' . $shortList . '</pre>';
-        $hitLine = $fileArray[$line - 1];
         $result .= $shortList . '</div>';
 
         return $result;
