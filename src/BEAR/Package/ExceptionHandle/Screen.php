@@ -123,9 +123,10 @@ EOT;
             return '<i>(void)</i>';
         }
         $html = '<table class="table table-condensed table-bordered params-table">';
+        $divObject = '';
         foreach ($args as $index => $arg) {
-            $type = gettype($arg);
             $divObject = '';
+            $type = gettype($arg);
             if (is_object($arg)) {
                 $divObject = $this->divObject($arg);
                 $objHash =  spl_object_hash($arg);
