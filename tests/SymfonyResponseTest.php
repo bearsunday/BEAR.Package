@@ -4,7 +4,7 @@ namespace BEAR\Sunday\Tests;
 
 use BEAR\Sunday\Output\Console;
 
-use BEAR\Sunday\Web\SymfonyResponse as Response;
+use BEAR\Package\Web\SymfonyResponse as Response;
 use BEAR\Sunday\Resource\Page\Ok;
 /**
  * Test class for Annotation.
