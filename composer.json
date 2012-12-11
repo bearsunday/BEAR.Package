@@ -29,7 +29,6 @@
         "ray/di"                  :">=1.0.0",
         "bear/resource"           :">=0.5.1",
         "bear/sunday"             :">=0.5.3",
-        "vdump/vdump"             :"*",
         "printo/printo"           :"*",
         "aura/di"                 :"1.0.*",
         "aura/router"             :"1.0.*",
