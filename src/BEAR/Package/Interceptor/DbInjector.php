@@ -94,7 +94,7 @@ final class DbInjector implements MethodInterceptor
     {
         $object = $invocation->getThis();
         $method = $invocation->getMethod();
-        $connectionParams = ($method->name !== 'onGet') ? $this->slaveDb : $this->masterDb;
+        $connectionParams = ($method->name === 'onGet') ? $this->slaveDb : $this->masterDb;
         $pagerAnnotation = $this->reader->getMethodAnnotation($method, 'BEAR\Sunday\Annotation\DbPager');
         if ($pagerAnnotation) {
             $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\DoctrineDbalModule\Connection';
