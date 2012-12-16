@@ -52,7 +52,6 @@ class Posts extends ResourceObject
     /**
      * @param int $id
      *
-     * @return Posts
      * @Cache(100)
      */
     public function onGet($id = null)
@@ -75,7 +74,6 @@ class Posts extends ResourceObject
          * @param string $title
          * @param string $body
          *
-         * @return Posts
          * @Time
          * @Transactional
          * @CacheUpdate
@@ -101,7 +99,6 @@ class Posts extends ResourceObject
      * @param string $title
      * @param string $body
      *
-     * @return Posts
      * @Time
      * @CacheUpdate
      */
@@ -120,7 +117,6 @@ class Posts extends ResourceObject
     /**
      * @param int $id
      *
-     * @return Posts
      * @CacheUpdate
      */
     public function onDelete($id)

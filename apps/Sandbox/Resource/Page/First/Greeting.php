@@ -28,8 +28,6 @@ class Greeting extends Page
 
     /**
      * @param string $name
-     *
-     * @return Greeting
      */
     public function onGet($name = 'anonymous')
     {

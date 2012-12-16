@@ -18,9 +18,9 @@ class World extends Page
     public $body = [
         'greeting' => ''
     ];
-    
+
     /**
-     * @return World
+     * @param string $name
      */
     public function onGet($name = "BEAR")
     {

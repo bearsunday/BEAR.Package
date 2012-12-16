@@ -56,9 +56,6 @@ class Index extends Page
         ];
     }
 
-    /**
-     * @return Index
-     */
     public function onGet()
     {
         $cache = (PHP_SAPI !== 'cli') ? apc_cache_info('user') : ['num_entries' => 0, 'mem_size' => 0];

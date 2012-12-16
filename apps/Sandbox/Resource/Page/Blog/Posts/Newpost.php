@@ -52,7 +52,6 @@ class Newpost extends Page
      * @param string $title
      * @param string $body
      *
-     * @return Newpost
      * @Form
      */
     public function onPost($title, $body)
