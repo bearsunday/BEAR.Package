@@ -42,7 +42,8 @@ class AppModule extends AbstractModule
         $scheme = __NAMESPACE__ . '\SchemeCollectionProvider';
         $this->install(new PackageModule\Package\PackageModule($this, $scheme));
 
-        $this->install(new PackageModule\TemplateEngine\Twig\TwigModule($this));
+        // install twig
+        //$this->install(new PackageModule\TemplateEngine\Twig\TwigModule($this));
 
         // dependency binding for application
         $this->bind('BEAR\Sunday\Application\Context')->to('Sandbox\App');
