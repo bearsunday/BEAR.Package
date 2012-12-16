@@ -30,8 +30,6 @@ class Edit extends Page
 
     /**
      * @param $int id
-     *
-     * @return Edit
      */
     public function onGet($id)
     {
@@ -45,7 +43,6 @@ class Edit extends Page
      * @param string $title
      * @param string $body
      *
-     * @return Edit
      * @Form
      */
     public function onPut($id, $title, $body)

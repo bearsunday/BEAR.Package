@@ -17,8 +17,6 @@ class Hello extends Page
 {
     /**
      * @param string $name
-     *
-     * @return Hello
      */
     public function onGet($name)
     {

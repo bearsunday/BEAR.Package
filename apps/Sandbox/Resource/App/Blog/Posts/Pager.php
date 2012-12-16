@@ -26,7 +26,6 @@ class Pager extends Posts
      *
      * @param int $id
      *
-     * @return array|Pager
      * @Cache
      * @DbPager(2)
      */
