@@ -23,5 +23,9 @@ class Greeting extends AbstractObject
     public function onGet($name)
     {
         return "Hello, {$name}";
+
+        // same as above.
+        $this->body = "Hello, {$name}";
+        return $this;
     }
 }
