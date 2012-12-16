@@ -12,6 +12,7 @@ use BEAR\Resource\Exception\BadRequest;
 use Ray\Di\InjectorInterface;
 use Ray\Di\AbstractModule;
 use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter;
 use BEAR\Resource\Exception\Scheme;
@@ -121,10 +122,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     public function handle(Exception $e)
     {
-        error_log($e);
-        $exceptionId = 'e' . substr(md5((string)$e), 0, 5);
-        $this->writeExceptionLog($e, $exceptionId);
-        $page = $this->buildErrorPage($e, $exceptionId, $this->errorPage);
+        $page = $this->buildErrorPage($e, $this->errorPage);
+        $id = $page->headers['X-EXCEPTION-ID'];
+        $this->writeExceptionLog($e, $id);
         $this->response->setResource($page)->render()->prepare()->send();
         exit(1);
     }
@@ -139,7 +139,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * @return \BEAR\Resource\AbstractObject
      * @throws
      */
-    private function buildErrorPage($e, $exceptionId, ResourceObject $response)
+    private function buildErrorPage($e, ResourceObject $response)
     {
         try {
             throw $e;
@@ -169,6 +169,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             $response->view = $this->message['BadRequest'];
             goto METHOD_NOT_ALLOWED;
         } catch (Exception $e) {
+            $response->view = "Internal error occurred ({$exceptionId})";
             goto SERVER_ERROR;
         }
 
@@ -181,20 +182,21 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         METHOD_NOT_ALLOWED:
         INVALID_URI:
 
+        $exceptionId = 'e' . $response->code . '-' . substr(md5((string)$e), 0, 5);
+
         if (PHP_SAPI === 'cli') {
-            $response->view = "Internal error occurred ({$exceptionId})";
         } else {
             $response->view = $this->getView($e);
         }
         $response->headers['X-EXCEPTION-CLASS'] = get_class($e);
         $response->headers['X-EXCEPTION-MESSAGE'] = str_replace(PHP_EOL, ' ', $e->getMessage());
-        $response->headers['X-EXCEPTION-CODE'] = $e->getCode();
-        $response->headers['X-EXCEPTION-FILE-LINE'] = $e->getFile() . ':' . $e->getLine();
+        $response->headers['X-EXCEPTION-CODE-FILE-LINE'] = '(' . $e->getCode() . ') ' . $e->getFile() . ':' . $e->getLine();
         $previous = $e->getPrevious() ? (
             get_class($e->getPrevious()) . ': ' . str_replace(PHP_EOL, ' ', $e->getPrevious()->getMessage())) : '-';
         $response->headers['X-EXCEPTION-PREVIOUS'] = $previous;
         $response->headers['X-EXCEPTION-ID'] = $exceptionId;
-        $this->writeExceptionLog($e, $exceptionId);
+        $response->headers['X-EXCEPTION-ID-FILE'] = $this->getLogFilePath($exceptionId);
+
 
         return $response;
     }
@@ -230,17 +232,30 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     public function writeExceptionLog(Exception $e, $exceptionId)
     {
-        $filename = "e.{$exceptionId}.log";
-        $data = PHP_EOL . $e->getTraceAsString();
+        $data = (string)$e;
         $previousE = $e->getPrevious();
         if ($previousE) {
             $data .= PHP_EOL . PHP_EOL . '-- Previous Exception --' . PHP_EOL . PHP_EOL;
             $data .= $previousE->getTraceAsString();
         }
-        $data .= (string)$e;
-        $file = "{$this->logDir}/" . $filename;
-        if (is_writable($file)) {
+        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL. (string)$this->injector;
+        $file = $this->getLogFilePath($exceptionId);
+        if (is_writable($this->logDir)) {
             file_put_contents($file, $data);
+        } else {
+            error_log("{$file} is not writable");
         }
+    }
+
+    /**
+     * Return log file path
+     *
+     * @param $exceptionId
+     *
+     * @return string
+     */
+    private function getLogFilePath($exceptionId)
+    {
+        return "{$this->logDir}/{$exceptionId}.log";
     }
 }
