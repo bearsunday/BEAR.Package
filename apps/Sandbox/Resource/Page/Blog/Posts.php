@@ -45,8 +45,6 @@ class Posts extends Page
 
     /**
      * @param int $id
-     *
-     * @return Posts
      */
     public function onDelete($id)
     {

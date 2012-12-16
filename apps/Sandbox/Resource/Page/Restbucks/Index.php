@@ -40,9 +40,6 @@ class Index extends Page
         $this->resourceLogger = $logger;
     }
 
-    /**
-     * @return Index
-     */
     public function onGet()
     {
         return $this;
