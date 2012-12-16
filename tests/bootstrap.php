@@ -28,3 +28,5 @@ AnnotationRegistry::registerAutoloadNamespace('BEAR\Resource\Annotation\\', dirn
 AnnotationRegistry::registerAutoloadNamespace('BEAR\Sunday\Annotation\\', dirname(__DIR__) . '/src/');
 AnnotationReader::addGlobalIgnoredName('noinspection');
 AnnotationReader::addGlobalIgnoredName('returns');
+
+ini_set('error_log', sys_get_temp_dir() . '/error.log');

@@ -1,5 +1,5 @@
 {
-    "hash": "96328e053c3abbbd6e6c6e793df3945b",
+    "hash": "10cc57703450a4d2fe447afceb5225dd",
     "packages": [
         {
             "name": "aura/di",
@@ -21,7 +21,7 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Di": "src/"
@@ -80,7 +80,7 @@
             "extra": {
                 "class": "Aura\\Composer\\DefaultInstaller"
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Composer\\": "src/"
@@ -123,7 +123,7 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Router": "src/"
@@ -177,7 +177,7 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Signal": "src/"
@@ -233,7 +233,7 @@
             },
             "time": "2012-11-30 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Web": "src/"
@@ -273,17 +273,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "3ca644bc29de4257ec9165ce1c9745150dc231dd"
+                "reference": "c49526a2250e7e239efdab53693ee1a38be39446"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Resource/archive/3ca644bc29de4257ec9165ce1c9745150dc231dd.zip",
-                "reference": "3ca644bc29de4257ec9165ce1c9745150dc231dd",
+                "url": "https://github.com/koriym/BEAR.Resource/archive/c49526a2250e7e239efdab53693ee1a38be39446.zip",
+                "reference": "c49526a2250e7e239efdab53693ee1a38be39446",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
-                "facebook/xhprof": "0.9.2",
                 "guzzle/guzzle": "2.7.*",
                 "doctrine/common": "2.3.*-dev",
                 "ray/aop": ">=1.0.0-beta2",
@@ -292,7 +291,7 @@
                 "aura/signal": "1.0.*",
                 "aura/installer-default": "1.0.*"
             },
-            "time": "2012-12-10 13:33:47",
+            "time": "2012-12-16 16:04:53",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -325,12 +324,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "a9b6fdd7cd34b9e7d2075a7c95e066547bcf59ac"
+                "reference": "324d57ad8d05ba030457738422343f093096c270"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Sunday/archive/a9b6fdd7cd34b9e7d2075a7c95e066547bcf59ac.zip",
-                "reference": "a9b6fdd7cd34b9e7d2075a7c95e066547bcf59ac",
+                "url": "https://github.com/koriym/BEAR.Sunday/archive/324d57ad8d05ba030457738422343f093096c270.zip",
+                "reference": "324d57ad8d05ba030457738422343f093096c270",
                 "shasum": ""
             },
             "require": {
@@ -339,27 +338,13 @@
                 "ext-curl": "*",
                 "ray/aop": ">=1.0.0-beta2",
                 "bear/resource": ">=0.5.1",
-                "vdump/vdump": "*",
-                "printo/printo": "*",
-                "doctrine/common": "2.3.*-dev",
-                "doctrine/dbal": "2.3.*-dev",
-                "facebook/xhprof": "0.9.*",
                 "guzzle/guzzle": "2.7.*",
-                "pagerfanta/pagerfanta": "dev-master",
-                "smarty/smarty": "3.1.*",
-                "symfony/console": "2.0.*",
-                "symfony/http-foundation": "2.0.*",
-                "firephp/firephp-core": "dev-master",
-                "twitter/bootstrap": "dev-master",
                 "nocarrier/hal": "dev-master",
-                "zendframework/zend-log": "2.0.*",
                 "ray/di": ">=1.0.0-beta3",
                 "aura/di": "1.0.*",
-                "aura/router": "1.0.*",
-                "aura/signal": "1.0.*",
-                "aura/web": "1.0.*"
+                "aura/signal": "1.0.*"
             },
-            "time": "2012-12-11 13:44:30",
+            "time": "2012-12-16 14:09:23",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -444,9 +429,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -840,12 +825,12 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.0-beta3"
+                "reference": "709427d4401c0aa383d35df584f3c4421d399d3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/Ray.Di/archive/1.0.0-beta3.zip",
-                "reference": "1.0.0-beta3",
+                "url": "https://github.com/koriym/Ray.Di/archive/709427d4401c0aa383d35df584f3c4421d399d3a.zip",
+                "reference": "709427d4401c0aa383d35df584f3c4421d399d3a",
                 "shasum": ""
             },
             "require": {
@@ -855,7 +840,7 @@
                 "ray/aop": ">=1.0.0-beta2",
                 "aura/installer-default": "1.0.*"
             },
-            "time": "2012-12-10 12:57:46",
+            "time": "2012-12-15 18:19:37",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -1088,25 +1073,7 @@
             },
             "type": "library",
             "installation-source": "source",
-            "time": "2012-12-09 05:05:05"
-        },
-        {
-            "name": "vdump/vdump",
-            "version": "0.1.0",
-            "target-dir": "vdump",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/vdump.git",
-                "reference": "master"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/koriym/vdump/zipball/master",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "library",
-            "installation-source": "dist"
+            "time": "2012-12-10 08:21:35"
         },
         {
             "name": "zendframework/zend-log",
