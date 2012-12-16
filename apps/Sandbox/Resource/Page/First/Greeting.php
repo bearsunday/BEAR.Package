@@ -28,8 +28,6 @@ class Greeting extends Page
 
     /**
      * @param string $name
-     *
-     * @return Greeting
      */
     public function onGet($name = 'anonymous')
     {
@@ -39,7 +37,6 @@ class Greeting extends Page
             ->uri('app://self/first/greeting')
             ->withQuery(['name' => $name])
             ->request();
-        echo $this['greeting']->toUri();
         return $this;
     }
 }

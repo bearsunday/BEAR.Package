@@ -20,9 +20,6 @@ class Minhello extends Page
      */
     public $body = 'Hello World !';
 
-    /**
-     * @return Minhello
-     */
     public function onGet()
     {
         return $this;
