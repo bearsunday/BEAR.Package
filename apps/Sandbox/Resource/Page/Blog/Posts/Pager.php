@@ -28,9 +28,6 @@ class Pager extends Page
         'posts' => ''
     ];
 
-    /**
-     * @return Pager
-     */
     public function onGet()
     {
         $this['posts'] = $this
