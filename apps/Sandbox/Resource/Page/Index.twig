@@ -75,7 +75,7 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="hero-unit">
-        <h1 class="effect">{$greeting}</h1>
+        <h1 class="effect">{{greeting}}</h1>
 
         <p class="sub-title">A Resource Oriented Framework for PHP5.4
             <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
@@ -92,24 +92,24 @@
         <div class="span4">
             <h2>Version</h2>
             <ul>
-                <li>BEAR.Sunday <code>{$version.BEAR}</code></li>
-                <li>PHP <code>{$version.php}</code></li>
+                <li>BEAR.Sunday <code>{{version.BEAR}}</code></li>
+                <li>PHP <code>{{version.php}}</code></li>
             </ul>
             <h2>Extension</h2>
 
             <h3>required</h3>
             <ul>
-                <li><a href="http://www.php.net/curl">curl</a> <code>{$extensions.curl}</code></li>
-                <li><a href="http://www.php.net/apc">apc</a> <code>{$extensions.apc}</code></li>
+                <li><a href="http://www.php.net/curl">curl</a> <code>{{extensions.curl}}</code></li>
+                <li><a href="http://www.php.net/apc">apc</a> <code>{{extensions.apc}}</code></li>
             </ul>
             <h3>optional</h3>
             <ul>
 
-                <li><a href="http://xdebug.org/">Xdebug</a> <code>{$extensions.Xdebug}</code></li>
-                <li><a href="http://www.php.net/xhprof">xhprof</a> <code>{$extensions.xhprof}</code></li>
-                <li><a href="http://www.php.net/memcache">memcache <code>{$extensions.memcache}</code></li>
-                <li><a href="http://www.php.net/pdo_sqlite">pdo_sqlite</a> <code>{$extensions.pdo_sqlite}</code></li>
-                <li><a href="http://www.php.net/mysqlnd">mysqlnd</a> <code>{$extensions.mysqlnd}</code></li>
+                <li><a href="http://xdebug.org/">Xdebug</a> <code>{{extensions.Xdebug}}</code></li>
+                <li><a href="http://www.php.net/xhprof">xhprof</a> <code>{{extensions.xhprof}}</code></li>
+                <li><a href="http://www.php.net/memcache">memcache <code>{{extensions.memcache}}</code></li>
+                <li><a href="http://www.php.net/pdo_sqlite">pdo_sqlite</a> <code>{{extensions.pdo_sqlite}}</code></li>
+                <li><a href="http://www.php.net/mysqlnd">mysqlnd</a> <code>{{extensions.mysqlnd}}</code></li>
             </ul>
         </div>
         <div class="span4">
@@ -173,8 +173,8 @@
     <hr>
 
     <footer>
-        <p>&copy; 2012 <a href="https://twitter.com/#!/bearsunday">@BEARSunday</a> ({$performance} page / sec)</p>
-        <p>Template Engine: Smarty</p>
+        <p>&copy; 2012 <a href="https://twitter.com/#!/bearsunday">@BEARSunday</a> ({{performance}} page / sec)</p>
+        <p>Template Engine: Twig</p>
     </footer>
 
 </div>
@@ -184,18 +184,6 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/bootstrap-tooltip.js"></script>
-{*
-     <script src="/assets/js/bootstrap-transition.js"></script>
-    <script src="/assets/js/bootstrap-alert.js"></script>
-    <script src="/assets/js/bootstrap-modal.js"></script>
-    <script src="/assets/js/bootstrap-dropdown.js"></script>
-    <script src="/assets/js/bootstrap-scrollspy.js"></script>
-    <script src="/assets/js/bootstrap-tab.js"></script>
-    <script src="/assets/js/bootstrap-popover.js"></script>
-    <script src="/assets/js/bootstrap-button.js"></script>
-    <script src="/assets/js/bootstrap-collapse.js"></script>
-    <script src="/assets/js/bootstrap-carousel.js"></script>
-    <script src="/assets/js/bootstrap-typeahead.js"></script>
-*}
+
 </body>
 </html>
