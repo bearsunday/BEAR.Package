@@ -39,7 +39,6 @@ class Greeting extends Page
             ->uri('app://self/first/greeting')
             ->withQuery(['name' => $name])
             ->request();
-        echo $this['greeting']->toUri();
         return $this;
     }
 }
