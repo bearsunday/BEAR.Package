@@ -18,7 +18,7 @@ use BEAR\Package\Debug\Debug;
  *
  * @param $var
  */
-function p($var)
+function p($var, $level = 2)
 {
-    Debug::printR(debug_backtrace(), $var);
+    Debug::printR(debug_backtrace(), $var, $level);
 }
