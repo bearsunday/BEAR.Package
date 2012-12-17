@@ -6,7 +6,7 @@
  * @subpackage Exception
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\ExceptionHandle;
+namespace BEAR\Package\Debug\ExceptionHandle;
 
 use BEAR\Resource\Exception\BadRequest;
 use Ray\Di\InjectorInterface;
@@ -141,6 +141,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     private function buildErrorPage($e, ResourceObject $response)
     {
+        $exceptionId = 'e' . $response->code . '-' . substr(md5((string)$e), 0, 5);
         try {
             throw $e;
         } catch (ResourceNotFound $e) {
@@ -182,7 +183,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         METHOD_NOT_ALLOWED:
         INVALID_URI:
 
-        $exceptionId = 'e' . $response->code . '-' . substr(md5((string)$e), 0, 5);
+
 
         if (PHP_SAPI === 'cli') {
         } else {

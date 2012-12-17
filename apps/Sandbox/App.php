@@ -15,12 +15,14 @@ use BEAR\Sunday\Web\ResponseInterface;
 use BEAR\Sunday\Application\Logger as ApplicationLogger;
 use BEAR\Sunday\Web\RouterInterface;
 use BEAR\Sunday\Web\GlobalsInterface;
-use BEAR\Package\ExceptionHandle\ExceptionHandlerInterface;
+use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
 use Guzzle\Common\Cache\CacheAdapterInterface;
 
 require_once dirname(dirname(__DIR__)) . '/vendor/smarty/smarty/distribution/libs/Smarty.class.php';
+require_once dirname(dirname(__DIR__)) . '/vendor/twig/twig/lib/Twig/Autoloader.php';
+\Twig_Autoloader::register();
 
 /**
  * Application

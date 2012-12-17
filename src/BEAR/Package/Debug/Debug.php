@@ -7,15 +7,13 @@ namespace BEAR\Package\Debug;
  */
 class Debug
 {
-    public static $level = 2;
-
     /**
      * debug print
      *
      * @param null $var
      * @param int  $level
      */
-    public static function printR($trace, $var = null)
+    public static function printR($trace, $var = null, $level = 2)
     {
         // contents
         $htmlErrors = ini_get('html_errors');
@@ -26,7 +24,6 @@ class Debug
             if ($isCli) {
                 ini_set('xdebug.xdebug.cli_color', true);
             }
-            $level = static::$level;
             ini_set('xdebug.var_display_max_depth', $level);
         }
         $er = error_reporting(0);
