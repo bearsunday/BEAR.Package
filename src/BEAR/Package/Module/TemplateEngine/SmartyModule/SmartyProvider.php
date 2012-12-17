@@ -39,7 +39,7 @@ class SmartyProvider implements Provide
         $smarty->cache_dir = $this->tmpDir . '/smarty/cache';
         $smarty->template_dir = $this->appDir . '/Resource/View';
         $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
-        $frameworkPlugin = dirname(__DIR__) . '/plugin';
+        $frameworkPlugin = __DIR__ . '/plugin';
         $smarty->plugins_dir = [$smarty->plugins_dir[0], $appPlugin, $frameworkPlugin];
 
         return $smarty;
