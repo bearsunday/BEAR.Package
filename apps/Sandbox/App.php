@@ -15,7 +15,7 @@ use BEAR\Sunday\Web\ResponseInterface;
 use BEAR\Sunday\Application\Logger as ApplicationLogger;
 use BEAR\Sunday\Web\RouterInterface;
 use BEAR\Sunday\Web\GlobalsInterface;
-use BEAR\Package\ExceptionHandle\ExceptionHandlerInterface;
+use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
 use Guzzle\Common\Cache\CacheAdapterInterface;

@@ -6,7 +6,7 @@
  * @subpackage Exception
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\ExceptionHandle;
+namespace BEAR\Package\Debug\ExceptionHandle;
 
 use BEAR\Resource\Exception\BadRequest;
 use Ray\Di\InjectorInterface;
