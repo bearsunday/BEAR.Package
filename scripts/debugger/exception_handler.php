@@ -7,7 +7,7 @@
  *
  */
 
-use BEAR\Package\ExceptionHandle\ExceptionHandler;
+use BEAR\Package\Debug\ExceptionHandle\ExceptionHandler;
 use Aura\Di\Exception;
 use BEAR\Package\Web\SymfonyResponse;
 use BEAR\Sunday\Output\Console;
