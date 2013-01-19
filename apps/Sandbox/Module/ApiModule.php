@@ -23,5 +23,6 @@ class ApiModule extends ProdModule
     {
         $this->install(new ProdModule);
         $this->install(new SundayModule\Resource\HalModule($this));
+        //$this->install(new SundayModule\Resource\JsonModule($this));
     }
 }
