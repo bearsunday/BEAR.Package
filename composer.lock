@@ -21,7 +21,6 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Di": "src/"
@@ -80,7 +79,6 @@
             "extra": {
                 "class": "Aura\\Composer\\DefaultInstaller"
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Composer\\": "src/"
@@ -123,7 +121,6 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Router": "src/"
@@ -177,7 +174,6 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Signal": "src/"
@@ -233,7 +229,6 @@
             },
             "time": "2012-11-30 00:00:00",
             "type": "aura-package",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Web": "src/"
@@ -273,12 +268,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "c49526a2250e7e239efdab53693ee1a38be39446"
+                "reference": "8aa61f093e8b189b7efefe9479f04ca6d9ab0e40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Resource/archive/c49526a2250e7e239efdab53693ee1a38be39446.zip",
-                "reference": "c49526a2250e7e239efdab53693ee1a38be39446",
+                "url": "https://github.com/koriym/BEAR.Resource/archive/8aa61f093e8b189b7efefe9479f04ca6d9ab0e40.zip",
+                "reference": "8aa61f093e8b189b7efefe9479f04ca6d9ab0e40",
                 "shasum": ""
             },
             "require": {
@@ -291,9 +286,8 @@
                 "aura/signal": "1.0.*",
                 "aura/installer-default": "1.0.*"
             },
-            "time": "2012-12-16 16:04:53",
+            "time": "2013-01-18 00:01:44",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "BEAR\\Resource": "src/"
@@ -324,12 +318,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "324d57ad8d05ba030457738422343f093096c270"
+                "reference": "651c2b174fec71957a98a1eef9fb9e45a03de819"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Sunday/archive/324d57ad8d05ba030457738422343f093096c270.zip",
-                "reference": "324d57ad8d05ba030457738422343f093096c270",
+                "url": "https://github.com/koriym/BEAR.Sunday/archive/651c2b174fec71957a98a1eef9fb9e45a03de819.zip",
+                "reference": "651c2b174fec71957a98a1eef9fb9e45a03de819",
                 "shasum": ""
             },
             "require": {
@@ -344,9 +338,8 @@
                 "aura/di": "1.0.*",
                 "aura/signal": "1.0.*"
             },
-            "time": "2012-12-16 14:09:23",
+            "time": "2013-01-17 23:59:40",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "BEAR\\Sunday": "src/"
@@ -399,7 +392,6 @@
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common": "lib/"
@@ -451,26 +443,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal",
-                "reference": "f63af1948a609a96b8ea1c1302c7cdf2f9f51468"
+                "reference": "4c33f633c48eeafe3408b308f6fc51743a21a3b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/archive/f63af1948a609a96b8ea1c1302c7cdf2f9f51468.zip",
-                "reference": "f63af1948a609a96b8ea1c1302c7cdf2f9f51468",
+                "url": "https://github.com/doctrine/dbal/archive/4c33f633c48eeafe3408b308f6fc51743a21a3b7.zip",
+                "reference": "4c33f633c48eeafe3408b308f6fc51743a21a3b7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "2012-12-04 21:06:56",
+            "time": "2013-01-07 20:03:43",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\DBAL": "lib/"
@@ -523,8 +514,7 @@
                 "reference": null,
                 "shasum": null
             },
-            "type": "library",
-            "installation-source": "dist"
+            "type": "library"
         },
         {
             "name": "firephp/firephp-core",
@@ -542,7 +532,6 @@
             },
             "time": "2012-05-29 00:08:14",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "classmap": [
                     "lib/FirePHPCore/FirePHP.class.php",
@@ -602,7 +591,6 @@
             },
             "time": "2012-07-02 14:04:37",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Tests": "tests/",
@@ -655,7 +643,6 @@
             },
             "time": "2012-11-20 14:48:17",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Nocarrier": "src"
@@ -706,7 +693,6 @@
             },
             "time": "2012-08-22 21:56:31",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Pagerfanta\\": "src/"
@@ -748,7 +734,6 @@
             },
             "time": "2012-10-24 16:31:36",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "classmap": [
                     "src/Printo/Printo.php",
@@ -793,7 +778,6 @@
             },
             "time": "2012-10-29 02:17:20",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Ray\\Aop": "src/"
@@ -842,7 +826,6 @@
             },
             "time": "2012-12-15 18:19:37",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Ray\\Di": "src/"
@@ -886,7 +869,6 @@
             },
             "time": "2012-09-25 22:13:16",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "classmap": [
                     "distribution/libs/Smarty.class.php"
@@ -923,20 +905,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console",
-                "reference": "v2.0.19"
+                "reference": "v2.0.22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Console/archive/v2.0.19.zip",
-                "reference": "v2.0.19",
+                "url": "https://github.com/symfony/Console/archive/v2.0.22.zip",
+                "reference": "v2.0.22",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-11-05 19:52:03",
+            "time": "2013-01-11 13:49:52",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Console": ""
@@ -966,12 +947,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher",
-                "reference": "eb290a447c0af5bea0d3de5d95d498afd8c82f89"
+                "reference": "1ba2e333b644ac0a0e5ef751d514dd01b3a26e9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/EventDispatcher/archive/eb290a447c0af5bea0d3de5d95d498afd8c82f89.zip",
-                "reference": "eb290a447c0af5bea0d3de5d95d498afd8c82f89",
+                "url": "https://github.com/symfony/EventDispatcher/archive/1ba2e333b644ac0a0e5ef751d514dd01b3a26e9d.zip",
+                "reference": "1ba2e333b644ac0a0e5ef751d514dd01b3a26e9d",
                 "shasum": ""
             },
             "require": {
@@ -984,14 +965,13 @@
                 "symfony/dependency-injection": "2.2.*",
                 "symfony/http-kernel": "2.2.*"
             },
-            "time": "2012-11-13 14:08:04",
+            "time": "2013-01-17 15:25:59",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\EventDispatcher\\": ""
@@ -1021,20 +1001,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation",
-                "reference": "4de1a1f9a81a58bd6f24607894f76fd7017d45e7"
+                "reference": "v2.0.22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpFoundation/archive/4de1a1f9a81a58bd6f24607894f76fd7017d45e7.zip",
-                "reference": "4de1a1f9a81a58bd6f24607894f76fd7017d45e7",
+                "url": "https://github.com/symfony/HttpFoundation/archive/v2.0.22.zip",
+                "reference": "v2.0.22",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-12-11 10:27:06",
+            "time": "2013-01-07 13:18:29",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\HttpFoundation": ""
@@ -1063,25 +1042,24 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "6c01c14fd8f42348a032148ebecb6e034e9e18bd"
+                "reference": "3225226e0be466395414da4b362013531eedb580"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/archive/6c01c14fd8f42348a032148ebecb6e034e9e18bd.zip",
-                "reference": "6c01c14fd8f42348a032148ebecb6e034e9e18bd",
+                "url": "https://github.com/fabpot/Twig/archive/3225226e0be466395414da4b362013531eedb580.zip",
+                "reference": "3225226e0be466395414da4b362013531eedb580",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "2012-12-16 07:55:06",
+            "time": "2013-01-16 13:37:25",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.12-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Twig_": "lib/"
@@ -1122,16 +1100,15 @@
                 "shasum": null
             },
             "type": "library",
-            "installation-source": "source",
             "time": "2012-12-09 05:05:05"
         },
         {
             "name": "zendframework/zend-log",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "target-dir": "Zend/Log",
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.5.zip",
+                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.6.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1147,7 +1124,6 @@
                 "zendframework/zend-validator": "Zend\\Validator component"
             },
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Zend\\Log\\": ""
@@ -1172,11 +1148,11 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "target-dir": "Zend/Stdlib",
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.5.zip",
+                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.6.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1187,7 +1163,6 @@
                 "pecl-weakref": "Implementation of weak references for Stdlib\\CallbackHandler"
             },
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Zend\\Stdlib\\": ""

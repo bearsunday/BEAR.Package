@@ -2,7 +2,7 @@
     "name":"bear/package",
     "type":"library",
     "description":"BEAR.Sunday application package",
-    "version":"0.5.5",
+    "version":"0.5.6",
     "keywords":[
         "BEAR.Sunday",
         "application skeleton",
@@ -17,34 +17,33 @@
             "email":"akihito.koriyama@gmail.com"
         }
     ],
-    "minimum-stability":"dev",
     "require":{
-        "php"                     :">=5.4.0",
-        "ext-apc"                 :"*",
-        "ext-curl"                :"*",
-        "ray/aop"                 :">=1.0.0",
-        "ray/di"                  :">=1.0.0",
-        "bear/resource"           :">=0.5.5",
-        "bear/sunday"             :">=0.5.5",
-        "printo/printo"           :"*",
-        "aura/di"                 :"1.0.*",
-        "aura/router"             :"1.0.*",
-        "aura/signal"             :"1.0.*",
-        "aura/web"                :"1.0.*",
-		"aura/installer-default"  :"1.0.*",
-        "doctrine/common"         :"2.3.*-dev",
-        "doctrine/dbal"           :"2.3.*-dev",
-        "facebook/xhprof"         :"0.9.*",
-        "guzzle/guzzle"           :"2.7.*",
-        "pagerfanta/pagerfanta"   :"dev-master",
-        "smarty/smarty"           :"3.1.*",
-        "symfony/console"         :"2.0.*",
-        "symfony/http-foundation" :"2.0.*",
-        "firephp/firephp-core"    :"dev-master",
-        "twitter/bootstrap"       :"dev-master",
-        "nocarrier/hal"           :"dev-master",
-        "twig/twig"               : ">=1.0.0",
-        "zendframework/zend-log"  : "2.0.*"
+        "php":">=5.4.0",
+        "ext-apc":"*",
+        "ext-curl":"*",
+        "ray/aop":">=1.0.0",
+        "ray/di":">=1.0.0",
+        "bear/resource":">=0.5.5",
+        "bear/sunday":">=0.5.5",
+        "printo/printo":"*",
+        "aura/di":"1.0.*",
+        "aura/router":"1.0.*",
+        "aura/signal":"1.0.*",
+        "aura/web":"1.0.*",
+        "aura/installer-default":"1.0.*",
+        "doctrine/common":"2.3.*-dev",
+        "doctrine/dbal":"2.3.*-dev",
+        "facebook/xhprof":"0.9.*",
+        "guzzle/guzzle":"2.7.*",
+        "pagerfanta/pagerfanta":"dev-master",
+        "smarty/smarty":"3.1.*",
+        "symfony/console":"2.0.*",
+        "symfony/http-foundation":"2.0.*",
+        "firephp/firephp-core":"dev-master",
+        "twitter/bootstrap":"dev-master",
+        "nocarrier/hal":"dev-master",
+        "twig/twig":">=1.0.0",
+        "zendframework/zend-log":"2.0.*"
     },
     "autoload":{
         "psr-0":{
@@ -54,10 +53,13 @@
         }
     },
     "minimum-stability":"dev",
+    "scripts":{
+        "post-package-install": "BEAR\\Package\\Distribution\\Installer::postPackageInstall"
+    },
     "repositories":[
         {
-            "type": "composer",
-            "url": "http://packages.zendframework.com/"
+            "type":"composer",
+            "url":"http://packages.zendframework.com/"
         },
         {
             "type":"package",
