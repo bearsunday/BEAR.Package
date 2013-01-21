@@ -28,7 +28,7 @@ class SmartyModule extends AbstractModule
         $this->bind('Smarty')->toProvider('BEAR\Package\Module\TemplateEngine\SmartyModule\SmartyProvider')->in(
             Scope::SINGLETON
         );
-        $this->bind('BEAR\Sunday\Resource\View\TemplateEngineAdapter')->to(
+        $this->bind('BEAR\Sunday\Resource\View\TemplateEngineAdapterInterface')->to(
             'BEAR\Package\Module\TemplateEngine\SmartyModule\SmartyAdapter'
         )->in(Scope::SINGLETON);
     }

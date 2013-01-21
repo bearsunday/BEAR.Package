@@ -14,7 +14,7 @@ use BEAR\Sunday\Output\ConsoleInterface;
 use BEAR\Sunday\Web\ResponseInterface;
 use BEAR\Sunday\Output\Console;
 use BEAR\Resource\Logger;
-use BEAR\Resource\Object as ResourceObject;
+use BEAR\Resource\ObjectInterface as ResourceObject;
 use BEAR\Resource\Abject;
 
 use BEAR\Sunday\Resource\AbstractPage as Page;

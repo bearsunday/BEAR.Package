@@ -1,7 +1,7 @@
 <?php
 namespace BEAR\Package\Tests;
 
-use BEAR\Package\ExceptionHandle\Screen;
+use BEAR\Package\Debug\ExceptionHandle\Screen;
 use Aura\Di\Exception;
 
 class ScreenTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +14,7 @@ class ScreenTest extends \PHPUnit_Framework_TestCase
 
     public function testNew()
     {
-        $this->assertInstanceOf('BEAR\Package\ExceptionHandle\Screen', $this->screen);
+        $this->assertInstanceOf('BEAR\Package\Debug\ExceptionHandle\Screen', $this->screen);
     }
 
     public function getTraceAsJsString()

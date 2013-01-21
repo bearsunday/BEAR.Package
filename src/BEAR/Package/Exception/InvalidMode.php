@@ -13,6 +13,6 @@ namespace BEAR\Package\Exception;
  * @package   BEAR.Package
  * @subpackge Exception
  */
-class InvalidMode extends \LogicException implements Exception
+class InvalidMode extends \LogicException implements ExceptionInterface
 {
 }
