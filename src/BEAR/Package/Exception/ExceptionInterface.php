@@ -12,6 +12,6 @@ namespace BEAR\Package\Exception;
  *
  * @package BEAR.Package
  */
-interface Exception
+interface ExceptionInterface
 {
 }

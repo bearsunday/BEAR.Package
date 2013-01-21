@@ -2,7 +2,7 @@
 namespace BEAR\Package\Tests;
 
 use BEAR\Sunday\Output\Console;
-use BEAR\Package\ExceptionHandle\ExceptionHandler;
+use BEAR\Package\Debug\ExceptionHandle\ExceptionHandler;
 use BEAR\Package\Web\SymfonyResponse;
 
 class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
@@ -18,7 +18,7 @@ class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testNew()
     {
-        $this->assertInstanceOf('BEAR\Package\ExceptionHandle\ExceptionHandler', $this->exceptionHandler);
+        $this->assertInstanceOf('BEAR\Package\Debug\ExceptionHandle\ExceptionHandler', $this->exceptionHandler);
     }
 
 }

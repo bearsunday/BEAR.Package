@@ -21,7 +21,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         if (!$app) {
             $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Application\Context');
+            $app = $injector->getInstance('BEAR\Sunday\Application\ContextInterface');
         }
         $this->resource = $app->resource;
     }

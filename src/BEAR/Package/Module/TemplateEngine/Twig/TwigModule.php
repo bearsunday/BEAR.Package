@@ -28,7 +28,7 @@ class TwigModule extends AbstractModule
         $this->bind('Twig_Environment')->toProvider('BEAR\Package\Module\TemplateEngine\Twig\TwigProvider')->in(
             Scope::SINGLETON
         );
-        $this->bind('BEAR\Sunday\Resource\View\TemplateEngineAdapter')->to(
+        $this->bind('BEAR\Sunday\Resource\View\TemplateEngineAdapterInterface')->to(
             'BEAR\Package\Module\TemplateEngine\Twig\TwigAdapter'
         )->in(Scope::SINGLETON);
     }

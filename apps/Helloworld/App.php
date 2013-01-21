@@ -6,7 +6,7 @@
  */
 namespace Helloworld;
 
-use BEAR\Sunday\Application\Context;
+use BEAR\Sunday\Application\ContextInterface;
 use Ray\Di\Injector;
 use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
