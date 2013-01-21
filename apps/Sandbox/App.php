@@ -6,7 +6,7 @@
  */
 namespace Sandbox;
 
-use BEAR\Sunday\Application\ContextInterface;
+use BEAR\Sunday\Application\AppInterface;
 use Ray\Di\Injector;
 use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
@@ -37,7 +37,7 @@ require_once dirname(dirname(__DIR__)) . '/vendor/twig/twig/lib/Twig/Autoloader.
  *
  * @package Sandbox
  */
-final class App implements ContextInterface
+final class App implements AppInterface
 {
     /** application dir path @var string */
     const DIR = __DIR__;

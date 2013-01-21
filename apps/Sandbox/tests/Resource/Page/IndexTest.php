@@ -19,7 +19,7 @@ class PageIndexTest extends \PHPUnit_Framework_TestCase
 
         parent::setUp();
         $injector = Injector::create([new TestModule], false);
-        $app = $injector->getInstance('BEAR\Sunday\Application\ContextInterface');
+        $app = $injector->getInstance('BEAR\Sunday\Application\AppInterface');
         $this->resource = $app->resource;
     }
 

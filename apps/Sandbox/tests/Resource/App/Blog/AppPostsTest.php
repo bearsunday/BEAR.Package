@@ -40,7 +40,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
         parent::setUp();
         if (!$app) {
             $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Application\ContextInterface');
+            $app = $injector->getInstance('BEAR\Sunday\Application\AppInterface');
         }
         $this->resource = $app->resource;
     }

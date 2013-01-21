@@ -43,7 +43,7 @@ if (!class_exists($moduleName)) {
 
 // create application object
 $injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(new Definition, new AnnotationReader)))), new $moduleName);
-$app = $injector->getInstance('BEAR\Sunday\Application\ContextInterface');
+$app = $injector->getInstance('BEAR\Sunday\Application\AppInterface');
 // log binding info
 $logFile = dirname(__DIR__) . "/data/log/module.{$cacheKey}.log";
 file_put_contents($logFile, (string)$injector);
