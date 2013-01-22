@@ -15,6 +15,6 @@ namespace BEAR\Package\Exception;
  * @package    BEAR.Package
  * @subpackage Exception
  */
-class NotBoundHandler implements ExceptionHandlerInterface
+class NotBoundHandler implements ExceptionInterface
 {
 }
