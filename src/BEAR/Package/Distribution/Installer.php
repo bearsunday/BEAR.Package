@@ -19,7 +19,7 @@ use RecursiveDirectoryIterator;
 class Installer
 {
     /**
-     * @param \Composer\Script\Event $event
+     * @param Event $event
      */
     public static function postPackageInstall(Event $event)
     {
