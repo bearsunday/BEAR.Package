@@ -12,7 +12,7 @@ use BEAR\Sunday\Inject\LogInject;
 use BEAR\Sunday\Application\LoggerInterface as AppLogger;
 use BEAR\Sunday\Output\ConsoleInterface;
 use BEAR\Sunday\Web\ResponseInterface;
-use BEAR\Sunday\Output\Console;
+use BEAR\Package\Output\Console;
 use BEAR\Resource\Logger;
 use BEAR\Resource\ObjectInterface as ResourceObject;
 use BEAR\Resource\Abject;

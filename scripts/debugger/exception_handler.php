@@ -10,7 +10,7 @@
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandler;
 use Aura\Di\Exception;
 use BEAR\Package\Web\SymfonyResponse;
-use BEAR\Sunday\Output\Console;
+use BEAR\Package\Output\Console;
 
 return function (\Exception $e) {
     $handler = new ExceptionHandler(

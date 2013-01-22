@@ -1,7 +1,7 @@
 <?php
 namespace BEAR\Package\Tests;
 
-use BEAR\Sunday\Output\Console;
+use BEAR\Package\Output\Console;
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandler;
 use BEAR\Package\Web\SymfonyResponse;
 
