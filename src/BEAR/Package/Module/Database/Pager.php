@@ -21,6 +21,11 @@ use Pagerfanta\View\TwitterBootstrapView;
 class Pager
 {
     /**
+     * @var DriverConnection
+     */
+    protected $db;
+
+    /**
      * Max per page
      *
      * @var int
@@ -125,8 +130,8 @@ class Pager
     /**
      * Constructor
      *
-     * @param \Doctrine\DBAL\Driver\Connection $db
-     * @param \Pagerfanta\Pagerfanta           $pagerfanta
+     * @param DriverConnection $db
+     * @param Pagerfanta       $pagerfanta
      */
     public function __construct(DriverConnection $db, Pagerfanta $pagerfanta)
     {
