@@ -121,8 +121,7 @@ class Connection extends DbalConnection implements DriverConnection
      *
      * @param ViewInterface $view
      *
-     * @return \BEAR\Sunday\Module\Database\DoctrineDbalModule\Connection
-     * @return self
+     * @return Connection
      */
     public function setView(ViewInterface $view)
     {
