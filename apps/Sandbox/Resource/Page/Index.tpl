@@ -18,15 +18,6 @@
 
         }
 
-        .effect {
-            color: white;
-            text-shadow: 3px 3px 8px #BF7F00, -3px -3px 8px #BF7F00
-        }
-
-        .sub-title {
-            font-family: "Montserrat Subrayada" sans-serif;
-        }
-
         .hero-unit h1 {
             color: white;
         }
@@ -154,7 +145,6 @@
             </p>
             <a class="btn" href="_dev/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC
                 Admin &raquo;</a>
-            </p>
             <p><a class="btn" href="_dev/memcache.php" id="memcache" rel="tooltip"
                   title="Open memcache admin carroll panel">Memcache Admin &raquo;</a>
             </p>
