@@ -28,7 +28,7 @@ class ZfLogProvider implements Provide
     /**
      * Provide instance
      *
-     * @return CacheAdapter
+     * @return \Guzzle\Common\Log\LogAdapterInterface
      */
     public function get()
     {
