@@ -1,5 +1,5 @@
 {
-    "hash": "76bdbc99238fa5a65f91359b4e0590fc",
+    "hash": "bf1f7c16a56f05b12c94bbd97ec2b4dd",
     "packages": [
         {
             "name": "aura/di",
@@ -443,19 +443,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal",
-                "reference": "4c33f633c48eeafe3408b308f6fc51743a21a3b7"
+                "reference": "fd45c6f6baa618d871f3201fabe76df5043abb1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/archive/4c33f633c48eeafe3408b308f6fc51743a21a3b7.zip",
-                "reference": "4c33f633c48eeafe3408b308f6fc51743a21a3b7",
+                "url": "https://github.com/doctrine/dbal/archive/fd45c6f6baa618d871f3201fabe76df5043abb1e.zip",
+                "reference": "fd45c6f6baa618d871f3201fabe76df5043abb1e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "2013-01-07 20:03:43",
+            "time": "2013-01-20 11:50:36",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -521,16 +521,16 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/RobLoach/firephp-core",
-                "reference": "c26d972dcb28fd483fa193512091df7b3c85e450"
+                "url": "https://github.com/firephp/firephp-core",
+                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/RobLoach/firephp-core/zipball/c26d972dcb28fd483fa193512091df7b3c85e450",
-                "reference": "c26d972dcb28fd483fa193512091df7b3c85e450",
+                "url": "https://github.com/firephp/firephp-core/archive/f60753a8dd7817e4da6bc73e0e717387a9a0866a.zip",
+                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a",
                 "shasum": ""
             },
-            "time": "2012-05-29 00:08:14",
+            "time": "2013-01-19 22:55:24",
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -546,7 +546,7 @@
                 {
                     "name": "Christoph Dorn",
                     "email": "christoph@christophdorn.com",
-                    "homepage": "christophdorn.com"
+                    "homepage": "http://christophdorn.com"
                 }
             ],
             "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
@@ -1042,18 +1042,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "3225226e0be466395414da4b362013531eedb580"
+                "reference": "93c6a8dedc46c73ccdd61342de3d5e761e4412f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/archive/3225226e0be466395414da4b362013531eedb580.zip",
-                "reference": "3225226e0be466395414da4b362013531eedb580",
+                "url": "https://github.com/fabpot/Twig/archive/93c6a8dedc46c73ccdd61342de3d5e761e4412f6.zip",
+                "reference": "93c6a8dedc46c73ccdd61342de3d5e761e4412f6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "2013-01-16 13:37:25",
+            "time": "2013-01-18 09:58:04",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1099,8 +1099,8 @@
                 "reference": null,
                 "shasum": null
             },
-            "type": "library",
-            "time": "2012-12-09 05:05:05"
+            "time": "2012-12-22 02:54:36",
+            "type": "library"
         },
         {
             "name": "zendframework/zend-log",
