@@ -133,7 +133,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * Return error page
      *
      * @param                               $e
-     * @param                               $exceptionId
      * @param \BEAR\Resource\AbstractObject $response
      *
      * @return \BEAR\Resource\AbstractObject

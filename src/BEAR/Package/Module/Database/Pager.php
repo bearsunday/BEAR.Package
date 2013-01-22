@@ -21,7 +21,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 class Pager
 {
     /**
-     * @var DriverConnection
+     * @var \Doctrine\Dbal\Connection
      */
     protected $db;
 
