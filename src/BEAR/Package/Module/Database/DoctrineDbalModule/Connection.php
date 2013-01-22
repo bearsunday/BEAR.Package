@@ -12,6 +12,7 @@ use BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapt
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Pagerfanta\Pagerfanta;
+use Pagerfanta\View\ViewInterface;
 use Pagerfanta\View\TwitterBootstrapView;
 
 /**
