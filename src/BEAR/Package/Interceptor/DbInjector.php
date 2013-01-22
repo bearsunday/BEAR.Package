@@ -7,6 +7,7 @@
 namespace BEAR\Package\Interceptor;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Logging\SQLLogger;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
@@ -28,7 +29,7 @@ final class DbInjector implements MethodInterceptor
     private $reader;
 
     /**
-     * @var SqlLogger
+     * @var DebugStack
      */
     private $sqlLogger;
 
@@ -99,6 +100,7 @@ final class DbInjector implements MethodInterceptor
         if ($pagerAnnotation) {
             $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\DoctrineDbalModule\Connection';
             $db = DriverManager::getConnection($connectionParams);
+            /** @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
             $db->setMaxPerPage($pagerAnnotation->limit);
         } else {
             $db = DriverManager::getConnection($connectionParams);
@@ -110,9 +112,11 @@ final class DbInjector implements MethodInterceptor
         }
         $object->setDb($db);
         $result = $invocation->proceed();
-        if ($this->sqlLogger instanceof SQLLogger) {
+        if ($this->sqlLogger instanceof DebugStack) {
             $this->sqlLogger->stopQuery();
             $object->headers['x-sql'] = [$this->sqlLogger->queries];
+        } elseif ($this->sqlLogger instanceof SQLLogger) {
+            $this->sqlLogger->stopQuery();
         }
         if ($pagerAnnotation) {
             $pagerData = $db->getPager();
