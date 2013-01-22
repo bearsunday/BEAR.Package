@@ -49,7 +49,7 @@ class Router implements RouterInterface
      *
      * @param array $globals
      *
-     * @return multitype:Ambigous <unknown, multitype:NULL > Ambigous <multitype:, string> multitype:string unknown
+     * @return array
      */
     public function match($globals)
     {
