@@ -31,7 +31,7 @@ class TwigProvider implements Provide
     /**
      * Return instance
      *
-     * @return Smarty
+     * @return \Smarty
      */
     public function get()
     {
