@@ -35,12 +35,13 @@ class SmartyProvider implements Provide
     public function get()
     {
         $smarty = new Smarty;
-        $smarty->compile_dir = $this->tmpDir . '/smarty/template_c';
-        $smarty->cache_dir = $this->tmpDir . '/smarty/cache';
-        $smarty->template_dir = $this->appDir . '/Resource/View';
         $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
         $frameworkPlugin = __DIR__ . '/plugin';
-        $smarty->plugins_dir = [$smarty->plugins_dir[0], $appPlugin, $frameworkPlugin];
+        $smarty
+        ->setCompileDir($this->tmpDir . '/smarty/template_c')
+        ->setCacheDir($this->tmpDir . '/smarty/cache')
+        ->setTemplateDir($this->appDir . '/Resource/View')
+        ->setPluginsDir([$appPlugin, $frameworkPlugin]);
 
         return $smarty;
     }
