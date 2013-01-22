@@ -22,6 +22,11 @@ use IteratorAggregate;
 class PagingQuery implements Countable, IteratorAggregate
 {
     /**
+     * @var \Doctrine\DBAL\Connection
+     */
+    private $db;
+
+    /**
      * Total number
      *
      * @var int
@@ -51,6 +56,7 @@ class PagingQuery implements Countable, IteratorAggregate
      */
     public function __construct(DriverConnection $db, $query, array $params = [])
     {
+        /** @var $db \Doctrine\DBAL\Connection */
         $this->db = $db;
         $this->pdo = $this->db->getWrappedConnection();
         $this->query = $query;
@@ -88,10 +94,13 @@ class PagingQuery implements Countable, IteratorAggregate
     public function getIterator()
     {
         $pdo = $this->db->getWrappedConnection();
+        /** @var $pdo  */
         $query = $this->getPagerSql($this->offset, $this->length);
         if ($this->params) {
+            /** @noinspection PhpUndefinedMethodInspection */
             $result = $pdo->prepare($query)->execute($this->params)->fetchColumn();
         } else {
+            /** @noinspection PhpUndefinedMethodInspection */
             $result = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
         }
 
@@ -127,12 +136,15 @@ class PagingQuery implements Countable, IteratorAggregate
         $countQuery = $this->getCountQuery($query);
         if ($countQuery) {
             if ($params) {
+                /** @noinspection PhpUndefinedMethodInspection */
                 $count = $this->pdo->prepare($countQuery)->execute($params)->fetchColumn();
             } else {
+                /** @noinspection PhpUndefinedMethodInspection */
                 $count = $this->pdo->query($countQuery)->fetchColumn();
             }
         } else {
             // GROUP BY => fetch the whole result set and count the rows returned
+            /** @noinspection PhpUndefinedMethodInspection */
             $result = $this->pdo->fetchAll($query);
             $count = count($result);
         }
