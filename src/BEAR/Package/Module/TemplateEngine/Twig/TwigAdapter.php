@@ -10,7 +10,6 @@ namespace BEAR\Package\Module\TemplateEngine\Twig;
 use BEAR\Sunday\Resource\View\TemplateEngineAdapter;
 use Twig_Environment;
 use BEAR\Sunday\Exception\TemplateNotFound;
-use Twig;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
@@ -26,7 +25,7 @@ class TwigAdapter implements TemplateEngineAdapter
     /**
      * Twig
      *
-     * @var Twig
+     * @var Twig_Environment
      */
     private $twig;
 
@@ -38,10 +37,8 @@ class TwigAdapter implements TemplateEngineAdapter
     private $template;
 
     /**
-     * @var bool
+     * @var array
      */
-//    private $isProd;
-
     private $values;
 
     /**
