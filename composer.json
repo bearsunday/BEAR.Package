@@ -55,8 +55,8 @@
         }
     },
     "minimum-stability":"dev",
-    "scripts":{
-        "post-package-install": "BEAR\\Package\\Distribution\\Installer::postPackageInstall"
+    "scripts"   :{
+        "post-install-cmd": "BEAR\\Package\\Distribution\\Installer::postInstall"
     },
     "repositories":[
         {
