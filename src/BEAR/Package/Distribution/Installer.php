@@ -21,10 +21,13 @@ class Installer
     /**
      * @param Event $event
      */
-    public static function postPackageInstall(Event $event)
+    public static function postInstall(Event $event)
     {
         self::chmodWritable("apps/Helloworld/data");
         self::chmodWritable("apps/Sandbox/data");
+        $version = $event->getComposer()->getPackage()->getPrettyVersion();
+        file_put_contents('./VERSION', $version);
+        echo "Thank you for installing BEAR.Sunday." . PHP_EOL;
     }
 
     /**
