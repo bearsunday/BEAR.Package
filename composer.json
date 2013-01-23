@@ -25,7 +25,6 @@
         "ray/di":">=1.0.0",
         "bear/resource":">=0.5.5",
         "bear/sunday":">=0.5.5",
-        "printo/printo":"*",
         "aura/di":"1.0.*",
         "aura/router":"1.0.*",
         "aura/signal":"1.0.*",
@@ -33,17 +32,20 @@
         "aura/installer-default":"1.0.*",
         "doctrine/common":"2.3.*-dev",
         "doctrine/dbal":"2.3.*-dev",
-        "facebook/xhprof":"0.9.*",
         "guzzle/guzzle":"2.7.*",
         "pagerfanta/pagerfanta":"dev-master",
         "smarty/smarty":"3.1.*",
         "symfony/console":"2.0.*",
         "symfony/http-foundation":"2.0.*",
-        "firephp/firephp-core":"dev-master",
         "twitter/bootstrap":"dev-master",
         "nocarrier/hal":"dev-master",
-        "twig/twig":">=1.0.0",
         "zendframework/zend-log":"2.0.*"
+    },
+    "require-dev":{
+        "printo/printo":"*",
+        "facebook/xhprof":"0.9.*",
+        "firephp/firephp-core":"dev-master",
+        "twig/twig":">=1.0.0"
     },
     "autoload":{
         "psr-0":{
