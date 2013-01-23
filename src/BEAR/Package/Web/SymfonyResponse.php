@@ -168,7 +168,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Make response object with RFC 2616 compliant HTTP header
      *
-     * @return \BEAR\Sunday\Web\ResponseInterface
+     * @return self
      */
     public function prepare()
     {
@@ -203,7 +203,7 @@ final class SymfonyResponse implements ResponseInterface
                 $this->resource->headers = $this->response->headers->all();
             }
             $statusText = Response::$statusTexts[$this->resource->code];
-            $this->consoleOutput->send($this->resource, $this->e, $statusText, Console::MODE_REQUEST);
+            $this->consoleOutput->send($this->resource, $statusText, Console::MODE_REQUEST);
         } else {
             $this->response->send();
         }
