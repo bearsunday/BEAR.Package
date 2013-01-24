@@ -8,7 +8,7 @@
 namespace BEAR\Package\Module\Log\ZfLogModule;
 
 use BEAR\Sunday\Inject\LogDirInject;
-use Guzzle\Common\Log\Zf2LogAdapter;
+use Guzzle\Log\Zf2LogAdapter;
 use Ray\Di\ProviderInterface as Provide;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
@@ -28,7 +28,7 @@ class ZfLogProvider implements Provide
     /**
      * Provide instance
      *
-     * @return \Guzzle\Common\Log\LogAdapterInterface
+     * @return \Guzzle\Log\LogAdapterInterface
      */
     public function get()
     {

@@ -24,7 +24,7 @@ class ZfLogModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Guzzle\Common\Log\LogAdapterInterface')->toProvider(
+        $this->bind('Guzzle\Log\LogAdapterInterface')->toProvider(
             'BEAR\Package\Module\Log\ZfLogModule\ZfLogProvider'
         );
     }

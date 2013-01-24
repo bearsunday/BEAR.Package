@@ -7,7 +7,7 @@
  */
 namespace BEAR\Package\Module\Log;
 
-use Guzzle\Common\Log\MonologLogAdapter;
+use Guzzle\Log\MonologLogAdapter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
