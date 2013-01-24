@@ -18,7 +18,7 @@ use BEAR\Sunday\Web\GlobalsInterface;
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
-use Guzzle\Common\Cache\CacheAdapterInterface;
+use Guzzle\Cache\CacheAdapterInterface;
 
 require_once dirname(dirname(__DIR__)) . '/vendor/smarty/smarty/distribution/libs/Smarty.class.php';
 require_once dirname(dirname(__DIR__)) . '/vendor/twig/twig/lib/Twig/Autoloader.php';

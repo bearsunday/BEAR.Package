@@ -24,8 +24,8 @@ class NullCacheModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Guzzle\Common\Cache\CacheAdapterInterface')->annotatedWith('resource_cache')->to(
-            'Guzzle\Common\Cache\NullCacheAdapter'
+        $this->bind('Guzzle\Cache\CacheAdapterInterface')->annotatedWith('resource_cache')->to(
+            'Guzzle\Cache\NullCacheAdapter'
         );
     }
 }

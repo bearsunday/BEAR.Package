@@ -16,7 +16,7 @@ use BEAR\Sunday\Exception\ExceptionHandlerInterface;
 use BEAR\Sunday\Application\Logger as ApplicationLogger;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
-use Guzzle\Common\Cache\CacheAdapterInterface;
+use Guzzle\Cache\CacheAdapterInterface;
 
 /**
  * Application
