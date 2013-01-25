@@ -50,13 +50,14 @@
     "autoload":{
         "psr-0":{
             "BEAR\\Package":"src/",
+            "BEAR\\Installer":"src/",
             "Helloworld\\":"apps/",
             "Sandbox\\":"apps/"
         }
     },
     "minimum-stability":"dev",
     "scripts"   :{
-        "post-install-cmd": "BEAR\\Package\\Distribution\\Installer::postInstall"
+        "post-install-cmd": "BEAR\\Installer\\Composer::postInstall"
     },
     "repositories":[
         {

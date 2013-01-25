@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Distribution;
+namespace BEAR\Installer;
 
 use Composer\Script\Event;
 use RecursiveIteratorIterator;
@@ -16,7 +16,7 @@ use RecursiveDirectoryIterator;
  *
  * @package    BEAR.Package
  */
-class Installer
+class Composer
 {
     /**
      * @param Event $event
