@@ -7,7 +7,7 @@
  */
 namespace Sandbox\Resource\Page\Restbucks;
 
-use BEAR\Sunday\Resource\AbstractPage as Page;
+use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Inject\AInject;
 use BEAR\Resource\LoggerInterface;

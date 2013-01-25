@@ -5,7 +5,7 @@
  */
 namespace Sandbox\Resource\Page\Hello;
 
-use BEAR\Sunday\Resource\AbstractPage as Page;
+use BEAR\Resource\AbstractObject as Page;
 
 /**
  * Hello World page

@@ -5,7 +5,7 @@
  */
 namespace Sandbox\Resource\Page;
 
-use BEAR\Sunday\Resource\AbstractPage as Page;
+use BEAR\Resource\AbstractObject as Page;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Framework\Framework;
