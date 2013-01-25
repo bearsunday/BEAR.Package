@@ -10,7 +10,7 @@ class PageIndexTest extends \PHPUnit_Framework_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resourcce
+     * @var BEAR\Resource\Resource
      */
     private $resource;
 

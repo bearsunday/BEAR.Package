@@ -2,7 +2,7 @@
 /**
  * CLI  Built-in web server dev script
  *
- * Examaple:
+ * Example:
  *
  * CLI:
  * $ php dev.php get /hello

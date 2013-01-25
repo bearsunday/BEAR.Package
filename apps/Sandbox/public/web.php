@@ -2,7 +2,7 @@
 /**
  * CLI / Built-in web server script for development
  *
- * examaple:
+ * example:
  *
  * CLI:
  * $ php web.php get /

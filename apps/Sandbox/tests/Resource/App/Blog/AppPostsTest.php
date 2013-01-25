@@ -29,7 +29,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resourcce
+     * @var BEAR\Resource\Resource
      */
     private $resource;
 
