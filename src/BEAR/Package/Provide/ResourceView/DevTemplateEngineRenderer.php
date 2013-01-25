@@ -11,7 +11,6 @@ use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\AbstractObject;
-use BEAR\Resource\RenderInterface;
 use BEAR\Resource\Request;
 use BEAR\Resource\DevInvoker;
 use BEAR\Sunday\Module\Cqrs\Interceptor\CacheLoader;
