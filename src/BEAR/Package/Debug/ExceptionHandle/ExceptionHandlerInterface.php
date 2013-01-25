@@ -12,7 +12,7 @@ use Exception;
 /**
  * Interface for exception handler
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  */
 interface ExceptionHandlerInterface
 {

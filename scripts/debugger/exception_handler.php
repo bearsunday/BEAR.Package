@@ -2,7 +2,7 @@
 /**
  * Exception handler for development
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  */
