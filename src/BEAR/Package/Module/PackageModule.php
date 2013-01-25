@@ -45,6 +45,7 @@ class PackageModule extends AbstractModule
         $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule);
         $this->install(new ProvideModule\Router\MinRouterModule);
         $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule);
+        $this->install(new ProvideModule\ResourceView\HalModule);
 
         // Package module
         $this->install(new Package\Module\Database\Dbal\DbalModule($this));
@@ -54,7 +55,6 @@ class PackageModule extends AbstractModule
         // Sunday module
         $this->install(new SundayModule\SchemeModule($this->scheme));
         $this->install(new SundayModule\Resource\ApcModule);
-        $this->install(new SundayModule\Resource\HalModule);
         $this->install(new SundayModule\WebContext\AuraWebModule);
         $this->install(new SundayModule\Cqrs\CacheModule($this));
     }

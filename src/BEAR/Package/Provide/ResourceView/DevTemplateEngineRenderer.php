@@ -14,7 +14,7 @@ use BEAR\Resource\AbstractObject;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\Request;
 use BEAR\Resource\DevInvoker;
-use BEAR\Sunday\Interceptor\CacheLoader;
+use BEAR\Sunday\Module\Cqrs\Interceptor\CacheLoader;
 use ReflectionClass;
 use ReflectionObject;
 use DateTime;
