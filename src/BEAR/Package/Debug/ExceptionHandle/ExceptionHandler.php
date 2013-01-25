@@ -43,7 +43,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     private $response;
 
     /**
-     * @var Error
+     * @var ResourceObject
      */
     private $errorPage;
 

@@ -13,6 +13,7 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
+use BEAR\Resource\AbstractObject as Page;
 use Guzzle\Cache\CacheAdapterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
@@ -71,14 +72,14 @@ abstract class AbstractApp implements AppInterface
     /**
      * Resource logger
      *
-     * @var LoggerInterface
+     * @var ApplicationLoggerInterface
      */
     public $logger;
 
     /**
      * Response page object
      *
-     * @var \BEAR\Resource\Object
+     * @var Page
      */
     public $page;
 
