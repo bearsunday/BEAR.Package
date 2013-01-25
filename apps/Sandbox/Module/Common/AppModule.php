@@ -40,7 +40,7 @@ class AppModule extends AbstractModule
         // install package module
         $this->install(new SundayModule\Constant\NamedModule($this->config));
         $scheme = __NAMESPACE__ . '\SchemeCollectionProvider';
-        $this->install(new PackageModule\Package\PackageModule($this, $scheme));
+        $this->install(new PackageModule\PackageModule($this, $scheme));
 
         // install twig
         //$this->install(new PackageModule\TemplateEngine\Twig\TwigModule($this));
