@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Sunday\Interceptor;
+namespace BEAR\Package\Module\Stab;
 
 use BEAR\Sunday\Inject\LogInject;
 use Ray\Aop\MethodInterceptor;
@@ -25,7 +25,7 @@ class Stab implements MethodInterceptor
     /**
      * Stab data
      *
-     * @var mixed
+     * @var array
      */
     private $stab;
 
@@ -34,7 +34,7 @@ class Stab implements MethodInterceptor
      *
      * @param mixed $stab
      */
-    public function __construct($stab)
+    public function __construct(array $stab)
     {
         $this->stab = $stab;
     }
