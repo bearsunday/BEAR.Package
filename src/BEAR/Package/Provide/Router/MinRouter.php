@@ -2,7 +2,7 @@
 /**
  * This file is part of the BEAR.Sunday package
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\Router;
@@ -13,7 +13,7 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 /**
  * Standard Router
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  */
 class MinRouter implements RouterInterface
 {

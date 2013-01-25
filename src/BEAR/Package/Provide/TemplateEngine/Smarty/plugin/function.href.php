@@ -35,7 +35,7 @@ use BEAR\Resource\Link;
  * {href rel="entry" data=$resource->body}
  * </pre>
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  * @param array                    $params   parameters

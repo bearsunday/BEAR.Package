@@ -2,7 +2,7 @@
 /**
  * This file is part of the BEAR.Sunday package
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\ApplicationLogger;
@@ -16,7 +16,7 @@ use Ray\Di\Di\Inject;
 /**
  * Logger
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  */
 final class ApplicationLogger implements ApplicationLoggerInterface
 {
