@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Interceptor\Setter;
+namespace BEAR\Package\Module\Database\Dbal\Setter;
 
 use Doctrine\DBAL\Driver\Connection;
 
@@ -15,7 +15,7 @@ use Doctrine\DBAL\Driver\Connection;
  * @package    BEAR.Sunday
  * @subpackage Inject
  */
-trait DbSetter
+trait DbSetterTrait
 {
     /**
      * DB

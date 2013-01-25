@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Database;
+namespace BEAR\Package\Module\Database\Dbal;
 
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Countable;

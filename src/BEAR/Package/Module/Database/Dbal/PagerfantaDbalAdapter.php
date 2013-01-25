@@ -5,11 +5,10 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta;
+namespace BEAR\Package\Module\Database\Dbal;
 
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Pagerfanta\Adapter\AdapterInterface;
-use BEAR\Package\Module\Database\PagingQuery;
 
 /**
  * DoctrineDbal adapter.
@@ -17,7 +16,7 @@ use BEAR\Package\Module\Database\PagingQuery;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class DoctrineDbalAdapter implements AdapterInterface
+class PagerfantaDbalAdapter implements AdapterInterface
 {
     /**
      * Constructor

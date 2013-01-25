@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Provide\TemplateEngine;
+namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
 use Smarty;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;

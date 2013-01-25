@@ -5,11 +5,11 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Database;
+namespace BEAR\Package\Module\Database\Dbal;
 
 use Ray\Di\AbstractModule;
-use BEAR\Sunday\Interceptor\TimeStamper;
-use BEAR\Sunday\Interceptor\Transactional;
+use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
+use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
 
 
 /**
@@ -18,7 +18,7 @@ use BEAR\Sunday\Interceptor\Transactional;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class DoctrineDbalModule extends AbstractModule
+class DbalModule extends AbstractModule
 {
     /**
      * Configure dependency binding
@@ -40,7 +40,7 @@ class DoctrineDbalModule extends AbstractModule
      */
     private function installDbInjector()
     {
-        $dbInjector = $this->requestInjection('\BEAR\Package\Interceptor\DbInjector');
+        $dbInjector = $this->requestInjection(__NAMESPACE__ . '\Interceptor\DbInjector');
         $this->bindInterceptor(
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Db'),
             $this->matcher->startWith('on'),
