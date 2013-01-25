@@ -7,7 +7,7 @@
  */
 namespace BEAR\Package\ProvideExtra\TemplateEngine\Twig;
 
-use BEAR\Sunday\Resource\View\TemplateEngineAdapter;
+use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Twig_Environment;
 use BEAR\Sunday\Exception\TemplateNotFound;
 use Twig;
@@ -21,7 +21,7 @@ use Ray\Di\Di\PostConstruct;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class TwigAdapter implements TemplateEngineAdapter
+class TwigAdapter implements TemplateEngineAdapterInterface
 {
     /**
      * Twig
