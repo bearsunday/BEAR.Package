@@ -7,8 +7,6 @@
  */
 namespace BEAR\Package\Module\Database\Dbal;
 
-use BEAR\Package\Module\Database\Dbal\Pagerfanta\DoctrineDbalAdapter;
-
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Pagerfanta\Pagerfanta;
@@ -122,7 +120,7 @@ class PagerConnection extends DbalConnection implements DriverConnection
      *
      * @param ViewInterface $view
      *
-     * @return Connection
+     * @return self
      */
     public function setView(ViewInterface $view)
     {

@@ -85,12 +85,12 @@ abstract class AbstractApp implements AppInterface
     /**
      * Constructor
      *
-     * @param InjectorInterface         $injector         Dependency Injector
-     * @param ResourceInterface         $resource         Resource client
-     * @param ExceptionHandlerInterface $exceptionHandler Exception handler
-     * @param Logger                    $logger           Application logger
-     * @param ResponseInterface         $response         Web / Console response
-     * @param RouterInterface           $router           Resource cache adapter
+     * @param InjectorInterface           $injector         Dependency Injector
+     * @param ResourceInterface           $resource         Resource client
+     * @param ExceptionHandlerInterface   $exceptionHandler Exception handler
+     * @param ApplicationLoggerInterface  $logger           Application logger
+     * @param ResponseInterface           $response         Web / Console response
+     * @param RouterInterface             $router           Resource cache adapter
      *
      * @Inject
      */

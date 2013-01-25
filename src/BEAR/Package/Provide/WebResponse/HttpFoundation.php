@@ -86,7 +86,7 @@ final class HttpFoundation implements ResponseInterface
     /**
      * Set application logger
      *
-     * @param \BEAR\Sunday\Application\LoggerInterface $appLogger
+     * @param AppLogger $appLogger
      *
      * @Inject
      */

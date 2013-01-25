@@ -45,7 +45,11 @@ class MinRouter implements RouterInterface
     }
 
     /**
+     * Set argv
+     *
      * @param array $argv
+     *
+     * @return self
      *
      * @throws BadRequest
      * @throws MethodNotAllowed
@@ -67,6 +71,13 @@ class MinRouter implements RouterInterface
         return $this;
     }
 
+    /**
+     * Set Global
+     *
+     * @param array $global
+     *
+     * @return self
+     */
     public function setGlobal(array $global)
     {
         $this->globals = $global;
@@ -75,8 +86,6 @@ class MinRouter implements RouterInterface
 
     /**
      * Match route
-     *
-     * @param array $globals
      *
      * @return array [$method, $pageUri, $query]
      */

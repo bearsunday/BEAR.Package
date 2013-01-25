@@ -38,10 +38,8 @@ class TwigAdapter implements TemplateEngineAdapter
     private $template;
 
     /**
-     * @var bool
+     * @var array
      */
-//    private $isProd;
-
     private $values;
 
     /**
