@@ -25,6 +25,7 @@ class StabModule extends AbstractModule
     {
         $this->install(new DevModule);
         $stab = include __DIR__ . '/common/stab/resource.php';
+        /** @var $stab array */
         $this->install(new PackageStabModule($stab));
     }
 }
