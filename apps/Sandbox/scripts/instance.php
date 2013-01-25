@@ -18,7 +18,7 @@ use Ray\Di\ApcConfig;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
 use Doctrine\Common\Annotations\AnnotationReader;
-use BEAR\Package\Exception\InvalidMode;
+use BEAR\Package\Provide\Application\Exception\InvalidMode;
 
 // init
 umask(0);
