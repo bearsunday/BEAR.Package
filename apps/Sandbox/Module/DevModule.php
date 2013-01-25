@@ -29,7 +29,6 @@ class DevModule extends AbstractModule
         $this->install(new Common\AppModule($config));
         $this->install(new PackageModule\Resource\DevResourceModule($this));
         // aspect weaving (AOP)
-        $this->install(new PackageModule\Package\AspectModule($this));
         $this->installWritableChecker();
     }
 

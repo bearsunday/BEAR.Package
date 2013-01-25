@@ -30,7 +30,5 @@ class TestModule extends ProdModule
         // dependency binding (DI)
         $this->install(new Common\AppModule($config));
         $this->install(new PackageModule\Resource\NullCacheModule($this));
-        // aspect weaving (AOP)
-        $this->install(new PackageModule\Package\AspectModule($this));
     }
 }

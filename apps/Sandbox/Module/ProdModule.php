@@ -27,7 +27,5 @@ class ProdModule extends AbstractModule
         $config = include __DIR__ . '/config.php';
         // dependency binding (DI)
         $this->install(new Common\AppModule($config));
-        // aspect weaving (AOP)
-        $this->install(new PackageModule\Package\AspectModule($this));
     }
 }
