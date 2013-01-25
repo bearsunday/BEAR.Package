@@ -66,7 +66,7 @@ $app->logger->register($app);
 
 // Route
 if (PHP_SAPI === 'cli') {
-    $this->router->setArgv($argv);
+    $app->router->setArgv($argv);
 }
 
 // Dispatch
