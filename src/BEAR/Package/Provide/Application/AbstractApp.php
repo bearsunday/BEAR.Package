@@ -36,42 +36,42 @@ abstract class AbstractApp implements AppInterface
     /**
      * Dependency injector
      *
-     * @var \Ray\Di\InjectorInterface
+     * @var InjectorInterface
      */
     public $injector;
 
     /**
      * Resource client
      *
-     * @var \BEAR\Resource\ResourceInterface
+     * @var ResourceInterface
      */
     public $resource;
 
     /**
      * Response
      *
-     * @var BEAR\Sunday\Extension\WebResponse\ResponseInterface
+     * @var ResponseInterface
      */
     public $response;
 
     /**
      * Exception handler
      *
-     * @var \BEAR\Package\ExceptionHandle\ExceptionHandlerInterface
+     * @var ExceptionHandlerInterface
      */
     public $exceptionHandler;
 
     /**
      * Router
      *
-     * @var \BEAR\Sunday\Extension\Router\RouterInterface
+     * @var RouterInterface
      */
     public $router;
 
     /**
      * Resource logger
      *
-     * @var \BEAR\Resource\LoggerInterface
+     * @var LoggerInterface
      */
     public $logger;
 
@@ -85,12 +85,12 @@ abstract class AbstractApp implements AppInterface
     /**
      * Constructor
      *
-     * @param \Ray\Di\InjectorInterface                               $injector         Dependency Injector
-     * @param \BEAR\Resource\ResourceInterface                        $resource         Resource client
-     * @param \BEAR\Package\ExceptionHandle\ExceptionHandlerInterface $exceptionHandler Exception handler
-     * @param \BEAR\Sunday\Application\Logger                         $logger           Application logger
-     * @param BEAR\Sunday\Extension\WebResponse\ResponseInterface                      $response         Web / Console response
-     * @param \BEAR\Sunday\Extension\Router\RouterInterface                        $router           Resource cache adapter
+     * @param InjectorInterface         $injector         Dependency Injector
+     * @param ResourceInterface         $resource         Resource client
+     * @param ExceptionHandlerInterface $exceptionHandler Exception handler
+     * @param Logger                    $logger           Application logger
+     * @param ResponseInterface         $response         Web / Console response
+     * @param RouterInterface           $router           Resource cache adapter
      *
      * @Inject
      */
