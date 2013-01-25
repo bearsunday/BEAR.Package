@@ -2,10 +2,10 @@
 /**
  * This file is part of the BEAR.Sunday package
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Sunday\Module\Provider;
+namespace BEAR\Package\Module\WebContext;
 
 use Ray\Di\ProviderInterface;
 use Aura\Web\Context;

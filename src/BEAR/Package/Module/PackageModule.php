@@ -5,8 +5,9 @@
  * @package    Sandbox
  * @subpackage Module
  */
-namespace BEAR\Package\Module\Package;
+namespace BEAR\Package\Module;
 
+use BEAR\Package;
 use BEAR\Package\Module;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
@@ -39,14 +40,16 @@ class PackageModule extends AbstractModule
 
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
-        $this->install(new ProvideModule\TemplateEngine\SmartyModule);
+        $this->install(new ProvideModule\TemplateEngine\Smarty\SmartyModule);
         $this->install(new ProvideModule\WebResponse\HttpFoundationModule);
         $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule);
         $this->install(new ProvideModule\Router\MinRouterModule);
+        $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule);
 
-        // package module
-        $this->install(new Module\Log\ZfLogModule);
-        $this->install(new Module\ExceptionHandle\HandleModule);
+        // Package module
+        $this->install(new Package\Module\Database\Dbal\DbalModule($this));
+        $this->install(new Package\Module\Log\ZfLogModule);
+        $this->install(new Package\Module\ExceptionHandle\HandleModule);
 
         // Sunday module
         $this->install(new SundayModule\SchemeModule($this->scheme));

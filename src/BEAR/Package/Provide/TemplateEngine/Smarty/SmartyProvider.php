@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Provide\TemplateEngine;
+namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
 use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Sunday\Inject\AppDirInject;
@@ -40,7 +40,7 @@ class SmartyProvider implements Provide
         ->setCompileDir($this->tmpDir . '/smarty/template_c')
         ->setCacheDir($this->tmpDir . '/smarty/cache')
         ->setTemplateDir($this->appDir . '/Resource/View')
-        ->setPluginsDir([$appPlugin, $frameworkPlugin]);
+        ->setPluginsDir(array_merge($smarty->getPluginsDir(), [$appPlugin, $frameworkPlugin]));
 
         return $smarty;
     }

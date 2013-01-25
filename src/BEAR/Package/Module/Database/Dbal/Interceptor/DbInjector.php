@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Interceptor;
+namespace BEAR\Package\Module\Database\Dbal\Interceptor;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\DebugStack;
@@ -98,7 +98,7 @@ final class DbInjector implements MethodInterceptor
         $connectionParams = ($method->name === 'onGet') ? $this->slaveDb : $this->masterDb;
         $pagerAnnotation = $this->reader->getMethodAnnotation($method, 'BEAR\Sunday\Annotation\DbPager');
         if ($pagerAnnotation) {
-            $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\DoctrineDbalModule\Connection';
+            $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
             $db = DriverManager::getConnection($connectionParams);
             /** @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
             $db->setMaxPerPage($pagerAnnotation->limit);

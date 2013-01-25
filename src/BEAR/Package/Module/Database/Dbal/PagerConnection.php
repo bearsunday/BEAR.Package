@@ -5,9 +5,9 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Database\DoctrineDbalModule;
+namespace BEAR\Package\Module\Database\Dbal;
 
-use BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapter;
+use BEAR\Package\Module\Database\Dbal\Pagerfanta\DoctrineDbalAdapter;
 
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
@@ -21,7 +21,7 @@ use Pagerfanta\View\TwitterBootstrapView;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class Connection extends DbalConnection implements DriverConnection
+class PagerConnection extends DbalConnection implements DriverConnection
 {
     /**
      * Maximum item per page
@@ -170,7 +170,7 @@ class Connection extends DbalConnection implements DriverConnection
         $firstResult = ($this->currentPage - 1) * $this->maxPerPage;
         $args = func_get_args();
         $query = $args[0];
-        $this->pagerfanta = new Pagerfanta(new DoctrineDbalAdapter($this, $query));
+        $this->pagerfanta = new Pagerfanta(new PagerfantaDbalAdapter($this, $query));
         $this->pagerfanta->setMaxPerPage($this->maxPerPage)->setCurrentPage($this->currentPage, false, true);
         $pagerQuery = $this->getDatabasePlatform()->modifyLimitQuery($query, $this->maxPerPage, $firstResult);
         $args[0] = $pagerQuery;
