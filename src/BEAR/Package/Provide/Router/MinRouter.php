@@ -110,7 +110,7 @@ class MinRouter implements RouterInterface
      *
      * @return array
      */
-    private function getMethodQuery(array $globals)
+    public function getMethodQuery(array $globals)
     {
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'GET' && isset($globals['_GET'][self::METHOD_OVERRIDE_GET])) {
             /** @noinspection PhpUnusedLocalVariableInspection */

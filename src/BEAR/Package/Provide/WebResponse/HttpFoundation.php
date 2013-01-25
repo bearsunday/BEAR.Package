@@ -12,7 +12,7 @@ use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Inject\LogInject;
-use BEAR\Package\Output\Console;
+use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Resource\Logger;
 use BEAR\Resource\ObjectInterface as ResourceObject;
 
@@ -203,7 +203,7 @@ final class HttpFoundation implements ResponseInterface
                 $this->resource->headers = $this->response->headers->all();
             }
             $statusText = Response::$statusTexts[$this->resource->code];
-            $this->consoleOutput->send($this->resource, $statusText, Console::MODE_REQUEST);
+            $this->consoleOutput->send($this->resource, $statusText, ConsoleOutput::MODE_REQUEST);
         } else {
             $this->response->send();
         }
