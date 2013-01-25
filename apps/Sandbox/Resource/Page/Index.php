@@ -8,7 +8,7 @@ namespace Sandbox\Resource\Page;
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Inject\ResourceInject;
-use BEAR\Sunday\Framework\Framework;
+use BEAR\Sunday\Version;
 use Ray\Di\Di\Inject;
 
 /**
@@ -43,7 +43,7 @@ class Index extends Page
     {
         $this['version'] = [
             'php' => phpversion(),
-            'BEAR' => Framework::VERSION
+            'BEAR' => Version::VERSION
         ];
         $this['extensions'] = [
             'apc' => extension_loaded('apc') ? phpversion('apc') : 'n/a',
