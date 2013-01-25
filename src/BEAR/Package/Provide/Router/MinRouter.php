@@ -9,7 +9,8 @@ namespace BEAR\Package\Provide\Router;
 
 use Aura\Router\Map;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-
+use BEAR\Resource\Exception\BadRequest;
+use BEAR\Resource\Exception\MethodNotAllowed;
 /**
  * Standard Router
  *
