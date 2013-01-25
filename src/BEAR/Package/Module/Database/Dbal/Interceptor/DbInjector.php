@@ -100,12 +100,12 @@ final class DbInjector implements MethodInterceptor
         if ($pagerAnnotation) {
             $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
             $db = DriverManager::getConnection($connectionParams);
-            /** @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
+            /** @var $db \BEAR\Package\Module\Database\Dbal\PagerConnection */
             $db->setMaxPerPage($pagerAnnotation->limit);
         } else {
             $db = DriverManager::getConnection($connectionParams);
         }
-        /* @var $db \BEAR\Package\Module\Database\DoctrineDbalModule\Connection */
+        /* @var $db \BEAR\Package\Module\Database\Dbal\PagerConnection */
 
         if ($this->sqlLogger instanceof SQLLogger) {
             $db->getConfiguration()->setSQLLogger($this->sqlLogger);
