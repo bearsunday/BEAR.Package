@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\TemplateEngine\Twig;
+namespace BEAR\Package\Provide\TemplateEngine;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
@@ -16,7 +16,7 @@ use Ray\Di\Scope;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class TwigModule extends AbstractModule
+class SmartyModule extends AbstractModule
 {
     /**
      * Configure dependency binding
@@ -25,11 +25,12 @@ class TwigModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Twig_Environment')->toProvider('BEAR\Package\Module\TemplateEngine\Twig\TwigProvider')->in(
+        $this
+            ->bind('BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface')
+            ->to(__NAMESPACE__ . '\SmartyAdapter')
+            ->in(Scope::SINGLETON);
+        $this->bind('Smarty')->toProvider(__NAMESPACE__ . '\SmartyProvider')->in(
             Scope::SINGLETON
         );
-        $this->bind('BEAR\Sunday\Resource\View\TemplateEngineAdapterInterface')->to(
-            'BEAR\Package\Module\TemplateEngine\Twig\TwigAdapter'
-        )->in(Scope::SINGLETON);
     }
 }

@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Output;
+namespace BEAR\Package\Provide\WebResponse;
 
 use Ray\Di\AbstractModule;
 
@@ -15,7 +15,7 @@ use Ray\Di\AbstractModule;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class WebResponseModule extends AbstractModule
+class HttpFoundationModule extends AbstractModule
 {
     /**
      * Configure
@@ -24,6 +24,6 @@ class WebResponseModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('BEAR\Sunday\Web\ResponseInterface')->to('BEAR\Package\Web\SymfonyResponse');
+        $this->bind('BEAR\Sunday\Extension\WebResponse\ResponseInterface')->to(__NAMESPACE__ . '\HttpFoundation');
     }
 }

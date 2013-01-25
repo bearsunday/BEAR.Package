@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\TemplateEngine\SmartyModule;
+namespace BEAR\Package\Provide\TemplateEngine;
 
 use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Sunday\Inject\AppDirInject;
@@ -13,7 +13,6 @@ use Ray\Di\ProviderInterface as Provide;
 use Smarty;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-
 
 // @codingStandardsIgnoreFile
 

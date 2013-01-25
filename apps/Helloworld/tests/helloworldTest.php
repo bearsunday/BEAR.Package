@@ -13,7 +13,7 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         if (!$app) {
             $injector = Injector::create([new AppModule]);
-            $app = $injector->getInstance('BEAR\Sunday\Application\AppInterface');
+            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         }
         $this->resource = $app->resource;
     }

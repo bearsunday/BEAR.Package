@@ -5,11 +5,10 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Output;
+namespace BEAR\Package\Provide\ConsoleOutput;
 
-use BEAR\Sunday\Output\ConsoleInterface;
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
@@ -18,18 +17,11 @@ use Guzzle\Parser\UriTemplate\UriTemplate;
  * @package    BEAR.Sunday
  * @subpackage Web
  */
-final class Console implements ConsoleInterface
+final class ConsoleOutput implements ConsoleOutputInterface
 {
     const MODE_REQUEST = 'request';
     const MODE_VIEW = 'view';
     const MODE_VALUE = 'value';
-
-    /**
-     * Console output
-     *
-     * @var ConsoleOutput
-     */
-    private $console;
 
     /**
      * Send CLI output

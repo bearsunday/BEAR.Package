@@ -5,13 +5,13 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Web;
+namespace BEAR\Package\Provide\WebResponse;
 
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
+use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Inject\LogInject;
-use BEAR\Sunday\Application\LoggerInterface as AppLogger;
-use BEAR\Sunday\Output\ConsoleInterface;
-use BEAR\Sunday\Web\ResponseInterface;
 use BEAR\Package\Output\Console;
 use BEAR\Resource\Logger;
 use BEAR\Resource\ObjectInterface as ResourceObject;
@@ -28,7 +28,7 @@ use Exception;
  * @package    BEAR.Sunday
  * @subpackage Web
  */
-final class SymfonyResponse implements ResponseInterface
+final class HttpFoundation implements ResponseInterface
 {
     use LogInject;
 
@@ -74,7 +74,7 @@ final class SymfonyResponse implements ResponseInterface
     private $view;
 
     /**
-     * @var ConsoleInterface
+     * @var ConsoleOutputInterface
      */
     private $consoleOutput;
 
@@ -98,11 +98,11 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Constructor
      *
-     * @param ConsoleInterface $consoleOutput
+     * @param ConsoleOutputInterface $consoleOutput
      *
      * @Inject
      */
-    public function __construct(ConsoleInterface $consoleOutput)
+    public function __construct(ConsoleOutputInterface $consoleOutput)
     {
         $this->consoleOutput = $consoleOutput;
     }
@@ -113,7 +113,7 @@ final class SymfonyResponse implements ResponseInterface
      * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
      *
      * @throws InvalidResourceType
-     * @return \BEAR\Sunday\Web\ResponseInterface
+     * @return BEAR\Sunday\Extension\WebResponse\ResponseInterface
      */
     public function setResource($resource)
     {
@@ -182,7 +182,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Output web console log (FireBug + FirePHP)
      *
-     * @return \BEAR\Sunday\Web\ResponseInterface
+     * @return BEAR\Sunday\Extension\WebResponse\ResponseInterface
      */
     public function outputWebConsoleLog()
     {
@@ -194,7 +194,7 @@ final class SymfonyResponse implements ResponseInterface
     /**
      * Transfer representational state to http client (or console output)
      *
-     * @return \BEAR\Sunday\Web\ResponseInterface
+     * @return BEAR\Sunday\Extension\WebResponse\ResponseInterface
      */
     public function send()
     {
