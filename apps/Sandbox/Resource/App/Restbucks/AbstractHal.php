@@ -21,7 +21,7 @@ abstract class AbstractHal extends AbstractObject
     /**
      * Set HalRenderer
      *
-     * @param Renderable $renderer
+     * @param RenderInterface $renderer
      *
      * @Inject
      * @Named("hal")
