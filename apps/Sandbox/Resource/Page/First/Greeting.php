@@ -5,7 +5,7 @@
  */
 namespace Sandbox\Resource\Page\First;
 
-use BEAR\Sunday\Resource\AbstractPage as Page;
+use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
 
