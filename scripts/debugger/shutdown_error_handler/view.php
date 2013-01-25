@@ -23,8 +23,8 @@ functions: {
         $result = '<div class="file-summary">';
         $files = file($file);
         $fileArray = array_map('htmlspecialchars', $files);
-        $hitLineOriginal = $fileArray[$line - 1];
-        $fileArray[$line - 1] = "<span class=\"hit-line\">{$fileArray[$line - 1]}</span>";
+        $hitLineOriginal = isset($fileArray[$line - 1]) ? $fileArray[$line - 1] : '';
+        $fileArray[$line - 1] = "<span class=\"hit-line\">{$hitLineOriginal}</span>";
         $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
         $shortListArray[$num - 1] = '<strog>' . $fileArray[$line - 1] . '</strong>';
         $shortList = implode('', $shortListArray);
