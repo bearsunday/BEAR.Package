@@ -16,7 +16,7 @@ use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Resource\Logger;
 use BEAR\Resource\ObjectInterface as ResourceObject;
 
-use BEAR\Sunday\Resource\AbstractPage as Page;
+use BEAR\Resource\AbstractObject as Page;
 use Symfony\Component\HttpFoundation\Response;
 use Ray\Aop\Weave;
 use Ray\Di\Di\Inject;
@@ -113,7 +113,7 @@ final class HttpFoundation implements ResponseInterface
      * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
      *
      * @throws InvalidResourceType
-     * @return BEAR\Sunday\Extension\WebResponse\ResponseInterface
+     * @return ResponseInterface
      */
     public function setResource($resource)
     {
@@ -135,7 +135,7 @@ final class HttpFoundation implements ResponseInterface
      * @param \Exception $e
      * @param int        $exceptionId
      *
-     * @return SymfonyResponse
+     * @return self
      */
     public function setException(Exception $e, $exceptionId)
     {
@@ -182,7 +182,7 @@ final class HttpFoundation implements ResponseInterface
     /**
      * Output web console log (FireBug + FirePHP)
      *
-     * @return BEAR\Sunday\Extension\WebResponse\ResponseInterface
+     * @return ResponseInterface
      */
     public function outputWebConsoleLog()
     {
@@ -194,7 +194,7 @@ final class HttpFoundation implements ResponseInterface
     /**
      * Transfer representational state to http client (or console output)
      *
-     * @return BEAR\Sunday\Extension\WebResponse\ResponseInterface
+     * @return ResponseInterface
      */
     public function send()
     {

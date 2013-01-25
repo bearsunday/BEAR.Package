@@ -10,7 +10,7 @@ namespace BEAR\Package\ProvideExtra\TemplateEngine\Twig;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Twig_Environment;
 use BEAR\Sunday\Exception\TemplateNotFound;
-use Twig;
+use Twig_Environment;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
@@ -26,7 +26,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     /**
      * Twig
      *
-     * @var Twig
+     * @var @return BEAR
      */
     private $twig;
 
@@ -50,22 +50,9 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     const EXT = 'twig';
 
     /**
-     * Is production ?
-     *
-     * @param bool $isProd
-     *
-     * @Inject
-     * @Named("is_prod")
-     */
-//    public function setIsProd($isProd)
-//    {
-//        $this->isProd = $isProd;
-//    }
-
-    /**
      * Constructor
      *
-     * Smarty $smarty
+     * @param Twig_Environment $twig
      *
      * @Inject
      */
