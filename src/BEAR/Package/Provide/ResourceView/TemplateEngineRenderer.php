@@ -9,7 +9,6 @@ namespace BEAR\Package\Provide\ResourceView;
 
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
-use BEAR\Resource\RenderInterface;
 use BEAR\Resource\AbstractObject;
 use Ray\Aop\Weave;
 use ReflectionClass;
