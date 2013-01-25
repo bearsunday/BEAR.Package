@@ -17,8 +17,7 @@ use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter;
 use BEAR\Resource\Exception\Scheme;
 use BEAR\Resource\Exception\Uri;
-use BEAR\Sunday\Resource\Page\Error;
-use BEAR\Sunday\Web\ResponseInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogDirInject;
 use Exception;
 use Ray\Di\Exception\Binding;
@@ -112,7 +111,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     ) {
         $this->viewTemplate = $exceptionTpl;
         $this->response = $response;
-        $this->errorPage = $errorPage ? : new Error;
+        $this->errorPage = $errorPage ? : new ErrorPage;
     }
 
     /**
