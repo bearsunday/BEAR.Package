@@ -29,7 +29,7 @@ class Edit extends Page
     ];
 
     /**
-     * @param $int id
+     * @param $id
      */
     public function onGet($id)
     {
