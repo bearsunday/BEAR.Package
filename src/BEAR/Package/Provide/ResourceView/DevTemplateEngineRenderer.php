@@ -118,7 +118,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         }
         if (PHP_SAPI === 'cli') {
             // delegate original method to avoid render dev html.
-            return (new Renderer($this->templateEngineAdapter))->render($resourceObject);
+            return (new TemplateEngineRenderer($this->templateEngineAdapter))->render($resourceObject);
         }
         // resource code editor
         $class = get_class($resourceObject);
