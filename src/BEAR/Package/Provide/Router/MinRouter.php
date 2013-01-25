@@ -115,9 +115,7 @@ class MinRouter implements RouterInterface
     /**
      * Return request method
      *
-     * @param $globals
-     *
-     * @return array
+     * @return array [$method, $query]
      */
     public function getMethodQuery()
     {
