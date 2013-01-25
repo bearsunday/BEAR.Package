@@ -24,8 +24,16 @@ class HandleModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('')->annotatedWith('exceptionTpl')->toInstance(__DIR__ . '/template/view.php');
-        $this->bind('BEAR\Resource\AbstractObject')->annotatedWith('errorPage')->to('BEAR\Sunday\Resource\Page\Error');
-        $this->bind('BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface')->to('BEAR\Package\Debug\ExceptionHandle\ExceptionHandler');
+        $this
+            ->bind('')
+            ->annotatedWith('exceptionTpl')
+            ->toInstance(__DIR__ . '/template/view.php');
+        $this
+            ->bind('BEAR\Resource\AbstractObject')
+            ->annotatedWith('errorPage')
+            ->to('BEAR\Package\Debug\ExceptionHandle\ErrorPage');
+        $this
+            ->bind('BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface')
+            ->to('BEAR\Package\Debug\ExceptionHandle\ExceptionHandler');
     }
 }

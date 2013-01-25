@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Web;
+namespace BEAR\Package\Provide\Router;
 
 use Ray\Di\AbstractModule;
 
@@ -16,7 +16,7 @@ use Ray\Di\AbstractModule;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class RouterModule extends AbstractModule
+class MinRouterModule extends AbstractModule
 {
     /**
      * (non-PHPdoc)
@@ -24,6 +24,8 @@ class RouterModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('BEAR\Sunday\Web\RouterInterface')->to('BEAR\Package\Web\Router');
+        $this
+            ->bind('BEAR\Sunday\Extension\Router\RouterInterface')
+            ->to(__NAMESPACE__ . '\MinRouter');
     }
 }

@@ -5,17 +5,17 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Web;
+namespace BEAR\Package\Provide\Router;
 
 use Aura\Router\Map;
-use BEAR\Sunday\Web\RouterInterface;
+use BEAR\Sunday\Extension\Router\RouterInterface;
 
 /**
  * Standard Router
  *
  * @package BEAR.Sunday
  */
-class Router implements RouterInterface
+class MinRouter implements RouterInterface
 {
     /**
      * $GLOBALS
@@ -45,15 +45,45 @@ class Router implements RouterInterface
     }
 
     /**
+     * @param array $argv
+     *
+     * @throws BadRequest
+     * @throws MethodNotAllowed
+     */
+    public function setArgv(array $argv)
+    {
+        if (count($argv) < 3) {
+            throw new BadRequest('Usage: [get|post|put|delete] [uri]');
+        }
+        $isMethodAllowed = in_array($argv[1], ['get', 'post', 'put', 'delete', 'options']);
+        if (!$isMethodAllowed) {
+            throw new MethodNotAllowed($argv[1]);
+        }
+        $globals['_SERVER']['REQUEST_METHOD'] = $argv[1];
+        $globals['_SERVER']['REQUEST_URI'] = parse_url($argv[2], PHP_URL_PATH);
+        parse_str(parse_url($argv[2], PHP_URL_QUERY), $get);
+        $globals['_GET'] = $get;
+        $this->globals = $globals;
+        return $this;
+    }
+
+    public function setGlobal(array $global)
+    {
+        $this->globals = $global;
+        return $this;
+    }
+
+    /**
      * Match route
      *
      * @param array $globals
      *
-     * @return array
+     * @return array [$method, $pageUri, $query]
      */
-    public function match($globals)
+    public function match()
     {
-        $this->globals = $globals;
+        $this->globals = $this->globals ?: $GLOBALS;
+        $globals = $this->globals;
         $uri = $globals['_SERVER']['REQUEST_URI'];
         $route = $this->map ? $this->map->match(parse_url($uri, PHP_URL_PATH), $globals['_SERVER']) : false;
         if ($route === false) {
@@ -80,7 +110,7 @@ class Router implements RouterInterface
      *
      * @return array
      */
-    public function getMethodQuery($globals)
+    private function getMethodQuery(array $globals)
     {
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'GET' && isset($globals['_GET'][self::METHOD_OVERRIDE_GET])) {
             /** @noinspection PhpUnusedLocalVariableInspection */
