@@ -35,7 +35,7 @@ try {
 // Transfer
 
 OK: {
-    $app->response->setResource($app->page)->render()->prepare()->send();
+    $app->response->setResource($app->page)->render()->send();
     exit(0);
 }
 

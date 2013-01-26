@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the BEAR.Sunday package
+ * This file is part of the BEAR.Package package
  *
  * @package    BEAR.Sunday
  * @subpackage Exception
@@ -124,7 +124,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         $page = $this->buildErrorPage($e, $this->errorPage);
         $id = $page->headers['X-EXCEPTION-ID'];
         $this->writeExceptionLog($e, $id);
-        $this->response->setResource($page)->render()->prepare()->send();
+        $this->response->setResource($page)->render()->send();
         exit(1);
     }
 
