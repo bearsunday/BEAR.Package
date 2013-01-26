@@ -15,9 +15,6 @@ use Twig_Loader_String;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-
-// @codingStandardsIgnoreFile
-
 /**
  * Twig
  *
@@ -31,7 +28,7 @@ class TwigProvider implements Provide
     /**
      * Return instance
      *
-     * @return \Smarty
+     * @return \Twig_Environment
      */
     public function get()
     {
