@@ -113,7 +113,7 @@ final class HttpFoundation implements ResponseInterface
      * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
      *
      * @throws InvalidResourceType
-     * @return ResponseInterface
+     * @return self
      */
     public function setResource($resource)
     {
