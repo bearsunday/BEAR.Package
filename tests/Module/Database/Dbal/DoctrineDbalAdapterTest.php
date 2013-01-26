@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Sunday\Tests;
+namespace BEAR\Package\tests\Module\Database\Dbal;
 
 use PDO;
 use BEAR\Package\Module\Database\dbal\PagerfantaDbalAdapter;

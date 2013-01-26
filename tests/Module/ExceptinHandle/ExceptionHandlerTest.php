@@ -1,5 +1,5 @@
 <?php
-namespace BEAR\Package\Tests;
+namespace BEAR\Package\tests\Module\ExceptionHandle;
 
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandler;
