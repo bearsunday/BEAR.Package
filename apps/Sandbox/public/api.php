@@ -45,7 +45,7 @@ $app = require dirname(__DIR__) . '/scripts/instance.php';
     if (PHP_SAPI === 'cli') {
         $app->router->setArgv($argv);
         $uri = $argv[2];
-        $get = [];
+        parse_str((isset(parse_url($uri)['query']) ? parse_url($uri)['query'] : ''), $get);
     } else {
         $pathInfo = isset($globals['_SERVER']['PATH_INFO']) ? $globals['_SERVER']['PATH_INFO'] : '/index';
         $uri = 'app://self' . $pathInfo;
