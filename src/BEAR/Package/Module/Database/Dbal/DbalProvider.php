@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Sunday\Module\Provider;
+namespace BEAR\Package\Module\Database\Dbal;
 
 use Ray\Di\ProviderInterface as Provide;
 

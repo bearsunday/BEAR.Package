@@ -5,7 +5,7 @@
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Sunday\Module\Resource;
+namespace BEAR\Package\Provide\ResourceView;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
