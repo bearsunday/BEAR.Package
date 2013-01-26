@@ -31,6 +31,8 @@ class RequestSample
  */
 class JsonRendererTest extends \PHPUnit_Framework_TestCase
 {
+    private $testResource;
+
     protected function setUp()
     {
         parent::setUp();
@@ -46,29 +48,25 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         $this->testResource->setRenderer(new JsonRenderer);
     }
 
-    public function test_render()
+    public function testRender()
     {
         // json render
-        $result = (string) $this->testResource;
+        $result = (string)$this->testResource;
         $data = json_decode($result, true);
-        $expected = array (
-  'one' => 1,
-  'two' =>
-  array (
-    'code' => 200,
-    'headers' =>
-    array (
-    ),
-    'body' =>
-    array (
-      'one' => 1,
-      'two' => NULL,
-    ),
-    'uri' => 'test://self/path/to/resource',
-    'view' => NULL,
-    'links' => []
-  ),
-);
+        $expected = array(
+            'one' => 1,
+            'two' => array(
+                'code' => 200,
+                'headers' => array(),
+                'body' => array(
+                    'one' => 1,
+                    'two' => null,
+                ),
+                'uri' => 'test://self/path/to/resource',
+                'view' => null,
+                'links' => []
+            ),
+        );
         $this->assertSame($expected, $data);
     }
 }
