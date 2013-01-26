@@ -79,7 +79,7 @@ try {
     $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 
     // Transfer
-    $app->response->setResource($app->page)->render()->prepare()->outputWebConsoleLog()->send();
+    $app->response->setResource($app->page)->render()->outputWebConsoleLog()->send();
     exit(0);
 } catch(Exception $e) {
     $app->exceptionHandler->handle($e);
