@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\Tests;
+namespace BEAR\Package\tests\Module\Database\Dbal;
 
 use BEAR\Package\Module\Database\Dbal\PagingQuery;
 use PDO;
