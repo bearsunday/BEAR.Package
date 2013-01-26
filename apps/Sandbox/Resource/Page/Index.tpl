@@ -17,6 +17,14 @@
             padding-bottom: 40px;
 
         }
+        .effect {
+            color: white;
+            text-shadow: 4px 4px 12px #00BF7F, -3px -3px 8px #BF7F00
+        }
+
+        .sub-title {
+            font-family: "Montserrat Subrayada" sans-serif;
+        }
 
         .hero-unit h1 {
             color: white;

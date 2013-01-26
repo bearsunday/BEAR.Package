@@ -13,7 +13,7 @@ Installation
 Here's how to install sandbox application using BEAR.Sunday:
 
     curl -s https://getcomposer.org/installer | php
-    composer.phar create-project -s dev bear/package ./bear
+    php composer.phar create-project -s dev bear/package ./bear
 
 More information is availavle at [wiki:install](http://code.google.com/p/bearsunday/wiki/install).
 
