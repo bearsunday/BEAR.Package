@@ -25,11 +25,13 @@ class TwigModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Twig_Environment')->toProvider('BEAR\Package\Module\TemplateEngine\Twig\TwigProvider')->in(
-            Scope::SINGLETON
-        );
-        $this->bind('BEAR\Sunday\Resource\View\TemplateEngineAdapterInterface')->to(
-            'BEAR\Package\Module\TemplateEngine\Twig\TwigAdapter'
-        )->in(Scope::SINGLETON);
+        $this
+            ->bind('BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface')
+            ->to(__NAMESPACE__ . '\TwigAdapter')
+            ->in(Scope::SINGLETON);
+        $this
+            ->bind('Twig_Environment')
+            ->toProvider(__NAMESPACE__ . '\TwigProvider')
+            ->in(Scope::SINGLETON);
     }
 }

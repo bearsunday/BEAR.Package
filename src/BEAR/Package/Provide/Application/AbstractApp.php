@@ -14,9 +14,8 @@ use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
 use BEAR\Resource\AbstractObject as Page;
-use Guzzle\Cache\CacheAdapterInterface;
-use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
+use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**

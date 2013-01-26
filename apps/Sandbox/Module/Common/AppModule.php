@@ -7,6 +7,7 @@ namespace Sandbox\Module\Common;
 
 use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module as PackageModule;
+use BEAR\Package\Provide as ProvideModule;
 use Sandbox\Interceptor\PostFormValidator;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
@@ -43,7 +44,7 @@ class AppModule extends AbstractModule
         $this->install(new PackageModule\PackageModule($this, $scheme));
 
         // install twig
-        //$this->install(new PackageModule\TemplateEngine\Twig\TwigModule($this));
+        //$this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
 
         // dependency binding for application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Sandbox\App');
