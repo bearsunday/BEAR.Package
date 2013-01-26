@@ -10,10 +10,11 @@ class Debug
     /**
      * debug print
      *
-     * @param null $var
-     * @param int  $level
+     * @param array $trace
+     * @param null  $var
+     * @param int   $level
      */
-    public static function printR($trace, $var = null, $level = 2)
+    public static function printR(array $trace, $var = null, $level = 2)
     {
         // contents
         $htmlErrors = ini_get('html_errors');

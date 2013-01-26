@@ -2,13 +2,13 @@
 /**
  * This file is part of the BEAR.Sunday package
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Log\ZfLogModule;
 
 use BEAR\Sunday\Inject\LogDirInject;
-use Guzzle\Common\Log\Zf2LogAdapter;
+use Guzzle\Log\Zf2LogAdapter;
 use Ray\Di\ProviderInterface as Provide;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
@@ -28,7 +28,7 @@ class ZfLogProvider implements Provide
     /**
      * Provide instance
      *
-     * @return CacheAdapter
+     * @return \Guzzle\Log\LogAdapterInterface
      */
     public function get()
     {

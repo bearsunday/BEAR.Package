@@ -25,7 +25,7 @@ class Greeting extends AbstractObject
         return "Hello, {$name}";
 
         // same as above.
-        $this->body = "Hello, {$name}";
-        return $this;
+        // $this->body = "Hello, {$name}";
+        // return $this;
     }
 }

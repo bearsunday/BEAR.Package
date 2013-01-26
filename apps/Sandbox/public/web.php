@@ -2,7 +2,7 @@
 /**
  * CLI / Built-in web server script for development
  *
- * examaple:
+ * example:
  *
  * CLI:
  * $ php web.php get /
@@ -65,11 +65,12 @@ $app = require dirname(__DIR__) . '/scripts/instance.php';
 $app->logger->register($app);
 
 // Route
-$globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
-// or use router
-// $router = require dirname(__DIR__) . '/scripts/router/standard_router.php';
+if (PHP_SAPI === 'cli') {
+    $app->router->setArgv($argv);
+}
+
 // Dispatch
-list($method, $pagePath, $query) = $app->router->match($globals);
+list($method, $pagePath, $query) = $app->router->match();
 
 restore_exception_handler();
 

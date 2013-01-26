@@ -13,3 +13,7 @@ tmp
 *.log
 *.tpl.php
 di.log.txt
+
+VERSION
+
+composer.phar

@@ -2,7 +2,7 @@
     "name":"bear/package",
     "type":"library",
     "description":"BEAR.Sunday application package",
-    "version":"0.5.6",
+    "version":"0.6.0",
     "keywords":[
         "BEAR.Sunday",
         "application skeleton",
@@ -23,9 +23,8 @@
         "ext-curl":"*",
         "ray/aop":">=1.0.0",
         "ray/di":">=1.0.0",
-        "bear/resource":">=0.5.5",
-        "bear/sunday":">=0.5.5",
-        "printo/printo":"*",
+        "bear/resource":"0.6.*",
+        "bear/sunday":"0.6.*",
         "aura/di":"1.0.*",
         "aura/router":"1.0.*",
         "aura/signal":"1.0.*",
@@ -33,28 +32,32 @@
         "aura/installer-default":"1.0.*",
         "doctrine/common":"2.3.*-dev",
         "doctrine/dbal":"2.3.*-dev",
-        "facebook/xhprof":"0.9.*",
-        "guzzle/guzzle":"2.7.*",
+        "guzzle/guzzle":"3.0.*",
         "pagerfanta/pagerfanta":"dev-master",
         "smarty/smarty":"3.1.*",
         "symfony/console":"2.0.*",
         "symfony/http-foundation":"2.0.*",
-        "firephp/firephp-core":"dev-master",
         "twitter/bootstrap":"dev-master",
         "nocarrier/hal":"dev-master",
-        "twig/twig":">=1.0.0",
         "zendframework/zend-log":"2.0.*"
+    },
+    "require-dev":{
+        "printo/printo":"*",
+        "facebook/xhprof":"0.9.*",
+        "firephp/firephp-core":"dev-master",
+        "twig/twig":">=1.0.0"
     },
     "autoload":{
         "psr-0":{
             "BEAR\\Package":"src/",
+            "BEAR\\Installer":"src/",
             "Helloworld\\":"apps/",
             "Sandbox\\":"apps/"
         }
     },
     "minimum-stability":"dev",
-    "scripts":{
-        "post-package-install": "BEAR\\Package\\Distribution\\Installer::postPackageInstall"
+    "scripts"   :{
+        "post-install-cmd": "BEAR\\Installer\\Composer::postInstall"
     },
     "repositories":[
         {

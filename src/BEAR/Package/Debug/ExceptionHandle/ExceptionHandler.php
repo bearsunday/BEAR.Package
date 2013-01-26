@@ -17,8 +17,7 @@ use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter;
 use BEAR\Resource\Exception\Scheme;
 use BEAR\Resource\Exception\Uri;
-use BEAR\Sunday\Resource\Page\Error;
-use BEAR\Sunday\Web\ResponseInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogDirInject;
 use Exception;
 use Ray\Di\Exception\Binding;
@@ -44,7 +43,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     private $response;
 
     /**
-     * @var Error
+     * @var ResourceObject
      */
     private $errorPage;
 
@@ -98,9 +97,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Set response
      *
-     * @param null                               $exceptionTpl
-     * @param \BEAR\Sunday\Web\ResponseInterface $response
-     * @param \BEAR\Resource\AbstractObject      $errorPage
+     * @param mixed             $exceptionTpl
+     * @param ResponseInterface $response
+     * @param ResourceObject    $errorPage
      *
      * @Inject
      * @Named("exceptionTpl=exceptionTpl,errorPage=errorPage")
@@ -109,10 +108,10 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         $exceptionTpl = null,
         ResponseInterface $response,
         ResourceObject $errorPage = null
-    ){
+    ) {
         $this->viewTemplate = $exceptionTpl;
         $this->response = $response;
-        $this->errorPage = $errorPage ?: new Error;
+        $this->errorPage = $errorPage ? : new ErrorPage;
     }
 
     /**
@@ -133,7 +132,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * Return error page
      *
      * @param                               $e
-     * @param                               $exceptionId
      * @param \BEAR\Resource\AbstractObject $response
      *
      * @return \BEAR\Resource\AbstractObject
@@ -184,16 +182,19 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         INVALID_URI:
 
 
-
         if (PHP_SAPI === 'cli') {
         } else {
             $response->view = $this->getView($e);
         }
         $response->headers['X-EXCEPTION-CLASS'] = get_class($e);
         $response->headers['X-EXCEPTION-MESSAGE'] = str_replace(PHP_EOL, ' ', $e->getMessage());
-        $response->headers['X-EXCEPTION-CODE-FILE-LINE'] = '(' . $e->getCode() . ') ' . $e->getFile() . ':' . $e->getLine();
-        $previous = $e->getPrevious() ? (
-            get_class($e->getPrevious()) . ': ' . str_replace(PHP_EOL, ' ', $e->getPrevious()->getMessage())) : '-';
+        $response->headers['X-EXCEPTION-CODE-FILE-LINE'] = '(' . $e->getCode() . ') ' . $e->getFile(
+        ) . ':' . $e->getLine();
+        $previous = $e->getPrevious() ? (get_class($e->getPrevious()) . ': ' . str_replace(
+            PHP_EOL,
+            ' ',
+            $e->getPrevious()->getMessage()
+        )) : '-';
         $response->headers['X-EXCEPTION-PREVIOUS'] = $previous;
         $response->headers['X-EXCEPTION-ID'] = $exceptionId;
         $response->headers['X-EXCEPTION-ID-FILE'] = $this->getLogFilePath($exceptionId);
@@ -207,12 +208,12 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         // exception screen in develop
         if (isset($this->injector)) {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $dependencyBindings = (string) $this->injector;
+            $dependencyBindings = (string)$this->injector;
             /** @noinspection PhpUnusedLocalVariableInspection */
             $modules = $this->injector->getModule()->modules;
         } elseif (isset($e->module)) {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $dependencyBindings = (string) $e->module;
+            $dependencyBindings = (string)$e->module;
             /** @noinspection PhpUnusedLocalVariableInspection */
             $modules = $e->module->modules;
         } else {
@@ -239,7 +240,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             $data .= PHP_EOL . PHP_EOL . '-- Previous Exception --' . PHP_EOL . PHP_EOL;
             $data .= $previousE->getTraceAsString();
         }
-        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL. (string)$this->injector;
+        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL . (string)$this->injector;
         $file = $this->getLogFilePath($exceptionId);
         if (is_writable($this->logDir)) {
             file_put_contents($file, $data);

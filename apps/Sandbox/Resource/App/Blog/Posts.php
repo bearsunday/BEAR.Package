@@ -5,7 +5,7 @@
  */
 namespace Sandbox\Resource\App\Blog;
 
-use BEAR\Package\Interceptor\Setter\DbSetter;
+use BEAR\Package\Module\Database\Dbal\Setter\DbSetterTrait;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Link;
 use BEAR\Resource\Code;
@@ -27,7 +27,7 @@ use BEAR\Sunday\Annotation\CacheUpdate;
  */
 class Posts extends ResourceObject
 {
-    use DbSetter;
+    use DbSetterTrait;
 
     /**
      * @var string

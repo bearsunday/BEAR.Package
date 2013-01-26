@@ -1,5 +1,5 @@
 {
-    "hash": "76bdbc99238fa5a65f91359b4e0590fc",
+    "hash": "5a0c602e265a8c335fdcfeea5dc0f7e9",
     "packages": [
         {
             "name": "aura/di",
@@ -264,29 +264,32 @@
         },
         {
             "name": "bear/resource",
-            "version": "dev-master",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "8aa61f093e8b189b7efefe9479f04ca6d9ab0e40"
+                "reference": "0.6.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Resource/archive/8aa61f093e8b189b7efefe9479f04ca6d9ab0e40.zip",
-                "reference": "8aa61f093e8b189b7efefe9479f04ca6d9ab0e40",
+                "url": "https://github.com/koriym/BEAR.Resource/archive/0.6.0.zip",
+                "reference": "0.6.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
-                "guzzle/guzzle": "2.7.*",
-                "doctrine/common": "2.3.*-dev",
                 "ray/aop": ">=1.0.0-beta2",
                 "ray/di": ">=1.0.0-beta3",
                 "aura/di": "1.0.*",
                 "aura/signal": "1.0.*",
-                "aura/installer-default": "1.0.*"
+                "aura/installer-default": "1.0.*",
+                "doctrine/common": "2.3.*-dev",
+                "guzzle/guzzle": "3.0.*"
             },
-            "time": "2013-01-18 00:01:44",
+            "require-dev": {
+                "facebook/xhprof": "dev-master"
+            },
+            "time": "2013-01-25 15:42:28",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -314,31 +317,31 @@
         },
         {
             "name": "bear/sunday",
-            "version": "dev-master",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "651c2b174fec71957a98a1eef9fb9e45a03de819"
+                "reference": "0.6.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Sunday/archive/651c2b174fec71957a98a1eef9fb9e45a03de819.zip",
-                "reference": "651c2b174fec71957a98a1eef9fb9e45a03de819",
+                "url": "https://github.com/koriym/BEAR.Sunday/archive/0.6.0.zip",
+                "reference": "0.6.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "ext-apc": "*",
                 "ext-curl": "*",
-                "ray/aop": ">=1.0.0-beta2",
-                "bear/resource": ">=0.5.1",
-                "guzzle/guzzle": "2.7.*",
-                "nocarrier/hal": "dev-master",
-                "ray/di": ">=1.0.0-beta3",
                 "aura/di": "1.0.*",
-                "aura/signal": "1.0.*"
+                "aura/signal": "1.0.*",
+                "ray/di": ">=1.0.0-beta3",
+                "ray/aop": ">=1.0.0-beta2",
+                "bear/resource": "0.6.*",
+                "guzzle/guzzle": "3.0.*",
+                "nocarrier/hal": "dev-master"
             },
-            "time": "2013-01-17 23:59:40",
+            "time": "2013-01-25 16:09:33",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -421,7 +424,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -443,19 +446,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal",
-                "reference": "4c33f633c48eeafe3408b308f6fc51743a21a3b7"
+                "reference": "fd45c6f6baa618d871f3201fabe76df5043abb1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/archive/4c33f633c48eeafe3408b308f6fc51743a21a3b7.zip",
-                "reference": "4c33f633c48eeafe3408b308f6fc51743a21a3b7",
+                "url": "https://github.com/doctrine/dbal/archive/fd45c6f6baa618d871f3201fabe76df5043abb1e.zip",
+                "reference": "fd45c6f6baa618d871f3201fabe76df5043abb1e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "2013-01-07 20:03:43",
+            "time": "2013-01-20 11:50:36",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -501,80 +504,46 @@
             ]
         },
         {
-            "name": "facebook/xhprof",
-            "version": "0.9.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/facebook/xhprof.git",
-                "reference": "master"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/facebook/xhprof/zipball/master",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "library"
-        },
-        {
-            "name": "firephp/firephp-core",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/RobLoach/firephp-core",
-                "reference": "c26d972dcb28fd483fa193512091df7b3c85e450"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/RobLoach/firephp-core/zipball/c26d972dcb28fd483fa193512091df7b3c85e450",
-                "reference": "c26d972dcb28fd483fa193512091df7b3c85e450",
-                "shasum": ""
-            },
-            "time": "2012-05-29 00:08:14",
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "lib/FirePHPCore/FirePHP.class.php",
-                    "lib/FirePHPCore/fb.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christoph Dorn",
-                    "email": "christoph@christophdorn.com",
-                    "homepage": "christophdorn.com"
-                }
-            ],
-            "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
-            "homepage": "https://github.com/firephp/firephp-core"
-        },
-        {
             "name": "guzzle/guzzle",
-            "version": "v2.7.2",
+            "version": "v3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle",
-                "reference": "v2.7.2"
+                "reference": "v3.0.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/guzzle/zipball/v2.7.2",
-                "reference": "v2.7.2",
+                "url": "https://github.com/guzzle/guzzle/archive/v3.0.7.zip",
+                "reference": "v3.0.7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "ext-curl": "*",
-                "symfony/event-dispatcher": "2.*"
+                "symfony/event-dispatcher": ">=2.1"
             },
             "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
                 "guzzle/common": "self.version",
                 "guzzle/http": "self.version",
-                "guzzle/parser": "self.version"
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
             },
             "require-dev": {
                 "doctrine/common": "*",
@@ -582,15 +551,17 @@
                 "monolog/monolog": "1.*",
                 "zendframework/zend-cache": "2.0.*",
                 "zendframework/zend-log": "2.0.*",
-                "zendframework/zend-loader": "2.0.*",
-                "zendframework/zend-stdlib": "2.0.*",
-                "zendframework/zend-eventmanager": "2.0.*",
-                "zendframework/zend-servicemanager": "2.0.*",
-                "zend/zend-log1": "1.11",
-                "zend/zend-cache1": "1.11"
+                "zend/zend-log1": "1.12",
+                "zend/zend-cache1": "1.12",
+                "phpunit/phpunit": "3.7.*"
             },
-            "time": "2012-07-02 14:04:37",
+            "time": "2012-12-19 23:06:35",
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Tests": "tests/",
@@ -630,18 +601,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal",
-                "reference": "cc466546c6ca5df3e806cd91258cdf194518a12f"
+                "reference": "0.9.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/blongden/hal/archive/cc466546c6ca5df3e806cd91258cdf194518a12f.zip",
-                "reference": "cc466546c6ca5df3e806cd91258cdf194518a12f",
+                "url": "https://github.com/blongden/hal/archive/0.9.0.zip",
+                "reference": "0.9.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2012-11-20 14:48:17",
+            "time": "2013-01-24 12:31:32",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -716,49 +687,6 @@
             ]
         },
         {
-            "name": "printo/printo",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/print_o.git",
-                "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/koriym/print_o/archive/abd0d6b68d00dc98a71124215780b57ec3ede268.zip",
-                "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "time": "2012-10-24 16:31:36",
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/Printo/Printo.php",
-                    "src/Printo/print_o.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym"
-                }
-            ],
-            "description": "An object graph visualizer.",
-            "homepage": "https://github.com/koriym/print_o",
-            "keywords": [
-                "debug",
-                "object"
-            ]
-        },
-        {
             "name": "ray/aop",
             "version": "dev-master",
             "source": {
@@ -809,12 +737,12 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/koriym/Ray.Di.git",
-                "reference": "709427d4401c0aa383d35df584f3c4421d399d3a"
+                "reference": "1f858ae7a065e459d3fab7150a04da5058dcf111"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/Ray.Di/archive/709427d4401c0aa383d35df584f3c4421d399d3a.zip",
-                "reference": "709427d4401c0aa383d35df584f3c4421d399d3a",
+                "url": "https://github.com/koriym/Ray.Di/archive/1f858ae7a065e459d3fab7150a04da5058dcf111.zip",
+                "reference": "1f858ae7a065e459d3fab7150a04da5058dcf111",
                 "shasum": ""
             },
             "require": {
@@ -824,7 +752,7 @@
                 "ray/aop": ">=1.0.0-beta2",
                 "aura/installer-default": "1.0.*"
             },
-            "time": "2012-12-15 18:19:37",
+            "time": "2013-01-22 09:37:39",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -947,12 +875,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher",
-                "reference": "1ba2e333b644ac0a0e5ef751d514dd01b3a26e9d"
+                "reference": "v2.2.0-BETA2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/EventDispatcher/archive/1ba2e333b644ac0a0e5ef751d514dd01b3a26e9d.zip",
-                "reference": "1ba2e333b644ac0a0e5ef751d514dd01b3a26e9d",
+                "url": "https://github.com/symfony/EventDispatcher/archive/v2.2.0-BETA2.zip",
+                "reference": "v2.2.0-BETA2",
                 "shasum": ""
             },
             "require": {
@@ -1037,55 +965,6 @@
             "homepage": "http://symfony.com"
         },
         {
-            "name": "twig/twig",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git://github.com/fabpot/Twig.git",
-                "reference": "3225226e0be466395414da4b362013531eedb580"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/fabpot/Twig/archive/3225226e0be466395414da4b362013531eedb580.zip",
-                "reference": "3225226e0be466395414da4b362013531eedb580",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.4"
-            },
-            "time": "2013-01-16 13:37:25",
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.12-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Twig_": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com"
-                }
-            ],
-            "description": "Twig, the flexible, fast, and secure template language for PHP",
-            "homepage": "http://twig.sensiolabs.org",
-            "keywords": [
-                "templating"
-            ]
-        },
-        {
             "name": "twitter/bootstrap",
             "version": "master",
             "source": {
@@ -1100,7 +979,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2012-12-09 05:05:05"
+            "time": "2012-12-22 02:54:36"
         },
         {
             "name": "zendframework/zend-log",
@@ -1185,7 +1064,152 @@
             }
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+        {
+            "name": "facebook/xhprof",
+            "version": "0.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/xhprof.git",
+                "reference": "master"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/facebook/xhprof/zipball/master",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library"
+        },
+        {
+            "name": "firephp/firephp-core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firephp/firephp-core",
+                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/firephp/firephp-core/archive/f60753a8dd7817e4da6bc73e0e717387a9a0866a.zip",
+                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a",
+                "shasum": ""
+            },
+            "time": "2013-01-19 22:55:24",
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/FirePHPCore/FirePHP.class.php",
+                    "lib/FirePHPCore/fb.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Dorn",
+                    "email": "christoph@christophdorn.com",
+                    "homepage": "http://christophdorn.com"
+                }
+            ],
+            "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
+            "homepage": "https://github.com/firephp/firephp-core"
+        },
+        {
+            "name": "printo/printo",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koriym/print_o.git",
+                "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/koriym/print_o/archive/abd0d6b68d00dc98a71124215780b57ec3ede268.zip",
+                "reference": "abd0d6b68d00dc98a71124215780b57ec3ede268",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "time": "2012-10-24 16:31:36",
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/Printo/Printo.php",
+                    "src/Printo/print_o.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym"
+                }
+            ],
+            "description": "An object graph visualizer.",
+            "homepage": "https://github.com/koriym/print_o",
+            "keywords": [
+                "debug",
+                "object"
+            ]
+        },
+        {
+            "name": "twig/twig",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/fabpot/Twig.git",
+                "reference": "93c6a8dedc46c73ccdd61342de3d5e761e4412f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/fabpot/Twig/archive/93c6a8dedc46c73ccdd61342de3d5e761e4412f6.zip",
+                "reference": "93c6a8dedc46c73ccdd61342de3d5e761e4412f6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "time": "2013-01-18 09:58:04",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ]
+        }
+    ],
     "aliases": [
 
     ],
@@ -1194,8 +1218,8 @@
         "doctrine/common": 20,
         "doctrine/dbal": 20,
         "pagerfanta/pagerfanta": 20,
-        "firephp/firephp-core": 20,
         "twitter/bootstrap": 20,
-        "nocarrier/hal": 20
+        "nocarrier/hal": 20,
+        "firephp/firephp-core": 20
     }
 }

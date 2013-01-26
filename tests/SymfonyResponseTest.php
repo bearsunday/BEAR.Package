@@ -2,7 +2,7 @@
 
 namespace BEAR\Sunday\Tests;
 
-use BEAR\Sunday\Output\Console;
+use BEAR\Package\Output\Console;
 
 use BEAR\Package\Web\SymfonyResponse as Response;
 use BEAR\Sunday\Resource\Page\Ok;

@@ -10,7 +10,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resourcce
+     * @var BEAR\Resource\Resource
      */
     private $resource;
 
@@ -21,7 +21,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         if (!$app) {
             $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Application\Context');
+            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         }
         $this->resource = $app->resource;
     }
