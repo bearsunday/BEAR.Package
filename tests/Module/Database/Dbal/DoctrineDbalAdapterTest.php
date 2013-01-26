@@ -3,7 +3,7 @@
 namespace BEAR\Sunday\Tests;
 
 use PDO;
-use BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapter;
+use BEAR\Package\Module\Database\dbal\PagerfantaDbalAdapter;
 use Doctrine\DBAL\DriverManager;
 
 /**
@@ -40,12 +40,12 @@ class DoctrineDbalAdapterTest extends \PHPUnit_Extensions_Database_TestCase
         $params['pdo'] = $this->pdo;
         $db = DriverManager::getConnection($params);
         $this->sql = 'SELECT * FROM posts';
-        $this->adapter = new DoctrineDbalAdapter($db, $this->sql);
+        $this->adapter = new PagerfantaDbalAdapter($db, $this->sql);
     }
 
     public function test_New()
     {
-        $this->assertInstanceOf('BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapter', $this->adapter);
+        $this->assertInstanceOf('\BEAR\Package\Module\Database\dbal\PagerfantaDbalAdapter', $this->adapter);
     }
 
     public function test_count()

@@ -1,9 +1,9 @@
 <?php
 namespace BEAR\Package\Tests;
 
-use BEAR\Package\Output\Console;
+use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandler;
-use BEAR\Package\Web\SymfonyResponse;
+use BEAR\Package\Provide\WebResponse\HttpFoundation;
 
 class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,7 +12,7 @@ class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $this->exceptionHandler = new ExceptionHandler(
             'dummy.tpl',
-            new SymfonyResponse(new Console)
+            new HttpFoundation(new ConsoleOutput)
         );
     }
 
