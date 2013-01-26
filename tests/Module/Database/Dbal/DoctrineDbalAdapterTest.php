@@ -3,8 +3,8 @@
 namespace BEAR\Package\tests\Module\Database\Dbal;
 
 use PDO;
-use BEAR\Package\Module\Database\dbal\PagerfantaDbalAdapter;
 use Doctrine\DBAL\DriverManager;
+use BEAR\Package\Module\Database\Dbal\PagerfantaDbalAdapter;
 
 /**
  * Test class for Pager.
@@ -12,26 +12,36 @@ use Doctrine\DBAL\DriverManager;
 class DoctrineDbalAdapterTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
+     * @var PagerfantaDbalAdapter
+     */
+    private $adapter;
+
+    /**
      * @var PDO
      */
     private $pdo;
 
     /**
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     * @var string
+     */
+    private $sql;
+
+    /**
+     * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
     {
-        $this->pdo = require __DIR__ . '/scripts/db.php';;
+        $this->pdo = require __DIR__ . '/scripts/db.php';
 
         return $this->createDefaultDBConnection($this->pdo, 'mysql');
     }
 
     /**
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
      */
     public function getDataSet()
     {
-        return $this->createMySQLXMLDataSet(__DIR__.'/mock/pager_seed.xml');
+        return $this->createMySQLXMLDataSet(__DIR__ . '/mock/pager_seed.xml');
     }
 
     protected function setUp()
@@ -43,24 +53,24 @@ class DoctrineDbalAdapterTest extends \PHPUnit_Extensions_Database_TestCase
         $this->adapter = new PagerfantaDbalAdapter($db, $this->sql);
     }
 
-    public function test_New()
+    public function testNew()
     {
         $this->assertInstanceOf('\BEAR\Package\Module\Database\dbal\PagerfantaDbalAdapter', $this->adapter);
     }
 
-    public function test_count()
+    public function testCount()
     {
         $count = $this->adapter->getNbResults();
         $this->assertSame(5, $count);
     }
 
-    public function test_getSlice()
+    public function testGetSlice()
     {
         $offset = 1;
         $length = 2;
         $result = $this->adapter->getSlice($offset, $length);
-        $this->assertSame(2, (integer) $result[0]['id']);
-        $this->assertSame(3, (integer) $result[1]['id']);
+        $this->assertSame(2, (integer)$result[0]['id']);
+        $this->assertSame(3, (integer)$result[1]['id']);
         $this->assertSame(2, count($result));
     }
 }

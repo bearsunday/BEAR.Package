@@ -9,13 +9,15 @@ use BEAR\Package\Provide\Router\MinRouter;
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+    private $router;
+
     protected function setUp()
     {
         parent::setUp();
         $this->router = new MinRouter;
     }
 
-    public function test_New()
+    public function testNew()
     {
         $this->assertInstanceOf('BEAR\Sunday\Extension\Router\RouterInterface', $this->router);
     }

@@ -19,6 +19,11 @@ class Ok extends AbstractObject
  */
 class HttpFoundationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var HttpFoundation
+     */
+    private $response;
+
     protected function setUp()
     {
         parent::setUp();
@@ -30,7 +35,7 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('BEAR\Sunday\Extension\WebResponse\ResponseInterface', $this->response);
     }
 
-    public function test_Output()
+    public function testOutput()
     {
         $response = new Ok;
         $response->body = '';
