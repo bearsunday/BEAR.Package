@@ -10,13 +10,12 @@ before_install:
  - 'wget http://pecl.php.net/get/APC ; tar -xzf APC ; sh -c "cd APC-* && phpize && ./configure  && make && sudo make install" ; echo "extension=apc.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`'
  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS blogbeartest;USE blogbeartest;CREATE TABLE IF NOT EXISTS posts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);" -u root; fi
  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS blogbear;USE blogbear;CREATE TABLE IF NOT EXISTS posts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);" -u root; fi
- - composer install
  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
  - pear config-set auto_discover 1
  - pear install pear.phpunit.de/PHP_Invoker
  - pear install pear.phpunit.de/DbUnit
  - wget http://getcomposer.org/composer.phar
- - php composer.phar install -dev
+ - php composer.phar install --dev
 
 script:
  - phpunit --coverage-text
