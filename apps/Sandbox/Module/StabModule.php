@@ -6,6 +6,7 @@
 namespace Sandbox\Module;
 
 use Ray\Di\AbstractModule;
+use BEAR\Package\Module\Stab\StabModule as PackageStabModule;
 use BEAR\Sunday\Interceptor\Stab;
 
 /**
@@ -24,24 +25,7 @@ class StabModule extends AbstractModule
     {
         $this->install(new DevModule);
         $stab = include __DIR__ . '/common/stab/resource.php';
-        $this->installResourceStab($stab);
-    }
-
-    /**
-     * Install resource stab
-     *
-     * @param array $stab
-     *
-     * @return void
-     */
-    protected function installResourceStab(array $stab)
-    {
-        foreach ($stab as $class => $value) {
-            $this->bindInterceptor(
-                $this->matcher->subclassesOf($class),
-                $this->matcher->any(),
-                [new Stab($value)]
-            );
-        }
+        /** @var $stab array */
+        $this->install(new PackageStabModule($stab));
     }
 }

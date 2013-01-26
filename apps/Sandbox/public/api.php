@@ -2,7 +2,7 @@
 /**
  * CLI  Built-in web server dev script
  *
- * Examaple:
+ * Example:
  *
  * CLI:
  * $ php dev.php get /hello
@@ -41,15 +41,21 @@ $app = require dirname(__DIR__) . '/scripts/clear.php';
 $mode = 'Api';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 
-    // Dispatch
-    $globals = (PHP_SAPI === 'cli') ? $app->globals->get($argv) : $GLOBALS;
-    $pathInfo = isset($globals['_SERVER']['PATH_INFO']) ? $globals['_SERVER']['PATH_INFO'] : '/index';
-    $uri = (PHP_SAPI === 'cli') ? $argv[2] : 'app://self' . $pathInfo;
+        // Dispatch
+    if (PHP_SAPI === 'cli') {
+        $app->router->setArgv($argv);
+        $uri = $argv[2];
+        $get = [];
+    } else {
+        $pathInfo = isset($globals['_SERVER']['PATH_INFO']) ? $globals['_SERVER']['PATH_INFO'] : '/index';
+        $uri = 'app://self' . $pathInfo;
+        $get = $_GET;
+    }
 try {
     // Router
-    list($method, $query) = $app->router->getMethodQuery($globals);
+    list($method,) = $app->router->getMethodQuery();
     // Request
-    $page = $app->resource->$method->uri($uri)->withQuery($globals['_GET'])->eager->request();
+    $page = $app->resource->$method->uri($uri)->withQuery($get)->eager->request();
 } catch (Exception $e) {
     $page = $app->exceptionHandler->handle($e);
 }

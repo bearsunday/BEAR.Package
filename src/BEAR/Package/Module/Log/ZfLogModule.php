@@ -2,7 +2,7 @@
 /**
  * This file is part of the BEAR.Sunday package
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Log;
@@ -24,7 +24,7 @@ class ZfLogModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Guzzle\Common\Log\LogAdapterInterface')->toProvider(
+        $this->bind('Guzzle\Log\LogAdapterInterface')->toProvider(
             'BEAR\Package\Module\Log\ZfLogModule\ZfLogProvider'
         );
     }

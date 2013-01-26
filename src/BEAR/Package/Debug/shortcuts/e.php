@@ -15,9 +15,11 @@ use BEAR\Package\Debug\Exception\Debug as DebugException;
 /**
  * Throw exception
  *
- * @package BEAR.Package
+ * @param null $var
+ * @param int  $level
  *
- * @param $var
+ * @package BEAR.Package
+ * @throws BEAR\Package\Debug\Exception\Debug
  */
 function e($var = null, $level = 2)
 {

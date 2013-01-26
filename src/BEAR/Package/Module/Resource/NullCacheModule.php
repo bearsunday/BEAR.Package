@@ -2,7 +2,7 @@
 /**
  * This file is part of the BEAR.Packages package
  *
- * @package BEAR.Sunday
+ * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Resource;
@@ -24,8 +24,8 @@ class NullCacheModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Guzzle\Common\Cache\CacheAdapterInterface')->annotatedWith('resource_cache')->to(
-            'Guzzle\Common\Cache\NullCacheAdapter'
+        $this->bind('Guzzle\Cache\CacheAdapterInterface')->annotatedWith('resource_cache')->to(
+            'Guzzle\Cache\NullCacheAdapter'
         );
     }
 }

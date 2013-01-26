@@ -24,7 +24,7 @@ class AppModule extends AbstractModule
     protected function configure()
     {
         // di - application
-        $this->bind('BEAR\Sunday\Application\Context')->to('Helloworld\App');
+        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Helloworld\App');
         $config = include __DIR__ . '/config.php';
         $this->install(new SundayModule\Constant\NamedModule($config));
         $this->install(new SundayModule\Framework\FrameworkModule($this));

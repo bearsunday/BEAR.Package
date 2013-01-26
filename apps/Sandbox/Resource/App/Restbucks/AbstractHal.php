@@ -6,7 +6,7 @@
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Resource\AbstractObject;
-use BEAR\Resource\Renderable;
+use BEAR\Resource\RenderInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -21,12 +21,12 @@ abstract class AbstractHal extends AbstractObject
     /**
      * Set HalRenderer
      *
-     * @param Renderable $renderer
+     * @param RenderInterface $renderer
      *
      * @Inject
      * @Named("hal")
      */
-    public function setRenderer(Renderable $renderer)
+    public function setRenderer(RenderInterface $renderer)
     {
         $this->renderer = $renderer;
     }

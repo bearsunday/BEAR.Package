@@ -6,17 +6,17 @@
  */
 namespace Helloworld;
 
-use BEAR\Sunday\Application\Context;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\Injector;
 use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Named;
-use BEAR\Sunday\Web\ResponseInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Exception\ExceptionHandlerInterface;
 use BEAR\Sunday\Application\Logger as ApplicationLogger;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\SignalHandler\Provides;
-use Guzzle\Common\Cache\CacheAdapterInterface;
+use Guzzle\Cache\CacheAdapterInterface;
 
 /**
  * Application

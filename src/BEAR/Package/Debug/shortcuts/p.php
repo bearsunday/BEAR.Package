@@ -16,7 +16,8 @@ use BEAR\Package\Debug\Debug;
  *
  * @package BEAR.Package
  *
- * @param $var
+ * @param mixed $var
+ * @param int  $level
  */
 function p($var, $level = 2)
 {

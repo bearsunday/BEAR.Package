@@ -40,6 +40,7 @@ OK: {
 }
 
 ERROR: {
+    /** @noinspection PhpUnreachableStatementInspection */
     http_response_code($code);
     require dirname(__DIR__) . "/http/{$code}.php";
     exit(1);

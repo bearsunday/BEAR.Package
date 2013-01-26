@@ -29,7 +29,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resourcce
+     * @var BEAR\Resource\Resource
      */
     private $resource;
 
@@ -40,7 +40,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
         parent::setUp();
         if (!$app) {
             $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Application\Context');
+            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         }
         $this->resource = $app->resource;
     }

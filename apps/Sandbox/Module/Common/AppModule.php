@@ -7,6 +7,7 @@ namespace Sandbox\Module\Common;
 
 use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module as PackageModule;
+use BEAR\Package\Provide as ProvideModule;
 use Sandbox\Interceptor\PostFormValidator;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
@@ -40,15 +41,18 @@ class AppModule extends AbstractModule
         // install package module
         $this->install(new SundayModule\Constant\NamedModule($this->config));
         $scheme = __NAMESPACE__ . '\SchemeCollectionProvider';
-        $this->install(new PackageModule\Package\PackageModule($this, $scheme));
+        $this->install(new PackageModule\PackageModule($this, $scheme));
 
         // install twig
-        //$this->install(new PackageModule\TemplateEngine\Twig\TwigModule($this));
+        //$this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
 
         // dependency binding for application
-        $this->bind('BEAR\Sunday\Application\Context')->to('Sandbox\App');
+        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Sandbox\App');
         $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
-        $this->bind('BEAR\Resource\Renderable')->annotatedWith('hal')->to('BEAR\Sunday\Resource\View\HalRenderer')->in(
+        $this->bind('BEAR\Resource\RenderInterface')
+            ->annotatedWith('hal')
+            ->to('BEAR\Package\Provide\ResourceView\HalRenderer')
+            ->in(
             Scope::SINGLETON
         );
         // aspect weaving for application

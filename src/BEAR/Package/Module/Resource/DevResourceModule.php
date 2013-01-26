@@ -9,6 +9,7 @@ namespace BEAR\Package\Module\Resource;
 
 use Ray\Di\AbstractModule;
 use BEAR\Sunday\Module as SundayModule;
+use BEAR\Package\Provide as ProvideModule;
 use Ray\Di\Scope;
 
 /**
@@ -33,7 +34,7 @@ class DevResourceModule extends AbstractModule
         $this->bind('Doctrine\DBAL\Logging\SQLLogger')->to('Doctrine\DBAL\Logging\DebugStack')->in(Scope::SINGLETON);
         // Common debug
         $this->bind('BEAR\Resource\InvokerInterface')->to('BEAR\Resource\DevInvoker')->in(Scope::SINGLETON);
-        $this->install(new SundayModule\TemplateEngine\DevRendererModule($this));
+        $this->install(new ProvideModule\ResourceView\DevRendererModule($this));
         $this->installDevLogger();
     }
 
@@ -44,7 +45,7 @@ class DevResourceModule extends AbstractModule
      */
     private function installDevLogger()
     {
-        $logger = $this->requestInjection('BEAR\Sunday\Interceptor\Logger');
+        $logger = $this->requestInjection(__NAMESPACE__ . '\Logger');
         $this->bindInterceptor(
             $this->matcher->subclassesOf('BEAR\Resource\Object'),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Log'),

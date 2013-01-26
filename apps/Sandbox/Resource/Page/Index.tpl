@@ -17,10 +17,9 @@
             padding-bottom: 40px;
 
         }
-
         .effect {
             color: white;
-            text-shadow: 3px 3px 8px #BF7F00, -3px -3px 8px #BF7F00
+            text-shadow: 4px 4px 12px #00BF7F, -3px -3px 8px #BF7F00
         }
 
         .sub-title {
@@ -154,7 +153,6 @@
             </p>
             <a class="btn" href="_dev/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC
                 Admin &raquo;</a>
-            </p>
             <p><a class="btn" href="_dev/memcache.php" id="memcache" rel="tooltip"
                   title="Open memcache admin carroll panel">Memcache Admin &raquo;</a>
             </p>

@@ -18,7 +18,7 @@ use Ray\Di\ApcConfig;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
 use Doctrine\Common\Annotations\AnnotationReader;
-use BEAR\Package\Exception\InvalidMode;
+use BEAR\Package\Provide\Application\Exception\InvalidMode;
 
 // init
 umask(0);
@@ -43,7 +43,7 @@ if (!class_exists($moduleName)) {
 
 // create application object
 $injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(new Definition, new AnnotationReader)))), new $moduleName);
-$app = $injector->getInstance('BEAR\Sunday\Application\Context');
+$app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
 // log binding info
 $logFile = dirname(__DIR__) . "/data/log/module.{$cacheKey}.log";
 file_put_contents($logFile, (string)$injector);
