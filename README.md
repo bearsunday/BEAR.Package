@@ -12,17 +12,17 @@ Installation
 
 Here's how to install sandbox application using BEAR.Sunday:
 
-    curl -s https://getcomposer.org/installer | php
-    php composer.phar create-project -s dev bear/package ./bear
+    $ curl -s https://getcomposer.org/installer | php
+    $ php composer.phar create-project -s dev --dev bear/package ./bear
 
 More information is availavle at [wiki:install](http://code.google.com/p/bearsunday/wiki/install).
 
 built-in web server for development
 ------------------
 
-    cd apps/Sandbox/public
-    php -S localhost:8088 web.php
-    php -S localhost:8089 api.php
+    $ cd apps/Sandbox/public
+    $ php -S localhost:8088 web.php
+    $ php -S localhost:8089 api.php
 
 Virtual Host for Production
 ------------
