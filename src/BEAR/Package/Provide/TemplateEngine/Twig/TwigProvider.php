@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\ProvideExtra\TemplateEngine\Twig;
+namespace BEAR\Package\Provide\TemplateEngine\Twig;
 
 use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Sunday\Inject\AppDirInject;

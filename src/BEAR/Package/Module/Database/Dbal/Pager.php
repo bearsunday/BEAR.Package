@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Database;
+namespace BEAR\Package\Module\Database\Dbal;
 
 use Pagerfanta\Pagerfanta;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
