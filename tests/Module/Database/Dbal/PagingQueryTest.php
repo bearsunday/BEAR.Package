@@ -2,7 +2,7 @@
 
 namespace BEAR\Package\Tests;
 
-use BEAR\Package\Module\Database\PagingQuery;
+use BEAR\Package\Module\Database\Dbal\PagingQuery;
 use PDO;
 use Doctrine\DBAL\DriverManager;
 
@@ -42,7 +42,7 @@ class PagingQueryTest extends \PHPUnit_Extensions_Database_TestCase
 
     public function test_New()
     {
-        $this->assertInstanceOf('BEAR\Package\Module\Database\PagingQuery', $this->pager);
+        $this->assertInstanceOf('BEAR\Package\Module\Database\Dbal\PagingQuery', $this->pager);
     }
 
     public function test_count()

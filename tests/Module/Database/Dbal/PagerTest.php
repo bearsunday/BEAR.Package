@@ -4,8 +4,8 @@ namespace BEAR\Package\Tests;
 
 use Pagerfanta\Pagerfanta;
 
-use BEAR\Package\Module\Database\Pager;
-use BEAR\Package\Module\Database\DoctrineDbalModule\Pagerfanta\DoctrineDbalAdapter;
+use BEAR\Package\Module\Database\Dbal\Pager;
+use BEAR\Package\Module\Database\Dbal\PagerfantaDbalAdapter;
 use PDO;
 use Doctrine\DBAL\DriverManager;
 
@@ -40,7 +40,7 @@ class PagerTest extends \PHPUnit_Extensions_Database_TestCase
         $params['pdo'] = $this->pdo;
         $db = DriverManager::getConnection($params);
         $this->query = 'SELECT * FROM posts';
-        $this->pager = new Pager($db, new Pagerfanta(new DoctrineDbalAdapter($db, $this->query)));
+        $this->pager = new Pager($db, new Pagerfanta(new PagerfantaDbalAdapter($db, $this->query)));
     }
 
     public function test_getPagerQuery()
