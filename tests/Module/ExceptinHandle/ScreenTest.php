@@ -1,11 +1,16 @@
 <?php
-namespace BEAR\Package\Tests;
+namespace BEAR\Package\tests\Module\ExceptionHandle;
 
 use BEAR\Package\Debug\ExceptionHandle\Screen;
 use Aura\Di\Exception;
 
 class ScreenTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Screen
+     */
+    private $screen;
+
     protected function setUp()
     {
         parent::setUp();
@@ -24,5 +29,4 @@ class ScreenTest extends \PHPUnit_Framework_TestCase
         error_log($string);
         $this->assertInternalType('string', $string);
     }
-
 }

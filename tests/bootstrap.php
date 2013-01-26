@@ -12,9 +12,9 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 error_reporting(E_ALL);
 
-ob_start(); // to hide chekcer message
+ob_start(); // to hide checker message
 $isInstallOk = require dirname(__DIR__) . '/scripts/check_env.php';
-if (! $isInstallOk) {
+if (!$isInstallOk) {
     echo "Please fix the install problem before tests." . PHP_EOL;
     exit(1);
 }
@@ -24,7 +24,10 @@ ob_end_clean();
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di\\', dirname(__DIR__) . '/vendor/ray/di/src');
-AnnotationRegistry::registerAutoloadNamespace('BEAR\Resource\Annotation\\', dirname(__DIR__) . '/vendor/bear/resource/src/');
+AnnotationRegistry::registerAutoloadNamespace(
+    'BEAR\Resource\Annotation\\',
+    dirname(__DIR__) . '/vendor/bear/resource/src/'
+);
 AnnotationRegistry::registerAutoloadNamespace('BEAR\Sunday\Annotation\\', dirname(__DIR__) . '/src/');
 AnnotationReader::addGlobalIgnoredName('noinspection');
 AnnotationReader::addGlobalIgnoredName('returns');

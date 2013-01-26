@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Sunday\Tests;
+namespace BEAR\Package\tests\Provide\ResourceView;
 
 use Ray\Di\Config;
 use Ray\Di\Annotation;
@@ -9,9 +9,14 @@ use BEAR\Resource\Request;
 use BEAR\Resource\Linker;
 use BEAR\Resource\Invoker;
 use BEAR\Resource\AbstractObject;
-use BEAR\Sunday\Resource\View\JsonRenderer;
+use BEAR\Package\Provide\ResourceView\JsonRenderer;
 
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
+
+use Aura\Signal\Manager;
+use Aura\Signal\HandlerFactory;
+use Aura\Signal\ResultFactory;
+use Aura\Signal\ResultCollection;
 
 class RequestSample
 {
@@ -26,10 +31,12 @@ class RequestSample
  */
 class JsonRendererTest extends \PHPUnit_Framework_TestCase
 {
+    private $testResource;
+
     protected function setUp()
     {
         parent::setUp();
-        $signal = require dirname(__DIR__) . '/vendor/aura/signal/scripts/instance.php';
+        $signal = new Manager(new HandlerFactory, new ResultFactory, new ResultCollection);
         $request = new Request(new Invoker(new Config(new Annotation(new Definition, new Reader)), new Linker(new Reader), $signal));
         $request->method = 'get';
         $this->testResource = new Ok;
@@ -41,29 +48,25 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         $this->testResource->setRenderer(new JsonRenderer);
     }
 
-    public function test_render()
+    public function testRender()
     {
         // json render
-        $result = (string) $this->testResource;
+        $result = (string)$this->testResource;
         $data = json_decode($result, true);
-        $expected = array (
-  'one' => 1,
-  'two' =>
-  array (
-    'code' => 200,
-    'headers' =>
-    array (
-    ),
-    'body' =>
-    array (
-      'one' => 1,
-      'two' => NULL,
-    ),
-    'uri' => 'test://self/path/to/resource',
-    'view' => NULL,
-    'links' => []
-  ),
-);
+        $expected = array(
+            'one' => 1,
+            'two' => array(
+                'code' => 200,
+                'headers' => array(),
+                'body' => array(
+                    'one' => 1,
+                    'two' => null,
+                ),
+                'uri' => 'test://self/path/to/resource',
+                'view' => null,
+                'links' => []
+            ),
+        );
         $this->assertSame($expected, $data);
     }
 }

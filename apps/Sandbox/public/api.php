@@ -59,5 +59,5 @@ try {
 } catch (Exception $e) {
     $page = $app->exceptionHandler->handle($e);
 }
-$app->response->setResource($page)->render()->prepare()->send();
+$app->response->setResource($page)->render()->send();
 exit(0);
