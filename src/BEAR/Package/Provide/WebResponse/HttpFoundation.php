@@ -169,13 +169,11 @@ final class HttpFoundation implements ResponseInterface
      * Make response object with RFC 2616 compliant HTTP header
      *
      * @return self
+     * @deprecated
      */
     public function prepare()
     {
-        $this->response = new Response($this->view, $this->resource->code, (array)$this->resource->headers);
-        // compliant with RFC 2616.
-        $this->response->prepare();
-
+        trigger_error('unnecessary science 0.6.0', E_USER_DEPRECATED);
         return $this;
     }
 
@@ -198,6 +196,10 @@ final class HttpFoundation implements ResponseInterface
      */
     public function send()
     {
+        $this->response = new Response($this->view, $this->resource->code, (array)$this->resource->headers);
+        // compliant with RFC 2616.
+        $this->response;
+
         if (PHP_SAPI === 'cli') {
             if ($this->resource instanceof Page) {
                 $this->resource->headers = $this->response->headers->all();
