@@ -9,6 +9,10 @@ namespace Sandbox;
 
 use BEAR\Package\Provide\Application\ApplicationFactory;
 
+$packageDir = dirname(dirname(dirname(__DIR__)));
+require $packageDir . '/vendor/autoload.php';
+require __DIR__ . '/apc_safe.php';
+
 // init
 umask(0);
 
@@ -23,7 +27,6 @@ if ($app){
 }
 
 // new application instance
-$packageDir = dirname(dirname(dirname(__DIR__)));
 $app = (new ApplicationFactory)->setLoader($packageDir)->newInstance(__NAMESPACE__, $mode);
 if (function_exists('apc_fetch')) {
     apc_store($cacheKey, $app);

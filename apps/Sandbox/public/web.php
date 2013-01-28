@@ -53,6 +53,8 @@ set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler
 // set fatal error handler
 register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_error_handler.php');
 
+require dirname(__DIR__) . '/scripts/apc_safe.php';
+
 // Clear
 require dirname(__DIR__) . '/scripts/clear.php';
 
