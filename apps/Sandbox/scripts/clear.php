@@ -10,8 +10,10 @@
  */
 
 // APC Cache
-apc_clear_cache('user');
-apc_clear_cache();
+if (function_exists('apc_clear_cache')) {
+    apc_clear_cache('user');
+    apc_clear_cache();
+}
 
 // tmp dir
 $tmpDir = dirname(__DIR__) . '/data/tmp';

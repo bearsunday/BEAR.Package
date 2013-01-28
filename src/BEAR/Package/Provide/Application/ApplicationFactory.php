@@ -33,9 +33,6 @@ class ApplicationFactory
      */
     public function setLoader($packageDir)
     {
-        /** @noinspection PhpIncludeInspection */
-        require_once $packageDir . '/vendor/autoload.php';
-
         AnnotationRegistry::registerAutoloadNamespace(__NAMESPACE__ . '\Annotation\\', dirname(dirname(__DIR__)));
         AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di\\', $packageDir . '/vendor/ray/di/src/');
         AnnotationRegistry::registerAutoloadNamespace(
