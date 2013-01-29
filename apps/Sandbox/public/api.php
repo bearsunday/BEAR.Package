@@ -18,13 +18,6 @@
  * @package BEAR.Framework
  * @global  $mode
  */
-namespace Sandbox;
-
-use BEAR\Sunday\Router\Router;
-use BEAR\Sunday\Framework\Dispatcher;
-use BEAR\Sunday\Framework\Globals;
-use BEAR\Sunday\Web;
-use Exception;
 
 global $mode;
 

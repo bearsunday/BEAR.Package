@@ -15,14 +15,7 @@
  *   http://localhost:8080/
  *
  * @global  $mode
- * @package BEAR.Sandbox
  */
-namespace Sandbox;
-
-use BEAR\Sunday\Router\Router;
-use Pagerfanta\Exception\LogicException;
-use BEAR\Sunday\Framework\Globals;
-use Exception;
 
 // Reroute
 if (php_sapi_name() == "cli-server") {
