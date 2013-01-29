@@ -14,6 +14,7 @@
  * type URL:
  *   http://localhost:8080/
  *
+ * @package BEAR.Package
  * @global  $mode
  */
 
@@ -54,7 +55,7 @@ require dirname(__DIR__) . '/scripts/clear.php';
 // Application
 $mode = 'Dev';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
-/** @var $app \Sandbox\App */
+/** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
 // Log
 $app->logger->register($app);
