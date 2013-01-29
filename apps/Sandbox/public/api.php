@@ -1,30 +1,20 @@
 <?php
 /**
- * CLI  Built-in web server dev script
+ * CLI  Built-in web server for API
  *
  * Example:
  *
  * CLI:
- * $ php dev.php get /hello
+ * $ php api.pgp get page://self/
+ * $ php api.pgp get 'page://first/greeting?name=koriym'
  *
  * Built-in web server:
  *
- * $ php -S localhost:8080 dev.php
+ * $ php -S localhost:8089 api.php
  *
- * type URL:
- *   http://localhost:8080/hello
- *   http://localhost:8080/helloresource
- *
- * @package BEAR.Framework
+ * @package BEAR.Package
  * @global  $mode
  */
-namespace Sandbox;
-
-use BEAR\Sunday\Router\Router;
-use BEAR\Sunday\Framework\Dispatcher;
-use BEAR\Sunday\Framework\Globals;
-use BEAR\Sunday\Web;
-use Exception;
 
 global $mode;
 
@@ -35,13 +25,12 @@ if (PHP_SAPI == 'cli-server') {
 }
 
 // Clear
-$app = require dirname(__DIR__) . '/scripts/clear.php';
+require dirname(__DIR__) . '/scripts/clear.php';
 
 // Application
 $mode = 'Api';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
-
-        // Dispatch
+/** @var $app \BEAR\Package\Provide\Application\AbstractApp */
     if (PHP_SAPI === 'cli') {
         $app->router->setArgv($argv);
         $uri = $argv[2];

@@ -1,18 +1,21 @@
 <?php
-// Web server script for production
+/**
+ * Web server script for production
+ *
+ * @package BEAR.Package
+ * @global  $mode
+ */
 
-use BEAR\Sunday\Router\Router;
 use Ray\Di\Exception\NotReadable as NotFound;
 use BEAR\Resource\Exception\Parameter as BadRequest;
 
 // Profile
 // require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
 
-// Clear
-
 // Application instance with loader
 $mode = 'Prod';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
+/** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
 // Dispatch
 list($method, $pagePath, $query) = $app->router->match($GLOBALS);
