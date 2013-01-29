@@ -14,15 +14,9 @@
  * type URL:
  *   http://localhost:8080/
  *
+ * @package BEAR.Package
  * @global  $mode
- * @package BEAR.Sandbox
  */
-namespace Sandbox;
-
-use BEAR\Sunday\Router\Router;
-use Pagerfanta\Exception\LogicException;
-use BEAR\Sunday\Framework\Globals;
-use Exception;
 
 // Reroute
 if (php_sapi_name() == "cli-server") {
@@ -61,7 +55,7 @@ require dirname(__DIR__) . '/scripts/clear.php';
 // Application
 $mode = 'Dev';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
-/** @var $app \Sandbox\App */
+/** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
 // Log
 $app->logger->register($app);
