@@ -12,6 +12,10 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
+$outputDir = ini_get('xhprof.output_dir');
+if (! $outputDir) {
+    ini_set('xhprof.output_dir', sys_get_temp_dir());
+}
 $enable = extension_loaded('xhprof') && (PHP_SAPI !== 'cli');
 if ($enable){
     // start
