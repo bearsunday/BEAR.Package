@@ -1,14 +1,11 @@
 <?php
 // Web server script for production
 
-use BEAR\Sunday\Router\Router;
 use Ray\Di\Exception\NotReadable as NotFound;
 use BEAR\Resource\Exception\Parameter as BadRequest;
 
 // Profile
 // require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
-
-// Clear
 
 // Application instance with loader
 $mode = 'Prod';
