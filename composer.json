@@ -52,7 +52,8 @@
             "BEAR\\Package":"src/",
             "BEAR\\Installer":"src/",
             "Helloworld\\":"apps/",
-            "Sandbox\\":"apps/"
+            "Sandbox\\":"apps/",
+            "Skeleton\\":"apps/"
         }
     },
     "minimum-stability":"dev",
