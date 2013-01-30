@@ -8,45 +8,24 @@
 namespace BEAR\Package\Provide\Application;
 
 use Ray\Di\Injector;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Ray\Di\AbstractModule;
 use Ray\Di\Container;
 use Ray\Di\Forge;
-use Ray\Di\ApcConfig;
+use Ray\Di\Config;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
 use BEAR\Package\Provide\Application\Exception\InvalidMode;
 
 class ApplicationFactory
 {
-    /**
-     * Set loader
-     *
-     *  - set composer auto loader
-     *  - set silent auto loader for doctrine annotation
-     *  - set ignore annotation
-     *
-     * @param $packageDir
-     *
-     * @return ApplicationFactory
-     */
-    public function setLoader($packageDir)
+    public function __construct(Cache $cache)
     {
-        AnnotationRegistry::registerAutoloadNamespace(__NAMESPACE__ . '\Annotation\\', dirname(dirname(__DIR__)));
-        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di\\', $packageDir . '/vendor/ray/di/src/');
-        AnnotationRegistry::registerAutoloadNamespace(
-            'BEAR\Resource\Annotation\\',
-            $packageDir . '/vendor/bear/resource/src/'
-        );
-        AnnotationRegistry::registerAutoloadNamespace(
-            'BEAR\Sunday\Annotation\\',
-            $packageDir . '/vendor/bear/sunday/src/'
-        );
-        AnnotationReader::addGlobalIgnoredName('noinspection');
-        AnnotationReader::addGlobalIgnoredName('returns'); // for Mr.Smarty. :(
-
-        return $this;
+        $this->cache = $cache;
     }
 
     /**
@@ -60,15 +39,35 @@ class ApplicationFactory
      */
     public function newInstance($appName, $mode)
     {
+        $appKey = PHP_SAPI . $appName . $mode;
+        $app = $this->cache->fetch($appKey);
+        if ($app) {
+            return $app;
+        }
         $moduleName = $appName . '\Module\\' . $mode . 'Module';
         if (!class_exists($moduleName)) {
             throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
         }
-
         // create application instance
-        $injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(new Definition, new AnnotationReader)))), new $moduleName);
+        $injector = new Injector(
+                        new Container(
+                            new Forge(
+                                new Config(
+                                    new Annotation(
+                                        new Definition,
+                                        new CachedReader(
+                                            new AnnotationReader,
+                                            $this->cache
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        new $moduleName
+        );
+        $injector->setCache($this->cache);
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
-
+        $this->cache->save($appKey, $app);
         return $app;
     }
 }
