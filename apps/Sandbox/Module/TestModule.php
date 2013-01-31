@@ -24,7 +24,8 @@ class TestModule extends ProdModule
      */
     protected function configure()
     {
-        $config = require __DIR__ . '/config.php';
+        $config = (require __DIR__ . '/config/test.php') + (require __DIR__ . '/config/prod.php');
+        /** @var $config array */
         $config['master_db']['dbname'] = 'blogbeartest';
         $config['slave_db'] = $config['master_db'];
         // dependency binding (DI)

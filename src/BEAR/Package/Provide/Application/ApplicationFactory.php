@@ -8,7 +8,6 @@
 namespace BEAR\Package\Provide\Application;
 
 use Ray\Di\Injector;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\AbstractModule;
 use Ray\Di\Container;
@@ -49,7 +48,7 @@ class ApplicationFactory
             throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
         }
         // create application instance
-        $injector = new Injector(
+        $injector = (new Injector(
                         new Container(
                             new Forge(
                                 new Config(
@@ -64,8 +63,7 @@ class ApplicationFactory
                             )
                         ),
                         new $moduleName
-        );
-        $injector->setCache($this->cache);
+        ))->setCache($this->cache);
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         $this->cache->save($appKey, $app);
         return $app;

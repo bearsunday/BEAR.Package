@@ -15,21 +15,23 @@
  * @package BEAR.Package
  * @global  $mode
  */
-
-global $mode;
-
 if (PHP_SAPI == 'cli-server') {
     if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico)$/', $_SERVER["REQUEST_URI"])) {
         return false;
     }
 }
+chdir(dirname(__DIR__));
 
-// Clear
-require dirname(__DIR__) . '/scripts/clear.php';
+// Boot
+require 'scripts/bootstrap/dev.php';
+
+// Cleaning
+require 'scripts/clear.php';
 
 // Application
 $mode = 'Api';
-$app = require dirname(__DIR__) . '/scripts/instance.php';
+$app = require 'scripts/instance.php';
+
 /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
     if (PHP_SAPI === 'cli') {
         $app->router->setArgv($argv);

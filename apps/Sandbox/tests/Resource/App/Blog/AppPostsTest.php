@@ -4,12 +4,11 @@ namespace Sandbox\tests\Resource\App\Blog;
 use Sandbox\App;
 use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
-use BEAR\Resource\Annotation\Post;
 
 class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
     {
@@ -18,7 +17,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
      */
     public function getDataSet()
     {
@@ -29,20 +28,16 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resource
+     * @var \BEAR\Resource\Resource
      */
     private $resource;
 
     protected function setUp()
     {
-        static $app;
-
         parent::setUp();
-        if (!$app) {
-            $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        if (! $this->resource) {
+            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
         }
-        $this->resource = $app->resource;
     }
 
     /**
@@ -98,13 +93,13 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         // inc 1
         $before = $this->getConnection()->getRowCount('posts');
-        $response = $this->resource
+        $this->resource
             ->post
             ->uri('app://self/blog/posts')
             ->withQuery(['title' => 'test_title', 'body' => 'test_body'])
             ->eager
             ->request();
-        $this->assertEquals($before + 1, $this->getConnection()->getRowCount('posts'), "faild to add post");
+        $this->assertEquals($before + 1, $this->getConnection()->getRowCount('posts'), "failed to add post");
 
         // new post
         $body = $this->resource
@@ -134,12 +129,12 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         // dec 1
         $before = $this->getConnection()->getRowCount('posts');
-        $response = $this->resource
+        $this->resource
             ->delete
             ->uri('app://self/blog/posts')
             ->withQuery(['id' => 1])
             ->eager
             ->request();
-        $this->assertEquals($before - 1, $this->getConnection()->getRowCount('posts'), "faild to delete post");
+        $this->assertEquals($before - 1, $this->getConnection()->getRowCount('posts'), "failed to delete post");
     }
 }

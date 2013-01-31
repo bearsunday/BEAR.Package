@@ -15,6 +15,7 @@
  *   http://localhost:8080/
  *
  * @package BEAR.Package
+ *
  * @global  $mode
  */
 
@@ -28,34 +29,20 @@ if (php_sapi_name() == "cli-server") {
     }
 }
 
-// Init
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ob_start();
-ini_set('xdebug.collect_params', '0');
+chdir(dirname(__DIR__));
 
-// Load
-$packageDir = dirname(dirname(dirname(__DIR__)));
-require_once  $packageDir . '/scripts/debug_load.php';
+// Dev
+require 'scripts/bootstrap/dev.php';
 
-// profiler for exception
-require_once  $packageDir . '/scripts/profile.php';
-
-// set exception handler for development
-set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler.php');
-
-// set fatal error handler
-register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_error_handler.php');
-
-require dirname(__DIR__) . '/scripts/apc_safe.php';
-
-// Clear
-require dirname(__DIR__) . '/scripts/clear.php';
+// Cleaning
+require 'scripts/clear.php';
 
 // Application
-$mode = 'Dev';
-$app = require dirname(__DIR__) . '/scripts/instance.php';
+$mode = isset($argv[3]) ? ucfirst($argv[3]) : 'Dev';
+$app = require 'scripts/instance.php';
+
 /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
+
 
 // Log
 $app->logger->register($app);

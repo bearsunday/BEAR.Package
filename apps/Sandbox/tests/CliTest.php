@@ -8,6 +8,11 @@ namespace BEAR\Sunday\Tests;
  */
 class CliTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
+    private $systemRoot;
+
     protected function setUp()
     {
         parent::setUp();
