@@ -7,7 +7,6 @@
  */
 namespace Sandbox\Resource\Page\Blog\Posts;
 
-use BEAR\Resource\Resource;
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;

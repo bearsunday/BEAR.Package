@@ -2,13 +2,14 @@
 namespace Sandbox\tests\Resource\Page\Blog;
 
 use Sandbox\App;
+use Doctrine\Common\Cache\ArrayCache;
 use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
 
 class PostsTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
     {
@@ -18,7 +19,7 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
     }
 
     /**
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
      */
     public function getDataSet()
     {
@@ -28,20 +29,16 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resource
+     * @var \BEAR\Resource\Resource
      */
     private $resource;
 
     protected function setUp()
     {
-        static $app;
-
         parent::setUp();
-        if (!$app) {
-            $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        if (! $this->resource) {
+            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
         }
-        $this->resource = $app->resource;
     }
 
     /**
@@ -86,6 +83,7 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
     public function test_AppResourceUri($page)
     {
         $posts = $page->body['posts'];
+        /** @var $posts \BEAR\Resource\Request */
         $this->assertSame('app://self/blog/posts', $posts->toUri());
     }
 
