@@ -3,7 +3,7 @@
 <project name="BEAR.Package" default="build">
     <target name="composer" description="Installing dependencies">
         <exec executable="composer.phar" failonerror="true">
-            <arg value="install" />
+            <arg value="install --dev --prefer-dist" />
         </exec>
     </target>
     <target name="build"
