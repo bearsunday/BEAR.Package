@@ -2,53 +2,23 @@
 /**
  * Application instance script
  *
- * +set auto loader
- * create application object using apc cache
- *
- * @return $app  application
+ * @return $app  \BEAR\Sunday\Extension\Application\AppInterface
  * @global $mode string configuration mode
  */
 namespace Sandbox;
 
-use Ray\Di\Injector;
-use Ray\Di\AbstractModule;
-use Ray\Di\Container;
-use Ray\Di\Forge;
-use Ray\Di\ApcConfig;
-use Ray\Di\Annotation;
-use Ray\Di\Definition;
-use Doctrine\Common\Annotations\AnnotationReader;
-use BEAR\Package\Provide\Application\Exception\InvalidMode;
+use BEAR\Package\Provide\Application\ApplicationFactory;
+use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\FilesystemCache;
 
-// init
-umask(0);
+require_once __DIR__ . '/bootstrap.php';
 
 // mode
 $mode = isset($mode) ? $mode : 'Prod';
 
-// cached application ?
-$cacheKey = __NAMESPACE__ . PHP_SAPI . $mode;
+// new application instance
+$cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(dirname(__DIR__) . '/data/tmp/cache');
 
-// load
-require_once __DIR__ . '/load.php';
+$app = (new ApplicationFactory($cache))->newInstance(__NAMESPACE__, $mode);
 
-$app = apc_fetch($cacheKey);
-if ($app) {
-    return $app;
-}
-$moduleName = __NAMESPACE__ . '\Module\\' . $mode . 'Module';
-if (!class_exists($moduleName)) {
-    throw new InvalidMode("Invalid mode [{$mode}], check [$moduleName]");
-}
-
-// create application object
-$injector = new Injector(new Container(new Forge(new ApcConfig(new Annotation(new Definition, new AnnotationReader)))), new $moduleName);
-$app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
-// log binding info
-$logFile = dirname(__DIR__) . "/data/log/module.{$cacheKey}.log";
-file_put_contents($logFile, (string)$injector);
-
-// store
-apc_store($cacheKey, $app);
-apc_store($cacheKey . '-injector', $injector);
 return $app;

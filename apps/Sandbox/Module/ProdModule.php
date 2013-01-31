@@ -24,8 +24,8 @@ class ProdModule extends AbstractModule
      */
     protected function configure()
     {
-        $config = include __DIR__ . '/config.php';
-        // dependency binding (DI)
+        $config = require __DIR__ . '/config/prod.php';
+        /** @var $config array */
         $this->install(new Common\AppModule($config));
     }
 }

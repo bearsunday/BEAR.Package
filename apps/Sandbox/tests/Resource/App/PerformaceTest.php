@@ -1,7 +1,6 @@
 <?php
 namespace Sandbox\tests\Resource\App;
 
-use Sandbox\App;
 use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
 
@@ -10,20 +9,16 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resource
+     * @var \BEAR\Resource\Resource
      */
     private $resource;
 
     protected function setUp()
     {
-        static $app;
-
         parent::setUp();
-        if (!$app) {
-            $injector = Injector::create([new TestModule], false);
-            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        if (! $this->resource) {
+            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
         }
-        $this->resource = $app->resource;
     }
 
     /**
