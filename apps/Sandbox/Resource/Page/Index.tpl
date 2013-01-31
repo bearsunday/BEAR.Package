@@ -146,6 +146,7 @@
                 <a class="btn" href="_dev/ide/index.php"
                    id="dev" rel="tooltip" title="Web IDE">Web IDE &raquo;</a>
 
+            {if !$is_cli_server}
             <p>
                 <a class="btn btn-success" href="/_dev/apc.php?SCOPE=A&SORT1=H&SORT2=D&COUNT=20&OB=3&object_only"
                    id="apc" rel="tooltip" title="APC stored object">APC
@@ -156,7 +157,7 @@
             <p><a class="btn" href="_dev/memcache.php" id="memcache" rel="tooltip"
                   title="Open memcache admin carroll panel">Memcache Admin &raquo;</a>
             </p>
-
+            {/if}
             <h2>Links</h2>
             <ul>
                 <li><i class="icon-book"></i><a href="http://code.google.com/p/bearsunday/wiki/manual?tm=6">BEAR.Sunday
