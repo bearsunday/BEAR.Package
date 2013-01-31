@@ -92,6 +92,7 @@
             <h2>Version</h2>
             <ul>
                 <li>BEAR.Sunday <code>{$version.BEAR}</code></li>
+                <li>BEAR.Package <code>{$version.Package}</code></li>
                 <li>PHP <code>{$version.php}</code></li>
             </ul>
             <h2>Extension</h2>
