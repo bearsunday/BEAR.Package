@@ -1,26 +1,26 @@
 <?php
 namespace Sandbox;
 
-use Sandbox\App;
-use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
+use Doctrine\Common\Cache\FilesystemCache;
+use Sandbox\Module\TestModule;
+
 
 class PageIndexTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resource
+     * @var \BEAR\Resource\Resource
      */
     private $resource;
 
     protected function setUp()
     {
-
         parent::setUp();
-        $injector = Injector::create([new TestModule], false);
-        $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
-        $this->resource = $app->resource;
+        if (! $this->resource) {
+            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
+        }
     }
 
     /**
@@ -68,6 +68,7 @@ class PageIndexTest extends \PHPUnit_Framework_TestCase
      */
     public function test_AppResourceUri($page)
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->assertSame('app://self/performance', $page->body['performance']->toUri());
     }
 
