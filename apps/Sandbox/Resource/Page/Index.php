@@ -43,7 +43,8 @@ class Index extends Page
     {
         $this['version'] = [
             'php' => phpversion(),
-            'BEAR' => Version::VERSION
+            'BEAR' => Version::VERSION,
+            'Package' => json_decode(file_get_contents(dirname(dirname(dirname(dirname(__DIR__)))) . '/composer.json'))->version
         ];
         $this['extensions'] = [
             'apc' => extension_loaded('apc') ? phpversion('apc') : 'n/a',
@@ -54,6 +55,7 @@ class Index extends Page
             'Xdebug' => extension_loaded('Xdebug') ? phpversion('Xdebug') : 'n/a',
             'xhprof' => extension_loaded('xhprof') ? phpversion('xhprof') : 'n/a'
         ];
+        $this['is_cli_server'] = (php_sapi_name() === 'cli-server');
     }
 
     public function onGet()
