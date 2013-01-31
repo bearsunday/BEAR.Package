@@ -984,11 +984,11 @@
         },
         {
             "name": "zendframework/zend-log",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "target-dir": "Zend/Log",
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.6.zip",
+                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.7.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1028,11 +1028,11 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "target-dir": "Zend/Stdlib",
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.6.zip",
+                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.7.zip",
                 "reference": null,
                 "shasum": null
             },
