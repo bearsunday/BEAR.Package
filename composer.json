@@ -2,7 +2,7 @@
     "name":"bear/package",
     "type":"library",
     "description":"BEAR.Sunday application package",
-    "version":"0.6.0",
+    "version":"0.6.1",
     "keywords":[
         "BEAR.Sunday",
         "application skeleton",
