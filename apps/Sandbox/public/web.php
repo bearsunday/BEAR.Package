@@ -46,6 +46,7 @@ $app = require 'scripts/instance.php';
 
 // Log
 $app->logger->register($app);
+file_put_contents(dirname(__DIR__) . "/data/log/di-{$mode}.log", (string)$app->injector);
 
 // Route
 if (PHP_SAPI === 'cli') {
