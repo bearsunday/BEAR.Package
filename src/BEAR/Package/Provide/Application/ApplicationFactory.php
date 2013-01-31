@@ -8,6 +8,8 @@
 namespace BEAR\Package\Provide\Application;
 
 use Ray\Di\Injector;
+use Aura\Di\Exception;
+use BEAR\Package\Provide\Application\DiLogger;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\AbstractModule;
 use Ray\Di\Container;
@@ -19,6 +21,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use BEAR\Package\Provide\Application\Exception\InvalidMode;
+use Ray\Di\Exception\Exception as DiException;
 
 class ApplicationFactory
 {
@@ -48,6 +51,7 @@ class ApplicationFactory
             throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
         }
         // create application instance
+        $diLogger = new DiLogger;
         $injector = (new Injector(
                         new Container(
                             new Forge(
@@ -62,10 +66,22 @@ class ApplicationFactory
                                 )
                             )
                         ),
-                        new $moduleName
-        ))->setCache($this->cache);
+                        new $moduleName)
+        )->setCache($this->cache)->setLogger($diLogger);
+
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        /** @var $app \BEAR\Sunday\Extension\Application\AppInterface */
         $this->cache->save($appKey, $app);
+
+        // log
+        try {
+            $logger = $injector->getInstance('Guzzle\Log\LogAdapterInterface');
+            /** @var $logger \Guzzle\Log\LogAdapterInterface */
+            $logger->log($diLogger->logMessage, LOG_INFO);
+        } catch (DiException $e) {
+            error_log($diLogger->logMessage, LOG_INFO);
+        }
+
         return $app;
     }
 }
