@@ -9,18 +9,16 @@ class GreetingTest extends \PHPUnit_Framework_TestCase
     /**
      * Resource client
      *
-     * @var BEAR\Resource\Resource
+     * @var \BEAR\Resource\Resource
      */
     private $resource;
 
     protected function setUp()
     {
         static $app;
-
         parent::setUp();
-        if (!$app) {
-            $injector = Injector::create([new TestModule]);
-            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        if (! $app) {
+            $app = Injector::create([new TestModule])->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         }
         $this->resource = $app->resource;
     }

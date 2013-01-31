@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>404</title>
+    <title>503</title>
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <style>
         body {
-            padding: 30px;
-            text-align: center;
+            padding: 50px;
         }
     </style>
 </head>
-
 <body>
-<img src="http://httpcats.herokuapp.com/503.jpg" width="500" height="400" alt="503 - Service Unavailable">
-<h2><?php echo get_class($e); ?></h2>
+
+<div class="well well-large">
+    <h1>503</h1>
+    Service Unavailable
+</div>
+<pre><?php echo $e; ?></pre>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
 </body>
-<!--(C) http://www.flickr.com/photos/girliemac/sets/72157628409467125/-->
 </html>

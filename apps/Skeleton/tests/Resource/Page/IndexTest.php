@@ -1,28 +1,11 @@
 <?php
 namespace Skeleton\Resource\Page;
 
+use BEAR\Test\ResourceSetupTrait;
+
 class IndexTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Resource client
-     *
-     * @var \BEAR\Resource\Resource
-     */
-    private $resource;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $app = require 'scripts/instance.php';
-        /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
-        $this->resource = $app->resource;
-    }
-
-    protected function tearDown()
-    {
-    }
-
+    use ResourceSetupTrait;
 
     /**
      * page resource

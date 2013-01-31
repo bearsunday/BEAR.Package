@@ -6,14 +6,14 @@
  * @global  $mode
  */
 
-use Ray\Di\Exception\NotReadable as NotFound;
 use BEAR\Resource\Exception\Parameter as BadRequest;
+use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 // Profile
 // require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
+// Boot
 
-// Application instance with loader
-$mode = 'Prod';
+// Application
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
@@ -38,6 +38,7 @@ try {
 // Transfer
 
 OK: {
+    error_reporting(E_ALL);
     $app->response->setResource($app->page)->render()->send();
     exit(0);
 }

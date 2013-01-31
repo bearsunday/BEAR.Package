@@ -7,7 +7,6 @@ namespace Sandbox\Module;
 
 use Ray\Di\AbstractModule;
 use BEAR\Package\Module\Stab\StabModule as PackageStabModule;
-use BEAR\Sunday\Interceptor\Stab;
 
 /**
  * Stab module
@@ -24,7 +23,7 @@ class StabModule extends AbstractModule
     protected function configure()
     {
         $this->install(new DevModule);
-        $stab = include __DIR__ . '/common/stab/resource.php';
+        $stab = include __DIR__ . '/config/stab/resource.php';
         /** @var $stab array */
         $this->install(new PackageStabModule($stab));
     }
