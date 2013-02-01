@@ -1,11 +1,23 @@
 <?php
 namespace Skeleton\Resource\Page;
 
-use BEAR\Test\ResourceSetupTrait;
+use Ray\Di\Injector;
+use Skeleton\Module\TestModule;
 
 class IndexTest extends \PHPUnit_Framework_TestCase
 {
-    use ResourceSetupTrait;
+    /**
+     * @var \BEAR\Resource\ResourceInterface
+     */
+    private $resource;
+
+    public function setUp()
+    {
+        parent::setUp();
+        if (!$this->resource) {
+            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\ResourceInterface');
+        }
+    }
 
     /**
      * page resource

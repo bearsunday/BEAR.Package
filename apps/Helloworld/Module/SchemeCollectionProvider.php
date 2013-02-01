@@ -7,7 +7,6 @@ namespace Helloworld\Module;
 
 use Ray\Di\ProviderInterface as Provide;
 use BEAR\Resource\Adapter\App as AppAdapter;
-use BEAR\Resource\Adapter\Page;
 use BEAR\Resource\SchemeCollection;
 use BEAR\Sunday\Inject\AppNameInject;
 use BEAR\Sunday\Inject\InjectorInject;

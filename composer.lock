@@ -1,5 +1,5 @@
 {
-    "hash": "c0157f8b8b87960ba81b60afc9d3749c",
+    "hash": "238a63c579802be34af2323521cfb1fd",
     "packages": [
         {
             "name": "aura/di",
@@ -317,7 +317,7 @@
         },
         {
             "name": "bear/sunday",
-            "version": "0.6.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
@@ -333,13 +333,13 @@
                 "php": ">=5.4.0",
                 "ext-apc": "*",
                 "ext-curl": "*",
+                "ray/aop": ">=1.0.0-beta2",
+                "nocarrier/hal": "dev-master",
+                "ray/di": ">=1.0.0-beta3",
                 "aura/di": "1.0.*",
                 "aura/signal": "1.0.*",
-                "ray/di": ">=1.0.0-beta3",
-                "ray/aop": ">=1.0.0-beta2",
                 "bear/resource": "0.6.*",
-                "guzzle/guzzle": "3.0.*",
-                "nocarrier/hal": "dev-master"
+                "guzzle/guzzle": "3.0.*"
             },
             "time": "2013-01-25 16:09:33",
             "type": "library",
@@ -733,26 +733,26 @@
         },
         {
             "name": "ray/di",
-            "version": "1.0.0-beta4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.0-beta4"
+                "reference": "0a190d3ac55e9221f6c39ff7e11d17287ccc2c35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.0-beta4",
-                "reference": "1.0.0-beta4",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/0a190d3ac55e9221f6c39ff7e11d17287ccc2c35",
+                "reference": "0a190d3ac55e9221f6c39ff7e11d17287ccc2c35",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "doctrine/common": "2.3.*-dev",
-                "ray/aop": "1.0.*",
                 "aura/di": "1.0.*",
-                "aura/installer-default": "1.0.*"
+                "aura/installer-default": "1.0.*",
+                "ray/aop": "1.0.*"
             },
-            "time": "2013-01-30 13:57:54",
+            "time": "2013-02-01 02:44:43",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -876,12 +876,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher",
-                "reference": "v2.2.0-BETA2"
+                "reference": "b07286109b0dd00dfbdedc943a5e133a2609d958"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/EventDispatcher/archive/v2.2.0-BETA2.zip",
-                "reference": "v2.2.0-BETA2",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/b07286109b0dd00dfbdedc943a5e133a2609d958",
+                "reference": "b07286109b0dd00dfbdedc943a5e133a2609d958",
                 "shasum": ""
             },
             "require": {
@@ -894,11 +894,11 @@
                 "symfony/dependency-injection": "2.2.*",
                 "symfony/http-kernel": "2.2.*"
             },
-            "time": "2013-01-17 15:25:59",
+            "time": "2013-01-31 21:39:01",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -979,8 +979,8 @@
                 "reference": null,
                 "shasum": null
             },
-            "type": "library",
-            "time": "2012-12-22 02:54:36"
+            "time": "2012-12-22 02:54:36",
+            "type": "library"
         },
         {
             "name": "zendframework/zend-log",
@@ -1071,6 +1071,8 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "ray/di": 20,
+        "bear/sunday": 20,
         "doctrine/common": 20,
         "doctrine/dbal": 20,
         "pagerfanta/pagerfanta": 20,

@@ -6,16 +6,18 @@ use Helloworld\Module\AppModule;
 
 class HelloworldTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \BEAR\Resource\ResourceInterface
+     */
+    private $resource;
+
     protected function setUp()
     {
-        static $app;
-
         parent::setUp();
-        if (!$app) {
+        if (!$this->resource) {
             $injector = Injector::create([new AppModule]);
-            $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+            $this->resource = $injector->getInstance('BEAR\Resource\ResourceInterface');
         }
-        $this->resource = $app->resource;
     }
 
     public function testPage()
@@ -30,20 +32,20 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
     {
         // resource request
         $this->expectOutputString('Hello World !');
-        $app = require dirname(__DIR__) . '/public/basic.php';
+        require dirname(__DIR__) . '/public/basic.php';
     }
 
     public function testMin()
     {
         // resource request
         $this->expectOutputString('Hello World !');
-        $app = require dirname(__DIR__) . '/public/min.php';
+        require dirname(__DIR__) . '/public/min.php';
     }
 
     public function testPull()
     {
         // resource request
         $this->expectOutputRegex("/^<html>\n/");
-        $app = require dirname(__DIR__) . '/public/pull.php';
+        require dirname(__DIR__) . '/public/pull.php';
     }
 }
