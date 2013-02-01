@@ -27,16 +27,16 @@ class Stab implements MethodInterceptor
      *
      * @var array
      */
-    private $stab;
+    private $stub;
 
     /**
      * Constructor
      *
-     * @param mixed $stab
+     * @param mixed $stub
      */
-    public function __construct(array $stab)
+    public function __construct(array $stub)
     {
-        $this->stab = $stab;
+        $this->stub = $stub;
     }
 
     /**
@@ -47,9 +47,9 @@ class Stab implements MethodInterceptor
     {
         $object = $invocation->getThis();
         if (is_array($object->body)) {
-            $object->body = array_merge($object->body, $this->stab);
+            $object->body = array_merge($object->body, $this->stub);
         } else {
-            $object->body = $this->stab;
+            $object->body = $this->stub;
         }
         return $object;
     }

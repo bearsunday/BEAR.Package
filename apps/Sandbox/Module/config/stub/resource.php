@@ -9,7 +9,7 @@
  * @package    Sandbox
  * @subpackage Module
  */
-$stab = [
+$stub = [
     'Sandbox\Resource\App\Blog\Posts' => [
         [
             'id' => 0,
@@ -47,4 +47,4 @@ $stab = [
     ],
 ];
 
-return $stab;
+return $stub;

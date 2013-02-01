@@ -20,11 +20,11 @@ class StabModule extends AbstractModule
     /**
      * @var array
      */
-    private $stab;
+    private $stub;
 
-    public function __construct(array $stab)
+    public function __construct(array $stub)
     {
-        $this->stab = $stab;
+        $this->stub = $stub;
     }
 
     /**
@@ -33,7 +33,7 @@ class StabModule extends AbstractModule
      */
     protected function configure()
     {
-        foreach ($this->stab as $class => $value) {
+        foreach ($this->stub as $class => $value) {
             $this->bindInterceptor(
                 $this->matcher->subclassesOf($class),
                 $this->matcher->any(),
