@@ -23,8 +23,8 @@ class StabModule extends AbstractModule
     protected function configure()
     {
         $this->install(new DevModule);
-        $stab = include __DIR__ . '/config/stab/resource.php';
-        /** @var $stab array */
-        $this->install(new PackageStabModule($stab));
+        $stub = include __DIR__ . '/config/stub/resource.php';
+        /** @var $stub array */
+        $this->install(new PackageStabModule($stub));
     }
 }
