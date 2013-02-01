@@ -5,9 +5,12 @@
  */
 namespace Helloworld\Module;
 
-use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module as PackageModule;
 use Ray\Di\AbstractModule;
+use BEAR\Package;
+use BEAR\Package\Module;
+use BEAR\Package\Provide as ProvideModule;
+use BEAR\Sunday\Module as SundayModule;
 
 /**
  * Production module
@@ -25,16 +28,8 @@ class AppModule extends AbstractModule
     {
         // di - application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Helloworld\App');
-        $config = include __DIR__ . '/config.php';
-        $this->install(new SundayModule\Constant\NamedModule($config));
-        $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new SundayModule\TemplateEngine\ProdRendererModule);
-        $this->install(new SundayModule\Resource\ApcModule);
+        $this->install(new SundayModule\Constant\NamedModule((require __DIR__ . '/config.php')));
         $this->install(new SundayModule\SchemeModule(__NAMESPACE__ . '\SchemeCollectionProvider'));
-        $this->install(new PackageModule\Output\WebResponseModule);
-        $this->install(new PackageModule\Log\ZfLogModule);
-        $this->install(new PackageModule\TemplateEngine\SmartyModule\SmartyModule);
-//
-
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
     }
 }

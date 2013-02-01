@@ -10,7 +10,9 @@
 	verbose="true">
 	<testsuites>
 		<testsuite name="BEAR.Package.Apps">
-			<directory suffix="Test.php">apps/Sandbox/tests</directory>
+            <directory suffix="Test.php">apps/Helloworld/tests</directory>
+            <directory suffix="Test.php">apps/Sandbox/tests</directory>
+            <directory suffix="Test.php">apps/Skeleton/tests</directory>
 		</testsuite>
 	</testsuites>
 	<logging>
