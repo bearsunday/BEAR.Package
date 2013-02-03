@@ -11,6 +11,8 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Package\Provide\Application\AbstractApp;
 
 
+require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/printo/printo/src.php';
+
 /**
  * Dev web tools
  */
