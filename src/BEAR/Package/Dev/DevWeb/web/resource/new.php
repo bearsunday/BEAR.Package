@@ -1,0 +1,71 @@
+<?php
+
+use BEAR\Package\Dev\Application\ApplicationReflector;
+
+dependency: {
+    $devDir = isset($_GLOBAL['_BEAR_DEV_DIR']) ? $_GLOBAL['_BEAR_DEV_DIR'] : dirname(__DIR__);
+}
+
+control: {
+    $appReflector = new ApplicationReflector($app);
+    $view['app_name'] = $appReflector->appName;
+    $resources = $appReflector->getResources();
+    if (! isset($_GET['uri'])) {
+        $body = '';
+        goto output;
+    }
+    // post
+    try {
+        list($filePath, $fileContents) = $appReflector->getNewResource($_GET['uri']);
+        $appReflector->filePutContents($filePath, $fileContents);
+        $code = 201;
+        $status = 'Created';
+    } catch (\Exception $e) {
+        $code = $e->getCode();
+        $status = $e->getMessage();
+        $filePath = 'n/a';
+        $fileContents = 'n/a';
+    }
+}
+
+view: {
+    $view['app_name'] = $appReflector->appName;
+    $uri = $_GET['uri'];
+    $contents = '<pre>' . highlight_string($fileContents, true) . '</pre>';
+    $file = urlencode($filePath);
+    $edit = ($code === 201) ? "<a href=\"../edit/?file={$file}\"><span class=\"btn\">Edit</span></a>" : '';
+    $body = <<<EOT
+    <hr>
+    <h3>{$code} {$status}</h3>
+    <p>{$edit}</p>
+    <p>URI: <code>{$uri}</code></p>
+    <p><tt>file: </tt><code>{$filePath}</code></p>
+    <p>{$contents}</p>
+EOT;
+}
+
+output: {
+    $code = isset($code) ? $code : 200;
+    http_response_code($code);
+    // output
+    $contentsForLayout = <<<EOT
+    <ul class="breadcrumb">
+    <li><a href="#">Home</a> <span class="divider">/</span></li>
+    <li><a href="index.php">Resource</a> <span class="divider">/</span></li>
+    <li class="active">Create</li>
+    </ul>
+
+    <form action="new.php" method="get">
+    <fieldset>
+    <legend>Create new resource</legend>
+    <label>URI</label>
+    <input type="text" class="input-xxlarge" name="uri" placeholder="page://self/index">
+    <br>
+    <button type="submit" class="btn">Submit</button>
+    </fieldset>
+    </form>
+    {$body}
+EOT;
+    // two step view
+    echo include $devDir . '/view/layout.php';
+}
