@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+.editor_label {
+    padding: 4px;
+    position: absolute;
+    right: 14px;
+    top: 0;
+    z-index: 10;
+}
+
+.editor_file {
+    background-color: #FEF49C;
+    color: black;
+    font-family: arial, sans-serif;
+    font-size: 12px;
+    padding: 4px;
+}
+
+.editor_file_save {
+    background-color: grey;
+    color: white;
+    font-family: arial, sans-serif;
+    font-size: 12px;
+    padding: 4px;
+}
