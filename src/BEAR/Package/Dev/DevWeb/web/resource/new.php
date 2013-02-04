@@ -50,8 +50,8 @@ output: {
     // output
     $contentsForLayout = <<<EOT
     <ul class="breadcrumb">
-    <li><a href="#">Home</a> <span class="divider">/</span></li>
-    <li><a href="index.php">Resource</a> <span class="divider">/</span></li>
+    <li><a href="../">Home</a> <span class="divider">/</span></li>
+    <li><a href="index">Resource</a> <span class="divider">/</span></li>
     <li class="active">Create</li>
     </ul>
 
