@@ -19,9 +19,11 @@
  * @global  $mode
  */
 
+use BEAR\Package\Dev\DevWeb\DevWeb;
+
 // Reroute
 if (php_sapi_name() == "cli-server") {
-    if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico|php)$/', $_SERVER["REQUEST_URI"])) {
+    if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico)$/', $_SERVER["REQUEST_URI"])) {
         return false;
     }
     if (is_file(__DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']))) {
@@ -66,6 +68,7 @@ try {
     $app->response->setResource($app->page)->render()->outputWebConsoleLog()->send();
     exit(0);
 } catch(Exception $e) {
+    (new DevWeb)->service($app, $pagePath);
     $app->exceptionHandler->handle($e);
     exit(1);
 }
