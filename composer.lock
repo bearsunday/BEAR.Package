@@ -264,16 +264,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.6.0",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.6.0"
+                "reference": "0.6.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/BEAR.Resource/archive/0.6.0.zip",
-                "reference": "0.6.0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.6.1",
+                "reference": "0.6.1",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +289,7 @@
             "require-dev": {
                 "facebook/xhprof": "dev-master"
             },
-            "time": "2013-01-25 15:42:28",
+            "time": "2013-02-04 09:41:45",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -1065,7 +1065,152 @@
             }
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+        {
+            "name": "facebook/xhprof",
+            "version": "0.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/xhprof.git",
+                "reference": "master"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/facebook/xhprof/zipball/master",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library"
+        },
+        {
+            "name": "firephp/firephp-core",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firephp/firephp-core",
+                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firephp/firephp-core/zipball/f60753a8dd7817e4da6bc73e0e717387a9a0866a",
+                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a",
+                "shasum": ""
+            },
+            "time": "2013-01-19 22:55:24",
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/FirePHPCore/FirePHP.class.php",
+                    "lib/FirePHPCore/fb.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Dorn",
+                    "email": "christoph@christophdorn.com",
+                    "homepage": "http://christophdorn.com"
+                }
+            ],
+            "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
+            "homepage": "https://github.com/firephp/firephp-core"
+        },
+        {
+            "name": "printo/printo",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koriym/print_o.git",
+                "reference": "2df3a126f2daed5f403727e774c5e9125810bd30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koriym/print_o/zipball/2df3a126f2daed5f403727e774c5e9125810bd30",
+                "reference": "2df3a126f2daed5f403727e774c5e9125810bd30",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "time": "2013-02-04 06:53:09",
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/Printo/Printo.php",
+                    "src/Printo/print_o.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym"
+                }
+            ],
+            "description": "An object graph visualizer.",
+            "homepage": "https://github.com/koriym/print_o",
+            "keywords": [
+                "debug",
+                "object"
+            ]
+        },
+        {
+            "name": "twig/twig",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/fabpot/Twig.git",
+                "reference": "c6445fb5cd6823f7bd65108a717064957b6eafd5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/c6445fb5cd6823f7bd65108a717064957b6eafd5",
+                "reference": "c6445fb5cd6823f7bd65108a717064957b6eafd5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "time": "2013-02-01 09:44:45",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ]
+        }
+    ],
     "aliases": [
 
     ],
