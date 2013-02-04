@@ -8,6 +8,7 @@
 
 use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
+use BEAR\Package\Dev\DevWeb\DevWeb;
 
 // Profile
 // require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
@@ -24,6 +25,7 @@ list($method, $pagePath, $query) = $app->router->match($GLOBALS);
 try {
     $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 } catch (NotFound $e) {
+    (new DevWeb)->service($app, $pagePath);
     $code = 404;
     goto ERROR;
 } catch (BadRequest $e) {

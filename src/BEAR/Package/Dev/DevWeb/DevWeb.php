@@ -42,5 +42,10 @@ class DevWeb
             require $scriptFile;
             exit(0);
         }
+        $scriptFile .= '.php';
+        if (file_exists($scriptFile) && is_file($scriptFile)) {
+            require $scriptFile;
+            exit(0);
+        }
     }
 }

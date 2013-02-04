@@ -1,15 +1,46 @@
 <?php
 
 use BEAR\Package\Dev\Application\ApplicationReflector;
+use BEAR\Sunday\Extension\Application\AppInterface;
+use Doctrine\Common\Annotations\Reader;
+
+class Controller
+{
+    /**
+     * @param Doctrine\Common\Annotations\Reader             $reader
+     * @param BEAR\Sunday\Extension\Application\AppInterface $app
+     *
+     * @Ray\Di\Di\Inject
+     */
+    public function __construct(Reader $reader, AppInterface $app){
+        $this->reader = $reader;
+        $this->app = $app;
+    }
+
+    public function onGet()
+    {
+        $resource = (new ApplicationReflector($this->app))->getResources()[$_GET['uri']];
+        $ref = new \ReflectionClass($resource['class']);
+    }
+}
 
 dependency: {
+    $appDir = isset($_GLOBAL['_BEAR_APP_DIR']) ? $_GLOBAL['_BEAR_APP_DIR'] : dirname(dirname(dirname(__DIR__)));
     $devDir = isset($_GLOBAL['_BEAR_DEV_DIR']) ? $_GLOBAL['_BEAR_DEV_DIR'] : dirname(__DIR__);
 }
 
 control: {
-//    $app = require $appDir . '/scripts/instance.php';
+    $mode = "Dev";
+//    $app = require $appDir . '/scripts/clear.php';
+    $app = require $appDir . '/scripts/instance.php';
+    /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
     $appReflector = new ApplicationReflector($app);
-    $resources = $appReflector->getResources();
+    $resourceInfo = $appReflector->getResources()[$_GET['uri']];
+    $ro = $app->resource->newInstance($_GET['uri']);
+    $options = $appReflector->getResourceOptions($ro);
+
+    var_dump($options);
+    exit;
 }
 
 view: {
@@ -26,9 +57,7 @@ view: {
 <tbody>
 EOT;
     foreach ($resources as $uri => $resource) {
-//        $uri = "<a href=\"item.php?uri={$uri}\">$uri</a>";
-        $file = (new \ReflectionClass($resource['class']))->getFileName();
-        $uri = "<a href=\"../edit/?file={$file}\">$uri</a>";
+        $uri = "<a href=\"item.php?file={$uri}\">$uri</a>";
         $buttonColor = [
             'get' => 'success',
             'post' => 'danger',
@@ -57,13 +86,13 @@ output: {
     // output
     $contentsForLayout = <<<EOT
     <ul class="breadcrumb">
-    <li><a href="../">Home</a> <span class="divider">/</span></li>
+    <li><a href="../index.php">Home</a> <span class="divider">/</span></li>
     <li class="active">Resource</li>
     </ul>
 
     <h1>Resources</h1>
     {$view['resource']}
-    <a href="new" class="btn btn-primary btn-large">New Resource</a>
+    <a href="new.php" class="btn btn-primary btn-large">New Resource</a>
 
 EOT;
     // two step view
