@@ -28,7 +28,7 @@ EOT;
     foreach ($resources as $uri => $resource) {
 //        $uri = "<a href=\"item.php?uri={$uri}\">$uri</a>";
         $file = (new \ReflectionClass($resource['class']))->getFileName();
-        $uri = "<a href=\"../edit/?file={$file}\">$uri</a>";
+        $uri = "$uri <a href=\"../edit/?file={$file}\"><span class=\"icon-edit\"></span></span></a> <a href=\"graph.php?uri={$uri}\"><span class=\" icon-eye-open\"></span>";
         $buttonColor = [
             'get' => 'success',
             'post' => 'danger',
