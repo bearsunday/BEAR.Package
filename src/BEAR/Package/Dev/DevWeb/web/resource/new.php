@@ -52,12 +52,12 @@ output: {
     <ul class="breadcrumb">
     <li><a href="../">Home</a> <span class="divider">/</span></li>
     <li><a href="index">Resource</a> <span class="divider">/</span></li>
-    <li class="active">Create</li>
+    <li class="active">New</li>
     </ul>
 
     <form action="new.php" method="get">
     <fieldset>
-    <legend>Create new resource</legend>
+    <legend>Create resource</legend>
     <label>URI</label>
     <input type="text" class="input-xxlarge" name="uri" placeholder="page://self/index">
     <br>
