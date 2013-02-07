@@ -178,18 +178,6 @@ final class HttpFoundation implements ResponseInterface
     }
 
     /**
-     * Output web console log (FireBug + FirePHP)
-     *
-     * @return ResponseInterface
-     */
-    public function outputWebConsoleLog()
-    {
-        $this->appLogger->outputWebConsoleLog();
-
-        return $this;
-    }
-
-    /**
      * Transfer representational state to http client (or console output)
      *
      * @return ResponseInterface
