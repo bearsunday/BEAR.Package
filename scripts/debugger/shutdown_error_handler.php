@@ -6,8 +6,8 @@ return function() {
     }
     $type = $message = $file = $line = $trace = '';
     $error = error_get_last();
-    if (!$error) {
-        exit(0);
+    if (! $error) {
+        return;
     }
     extract($error);
     // redirect
@@ -17,7 +17,7 @@ return function() {
     }
     // Logic error only
     if (!in_array($type, [E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR])) {
-        exit(0);
+        return;
     }
     error_log(ob_get_clean());
     http_response_code(500);
