@@ -66,7 +66,8 @@ try {
     $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 
     // Transfer
-    $app->response->setResource($app->page)->render()->outputWebConsoleLog()->send();
+    ob_start();
+    $app->response->setResource($app->page)->render()->send();
     exit(0);
 } catch(Exception $e) {
     (new DevWeb)->service($app, $pagePath);
