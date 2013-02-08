@@ -32,4 +32,7 @@ AnnotationRegistry::registerAutoloadNamespace('BEAR\Sunday\Annotation\\', dirnam
 AnnotationReader::addGlobalIgnoredName('noinspection');
 AnnotationReader::addGlobalIgnoredName('returns');
 
+define('_BEAR_TEST_DIR', __DIR__);
 ini_set('error_log', sys_get_temp_dir() . '/error.log');
+
+error_log("test start...");
