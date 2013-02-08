@@ -41,7 +41,7 @@ class Screen
                 $html .= "</a>";
                 $html .= "{$row['file']} : {$row['line']}  ";
                 $html .= "<a target=\"code_edit\" href=\"/_dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
-                $args = $this->getArgsAsString($row['args']);
+                $args = isset($row['args']) ? $this->getArgsAsString($row['args']) : '';
                 $html .= "</li>";
                 $html .= "<div id=\"source{$cnt}\" class=\"collapse out\">{$row['source']}</div>";
                 $html .= "<div id=\"args{$cnt}\" class=\"collapse out\">{$args}</div>";
