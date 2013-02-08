@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Resource list
+ *
+ * @global $app
+ */
 use BEAR\Package\Dev\Application\ApplicationReflector;
 
 dependency: {
@@ -7,7 +11,6 @@ dependency: {
 }
 
 control: {
-//    $app = require $appDir . '/scripts/instance.php';
     $appReflector = new ApplicationReflector($app);
     $resources = $appReflector->getResources();
 }
@@ -67,5 +70,6 @@ output: {
 
 EOT;
     // two step view
+    /** @noinspection PhpIncludeInspection */
     echo include $devDir . '/view/layout.php';
 }
