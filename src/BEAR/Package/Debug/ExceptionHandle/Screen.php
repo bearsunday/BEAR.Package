@@ -40,7 +40,7 @@ class Screen
                 $html .= "<span class=\"params\">[params]</span>";
                 $html .= "</a>";
                 $html .= "{$row['file']} : {$row['line']}  ";
-                $html .= "<a target=\"code_edit\" href=\"/_dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
+                $html .= "<a target=\"code_edit\" href=\"/dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
                 $args = isset($row['args']) ? $this->getArgsAsString($row['args']) : '';
                 $html .= "</li>";
                 $html .= "<div id=\"source{$cnt}\" class=\"collapse out\">{$row['source']}</div>";
@@ -64,14 +64,14 @@ class Screen
         <h2 class="alert-heading">{$title}</h2>
         <h3>{$subTitle}</h3>
         <p>in {$file} on line {$line}</p>
-        <a class="btn" rel="tooltip" title="" href="/_dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
+        <a class="btn" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
       </div>
 EOT;
     }
 
     public function getEditorLink($file, $line, $systemRoot = null)
     {
-        $href = '/_dev/edit/index.php?file=';
+        $href = '/dev/edit/index.php?file=';
         $href .= $systemRoot ? str_replace($systemRoot, '', $file) : $file;
         $href .= "&line={$line}";
         $link = "<a target=\"code_edit\" href=\"{$href}\" >{$file} : {$line}</a>";

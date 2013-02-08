@@ -241,8 +241,8 @@ EOT;
   <a data-toggle="tab" href="#{$resourceKey}_html"><span class="icon-font" rel="tooltip" title="View"></span></a>
   <a data-toggle="tab" href="#{$resourceKey}_info"><span class="icon-info-sign" rel="tooltip" title="Info"></span></a>
 <span style="padding:4px;"></span>
-  <a target="_blank" href="/_dev/edit/index.php?file={$codeFile}"><span class="icon-edit" rel="tooltip" title="Code ({$codeFile})"></span></a>
-  <a target="_blank" href="/_dev/edit/index.php?file={$templateFile}"><span class="icon-file" rel="tooltip" title="Template ({$templateFile})"></span></a>
+  <a target="_blank" href="/dev/edit/index.php?file={$codeFile}"><span class="icon-edit" rel="tooltip" title="Code ({$codeFile})"></span></a>
+  <a target="_blank" href="/dev/edit/index.php?file={$templateFile}"><span class="icon-file" rel="tooltip" title="Template ({$templateFile})"></span></a>
 </span>
 <div class="tab-content">
   <div id="{$resourceKey}_body" class="tab-pane fade active in"><div style="border: 1px dashed gray">
@@ -410,7 +410,7 @@ EOT;
             $interceptorFile = (new ReflectionClass($interceptor))->getFileName();
             $interceptorFile = $this->makeRelativePath($interceptorFile);
             $result .= <<<EOT
-<li><a target="_blank" href="/_dev/edit/index.php?file={$interceptorFile}"><span class="icon-arrow-right"></span>{$interceptor}</a></li>
+<li><a target="_blank" href="/dev/edit/index.php?file={$interceptorFile}"><span class="icon-arrow-right"></span>{$interceptor}</a></li>
 EOT;
         }
         $result .= '</ul></div>';
@@ -446,7 +446,7 @@ EOT;
         if (isset($resourceObject->headers[DevInvoker::HEADER_PROFILE_ID])) {
             $profileId = $resourceObject->headers[DevInvoker::HEADER_PROFILE_ID];
             $result .= <<<EOT
-<span class="icon-random"></span><a href="/_dev/xhprof_html/index.php?run={$profileId}&source=resource"> {$profileId}</a>
+<span class="icon-random"></span><a href="/dev/xhprof_html/index.php?run={$profileId}&source=resource"> {$profileId}</a>
 EOT;
         }
         $result .= '</div>';

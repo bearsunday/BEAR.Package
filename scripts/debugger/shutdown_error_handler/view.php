@@ -59,7 +59,7 @@ functions: {
                 $html .= "<code>{$row['statement']}</code>";
                 $html .= "</a>";
                 $html .= "{$row['file']} : {$row['line']}  ";
-                $html .= "<a target=\"code_edit\" href=\"/_dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
+                $html .= "<a target=\"code_edit\" href=\"/dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
                 $html .= "</li>";
                 $html .= "<div id=\"args{$cnt}\" class=\"collapse out\">{$row['source']}</div>";
             }
@@ -104,7 +104,7 @@ view_logic: {
     $files = get_included_files();
     $includeFiles = $server = '';
     foreach (get_included_files() as $includeFile) {
-        $includeFiles .= "<li><a target=\"code_edit\" href=\"/_dev/edit/index.php?file={$includeFile}\">$includeFile</a></li>";
+        $includeFiles .= "<li><a target=\"code_edit\" href=\"/dev/edit/index.php?file={$includeFile}\">$includeFile</a></li>";
     }
     $includeFilesNum = count($files);
     foreach ($_SERVER as $key => $val) {
@@ -170,7 +170,7 @@ return <<<EOT
         </a><br>
         in {$file} on line {$line}
         </div>
-        <a class="btn" rel="tooltip" title="" href="/_dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
+        <a class="btn" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
     </div>
     <ul id="tab" class="nav nav-tabs">
         <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
@@ -186,7 +186,7 @@ return <<<EOT
         </div>
 
         <div class="tab-pane" id="file">
-            <p><span class="icon-fire"></span><a target="code_edit" href="/_dev/edit/index.php?file={$file}">{$file} : {$line}</a></P>
+            <p><span class="icon-fire"></span><a target="code_edit" href="/dev/edit/index.php?file={$file}">{$file} : {$line}</a></P>
       <pre class="prettyprint linenums">
         {$fileContents}
       </pre>

@@ -67,7 +67,7 @@ class Debug
 
             return;
         } else {
-            $file = "<a href=\"/_dev/edit/index.php?file={$file}&line={$line}\">$file</a>";
+            $file = "<a href=\"/dev/edit/index.php?file={$file}&line={$line}\">$file</a>";
         }
         $varNameCss = <<<EOT
     background-color: green;
