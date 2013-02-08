@@ -24,8 +24,14 @@ class ApplicationLoggerModule extends AbstractModule
      */
     protected function configure()
     {
+        // log register
         $this
             ->bind('BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface')
             ->to(__NAMESPACE__ . '\ApplicationLogger');
+
+        // log writer
+        $this
+            ->bind('BEAR\Resource\LogWriterInterface')
+            ->toProvider(__NAMESPACE__ . '\ResourceLog\WritersProvider');
     }
 }
