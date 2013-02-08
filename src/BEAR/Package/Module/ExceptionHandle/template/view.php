@@ -17,7 +17,7 @@ view_logic: {
     $files = get_included_files();
     $includeFiles = '';
     foreach ($files as $includeFile) {
-        $includeFiles .= "<li><a target=\"code_edit\" href=\"/_dev/edit/index.php?file={$includeFile}\">$includeFile</a></li>";
+        $includeFiles .= "<li><a target=\"code_edit\" href=\"/dev/edit/index.php?file={$includeFile}\">$includeFile</a></li>";
     }
     $includeFilesNum = count($files);
     $file = htmlspecialchars(trim(file_get_contents($e->getFile())));

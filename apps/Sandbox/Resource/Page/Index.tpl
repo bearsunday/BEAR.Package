@@ -84,7 +84,7 @@
             GitHub &raquo;</a>
             <a rel="tooltip" title="{$apc.size} bytes of {$apc.total} user APC entries will be cleared."
                class="btn btn-primary btn-large btn btn-warning"
-               href="/_dev/refresh.php"><i class="icon-refresh"></i> Refresh</a></p>
+               href="/dev/refresh.php"><i class="icon-refresh"></i> Refresh</a></p>
     </div>
     <!-- Example row of columns -->
     <div class="row">
@@ -149,7 +149,7 @@
 
             {if !$is_cli_server}
             <p>
-                <a class="btn btn-success" href="/_dev/apc.php?SCOPE=A&SORT1=H&SORT2=D&COUNT=20&OB=3&object_only"
+                <a class="btn btn-success" href="/dev/apc.php?SCOPE=A&SORT1=H&SORT2=D&COUNT=20&OB=3&object_only"
                    id="apc" rel="tooltip" title="APC stored object">APC
                     Objects &raquo;</a>
             </p>

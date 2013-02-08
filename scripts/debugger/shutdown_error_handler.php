@@ -13,7 +13,7 @@ return function() {
     // redirect
     if ($type == E_PARSE) {
         $back = $_SERVER['REQUEST_URI'];
-        header("Location: /_dev/edit/index.php?file={$file}&line={$line}&error={$message}&back={$back}");
+        header("Location: /dev/edit/index.php?file={$file}&line={$line}&error={$message}&back={$back}");
     }
     // Logic error only
     if (!in_array($type, [E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR])) {

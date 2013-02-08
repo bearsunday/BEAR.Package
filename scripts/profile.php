@@ -30,7 +30,7 @@ if ($enable){
             require_once dirname(__DIR__) . '/vendor/facebook/xhprof/xhprof_lib/utils/xhprof_runs.php';
             $id = (new XHProfRuns_Default)->save_run($xhprof, 'sunday');
             if ($id) {
-                echo "<a style=\"position:absolute;right:20px; bottom:10px;\" class=\"btn btn btn-mini\" href=\"/_dev/xhprof_html/index.php?run={$id}&source=sunday\" target=\"_blank\">PROFILE</a>\n";
+                echo "<a style=\"position:absolute;right:20px; bottom:10px;\" class=\"btn btn btn-mini\" href=\"/dev/xhprof_html/index.php?run={$id}&source=sunday\" target=\"_blank\">PROFILE</a>\n";
             }
         });
 }
