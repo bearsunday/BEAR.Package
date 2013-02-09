@@ -19,6 +19,7 @@ umask(0);
 framework: {
     $packageDir = dirname(dirname(dirname(__DIR__)));
     $loader = require $packageDir . '/vendor/autoload.php';
+    /** @var $loader \Composer\Autoload\ClassLoader */
     AnnotationRegistry::registerLoader([$loader, 'loadClass']);
     AnnotationReader::addGlobalIgnoredName('noinspection'); // for phpStorm
     AnnotationReader::addGlobalIgnoredName('returns'); // for Mr.Smarty. :(
