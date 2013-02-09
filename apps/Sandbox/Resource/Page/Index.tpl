@@ -141,11 +141,11 @@
             </ul>
             <p><a class="btn" href="http://code.google.com/p/bearsunday/wiki/blog">Try tutorial &raquo;</a></p>
 
-            <h2>Tools</h2>
+            <h2>Development</h2>
 
             <p>
-                <a class="btn" href="_dev/ide/index.php"
-                   id="dev" rel="tooltip" title="Web IDE">Web IDE &raquo;</a>
+                <a class="btn" href="/dev/"
+                   id="dev" rel="tooltip" title="Web IDE">DevTool &raquo;</a>
 
             {if !$is_cli_server}
             <p>

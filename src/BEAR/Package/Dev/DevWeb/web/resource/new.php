@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * new resource
+ *
+ * @global $app \BEAR\Package\Provide\Application\AbstractApp
+ */
 use BEAR\Package\Dev\Application\ApplicationReflector;
 
 dependency: {

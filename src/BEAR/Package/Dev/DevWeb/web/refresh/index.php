@@ -1,8 +1,11 @@
 <?php
 /**
- * @global $app
+ * clear cache
+ *
+ * @global $app \BEAR\Package\Provide\Application\AbstractApp
+ * @global $appDir string
  */
-// clear APC cache
+
 error_log('app files cleared by ' . __FILE__);
 require $appDir . '/scripts/clear.php';
 

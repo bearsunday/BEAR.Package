@@ -11,7 +11,6 @@ use BEAR\Resource\RequestInterface;
 use Ray\Di\ProviderInterface;
 use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
-use Ray\Di\Di\Inject;
 
 final class Zf2Log implements LogWriterInterface
 {
@@ -21,24 +20,51 @@ final class Zf2Log implements LogWriterInterface
     private $provider;
 
     /**
-     * @param ProviderInterface $log
+     * @var string
+     */
+    private $pageId;
+
+    /**
+     * @var \Zend\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param \Ray\Di\ProviderInterface $provider
      *
      * @Inject
      */
     public function __construct(ProviderInterface $provider)
     {
         $this->provider = $provider;
+        $this->pageId = rtrim(base64_encode(pack('H*', uniqid())), '=');
     }
+
+//    public function __destruct()
+//    {
+//        error_log(spl_object_hash($this));
+//    }
 
     /**
      * {@inheritdoc}
      */
     public function write(RequestInterface $request, ResourceObject $result)
     {
-        $logger = $this->provider->get();
+        $this->logger = $this->provider->get();
+        $id = "{$this->pageId}";
         /** @var $logger \Zend\Log\LoggerInterface */
-        $msg = 'req:' . $request->toUriWithMethod() . "{\t}code:" . $result->code;
-        $msg .= '{\t}body:' . json_encode($result->body);
-        $logger->info($msg);
+        $msg = "id:{$id}\treq:" . $request->toUriWithMethod();
+        $msg .= "\tcode:" . $result->code;
+        $msg .= "\tbody:" . json_encode($result->body);
+        $msg .= "\theader:" . json_encode($result->headers);
+        if (isset($_SERVER['PATH_INFO'])) {
+            $path = $_SERVER['PATH_INFO'];
+            $path .= $_GET ? '?' : '';
+            $path .= http_build_query($_GET);
+        } else {
+            $path = '/';
+        }
+        $msg .= "\tpath:$path";
+        $this->logger->info($msg, ['page' => $this->pageId]);
     }
 }

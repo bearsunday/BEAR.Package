@@ -21,10 +21,13 @@ final class Zf2LogProvider implements ProviderInterface
      */
     private $db;
 
+    /**
+     * @var \Zend\Log\Logger
+     */
     private $zf2Log;
 
     /**
-     * @param string $dbFile
+     * @param $logDir string
      */
     public function __construct($logDir)
     {
@@ -41,8 +44,8 @@ final class Zf2LogProvider implements ProviderInterface
      */
     public function get()
     {
-        $this->db->query('CREATE TABLE IF NOT EXISTS log_table(timestamp, message, priority, priorityName)', Adapter::QUERY_MODE_EXECUTE);
-        $writer = new Db($this->db, 'log_table');
+        $this->db->query('CREATE TABLE IF NOT EXISTS log(timestamp, message, priority, priorityName, extra_page)', Adapter::QUERY_MODE_EXECUTE);
+        $writer = new Db($this->db, 'log');
         $this->zf2Log->addWriter($writer);
 
         return $this->zf2Log;

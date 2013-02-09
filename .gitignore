@@ -14,6 +14,5 @@ tmp
 *.tpl.php
 di.log.txt
 
-VERSION
-
 composer.phar
+resource.db
