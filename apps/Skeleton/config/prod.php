@@ -8,7 +8,7 @@ $password = isset($_SERVER['BEAR_DB_PASSWORD']) ? $_SERVER['BEAR_DB_PASSWORD'] :
 $slaveId = isset($_SERVER['BEAR_DB_ID_SLAVE']) ? $_SERVER['BEAR_DB_ID_SLAVE'] : 'root';
 $slavePassword = isset($_SERVER['BEAR_DB_PASSWORD_SLAVE']) ? $_SERVER['BEAR_DB_PASSWORD_SLAVE'] : '';
 
-$appDir = dirname(dirname(__DIR__));
+$appDir = dirname(__DIR__);
 // @Named($key) => instance
 $config = [
     // database

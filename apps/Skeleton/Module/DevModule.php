@@ -24,7 +24,7 @@ class DevModule extends AbstractModule
      */
     protected function configure()
     {
-        $config = (require __DIR__ . '/config/dev.php') + (require __DIR__ . '/config/prod.php');
+        $config = (require dirname(__DIR__) . '/config/dev.php') + (require dirname(__DIR__) . '/config/prod.php');
         /** @var $config array */
         $this->install(new App\AppModule($config));
         $this->install(new PackageModule\Resource\DevResourceModule($this));
