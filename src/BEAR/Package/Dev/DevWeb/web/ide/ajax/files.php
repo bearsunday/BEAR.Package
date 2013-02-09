@@ -24,4 +24,3 @@ foreach ($files as $file) {
     echo "<li class=\"file ext_$ext\"><a href=\"#\" alt=\"{$file}\" rel=\"" . htmlspecialchars($file) . "\">" . htmlspecialchars($shortfileName) . "</a></li>";
 }
 echo "</ul><!-- tree -->";
-?>

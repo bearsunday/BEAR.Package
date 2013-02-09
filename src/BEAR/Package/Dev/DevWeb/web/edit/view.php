@@ -51,13 +51,13 @@
                 if (mode == 'reset') {
                     // reset
                     jQuery(label).html('SAVE').css('background-color', 'gray');
-                } else if (mode == 'changed') {
+                } elseif (mode == 'changed') {
                     // change
                     jQuery(label).html('SAVE').css('background-color', 'green');
-                } else if (mode == 'readonly') {
+                } elseif (mode == 'readonly') {
                     // change
                     jQuery(label).html('Read Only').css('background-color', 'gray');
-                } else if (mode == 'save') {
+                } elseif (mode == 'save') {
                     jQuery(label).html('Saving...').css('background-color', 'red').fadeOut().fadeIn('slow', function() {
                         jQuery(label).html('SAVE').css('background-color', 'gray');
                     });
@@ -138,13 +138,13 @@
         <?php echo ($view['is_writable']) ? "$.codeEdit.label('reset');" : "$.codeEdit.label('readonly');"; ?>
         var save = function() {$.codeEdit.save("<?php echo $view['file_path'] ?>", editor.getSession().getValue());};
         editor.commands.addCommand({
-		    name: 'Save',
-		    bindKey: {
+            name: 'Save',
+            bindKey: {
                 win: 'Ctrl-S',
                 mac: 'Command-S'
             },
-		    exec: save
-		});
+            exec: save
+        });
          $('#save_now').click(save);
     });
     </script>

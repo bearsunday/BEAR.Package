@@ -19,7 +19,7 @@ class FileTree
      *
      * @var string
      */
-    var $cmd = '';
+    public $cmd = '';
 
     /**
      * @param $placeholder
