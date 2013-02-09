@@ -12,9 +12,10 @@ $contentsForLayout =<<<EOT
     <li class="active">Home</li>
     </ul>
 
-    <div class="awell">
+    <div class="well">
         <ul>
             <li><a href="resource/"><i class="icon-th-list"></i> Resource</a></li>
+            <li><a href="log/"><i class="icon-th-list"></i> Log</a></li>
             <li><a href="refresh/"><i class="icon-refresh"></i> Refresh</a></li>
             <li><a href="di/"><i class="icon-info-sign"></i> Di Log</a></li>
         </ul>

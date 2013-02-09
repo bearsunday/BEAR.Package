@@ -321,12 +321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "0.6.0"
+                "reference": "28373e50539b7583225d1288bfe0d9607c26ca03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/0.6.0",
-                "reference": "0.6.0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/28373e50539b7583225d1288bfe0d9607c26ca03",
+                "reference": "28373e50539b7583225d1288bfe0d9607c26ca03",
                 "shasum": ""
             },
             "require": {
@@ -341,7 +341,7 @@
                 "ray/aop": ">=1.0.0-beta2",
                 "ray/di": ">=1.0.0-beta3"
             },
-            "time": "2013-01-25 16:09:33",
+            "time": "2013-02-08 17:15:07",
             "type": "library",
             "autoload": {
                 "psr-0": {
