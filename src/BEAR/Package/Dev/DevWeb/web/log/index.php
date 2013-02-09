@@ -34,4 +34,3 @@ output: {
 EOT;
     echo include dirname(__DIR__) . '/view/layout.php';
 }
-

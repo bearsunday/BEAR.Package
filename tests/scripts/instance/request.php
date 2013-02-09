@@ -19,4 +19,3 @@ return new Request(
     new Invoker(new Config(new Annotation(new Definition, new Reader)), new Linker(new Reader),
     new Manager(new HandlerFactory, new ResultFactory, new ResultCollection))
 );
-

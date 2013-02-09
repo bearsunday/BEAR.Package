@@ -12,7 +12,8 @@ class Controller
      *
      * @Ray\Di\Di\Inject
      */
-    public function __construct(Reader $reader, AppInterface $app){
+    public function __construct(Reader $reader, AppInterface $app)
+    {
         $this->reader = $reader;
         $this->app = $app;
     }
