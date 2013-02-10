@@ -26,7 +26,7 @@ class DevWeb
      */
     public function service(AbstractApp $app, $pagePath)
     {
-        global $rootDir;
+        global $appDir;
 
         if (substr($pagePath, 0, 4) !== 'dev/') {
             return false;
@@ -37,7 +37,7 @@ class DevWeb
             $path .= 'index.php';
         }
         $appDir = dirname((new \ReflectionObject($app))->getFileName());
-        $scriptFile = __DIR__ . '/web/' . $path;
+        $scriptFile = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/docs/dev/public/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             require $scriptFile;
             exit(0);

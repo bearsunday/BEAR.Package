@@ -1,7 +1,18 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Dev\DevWeb\Editor;
 
-
-
+/**
+ * File tree
+ *
+ * @package    BEAR.Package
+ * @subpackage Editor
+ */
 class FileTree
 {
     private $root;
@@ -58,17 +69,3 @@ class FileTree
         return "$(document).ready( function() {{$this->cmd}load(\"$initialOpeningFile\")});";
     }
 }
-
-$projectDir = '';
-
-// Treeを描画
-$root = require __DIR__ . '/ini.php';
-//$root = $_GET['root'];
-$tree = new FileTree($root);
-//$tree->tree('#container_id1', $files['page'], '<span class=\"tree_label\">Page</span>');
-//$tree->tree('#container_id2', $files['ro'], '<span class=\"tree_label\">Resource</span>');
-//$tree->tree('#container_id3', $files['view'], '<span class=\"tree_label\">View template</span>');
-$tree->tree('#container_id', $projectDir , '<span class=\"tree_label\">Project</span>');
-$initialOpeningFile ='App.php';
-$js = $tree->getJsCode($initialOpeningFile);
-echo $js;

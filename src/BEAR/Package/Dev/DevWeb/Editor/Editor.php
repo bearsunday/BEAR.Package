@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
 namespace BEAR\Package\Dev\DevWeb\Editor;
 
 /**
@@ -7,6 +12,9 @@ namespace BEAR\Package\Dev\DevWeb\Editor;
  */
 class Editor
 {
+    /**
+     * @return array
+     */
     public function getView()
     {
         list($fullPath, $line, $relativePath) = $this->getInput();
@@ -32,6 +40,9 @@ class Editor
         return $view;
     }
 
+    /**
+     * @return string
+     */
     public function save()
     {
         list($fullPath, $line, $relativePath) = $this->getInput();
