@@ -1,0 +1,14 @@
+{
+    "name": "bear/skeleton",
+    "description": "Skeleton application for BEAR.Sunday",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-0": { "": "./" }
+    },
+    "scripts"   :{
+        "post-install-cmd": "Skeleton\\scripts\\Install\\Composer::postInstall"
+    }
+}
