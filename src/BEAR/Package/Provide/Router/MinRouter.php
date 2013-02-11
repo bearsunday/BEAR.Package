@@ -55,7 +55,7 @@ class MinRouter implements RouterInterface
      * @throws BadRequest
      * @throws MethodNotAllowed
      */
-    public function setArgv(array $argv)
+    public function setArgv($argv)
     {
         if (count($argv) < 3) {
             throw new BadRequest('Usage: [get|post|put|delete] [uri]');
@@ -79,7 +79,7 @@ class MinRouter implements RouterInterface
      *
      * @return self
      */
-    public function setGlobal(array $global)
+    public function setGlobal($global)
     {
         $this->globals = $global;
         return $this;

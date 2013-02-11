@@ -7,7 +7,6 @@ namespace Skeleton\Resource\Page;
 
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
-use Ray\Di\Di\Inject;
 
 /**
  * Index page

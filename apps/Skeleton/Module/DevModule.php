@@ -8,7 +8,6 @@ namespace Skeleton\Module;
 use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module as PackageModule;
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 /**
  * Dev module
