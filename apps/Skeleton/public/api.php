@@ -22,15 +22,11 @@ if (PHP_SAPI == 'cli-server') {
 }
 chdir(dirname(__DIR__));
 
-// Boot
-require 'scripts/bootstrap/dev.php';
-
 // Cleaning
 require 'scripts/clear.php';
 
-// Application
 $mode = 'Api';
-$app = require 'scripts/instance.php';
+$app = require dirname(__DIR__) . '/scripts/bootstrap/dev_instance.php';
 
 /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
     if (PHP_SAPI === 'cli') {
