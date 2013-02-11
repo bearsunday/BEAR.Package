@@ -9,7 +9,6 @@ use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module as PackageModule;
 use BEAR\Package\Provide as ProvideModule;
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 /**
  * Application module

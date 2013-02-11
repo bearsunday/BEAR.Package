@@ -10,8 +10,6 @@ use BEAR\Resource\Adapter\App as AppAdapter;
 use BEAR\Resource\SchemeCollection;
 use BEAR\Sunday\Inject\AppNameInject;
 use BEAR\Sunday\Inject\InjectorInject;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Scheme collection
