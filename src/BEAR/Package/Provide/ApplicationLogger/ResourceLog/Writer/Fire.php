@@ -38,7 +38,6 @@ final class Fire implements LogWriterInterface
     public function write(RequestInterface $request, ResourceObject $result)
     {
         if (headers_sent()) {
-            error_log('firephp is disabled on ' . __LINE__  . ' in ' . __FILE__);
             return;
         }
         $requestLabel = $request->toUriWithMethod();
