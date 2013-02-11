@@ -9,6 +9,6 @@
         "psr-0": { "": "./" }
     },
     "scripts"   :{
-        "post-install-cmd": "Skeleton\\scripts\\Install\\Composer::postInstall"
+        "post-install-cmd": "scripts\\Install\\Composer::postInstall"
     }
 }
