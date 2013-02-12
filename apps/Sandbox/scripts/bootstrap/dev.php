@@ -8,10 +8,10 @@ ini_set('display_errors', 1);
 $packageDir = dirname(dirname(dirname(dirname(__DIR__))));
 
 // Load
-require  $packageDir . '/scripts/debug_load.php';
+require  $packageDir . '/scripts/dev/load.php';
 
 // profiler
-require  $packageDir . '/scripts/profile.php';
+require  $packageDir . '/scripts/dev/profile.php';
 
 // set exception handler for development
 set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler.php');
