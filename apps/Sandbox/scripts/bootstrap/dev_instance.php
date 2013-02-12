@@ -50,6 +50,8 @@ $app->logger->register($app);
 // Use cli parameter for routing (web.php get /)
 if (PHP_SAPI === 'cli' && isset($argv)) {
     $app->router->setArgv($argv);
+} else {
+    $app->router->setGlobals($GLOBALS);
 }
 
 return $app;

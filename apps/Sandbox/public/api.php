@@ -41,7 +41,7 @@ $app = require 'scripts/instance.php';
     }
 try {
     // Router
-    list($method,) = $app->router->getMethodQuery();
+    list($method,) = $app->router->match();
     // Request
     $page = $app->resource->$method->uri($uri)->withQuery($get)->eager->request();
 } catch (Exception $e) {
