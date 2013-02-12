@@ -30,6 +30,8 @@ $contentsForLayout =<<<EOT
             <li><a href="memcache/"><i class="icon-zoom-in"></i> Memcache admin</a></li>
             <li><a href="phpinfo/"><i class="icon-info-sign"></i> phpinfo</a></li>
         </ul>
+        <hr>
+            <a href="/"><i class="icon-arrow-left"></i> Back</a>
     </div>
 EOT;
 echo include __DIR__ . '/view/layout.php';

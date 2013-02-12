@@ -3,6 +3,6 @@
 /**
  * editor root
  */
-$rootDir = '/Users/akihito/git/BEAR.Package/apps/Sandbox/';
+global $appDir;
 
-return $rootDir;
+return $appDir;
