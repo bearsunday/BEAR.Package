@@ -145,7 +145,7 @@
 
             <p>
                 <a class="btn" href="/dev/"
-                   id="dev" rel="tooltip" title="Web IDE">DevTool &raquo;</a>
+                   id="dev">Dev Tool &raquo;</a>
 
             {if !$is_cli_server}
             <p>
