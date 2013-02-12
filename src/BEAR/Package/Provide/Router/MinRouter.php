@@ -11,6 +11,8 @@ use Aura\Router\Map;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
+use Ray\Di\Di\Inject;
+
 /**
  * Standard Router
  *
@@ -39,6 +41,7 @@ class MinRouter implements RouterInterface
      * Constructor
      *
      * @param Map $map
+     * @Inject(optional=true)
      */
     public function __construct(Map $map = null)
     {
@@ -46,11 +49,16 @@ class MinRouter implements RouterInterface
     }
 
     /**
-     * Set argv
-     *
-     * @param array $argv
-     *
-     * @return self
+     * {@inheritDoc}
+     */
+    public function setGlobals($global)
+    {
+        $this->globals = $global;
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @throws BadRequest
      * @throws MethodNotAllowed
@@ -73,20 +81,7 @@ class MinRouter implements RouterInterface
     }
 
     /**
-     * Set Global
-     *
-     * @param array $global
-     *
-     * @return self
-     */
-    public function setGlobal($global)
-    {
-        $this->globals = $global;
-        return $this;
-    }
-
-    /**
-     * Match route
+     * {@inheritDoc}
      *
      * @return array [$method, $pageUri, $query]
      */
@@ -97,7 +92,7 @@ class MinRouter implements RouterInterface
         $uri = $globals['_SERVER']['REQUEST_URI'];
         $route = $this->map ? $this->map->match(parse_url($uri, PHP_URL_PATH), $globals['_SERVER']) : false;
         if ($route === false) {
-            list($method, $query) = $this->getMethodQuery($globals);
+            list($method, $query) = $this->getMethodQuery();
             $pageUri = $this->getPageKey();
         } else {
             $method = $route->values['action'];

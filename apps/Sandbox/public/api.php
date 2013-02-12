@@ -22,9 +22,6 @@ if (PHP_SAPI == 'cli-server') {
 }
 chdir(dirname(__DIR__));
 
-// Boot
-require 'scripts/bootstrap/dev.php';
-
 // Cleaning
 require 'scripts/clear.php';
 

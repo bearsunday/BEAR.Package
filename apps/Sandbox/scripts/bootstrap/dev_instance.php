@@ -7,7 +7,7 @@
  */
 
 // built-in web server
-$isDevTool = substr($_SERVER["REQUEST_URI"], 0, 5) === '/dev/';
+$isDevTool = PHP_SAPI  !== 'cli' && substr($_SERVER["REQUEST_URI"], 0, 5) === '/dev/';
 if (! $isDevTool && php_sapi_name() == "cli-server") {
     if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico|php)$/', $_SERVER["REQUEST_URI"])) {
         return false;
