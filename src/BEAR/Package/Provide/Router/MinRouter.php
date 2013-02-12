@@ -14,11 +14,15 @@ use BEAR\Resource\Exception\MethodNotAllowed;
 use Ray\Di\Di\Inject;
 
 /**
- * Standard Router
+ * Standard min router
  *
- * @package BEAR.Package
+ * The constructor can accepts "Aura.Route" routing
+ * @see https://github.com/auraphp/Aura.Router
+ *
+ * @package    BEAR.Package
+ * @subpackage Route
  */
-class MinRouter implements RouterInterface
+final class MinRouter implements RouterInterface
 {
     /**
      * $GLOBALS
@@ -77,6 +81,7 @@ class MinRouter implements RouterInterface
         parse_str(parse_url($argv[2], PHP_URL_QUERY), $get);
         $globals['_GET'] = $get;
         $this->globals = $globals;
+
         return $this;
     }
 
@@ -92,7 +97,7 @@ class MinRouter implements RouterInterface
         $uri = $globals['_SERVER']['REQUEST_URI'];
         $route = $this->map ? $this->map->match(parse_url($uri, PHP_URL_PATH), $globals['_SERVER']) : false;
         if ($route === false) {
-            list($method, $query) = $this->getMethodQuery();
+            list($method, $query,) = $this->getMethodQuery();
             $pageUri = $this->getPageKey();
         } else {
             $method = $route->values['action'];
@@ -113,27 +118,20 @@ class MinRouter implements RouterInterface
      *
      * @return array [$method, $query]
      */
-    public function getMethodQuery()
+    private function getMethodQuery()
     {
         $globals = $this->globals;
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'GET' && isset($globals['_GET'][self::METHOD_OVERRIDE_GET])) {
-            /** @noinspection PhpUnusedLocalVariableInspection */
             $method = $globals['_GET'][self::METHOD_OVERRIDE_GET];
-            /** @noinspection PhpUnusedLocalVariableInspection */
             $query = $globals['_GET'];
-            goto complete;
-        }
-        if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
-            /** @noinspection PhpUnusedLocalVariableInspection */
+        } else if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
             $method = $globals['_POST'][self::METHOD_OVERRIDE];
-            /** @noinspection PhpUnusedLocalVariableInspection */
             $query = $globals['_POST'];
-            goto complete;
+        } else {
+            $method = $globals['_SERVER']['REQUEST_METHOD'];
+            $query = $globals['_GET'];
         }
-        $method = $globals['_SERVER']['REQUEST_METHOD'];
-        $query = $globals['_GET'];
 
-        complete:
         $method = strtolower($method);
 
         return [$method, $query];
@@ -142,7 +140,7 @@ class MinRouter implements RouterInterface
     /**
      * Return page key
      *
-     * @return array                     [$method, $pagekey]
+     * @return array [$method, $pagekey]
      * @throws \InvalidArgumentException
      */
     private function getPageKey()
