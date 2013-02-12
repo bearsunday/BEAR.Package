@@ -11,7 +11,7 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 use BEAR\Package\Dev\DevWeb\DevWeb;
 
 // Profile
-// require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
+// require dirname(dirname(dirname(__DIR__))) . '/scripts/dev/profile.php';
 // Boot
 
 // Application

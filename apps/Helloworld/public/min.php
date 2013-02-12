@@ -8,7 +8,7 @@
  */
 
 // profiler
-//require dirname(dirname(dirname(__DIR__))) . '/scripts/profile.php';
+//require dirname(dirname(dirname(__DIR__))) . '/scripts/dev/profile.php';
 
 // page request
 $app = require dirname(__DIR__) . '/scripts/instance.php';
