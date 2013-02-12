@@ -100,7 +100,6 @@ class ApplicationReflector
         $dir = '';
         foreach ($parts as $part) {
             if (!is_dir($dir .= "/$part")) {
-                var_dump($dir);
                 mkdir($dir);
                 if (!is_writable($dir)) {
                     throw new \RuntimeException("Not writable dir [$dir]", 500);
