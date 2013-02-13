@@ -36,7 +36,7 @@ namespace BEAR\Package\Provide\Application {
          */
         protected function setUp()
         {
-            $this->object = new ApplicationFactory;
+            $this->object = new ApplicationFactory(new \Doctrine\Common\Cache\ArrayCache);
         }
 
         /**
@@ -50,15 +50,6 @@ namespace BEAR\Package\Provide\Application {
         public function testNew()
         {
             $this->assertInstanceOf('BEAR\Package\Provide\Application\ApplicationFactory', $this->object);
-        }
-
-        /**
-         * @covers BEAR\Package\Provide\Application\ApplicationFactory::setLoader
-         */
-        public function testSetLoader()
-        {
-            $object = $this->object->setLoader(dirname(dirname(dirname(__DIR__))));
-            $this->assertInstanceOf('BEAR\Package\Provide\Application\ApplicationFactory', $object);
         }
 
         /**

@@ -42,7 +42,7 @@ class PagerTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-        return $this->createMySQLXMLDataSet(__DIR__ . '/Mock/pager_seed.xml');
+        return $this->createMySQLXMLDataSet(dirname(__DIR__) . '/mock/pager_seed.xml');
     }
 
     protected function setUp()
