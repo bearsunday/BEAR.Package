@@ -13,7 +13,7 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection()
     {
-        $pdo = require App::DIR . '/tests/scripts/db.php';
+        $pdo = require $GLOBALS['APP_DIR'] . '/tests/scripts/db.php';
 
         return $this->createDefaultDBConnection($pdo, 'mysql');
     }
@@ -23,7 +23,7 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-        return $this->createMySQLXMLDataSet(App::DIR . '/tests/seed.xml');
+        return $this->createMySQLXMLDataSet($GLOBALS['APP_DIR'] . '/tests/seed.xml');
     }
 
     /**

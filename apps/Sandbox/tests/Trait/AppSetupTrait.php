@@ -21,7 +21,7 @@ trait AppSetupTrait
             $mode = 'Test';
             /** @noinspection PhpUndefinedClassInspection */
             /** @noinspection PhpIncludeInspection */
-            $app = require App::DIR . '/scripts/instance.php';
+            $app = require $GLOBALS['APP_DIR'] . '/scripts/instance.php';
         }
 
         $this->resource = $app->resource;
