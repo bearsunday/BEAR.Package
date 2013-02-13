@@ -9,7 +9,6 @@ namespace BEAR\Package\Provide\Router;
 
 use Ray\Di\AbstractModule;
 
-
 /**
  * Router module
  *

@@ -50,7 +50,7 @@ class SymfonyRouter implements RouterInterface
         $matcher = new UrlMatcher($this->collection, $this->context);
         $query = $this->context->getParameters();
         
-        try{
+        try {
             $match = $matcher->match($this->context->getPathInfo());
             $pageUri = $match['_path'];
             unset($match['_path'], $match['_route']);
@@ -86,10 +86,10 @@ class SymfonyRouter implements RouterInterface
      *
      * @return self
      */
-     public function setGlobals($globals)
-     {
-         // Fulfilling interface requirements
-     }
+    public function setGlobals($globals)
+    {
+        // Fulfilling interface requirements
+    }
     
     /**
      * Sets routing collection
@@ -127,13 +127,13 @@ class SymfonyRouter implements RouterInterface
     {
         $params = $this->context->getParameters();
         switch ($this->context->getMethod()) {
-            case 'GET': 
+            case 'GET':
                 if (isset($params[self::METHOD_OVERRIDE_GET])) {
                     $this->context->setMethod($params[self::METHOD_OVERRIDE_GET]);
                     unset($params[self::METHOD_OVERRIDE_GET]);
                 }
                 break;
-            case 'POST': 
+            case 'POST':
                 if (isset($params[self::METHOD_OVERRIDE])) {
                     $this->context->setMethod($params[self::METHOD_OVERRIDE]);
                     unset($params[self::METHOD_OVERRIDE]);
