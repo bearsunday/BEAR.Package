@@ -124,7 +124,7 @@ final class MinRouter implements RouterInterface
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'GET' && isset($globals['_GET'][self::METHOD_OVERRIDE_GET])) {
             $method = $globals['_GET'][self::METHOD_OVERRIDE_GET];
             $query = $globals['_GET'];
-        } else if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
+        } elseif ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
             $method = $globals['_POST'][self::METHOD_OVERRIDE];
             $query = $globals['_POST'];
         } else {
