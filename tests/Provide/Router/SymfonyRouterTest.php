@@ -77,8 +77,8 @@ class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
     public function testAdditionalParameters()
     {
         $route = new Route(
-            '/archive/{month}', 
-            ['someparam' => 'a param', '_path' => '/a-path'], 
+            '/archive/{month}',
+            ['someparam' => 'a param', '_path' => '/a-path'],
             ['month' => '[0-9]{4}-[0-9]{2}']
         );
         $this->context->setParameters(['one' => '1']);
