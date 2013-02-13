@@ -60,7 +60,7 @@ class Index extends Page
 
     public function onGet()
     {
-        $cache = (PHP_SAPI !== 'cli') ? apc_cache_info('user') : ['num_entries' => 0, 'mem_size' => 0];
+        $cache = (PHP_SAPI !== 'cli' && function_exists('apc_cache_info')) ? apc_cache_info('user') : ['num_entries' => 0, 'mem_size' => 0];
         $this['apc'] = [
             'total' => $cache['num_entries'],
             'size' => $cache['mem_size']

@@ -48,12 +48,10 @@ if (phpversion("xhprof")) {
 echo '(info) variables_order: ' . ini_get('variables_order') . PHP_EOL;
 echo '(info) php.ini: ' . ini_get('variables_order') . PHP_EOL;
 
-$isEnvOk = ($isPhpVersionOk === $ok
-            && ($isAPCVersionOk === $ok)
-            && ($isVendorInstalledOk === $ok)
-            && ($isDbConnectionOk === $ok));
+$isEnvOk = $isVendorInstalledOk === $ok
+           && ($isDbConnectionOk === $ok);
 $isInstallOk = $isEnvOk ? $ok : $ng;
 
 echo PHP_EOL;
-echo "BEAR.Sunday INSTALL: {$isInstallOk}" . PHP_EOL;
+echo "BEAR.Sunday env check: {$isInstallOk}" . PHP_EOL . PHP_EOL;
 return $isEnvOk;
