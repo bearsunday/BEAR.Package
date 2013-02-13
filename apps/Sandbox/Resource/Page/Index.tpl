@@ -84,7 +84,7 @@
             GitHub &raquo;</a>
             <a rel="tooltip" title="{$apc.size} bytes of {$apc.total} user APC entries will be cleared."
                class="btn btn-primary btn-large btn btn-warning"
-               href="/dev/refresh.php"><i class="icon-refresh"></i> Refresh</a></p>
+               href="/dev/refresh/"><i class="icon-refresh"></i> Refresh</a></p>
     </div>
     <!-- Example row of columns -->
     <div class="row">
