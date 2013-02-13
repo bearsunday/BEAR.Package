@@ -19,7 +19,6 @@
     ],
     "require":{
         "php":">=5.4.0",
-        "ext-apc":"*",
         "ext-curl":"*",
         "ray/aop":"1.0.*",
         "ray/di":"dev-master",
