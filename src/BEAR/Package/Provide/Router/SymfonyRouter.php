@@ -80,6 +80,18 @@ class SymfonyRouter implements RouterInterface
     }
     
     /**
+     * Set globals
+     *
+     * @param mixed $globals array | \ArrayAccess
+     *
+     * @return self
+     */
+     public function setGlobals($globals)
+     {
+         // Fulfilling interface requirements
+     }
+    
+    /**
      * Sets routing collection
      */
     public function setCollection(RouteCollection $collection)
@@ -141,7 +153,7 @@ class SymfonyRouter implements RouterInterface
      * @throws BadRequest
      * @throws MethodNotAllowed
      */
-    public function setArgv(array $argv)
+    public function setArgv($argv)
     {
         if (count($argv) < 3) {
             throw new BadRequest('Usage: [get|post|put|delete] [uri]');
