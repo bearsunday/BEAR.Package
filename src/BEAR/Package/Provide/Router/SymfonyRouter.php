@@ -88,7 +88,22 @@ class SymfonyRouter implements RouterInterface
      */
     public function setGlobals($globals)
     {
-        // Fulfilling interface requirements
+        $request = new Request(
+            $globals['_GET'],
+            $globals['_POST'],
+            [],
+            $globals['_COOKIE'],
+            $globals['_FILES'],
+            $globals['_SERVER']
+        );
+        parse_str($request->getContent(), $data);
+        $request->request = new ParameterBag($data);
+        $context = new RequestContext;
+        $context->fromRequest($request);
+        $get = $request->query->all();
+        $post = $request->request->all();
+        $context->setParameters(array_merge($get, $post));
+        $this->context = $context;
     }
     
     /**
