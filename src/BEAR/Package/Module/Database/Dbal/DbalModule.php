@@ -11,7 +11,6 @@ use Ray\Di\AbstractModule;
 use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
 use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
 
-
 /**
  * DBAL module
  *
@@ -36,7 +35,7 @@ class DbalModule extends AbstractModule
     }
 
     /**
-     * @Transactional - db transaction
+     * @Db - db setter
      */
     private function installDbInjector()
     {

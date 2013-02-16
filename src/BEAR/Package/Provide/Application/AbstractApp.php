@@ -13,11 +13,9 @@ use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
 use BEAR\Resource\ResourceInterface;
-use BEAR\Resource\SignalHandler\Provides;
 use BEAR\Resource\AbstractObject as Page;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Application
@@ -86,12 +84,12 @@ abstract class AbstractApp implements AppInterface
     /**
      * Constructor
      *
-     * @param InjectorInterface           $injector         Dependency Injector
-     * @param ResourceInterface           $resource         Resource client
-     * @param ExceptionHandlerInterface   $exceptionHandler Exception handler
-     * @param ApplicationLoggerInterface  $logger           Application logger
-     * @param ResponseInterface           $response         Web / Console response
-     * @param RouterInterface             $router           Resource cache adapter
+     * @param InjectorInterface          $injector         Dependency Injector
+     * @param ResourceInterface          $resource         Resource client
+     * @param ExceptionHandlerInterface  $exceptionHandler Exception handler
+     * @param ApplicationLoggerInterface $logger           Application logger
+     * @param ResponseInterface          $response         Web / Console response
+     * @param RouterInterface            $router           URI Router
      *
      * @Inject
      */
@@ -109,6 +107,5 @@ abstract class AbstractApp implements AppInterface
         $this->exceptionHandler = $exceptionHandler;
         $this->logger = $logger;
         $this->router = $router;
-        $resource->attachParamProvider('Provides', new Provides);
     }
 }
