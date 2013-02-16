@@ -5,17 +5,17 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Stab;
+namespace BEAR\Package\Module\Stub
 
 use Ray\Di\AbstractModule;
 
 /**
- * Stab Module
+ * StubModule
  *
  * @package    BEAR.Package
  * @subpackage Module
  */
-class StabModule extends AbstractModule
+class Stubodule extends AbstractModule
 {
     /**
      * @var array
@@ -37,7 +37,7 @@ class StabModule extends AbstractModule
             $this->bindInterceptor(
                 $this->matcher->subclassesOf($class),
                 $this->matcher->any(),
-                [new Stab($value)]
+                [new Stub$value)]
             );
         }
 
