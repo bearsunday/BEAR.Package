@@ -1,4 +1,7 @@
 <?php
 
-//unset($app->page);
-print_o($app);
+if (isset($_GET['text'])) {
+    echo serialize($app);
+} else {
+    print_o($app);
+}
