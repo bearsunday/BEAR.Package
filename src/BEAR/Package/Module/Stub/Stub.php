@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module\Stab;
+namespace BEAR\Package\Module\Stub
 
 use BEAR\Sunday\Inject\LogInject;
 use Ray\Aop\MethodInterceptor;
@@ -18,12 +18,12 @@ use Ray\Di\Di\Inject;
  * @package    BEAR.Sunday
  * @subpackage Interceptor
  */
-class Stab implements MethodInterceptor
+class Stub implements MethodInterceptor
 {
     use LogInject;
 
     /**
-     * Stab data
+     * Stubdata
      *
      * @var array
      */
