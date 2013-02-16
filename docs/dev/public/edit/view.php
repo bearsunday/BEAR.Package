@@ -51,13 +51,13 @@
                 if (mode == 'reset') {
                     // reset
                     jQuery(label).html('SAVE').css('background-color', 'gray');
-                } else if (mode == 'changed') {
+                } elseif (mode == 'changed') {
                     // change
                     jQuery(label).html('SAVE').css('background-color', 'green');
-                } else if (mode == 'readonly') {
+                } elseif (mode == 'readonly') {
                     // change
                     jQuery(label).html('Read Only').css('background-color', 'gray');
-                } else if (mode == 'save') {
+                } elseif (mode == 'save') {
                     jQuery(label).html('Saving...').css('background-color', 'red').fadeOut().fadeIn('slow', function() {
                         jQuery(label).html('SAVE').css('background-color', 'gray');
                     });
