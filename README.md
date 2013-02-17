@@ -40,7 +40,7 @@ Make your own application
 
     $ cd bear/apps
     $ curl -s https://getcomposer.org/installer | php
-    $ php composer.phar create-project -s dev --dev bear/skeleton ./{yourAppName}
+    $ php composer.phar create-project -s dev --dev bear/skeleton ./{YourAppName}
     // Console
     $ php web.php get /
     // Web
