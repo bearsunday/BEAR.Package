@@ -26,16 +26,16 @@ use Ray\Di\Di\Named;
  */
 class SymfonyRouter implements RouterInterface
 {
-    
+
     private $context;
     private $fileName;
     private $fileLocation;
     private $collection;
     private $request;
-    
+
     const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
     const METHOD_OVERRIDE_GET = '_method';
-    
+
     /**
      * Match route
      *
@@ -49,7 +49,7 @@ class SymfonyRouter implements RouterInterface
 
         $matcher = new UrlMatcher($this->collection, $this->context);
         $query = $this->context->getParameters();
-        
+
         try {
             $match = $matcher->match($this->context->getPathInfo());
             $pageUri = $match['_path'];
@@ -58,13 +58,13 @@ class SymfonyRouter implements RouterInterface
         } catch (\Exception $e) {
             $pageUri = $this->context->getPathInfo();
         }
-        
+
         $method = strtolower($this->context->getMethod());
         unset($query[self::METHOD_OVERRIDE]);
 
         return [$method, $pageUri, $query];
     }
-    
+
     /**
      * Loads Symfony Yml Files
      */
@@ -76,9 +76,9 @@ class SymfonyRouter implements RouterInterface
         $locator = new FileLocator(array($this->fileLocation));
         $loader = new YamlFileLoader($locator);
         $this->collection = $loader->load($this->fileName ?: 'routes.yml');
-    
+
     }
-    
+
     /**
      * Set globals
      *
@@ -105,7 +105,7 @@ class SymfonyRouter implements RouterInterface
         $context->setParameters(array_merge($get, $post));
         $this->context = $context;
     }
-    
+
     /**
      * Sets routing collection
      */
@@ -113,7 +113,7 @@ class SymfonyRouter implements RouterInterface
     {
         $this->collection = $collection;
     }
-    
+
     /**
      * Sets context
      *
@@ -134,7 +134,7 @@ class SymfonyRouter implements RouterInterface
         }
         $this->context = $context;
     }
-    
+
     /**
      * Allows overriding of methods using Bear.Sunday standards
      */
@@ -157,7 +157,7 @@ class SymfonyRouter implements RouterInterface
         }
         $this->context->setParameters($params);
     }
-    
+
     /**
      * Set argv
      *
@@ -185,7 +185,7 @@ class SymfonyRouter implements RouterInterface
         $this->context = $context;
         return $this;
     }
-    
+
     /**
      * Sets the location of the routes file
      *
