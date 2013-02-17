@@ -110,7 +110,7 @@ view_logic: {
     foreach ($_SERVER as $key => $val) {
         $server .= "<b>$key</b>: $val<br>";
     }
-    $lang = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $lang = (function_exists('locale_accept_from_http')) ? locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']) : 'en';
     $errorNameFile = file_exists(__DIR__ . "/{$lang}/errors.php") ? __DIR__ . "/{$lang}/errors.php" : __DIR__ . "/en/errors.php";
     $errorNames = include $errorNameFile;
     $hitFile = $getFile($file, $line);
