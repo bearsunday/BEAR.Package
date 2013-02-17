@@ -16,7 +16,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         static $app;
         parent::setUp();
         if (! $app) {
-            $app = require dirname(dirname(__DIR__)) . '/apps/Skeleton/scripts/instance.php';
+            $app = require dirname(dirname(__DIR__)) . '/apps/Sandbox/scripts/instance.php';
         }
         $this->appReflector = new ApplicationReflector($app);
 
@@ -46,7 +46,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResources(array $resources)
     {
-        $this->assertSame(1, count($resources));
+        $this->assertSame(22, count($resources));
     }
 
     /**
@@ -56,7 +56,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourcesClassName(array $resources)
     {
-        $this->assertSame('Skeleton\Resource\Page\Index', $resources['page://self/index']['class']);
+        $this->assertSame('Sandbox\Resource\Page\Index', $resources['page://self/index']['class']);
     }
 
     /**
@@ -71,7 +71,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
             [
                 0 => 'get',
             ],
-            'param-get' => '(name)',
+            'param-get' => '',
         ];
         $this->assertSame($expected, $resources['page://self/index']['options']);
     }
@@ -83,7 +83,21 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourcesLinks(array $resources)
     {
-        $expected = [];
+//        var_export($resources['page://self/index']['links']);
+        $expected = [
+            'helloworld' =>
+                [
+                'href' => 'page://self/hello/world',
+                ],
+            'blog' =>
+            [
+                'href' => 'page://self/blog/posts',
+            ],
+            'restbucks' =>
+            [
+               'href' => 'page://self/restbucks/index',
+            ],
+        ];
         $this->assertSame($expected, $resources['page://self/index']['links']);
     }
 }
