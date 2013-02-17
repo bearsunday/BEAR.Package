@@ -15,7 +15,7 @@ use Ray\Di\AbstractModule;
  * @package    BEAR.Sunday
  * @subpackage Module
  */
-class MinRouterModule extends AbstractModule
+class SymfonyRouterModule extends AbstractModule
 {
     /**
      * (non-PHPdoc)
@@ -25,6 +25,6 @@ class MinRouterModule extends AbstractModule
     {
         $this
             ->bind('BEAR\Sunday\Extension\Router\RouterInterface')
-            ->to(__NAMESPACE__ . '\MinRouter');
+            ->to(__NAMESPACE__ . '\SymfonyRouter');
     }
 }

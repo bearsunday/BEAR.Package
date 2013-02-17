@@ -6,15 +6,15 @@
 namespace Sandbox\Module;
 
 use Ray\Di\AbstractModule;
-use BEAR\Package\Module\Stab\StabModule as PackageStabModule;
+use BEAR\Package\Module\Stub\StubModule as PackageStubModule;
 
 /**
- * Stab module
+ * Stub module
  *
  * @package    Sandbox
  * @subpackage Module
  */
-class StabModule extends AbstractModule
+class StubModule extends AbstractModule
 {
     /**
      * (non-PHPdoc)
@@ -25,6 +25,6 @@ class StabModule extends AbstractModule
         $this->install(new DevModule);
         $stub = include __DIR__ . '/config/stub/resource.php';
         /** @var $stub array */
-        $this->install(new PackageStabModule($stub));
+        $this->install(new PackageStubModule($stub));
     }
 }
