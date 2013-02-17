@@ -29,13 +29,14 @@ require 'scripts/clear.php';
 $mode = 'Api';
 $app = require 'scripts/instance.php';
 
+
 /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
     if (PHP_SAPI === 'cli') {
         $app->router->setArgv($argv);
         $uri = $argv[2];
         parse_str((isset(parse_url($uri)['query']) ? parse_url($uri)['query'] : ''), $get);
     } else {
-        $pathInfo = isset($globals['_SERVER']['PATH_INFO']) ? $globals['_SERVER']['PATH_INFO'] : '/index';
+        $pathInfo = $_SERVER['PATH_INFO'] ? $_SERVER['PATH_INFO'] : '/index';
         $uri = 'app://self' . $pathInfo;
         $get = $_GET;
     }
