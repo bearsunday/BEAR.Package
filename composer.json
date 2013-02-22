@@ -54,6 +54,7 @@
         "psr-0":{
             "BEAR\\Package":"src/",
             "BEAR\\Installer":"src/",
+            "BEAR\\Ace":"src/",
             "Helloworld\\":"apps/",
             "Sandbox\\":"apps/",
             "Skeleton\\":"apps/"
