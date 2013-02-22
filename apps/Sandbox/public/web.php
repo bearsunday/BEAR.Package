@@ -14,15 +14,13 @@
  * @global  $mode string
  */
 
-use BEAR\Package\Dev\DevWeb\DevWeb;
-
 // Cleaning (comment out to enable cache)
 require  dirname(__DIR__) . '/scripts/clear.php';
 
 // Get application instance with $mode (Prod, Dev, Api, Stub, Test)
 $mode = 'Dev';
+ob_start();
 $app = require dirname(__DIR__) . '/scripts/bootstrap/dev_instance.php';
-
 // Return if direct file access in built-in web server
 if (! $app) {
     return false;
@@ -39,7 +37,6 @@ try {
     $app->response->setResource($app->page)->render()->send();
     exit(0);
 } catch(Exception $e) {
-    (new DevWeb)->service($app, $pagePath);
     $app->exceptionHandler->handle($e);
     exit(1);
 }

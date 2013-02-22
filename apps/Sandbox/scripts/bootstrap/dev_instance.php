@@ -6,6 +6,13 @@
  * @global $mode
  */
 
+use BEAR\Package\Dev\DevWeb\DevWeb;
+
+// Init
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+//ini_set('xdebug.collect_params', '0');
+
 // built-in web server
 $isDevTool = PHP_SAPI  !== 'cli' && substr($_SERVER["REQUEST_URI"], 0, 5) === '/dev/';
 if (! $isDevTool && php_sapi_name() == "cli-server") {
@@ -16,15 +23,12 @@ if (! $isDevTool && php_sapi_name() == "cli-server") {
         return false;
     }
 }
-
-// Init
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-//ini_set('xdebug.collect_params', '0');
-
 $packageDir = dirname(dirname(dirname(dirname(__DIR__))));
 
-// Load
+// Loader
+require  dirname(__DIR__) . '/bootstrap.php';
+
+// debug loader
 require  $packageDir . '/scripts/dev/load.php';
 
 // profiler
@@ -38,6 +42,14 @@ register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_err
 
 // set dev tool shutdown function
 register_shutdown_function(include $packageDir . '/scripts/dev/shutdown.php');
+
+// debug web service (/dev)
+if ($isDevTool) {
+    $isAjaxReq = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+    $app = $isAjaxReq ? null : (require dirname(__DIR__) . '/instance.php');
+    (new DevWeb)->service($_SERVER['REQUEST_URI'], $app);
+    exit(0);
+}
 
 // Application
 $mode = isset($argv[3]) ? ucfirst($argv[3]) : (isset($mode) ? $mode : 'Prod');

@@ -1,12 +1,18 @@
+<?php
+/**
+ * @global $view array
+ */
+return <<<EOT
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title><?php echo $view['file_path'] ?></title>
+    <title>{$view['file_path']}</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
     <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
     <script>
         $.codeEdit = {
@@ -25,7 +31,7 @@
                 return editor;
             },
             save : function(file_path, data, save_url) {
-                if(typeof save_url === 'undefined') save_url = "save.php";
+                if(typeof save_url === 'undefined') save_url = "{$view['save_url']}";
                 if ($.codeEdit.changed == false) {
                     return;
                 }
@@ -51,13 +57,13 @@
                 if (mode == 'reset') {
                     // reset
                     jQuery(label).html('SAVE').css('background-color', 'gray');
-                } elseif (mode == 'changed') {
+                } else if (mode == 'changed') {
                     // change
                     jQuery(label).html('SAVE').css('background-color', 'green');
-                } elseif (mode == 'readonly') {
+                } else if (mode == 'readonly') {
                     // change
                     jQuery(label).html('Read Only').css('background-color', 'gray');
-                } elseif (mode == 'save') {
+                } else if (mode == 'save') {
                     jQuery(label).html('Saving...').css('background-color', 'red').fadeOut().fadeIn('slow', function() {
                         jQuery(label).html('SAVE').css('background-color', 'gray');
                     });
@@ -110,6 +116,7 @@
             font-family: arial, sans-serif;
             font-size: 12px;
             padding: 4px;
+            left: 4px;
         }
 
         .editor_file_save {
@@ -125,18 +132,20 @@
     </style>
 </head>
 <body>
+
     <div id="label" class="editor_label">
-    <?php if ($view['error']) {echo "<span class=\"error\">{$view['error']}</span>";}?><span class="editor_file"><?php echo "{$view['file_path']} ({$view['line']})"?>
-    </span>
-    <span class="editor_file_save" id="save_now">Save</span></div>
-    <pre id="editor"><?php echo $view['file_contents']; ?></pre>
+        {$view['message']}
+        <span class="editor_file">{$view['file_path']}</span>
+        <span class="editor_file_save" id="save_now">Save</span>
+    </div>
+    <pre id="editor">{$view['file_contents']}</pre>
     <script>
     $(function(){
         editor = $.codeEdit.factory();
-        editor.gotoLine(<?php echo $view['line'];?>);
-        editor.setReadOnly(<?php echo ($view['is_writable'] ? 'false' : 'true');?>);
-        <?php echo ($view['is_writable']) ? "$.codeEdit.label('reset');" : "$.codeEdit.label('readonly');"; ?>
-        var save = function() {$.codeEdit.save("<?php echo $view['file_path'] ?>", editor.getSession().getValue());};
+        editor.gotoLine({$view['line']});
+        editor.setReadOnly({$view['is_read_only']});
+        $.codeEdit.label('{$view['is_writable_label']}');
+        var save = function() {\$.codeEdit.save("{$view['file_path']}", editor.getSession().getValue());};
         editor.commands.addCommand({
             name: 'Save',
             bindKey: {
@@ -150,3 +159,4 @@
     </script>
 </body>
 </html>
+EOT;
