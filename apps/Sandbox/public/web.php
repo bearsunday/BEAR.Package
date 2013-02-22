@@ -17,9 +17,10 @@
 // Cleaning (comment out to enable cache)
 require  dirname(__DIR__) . '/scripts/clear.php';
 
+ob_start();
+
 // Get application instance with $mode (Prod, Dev, Api, Stub, Test)
 $mode = 'Dev';
-ob_start();
 $app = require dirname(__DIR__) . '/scripts/bootstrap/dev_instance.php';
 // Return if direct file access in built-in web server
 if (! $app) {
