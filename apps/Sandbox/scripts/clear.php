@@ -29,4 +29,3 @@ array_map('unlink', glob("{$tmpDir}/smarty/template_c/*.tpl.php"));
 
 unset($rm);
 unset($tmpDir);
-
