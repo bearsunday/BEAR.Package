@@ -40,9 +40,6 @@ set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler
 // set fatal error handler
 register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_error_handler.php');
 
-// set dev tool shutdown function
-register_shutdown_function(include $packageDir . '/scripts/dev/shutdown.php');
-
 // debug web service (/dev)
 if ($isDevTool) {
     $isAjaxReq = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
