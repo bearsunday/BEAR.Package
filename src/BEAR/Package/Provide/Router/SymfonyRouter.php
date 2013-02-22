@@ -136,7 +136,7 @@ class SymfonyRouter implements RouterInterface
     }
 
     /**
-     * Allows overriding of methods using Bear.Sunday standards
+     * Allows overriding of methods using BEAR.Sunday standards
      */
     private function overrideMethods()
     {
