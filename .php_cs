@@ -5,6 +5,10 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->exclude('docs')
     ->exclude('vendor')
     ->exclude('.idea')
+    ->exclude('cs')
+    ->notName('*.tpl.php')
+    ->notName('*.xml')
+    ->notName('APC')
     ->in(__DIR__ . '/src')
 ;
 
