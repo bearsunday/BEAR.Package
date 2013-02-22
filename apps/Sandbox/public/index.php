@@ -23,7 +23,7 @@ $app = require dirname(__DIR__) . '/scripts/instance.php';
  * Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
  * in the page request.
  */
-list($method, $pagePath, $query) = $app->router->match($GLOBALS);
+list($method, $pagePath, $query) = $app->router->match();
 
 /**
  * An attempt to request the page resource is made.
