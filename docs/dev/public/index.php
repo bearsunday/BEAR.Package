@@ -1,12 +1,12 @@
 
 <?php
 /**
- * @global $app
+ * @global $appDir
  */
 // clear APC cache
 
 
-$view['app_name'] = get_class($app);
+$view['app_name'] = $appDir;
 $contentsForLayout =<<<EOT
     <ul class="breadcrumb">
     <li class="active">Home</li>

@@ -1,5 +1,5 @@
 {
-    "hash": "5fbf8e6d8db52fd79ae5489127cb6ad6",
+    "hash": "bc60d199a37724da8f8fa37f3a4a2f7a",
     "packages": [
         {
             "name": "aura/di",
@@ -321,26 +321,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "fc4804e5690d5991ac410730f2bb37d3856db86a"
+                "reference": "743b393a715acca5daab8540264076762a37ce7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/fc4804e5690d5991ac410730f2bb37d3856db86a",
-                "reference": "fc4804e5690d5991ac410730f2bb37d3856db86a",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/743b393a715acca5daab8540264076762a37ce7f",
+                "reference": "743b393a715acca5daab8540264076762a37ce7f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
-                "ext-curl": "*",
-                "ray/aop": ">=1.0.0-beta2",
-                "nocarrier/hal": "dev-master",
-                "ray/di": ">=1.0.0-beta3",
                 "aura/di": "1.0.*",
                 "aura/signal": "1.0.*",
                 "bear/resource": "0.6.*",
-                "guzzle/guzzle": "3.0.*"
+                "ext-curl": "*",
+                "guzzle/guzzle": "3.0.*",
+                "nocarrier/hal": "dev-master",
+                "php": ">=5.4.0",
+                "ray/aop": ">=1.0.0-beta2",
+                "ray/di": ">=1.0.0-beta3"
             },
-            "time": "2013-02-13 12:03:19",
+            "time": "2013-02-18 07:28:10",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -454,8 +454,8 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2",
-                "doctrine/common": "2.3.*"
+                "doctrine/common": "2.3.*",
+                "php": ">=5.3.2"
             },
             "time": "2013-01-20 11:50:36",
             "type": "library",
@@ -599,19 +599,19 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/blongden/hal",
-                "reference": "5c4aedaa90e368b5ddc18cfcfdc9e9d85c74dff7"
+                "url": "https://github.com/blongden/hal.git",
+                "reference": "9e48789bd342f1f33bc98f8beb1741740a780ff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blongden/hal/zipball/5c4aedaa90e368b5ddc18cfcfdc9e9d85c74dff7",
-                "reference": "5c4aedaa90e368b5ddc18cfcfdc9e9d85c74dff7",
+                "url": "https://api.github.com/repos/blongden/hal/zipball/9e48789bd342f1f33bc98f8beb1741740a780ff0",
+                "reference": "9e48789bd342f1f33bc98f8beb1741740a780ff0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2013-02-09 16:18:17",
+            "time": "2013-02-14 13:48:25",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -644,25 +644,39 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "12f71d99457b018fb80746f84514dd5b495c5789"
+                "url": "https://github.com/whiteoctober/Pagerfanta.git",
+                "reference": "878aee5e274ca75fbdf74262efd05d1207c31669"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/12f71d99457b018fb80746f84514dd5b495c5789",
-                "reference": "12f71d99457b018fb80746f84514dd5b495c5789",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/878aee5e274ca75fbdf74262efd05d1207c31669",
+                "reference": "878aee5e274ca75fbdf74262efd05d1207c31669",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "suggest": {
-                "doctrine/mongodb-odm": "2.*",
+            "require-dev": {
+                "doctrine/mongodb-odm": "*",
                 "doctrine/orm": "2.*",
-                "solarium/solarium": "2.*"
+                "mandango/mandango": "*",
+                "propel/propel1": ">=1.6,<2.0",
+                "solarium/solarium": "3.*"
             },
-            "time": "2012-08-22 21:56:31",
+            "suggest": {
+                "doctrine/mongodb-odm": "To use the DoctrineODMMongoDBAdapter.",
+                "doctrine/orm": "To use the DoctrineORMAdapter.",
+                "mandango/mandango": "To use the MandangoAdapter.",
+                "propel/propel1": "To use the PropelAdapter",
+                "solarium/solarium": "To use the SolariumAdapter."
+            },
+            "time": "2013-02-19 13:51:25",
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Pagerfanta\\": "src/"
@@ -745,10 +759,10 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
-                "doctrine/common": "2.3.*-dev",
                 "aura/di": "1.0.*",
                 "aura/installer-default": "1.0.*",
+                "doctrine/common": "2.3.*-dev",
+                "php": ">=5.4.0",
                 "ray/aop": "1.0.*"
             },
             "time": "2013-02-01 02:44:43",
@@ -832,19 +846,19 @@
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Config",
-                "reference": "fb7ce57ccb3c418c264a28754f88e0a229b5022b"
+                "url": "https://github.com/symfony/Config.git",
+                "reference": "01a1b2fe40ca5267a3cd549c44610d160df9f149"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/fb7ce57ccb3c418c264a28754f88e0a229b5022b",
-                "reference": "fb7ce57ccb3c418c264a28754f88e0a229b5022b",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/01a1b2fe40ca5267a3cd549c44610d160df9f149",
+                "reference": "01a1b2fe40ca5267a3cd549c44610d160df9f149",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2013-01-31 21:39:01",
+            "time": "2013-02-18 21:28:20",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1030,15 +1044,15 @@
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "psr/log": ">=1.0,<2.0",
                 "doctrine/common": ">=2.2,<3.0",
+                "psr/log": ">=1.0,<2.0",
                 "symfony/config": ">=2.2,<2.3-dev",
                 "symfony/yaml": ">=2.0,<3.0"
             },
             "suggest": {
+                "doctrine/common": "~2.2",
                 "symfony/config": "2.2.*",
-                "symfony/yaml": "2.2.*",
-                "doctrine/common": "~2.2"
+                "symfony/yaml": "2.2.*"
             },
             "time": "2013-02-11 11:24:47",
             "type": "library",
@@ -1135,11 +1149,16 @@
         },
         {
             "name": "zendframework/zend-db",
-            "version": "2.1.1",
+            "version": "dev-master",
             "target-dir": "Zend/Db",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/zendframework/Component_ZendDb.git",
+                "reference": "97ff1f812ccc544be80dcd5ada2629572011f3bb"
+            },
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Db-2.1.1.zip",
+                "url": "https://github.com/zendframework/Component_ZendDb/zipball/master",
                 "reference": null,
                 "shasum": null
             },
@@ -1147,9 +1166,15 @@
                 "php": ">=5.3.3"
             },
             "suggest": {
-                "zendframework/zend-stdlib": "2.1.1"
+                "zendframework/zend-stdlib": "dev-master"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev",
+                    "dev-develop": "2.2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Zend\\Db\\": ""
@@ -1159,17 +1184,11 @@
                 "BSD-3-Clause"
             ],
             "description": " ",
-            "homepage": "http://packages.zendframework.com/",
             "keywords": [
                 "db",
                 "zf2"
             ],
-            "support": {
-                "email": "fw-general-subscribe@lists.zend.com",
-                "irc": "irc://irc.freenode.net/zftalk",
-                "issues": "https://github.com/zendframework/zf2/issues",
-                "source": "https://github.com/zendframework/zf2"
-            }
+            "time": "2013-02-07 22:26:44"
         },
         {
             "name": "zendframework/zend-log",

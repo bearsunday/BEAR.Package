@@ -1,6 +1,6 @@
 <?php
+use BEAR\Ace\Editor\Editor;
 return function() {
-    $xstack = (function_exists('xdebug_get_function_stack')) ? xdebug_get_function_stack() : [];
     if (PHP_SAPI === 'cli') {
         return;
     }
@@ -12,8 +12,16 @@ return function() {
     extract($error);
     // redirect
     if ($type == E_PARSE) {
-        $back = $_SERVER['REQUEST_URI'];
-        header("Location: /dev/edit/index.php?file={$file}&line={$line}&error={$message}&back={$back}");
+        ob_end_clean();
+        $base = dirname(dirname(dirname(__DIR__)));
+        $file = str_replace($base, '', $file);
+        echo (new Editor)
+            ->setBasePath($base)
+            ->setPath($file)
+            ->setLine($line)
+            ->setMessage($message)
+            ->setSaveUrl('/dev/edit/save.php');
+        exit();
     }
     // Logic error only
     if (!in_array($type, [E_COMPILE_ERROR, E_CORE_ERROR, E_ERROR])) {
