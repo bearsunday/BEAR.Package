@@ -6,7 +6,7 @@
  * guideline and this procedural boot strap is gives you some defaults as a guide.
  * You are free to change and configure this script at will.
  *
- * @package Skeleton
+ * @package BEAR.Package
  * @global  $mode
  */
 use BEAR\Resource\Exception\Parameter as BadRequest;
