@@ -8,7 +8,6 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->exclude('cs')
     ->notName('*.tpl.php')
     ->notName('*.xml')
-    ->notName('APC*')
     ->in(__DIR__ . '/src')
 ;
 
