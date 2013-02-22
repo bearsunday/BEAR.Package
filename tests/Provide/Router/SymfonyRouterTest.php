@@ -25,24 +25,24 @@ class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('BEAR\Package\Provide\Router\SymfonyRouter', $this->router);
     }
-    
+
     public function testSimpleMatch()
     {
         $route = new Route('/foo', ['_path' => 'this/is/my/path']);
         $this->collection->add('route_name', $route);
         $result = $this->getMatches('/foo');
-        
+
         $this->assertEquals($result[0], 'get');
         $this->assertEquals($result[1], 'this/is/my/path');
     }
-    
+
     public function testMethodTypes()
     {
         $this->context->setMethod('POST');
         $result = $this->getMatches('/foo');
         $this->assertEquals($result[0], 'post');
     }
-    
+
     public function testMethodOverride()
     {
         $this->context->setParameters(['_method' => 'PUT']);
@@ -50,16 +50,16 @@ class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result[0], 'put');
         $this->assertEquals($result[2], []);
     }
-    
+
     public function testCorrectMethodNeeded()
     {
         $route = new Route('/bar', ['_path' => 'this/is/my/path'], ['_method' => 'put']);
         $this->collection->add('route_name', $route);
         $result = $this->getMatches('/bar');
-        
+
         $this->assertEquals($result[1], '/bar');
     }
-    
+
     public function testParametersAreCorrect()
     {
         $params = ['one' => 1, 'two' => 2];
@@ -67,13 +67,13 @@ class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
         $result = $this->getMatches('/bar');
         $this->assertEquals($result[2], $params);
     }
-    
+
     public function testFallbackWhenNoRoutePresent()
     {
         $result = $this->getMatches('/foo');
         $this->assertEquals($result[1], '/foo');
     }
-    
+
     public function testAdditionalParameters()
     {
         $route = new Route(
@@ -87,7 +87,7 @@ class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
         $expected = ['someparam' => 'a param', 'month' => '2004-10', 'one' => '1'];
         $this->assertEquals($result[2], $expected);
     }
-    
+
     public function testSettingArguments()
     {
         $data = ['api.php','post', 'app://self/posts?title=hello&body="this is first post"'];
@@ -97,7 +97,7 @@ class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
         $expected = ['post', '/posts', ['title' => 'hello', 'body' => '"this is first post"']];
         $this->assertEquals($expected, $result);
     }
-    
+
     private function getMatches($route)
     {
         $this->router->setCollection($this->collection);
