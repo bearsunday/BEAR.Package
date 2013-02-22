@@ -58,7 +58,7 @@ if (PHP_SAPI === 'cli') {
  * On failure trigger the error handler.
  */
 try {
-    list($method,) = $app->router->getMethodQuery();
+    list($method,) = $app->router->match();
     $page = $app->resource->$method->uri($uri)->withQuery($get)->eager->request();
 } catch (Exception $e) {
     $page = $app->exceptionHandler->handle($e);
