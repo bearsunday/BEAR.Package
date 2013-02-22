@@ -8,8 +8,6 @@
 namespace BEAR\Package\Dev\DevWeb;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Package\Provide\Application\AbstractApp;
-
 
 require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/printo/printo/src.php';
 
@@ -19,24 +17,24 @@ require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/printo/p
 class DevWeb
 {
     /**
-     * @param \BEAR\Package\Provide\Application\AbstractApp $app
-     * @param                                               $pagePath
+     * Service dev web tool
      *
-     * @return void
+     * @param                                                 $pagePath
+     * @param \BEAR\Sunday\Extension\Application\AppInterface $app
      */
-    public function service(AbstractApp $app, $pagePath)
+    public function service($pagePath, AppInterface $app = null)
     {
+        // application directory path
         global $appDir;
 
-        if (substr($pagePath, 0, 4) !== 'dev/') {
-            return false;
+        if ($app instanceof AppInterface) {
+            $appDir = dirname((new \ReflectionObject($app))->getFileName());
         }
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
         if ($path == '' || substr($path, -1, 1) === '/'){
             $path .= 'index.php';
         }
-        $appDir = dirname((new \ReflectionObject($app))->getFileName());
         $scriptFile = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/docs/dev/public/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             require $scriptFile;
@@ -47,5 +45,7 @@ class DevWeb
             require $scriptFile;
             exit(0);
         }
+        echo "404";
+        exit(1);
     }
 }
