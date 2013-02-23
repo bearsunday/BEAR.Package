@@ -4,7 +4,7 @@
     backupStaticAttributes="false"
     strict="true"
     colors="true"
-    timeoutForSmallTests="20"
+    timeoutForSmallTests="90"
     stopOnError="true"
     stopOnFailure="true"
     verbose="true">
