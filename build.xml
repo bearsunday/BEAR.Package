@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="BEAR.Package" default="build">
+    <target name="install-pear" description="Installs PEAR">
+        <!-- auto-discover channels -->
+        <exec executable="pear">
+            <arg value="config-set"/>
+            <arg value="auto_discover"/>
+            <arg value="1" />
+        </exec>
+
+        <exec executable="pear">
+            <arg value="install" />
+            <arg value="--alldeps" />
+            <arg value="PHP_CodeSniffer" />
+            <arg value="pear.phpunit.de/PHPUnit" />
+            <arg value="pear.phpunit.de/DbUnit" />
+            <arg value="pear.phpunit.de/PHP_Invoker" />
+            <arg value="pear.pdepend.org/PHP_Depend" />
+            <arg value="pear.phpmd.org/PHP_PMD" />
+            <arg value="pear.phpqatools.org/phpqatools" />
+            <arg value="pear.netpirates.net/phpDox" />
+            <arg value="pear.apigen.org/apigen" />
+            <arg value="pear.docblox-project.org/docblox" />
+        </exec>
+    </target>
+
+    <target name="install-pecl" description="Installs PECL">
+        <exec executable="pecl">
+            <arg value="install" />
+            <arg value="xdebug"/>
+            <arg value="intl"/>
+            <arg value="xhprof-beta"/>
+        </exec>
+    </target>
+
     <target name="composer" description="Installing dependencies">
         <exec executable="wget" failonerror="true">
             <arg value="-nc" />
@@ -14,7 +47,7 @@
     </target>
 
     <target name="build"
-            depends="composer,prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,apigen"/>
+            depends="install-pear,composer,prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,apigen"/>
 
     <target name="build-parallel"
             depends="composer,prepare,lint,tools-parallel,phpunit,phpcb"/>
