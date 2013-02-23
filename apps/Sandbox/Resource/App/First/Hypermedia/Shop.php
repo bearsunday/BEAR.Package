@@ -3,7 +3,7 @@
  * @package    Sandbox
  * @subpackage Resource
  */
-namespace Sandbox\Resource\App\First\HyperMedia;
+namespace Sandbox\Resource\App\First\Hypermedia;
 
 use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Inject\ResourceInject;
