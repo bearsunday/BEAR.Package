@@ -2,8 +2,14 @@
 
 <project name="BEAR.Package" default="build">
     <target name="composer" description="Installing dependencies">
-        <exec executable="composer.phar" failonerror="true">
-            <arg value="install --dev --prefer-dist" />
+        <exec executable="wget" failonerror="true">
+            <arg value="-nc" />
+            <arg value="http://getcomposer.org/composer.phar" />
+        </exec>
+        <exec executable="php" failonerror="true">
+           <arg value="composer.phar" />
+           <arg value="install" />
+           <arg value="--dev" />
         </exec>
     </target>
     <target name="build"
