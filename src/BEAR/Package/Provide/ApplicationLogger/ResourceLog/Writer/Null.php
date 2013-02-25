@@ -11,6 +11,9 @@ use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 
+/**
+ * Null logger
+ */
 final class Null implements LogWriterInterface
 {
     /**
@@ -18,6 +21,9 @@ final class Null implements LogWriterInterface
      */
     public $logs = [];
 
+    /**
+     *  {@inheritDoc}
+     */
     public function write(RequestInterface $request, ResourceObject $result)
     {
         $this->logs[] = [$request, $result];

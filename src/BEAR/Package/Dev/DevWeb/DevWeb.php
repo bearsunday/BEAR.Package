@@ -37,6 +37,7 @@ class DevWeb
         }
         $scriptFile = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/docs/dev/public/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
+            /** @noinspection PhpIncludeInspection */
             require $scriptFile;
             exit(0);
         }

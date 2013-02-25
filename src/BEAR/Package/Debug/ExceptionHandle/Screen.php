@@ -51,6 +51,14 @@ class Screen
         return $html;
     }
 
+    /**
+     * Return headers
+     *
+     * @param \Exception $e
+     * @param string     $type
+     *
+     * @return string
+     */
     public function getHeader(\Exception $e, $type = "error")
     {
         $title = get_class($e);
@@ -69,6 +77,15 @@ class Screen
 EOT;
     }
 
+    /**
+     * Return editor link
+     *
+     * @param      $file
+     * @param      $line
+     * @param null $systemRoot
+     *
+     * @return string
+     */
     public function getEditorLink($file, $line, $systemRoot = null)
     {
         $href = '/dev/edit/index.php?file=';
@@ -78,6 +95,13 @@ EOT;
         return $link;
     }
 
+    /**
+     * Return trace
+     *
+     * @param $trace
+     *
+     * @return array
+     */
     private function getStack($trace)
     {
         $stack = [];
@@ -104,6 +128,15 @@ EOT;
         return $stack;
     }
 
+    /**
+     * Return files
+     *
+     * @param     $file
+     * @param     $line
+     * @param int $num
+     *
+     * @return string
+     */
     private function getFiles($file, $line, $num = 6)
     {
 
@@ -123,6 +156,13 @@ EOT;
         return $result;
     }
 
+    /**
+     * Return arguments as formatted string
+     *
+     * @param array $args
+     *
+     * @return string
+     */
     private function getArgsAsString(array &$args)
     {
         if (! $args) {
@@ -149,11 +189,21 @@ EOT;
         return $html . $divObject;
     }
 
+    /**
+     * Return object name
+     *
+     * @param $obj
+     *
+     * @return string
+     */
     private function getObjectName($obj)
     {
         return '<strong>' . get_class($obj). '</strong><span class="weak">#' . spl_object_hash($obj) . '</span>';
     }
 
+    /**
+     * @param array $args
+     */
     private function makeArgsElementsScalar(array &$args)
     {
         $params = [];
@@ -169,6 +219,13 @@ EOT;
         $args = $params;
     }
 
+    /**
+     * Return object as string
+     *
+     * @param $obj
+     *
+     * @return string
+     */
     private function divObject($obj)
     {
         $props = (new \ReflectionObject($obj))->getProperties();

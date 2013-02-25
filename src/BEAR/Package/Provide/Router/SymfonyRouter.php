@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -27,14 +28,124 @@ use Ray\Di\Di\Named;
 class SymfonyRouter implements RouterInterface
 {
 
+    /**
+     * @var RequestContext
+     */
     private $context;
+
+    /**
+     * @var string
+     */
     private $fileName;
+
+    /**
+     * @var string
+     */
     private $fileLocation;
+
+    /**
+     * @var RouteCollection
+     */
     private $collection;
+
+    /**
+     * @var Request
+     */
     private $request;
 
     const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
     const METHOD_OVERRIDE_GET = '_method';
+
+    /**
+     * Sets the location of the routes file
+     *
+     * @param string $fileLocation
+     *
+     * @Inject
+     * @Named("fileLocation=routes_file_location")
+     */
+    public function setFilePath($fileLocation)
+    {
+        $this->fileLocation = $fileLocation;
+    }
+
+    /**
+     * Set globals
+     *
+     * @param mixed $globals array | \ArrayAccess
+     *
+     * @return self
+     */
+    public function setGlobals($globals)
+    {
+        $request = new Request($globals['_GET'], $globals['_POST'], [], $globals['_COOKIE'], $globals['_FILES'], $globals['_SERVER']);
+        parse_str($request->getContent(), $data);
+        $request->request = new ParameterBag($data);
+        $context = new RequestContext;
+        $context->fromRequest($request);
+        $get = $request->query->all();
+        $post = $request->request->all();
+        $context->setParameters(array_merge($get, $post));
+        $this->context = $context;
+    }
+
+
+    /**
+     * Set argv
+     *
+     * @param array $argv
+     *
+     * @return self
+     *
+     * @throws BadRequest
+     * @throws MethodNotAllowed
+     */
+    public function setArgv($argv)
+    {
+        if (count($argv) < 3) {
+            throw new BadRequest('Usage: [get|post|put|delete] [uri]');
+        }
+        $isMethodAllowed = in_array($argv[1], ['get', 'post', 'put', 'delete', 'options']);
+        if (!$isMethodAllowed) {
+            throw new MethodNotAllowed($argv[1]);
+        }
+        $context = new RequestContext;
+        $context->setPathInfo(parse_url($argv[2], PHP_URL_PATH));
+        $context->setMethod(strtoupper($argv[1]));
+        parse_str(parse_url($argv[2], PHP_URL_QUERY), $params);
+        $context->setParameters($params);
+        $this->context = $context;
+        return $this;
+    }
+
+    /**
+     * Sets routing collection
+     */
+    public function setCollection(RouteCollection $collection)
+    {
+        $this->collection = $collection;
+    }
+
+    /**
+     * Sets context
+     *
+     * @param \Symfony\Component\Routing\RequestContext $context
+     */
+    public function setContext(RequestContext $context = null)
+    {
+        if ($this->context && !$context) {
+            return;
+        }
+        if (!$context) {
+            $context = new RequestContext();
+            $request = Request::createFromGlobals();
+            $context->fromRequest($request);
+            $get = $request->query->all();
+            $post = $request->request->all();
+            $context->setParameters(array_merge($get, $post));
+        }
+        $this->context = $context;
+    }
 
     /**
      * Match route
@@ -75,64 +186,8 @@ class SymfonyRouter implements RouterInterface
         }
         $locator = new FileLocator(array($this->fileLocation));
         $loader = new YamlFileLoader($locator);
-        $this->collection = $loader->load($this->fileName ?: 'routes.yml');
+        $this->collection = $loader->load($this->fileName ? : 'routes.yml');
 
-    }
-
-    /**
-     * Set globals
-     *
-     * @param mixed $globals array | \ArrayAccess
-     *
-     * @return self
-     */
-    public function setGlobals($globals)
-    {
-        $request = new Request(
-            $globals['_GET'],
-            $globals['_POST'],
-            [],
-            $globals['_COOKIE'],
-            $globals['_FILES'],
-            $globals['_SERVER']
-        );
-        parse_str($request->getContent(), $data);
-        $request->request = new ParameterBag($data);
-        $context = new RequestContext;
-        $context->fromRequest($request);
-        $get = $request->query->all();
-        $post = $request->request->all();
-        $context->setParameters(array_merge($get, $post));
-        $this->context = $context;
-    }
-
-    /**
-     * Sets routing collection
-     */
-    public function setCollection(RouteCollection $collection)
-    {
-        $this->collection = $collection;
-    }
-
-    /**
-     * Sets context
-     *
-     * @param $context see Symfony\Component\Routing\RequestContext
-     */
-    public function setContext(RequestContext $context = null)
-    {
-        if ($this->context && !$context) {
-            return;
-        }
-        if (!$context) {
-            $context = new RequestContext();
-            $request = Request::createFromGlobals();
-            $context->fromRequest($request);
-            $get = $request->query->all();
-            $post = $request->request->all();
-            $context->setParameters(array_merge($get, $post));
-        }
-        $this->context = $context;
     }
 
     /**
@@ -156,46 +211,5 @@ class SymfonyRouter implements RouterInterface
                 break;
         }
         $this->context->setParameters($params);
-    }
-
-    /**
-     * Set argv
-     *
-     * @param array $argv
-     *
-     * @return self
-     *
-     * @throws BadRequest
-     * @throws MethodNotAllowed
-     */
-    public function setArgv($argv)
-    {
-        if (count($argv) < 3) {
-            throw new BadRequest('Usage: [get|post|put|delete] [uri]');
-        }
-        $isMethodAllowed = in_array($argv[1], ['get', 'post', 'put', 'delete', 'options']);
-        if (!$isMethodAllowed) {
-            throw new MethodNotAllowed($argv[1]);
-        }
-        $context = new RequestContext;
-        $context->setPathInfo(parse_url($argv[2], PHP_URL_PATH));
-        $context->setMethod(strtoupper($argv[1]));
-        parse_str(parse_url($argv[2], PHP_URL_QUERY), $params);
-        $context->setParameters($params);
-        $this->context = $context;
-        return $this;
-    }
-
-    /**
-     * Sets the location of the routes file
-     *
-     * @param string $fileLocation
-     *
-     * @Inject
-     * @Named("fileLocation=routes_file_location")
-     */
-    public function setFilePath($fileLocation)
-    {
-        $this->fileLocation = $fileLocation;
     }
 }
