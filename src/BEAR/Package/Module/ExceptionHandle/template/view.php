@@ -10,7 +10,6 @@ view_logic: {
     $screen = new Screen;
     $traceAsString = $screen->getTraceAsJsString($e->getTrace());
     $fileLink = $screen->getEditorLink($e->getFile(), $e->getLine());
-    $modules = print_r($modules, true);
     $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
     $memory = number_format(memory_get_peak_usage(true));
     $files = get_included_files();
@@ -26,7 +25,7 @@ view_logic: {
         $headers .= $screen->getHeader($previousE, 'warning');
     }
     $dependencyBindings = $view['dependency_bindings'];
-    $modules = $view['modules'];
+    $modules = print_r($view['modules'], true);
 }
 $html = <<<EOT
 <!DOCTYPE html>
