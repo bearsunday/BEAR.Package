@@ -3,9 +3,8 @@
 use BEAR\Package\Debug\ExceptionHandle\Screen;
 
 /**
- * @var Exception $e
- * @var array     $dependencyBindings
- * @var array     $modules
+ * @var \Exception $e
+ * @var array      $view
  */
 view_logic: {
     $screen = new Screen;
@@ -26,6 +25,8 @@ view_logic: {
     if ($previousE) {
         $headers .= $screen->getHeader($previousE, 'warning');
     }
+    $dependencyBindings = $view['dependency_bindings'];
+    $modules = $view['modules'];
 }
 $html = <<<EOT
 <!DOCTYPE html>
