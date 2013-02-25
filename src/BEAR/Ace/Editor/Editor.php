@@ -94,6 +94,11 @@ class Editor
         return $this;
     }
 
+    /**
+     * @param $message
+     *
+     * @return Editor
+     */
     public function setMessage($message)
     {
         $this->message = $message;
@@ -101,6 +106,11 @@ class Editor
         return $this;
     }
 
+    /**
+     * @param $saveUrl
+     *
+     * @return Editor
+     */
     public function setSaveUrl($saveUrl)
     {
         $this->saveUrl = $saveUrl;
@@ -108,6 +118,9 @@ class Editor
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $fullPath = $this->file;

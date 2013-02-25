@@ -12,6 +12,9 @@ use Ray\Di\ProviderInterface;
 use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 
+/**
+ * Zf2 logger
+ */
 final class Zf2Log implements LogWriterInterface
 {
     /**
@@ -39,11 +42,6 @@ final class Zf2Log implements LogWriterInterface
         $this->provider = $provider;
         $this->pageId = rtrim(base64_encode(pack('H*', uniqid())), '=');
     }
-
-//    public function __destruct()
-//    {
-//        error_log(spl_object_hash($this));
-//    }
 
     /**
      * {@inheritdoc}

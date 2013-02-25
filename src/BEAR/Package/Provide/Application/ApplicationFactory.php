@@ -23,8 +23,14 @@ use Doctrine\Common\Annotations\CachedReader;
 use BEAR\Package\Provide\Application\Exception\InvalidMode;
 use Ray\Di\Exception\Exception as DiException;
 
+/**
+ * Application object factory
+ */
 class ApplicationFactory
 {
+    /**
+     * @param \Doctrine\Common\Cache\Cache $cache
+     */
     public function __construct(Cache $cache)
     {
         $this->cache = $cache;
@@ -37,7 +43,7 @@ class ApplicationFactory
      * @param string $mode    run mode
      *
      * @return \BEAR\Sunday\Extension\Application\AppInterface
-     * @throws Exception\InvalidMode
+     * @throws InvalidMode
      */
     public function newInstance($appName, $mode)
     {

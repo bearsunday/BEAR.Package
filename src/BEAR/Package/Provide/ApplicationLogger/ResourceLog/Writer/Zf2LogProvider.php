@@ -14,6 +14,9 @@ use Zend\Db\Adapter\Adapter;
 use Zend\Log\Writer\Db;
 use Zend\Log\Writer\Syslog;
 
+/**
+ * Zf2 logger provider
+ */
 final class Zf2LogProvider implements ProviderInterface
 {
     /**
