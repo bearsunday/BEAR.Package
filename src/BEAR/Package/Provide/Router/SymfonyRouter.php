@@ -117,7 +117,7 @@ class SymfonyRouter implements RouterInterface
     /**
      * Sets context
      *
-     * @param $context see Symfony\Component\Routing\RequestContext
+     * @param \Symfony\Component\Routing\RequestContext $context
      */
     public function setContext(RequestContext $context = null)
     {
