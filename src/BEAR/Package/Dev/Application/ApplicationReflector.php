@@ -18,7 +18,7 @@ use BEAR\Resource\AbstractObject as ResourceObject;
 class ApplicationReflector
 {
     /**
-     * @var AppInterface
+     * @var \BEAR\Package\Provide\Application\AbstractApp
      */
     public $app;
 

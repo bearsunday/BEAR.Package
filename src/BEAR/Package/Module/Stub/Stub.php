@@ -23,7 +23,7 @@ class Stub implements MethodInterceptor
     use LogInject;
 
     /**
-     * Stubdata
+     * Stub data
      *
      * @var array
      */

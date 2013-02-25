@@ -61,8 +61,9 @@ class FileTree
     }
 
     /**
+     * @param $initialOpeningFile
      *
-     * @return void
+     * @return string
      */
     public function getJsCode($initialOpeningFile)
     {
