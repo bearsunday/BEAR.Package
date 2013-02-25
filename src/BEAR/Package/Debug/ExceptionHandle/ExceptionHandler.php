@@ -272,7 +272,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * @return mixed
      */
     private function getViewTemplate(
+        /** @noinspection PhpUnusedParameterInspection */
         \Exception $e,
+        /** @noinspection PhpUnusedParameterInspection */
         array $view = [
             'dependency_bindings' => '',
             'modules' => ''
