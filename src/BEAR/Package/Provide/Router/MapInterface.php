@@ -7,6 +7,9 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+/**
+ * Map interface
+ */
 interface MapInterface
 {
     /**

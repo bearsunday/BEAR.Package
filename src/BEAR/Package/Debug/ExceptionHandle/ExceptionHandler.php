@@ -203,6 +203,13 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         return $response;
     }
 
+    /**
+     * Return view
+     *
+     * @param \Exception $e
+     *
+     * @return mixed
+     */
     private function getView(\Exception $e)
     {
         // exception screen in develop
