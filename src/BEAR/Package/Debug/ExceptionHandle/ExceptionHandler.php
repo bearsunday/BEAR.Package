@@ -11,6 +11,8 @@ namespace BEAR\Package\Debug\ExceptionHandle;
 use BEAR\Resource\Exception\BadRequest;
 use Ray\Di\InjectorInterface;
 use Ray\Di\AbstractModule;
+use Ray\Di\Exception\NotBound;
+
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Resource\Exception\MethodNotAllowed;
@@ -208,29 +210,24 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @param \Exception $e
      *
-     * @return mixed
+     * @return string
      */
     private function getView(\Exception $e)
     {
         // exception screen in develop
         if (isset($this->injector)) {
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $dependencyBindings = (string)$this->injector;
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $modules = $this->injector->getModule()->modules;
-        } elseif (isset($e->module)) {
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $dependencyBindings = (string)$e->module;
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $modules = $e->module->modules;
+            $view['dependency_bindings'] = (string)$this->injector;
+            $view['modules'] = $this->injector->getModule()->modules;
+        } elseif ($e instanceof NotBound) {
+            $view['dependency_bindings'] = (string)$e->module;
+            $view['modules'] = $e->module->modules;
         } else {
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $dependencyBindings = 'n/a';
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $modules = 'n/a';
+            $view['dependency_bindings'] = 'n/a';
+            $view['modules'] = 'n/a';
         }
-        /** @noinspection PhpIncludeInspection */
-        return include $this->viewTemplate;
+        $html = $this->getViewTemplate($e, $view);
+
+        return $html;
     }
 
     /**
@@ -266,5 +263,21 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     private function getLogFilePath($exceptionId)
     {
         return "{$this->logDir}/{$exceptionId}.log";
+    }
+
+    /**
+     * @param \Exception $e
+     * @param array      $view
+     *
+     * @return mixed
+     */
+    private function getViewTemplate(
+        \Exception $e,
+        array $view = [
+            'dependency_bindings' => '',
+            'modules' => ''
+        ]
+    ) {
+        return require $this->viewTemplate;
     }
 }
