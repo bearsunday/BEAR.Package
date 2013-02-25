@@ -11,15 +11,20 @@ use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 
+/**
+ * Writer collection
+ */
 final class Collection implements LogWriterInterface
 {
     /**
-     * @var array \BEAR\Resource\LogWriterInterface[]
+     * \BEAR\Resource\LogWriterInterface[]
+     *
+     * @var array
      */
     private $writers = [];
 
     /**
-     * @param array $loggers
+     * @param array $writers
      *
      * @Inject
      * @Named("log_writers")

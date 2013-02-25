@@ -23,6 +23,10 @@ class PackageModule extends AbstractModule
 {
     private $scheme;
 
+    /**
+     * @param \Ray\Di\AbstractModule $module
+     * @param \Ray\Aop\Matcher       $scheme
+     */
     public function __construct(AbstractModule $module, $scheme)
     {
         parent::__construct($module);

@@ -87,7 +87,7 @@ return <<<EOT
 
         #editor {
             margin: 0;
-            position: absorlute;
+            position: absolute;
             top: 0;
             bottom: 0;
             left: 0;
