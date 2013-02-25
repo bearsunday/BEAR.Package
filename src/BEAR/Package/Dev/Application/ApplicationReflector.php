@@ -10,7 +10,7 @@ namespace BEAR\Package\Dev\Application;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
-use BEAR\Resource\AbstractObject as ResourceOjbect;
+use BEAR\Resource\AbstractObject as ResourceObject;
 
 /**
  * Application reflector
@@ -18,7 +18,7 @@ use BEAR\Resource\AbstractObject as ResourceOjbect;
 class ApplicationReflector
 {
     /**
-     * @var AppInterface
+     * @var \BEAR\Package\Provide\Application\AbstractApp
      */
     public $app;
 
@@ -86,13 +86,16 @@ class ApplicationReflector
         $namespace = implode('\\', $array);
         $fileContents = str_replace('{$namespace}', $namespace, $fileContents);
         $fileContents = str_replace('{$class}', $class, $fileContents);
-
-//        $this->filePutContents($filePath, $fileContents);
-
         return [$filePath, $fileContents];
 
     }
 
+    /**
+     * @param $path
+     * @param $contents
+     *
+     * @throws \RuntimeException
+     */
     public function filePutContents($path, $contents)
     {
         $parts = explode('/', $path);
@@ -116,7 +119,12 @@ class ApplicationReflector
         }
     }
 
-    public function getResourceOptions(ResourceOjbect $ro)
+    /**
+     * @param \BEAR\Resource\AbstractObject $ro
+     *
+     * @return array
+     */
+    public function getResourceOptions(ResourceObject $ro)
     {
         $ref = new \ReflectionClass($ro);
         $methods = $ref->getMethods();

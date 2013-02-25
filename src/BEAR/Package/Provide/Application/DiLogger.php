@@ -20,6 +20,15 @@ class DiLogger implements LoggerInterface
      */
     public $logMessage = '';
 
+    /**
+     * log injection information
+     *
+     * @param string        $class
+     * @param array         $params
+     * @param array         $setter
+     * @param object        $object
+     * @param \Ray\Aop\Bind $bind
+     */
     public function log($class, array $params, array $setter, $object, Bind $bind)
     {
         $toStr = function ($params) {

@@ -3,15 +3,13 @@
 use BEAR\Package\Debug\ExceptionHandle\Screen;
 
 /**
- * @var Exception $e
- * @var array     $dependencyBindings
- * @var array     $modules
+ * @var \Exception $e
+ * @var array      $view
  */
 view_logic: {
     $screen = new Screen;
     $traceAsString = $screen->getTraceAsJsString($e->getTrace());
     $fileLink = $screen->getEditorLink($e->getFile(), $e->getLine());
-    $modules = print_r($modules, true);
     $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
     $memory = number_format(memory_get_peak_usage(true));
     $files = get_included_files();
@@ -26,6 +24,8 @@ view_logic: {
     if ($previousE) {
         $headers .= $screen->getHeader($previousE, 'warning');
     }
+    $dependencyBindings = $view['dependency_bindings'];
+    $modules = print_r($view['modules'], true);
 }
 $html = <<<EOT
 <!DOCTYPE html>

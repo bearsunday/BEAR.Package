@@ -14,6 +14,9 @@ use BEAR\Resource\AbstractObject as ResourceObject;
 use Traversable;
 use Ray\Di\Di\Inject;
 
+/**
+ * Fire logger
+ */
 final class Fire implements LogWriterInterface
 {
 
