@@ -13,7 +13,6 @@ use Zend\Log\Logger;
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Zf2Log;
 use Ray\Di\ProviderInterface;
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
-use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Null;
 
 /**
  * Writer provider
