@@ -10,7 +10,7 @@ namespace BEAR\Package\Dev\Application;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
-use BEAR\Resource\AbstractObject as ResourceOjbect;
+use BEAR\Resource\AbstractObject as ResourceObject;
 
 /**
  * Application reflector
@@ -124,7 +124,7 @@ class ApplicationReflector
      *
      * @return array
      */
-    public function getResourceOptions(ResourceOjbect $ro)
+    public function getResourceOptions(ResourceObject $ro)
     {
         $ref = new \ReflectionClass($ro);
         $methods = $ref->getMethods();
