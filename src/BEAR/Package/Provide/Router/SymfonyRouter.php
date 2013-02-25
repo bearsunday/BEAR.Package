@@ -28,10 +28,29 @@ use Ray\Di\Di\Named;
 class SymfonyRouter implements RouterInterface
 {
 
+    /**
+     * @var RequestContext
+     */
     private $context;
+
+    /**
+     * @var string
+     */
     private $fileName;
+
+    /**
+     * @var string
+     */
     private $fileLocation;
+
+    /**
+     * @var RouteCollection
+     */
     private $collection;
+
+    /**
+     * @var Request
+     */
     private $request;
 
     const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
