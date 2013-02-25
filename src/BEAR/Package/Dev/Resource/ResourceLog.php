@@ -92,6 +92,11 @@ class ResourceLog
         return $logs;
     }
 
+    /**
+     * @param $logs
+     *
+     * @return string
+     */
     private function getTables($logs)
     {
         $tableBody = '';
@@ -111,6 +116,11 @@ EOT;
         return $body;
     }
 
+    /**
+     * @param $code
+     *
+     * @return string
+     */
     private function getCode($code)
     {
         $status = substr($code, 0, 1);
@@ -123,6 +133,11 @@ EOT;
         return "<span class=\"label label-{$label}\">{$code}</code>";
     }
 
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
     private function getTableOpen($path = '')
     {
         $tableOpen = <<<EOT

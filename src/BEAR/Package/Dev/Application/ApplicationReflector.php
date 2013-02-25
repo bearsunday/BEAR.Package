@@ -86,13 +86,16 @@ class ApplicationReflector
         $namespace = implode('\\', $array);
         $fileContents = str_replace('{$namespace}', $namespace, $fileContents);
         $fileContents = str_replace('{$class}', $class, $fileContents);
-
-//        $this->filePutContents($filePath, $fileContents);
-
         return [$filePath, $fileContents];
 
     }
 
+    /**
+     * @param $path
+     * @param $contents
+     *
+     * @throws \RuntimeException
+     */
     public function filePutContents($path, $contents)
     {
         $parts = explode('/', $path);
@@ -116,6 +119,11 @@ class ApplicationReflector
         }
     }
 
+    /**
+     * @param \BEAR\Resource\AbstractObject $ro
+     *
+     * @return array
+     */
     public function getResourceOptions(ResourceOjbect $ro)
     {
         $ref = new \ReflectionClass($ro);

@@ -11,9 +11,12 @@ use BEAR\Resource\RequestInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 
 /**
- * Resource log output
+ * Resource log write interface
  */
 interface WriterInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function write(RequestInterface $request, ResourceObject $result);
 }

@@ -26,6 +26,9 @@ class WritersProvider implements ProviderInterface
 
     use \BEAR\Sunday\Inject\LogDirInject;
 
+    /**
+     * @return Writer\Collection|object
+     */
     public function get()
     {
         $writers = new Collection([
