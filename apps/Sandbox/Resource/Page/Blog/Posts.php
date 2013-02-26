@@ -10,7 +10,6 @@ namespace Sandbox\Resource\Page\Blog;
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Annotation;
-use Ray\Di\Di\Inject;
 use BEAR\Sunday\Annotation\Cache;
 
 /**
