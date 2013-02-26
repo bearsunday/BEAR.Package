@@ -35,5 +35,11 @@ class ApplicationLoggerModule extends AbstractModule
             ->bind('BEAR\Resource\LogWriterInterface')
             ->toProvider(__NAMESPACE__ . '\ResourceLog\WritersProvider')
             ->in(Scope::SINGLETON);
+
+        $this
+            ->bind('Ray\Di\LoggerInterface')
+            ->to('BEAR\Package\Provide\Application\DiLogger')
+            ->in(Scope::SINGLETON);
+
     }
 }

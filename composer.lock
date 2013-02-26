@@ -321,12 +321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "743b393a715acca5daab8540264076762a37ce7f"
+                "reference": "c8d3579697edc06d218b90b30a40247ae479eddb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/743b393a715acca5daab8540264076762a37ce7f",
-                "reference": "743b393a715acca5daab8540264076762a37ce7f",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/c8d3579697edc06d218b90b30a40247ae479eddb",
+                "reference": "c8d3579697edc06d218b90b30a40247ae479eddb",
                 "shasum": ""
             },
             "require": {
@@ -340,7 +340,7 @@
                 "ray/aop": ">=1.0.0-beta2",
                 "ray/di": ">=1.0.0-beta3"
             },
-            "time": "2013-02-18 07:28:10",
+            "time": "2013-02-23 10:06:39",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -749,13 +749,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/koriym/Ray.Di.git",
-                "reference": "0a190d3ac55e9221f6c39ff7e11d17287ccc2c35"
+                "url": "https://github.com/koriym/Ray.Di.git",
+                "reference": "2cadd3050161d320917eaed24a6949b7e168bb2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/0a190d3ac55e9221f6c39ff7e11d17287ccc2c35",
-                "reference": "0a190d3ac55e9221f6c39ff7e11d17287ccc2c35",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/2cadd3050161d320917eaed24a6949b7e168bb2f",
+                "reference": "2cadd3050161d320917eaed24a6949b7e168bb2f",
                 "shasum": ""
             },
             "require": {
@@ -765,7 +765,7 @@
                 "php": ">=5.4.0",
                 "ray/aop": "1.0.*"
             },
-            "time": "2013-02-01 02:44:43",
+            "time": "2013-02-26 13:19:05",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -1031,13 +1031,13 @@
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Routing",
-                "reference": "v2.2.0-RC2"
+                "url": "https://github.com/symfony/Routing.git",
+                "reference": "v2.2.0-RC3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.0-RC2",
-                "reference": "v2.2.0-RC2",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.0-RC3",
+                "reference": "v2.2.0-RC3",
                 "shasum": ""
             },
             "require": {
@@ -1144,8 +1144,8 @@
                 "reference": null,
                 "shasum": null
             },
-            "time": "2013-02-08 06:13:13",
-            "type": "library"
+            "type": "library",
+            "time": "2013-02-08 06:13:13"
         },
         {
             "name": "zendframework/zend-db",
@@ -1154,7 +1154,7 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/zendframework/Component_ZendDb.git",
-                "reference": "97ff1f812ccc544be80dcd5ada2629572011f3bb"
+                "reference": "a11f64faab1f8b510928267fee60816abd5c45c4"
             },
             "dist": {
                 "type": "zip",
@@ -1188,7 +1188,7 @@
                 "db",
                 "zf2"
             ],
-            "time": "2013-02-07 22:26:44"
+            "time": "2013-02-20 16:01:24"
         },
         {
             "name": "zendframework/zend-log",

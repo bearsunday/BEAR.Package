@@ -36,7 +36,7 @@ class Composer
     private static function chmodWritable($path)
     {
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
-        foreach($iterator as $item) {
+        foreach ($iterator as $item) {
             chmod($item, 0777);
         }
     }
