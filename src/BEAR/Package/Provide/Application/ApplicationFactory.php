@@ -56,8 +56,6 @@ class ApplicationFactory
         if (!class_exists($moduleName)) {
             throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
         }
-        // create application instance
-        $diLogger = new DiLogger;
         $injector = (new Injector(
                         new Container(
                             new Forge(
@@ -73,7 +71,9 @@ class ApplicationFactory
                             )
                         ),
                         new $moduleName)
-        )->setCache($this->cache)->setLogger($diLogger);
+        )->setCache($this->cache);
+        $diLogger = $injector->getInstance('BEAR\Package\Provide\Application\DiLogger');
+        $injector->setLogger($diLogger);
 
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** @var $app \BEAR\Sunday\Extension\Application\AppInterface */
@@ -83,9 +83,9 @@ class ApplicationFactory
         try {
             $logger = $injector->getInstance('Guzzle\Log\LogAdapterInterface');
             /** @var $logger \Guzzle\Log\LogAdapterInterface */
-            $logger->log($diLogger->logMessage, LOG_INFO);
+            $logger->log((string)$diLogger, LOG_INFO);
         } catch (DiException $e) {
-            error_log($diLogger->logMessage, LOG_INFO);
+            error_log((string)$diLogger, LOG_INFO);
         }
 
         return $app;
