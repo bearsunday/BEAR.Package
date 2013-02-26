@@ -12,6 +12,7 @@ use BEAR\Package\Module;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 /**
  * Package module
@@ -32,6 +33,7 @@ class PackageModule extends AbstractModule
         parent::__construct($module);
         $this->scheme = $scheme;
     }
+
     /**
      * (non-PHPdoc)
      * @see Ray\Di.AbstractModule::configure()
@@ -41,6 +43,7 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule\Framework\FrameworkModule($this));
         $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
         $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
+        $this->bind('Ray\Di\LoggerInterface')->to('BEAR\Package\Provide\Application\DiLogger')->in(Scope::SINGLETON);
 
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
@@ -61,5 +64,6 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule\Resource\ApcModule);
         $this->install(new SundayModule\WebContext\AuraWebModule);
         $this->install(new SundayModule\Cqrs\CacheModule($this));
+
     }
 }

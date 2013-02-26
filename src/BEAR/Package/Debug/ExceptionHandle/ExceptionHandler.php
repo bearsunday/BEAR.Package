@@ -220,7 +220,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             $view['modules'] = $this->injector->getModule()->modules;
         } elseif ($e instanceof NotBound) {
             $view['dependency_bindings'] = (string)$e->module;
-            $view['modules'] = $e->module->modules;
+            $view['modules'] = $e->module;
         } else {
             $view['dependency_bindings'] = 'n/a';
             $view['modules'] = 'n/a';
