@@ -18,7 +18,7 @@ class DiLogger implements LoggerInterface
     /**
      * @var string
      */
-    public $logMessage = '';
+    private $logMessages = [];
 
     /**
      * log injection information
@@ -34,9 +34,9 @@ class DiLogger implements LoggerInterface
         $toStr = function ($params) {
             foreach ($params as &$param) {
                 if (is_object($param)) {
-                    $param = '(' . get_class($param) . ')';
+                    $param = get_class($param) . '#' . spl_object_hash($param);
                 } elseif (is_scalar($param)) {
-                    $param = '(' . gettype($param) . ') ' . $param;
+                    $param = '(' . gettype($param) . ') ' . (string) $param;
                 } elseif (is_callable($param)) {
                     $param = '(Callable)';
                 }
@@ -47,6 +47,15 @@ class DiLogger implements LoggerInterface
         $constructor = $constructor ? $constructor : '';
         $setter = $setter ? "setter[" . implode(', ', array_keys($setter)) . ']': '';
         $logMessage = "[DI] {$class} construct[$constructor] {$setter}";
-        $this->logMessage = $logMessage;
+        $this->logMessages[] = $logMessage;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return implode(PHP_EOL, $this->logMessages);
+    }
+
 }

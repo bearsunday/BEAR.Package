@@ -1,10 +1,10 @@
 <?php
 /**
- * @global $xstack stack data
  * @global $file
  * @global $line
  * @global $num
  */
+$xstack = (function_exists('xdebug_get_function_stack')) ? xdebug_get_function_stack() : debug_backtrace();
 functions: {
     /**
      * Return source

@@ -7,7 +7,10 @@
 $view['app_name'] = get_class($app);
 
 $time = date('r', time());
+
 $bindings = nl2br((string)$app->injector);
+$injections = nl2br((string)$app->injector->getLogger());
+
 $contentsForLayout =<<<EOT
     <ul class="breadcrumb">
     <li><a href="../">Home</a> <span class="divider">/</span></li>
@@ -17,6 +20,10 @@ $contentsForLayout =<<<EOT
     <h3>Bindings</h3>
     <div class="well">
     {$bindings}
+    </div>
+    <h3>Injection log</h3>
+    <div class="well">
+    {$injections}
     </div>
 EOT;
 
