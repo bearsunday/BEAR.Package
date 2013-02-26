@@ -12,8 +12,8 @@ use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Inject\AInject;
 use BEAR\Resource\LoggerInterface;
 use BEAR\Resource\Code;
-use Ray\Di\Di\Inject;
 use RuntimeException;
+use Ray\Di\Di\Inject;
 
 /**
  * Restbucks order
