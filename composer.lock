@@ -19,7 +19,6 @@
                 "aura/installer-default": ">=1.0.0",
                 "php": ">=5.4.0"
             },
-            "time": "2012-11-28 00:00:00",
             "type": "aura-package",
             "autoload": {
                 "psr-0": {
@@ -58,7 +57,8 @@
                 "dependency injection container",
                 "di",
                 "di container"
-            ]
+            ],
+            "time": "2012-11-28 00:00:00"
         },
         {
             "name": "aura/installer-default",
@@ -74,7 +74,6 @@
                 "reference": "1.0.0",
                 "shasum": ""
             },
-            "time": "2012-11-26 21:35:57",
             "type": "composer-installer",
             "extra": {
                 "class": "Aura\\Composer\\DefaultInstaller"
@@ -99,7 +98,8 @@
             "keywords": [
                 "aura",
                 "installer"
-            ]
+            ],
+            "time": "2012-11-26 21:35:57"
         },
         {
             "name": "aura/router",
@@ -119,7 +119,6 @@
                 "aura/installer-default": ">=1.0.0",
                 "php": ">=5.4.0"
             },
-            "time": "2012-11-28 00:00:00",
             "type": "aura-package",
             "autoload": {
                 "psr-0": {
@@ -152,7 +151,8 @@
                 "route",
                 "router",
                 "routing"
-            ]
+            ],
+            "time": "2012-11-28 00:00:00"
         },
         {
             "name": "aura/signal",
@@ -172,7 +172,6 @@
                 "aura/installer-default": ">=1.0.0",
                 "php": ">=5.4.0"
             },
-            "time": "2012-11-28 00:00:00",
             "type": "aura-package",
             "autoload": {
                 "psr-0": {
@@ -207,7 +206,8 @@
                 "event handling",
                 "signal",
                 "signal slots"
-            ]
+            ],
+            "time": "2012-11-28 00:00:00"
         },
         {
             "name": "aura/web",
@@ -227,7 +227,6 @@
                 "aura/installer-default": ">=1.0.0",
                 "php": ">=5.4.0"
             },
-            "time": "2012-11-30 00:00:00",
             "type": "aura-package",
             "autoload": {
                 "psr-0": {
@@ -260,7 +259,8 @@
                 "controller",
                 "page controller",
                 "web controller"
-            ]
+            ],
+            "time": "2012-11-30 00:00:00"
         },
         {
             "name": "bear/resource",
@@ -289,7 +289,6 @@
             "require-dev": {
                 "facebook/xhprof": "dev-master"
             },
-            "time": "2013-02-13 12:14:24",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -313,7 +312,8 @@
                 "HATEOAS",
                 "rest",
                 "service layer"
-            ]
+            ],
+            "time": "2013-02-13 12:14:24"
         },
         {
             "name": "bear/sunday",
@@ -340,7 +340,6 @@
                 "ray/aop": ">=1.0.0-beta2",
                 "ray/di": ">=1.0.0-beta3"
             },
-            "time": "2013-02-23 10:06:39",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -368,7 +367,8 @@
                 "hypermedia",
                 "resource",
                 "roa"
-            ]
+            ],
+            "time": "2013-02-23 10:06:39"
         },
         {
             "name": "doctrine/common",
@@ -387,7 +387,6 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-09-20 05:55:18",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -437,7 +436,8 @@
                 "eventmanager",
                 "persistence",
                 "spl"
-            ]
+            ],
+            "time": "2012-09-20 05:55:18"
         },
         {
             "name": "doctrine/dbal",
@@ -457,7 +457,6 @@
                 "doctrine/common": "2.3.*",
                 "php": ">=5.3.2"
             },
-            "time": "2013-01-20 11:50:36",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -500,7 +499,8 @@
                 "dbal",
                 "persistence",
                 "queryobject"
-            ]
+            ],
+            "time": "2013-01-20 11:50:36"
         },
         {
             "name": "guzzle/guzzle",
@@ -554,7 +554,6 @@
                 "zendframework/zend-cache": "2.0.*",
                 "zendframework/zend-log": "2.0.*"
             },
-            "time": "2012-12-19 23:06:35",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -592,7 +591,8 @@
                 "http client",
                 "rest",
                 "web service"
-            ]
+            ],
+            "time": "2012-12-19 23:06:35"
         },
         {
             "name": "nocarrier/hal",
@@ -611,7 +611,6 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2013-02-14 13:48:25",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -637,7 +636,8 @@
                 "json",
                 "rest",
                 "xml"
-            ]
+            ],
+            "time": "2013-02-14 13:48:25"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -670,7 +670,6 @@
                 "propel/propel1": "To use the PropelAdapter",
                 "solarium/solarium": "To use the SolariumAdapter."
             },
-            "time": "2013-02-19 13:51:25",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -697,7 +696,8 @@
             "keywords": [
                 "page",
                 "paging"
-            ]
+            ],
+            "time": "2013-02-19 13:51:25"
         },
         {
             "name": "ray/aop",
@@ -717,14 +717,13 @@
                 "doctrine/common": "2.3.*-dev",
                 "php": ">=5.4.0"
             },
-            "time": "2012-10-17 00:13:53",
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "Ray\\Aop": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -742,7 +741,8 @@
                 "aop",
                 "aspect",
                 "method interception"
-            ]
+            ],
+            "time": "2012-10-17 00:13:53"
         },
         {
             "name": "ray/di",
@@ -750,12 +750,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "2cadd3050161d320917eaed24a6949b7e168bb2f"
+                "reference": "7f0076749c29037c4d186ade50d9b08eb93f08a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/2cadd3050161d320917eaed24a6949b7e168bb2f",
-                "reference": "2cadd3050161d320917eaed24a6949b7e168bb2f",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/7f0076749c29037c4d186ade50d9b08eb93f08a1",
+                "reference": "7f0076749c29037c4d186ade50d9b08eb93f08a1",
                 "shasum": ""
             },
             "require": {
@@ -765,14 +765,13 @@
                 "php": ">=5.4.0",
                 "ray/aop": "1.0.*"
             },
-            "time": "2013-02-26 13:19:05",
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "Ray\\Di": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -795,7 +794,8 @@
                 "ioc",
                 "jsr",
                 "method interception"
-            ]
+            ],
+            "time": "2013-02-27 04:15:17"
         },
         {
             "name": "smarty/smarty",
@@ -808,7 +808,6 @@
             "require": {
                 "php": ">=5.2"
             },
-            "time": "2013-01-26 12:03:52",
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -838,7 +837,8 @@
             "homepage": "http://www.smarty.net",
             "keywords": [
                 "templating"
-            ]
+            ],
+            "time": "2013-01-26 12:03:52"
         },
         {
             "name": "symfony/config",
@@ -858,7 +858,6 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2013-02-18 21:28:20",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -885,7 +884,8 @@
                 }
             ],
             "description": "Symfony Config Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2013-02-18 21:28:20"
         },
         {
             "name": "symfony/console",
@@ -905,7 +905,6 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2013-01-11 13:49:52",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -927,7 +926,8 @@
                 }
             ],
             "description": "Symfony Console Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2013-01-11 13:49:52"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -954,7 +954,6 @@
                 "symfony/dependency-injection": "2.2.*",
                 "symfony/http-kernel": "2.2.*"
             },
-            "time": "2013-02-11 11:27:01",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -981,7 +980,8 @@
                 }
             ],
             "description": "Symfony EventDispatcher Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2013-02-11 11:27:01"
         },
         {
             "name": "symfony/http-foundation",
@@ -1001,7 +1001,6 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2013-02-07 16:36:12",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -1023,7 +1022,8 @@
                 }
             ],
             "description": "Symfony HttpFoundation Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2013-02-07 16:36:12"
         },
         {
             "name": "symfony/routing",
@@ -1054,7 +1054,6 @@
                 "symfony/config": "2.2.*",
                 "symfony/yaml": "2.2.*"
             },
-            "time": "2013-02-11 11:24:47",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1081,7 +1080,8 @@
                 }
             ],
             "description": "Symfony Routing Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2013-02-11 11:24:47"
         },
         {
             "name": "symfony/yaml",
@@ -1101,7 +1101,6 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2013-01-31 21:39:01",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1128,7 +1127,8 @@
                 }
             ],
             "description": "Symfony Yaml Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2013-01-31 21:39:01"
         },
         {
             "name": "twitter/bootstrap",
@@ -1145,7 +1145,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-02-08 06:13:13"
+            "time": "2013-02-21 21:10:21"
         },
         {
             "name": "zendframework/zend-db",
