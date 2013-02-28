@@ -51,12 +51,9 @@ class FileTree
             $path = serialize($path);
         } else {
             $isDir = 'true';
-            if (strpos($path, $this->root, 0) === 0) {
-                $path = substr($path, strlen($this->root));
-            }
+            $path = $this->root;
         }
         $this->cmd .= "addTree('{$placeholder}', '{$path}/', {$isDir}, '{$label}');";
-
         return $this;
     }
 
