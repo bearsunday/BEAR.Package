@@ -1,5 +1,5 @@
 <?php
-namespace Sandbox\tests\Resource\App\Blog;
+namespace Sandbox\tests\Resource\App\First;
 
 use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
