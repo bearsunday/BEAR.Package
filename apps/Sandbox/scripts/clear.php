@@ -26,6 +26,7 @@ $rm = function ($dir) use (&$rm) {
 
 $rm("{$tmpDir}/cache");
 array_map('unlink', glob("{$tmpDir}/smarty/template_c/*.tpl.php"));
+array_map('unlink', glob("{$tmpDir}/cache/*"));
 
 unset($rm);
 unset($tmpDir);
