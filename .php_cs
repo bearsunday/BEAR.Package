@@ -2,11 +2,11 @@
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->notName('view.php')
+    ->notName('prod.php')
     ->exclude('docs')
     ->exclude('vendor')
     ->exclude('.idea')
     ->exclude('cs')
-    ->exclude('prod.php')
     ->notName('*.tpl.php')
     ->notName('*.xml')
     ->in(__DIR__ . '/src')
