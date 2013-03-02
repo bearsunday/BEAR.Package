@@ -446,7 +446,7 @@ EOT;
         if (isset($resourceObject->headers[DevInvoker::HEADER_PROFILE_ID])) {
             $profileId = $resourceObject->headers[DevInvoker::HEADER_PROFILE_ID];
             $result .= <<<EOT
-<span class="icon-random"></span><a href="/dev/xhprof_html/index.php?run={$profileId}&source=resource"> {$profileId}</a>
+<span class="icon-random"></span><a href="/xhprof_html/index.php?run={$profileId}&source=resource"> {$profileId}</a>
 EOT;
         }
         $result .= '</div>';
