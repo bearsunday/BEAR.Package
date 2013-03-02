@@ -2,7 +2,7 @@
 
 $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->notName('view.php')
-    ->notName('prod.php')
+    ->notName('preloader.php')
     ->exclude('docs')
     ->exclude('vendor')
     ->exclude('.idea')
