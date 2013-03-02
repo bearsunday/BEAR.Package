@@ -16,7 +16,8 @@ ini_set('display_errors', 1);
 // built-in web server
 $isDevTool = PHP_SAPI  !== 'cli' && substr($_SERVER["REQUEST_URI"], 0, 5) === '/dev/';
 if (! $isDevTool && php_sapi_name() == "cli-server") {
-    if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico|php)$/', $_SERVER["REQUEST_URI"])) {
+    $path = parse_url($_SERVER['REQUEST_URI'])['path'];
+    if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico|php|html)$/', $path)) {
         return false;
     }
     if (is_file(__DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']))) {
