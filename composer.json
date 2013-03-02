@@ -54,7 +54,6 @@
     "autoload":{
         "psr-0":{
             "BEAR\\Package":"src/",
-            "BEAR\\Installer":"src/",
             "BEAR\\Ace":"src/",
             "Helloworld\\":"apps/",
             "Sandbox\\":"apps/",
@@ -63,7 +62,7 @@
     },
     "minimum-stability":"dev",
     "scripts"   :{
-        "post-install-cmd": "BEAR\\Installer\\Composer::postInstall"
+        "post-autoload-dump": ["php bin/setup.php", "php bin/loader.php"]
     },
     "repositories":[
         {
