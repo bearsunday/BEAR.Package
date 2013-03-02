@@ -62,6 +62,7 @@
     },
     "minimum-stability":"dev",
     "scripts"   :{
+        "post-install-cmd": "php bin/env.php",
         "post-autoload-dump": ["php bin/setup.php", "php bin/loader.php"]
     },
     "repositories":[
