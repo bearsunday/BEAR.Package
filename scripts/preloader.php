@@ -3961,72 +3961,6 @@ final class Bind extends ArrayObject implements BindInterface
     }
 }
 /**
- * @package    Sandbox
- * @subpackage Module
- */
-namespace Sandbox\Module\Common;
-
-use BEAR\Sunday\Module as SundayModule;
-use BEAR\Package\Module as PackageModule;
-use BEAR\Package\Provide as ProvideModule;
-use Sandbox\Interceptor\PostFormValidator;
-use Sandbox\Interceptor\TimeMessage;
-use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
-/**
- * Application module
- *
- * @package    Sandbox
- * @subpackage Module
- */
-class AppModule extends AbstractModule
-{
-    /**
-     * @var array
-     */
-    private $config;
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-        parent::__construct();
-    }
-    /**
-     * (non-PHPdoc)
-     * @see Ray\Di.AbstractModule::configure()
-     */
-    protected function configure()
-    {
-        // install package module
-        $this->install(new SundayModule\Constant\NamedModule($this->config));
-        $scheme = __NAMESPACE__ . '\\SchemeCollectionProvider';
-        $this->install(new PackageModule\PackageModule($this, $scheme));
-        // install twig
-        //$this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
-        // dependency binding for application
-        $this->bind('BEAR\\Sunday\\Extension\\Application\\AppInterface')->to('Sandbox\\App');
-        $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
-        $this->bind('BEAR\\Resource\\RenderInterface')->annotatedWith('hal')->to('BEAR\\Package\\Provide\\ResourceView\\HalRenderer')->in(Scope::SINGLETON);
-        // aspect weaving for application
-        $this->installTimeMessage();
-        $this->installNewPostFormValidator();
-    }
-    /**
-     * @Form - bind form validator
-     */
-    private function installNewPostFormValidator()
-    {
-        $this->bindInterceptor($this->matcher->subclassesOf('Sandbox\\Resource\\Page\\Blog\\Posts\\Newpost'), $this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\Form'), array(new PostFormValidator()));
-    }
-    /**
-     * Add time message aspect
-     */
-    private function installTimeMessage()
-    {
-        // time message binding
-        $this->bindInterceptor($this->matcher->subclassesOf('Sandbox\\Resource\\App\\First\\Greeting\\Aop'), $this->matcher->any(), array(new TimeMessage()));
-    }
-}
-/**
  * This file is part of the BEAR.Sunday package
  *
  * @package BEAR.Sunday
@@ -5696,42 +5630,6 @@ trait InjectorInject
     }
 }
 /**
- * @package    Sandbox
- * @subpackage Module
- */
-namespace Sandbox\Module\Common;
-
-use Ray\Di\ProviderInterface as Provide;
-use BEAR\Resource\Adapter\App as AppAdapter;
-use BEAR\Resource\SchemeCollection;
-use BEAR\Sunday\Inject\AppNameInject;
-use BEAR\Sunday\Inject\InjectorInject;
-/**
- * Scheme collection
- *
- * @package    Sandbox
- * @subpackage Module
- */
-class SchemeCollectionProvider implements Provide
-{
-    use AppNameInject;
-    use InjectorInject;
-    /**
-     * Return resource adapter set.
-     *
-     * @return SchemeCollection
-     */
-    public function get()
-    {
-        $schemeCollection = new SchemeCollection();
-        $pageAdapter = new AppAdapter($this->injector, $this->appName, 'Resource\\Page');
-        $appAdapter = new AppAdapter($this->injector, $this->appName, 'Resource\\App');
-        $schemeCollection->scheme('page')->host('self')->toAdapter($pageAdapter);
-        $schemeCollection->scheme('app')->host('self')->toAdapter($appAdapter);
-        return $schemeCollection;
-    }
-}
-/**
  * This file is part of the BEAR.Sunday package
  *
  * @package BEAR.Sunday
@@ -6155,31 +6053,6 @@ final class CacheUpdate implements AnnotationInterface
     
 }
 /**
- * Time message
- *
- * @package BEAR.Framework
- */
-namespace Sandbox\Interceptor;
-
-use Ray\Aop\MethodInterceptor;
-use Ray\Aop\MethodInvocation;
-/**
- * +Time  message add interceptor
- */
-class TimeMessage implements MethodInterceptor
-{
-    /**
-     * (non-PHPdoc)
-     * @see Ray\Aop.MethodInterceptor::invoke()
-     */
-    public function invoke(MethodInvocation $invocation)
-    {
-        $time = date('g:i');
-        $result = $invocation->proceed() . ". It is {$time} now !";
-        return $result;
-    }
-}
-/**
  * This file is part of the BEAR.Sunday package
  *
  * @package BEAR.Sunday
@@ -6199,59 +6072,6 @@ namespace BEAR\Sunday\Annotation;
 final class Form
 {
     
-}
-/**
- * Env setting checker
- *
- * @package BEAR.Framework
- */
-namespace Sandbox\Interceptor;
-
-use Ray\Aop\MethodInterceptor;
-use Ray\Aop\MethodInvocation;
-/**
- * Form validator
- */
-class PostFormValidator implements MethodInterceptor
-{
-    const TITLE = 0;
-    const BODY = 1;
-    /**
-     * Error
-     *
-     * @var array
-     */
-    private $errors = array('title' => '', 'body' => '');
-    /**
-     * (non-PHPdoc)
-     * @see Ray\Aop.MethodInterceptor::invoke()
-     */
-    public function invoke(MethodInvocation $invocation)
-    {
-        // retrieve page and query
-        $args = $invocation->getArguments();
-        $page = $invocation->getThis();
-        // strip tags
-        foreach ($args as &$arg) {
-            $arg = strip_tags($arg);
-        }
-        // required title
-        if ($args[self::TITLE] === '') {
-            $this->errors['title'] = 'title required.';
-        }
-        // required body
-        if ($args[self::BODY] === '') {
-            $this->errors['body'] = 'body required.';
-        }
-        // valid form ?
-        if (implode('', $this->errors) === '') {
-            return $invocation->proceed();
-        }
-        // error, modify 'GET' page wih error message.
-        $page['errors'] = $this->errors;
-        $page['submit'] = array('title' => $args[self::TITLE], 'body' => $args[self::BODY]);
-        return $page->onGet();
-    }
 }
 /**
  * This file is part of the Ray package.
@@ -6585,31 +6405,6 @@ abstract class AbstractObject implements ObjectInterface, ArrayAccess, Countable
     public $links = array();
 }
 /**
- * @package    Sandbox
- * @subpackage Resource
- */
-namespace Sandbox\Resource\App\First\Greeting;
-
-use BEAR\Resource\AbstractObject;
-/**
- * My first AOP
- *
- * @package    Sandbox
- * @subpackage Resource
- */
-class Aop extends AbstractObject
-{
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public function onGet($name = 'anonymous')
-    {
-        return "Hello, {$name}";
-    }
-}
-/**
  * This file is part of the BEAR.Sunday package
  *
  * @package BEAR.Sunday
@@ -6640,61 +6435,6 @@ trait ResourceInject
     public function setResource(ResourceInterface $resource)
     {
         $this->resource = $resource;
-    }
-}
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
-namespace Sandbox\Resource\Page\Blog\Posts;
-
-use BEAR\Resource\AbstractObject as Page;
-use BEAR\Sunday\Inject\ResourceInject;
-use Ray\Di\Di\Inject;
-use BEAR\Resource\Link;
-use BEAR\Sunday\Annotation\Form;
-/**
- * New post page
- *
- * @package    Sandbox
- * @subpackage Resource
- */
-class Newpost extends Page
-{
-    use ResourceInject;
-    /**
-     * @var array
-     */
-    public $body = array('errors' => array('title' => '', 'body' => ''), 'submit' => array('title' => '', 'body' => ''), 'code' => 200);
-    /**
-     * @var array
-     */
-    public $links = array('back' => array(Link::HREF => 'page://self/blog/posts'));
-    /**
-     * @return Newpost
-     */
-    public function onGet()
-    {
-        return $this;
-    }
-    /**
-     * @param string $title
-     * @param string $body
-     *
-     * @Form
-     */
-    public function onPost($title, $body)
-    {
-        // create post
-        $response = $this->resource->post->uri('app://self/blog/posts')->withQuery(array('title' => $title, 'body' => $body))->eager->request();
-        $this['code'] = $response->code;
-        $this->links += $response->links;
-        // redirect
-        //      $this->code = 303;
-        //      $this->headers = ['Location' => '/blog/posts'];
-        return $this;
     }
 }
 /**
@@ -6810,24 +6550,6 @@ abstract class AbstractApp implements AppInterface
         $this->logger = $logger;
         $this->router = $router;
     }
-}
-/**
- * Sandbox
- *
- * @package Sandbox
- */
-namespace Sandbox;
-
-use BEAR\Package\Provide\Application\AbstractApp;
-/**
- * Application
- *
- * @package Sandbox
- */
-final class App extends AbstractApp
-{
-    /** application dir path @var string */
-    const DIR = '/Users/akihito/git/BEAR.Package/apps/Sandbox';
 }
 /**
  * This file is part of the BEAR.Resource package
