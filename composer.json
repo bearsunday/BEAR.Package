@@ -48,7 +48,8 @@
         "printo/printo":"*",
         "facebook/xhprof":"0.9.*",
         "firephp/firephp-core":"dev-master",
-        "twig/twig":">=1.0.0"
+        "twig/twig":">=1.0.0",
+        "classpreloader/classpreloader": "dev-master"
     },
     "autoload":{
         "psr-0":{

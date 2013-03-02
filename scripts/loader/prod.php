@@ -314,185 +314,62 @@ abstract class CacheProvider implements Cache
 namespace Doctrine\Common\Cache;
 
 /**
- * Base file cache driver.
+ * APC cache provider.
  *
- * @since   2.3
- * @author  Fabio B. Silva <fabio.bat.silva@gmail.com>
+ * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link    www.doctrine-project.org
+ * @since   2.0
+ * @author  Benjamin Eberlei <kontakt@beberlei.de>
+ * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author  Jonathan Wage <jonwage@gmail.com>
+ * @author  Roman Borschel <roman@code-factory.org>
+ * @author  David Abdemoulaie <dave@hobodave.com>
  */
-abstract class FileCache extends CacheProvider
+class ApcCache extends CacheProvider
 {
-    /**
-     * @var string Cache directory.
-     */
-    protected $directory;
-    /**
-     * @var string Cache file extension.
-     */
-    protected $extension;
-    /**
-     * Constructor
-     *
-     * @param string $directory Cache directory.
-     * @param string $directory Cache file extension.
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct($directory, $extension = null)
-    {
-        if (!is_dir($directory) && !@mkdir($directory, 511, true)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist and could not be created.', $directory));
-        }
-        if (!is_writable($directory)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" is not writable.', $directory));
-        }
-        $this->directory = realpath($directory);
-        $this->extension = $extension ?: $this->extension;
-    }
-    /**
-     * Gets the cache directory.
-     * 
-     * @return string
-     */
-    public function getDirectory()
-    {
-        return $this->directory;
-    }
-    /**
-     * Gets the cache file extension.
-     * 
-     * @return string
-     */
-    public function getExtension()
-    {
-        return $this->extension;
-    }
-    /**
-     * @return string
-     */
-    protected function getFilename($id)
-    {
-        $path = implode(str_split(md5($id), 12), DIRECTORY_SEPARATOR);
-        $path = $this->directory . DIRECTORY_SEPARATOR . $path;
-        return $path . DIRECTORY_SEPARATOR . $id . $this->extension;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doDelete($id)
-    {
-        return @unlink($this->getFilename($id));
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doFlush()
-    {
-        $pattern = '/^.+\\' . $this->extension . '$/i';
-        $iterator = new \RecursiveDirectoryIterator($this->directory);
-        $iterator = new \RecursiveIteratorIterator($iterator);
-        $iterator = new \RegexIterator($iterator, $pattern);
-        foreach ($iterator as $name => $file) {
-            @unlink($name);
-        }
-        return true;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doGetStats()
-    {
-        return null;
-    }
-}
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
- */
-namespace Doctrine\Common\Cache;
-
-/**
- * Filesystem cache driver.
- *
- * @since   2.3
- * @author  Fabio B. Silva <fabio.bat.silva@gmail.com>
- */
-class FilesystemCache extends FileCache
-{
-    const EXTENSION = '.doctrinecache.data';
-    /**
-     * {@inheritdoc}
-     */
-    protected $extension = self::EXTENSION;
     /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
-        $data = '';
-        $lifetime = -1;
-        $filename = $this->getFilename($id);
-        if (!file_exists($filename)) {
-            return false;
-        }
-        $resource = fopen($filename, 'r');
-        if (false !== ($line = fgets($resource))) {
-            $lifetime = (int) $line;
-        }
-        if ($lifetime !== 0 && $lifetime < time()) {
-            fclose($resource);
-            return false;
-        }
-        while (false !== ($line = fgets($resource))) {
-            $data .= $line;
-        }
-        fclose($resource);
-        return unserialize($data);
+        return apc_fetch($id);
     }
     /**
      * {@inheritdoc}
      */
     protected function doContains($id)
     {
-        $lifetime = -1;
-        $filename = $this->getFilename($id);
-        if (!file_exists($filename)) {
-            return false;
-        }
-        $resource = fopen($filename, 'r');
-        if (false !== ($line = fgets($resource))) {
-            $lifetime = (int) $line;
-        }
-        fclose($resource);
-        return $lifetime === 0 || $lifetime > time();
+        return apc_exists($id);
     }
     /**
      * {@inheritdoc}
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
-        if ($lifeTime > 0) {
-            $lifeTime = time() + $lifeTime;
-        }
-        $data = serialize($data);
-        $filename = $this->getFilename($id);
-        $filepath = pathinfo($filename, PATHINFO_DIRNAME);
-        if (!is_dir($filepath)) {
-            mkdir($filepath, 511, true);
-        }
-        return file_put_contents($filename, $lifeTime . PHP_EOL . $data);
+        return (bool) apc_store($id, $data, (int) $lifeTime);
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function doDelete($id)
+    {
+        return apc_delete($id);
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function doFlush()
+    {
+        return apc_clear_cache() && apc_clear_cache('user');
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function doGetStats()
+    {
+        $info = apc_cache_info();
+        $sma = apc_sma_info();
+        return array(Cache::STATS_HITS => $info['num_hits'], Cache::STATS_MISSES => $info['num_misses'], Cache::STATS_UPTIME => $info['start_time'], Cache::STATS_MEMORY_USAGE => $info['mem_size'], Cache::STATS_MEMORY_AVAILIABLE => $sma['avail_mem']);
     }
 }
 /**
@@ -568,136 +445,451 @@ class ApplicationFactory
     }
 }
 /**
- * This file is part of the BEAR.Sunday package
+ * This file is part of the Ray package.
  *
- * @package BEAR.Sunday
+ * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Sunday\Extension\Application;
+namespace Ray\Di;
 
+use Ray\Aop\Bind;
+use Ray\Aop\Matcher;
+use Ray\Aop\Pointcut;
+use Doctrine\Common\Annotations\AnnotationReader as Reader;
+use ArrayObject;
+use ArrayAccess;
 /**
- * Interface for application context
+ * A module contributes configuration information, typically interface bindings,
+ *  which will be used to create an Injector.
  *
- * @package    BEAR.Sunday
- * @subpackage Application
+ * @package   Ray.Di
  */
-interface AppInterface
-{
-    
-}
-/**
- * This file is part of the BEAR.Package package
- *
- * @package BEAR.Package
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Package\Provide\Application;
-
-use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
-use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
-use BEAR\Sunday\Extension\Router\RouterInterface;
-use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
-use BEAR\Resource\ResourceInterface;
-use BEAR\Resource\AbstractObject as Page;
-use Ray\Di\InjectorInterface;
-use Ray\Di\Di\Inject;
-/**
- * Application
- *
- * available run mode:
- *
- * 'Prod'
- * 'Api'
- * 'Dev'
- * 'Stab;
- * 'Test'
- *
- * @package BEAR.Package
- */
-abstract class AbstractApp implements AppInterface
+abstract class AbstractModule implements ArrayAccess
 {
     /**
-     * Dependency injector
+     * Bind
      *
+     * @var string
+     */
+    const BIND = 'bind';
+    /**
+     * Name
+     *
+     * @var string
+     */
+    const NAME = 'name';
+    /**
+     * In (Scope)
+     *
+     * @var string
+     */
+    const IN = 'in';
+    /**
+     * To
+     *
+     * @var string
+     */
+    const TO = 'to';
+    /**
+     * To Class
+     *
+     * @var string
+     */
+    const TO_CLASS = 'class';
+    /**
+     * Provider
+     *
+     * @var string
+     */
+    const TO_PROVIDER = 'provider';
+    /**
+     * To Instance
+     *
+     * @var string
+     */
+    const TO_INSTANCE = 'instance';
+    /**
+     * To Closure
+     *
+     * @var string
+     */
+    const TO_CALLABLE = 'callable';
+    /**
+     * To Constructor
+     *
+     * @var string
+     */
+    const TO_CONSTRUCTOR = 'constructor';
+    /**
+     * To Constructor
+     *
+     * @var string
+     */
+    const TO_SETTER = 'setter';
+    /**
+     * To Scope
+     *
+     * @var string
+     */
+    const SCOPE = 'scope';
+    /**
+     * Unspecified name
+     *
+     * @var string
+     */
+    const NAME_UNSPECIFIED = '*';
+    /**
+     * Binding definition
+     *
+     * @var Definition
+     */
+    public $bindings;
+    /**
+     * Pointcuts
+     *
+     * @var ArrayObject
+     */
+    /**
+     * Current Binding
+     *
+     * @var string
+     */
+    protected $currentBinding;
+    /**
+     * Current Name
+     *
+     * @var string
+     */
+    protected $currentName = self::NAME_UNSPECIFIED;
+    /**
+     * Scope
+     *
+     * @var array
+     */
+    protected $scope = array(Scope::PROTOTYPE, Scope::SINGLETON);
+    /**
+     * Pointcuts
+     *
+     * @var array
+     */
+    public $pointcuts = array();
+    /**
      * @var InjectorInterface
      */
-    public $injector;
+    protected $dependencyInjector;
     /**
-     * Resource client
+     * Is activated
      *
-     * @var ResourceInterface
+     * @var bool
      */
-    public $resource;
+    protected $activated = false;
     /**
-     * Response
+     * Installed modules
      *
-     * @var ResponseInterface
+     * @var array
      */
-    public $response;
-    /**
-     * Exception handler
-     *
-     * @var ExceptionHandlerInterface
-     */
-    public $exceptionHandler;
-    /**
-     * Router
-     *
-     * @var RouterInterface
-     */
-    public $router;
-    /**
-     * Resource logger
-     *
-     * @var ApplicationLoggerInterface
-     */
-    public $logger;
-    /**
-     * Response page object
-     *
-     * @var Page
-     */
-    public $page;
+    public $modules = array();
     /**
      * Constructor
      *
-     * @param InjectorInterface          $injector         Dependency Injector
-     * @param ResourceInterface          $resource         Resource client
-     * @param ExceptionHandlerInterface  $exceptionHandler Exception handler
-     * @param ApplicationLoggerInterface $logger           Application logger
-     * @param ResponseInterface          $response         Web / Console response
-     * @param RouterInterface            $router           URI Router
-     *
-     * @Inject
+     * @param AbstractModule $module
+     * @param Matcher        $matcher
      */
-    public function __construct(InjectorInterface $injector, ResourceInterface $resource, ExceptionHandlerInterface $exceptionHandler, ApplicationLoggerInterface $logger, ResponseInterface $response, RouterInterface $router)
+    public function __construct(AbstractModule $module = null, Matcher $matcher = null)
     {
-        $this->injector = $injector;
-        $this->resource = $resource;
-        $this->response = $response;
-        $this->exceptionHandler = $exceptionHandler;
-        $this->logger = $logger;
-        $this->router = $router;
+        if (is_null($module)) {
+            $this->bindings = new ArrayObject();
+            $this->pointcuts = new ArrayObject();
+        } else {
+            $module->activate();
+            $this->bindings = $module->bindings;
+            $this->pointcuts = $module->pointcuts;
+        }
+        $this->modules[] = get_class($this);
+        $this->matcher = $matcher ?: new Matcher(new Reader());
     }
-}
-/**
- * Sandbox
- *
- * @package Sandbox
- */
-namespace Sandbox;
-
-use BEAR\Package\Provide\Application\AbstractApp;
-/**
- * Application
- *
- * @package Sandbox
- */
-final class App extends AbstractApp
-{
-    /** application dir path @var string */
-    const DIR = __DIR__;
+    /**
+     * Activation
+     *
+     * @param InjectorInterface $injector
+     */
+    public function activate(InjectorInterface $injector = null)
+    {
+        if ($this->activated === true) {
+            return;
+        }
+        $this->activated = true;
+        $this->dependencyInjector = $injector ?: Injector::create(array($this));
+        $this->configure();
+    }
+    /**
+     * Configures a Binder via the exposed methods.
+     *
+     * @return void
+     */
+    protected abstract function configure();
+    /**
+     * Set bind interface
+     *
+     * @param string $interface
+     *
+     * @return AbstractModule
+     */
+    protected function bind($interface = '')
+    {
+        if (strlen($interface) > 0 && $interface[0] === '\\') {
+            // remove leading back slash
+            $interface = substr($interface, 1);
+        }
+        $this->currentBinding = $interface;
+        $this->currentName = self::NAME_UNSPECIFIED;
+        return $this;
+    }
+    /**
+     * Set binding annotation.
+     *
+     * @param string $name
+     *
+     * @return AbstractModule
+     */
+    protected function annotatedWith($name)
+    {
+        $this->currentName = $name;
+        $this->bindings[$this->currentBinding][$name] = array(self::IN => Scope::SINGLETON);
+        return $this;
+    }
+    /**
+     * Set scope
+     *
+     * @param string $scope
+     *
+     * @return AbstractModule
+     */
+    protected function in($scope)
+    {
+        $this->bindings[$this->currentBinding][$this->currentName][self::IN] = $scope;
+        return $this;
+    }
+    /**
+     * To class
+     *
+     * @param string $class
+     *
+     * @return AbstractModule
+     * @throws Exception\ToBinding
+     */
+    protected function to($class)
+    {
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CLASS, $class));
+        return $this;
+    }
+    /**
+     * To provider
+     *
+     * @param string $provider provider class
+     *
+     * @return AbstractModule
+     * @throws Exception\Configuration
+     */
+    protected function toProvider($provider)
+    {
+        $hasProviderInterface = class_exists($provider) && in_array('Ray\\Di\\ProviderInterface', class_implements($provider));
+        if ($hasProviderInterface === false) {
+            throw new Exception\Configuration($provider);
+        }
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_PROVIDER, $provider));
+        return $this;
+    }
+    /**
+     * To instance
+     *
+     * @param mixed $instance
+     *
+     * @return AbstractModule
+     */
+    protected function toInstance($instance)
+    {
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_INSTANCE, $instance));
+    }
+    /**
+     * To closure
+     *
+     * @param Callable $callable
+     *
+     * @return void
+     */
+    protected function toCallable(callable $callable)
+    {
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CALLABLE, $callable));
+    }
+    /**
+     * To constructor
+     *
+     * @param array $params
+     */
+    protected function toConstructor(array $params)
+    {
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CONSTRUCTOR, $params));
+    }
+    /**
+     * Bind interceptor
+     *
+     * @param Matcher $classMatcher
+     * @param Matcher $methodMatcher
+     * @param array   $interceptors
+     *
+     * @return void
+     */
+    protected function bindInterceptor(Matcher $classMatcher, Matcher $methodMatcher, array $interceptors)
+    {
+        $id = uniqid();
+        $this->pointcuts[$id] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
+    }
+    /**
+     * Install module
+     *
+     * @param AbstractModule $module
+     */
+    public function install(AbstractModule $module)
+    {
+        $module->activate($this->dependencyInjector);
+        $this->pointcuts = new ArrayObject(array_merge((array) $module->pointcuts, (array) $this->pointcuts));
+        $this->bindings = new ArrayObject(array_merge_recursive((array) $this->bindings, (array) $module->bindings));
+        if ($module->modules) {
+            $this->modules = array_merge($this->modules, array(), $module->modules);
+        }
+    }
+    /**
+     * Request injection
+     *
+     * Get instance with current module.
+     *
+     * @param string $class
+     *
+     * @return object
+     */
+    public function requestInjection($class)
+    {
+        $module = $this->dependencyInjector->getModule();
+        $this->dependencyInjector->setModule($this, false);
+        $instance = $this->dependencyInjector->getInstance($class);
+        if ($module instanceof AbstractModule) {
+            $this->dependencyInjector->setModule($module, false);
+        }
+        return $instance;
+    }
+    /**
+     * Return matched binder
+     *
+     * @param string $class
+     * @param Bind   $bind
+     *
+     * @return Bind $bind
+     */
+    public function __invoke($class, Bind $bind)
+    {
+        $bind->bind($class, (array) $this->pointcuts);
+        return $bind;
+    }
+    /**
+     * ArrayAccess::offsetExists
+     *
+     * @param string $offset
+     *
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->bindings[$offset]);
+    }
+    /**
+     * ArrayAccess::offsetGet
+     *
+     * @param string $offset
+     *
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return isset($this->bindings[$offset]) ? $this->bindings[$offset] : null;
+    }
+    /**
+     * ArrayAccess::offsetSet
+     *
+     * @param string $offset
+     * @param mixed  $value
+     *
+     * @throws Exception\ReadOnly
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new Exception\ReadOnly();
+    }
+    /**
+     * ArrayAccess::offsetUnset
+     *
+     * @param string $offset
+     *
+     * @throws Exception\ReadOnly
+     */
+    public function offsetUnset($offset)
+    {
+        throw new Exception\ReadOnly();
+    }
+    /**
+     * Return binding information
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $output = '';
+        foreach ((array) $this->bindings as $bind => $bindTo) {
+            foreach ($bindTo as $annotate => $to) {
+                $type = $to['to'][0];
+                $output .= $annotate !== '*' ? "bind('{$bind}')->annotatedWith('{$annotate}')" : "bind('{$bind}')";
+                if ($type === 'class') {
+                    $output .= '->to(\'' . $to['to'][1] . '\')';
+                }
+                if ($type === 'instance') {
+                    $instance = $to['to'][1];
+                    $type = gettype($instance);
+                    switch ($type) {
+                        case 'object':
+                            $instance = '(object) ' . get_class($instance);
+                            break;
+                        case 'array':
+                            $instance = '(array) ' . json_encode($instance);
+                            break;
+                        case 'string':
+                            $instance = "'{$instance}'";
+                            break;
+                        case 'boolean':
+                            $instance = '(bool) ' . ($instance ? 'true' : 'false');
+                            break;
+                        default:
+                            $instance = "({$type}) {$instance}";
+                    }
+                    $output .= '->toInstance(' . $instance . ')';
+                }
+                if ($type === 'provider') {
+                    $provider = $to['to'][1];
+                    $output .= '->toProvider(\'' . $provider . '\')';
+                }
+                $output .= PHP_EOL;
+            }
+        }
+        return $output;
+    }
+    /**
+     * Keep only bindings and pointcuts.
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        return array('bindings', 'pointcuts');
+    }
 }
 /**
  * This file is part of the Ray package.
@@ -1000,7 +1192,7 @@ class Injector implements InjectorInterface
         if (is_object($bound)) {
             return $bound;
         }
-        $isNotRecursive = debug_backtrace()[0]['file'] !== __FILE__;
+        $isNotRecursive = debug_backtrace()[0]['file'] !== '/Users/akihito/git/BEAR.Package/vendor/ray/di/src/Ray/Di/Injector.php';
         $isFirstLoadInThisSession = !in_array($class, $loaded);
         $useCache = $this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession;
         $loaded[] = $class;
@@ -1427,1313 +1619,6 @@ class Injector implements InjectorInterface
         $result = (string) $this->module;
         return $result;
     }
-}
-/**
- * 
- * This file is part of the Aura Project for PHP.
- * 
- * @package Aura.Di
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- */
-namespace Aura\Di;
-
-/**
- * 
- * Retains and unifies class constructor parameter values with external values.
- * 
- * @package Aura.Di
- * 
- */
-interface ConfigInterface
-{
-    /**
-     * 
-     * Fetches the unified constructor values and external values.
-     * 
-     * @param string $class The class name to fetch values for.
-     * 
-     * @return array An associative array of constructor values for the class.
-     * 
-     */
-    public function fetch($class);
-    /**
-     * 
-     * Gets the $params property.
-     * 
-     * @return \ArrayObject
-     * 
-     */
-    public function getParams();
-    /**
-     * 
-     * Gets the $setter property.
-     * 
-     * @return \ArrayObject
-     * 
-     */
-    public function getSetter();
-    /**
-     * 
-     * Gets a retained ReflectionClass; if not already retained, creates and
-     * retains one before returning it.
-     * 
-     * @param string $class The class to reflect on.
-     * 
-     * @return \ReflectionClass
-     * 
-     */
-    public function getReflect($class);
-}
-/**
- * This file is taken from Aura.Di(https://github.com/auraphp/Aura.Di) and modified.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * @see     https://github.com/auraphp/Aura.Di
- *
- */
-namespace Ray\Di;
-
-use Aura\Di\ConfigInterface;
-use ArrayObject;
-use ReflectionClass;
-use ReflectionMethod;
-/**
- * Retains and unifies class configurations.
- *
- * @package Ray.Di
- */
-class Config implements ConfigInterface
-{
-    /**
-     * Parameter index number
-     */
-    const INDEX_PARAM = 0;
-    /**
-     * Setter index number
-     */
-    const INDEX_SETTER = 1;
-    /**
-     * Definition index number
-     */
-    const INDEX_DEFINITION = 2;
-    /**
-     *
-     * Constructor params from external configuration in the form
-     * `$params[$class][$name] = $value`.
-     *
-     * @var \ArrayObject
-     *
-     */
-    protected $params;
-    /**
-     *
-     * An array of retained ReflectionClass instances; this is as much for
-     * the Forge as it is for Config.
-     *
-     * @var array
-     *
-     */
-    protected $reflect = array();
-    /**
-     *
-     * Setter definitions in the form of `$setter[$class][$method] = $value`.
-     *
-     * @var \ArrayObject
-     *
-     */
-    protected $setter;
-    /**
-     *
-     * Constructor params and setter definitions, unified across class
-     * defaults, inheritance hierarchies, and external configurations.
-     *
-     * @var array
-     *
-     */
-    protected $unified = array();
-    /**
-     * Method parameters
-     *
-     * $params[$class][$method] = [$param1varName, $param2varName ...]
-     *
-     * @var array
-     */
-    protected $methodReflect;
-    /**
-     * Class annotated definition. object life cycle, dependency injection.
-     *
-     * `$definition[$class]['Scope'] = $value`
-     * `$definition[$class]['PostConstruct'] = $value`
-     * `$definition[$class]['PreDestroy'] = $value`
-     * `$definition[$class]['Inject'] = $value`
-     *
-     * @var Definition
-     */
-    protected $definition;
-    /**
-     * Annotation scanner
-     *
-     * @var AnnotationInterface
-     */
-    protected $annotation;
-    /**
-     * Constructor
-     *
-     * @param AnnotationInterface $annotation
-     */
-    public function __construct(AnnotationInterface $annotation)
-    {
-        $this->reset();
-        $this->annotation = $annotation;
-    }
-    /**
-     *
-     * When cloning this object, reset the params and setter values (but
-     * leave the reflection values in place).
-     *
-     * @return void
-     *
-     */
-    public function __clone()
-    {
-        $this->reset();
-    }
-    /**
-     *
-     * Resets the params and setter values.
-     *
-     * @return void
-     *
-     */
-    protected function reset()
-    {
-        $this->params = new ArrayObject();
-        $this->params['*'] = array();
-        $this->setter = new ArrayObject();
-        $this->setter['*'] = array();
-        $this->definition = new Definition(array());
-        $this->definition['*'] = array();
-        $this->methodReflect = new ArrayObject();
-    }
-    /**
-     *
-     * Gets the $params property.
-     *
-     * @return \ArrayObject
-     *
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-    /**
-     *
-     * Gets the $setter property.
-     *
-     * @return \ArrayObject
-     *
-     */
-    public function getSetter()
-    {
-        return $this->setter;
-    }
-    /**
-     *
-     * Gets the $definition property.
-     *
-     * @return Definition
-     *
-     */
-    public function getDefinition()
-    {
-        return $this->definition;
-    }
-    /**
-     *
-     * Returns a \ReflectionClass for a named class.
-     *
-     * @param string $class The class to reflect on.
-     *
-     * @return \ReflectionClass
-     *
-     */
-    public function getReflect($class)
-    {
-        if (!isset($this->reflect[$class])) {
-            $this->reflect[$class] = new ReflectionClass($class);
-        }
-        return $this->reflect[$class];
-    }
-    /**
-     *
-     * Fetches the unified constructor params and setter values for a class.
-     *
-     * @param string $class The class name to fetch values for.
-     *
-     * @return array An array with two elements; 0 is the constructor values
-     * for the class, and 1 is the setter methods and values for the class.
-     * 2 is the class definition.
-     */
-    public function fetch($class)
-    {
-        // have values already been unified for this class?
-        if (isset($this->unified[$class])) {
-            return $this->unified[$class];
-        }
-        // fetch the values for parents so we can inherit them
-        $parentClass = get_parent_class($class);
-        if ($parentClass) {
-            // parent class values
-            list($parent_params, $parent_setter, $parent_definition) = $this->fetch($parentClass);
-        } else {
-            // no more parents; get top-level values for all classes
-            $parent_params = $this->params['*'];
-            $parent_setter = $this->setter['*'];
-            // class annotated definition
-            $parent_definition = $this->annotation->getDefinition($class);
-        }
-        // stores the unified config and setter values
-        $unified_params = array();
-        // reflect on the class
-        $classReflection = $this->getReflect($class);
-        // does it have a constructor?
-        $constructorReflection = $classReflection->getConstructor();
-        if ($constructorReflection) {
-            // reflect on what params to pass, in which order
-            $params = $constructorReflection->getParameters();
-            foreach ($params as $param) {
-                $name = $param->name;
-                $explicit = $this->params->offsetExists($class) && isset($this->params[$class][$name]);
-                if ($explicit) {
-                    // use the explicit value for this class
-                    $unified_params[$name] = $this->params[$class][$name];
-                } elseif (isset($parent_params[$name])) {
-                    // use the implicit value for the parent class
-                    $unified_params[$name] = $parent_params[$name];
-                } elseif ($param->isDefaultValueAvailable()) {
-                    // use the external value from the constructor
-                    $unified_params[$name] = $param->getDefaultValue();
-                } else {
-                    // no value, use a null placeholder
-                    $unified_params[$name] = null;
-                }
-            }
-        }
-        // merge the setters
-        if (isset($this->setter[$class])) {
-            $unified_setter = array_merge($parent_setter, $this->setter[$class]);
-        } else {
-            $unified_setter = $parent_setter;
-        }
-        // merge the definitions
-        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
-        $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
-        $this->definition[$class] = $unified_definition;
-        // done, return the unified values
-        $this->unified[$class][0] = $unified_params;
-        $this->unified[$class][1] = $unified_setter;
-        $this->unified[$class][2] = $unified_definition;
-        return $this->unified[$class];
-    }
-    /**
-     *
-     * Returns a \ReflectionClass for a named class.
-     *
-     * @param string $class  The class to reflect on
-     * @param string $method The method to reflect on
-     *
-     * @return \ReflectionMethod
-     *
-     */
-    public function getMethodReflect($class, $method)
-    {
-        if (is_object($class)) {
-            $class = get_class($class);
-        }
-        if (!isset($this->reflect[$class]) || !is_array($this->reflect[$class])) {
-            $methodRef = new ReflectionMethod($class, $method);
-            $this->methodReflect[$class][$method] = $methodRef;
-        }
-        return $this->methodReflect[$class][$method];
-    }
-    /**
-     * Remove reflection property
-     *
-     * @return array
-     */
-    public function __sleep()
-    {
-        return array('params', 'setter', 'unified', 'definition', 'annotation');
-    }
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di;
-
-use ArrayObject;
-/**
- * Retains target class inject definition.
- *
- * @package Ray.Di
- */
-class Definition extends ArrayObject
-{
-    /**
-     * Post construct annotation
-     *
-     * @var string
-     */
-    const POST_CONSTRUCT = 'PostConstruct';
-    /**
-     * PreDestroy annotation
-     *
-     * @var string
-     */
-    const PRE_DESTROY = 'PreDestroy';
-    /**
-     * Inject annotation
-     *
-     * @var string
-     */
-    const INJECT = 'Inject';
-    /**
-     * Provide annotation
-     *
-     * @var string
-     */
-    const PROVIDE = 'Provide';
-    /**
-     * Scope annotation
-     *
-     * @var string
-     */
-    const SCOPE = 'Scope';
-    /**
-     * ImplementedBy annotation (Just-in-time Binding)
-     *
-     * @var string
-     */
-    const IMPLEMENTEDBY = 'ImplementedBy';
-    /**
-     * ProvidedBy annotation (Just-in-time Binding)
-     *
-     * @var string
-     */
-    const PROVIDEDBY = 'ProvidedBy';
-    /**
-     * Named annotation
-     *
-     * @var string
-     */
-    const NAMED = 'Named';
-    /**
-     * PreDestroy annotation
-     *
-     * @var string
-     */
-    const NAME_UNSPECIFIED = '*';
-    /**
-     * Setter inject definition
-     *
-     * @var string
-     */
-    const INJECT_SETTER = 'setter';
-    /**
-     * Parameter position
-     *
-     * @var string
-     */
-    const PARAM_POS = 'pos';
-    /**
-     * Typehint
-     *
-     * @var string
-     */
-    const PARAM_TYPEHINT = 'typehint';
-    /**
-     * Param typehint default concrete class / provider class
-     *
-     * @var array [$typehintMethod, $className>]
-     */
-    const PARAM_TYPEHINT_BY = 'typehint_by';
-    /**
-     * Param typehint default concrete class
-     *
-     * @var string
-     */
-    const PARAM_TYPEHINT_METHOD_IMPLEMETEDBY = 'implementedby';
-    /**
-     * Param typehint default provider
-     *
-     * @var string
-     */
-    const PARAM_TYPEHINT_METHOD_PROVIDEDBY = 'providedby';
-    /**
-     * Param var name
-     *
-     * @var string
-     */
-    const PARAM_NAME = 'name';
-    /**
-     * Param named annotation
-     *
-     * @var string
-     */
-    const PARAM_ANNOTATE = 'annotate';
-    /**
-     * Aspect annotation
-     *
-     * @var string
-     */
-    const ASPECT = 'Aspect';
-    /**
-     * User defined interceptor annotation
-     *
-     * @var string
-     */
-    const USER = 'user';
-    /**
-     * OPTIONS
-     *
-     * @var string
-     */
-    const OPTIONS = 'options';
-    /**
-     * BINDING
-     *
-     * @var string
-     */
-    const BINDING = 'binding';
-    /**
-     * BY_METHOD
-     *
-     * @var string
-     */
-    const BY_METHOD = 'by_method';
-    /**
-     * BY_NAME
-     *
-     * @var string
-     */
-    const BY_NAME = 'by_name';
-    /**
-     * Optional Inject
-     *
-     * @var string
-     */
-    const OPTIONAL = 'optional';
-    /**
-     * Definition default
-     *
-     * @var array
-     */
-    private $defaults = array(self::SCOPE => Scope::PROTOTYPE, self::POST_CONSTRUCT => null, self::PRE_DESTROY => null, self::INJECT => array(), self::IMPLEMENTEDBY => array(), self::USER => array(), self::OPTIONAL => array());
-    /**
-     * Constructor
-     *
-     * @param array $defaults default definition set
-     */
-    public function __construct(array $defaults = null)
-    {
-        $defaults = $defaults ?: $this->defaults;
-        parent::__construct($defaults);
-    }
-    /**
-     * Return is-defined
-     *
-     * @return bool
-     */
-    public function hasDefinition()
-    {
-        $hasDefinition = $this->getArrayCopy() !== $this->defaults;
-        return $hasDefinition;
-    }
-    /**
-     * Set user annotation by name
-     *
-     * @param string $annotationName
-     * @param string $methodName
-     *
-     * @return void
-     */
-    public function setUserAnnotationMethodName($annotationName, $methodName)
-    {
-        $this[self::BY_NAME][$annotationName][] = $methodName;
-    }
-    /**
-     * Return user annotation by annotation name
-     *
-     * @param $annotationName
-     *
-     * @return array [$methodName, $methodAnnotation]
-     */
-    public function getUserAnnotationMethodName($annotationName)
-    {
-        $hasUserAnnotation = isset($this[self::BY_NAME]) && isset($this[self::BY_NAME][$annotationName]);
-        $result = $hasUserAnnotation ? $this[Definition::BY_NAME][$annotationName] : null;
-        return $result;
-    }
-    /**
-     * setUserAnnotationByMethod
-     *
-     * @param string $annotationName
-     * @param string $methodName
-     * @param object $methodAnnotation
-     *
-     * @return void
-     */
-    public function setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation)
-    {
-        $this[self::BY_METHOD][$methodName][$annotationName][] = $methodAnnotation;
-    }
-    /**
-     * Return user annotation by method name
-     *
-     * @param string $methodName
-     *
-     * @return array [$annotationName, $methodAnnotation][]
-     */
-    public function getUserAnnotationByMethod($methodName)
-    {
-        $result = isset($this[self::BY_METHOD]) && isset($this[self::BY_METHOD][$methodName]) ? $this[self::BY_METHOD][$methodName] : null;
-        return $result;
-    }
-    /**
-     * Return class annotation definition information.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return var_export($this, true);
-    }
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di;
-
-/**
- * Scope Definition
- *
- * @package Ray.Di
- */
-class Scope
-{
-    /**
-     * Singleton scope
-     *
-     * @var string
-     */
-    const SINGLETON = 'singleton';
-    /**
-     * Prototype scope
-     *
-     * @var string
-     */
-    const PROTOTYPE = 'prototype';
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Di;
-
-/**
- * Annotation interface
- *
- * @package Ray.Di
- */
-interface Annotation
-{
-    
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Di;
-
-/**
- * Inject
- *
- * @Annotation
- * @Target("METHOD")
- *
- * @package    Ray.Di
- * @subpackage Annotation
- */
-final class Inject implements Annotation
-{
-    /**
-     * Optional ?
-     *
-     * @var bool
-     */
-    public $optional = false;
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Di;
-
-/**
- * Named
- *
- * @Annotation
- * @Target("METHOD")
- *
- * @package    Ray.Di
- * @subpackage Annotation
- */
-final class Named implements Annotation
-{
-    /**
-     * Name
-     *
-     * @var string
-     */
-    public $value;
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Di;
-
-/**
- * PostConstruct
- *
- * @Annotation
- * @Target("METHOD")
- *
- * @package    Ray.Di
- * @subpackage Annotation
- */
-final class PostConstruct implements Annotation
-{
-    
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di;
-
-/**
- * Annotation scanner.
- *
- * @package Ray.Di
- */
-interface AnnotationInterface
-{
-    /**
-     * Get class definition by annotation
-     *
-     * @param string $class
-     *
-     * @return Definition
-     */
-    public function getDefinition($class);
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di;
-
-use Doctrine\Common\Annotations\Reader;
-use ReflectionClass;
-use ReflectionMethod;
-/**
- * Annotation scanner
- *
- * @package Ray.Di
- */
-class Annotation implements AnnotationInterface
-{
-    /**
-     * User defined annotation
-     *
-     * $definition[Annotation::USER][$methodName] = [$annotation1, $annotation2 .. ]
-     *
-     * @var array
-     */
-    const USER = 'user';
-    /**
-     * Class definition (new)
-     *
-     * @var Definition
-     */
-    protected $newDefinition;
-    /**
-     * Class definition
-     *
-     * @var Definition
-     */
-    protected $definition;
-    /**
-     * Class definitions for in-memory cache
-     *
-     * @var Definition[]
-     */
-    protected $definitions = array();
-    /**
-     * Annotation reader
-     *
-     * @var \Doctrine\Common\Annotations\Reader;
-     */
-    protected $reader;
-    /**
-     * Constructor
-     *
-     * @param Definition $definition
-     * @param Reader     $reader
-     */
-    public function __construct(Definition $definition, Reader $reader)
-    {
-        $this->newDefinition = $definition;
-        $this->reader = $reader;
-    }
-    /**
-     * Return class definition by annotation
-     *
-     * @param string $className
-     *
-     * @return array
-     * @throws Exception\NotReadable
-     */
-    public function getDefinition($className)
-    {
-        if (isset($this->definitions[$className])) {
-            return $this->definitions[$className];
-        }
-        $this->definition = clone $this->newDefinition;
-        try {
-            $class = new ReflectionClass($className);
-        } catch (\ReflectionException $e) {
-            throw new Exception\NotReadable($className, 0, $e);
-        }
-        $annotations = $this->reader->getClassAnnotations($class);
-        $classDefinition = $this->getDefinitionFormat($annotations);
-        foreach ($classDefinition as $key => $value) {
-            $this->definition[$key] = $value;
-        }
-        // Method Annotation
-        $this->setMethodDefinition($class);
-        $this->definitions[$className] = $this->definition;
-        return $this->definition;
-    }
-    /**
-     * Return definition format from annotations
-     *
-     * @param array $annotations
-     * @param bool  $returnValue
-     *
-     * @return array [$annotation => $value][]
-     */
-    private function getDefinitionFormat(array $annotations, $returnValue = true)
-    {
-        $result = array();
-        foreach ($annotations as $annotation) {
-            $annotationName = $this->getAnnotationName($annotation);
-            $value = $annotation;
-            if ($returnValue === true) {
-                $value = isset($annotation->value) ? $annotation->value : null;
-            }
-            $result[$annotationName] = $value;
-        }
-        return $result;
-    }
-    /**
-     * Set method definition
-     *
-     * @param ReflectionClass $class
-     *
-     * @return void
-     */
-    private function setMethodDefinition(ReflectionClass $class)
-    {
-        $methods = $class->getMethods();
-        foreach ($methods as $method) {
-            $annotations = $this->reader->getMethodAnnotations($method);
-            $methodAnnotation = $this->getDefinitionFormat($annotations, false);
-            foreach ($methodAnnotation as $key => $value) {
-                $this->setAnnotationName($key, $method, $methodAnnotation);
-            }
-            // user land annotation by method
-            foreach ($annotations as $annotation) {
-                $annotationName = $this->getAnnotationName($annotation);
-                $this->definition->setUserAnnotationByMethod($annotationName, $method->name, $annotation);
-            }
-        }
-    }
-    /**
-     * Return annotation name from annotation class name
-     *
-     * @param $annotation
-     *
-     * @return mixed
-     */
-    private function getAnnotationName($annotation)
-    {
-        $classPath = explode('\\', get_class($annotation));
-        $annotationName = array_pop($classPath);
-        return $annotationName;
-    }
-    /**
-     * Set annotation key-value for DI
-     *
-     * @param string           $name        annotation name
-     * @param ReflectionMethod $method
-     * @param array            $annotations
-     *
-     * @return void
-     * @throws Exception\MultipleAnnotationNotAllowed
-     */
-    private function setAnnotationName($name, ReflectionMethod $method, array $annotations)
-    {
-        if ($name === Definition::POST_CONSTRUCT || $name == Definition::PRE_DESTROY) {
-            if (isset($this->definition[$name]) && $this->definition[$name]) {
-                $msg = "@{$name} in " . $method->getDeclaringClass()->name;
-                throw new Exception\MultipleAnnotationNotAllowed($msg);
-            } else {
-                $this->definition[$name] = $method->name;
-            }
-            return;
-        }
-        if ($name === Definition::INJECT) {
-            $this->setSetterInjectDefinition($annotations, $method);
-            return;
-        }
-        if ($name === Definition::NAMED) {
-            return;
-        }
-        // user land annotation by name
-        $this->definition->setUserAnnotationMethodName($name, $method->name);
-    }
-    /**
-     * Set setter inject definition
-     *
-     * @param array            $methodAnnotation
-     * @param ReflectionMethod $method
-     *
-     * @return void
-     */
-    private function setSetterInjectDefinition($methodAnnotation, ReflectionMethod $method)
-    {
-        $nameParameter = false;
-        if (isset($methodAnnotation[Definition::NAMED])) {
-            $named = $methodAnnotation[Definition::NAMED];
-            $nameParameter = $named->value;
-        }
-        $named = $nameParameter !== false ? $this->getNamed($nameParameter) : array();
-        $parameters = $method->getParameters();
-        $paramsInfo = array();
-        foreach ($parameters as $parameter) {
-            /** @var $parameter \ReflectionParameter */
-            $class = $parameter->getClass();
-            $typehint = $class ? $class->getName() : '';
-            $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : array();
-            $pos = $parameter->getPosition();
-            if (is_string($named)) {
-                $name = $named;
-            } elseif (isset($named[$parameter->name])) {
-                $name = $named[$parameter->name];
-            } else {
-                $name = Definition::NAME_UNSPECIFIED;
-            }
-            $optionalInject = $methodAnnotation[Definition::INJECT]->optional;
-            $paramsInfo[] = array(Definition::PARAM_POS => $pos, Definition::PARAM_TYPEHINT => $typehint, Definition::PARAM_NAME => $parameter->name, Definition::PARAM_ANNOTATE => $name, Definition::PARAM_TYPEHINT_BY => $typehintBy, Definition::OPTIONAL => $optionalInject);
-        }
-        $paramInfo[$method->name] = $paramsInfo;
-        $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
-    }
-    /**
-     * Get default injection by typehint
-     *
-     * this works as default bindings.
-     *
-     * @param string $typehint
-     *
-     * @return array
-     */
-    private function getTypeHintDefaultInjection($typehint)
-    {
-        static $definition = array();
-        if (isset($definition[$typehint])) {
-            $hintDef = $definition[$typehint];
-        } else {
-            //$annotations = $this->docParser->parse($doc, 'class ' . $typehint);
-            $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
-            $hintDef = $this->getDefinitionFormat($annotations);
-            $definition[$typehint] = $hintDef;
-        }
-        // @ImplementBy as default
-        if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
-            $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]);
-            return $result;
-        }
-        // @ProvidedBy as default
-        if (isset($hintDef[Definition::PROVIDEDBY])) {
-            $result = array(Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]);
-            return $result;
-        }
-        // this typehint is class, not a interface.
-        if (class_exists($typehint)) {
-            $class = new ReflectionClass($typehint);
-            if ($class->isAbstract() === false) {
-                $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint);
-                return $result;
-            }
-        }
-        return array();
-    }
-    /**
-     * Get Named
-     *
-     * @param string $nameParameter "value" or "key1=value1,ke2=value2"
-     *
-     * @return array [$paramName => $named][]
-     * @throws Exception\Named
-     */
-    private function getNamed($nameParameter)
-    {
-        // single annotation @Named($annotation)
-        if (preg_match('/^[a-zA-Z0-9_]+$/', $nameParameter)) {
-            return $nameParameter;
-        }
-        // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
-        // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
-        preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
-        if ($matches[0] === array()) {
-            throw new Exception\Named();
-        }
-        $result = array();
-        $count = count($matches[0]);
-        for ($i = 0; $i < $count; $i++) {
-            $result[$matches[1][$i]] = $matches[2][$i];
-        }
-        return $result;
-    }
-}
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
- */
-namespace Doctrine\Common;
-
-/**
- * Base class for writing simple lexers, i.e. for creating small DSLs.
- *
- * @since   2.0
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
- * @todo Rename: AbstractLexer
- */
-abstract class Lexer
-{
-    /**
-     * @var array Array of scanned tokens
-     */
-    private $tokens = array();
-    /**
-     * @var integer Current lexer position in input string
-     */
-    private $position = 0;
-    /**
-     * @var integer Current peek of current lexer position
-     */
-    private $peek = 0;
-    /**
-     * @var array The next token in the input.
-     */
-    public $lookahead;
-    /**
-     * @var array The last matched/seen token.
-     */
-    public $token;
-    /**
-     * Sets the input data to be tokenized.
-     *
-     * The Lexer is immediately reset and the new input tokenized.
-     * Any unprocessed tokens from any previous input are lost.
-     *
-     * @param string $input The input to be tokenized.
-     */
-    public function setInput($input)
-    {
-        $this->tokens = array();
-        $this->reset();
-        $this->scan($input);
-    }
-    /**
-     * Resets the lexer.
-     */
-    public function reset()
-    {
-        $this->lookahead = null;
-        $this->token = null;
-        $this->peek = 0;
-        $this->position = 0;
-    }
-    /**
-     * Resets the peek pointer to 0.
-     */
-    public function resetPeek()
-    {
-        $this->peek = 0;
-    }
-    /**
-     * Resets the lexer position on the input to the given position.
-     *
-     * @param integer $position Position to place the lexical scanner
-     */
-    public function resetPosition($position = 0)
-    {
-        $this->position = $position;
-    }
-    /**
-     * Checks whether a given token matches the current lookahead.
-     *
-     * @param integer|string $token
-     * @return boolean
-     */
-    public function isNextToken($token)
-    {
-        return null !== $this->lookahead && $this->lookahead['type'] === $token;
-    }
-    /**
-     * Checks whether any of the given tokens matches the current lookahead
-     *
-     * @param array $tokens
-     * @return boolean
-     */
-    public function isNextTokenAny(array $tokens)
-    {
-        return null !== $this->lookahead && in_array($this->lookahead['type'], $tokens, true);
-    }
-    /**
-     * Moves to the next token in the input string.
-     *
-     * A token is an associative array containing three items:
-     *  - 'value'    : the string value of the token in the input string
-     *  - 'type'     : the type of the token (identifier, numeric, string, input
-     *                 parameter, none)
-     *  - 'position' : the position of the token in the input string
-     *
-     * @return array|null the next token; null if there is no more tokens left
-     */
-    public function moveNext()
-    {
-        $this->peek = 0;
-        $this->token = $this->lookahead;
-        $this->lookahead = isset($this->tokens[$this->position]) ? $this->tokens[$this->position++] : null;
-        return $this->lookahead !== null;
-    }
-    /**
-     * Tells the lexer to skip input tokens until it sees a token with the given value.
-     *
-     * @param string $type The token type to skip until.
-     */
-    public function skipUntil($type)
-    {
-        while ($this->lookahead !== null && $this->lookahead['type'] !== $type) {
-            $this->moveNext();
-        }
-    }
-    /**
-     * Checks if given value is identical to the given token
-     *
-     * @param mixed $value
-     * @param integer $token
-     * @return boolean
-     */
-    public function isA($value, $token)
-    {
-        return $this->getType($value) === $token;
-    }
-    /**
-     * Moves the lookahead token forward.
-     *
-     * @return array | null The next token or NULL if there are no more tokens ahead.
-     */
-    public function peek()
-    {
-        if (isset($this->tokens[$this->position + $this->peek])) {
-            return $this->tokens[$this->position + $this->peek++];
-        } else {
-            return null;
-        }
-    }
-    /**
-     * Peeks at the next token, returns it and immediately resets the peek.
-     *
-     * @return array|null The next token or NULL if there are no more tokens ahead.
-     */
-    public function glimpse()
-    {
-        $peek = $this->peek();
-        $this->peek = 0;
-        return $peek;
-    }
-    /**
-     * Scans the input string for tokens.
-     *
-     * @param string $input a query string
-     */
-    protected function scan($input)
-    {
-        static $regex;
-        if (!isset($regex)) {
-            $regex = '/(' . implode(')|(', $this->getCatchablePatterns()) . ')|' . implode('|', $this->getNonCatchablePatterns()) . '/i';
-        }
-        $flags = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
-        $matches = preg_split($regex, $input, -1, $flags);
-        foreach ($matches as $match) {
-            // Must remain before 'value' assignment since it can change content
-            $type = $this->getType($match[0]);
-            $this->tokens[] = array('value' => $match[0], 'type' => $type, 'position' => $match[1]);
-        }
-    }
-    /**
-     * Gets the literal for a given token.
-     *
-     * @param integer $token
-     * @return string
-     */
-    public function getLiteral($token)
-    {
-        $className = get_class($this);
-        $reflClass = new \ReflectionClass($className);
-        $constants = $reflClass->getConstants();
-        foreach ($constants as $name => $value) {
-            if ($value === $token) {
-                return $className . '::' . $name;
-            }
-        }
-        return $token;
-    }
-    /**
-     * Lexical catchable patterns.
-     *
-     * @return array
-     */
-    protected abstract function getCatchablePatterns();
-    /**
-     * Lexical non-catchable patterns.
-     *
-     * @return array
-     */
-    protected abstract function getNonCatchablePatterns();
-    /**
-     * Retrieve token type. Also processes the token value if necessary.
-     *
-     * @param string $value
-     * @return integer
-     */
-    protected abstract function getType(&$value);
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Di;
-
-/**
- * Default implementation
- *
- * @Annotation
- * @Target("CLASS")
- *
- * @package    Ray.Di
- * @subpackage Annotation
- */
-final class ImplementedBy implements Annotation
-{
-    /**
-     * Default class
-     *
-     * @var string
-     */
-    public $value;
-}
-/**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Di;
-
-/**
- * Scope
- *
- * @Annotation
- * @Target("CLASS")
- *
- * @package    Ray.Di
- * @subpackage Annotation
- */
-final class Scope implements Annotation
-{
-    /**
-     * Singleton
-     *
-     * @var string
-     */
-    const SINGLETON = 'singleton';
-    /**
-     * Prototype
-     *
-     * @var string
-     */
-    const PROTOTYPE = 'prototype';
-    /**
-     * Object lifecycle
-     *
-     * @var string
-     */
-    public $value = self::PROTOTYPE;
 }
 /**
  * 
@@ -3419,308 +2304,344 @@ class Forge extends AuraForge implements ForgeInterface
     
 }
 /**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
+ * 
+ * This file is part of the Aura Project for PHP.
+ * 
+ * @package Aura.Di
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
  */
-namespace BEAR\Resource;
+namespace Aura\Di;
 
-use Ray\Di\Di\ImplementedBy;
 /**
- * Interface for resource factory
- *
- * @package BEAR.Resource
- *
- * @ImplementedBy("Factory")
+ * 
+ * Retains and unifies class constructor parameter values with external values.
+ * 
+ * @package Aura.Di
+ * 
  */
-interface FactoryInterface
+interface ConfigInterface
 {
     /**
-     * Return new resource object instance
-     *
-     * @param string $uri resource URI
-     *
-     * @return \BEAR\Resource\ObjectInterface;
+     * 
+     * Fetches the unified constructor values and external values.
+     * 
+     * @param string $class The class name to fetch values for.
+     * 
+     * @return array An associative array of constructor values for the class.
+     * 
      */
-    public function newInstance($uri);
+    public function fetch($class);
+    /**
+     * 
+     * Gets the $params property.
+     * 
+     * @return \ArrayObject
+     * 
+     */
+    public function getParams();
+    /**
+     * 
+     * Gets the $setter property.
+     * 
+     * @return \ArrayObject
+     * 
+     */
+    public function getSetter();
+    /**
+     * 
+     * Gets a retained ReflectionClass; if not already retained, creates and
+     * retains one before returning it.
+     * 
+     * @param string $class The class to reflect on.
+     * 
+     * @return \ReflectionClass
+     * 
+     */
+    public function getReflect($class);
 }
 /**
- * This file is part of the BEAR.Resource package
+ * This file is taken from Aura.Di(https://github.com/auraphp/Aura.Di) and modified.
  *
- * @package BEAR.Resource
+ * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
+ * @see     https://github.com/auraphp/Aura.Di
+ *
  */
-namespace BEAR\Resource;
+namespace Ray\Di;
 
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Scope;
-/**
- * Resource object factory.
- *
- * @package BEAR.Resource
- *
- * @Scope("singleton")
- */
-class Factory implements FactoryInterface
-{
-    /**
-     * Resource adapter biding config
-     *
-     * @var SchemeCollection
-     */
-    private $scheme = array();
-    /**
-     * Constructor
-     *
-     * @param SchemeCollection  $scheme
-     *
-     * @Inject
-     */
-    public function __construct(SchemeCollection $scheme)
-    {
-        $this->scheme = $scheme;
-    }
-    /**
-     * Set scheme collection
-     *
-     * @param SchemeCollection $scheme
-     *
-     * @Inject(optional = true)
-     */
-    public function setSchemeCollection(SchemeCollection $scheme)
-    {
-        $this->scheme = $scheme;
-    }
-    /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.FactoryInterface::newInstance()
-     * @throws Exception\Scheme
-     */
-    public function newInstance($uri)
-    {
-        $parsedUrl = parse_url($uri);
-        if (!(isset($parsedUrl['scheme']) && isset($parsedUrl['scheme']))) {
-            throw new Exception\Uri();
-        }
-        $scheme = $parsedUrl['scheme'];
-        $host = $parsedUrl['host'];
-        if (!isset($this->scheme[$scheme])) {
-            throw new Exception\Scheme($uri);
-        }
-        if (!isset($this->scheme[$scheme][$host])) {
-            if (!isset($this->scheme[$scheme]['*'])) {
-                throw new Exception\Scheme($uri);
-            }
-            $host = '*';
-        }
-        try {
-            $adapter = $this->scheme[$scheme][$host];
-            if ($adapter instanceof ProviderInterface) {
-                $adapter = $adapter->get($uri);
-            }
-        } catch (\Exception $e) {
-            throw new Exception\ResourceNotFound($uri, 0, $e);
-        }
-        $adapter->uri = $uri;
-        return $adapter;
-    }
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-use BEAR\Resource\Adapter\AdapterInterface;
+use Aura\Di\ConfigInterface;
 use ArrayObject;
+use ReflectionClass;
+use ReflectionMethod;
 /**
- * Resource scheme collection
+ * Retains and unifies class configurations.
  *
- * @package BEAR.Resource
+ * @package Ray.Di
  */
-class SchemeCollection extends ArrayObject
+class Config implements ConfigInterface
 {
     /**
-     * Scheme
-     *
-     * @var string
+     * Parameter index number
      */
-    private $scheme;
+    const INDEX_PARAM = 0;
     /**
-     * Host
-     *
-     * @var string
+     * Setter index number
      */
-    private $host;
+    const INDEX_SETTER = 1;
     /**
-     * Set scheme
-     *
-     * @param $scheme
-     *
-     * @return SchemeCollection
+     * Definition index number
      */
-    public function scheme($scheme)
-    {
-        $this->scheme = $scheme;
-        return $this;
-    }
+    const INDEX_DEFINITION = 2;
     /**
-     * Set host
      *
-     * @param $host
+     * Constructor params from external configuration in the form
+     * `$params[$class][$name] = $value`.
      *
-     * @return SchemeCollection
+     * @var \ArrayObject
+     *
      */
-    public function host($host)
-    {
-        $this->host = $host;
-        return $this;
-    }
+    protected $params;
     /**
-     * Set resource adapter
      *
-     * @param AdapterInterface $adapter
+     * An array of retained ReflectionClass instances; this is as much for
+     * the Forge as it is for Config.
      *
-     * @return SchemeCollection
+     * @var array
+     *
      */
-    public function toAdapter(AdapterInterface $adapter)
-    {
-        $this[$this->scheme][$this->host] = $adapter;
-        $this->scheme = $this->host = null;
-        return $this;
-    }
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-/**
- * Resource object marker interface
- *
- * @package BEAR.Resource
- */
-interface ObjectInterface
-{
-    
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-/**
- * Interface for resource adapter provider.
- *
- * @package BEAR.Resource
- */
-interface ProviderInterface
-{
+    protected $reflect = array();
     /**
-     * Get resource adapter
      *
-     * @param string $uri
-     */
-    public function get($uri);
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource\Adapter;
-
-/**
- * Interface for resource adapter
- */
-interface AdapterInterface
-{
-    
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource\Adapter;
-
-use BEAR\Resource\ObjectInterface;
-use BEAR\Resource\ProviderInterface;
-use Ray\Di\InjectorInterface;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Scope;
-use RuntimeException;
-/**
- * App resource (app:://self/path/to/resource)
- *
- * @package BEAR.Resource
- *
- * @Scope("prototype")
- */
-class App implements ObjectInterface, ProviderInterface, AdapterInterface
-{
-    /**
-     * Application dependency injector
+     * Setter definitions in the form of `$setter[$class][$method] = $value`.
      *
-     * @var \Ray\Di\Injector
+     * @var \ArrayObject
+     *
      */
-    private $injector;
+    protected $setter;
     /**
-     * Resource adapter namespace
+     *
+     * Constructor params and setter definitions, unified across class
+     * defaults, inheritance hierarchies, and external configurations.
+     *
+     * @var array
+     *
+     */
+    protected $unified = array();
+    /**
+     * Method parameters
+     *
+     * $params[$class][$method] = [$param1varName, $param2varName ...]
      *
      * @var array
      */
-    private $namespace;
+    protected $methodReflect;
     /**
-     * Resource adapter path
+     * Class annotated definition. object life cycle, dependency injection.
      *
-     * @var array
+     * `$definition[$class]['Scope'] = $value`
+     * `$definition[$class]['PostConstruct'] = $value`
+     * `$definition[$class]['PreDestroy'] = $value`
+     * `$definition[$class]['Inject'] = $value`
+     *
+     * @var Definition
      */
-    private $path;
+    protected $definition;
+    /**
+     * Annotation scanner
+     *
+     * @var AnnotationInterface
+     */
+    protected $annotation;
     /**
      * Constructor
      *
-     * @param InjectorInterface $injector  Application dependency injector
-     * @param string            $namespace Resource adapter namespace
-     * @param string            $path      Resource adapter path
-     *
-     * @Inject
-     * @throws RuntimeException
+     * @param AnnotationInterface $annotation
      */
-    public function __construct(InjectorInterface $injector, $namespace, $path)
+    public function __construct(AnnotationInterface $annotation)
     {
-        if (!is_string($namespace)) {
-            throw new RuntimeException('namespace not string');
-        }
-        $this->injector = $injector;
-        $this->namespace = $namespace;
-        $this->path = $path;
+        $this->reset();
+        $this->annotation = $annotation;
     }
     /**
-     * (non-PHPdoc)
      *
-     * @see    BEAR\Resource.ProviderInterface::get()
+     * When cloning this object, reset the params and setter values (but
+     * leave the reflection values in place).
+     *
+     * @return void
+     *
      */
-    public function get($uri)
+    public function __clone()
     {
-        $parsedUrl = parse_url($uri);
-        $path = str_replace('/', ' ', $parsedUrl['path']);
-        $path = ucwords($path);
-        $path = str_replace(' ', '\\', $path);
-        $className = "{$this->namespace}\\{$this->path}{$path}";
-        $instance = $this->injector->getInstance($className);
-        return $instance;
+        $this->reset();
+    }
+    /**
+     *
+     * Resets the params and setter values.
+     *
+     * @return void
+     *
+     */
+    protected function reset()
+    {
+        $this->params = new ArrayObject();
+        $this->params['*'] = array();
+        $this->setter = new ArrayObject();
+        $this->setter['*'] = array();
+        $this->definition = new Definition(array());
+        $this->definition['*'] = array();
+        $this->methodReflect = new ArrayObject();
+    }
+    /**
+     *
+     * Gets the $params property.
+     *
+     * @return \ArrayObject
+     *
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+    /**
+     *
+     * Gets the $setter property.
+     *
+     * @return \ArrayObject
+     *
+     */
+    public function getSetter()
+    {
+        return $this->setter;
+    }
+    /**
+     *
+     * Gets the $definition property.
+     *
+     * @return Definition
+     *
+     */
+    public function getDefinition()
+    {
+        return $this->definition;
+    }
+    /**
+     *
+     * Returns a \ReflectionClass for a named class.
+     *
+     * @param string $class The class to reflect on.
+     *
+     * @return \ReflectionClass
+     *
+     */
+    public function getReflect($class)
+    {
+        if (!isset($this->reflect[$class])) {
+            $this->reflect[$class] = new ReflectionClass($class);
+        }
+        return $this->reflect[$class];
+    }
+    /**
+     *
+     * Fetches the unified constructor params and setter values for a class.
+     *
+     * @param string $class The class name to fetch values for.
+     *
+     * @return array An array with two elements; 0 is the constructor values
+     * for the class, and 1 is the setter methods and values for the class.
+     * 2 is the class definition.
+     */
+    public function fetch($class)
+    {
+        // have values already been unified for this class?
+        if (isset($this->unified[$class])) {
+            return $this->unified[$class];
+        }
+        // fetch the values for parents so we can inherit them
+        $parentClass = get_parent_class($class);
+        if ($parentClass) {
+            // parent class values
+            list($parent_params, $parent_setter, $parent_definition) = $this->fetch($parentClass);
+        } else {
+            // no more parents; get top-level values for all classes
+            $parent_params = $this->params['*'];
+            $parent_setter = $this->setter['*'];
+            // class annotated definition
+            $parent_definition = $this->annotation->getDefinition($class);
+        }
+        // stores the unified config and setter values
+        $unified_params = array();
+        // reflect on the class
+        $classReflection = $this->getReflect($class);
+        // does it have a constructor?
+        $constructorReflection = $classReflection->getConstructor();
+        if ($constructorReflection) {
+            // reflect on what params to pass, in which order
+            $params = $constructorReflection->getParameters();
+            foreach ($params as $param) {
+                $name = $param->name;
+                $explicit = $this->params->offsetExists($class) && isset($this->params[$class][$name]);
+                if ($explicit) {
+                    // use the explicit value for this class
+                    $unified_params[$name] = $this->params[$class][$name];
+                } elseif (isset($parent_params[$name])) {
+                    // use the implicit value for the parent class
+                    $unified_params[$name] = $parent_params[$name];
+                } elseif ($param->isDefaultValueAvailable()) {
+                    // use the external value from the constructor
+                    $unified_params[$name] = $param->getDefaultValue();
+                } else {
+                    // no value, use a null placeholder
+                    $unified_params[$name] = null;
+                }
+            }
+        }
+        // merge the setters
+        if (isset($this->setter[$class])) {
+            $unified_setter = array_merge($parent_setter, $this->setter[$class]);
+        } else {
+            $unified_setter = $parent_setter;
+        }
+        // merge the definitions
+        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
+        $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
+        $this->definition[$class] = $unified_definition;
+        // done, return the unified values
+        $this->unified[$class][0] = $unified_params;
+        $this->unified[$class][1] = $unified_setter;
+        $this->unified[$class][2] = $unified_definition;
+        return $this->unified[$class];
+    }
+    /**
+     *
+     * Returns a \ReflectionClass for a named class.
+     *
+     * @param string $class  The class to reflect on
+     * @param string $method The method to reflect on
+     *
+     * @return \ReflectionMethod
+     *
+     */
+    public function getMethodReflect($class, $method)
+    {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+        if (!isset($this->reflect[$class]) || !is_array($this->reflect[$class])) {
+            $methodRef = new ReflectionMethod($class, $method);
+            $this->methodReflect[$class][$method] = $methodRef;
+        }
+        return $this->methodReflect[$class][$method];
+    }
+    /**
+     * Remove reflection property
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        return array('params', 'setter', 'unified', 'definition', 'annotation');
     }
 }
 /**
@@ -3731,491 +2652,809 @@ class App implements ObjectInterface, ProviderInterface, AdapterInterface
  */
 namespace Ray\Di;
 
-use Ray\Aop\Bind;
-use Ray\Aop\Matcher;
-use Ray\Aop\Pointcut;
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
-use ArrayObject;
-use ArrayAccess;
 /**
- * A module contributes configuration information, typically interface bindings,
- *  which will be used to create an Injector.
+ * Annotation scanner.
  *
- * @package   Ray.Di
+ * @package Ray.Di
  */
-abstract class AbstractModule implements ArrayAccess
+interface AnnotationInterface
 {
     /**
-     * Bind
+     * Get class definition by annotation
+     *
+     * @param string $class
+     *
+     * @return Definition
+     */
+    public function getDefinition($class);
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di;
+
+use Doctrine\Common\Annotations\Reader;
+use ReflectionClass;
+use ReflectionMethod;
+/**
+ * Annotation scanner
+ *
+ * @package Ray.Di
+ */
+class Annotation implements AnnotationInterface
+{
+    /**
+     * User defined annotation
+     *
+     * $definition[Annotation::USER][$methodName] = [$annotation1, $annotation2 .. ]
+     *
+     * @var array
+     */
+    const USER = 'user';
+    /**
+     * Class definition (new)
+     *
+     * @var Definition
+     */
+    protected $newDefinition;
+    /**
+     * Class definition
+     *
+     * @var Definition
+     */
+    protected $definition;
+    /**
+     * Class definitions for in-memory cache
+     *
+     * @var Definition[]
+     */
+    protected $definitions = array();
+    /**
+     * Annotation reader
+     *
+     * @var \Doctrine\Common\Annotations\Reader;
+     */
+    protected $reader;
+    /**
+     * Constructor
+     *
+     * @param Definition $definition
+     * @param Reader     $reader
+     */
+    public function __construct(Definition $definition, Reader $reader)
+    {
+        $this->newDefinition = $definition;
+        $this->reader = $reader;
+    }
+    /**
+     * Return class definition by annotation
+     *
+     * @param string $className
+     *
+     * @return array
+     * @throws Exception\NotReadable
+     */
+    public function getDefinition($className)
+    {
+        if (isset($this->definitions[$className])) {
+            return $this->definitions[$className];
+        }
+        $this->definition = clone $this->newDefinition;
+        try {
+            $class = new ReflectionClass($className);
+        } catch (\ReflectionException $e) {
+            throw new Exception\NotReadable($className, 0, $e);
+        }
+        $annotations = $this->reader->getClassAnnotations($class);
+        $classDefinition = $this->getDefinitionFormat($annotations);
+        foreach ($classDefinition as $key => $value) {
+            $this->definition[$key] = $value;
+        }
+        // Method Annotation
+        $this->setMethodDefinition($class);
+        $this->definitions[$className] = $this->definition;
+        return $this->definition;
+    }
+    /**
+     * Return definition format from annotations
+     *
+     * @param array $annotations
+     * @param bool  $returnValue
+     *
+     * @return array [$annotation => $value][]
+     */
+    private function getDefinitionFormat(array $annotations, $returnValue = true)
+    {
+        $result = array();
+        foreach ($annotations as $annotation) {
+            $annotationName = $this->getAnnotationName($annotation);
+            $value = $annotation;
+            if ($returnValue === true) {
+                $value = isset($annotation->value) ? $annotation->value : null;
+            }
+            $result[$annotationName] = $value;
+        }
+        return $result;
+    }
+    /**
+     * Set method definition
+     *
+     * @param ReflectionClass $class
+     *
+     * @return void
+     */
+    private function setMethodDefinition(ReflectionClass $class)
+    {
+        $methods = $class->getMethods();
+        foreach ($methods as $method) {
+            $annotations = $this->reader->getMethodAnnotations($method);
+            $methodAnnotation = $this->getDefinitionFormat($annotations, false);
+            foreach ($methodAnnotation as $key => $value) {
+                $this->setAnnotationName($key, $method, $methodAnnotation);
+            }
+            // user land annotation by method
+            foreach ($annotations as $annotation) {
+                $annotationName = $this->getAnnotationName($annotation);
+                $this->definition->setUserAnnotationByMethod($annotationName, $method->name, $annotation);
+            }
+        }
+    }
+    /**
+     * Return annotation name from annotation class name
+     *
+     * @param $annotation
+     *
+     * @return mixed
+     */
+    private function getAnnotationName($annotation)
+    {
+        $classPath = explode('\\', get_class($annotation));
+        $annotationName = array_pop($classPath);
+        return $annotationName;
+    }
+    /**
+     * Set annotation key-value for DI
+     *
+     * @param string           $name        annotation name
+     * @param ReflectionMethod $method
+     * @param array            $annotations
+     *
+     * @return void
+     * @throws Exception\MultipleAnnotationNotAllowed
+     */
+    private function setAnnotationName($name, ReflectionMethod $method, array $annotations)
+    {
+        if ($name === Definition::POST_CONSTRUCT || $name == Definition::PRE_DESTROY) {
+            if (isset($this->definition[$name]) && $this->definition[$name]) {
+                $msg = "@{$name} in " . $method->getDeclaringClass()->name;
+                throw new Exception\MultipleAnnotationNotAllowed($msg);
+            } else {
+                $this->definition[$name] = $method->name;
+            }
+            return;
+        }
+        if ($name === Definition::INJECT) {
+            $this->setSetterInjectDefinition($annotations, $method);
+            return;
+        }
+        if ($name === Definition::NAMED) {
+            return;
+        }
+        // user land annotation by name
+        $this->definition->setUserAnnotationMethodName($name, $method->name);
+    }
+    /**
+     * Set setter inject definition
+     *
+     * @param array            $methodAnnotation
+     * @param ReflectionMethod $method
+     *
+     * @return void
+     */
+    private function setSetterInjectDefinition($methodAnnotation, ReflectionMethod $method)
+    {
+        $nameParameter = false;
+        if (isset($methodAnnotation[Definition::NAMED])) {
+            $named = $methodAnnotation[Definition::NAMED];
+            $nameParameter = $named->value;
+        }
+        $named = $nameParameter !== false ? $this->getNamed($nameParameter) : array();
+        $parameters = $method->getParameters();
+        $paramsInfo = array();
+        foreach ($parameters as $parameter) {
+            /** @var $parameter \ReflectionParameter */
+            $class = $parameter->getClass();
+            $typehint = $class ? $class->getName() : '';
+            $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : array();
+            $pos = $parameter->getPosition();
+            if (is_string($named)) {
+                $name = $named;
+            } elseif (isset($named[$parameter->name])) {
+                $name = $named[$parameter->name];
+            } else {
+                $name = Definition::NAME_UNSPECIFIED;
+            }
+            $optionalInject = $methodAnnotation[Definition::INJECT]->optional;
+            $paramsInfo[] = array(Definition::PARAM_POS => $pos, Definition::PARAM_TYPEHINT => $typehint, Definition::PARAM_NAME => $parameter->name, Definition::PARAM_ANNOTATE => $name, Definition::PARAM_TYPEHINT_BY => $typehintBy, Definition::OPTIONAL => $optionalInject);
+        }
+        $paramInfo[$method->name] = $paramsInfo;
+        $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
+    }
+    /**
+     * Get default injection by typehint
+     *
+     * this works as default bindings.
+     *
+     * @param string $typehint
+     *
+     * @return array
+     */
+    private function getTypeHintDefaultInjection($typehint)
+    {
+        static $definition = array();
+        if (isset($definition[$typehint])) {
+            $hintDef = $definition[$typehint];
+        } else {
+            //$annotations = $this->docParser->parse($doc, 'class ' . $typehint);
+            $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
+            $hintDef = $this->getDefinitionFormat($annotations);
+            $definition[$typehint] = $hintDef;
+        }
+        // @ImplementBy as default
+        if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
+            $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]);
+            return $result;
+        }
+        // @ProvidedBy as default
+        if (isset($hintDef[Definition::PROVIDEDBY])) {
+            $result = array(Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]);
+            return $result;
+        }
+        // this typehint is class, not a interface.
+        if (class_exists($typehint)) {
+            $class = new ReflectionClass($typehint);
+            if ($class->isAbstract() === false) {
+                $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint);
+                return $result;
+            }
+        }
+        return array();
+    }
+    /**
+     * Get Named
+     *
+     * @param string $nameParameter "value" or "key1=value1,ke2=value2"
+     *
+     * @return array [$paramName => $named][]
+     * @throws Exception\Named
+     */
+    private function getNamed($nameParameter)
+    {
+        // single annotation @Named($annotation)
+        if (preg_match('/^[a-zA-Z0-9_]+$/', $nameParameter)) {
+            return $nameParameter;
+        }
+        // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
+        // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
+        preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
+        if ($matches[0] === array()) {
+            throw new Exception\Named();
+        }
+        $result = array();
+        $count = count($matches[0]);
+        for ($i = 0; $i < $count; $i++) {
+            $result[$matches[1][$i]] = $matches[2][$i];
+        }
+        return $result;
+    }
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di;
+
+use ArrayObject;
+/**
+ * Retains target class inject definition.
+ *
+ * @package Ray.Di
+ */
+class Definition extends ArrayObject
+{
+    /**
+     * Post construct annotation
      *
      * @var string
      */
-    const BIND = 'bind';
+    const POST_CONSTRUCT = 'PostConstruct';
     /**
-     * Name
+     * PreDestroy annotation
      *
      * @var string
      */
-    const NAME = 'name';
+    const PRE_DESTROY = 'PreDestroy';
     /**
-     * In (Scope)
+     * Inject annotation
      *
      * @var string
      */
-    const IN = 'in';
+    const INJECT = 'Inject';
     /**
-     * To
+     * Provide annotation
      *
      * @var string
      */
-    const TO = 'to';
+    const PROVIDE = 'Provide';
     /**
-     * To Class
+     * Scope annotation
      *
      * @var string
      */
-    const TO_CLASS = 'class';
+    const SCOPE = 'Scope';
     /**
-     * Provider
+     * ImplementedBy annotation (Just-in-time Binding)
      *
      * @var string
      */
-    const TO_PROVIDER = 'provider';
+    const IMPLEMENTEDBY = 'ImplementedBy';
     /**
-     * To Instance
+     * ProvidedBy annotation (Just-in-time Binding)
      *
      * @var string
      */
-    const TO_INSTANCE = 'instance';
+    const PROVIDEDBY = 'ProvidedBy';
     /**
-     * To Closure
+     * Named annotation
      *
      * @var string
      */
-    const TO_CALLABLE = 'callable';
+    const NAMED = 'Named';
     /**
-     * To Constructor
-     *
-     * @var string
-     */
-    const TO_CONSTRUCTOR = 'constructor';
-    /**
-     * To Constructor
-     *
-     * @var string
-     */
-    const TO_SETTER = 'setter';
-    /**
-     * To Scope
-     *
-     * @var string
-     */
-    const SCOPE = 'scope';
-    /**
-     * Unspecified name
+     * PreDestroy annotation
      *
      * @var string
      */
     const NAME_UNSPECIFIED = '*';
     /**
-     * Binding definition
-     *
-     * @var Definition
-     */
-    public $bindings;
-    /**
-     * Pointcuts
-     *
-     * @var ArrayObject
-     */
-    /**
-     * Current Binding
+     * Setter inject definition
      *
      * @var string
      */
-    protected $currentBinding;
+    const INJECT_SETTER = 'setter';
     /**
-     * Current Name
+     * Parameter position
      *
      * @var string
      */
-    protected $currentName = self::NAME_UNSPECIFIED;
+    const PARAM_POS = 'pos';
     /**
-     * Scope
+     * Typehint
+     *
+     * @var string
+     */
+    const PARAM_TYPEHINT = 'typehint';
+    /**
+     * Param typehint default concrete class / provider class
+     *
+     * @var array [$typehintMethod, $className>]
+     */
+    const PARAM_TYPEHINT_BY = 'typehint_by';
+    /**
+     * Param typehint default concrete class
+     *
+     * @var string
+     */
+    const PARAM_TYPEHINT_METHOD_IMPLEMETEDBY = 'implementedby';
+    /**
+     * Param typehint default provider
+     *
+     * @var string
+     */
+    const PARAM_TYPEHINT_METHOD_PROVIDEDBY = 'providedby';
+    /**
+     * Param var name
+     *
+     * @var string
+     */
+    const PARAM_NAME = 'name';
+    /**
+     * Param named annotation
+     *
+     * @var string
+     */
+    const PARAM_ANNOTATE = 'annotate';
+    /**
+     * Aspect annotation
+     *
+     * @var string
+     */
+    const ASPECT = 'Aspect';
+    /**
+     * User defined interceptor annotation
+     *
+     * @var string
+     */
+    const USER = 'user';
+    /**
+     * OPTIONS
+     *
+     * @var string
+     */
+    const OPTIONS = 'options';
+    /**
+     * BINDING
+     *
+     * @var string
+     */
+    const BINDING = 'binding';
+    /**
+     * BY_METHOD
+     *
+     * @var string
+     */
+    const BY_METHOD = 'by_method';
+    /**
+     * BY_NAME
+     *
+     * @var string
+     */
+    const BY_NAME = 'by_name';
+    /**
+     * Optional Inject
+     *
+     * @var string
+     */
+    const OPTIONAL = 'optional';
+    /**
+     * Definition default
      *
      * @var array
      */
-    protected $scope = array(Scope::PROTOTYPE, Scope::SINGLETON);
-    /**
-     * Pointcuts
-     *
-     * @var array
-     */
-    public $pointcuts = array();
-    /**
-     * @var InjectorInterface
-     */
-    protected $dependencyInjector;
-    /**
-     * Is activated
-     *
-     * @var bool
-     */
-    protected $activated = false;
-    /**
-     * Installed modules
-     *
-     * @var array
-     */
-    public $modules = array();
+    private $defaults = array(self::SCOPE => Scope::PROTOTYPE, self::POST_CONSTRUCT => null, self::PRE_DESTROY => null, self::INJECT => array(), self::IMPLEMENTEDBY => array(), self::USER => array(), self::OPTIONAL => array());
     /**
      * Constructor
      *
-     * @param AbstractModule $module
-     * @param Matcher        $matcher
+     * @param array $defaults default definition set
      */
-    public function __construct(AbstractModule $module = null, Matcher $matcher = null)
+    public function __construct(array $defaults = null)
     {
-        if (is_null($module)) {
-            $this->bindings = new ArrayObject();
-            $this->pointcuts = new ArrayObject();
-        } else {
-            $module->activate();
-            $this->bindings = $module->bindings;
-            $this->pointcuts = $module->pointcuts;
-        }
-        $this->modules[] = get_class($this);
-        $this->matcher = $matcher ?: new Matcher(new Reader());
+        $defaults = $defaults ?: $this->defaults;
+        parent::__construct($defaults);
     }
     /**
-     * Activation
-     *
-     * @param InjectorInterface $injector
-     */
-    public function activate(InjectorInterface $injector = null)
-    {
-        if ($this->activated === true) {
-            return;
-        }
-        $this->activated = true;
-        $this->dependencyInjector = $injector ?: Injector::create(array($this));
-        $this->configure();
-    }
-    /**
-     * Configures a Binder via the exposed methods.
-     *
-     * @return void
-     */
-    protected abstract function configure();
-    /**
-     * Set bind interface
-     *
-     * @param string $interface
-     *
-     * @return AbstractModule
-     */
-    protected function bind($interface = '')
-    {
-        if (strlen($interface) > 0 && $interface[0] === '\\') {
-            // remove leading back slash
-            $interface = substr($interface, 1);
-        }
-        $this->currentBinding = $interface;
-        $this->currentName = self::NAME_UNSPECIFIED;
-        return $this;
-    }
-    /**
-     * Set binding annotation.
-     *
-     * @param string $name
-     *
-     * @return AbstractModule
-     */
-    protected function annotatedWith($name)
-    {
-        $this->currentName = $name;
-        $this->bindings[$this->currentBinding][$name] = array(self::IN => Scope::SINGLETON);
-        return $this;
-    }
-    /**
-     * Set scope
-     *
-     * @param string $scope
-     *
-     * @return AbstractModule
-     */
-    protected function in($scope)
-    {
-        $this->bindings[$this->currentBinding][$this->currentName][self::IN] = $scope;
-        return $this;
-    }
-    /**
-     * To class
-     *
-     * @param string $class
-     *
-     * @return AbstractModule
-     * @throws Exception\ToBinding
-     */
-    protected function to($class)
-    {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CLASS, $class));
-        return $this;
-    }
-    /**
-     * To provider
-     *
-     * @param string $provider provider class
-     *
-     * @return AbstractModule
-     * @throws Exception\Configuration
-     */
-    protected function toProvider($provider)
-    {
-        $hasProviderInterface = class_exists($provider) && in_array('Ray\\Di\\ProviderInterface', class_implements($provider));
-        if ($hasProviderInterface === false) {
-            throw new Exception\Configuration($provider);
-        }
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_PROVIDER, $provider));
-        return $this;
-    }
-    /**
-     * To instance
-     *
-     * @param mixed $instance
-     *
-     * @return AbstractModule
-     */
-    protected function toInstance($instance)
-    {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_INSTANCE, $instance));
-    }
-    /**
-     * To closure
-     *
-     * @param Callable $callable
-     *
-     * @return void
-     */
-    protected function toCallable(callable $callable)
-    {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CALLABLE, $callable));
-    }
-    /**
-     * To constructor
-     *
-     * @param array $params
-     */
-    protected function toConstructor(array $params)
-    {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CONSTRUCTOR, $params));
-    }
-    /**
-     * Bind interceptor
-     *
-     * @param Matcher $classMatcher
-     * @param Matcher $methodMatcher
-     * @param array   $interceptors
-     *
-     * @return void
-     */
-    protected function bindInterceptor(Matcher $classMatcher, Matcher $methodMatcher, array $interceptors)
-    {
-        $id = uniqid();
-        $this->pointcuts[$id] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
-    }
-    /**
-     * Install module
-     *
-     * @param AbstractModule $module
-     */
-    public function install(AbstractModule $module)
-    {
-        $module->activate($this->dependencyInjector);
-        $this->pointcuts = new ArrayObject(array_merge((array) $module->pointcuts, (array) $this->pointcuts));
-        $this->bindings = new ArrayObject(array_merge_recursive((array) $this->bindings, (array) $module->bindings));
-        if ($module->modules) {
-            $this->modules = array_merge($this->modules, array(), $module->modules);
-        }
-    }
-    /**
-     * Request injection
-     *
-     * Get instance with current module.
-     *
-     * @param string $class
-     *
-     * @return object
-     */
-    public function requestInjection($class)
-    {
-        $module = $this->dependencyInjector->getModule();
-        $this->dependencyInjector->setModule($this, false);
-        $instance = $this->dependencyInjector->getInstance($class);
-        if ($module instanceof AbstractModule) {
-            $this->dependencyInjector->setModule($module, false);
-        }
-        return $instance;
-    }
-    /**
-     * Return matched binder
-     *
-     * @param string $class
-     * @param Bind   $bind
-     *
-     * @return Bind $bind
-     */
-    public function __invoke($class, Bind $bind)
-    {
-        $bind->bind($class, (array) $this->pointcuts);
-        return $bind;
-    }
-    /**
-     * ArrayAccess::offsetExists
-     *
-     * @param string $offset
+     * Return is-defined
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function hasDefinition()
     {
-        return isset($this->bindings[$offset]);
+        $hasDefinition = $this->getArrayCopy() !== $this->defaults;
+        return $hasDefinition;
     }
     /**
-     * ArrayAccess::offsetGet
+     * Set user annotation by name
      *
-     * @param string $offset
+     * @param string $annotationName
+     * @param string $methodName
      *
-     * @return mixed
+     * @return void
      */
-    public function offsetGet($offset)
+    public function setUserAnnotationMethodName($annotationName, $methodName)
     {
-        return isset($this->bindings[$offset]) ? $this->bindings[$offset] : null;
+        $this[self::BY_NAME][$annotationName][] = $methodName;
     }
     /**
-     * ArrayAccess::offsetSet
+     * Return user annotation by annotation name
      *
-     * @param string $offset
-     * @param mixed  $value
+     * @param $annotationName
      *
-     * @throws Exception\ReadOnly
+     * @return array [$methodName, $methodAnnotation]
      */
-    public function offsetSet($offset, $value)
+    public function getUserAnnotationMethodName($annotationName)
     {
-        throw new Exception\ReadOnly();
+        $hasUserAnnotation = isset($this[self::BY_NAME]) && isset($this[self::BY_NAME][$annotationName]);
+        $result = $hasUserAnnotation ? $this[Definition::BY_NAME][$annotationName] : null;
+        return $result;
     }
     /**
-     * ArrayAccess::offsetUnset
+     * setUserAnnotationByMethod
      *
-     * @param string $offset
+     * @param string $annotationName
+     * @param string $methodName
+     * @param object $methodAnnotation
      *
-     * @throws Exception\ReadOnly
+     * @return void
      */
-    public function offsetUnset($offset)
+    public function setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation)
     {
-        throw new Exception\ReadOnly();
+        $this[self::BY_METHOD][$methodName][$annotationName][] = $methodAnnotation;
     }
     /**
-     * Return binding information
+     * Return user annotation by method name
+     *
+     * @param string $methodName
+     *
+     * @return array [$annotationName, $methodAnnotation][]
+     */
+    public function getUserAnnotationByMethod($methodName)
+    {
+        $result = isset($this[self::BY_METHOD]) && isset($this[self::BY_METHOD][$methodName]) ? $this[self::BY_METHOD][$methodName] : null;
+        return $result;
+    }
+    /**
+     * Return class annotation definition information.
      *
      * @return string
      */
     public function __toString()
     {
-        $output = '';
-        foreach ((array) $this->bindings as $bind => $bindTo) {
-            foreach ($bindTo as $annotate => $to) {
-                $type = $to['to'][0];
-                $output .= $annotate !== '*' ? "bind('{$bind}')->annotatedWith('{$annotate}')" : "bind('{$bind}')";
-                if ($type === 'class') {
-                    $output .= '->to(\'' . $to['to'][1] . '\')';
-                }
-                if ($type === 'instance') {
-                    $instance = $to['to'][1];
-                    $type = gettype($instance);
-                    switch ($type) {
-                        case 'object':
-                            $instance = '(object) ' . get_class($instance);
-                            break;
-                        case 'array':
-                            $instance = '(array) ' . json_encode($instance);
-                            break;
-                        case 'string':
-                            $instance = "'{$instance}'";
-                            break;
-                        case 'boolean':
-                            $instance = '(bool) ' . ($instance ? 'true' : 'false');
-                            break;
-                        default:
-                            $instance = "({$type}) {$instance}";
-                    }
-                    $output .= '->toInstance(' . $instance . ')';
-                }
-                if ($type === 'provider') {
-                    $provider = $to['to'][1];
-                    $output .= '->toProvider(\'' . $provider . '\')';
-                }
-                $output .= PHP_EOL;
-            }
-        }
-        return $output;
-    }
-    /**
-     * Keep only bindings and pointcuts.
-     *
-     * @return array
-     */
-    public function __sleep()
-    {
-        return array('bindings', 'pointcuts');
+        return var_export($this, true);
     }
 }
 /**
- * This file is part of the Ray.Aop package
+ * This file is part of the Ray package.
  *
- * @package Ray.Aop
+ * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace Ray\Aop;
+namespace Ray\Di;
 
 /**
- * Pointcut
+ * Scope Definition
  *
  * @package Ray.Di
  */
-final class Pointcut
+class Scope
 {
     /**
-     * Class matcher
+     * Singleton scope
      *
-     * @var Matcher
+     * @var string
      */
-    public $classMatcher;
+    const SINGLETON = 'singleton';
     /**
-     * Method matcher
+     * Prototype scope
      *
-     * @var Matcher
+     * @var string
      */
-    public $methodMatcher;
+    const PROTOTYPE = 'prototype';
+}
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
+namespace Doctrine\Common;
+
+/**
+ * Base class for writing simple lexers, i.e. for creating small DSLs.
+ *
+ * @since   2.0
+ * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author  Jonathan Wage <jonwage@gmail.com>
+ * @author  Roman Borschel <roman@code-factory.org>
+ * @todo Rename: AbstractLexer
+ */
+abstract class Lexer
+{
     /**
-     * Interceptors
-     *
-     * @var Interceptor[]
+     * @var array Array of scanned tokens
      */
-    public $interceptors = array();
+    private $tokens = array();
     /**
-     * Constructor
-     *
-     * @param Matcher $classMatcher
-     * @param Matcher $methodMatcher
-     * @param array   $interceptors
+     * @var integer Current lexer position in input string
      */
-    public function __construct(Matcher $classMatcher, Matcher $methodMatcher, array $interceptors)
+    private $position = 0;
+    /**
+     * @var integer Current peek of current lexer position
+     */
+    private $peek = 0;
+    /**
+     * @var array The next token in the input.
+     */
+    public $lookahead;
+    /**
+     * @var array The last matched/seen token.
+     */
+    public $token;
+    /**
+     * Sets the input data to be tokenized.
+     *
+     * The Lexer is immediately reset and the new input tokenized.
+     * Any unprocessed tokens from any previous input are lost.
+     *
+     * @param string $input The input to be tokenized.
+     */
+    public function setInput($input)
     {
-        $this->classMatcher = $classMatcher;
-        $this->methodMatcher = $methodMatcher;
-        $this->interceptors = $interceptors;
+        $this->tokens = array();
+        $this->reset();
+        $this->scan($input);
     }
+    /**
+     * Resets the lexer.
+     */
+    public function reset()
+    {
+        $this->lookahead = null;
+        $this->token = null;
+        $this->peek = 0;
+        $this->position = 0;
+    }
+    /**
+     * Resets the peek pointer to 0.
+     */
+    public function resetPeek()
+    {
+        $this->peek = 0;
+    }
+    /**
+     * Resets the lexer position on the input to the given position.
+     *
+     * @param integer $position Position to place the lexical scanner
+     */
+    public function resetPosition($position = 0)
+    {
+        $this->position = $position;
+    }
+    /**
+     * Checks whether a given token matches the current lookahead.
+     *
+     * @param integer|string $token
+     * @return boolean
+     */
+    public function isNextToken($token)
+    {
+        return null !== $this->lookahead && $this->lookahead['type'] === $token;
+    }
+    /**
+     * Checks whether any of the given tokens matches the current lookahead
+     *
+     * @param array $tokens
+     * @return boolean
+     */
+    public function isNextTokenAny(array $tokens)
+    {
+        return null !== $this->lookahead && in_array($this->lookahead['type'], $tokens, true);
+    }
+    /**
+     * Moves to the next token in the input string.
+     *
+     * A token is an associative array containing three items:
+     *  - 'value'    : the string value of the token in the input string
+     *  - 'type'     : the type of the token (identifier, numeric, string, input
+     *                 parameter, none)
+     *  - 'position' : the position of the token in the input string
+     *
+     * @return array|null the next token; null if there is no more tokens left
+     */
+    public function moveNext()
+    {
+        $this->peek = 0;
+        $this->token = $this->lookahead;
+        $this->lookahead = isset($this->tokens[$this->position]) ? $this->tokens[$this->position++] : null;
+        return $this->lookahead !== null;
+    }
+    /**
+     * Tells the lexer to skip input tokens until it sees a token with the given value.
+     *
+     * @param string $type The token type to skip until.
+     */
+    public function skipUntil($type)
+    {
+        while ($this->lookahead !== null && $this->lookahead['type'] !== $type) {
+            $this->moveNext();
+        }
+    }
+    /**
+     * Checks if given value is identical to the given token
+     *
+     * @param mixed $value
+     * @param integer $token
+     * @return boolean
+     */
+    public function isA($value, $token)
+    {
+        return $this->getType($value) === $token;
+    }
+    /**
+     * Moves the lookahead token forward.
+     *
+     * @return array | null The next token or NULL if there are no more tokens ahead.
+     */
+    public function peek()
+    {
+        if (isset($this->tokens[$this->position + $this->peek])) {
+            return $this->tokens[$this->position + $this->peek++];
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Peeks at the next token, returns it and immediately resets the peek.
+     *
+     * @return array|null The next token or NULL if there are no more tokens ahead.
+     */
+    public function glimpse()
+    {
+        $peek = $this->peek();
+        $this->peek = 0;
+        return $peek;
+    }
+    /**
+     * Scans the input string for tokens.
+     *
+     * @param string $input a query string
+     */
+    protected function scan($input)
+    {
+        static $regex;
+        if (!isset($regex)) {
+            $regex = '/(' . implode(')|(', $this->getCatchablePatterns()) . ')|' . implode('|', $this->getNonCatchablePatterns()) . '/i';
+        }
+        $flags = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
+        $matches = preg_split($regex, $input, -1, $flags);
+        foreach ($matches as $match) {
+            // Must remain before 'value' assignment since it can change content
+            $type = $this->getType($match[0]);
+            $this->tokens[] = array('value' => $match[0], 'type' => $type, 'position' => $match[1]);
+        }
+    }
+    /**
+     * Gets the literal for a given token.
+     *
+     * @param integer $token
+     * @return string
+     */
+    public function getLiteral($token)
+    {
+        $className = get_class($this);
+        $reflClass = new \ReflectionClass($className);
+        $constants = $reflClass->getConstants();
+        foreach ($constants as $name => $value) {
+            if ($value === $token) {
+                return $className . '::' . $name;
+            }
+        }
+        return $token;
+    }
+    /**
+     * Lexical catchable patterns.
+     *
+     * @return array
+     */
+    protected abstract function getCatchablePatterns();
+    /**
+     * Lexical non-catchable patterns.
+     *
+     * @return array
+     */
+    protected abstract function getNonCatchablePatterns();
+    /**
+     * Retrieve token type. Also processes the token value if necessary.
+     *
+     * @param string $value
+     * @return integer
+     */
+    protected abstract function getType(&$value);
 }
 /**
  * This file is part of the Ray.Aop package
@@ -4535,6 +3774,1235 @@ class Matcher implements Matchable
 namespace Ray\Aop;
 
 /**
+ * Bind method name to interceptors
+ *
+ * @package Ray.Aop
+ */
+interface BindInterface
+{
+    /**
+     * Bind method to interceptors
+     *
+     * @param string $method
+     * @param array  $interceptors
+     * @param object $annotation   Binding annotation if annotate bind
+     *
+     * @return Bind
+     */
+    public function bindInterceptors($method, array $interceptors, $annotation = null);
+    /**
+     * Get matched Interceptor
+     *
+     * @param string $name class name
+     *
+     * @return mixed string|boolean matched method name
+     */
+    public function __invoke($name);
+    /**
+     * Make pointcuts to binding information
+     *
+     * @param string $class
+     * @param array  $pointcuts
+     *
+     * @return Bind
+     */
+    public function bind($class, array $pointcuts);
+}
+/**
+ * This file is part of the Ray.Aop package
+ *
+ * @package Ray.Aop
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Aop;
+
+use ReflectionClass;
+use ReflectionMethod;
+use ArrayObject;
+/**
+ * Bind method name to interceptors
+ *
+ * @package Ray.Aop
+ */
+final class Bind extends ArrayObject implements BindInterface
+{
+    /**
+     * Annotated binding annotation
+     *
+     * @var array [$method => $annotations]
+     */
+    public $annotation = array();
+    /**
+     * Bind method to interceptors
+     *
+     * @param string $method
+     * @param array  $interceptors
+     * @param object $annotation   Binding annotation if annotate bind
+     *
+     * @return Bind
+     */
+    /**
+     * (non-PHPDoc)
+     * @see \Ray\Aop\BindInterface::bindInterceptors()
+     */
+    public function bindInterceptors($method, array $interceptors, $annotation = null)
+    {
+        if (!isset($this[$method])) {
+            $this[$method] = $interceptors;
+        } else {
+            $this[$method] = array_merge($this[$method], $interceptors);
+        }
+        if ($annotation) {
+            $this->annotation[$method] = $annotation;
+        }
+        return $this;
+    }
+    /**
+     * (non-PHPDoc)
+     * @see \Ray\Aop\BindInterface::hasBinding()
+     */
+    public function hasBinding()
+    {
+        $hasImplicitBinding = count($this) ? true : false;
+        return $hasImplicitBinding;
+    }
+    /**
+     * (non-PHPDoc)
+     * @see \Ray\Aop\BindInterface::bind()
+     */
+    public function bind($class, array $pointcuts)
+    {
+        foreach ($pointcuts as $pointcut) {
+            /** @var $pointcut Pointcut */
+            $classMatcher = $pointcut->classMatcher;
+            $isClassMatch = $classMatcher($class, Matcher::TARGET_CLASS);
+            if ($isClassMatch === true) {
+                $method = $pointcut->methodMatcher->isAnnotateBinding() ? 'bindByAnnotateBinding' : 'bindByCallable';
+                $this->{$method}($class, $pointcut->methodMatcher, $pointcut->interceptors);
+            }
+        }
+        return $this;
+    }
+    /**
+     * Bind interceptor by callable matcher
+     *
+     * @param string  $class
+     * @param Matcher $methodMatcher
+     * @param array   $interceptors
+     *
+     * @return void
+     * @noinspection PhpUnusedPrivateMethodInspection
+     */
+    private function bindByCallable($class, Matcher $methodMatcher, array $interceptors)
+    {
+        $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
+        foreach ($methods as $method) {
+            $isMethodMatch = $methodMatcher($method->name, Matcher::TARGET_METHOD) === true;
+            if ($isMethodMatch) {
+                $this->bindInterceptors($method->name, $interceptors);
+            }
+        }
+    }
+    /**
+     * Bind interceptor by annotation binding
+     *
+     * @param string  $class
+     * @param Matcher $methodMatcher
+     * @param array   $interceptors
+     *
+     * @return void
+     * @noinspection PhpUnusedPrivateMethodInspection
+     */
+    private function bindByAnnotateBinding($class, Matcher $methodMatcher, array $interceptors)
+    {
+        $matches = (array) $methodMatcher($class, Matcher::TARGET_METHOD);
+        if (!$matches) {
+            return;
+        }
+        foreach ($matches as $matched) {
+            if ($matched instanceof Matched) {
+                $this->bindInterceptors($matched->methodName, $interceptors, $matched->annotation);
+            }
+        }
+    }
+    /**
+     * Get matched Interceptor
+     *
+     * @param string $name class name
+     *
+     * @return mixed string|boolean matched method name
+     */
+    public function __invoke($name)
+    {
+        // pre compiled implicit matcher
+        $interceptors = isset($this[$name]) ? $this[$name] : false;
+        return $interceptors;
+    }
+    /**
+     * to String
+     *
+     * for logging
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $binds = array();
+        foreach ($this as $method => $interceptors) {
+            $inspectorsInfo = array();
+            foreach ($interceptors as $interceptor) {
+                $inspectorsInfo[] .= get_class($interceptor);
+            }
+            $inspectorsInfo = implode(',', $inspectorsInfo);
+            $binds[] = "{$method} => " . $inspectorsInfo;
+        }
+        $result = implode(',', $binds);
+        return $result;
+    }
+}
+/**
+ * @package    Sandbox
+ * @subpackage Module
+ */
+namespace Sandbox\Module\Common;
+
+use BEAR\Sunday\Module as SundayModule;
+use BEAR\Package\Module as PackageModule;
+use BEAR\Package\Provide as ProvideModule;
+use Sandbox\Interceptor\PostFormValidator;
+use Sandbox\Interceptor\TimeMessage;
+use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
+/**
+ * Application module
+ *
+ * @package    Sandbox
+ * @subpackage Module
+ */
+class AppModule extends AbstractModule
+{
+    /**
+     * @var array
+     */
+    private $config;
+    public function __construct(array $config)
+    {
+        $this->config = $config;
+        parent::__construct();
+    }
+    /**
+     * (non-PHPdoc)
+     * @see Ray\Di.AbstractModule::configure()
+     */
+    protected function configure()
+    {
+        // install package module
+        $this->install(new SundayModule\Constant\NamedModule($this->config));
+        $scheme = __NAMESPACE__ . '\\SchemeCollectionProvider';
+        $this->install(new PackageModule\PackageModule($this, $scheme));
+        // install twig
+        //$this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
+        // dependency binding for application
+        $this->bind('BEAR\\Sunday\\Extension\\Application\\AppInterface')->to('Sandbox\\App');
+        $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
+        $this->bind('BEAR\\Resource\\RenderInterface')->annotatedWith('hal')->to('BEAR\\Package\\Provide\\ResourceView\\HalRenderer')->in(Scope::SINGLETON);
+        // aspect weaving for application
+        $this->installTimeMessage();
+        $this->installNewPostFormValidator();
+    }
+    /**
+     * @Form - bind form validator
+     */
+    private function installNewPostFormValidator()
+    {
+        $this->bindInterceptor($this->matcher->subclassesOf('Sandbox\\Resource\\Page\\Blog\\Posts\\Newpost'), $this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\Form'), array(new PostFormValidator()));
+    }
+    /**
+     * Add time message aspect
+     */
+    private function installTimeMessage()
+    {
+        // time message binding
+        $this->bindInterceptor($this->matcher->subclassesOf('Sandbox\\Resource\\App\\First\\Greeting\\Aop'), $this->matcher->any(), array(new TimeMessage()));
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Constant;
+
+use Ray\Di\AbstractModule;
+/**
+ * Constants 'Named' module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class NamedModule extends AbstractModule
+{
+    /**
+     * Constructor
+     *
+     * @param array $names
+     */
+    public function __construct(array $names)
+    {
+        $this->names = $names;
+        parent::__construct();
+    }
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        foreach ($this->names as $annotatedWith => $instance) {
+            $this->bind()->annotatedWith($annotatedWith)->toInstance($instance);
+        }
+    }
+}
+/**
+ * Module
+ *
+ * @package    Sandbox
+ * @subpackage Module
+ */
+namespace BEAR\Package\Module;
+
+use BEAR\Package;
+use BEAR\Package\Module;
+use BEAR\Package\Provide as ProvideModule;
+use BEAR\Sunday\Module as SundayModule;
+use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
+/**
+ * Package module
+ *
+ * @package    Sandbox
+ * @subpackage Module
+ */
+class PackageModule extends AbstractModule
+{
+    private $scheme;
+    /**
+     * @param \Ray\Di\AbstractModule $module
+     * @param \Ray\Aop\Matcher       $scheme
+     */
+    public function __construct(AbstractModule $module, $scheme)
+    {
+        parent::__construct($module);
+        $this->scheme = $scheme;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see Ray\Di.AbstractModule::configure()
+     */
+    protected function configure()
+    {
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
+        $packageDir = dirname(dirname(dirname(dirname(dirname('/Users/akihito/git/BEAR.Package/src/BEAR/Package/Module')))));
+        $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
+        // Provide module (BEAR.Sunday extension interfaces)
+        $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule());
+        $this->install(new ProvideModule\TemplateEngine\Smarty\SmartyModule());
+        $this->install(new ProvideModule\WebResponse\HttpFoundationModule());
+        $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule());
+        $this->install(new ProvideModule\Router\MinRouterModule());
+        $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule());
+        $this->install(new ProvideModule\ResourceView\HalModule());
+        // Package module
+        $this->install(new Package\Module\Database\Dbal\DbalModule($this));
+        $this->install(new Package\Module\Log\ZfLogModule());
+        $this->install(new Package\Module\ExceptionHandle\HandleModule());
+        // Sunday module
+        $this->install(new SundayModule\SchemeModule($this->scheme));
+        $this->install(new SundayModule\Resource\ApcModule());
+        $this->install(new SundayModule\WebContext\AuraWebModule());
+        $this->install(new SundayModule\Cqrs\CacheModule($this));
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Framework;
+
+use BEAR\Sunday\Module;
+use Ray\Di\Injector;
+use Ray\Di\AbstractModule;
+/**
+ * Application module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class FrameworkModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        // core
+        $this->install(new Module\Framework\ConstantModule());
+        $this->install(new Module\Di\InjectorModule());
+        $this->install(new Module\Resource\ResourceModule());
+        $this->install(new Module\Code\CachedAnnotationModule());
+        // extension
+        $this->install(new Module\Cache\ApcModule());
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Framework;
+
+use Ray\Di\AbstractModule;
+/**
+ * Output console module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ConstantModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('')->annotatedWith('is_prod')->toInstance(false);
+        $sundayDir = dirname(dirname(dirname(dirname(dirname('/Users/akihito/git/BEAR.Package/vendor/bear/sunday/src/BEAR/Sunday/Module/Framework')))));
+        $this->bind('')->annotatedWith('sunday_dir')->toInstance($sundayDir);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Di;
+
+use Ray\Di\Injector;
+use Ray\Di\InjectorInterface;
+use Ray\Di\AbstractModule;
+/**
+ * Application module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class InjectorModule extends AbstractModule
+{
+    private $injector;
+    /**
+     * Constructor
+     *
+     * @param InjectorInterface $injector
+     */
+    public function construct(InjectorInterface $injector)
+    {
+        $this->injector = $injector;
+        $logger = $this->requestInjection('BEAR\\Sunday\\Inject\\Logger\\Adapter');
+        /** @var $logger \Ray\Di\LoggerInterface */
+        $this->injector->setLogger($logger);
+        parent::__construct();
+    }
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $config = $this->dependencyInjector->getContainer()->getForge()->getConfig();
+        $this->bind('Aura\\Di\\ConfigInterface')->toInstance($config);
+        $this->bind('Ray\\Di\\InjectorInterface')->toInstance($this->dependencyInjector);
+        $module = $this->dependencyInjector->getModule();
+        $this->bind('Ray\\Di\\AbstractModule')->toInstance($module);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Resource;
+
+use Ray\Di\Injector;
+use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
+/**
+ * Resource module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ResourceModule extends AbstractModule
+{
+    private $injector;
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('Ray\\Di\\InjectorInterface')->toInstance($this->injector);
+        $this->bind('BEAR\\Resource\\ResourceInterface')->to('BEAR\\Resource\\Resource')->in(Scope::SINGLETON);
+        $this->bind('BEAR\\Resource\\InvokerInterface')->to('BEAR\\Resource\\Invoker')->in(Scope::SINGLETON);
+        $this->bind('BEAR\\Resource\\LinkerInterface')->to('BEAR\\Resource\\Linker')->in(Scope::SINGLETON);
+        $this->bind('BEAR\\Resource\\LoggerInterface')->annotatedWith('resource_logger')->to('BEAR\\Resource\\Logger');
+        $this->bind('BEAR\\Resource\\LoggerInterface')->toProvider('BEAR\\Sunday\\Module\\Provider\\ResourceLoggerProvider');
+        $this->bind('BEAR\\Resource\\HrefInterface')->to('BEAR\\Resource\\A');
+        $this->bind('BEAR\\Sunday\\Resource\\CacheControl\\TagInterface')->to('BEAR\\Sunday\\Resource\\CacheControl\\Etag');
+        $this->bind('Aura\\Signal\\Manager')->toProvider('BEAR\\Sunday\\Module\\Provider\\SignalProvider')->in(Scope::SINGLETON);
+        $this->bind('Guzzle\\Parser\\UriTemplate\\UriTemplateInterface')->to('Guzzle\\Parser\\UriTemplate\\UriTemplate');
+    }
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di;
+
+/**
+ * Interface for object provider. (lazy-loading)
+ *
+ * @package Ray.Di
+ */
+interface ProviderInterface
+{
+    /**
+     * Get object
+     *
+     * @return object
+     */
+    public function get();
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Provider;
+
+use Ray\Di\ProviderInterface;
+use BEAR\Resource\LoggerInterface;
+use BEAR\Sunday\Extension\Application\AppInterface;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+/**
+ * Resource logger
+ *
+ * @package BEAR.Sunday
+ * @see     https://github.com/auraphp/Aura.Web.git
+ */
+class ResourceLoggerProvider implements ProviderInterface
+{
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    /**
+     * Set logger name
+     *
+     * @param LoggerInterface $logger
+     *
+     * @Inject
+     * @Named("resource_logger")
+     */
+    public function setLoggerClassName(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+    /**
+     * Logger instance
+     *
+     * @var \BEAR\Resource\Logger
+     */
+    private static $instance;
+    /**
+     * Return instance
+     *
+     * @return AppInterface
+     */
+    public function get()
+    {
+        if (!self::$instance) {
+            self::$instance = $this->logger;
+        }
+        return self::$instance;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Provider;
+
+use Ray\Di\ProviderInterface as Provide;
+use Aura\Signal\Manager;
+use Aura\Signal\HandlerFactory;
+use Aura\Signal\ResultFactory;
+use Aura\Signal\ResultCollection;
+/**
+ * Signal
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class SignalProvider implements Provide
+{
+    /**
+     * Return instance
+     *
+     * @return Manager
+     */
+    public function get()
+    {
+        return new Manager(new HandlerFactory(), new ResultFactory(), new ResultCollection());
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Code;
+
+use Ray\Di\AbstractModule;
+/**
+ * Cached annotation reader module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class CachedAnnotationModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('Doctrine\\Common\\Annotations\\Reader')->toProvider('BEAR\\Sunday\\Module\\Provider\\CachedReaderProvider');
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Provider;
+
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\ApcCache;
+use Ray\Di\ProviderInterface as Provide;
+/**
+ * APC cached reader
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class CachedReaderProvider implements Provide
+{
+    /**
+     * Return instance
+     *
+     * @return CachedReader
+     */
+    public function get()
+    {
+        $reader = new CachedReader(new AnnotationReader(), new ApcCache(), true);
+        return $reader;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Cache;
+
+use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
+/**
+ * Cache module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ApcModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('Guzzle\\Cache\\AbstractCacheAdapter')->toProvider('BEAR\\Sunday\\Module\\Provider\\ApcCacheProvider')->in(Scope::SINGLETON);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Inject;
+
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+/**
+ * Inject tmp_dir
+ *
+ * @package BEAR.Sunday
+ */
+trait TmpDirInject
+{
+    /**
+     * Tmp dir
+     *
+     * @var string
+     */
+    private $tmpDir;
+    /**
+     * Set tmp dir path
+     *
+     * @param string $tmpDir
+     *
+     * @Ray\Di\Di\Inject
+     * @Ray\Di\Di\Named("tmp_dir")
+     */
+    public function setTmpDir($tmpDir)
+    {
+        $this->tmpDir = $tmpDir;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Provider;
+
+use Doctrine\Common\Cache\ApcCache;
+use Guzzle\Cache\DoctrineCacheAdapter as CacheAdapter;
+use Ray\Di\ProviderInterface as Provide;
+use BEAR\Sunday\Inject\TmpDirInject;
+use Doctrine\Common\Cache\FilesystemCache;
+/**
+ * Cache
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ApcCacheProvider implements Provide
+{
+    use TmpDirInject;
+    /**
+     * Return instance
+     *
+     * @return CacheAdapter
+     */
+    public function get()
+    {
+        if (function_exists('apc_cache_info')) {
+            $cache = new CacheAdapter(new ApcCache());
+        } else {
+            $cache = new CacheAdapter(new FilesystemCache($this->tmpDir));
+        }
+        return $cache;
+    }
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di\Di;
+
+/**
+ * Annotation interface
+ *
+ * @package Ray.Di
+ */
+interface Annotation
+{
+    
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di\Di;
+
+/**
+ * Scope
+ *
+ * @Annotation
+ * @Target("CLASS")
+ *
+ * @package    Ray.Di
+ * @subpackage Annotation
+ */
+final class Scope implements Annotation
+{
+    /**
+     * Singleton
+     *
+     * @var string
+     */
+    const SINGLETON = 'singleton';
+    /**
+     * Prototype
+     *
+     * @var string
+     */
+    const PROTOTYPE = 'prototype';
+    /**
+     * Object lifecycle
+     *
+     * @var string
+     */
+    public $value = self::PROTOTYPE;
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ApplicationLogger;
+
+use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
+/**
+ * Application logger module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ApplicationLoggerModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        // log register
+        $this->bind('BEAR\\Sunday\\Extension\\ApplicationLogger\\ApplicationLoggerInterface')->to(__NAMESPACE__ . '\\ApplicationLogger');
+        // log writer
+        $this->bind('BEAR\\Resource\\LogWriterInterface')->toProvider(__NAMESPACE__ . '\\ResourceLog\\WritersProvider')->in(Scope::SINGLETON);
+        $this->bind('Ray\\Di\\LoggerInterface')->to('BEAR\\Package\\Provide\\Application\\DiLogger')->in(Scope::SINGLETON);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Inject;
+
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+/**
+ * Inject log dir
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Inject
+ */
+trait LogDirInject
+{
+    /**
+     * Tmp dir
+     *
+     * @var string
+     */
+    private $logDir;
+    /**
+     * Set tmp dir path
+     *
+     * @param string $logDir
+     *
+     * @Ray\Di\Di\Inject
+     * @Ray\Di\Di\Named("log_dir")
+     */
+    public function setLogDir($logDir)
+    {
+        $this->logDir = $logDir;
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog;
+
+use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Collection;
+use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Zf2LogProvider;
+use Zend\Log\Logger;
+use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Zf2Log;
+use Ray\Di\ProviderInterface;
+use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
+/**
+ * Writer provider
+ *
+ * @package    BEAR.Package
+ * @subpackage Module
+ */
+class WritersProvider implements ProviderInterface
+{
+    use \BEAR\Sunday\Inject\LogDirInject;
+    /**
+     * @return Writer\Collection|object
+     */
+    public function get()
+    {
+        $writers = new Collection(array(new Fire(), new Zf2Log(new Zf2LogProvider($this->logDir))));
+        return $writers;
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\TemplateEngine\Smarty;
+
+use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
+/**
+ * Smarty module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class SmartyModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Sunday\\Extension\\TemplateEngine\\TemplateEngineAdapterInterface')->to(__NAMESPACE__ . '\\SmartyAdapter')->in(Scope::SINGLETON);
+        $this->bind('Smarty')->toProvider(__NAMESPACE__ . '\\SmartyProvider')->in(Scope::SINGLETON);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Inject;
+
+/**
+ * Inject app dir
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Inject
+ */
+trait AppDirInject
+{
+    /**
+     * App directory path
+     *
+     * @var string
+     */
+    private $appDir;
+    /**
+     * App directory path setter
+     *
+     * @param string $appDir
+     *
+     * @return void
+     *
+     * @Ray\Di\Di\Inject
+     * @Ray\Di\Di\Named("app_dir")
+     */
+    public function setAppDir($appDir)
+    {
+        $this->appDir = $appDir;
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\TemplateEngine\Smarty;
+
+use BEAR\Sunday\Inject\TmpDirInject;
+use BEAR\Sunday\Inject\AppDirInject;
+use Ray\Di\ProviderInterface as Provide;
+use Smarty;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+// @codingStandardsIgnoreFile
+/**
+ * Smarty3
+ *
+ * @see http://www.smarty.net/docs/ja/
+ */
+class SmartyProvider implements Provide
+{
+    use TmpDirInject;
+    use AppDirInject;
+    /**
+     * Return instance
+     *
+     * @return Smarty
+     */
+    public function get()
+    {
+        $smarty = new Smarty();
+        $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
+        $frameworkPlugin = '/Users/akihito/git/BEAR.Package/src/BEAR/Package/Provide/TemplateEngine/Smarty' . '/plugin';
+        $smarty->setCompileDir($this->tmpDir . '/smarty/template_c')->setCacheDir($this->tmpDir . '/smarty/cache')->setTemplateDir($this->appDir . '/Resource/View')->setPluginsDir(array_merge($smarty->getPluginsDir(), array($appPlugin, $frameworkPlugin)));
+        return $smarty;
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\WebResponse;
+
+use Ray\Di\AbstractModule;
+/**
+ * Web response module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class HttpFoundationModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Sunday\\Extension\\WebResponse\\ResponseInterface')->to(__NAMESPACE__ . '\\HttpFoundation');
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ConsoleOutput;
+
+use Ray\Di\AbstractModule;
+/**
+ * Output console module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ConsoleOutputModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Sunday\\Extension\\ConsoleOutput\\ConsoleOutputInterface')->to(__NAMESPACE__ . '\\ConsoleOutput');
+    }
+}
+/**
+ * This file is part of the BEAR.Packages package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\Router;
+
+use Ray\Di\AbstractModule;
+/**
+ * Router module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class MinRouterModule extends AbstractModule
+{
+    /**
+     * (non-PHPdoc)
+     * @see Ray\Di.AbstractModule::configure()
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Sunday\\Extension\\Router\\RouterInterface')->to(__NAMESPACE__ . '\\MinRouter');
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ResourceView;
+
+use Ray\Di\AbstractModule;
+/**
+ * Resource renderer module - PROD
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class TemplateEngineRendererModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Resource\\RenderInterface')->to(__NAMESPACE__ . '\\TemplateEngineRenderer');
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ResourceView;
+
+use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
+/**
+ * Hal render module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class HalModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Resource\\RenderInterface')->to(__NAMESPACE__ . '\\HalRenderer')->in(Scope::SINGLETON);
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Module\Database\Dbal;
+
+use Ray\Di\AbstractModule;
+use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
+use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
+/**
+ * DBAL module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class DbalModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        // @Db
+        $this->installDbInjector();
+        // @Transactional
+        $this->installTransaction();
+        // @Time
+        $this->installTimeStamper();
+    }
+    /**
+     * @Db - db setter
+     */
+    private function installDbInjector()
+    {
+        $dbInjector = $this->requestInjection(__NAMESPACE__ . '\\Interceptor\\DbInjector');
+        $this->bindInterceptor($this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\Db'), $this->matcher->startWith('on'), array($dbInjector));
+    }
+    /**
+     * @Transactional - db transaction
+     */
+    private function installTransaction()
+    {
+        $this->bindInterceptor($this->matcher->any(), $this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\Transactional'), array(new Transactional()));
+    }
+    /**
+     * @Time - put time to 'time' property
+     */
+    private function installTimeStamper()
+    {
+        $this->bindInterceptor($this->matcher->any(), $this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\Time'), array(new TimeStamper()));
+    }
+}
+/**
+ * This file is part of the Ray.Aop package
+ *
+ * @package Ray.Aop
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Aop;
+
+/**
  * Tag interface for Advice. Implementations can be any type of advice, such as Interceptors.
  *
  * @package  Ray.Aop
@@ -4715,6 +5183,221 @@ final class DbInjector implements MethodInterceptor
         return $result;
     }
 }
+/*
+ *  $Id$
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
+ */
+namespace Doctrine\DBAL\Logging;
+
+/**
+ * Interface for SQL loggers.
+ *
+ * 
+ * @link    www.doctrine-project.org
+ * @since   2.0
+ * @version $Revision$
+ * @author  Benjamin Eberlei <kontakt@beberlei.de>
+ * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author  Jonathan Wage <jonwage@gmail.com>
+ * @author  Roman Borschel <roman@code-factory.org>
+ */
+interface SQLLogger
+{
+    /**
+     * Logs a SQL statement somewhere.
+     *
+     * @param string $sql The SQL to be executed.
+     * @param array $params The SQL parameters.
+     * @param array $types The SQL parameter types.
+     * @return void
+     */
+    public function startQuery($sql, array $params = null, array $types = null);
+    /**
+     * Mark the last started query as stopped. This can be used for timing of queries.
+     *
+     * @return void
+     */
+    public function stopQuery();
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package    Ray.Di
+ * @subpackage Exception
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di\Exception;
+
+/**
+ * Exception interface
+ *
+ * @package    Ray.Di
+ * @subpackage Exception
+ */
+interface Exception
+{
+    
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package    Ray.Di
+ * @subpackage Exception
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di\Exception;
+
+use LogicException;
+/**
+ * Invalid binding.
+ *
+ * @package    Ray.Di
+ * @subpackage Exception
+ */
+class Binding extends LogicException implements Exception
+{
+    
+}
+/**
+ * This file is part of the Ray package.
+ *
+ * @package    Ray.Di
+ * @subpackage Exception
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Di\Exception;
+
+/**
+ *  Optional injection is not bound.
+ *
+ * @package    Ray.Di
+ * @subpackage Exception
+ */
+class OptionalInjectionNotBound extends Binding implements Exception
+{
+    
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * Annotation
+ *
+ * @package BEAR.Sunday
+ */
+interface AnnotationInterface
+{
+    
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * Db
+ *
+ * @Annotation
+ * @Target("CLASS")
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Annotation
+ */
+final class Db implements AnnotationInterface
+{
+    
+}
+/**
+ * This file is part of the Ray.Aop package
+ *
+ * @package Ray.Aop
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace Ray\Aop;
+
+/**
+ * Pointcut
+ *
+ * @package Ray.Di
+ */
+final class Pointcut
+{
+    /**
+     * Class matcher
+     *
+     * @var Matcher
+     */
+    public $classMatcher;
+    /**
+     * Method matcher
+     *
+     * @var Matcher
+     */
+    public $methodMatcher;
+    /**
+     * Interceptors
+     *
+     * @var Interceptor[]
+     */
+    public $interceptors = array();
+    /**
+     * Constructor
+     *
+     * @param Matcher $classMatcher
+     * @param Matcher $methodMatcher
+     * @param array   $interceptors
+     */
+    public function __construct(Matcher $classMatcher, Matcher $methodMatcher, array $interceptors)
+    {
+        $this->classMatcher = $classMatcher;
+        $this->methodMatcher = $methodMatcher;
+        $this->interceptors = $interceptors;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * Time
+ *
+ * @Annotation
+ * @Target("METHOD")
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Annotation
+ */
+final class Transactional implements AnnotationInterface
+{
+    
+}
 /**
  * This file is part of the BEAR.Package package
  *
@@ -4755,6 +5438,27 @@ class Transactional implements MethodInterceptor
     }
 }
 /**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * Time
+ *
+ * @Annotation
+ * @Target({"METHOD","CLASS"})
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Annotation
+ */
+final class Time implements AnnotationInterface
+{
+    
+}
+/**
  * This file is part of the BEAR.Package package
  *
  * @package BEAR.Package
@@ -4783,6 +5487,334 @@ class TimeStamper implements MethodInterceptor
         $object->time = date('Y-m-d H:i:s', time());
         $result = $invocation->proceed();
         return $result;
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Module\Log;
+
+use Ray\Di\AbstractModule;
+/**
+ * Zf2 log module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ZfLogModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('Guzzle\\Log\\LogAdapterInterface')->toProvider('BEAR\\Package\\Module\\Log\\ZfLogModule\\ZfLogProvider');
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Module\Log\ZfLogModule;
+
+use BEAR\Sunday\Inject\LogDirInject;
+use Guzzle\Log\Zf2LogAdapter;
+use Ray\Di\ProviderInterface as Provide;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+/**
+ * Zend log provider
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ZfLogProvider implements Provide
+{
+    use LogDirInject;
+    /**
+     * Provide instance
+     *
+     * @return \Guzzle\Log\LogAdapterInterface
+     */
+    public function get()
+    {
+        $logger = new Logger();
+        $writer = new Stream($this->logDir . '/app.log');
+        $logger->addWriter($writer);
+        return new Zf2LogAdapter($logger);
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Module\ExceptionHandle;
+
+use Ray\Di\AbstractModule;
+/**
+ * Exception handle module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class HandleModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('')->annotatedWith('exceptionTpl')->toInstance('/Users/akihito/git/BEAR.Package/src/BEAR/Package/Module/ExceptionHandle' . '/template/view.php');
+        $this->bind('BEAR\\Resource\\AbstractObject')->annotatedWith('errorPage')->to('BEAR\\Package\\Debug\\ExceptionHandle\\ErrorPage');
+        $this->bind('BEAR\\Package\\Debug\\ExceptionHandle\\ExceptionHandlerInterface')->to('BEAR\\Package\\Debug\\ExceptionHandle\\ExceptionHandler');
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module;
+
+use Ray\Di\AbstractModule;
+/**
+ * Scheme module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class SchemeModule extends AbstractModule
+{
+    /**
+     * Scheme collection provider
+     *
+     * @var string
+     */
+    private $schemeProvider;
+    /**
+     * Constructor
+     *
+     * @param string $schemeProvider provider class name
+     */
+    public function __construct($schemeProvider)
+    {
+        $this->schemeProvider = $schemeProvider;
+        parent::__construct();
+    }
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('BEAR\\Resource\\SchemeCollection')->toProvider($this->schemeProvider);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Inject;
+
+/**
+ * Inject application namespace
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Inject
+ */
+trait AppNameInject
+{
+    /**
+     * application namespace
+     *
+     * @var string
+     */
+    private $appName;
+    /**
+     * App name (=namespace) setter
+     *
+     * @param string $appName
+     *
+     * @Ray\Di\Di\Inject
+     * @Ray\Di\Di\Named("app_name")
+     */
+    public function setAppName($appName)
+    {
+        $this->appName = $appName;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Inject;
+
+use Ray\Di\InjectorInterface as Di;
+/**
+ * Inject injector
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Inject
+ */
+trait InjectorInject
+{
+    /**
+     * Dependency injector
+     *
+     * @var Di
+     */
+    private $injector;
+    /**
+     * Injector setter
+     *
+     * @param Di $injector
+     *
+     * @Ray\Di\Di\Inject
+     */
+    public function setInjector(Di $injector)
+    {
+        $this->injector = $injector;
+    }
+}
+/**
+ * @package    Sandbox
+ * @subpackage Module
+ */
+namespace Sandbox\Module\Common;
+
+use Ray\Di\ProviderInterface as Provide;
+use BEAR\Resource\Adapter\App as AppAdapter;
+use BEAR\Resource\SchemeCollection;
+use BEAR\Sunday\Inject\AppNameInject;
+use BEAR\Sunday\Inject\InjectorInject;
+/**
+ * Scheme collection
+ *
+ * @package    Sandbox
+ * @subpackage Module
+ */
+class SchemeCollectionProvider implements Provide
+{
+    use AppNameInject;
+    use InjectorInject;
+    /**
+     * Return resource adapter set.
+     *
+     * @return SchemeCollection
+     */
+    public function get()
+    {
+        $schemeCollection = new SchemeCollection();
+        $pageAdapter = new AppAdapter($this->injector, $this->appName, 'Resource\\Page');
+        $appAdapter = new AppAdapter($this->injector, $this->appName, 'Resource\\App');
+        $schemeCollection->scheme('page')->host('self')->toAdapter($pageAdapter);
+        $schemeCollection->scheme('app')->host('self')->toAdapter($appAdapter);
+        return $schemeCollection;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Resource;
+
+use Ray\Di\AbstractModule;
+/**
+ * Resource cache APC module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class ApcModule extends AbstractModule
+{
+    /**
+     * Configure
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('Guzzle\\Cache\\CacheAdapterInterface')->annotatedWith('resource_cache')->toProvider('BEAR\\Sunday\\Module\\Provider\\ApcCacheProvider');
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\WebContext;
+
+use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
+/**
+ * Aura.Web Context module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class AuraWebModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this->bind('Ray\\Di\\ProviderInterface')->annotatedWith('webContext')->to('BEAR\\Sunday\\Module\\Provider\\WebContextProvider')->in(Scope::SINGLETON);
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Module\Cqrs;
+
+use Ray\Di\AbstractModule;
+/**
+ * Cache module
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Module
+ */
+class CacheModule extends AbstractModule
+{
+    /**
+     * Configure dependency binding
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $cacheLoader = $this->requestInjection(__NAMESPACE__ . '\\Interceptor\\CacheLoader');
+        // bind @Cache annotated method in any class
+        $this->bindInterceptor($this->matcher->any(), $this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\Cache'), array($cacheLoader));
+        $cacheUpdater = $this->requestInjection(__NAMESPACE__ . '\\Interceptor\\CacheUpdater');
+        $this->bindInterceptor($this->matcher->any(), $this->matcher->annotatedWith('BEAR\\Sunday\\Annotation\\CacheUpdate'), array($cacheUpdater));
     }
 }
 /**
@@ -5026,6 +6058,32 @@ class DoctrineCacheAdapter extends AbstractCacheAdapter
  * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * Cache
+ *
+ * @Annotation
+ * @Target("METHOD")
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Annotation
+ */
+final class Cache implements AnnotationInterface
+{
+    /**
+     * Cache time
+     *
+     * @var integer
+     */
+    public $time = false;
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
 namespace BEAR\Sunday\Module\Cqrs\Interceptor;
 
 use Ray\Aop\MethodInterceptor;
@@ -5076,6 +6134,27 @@ class CacheUpdater implements MethodInterceptor
     }
 }
 /**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * CacheUpdate
+ *
+ * @Annotation
+ * @Target("METHOD")
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Annotation
+ */
+final class CacheUpdate implements AnnotationInterface
+{
+    
+}
+/**
  * Time message
  *
  * @package BEAR.Framework
@@ -5099,6 +6178,27 @@ class TimeMessage implements MethodInterceptor
         $result = $invocation->proceed() . ". It is {$time} now !";
         return $result;
     }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Annotation;
+
+/**
+ * Form
+ *
+ * @Annotation
+ * @Target({"METHOD"})
+ *
+ * @package    Sandbox
+ * @subpackage Annotation
+ */
+final class Form
+{
+    
 }
 /**
  * Env setting checker
@@ -5239,199 +6339,495 @@ class DiLogger implements LoggerInterface
     }
 }
 /**
- * This file is part of the Ray.Aop package
+ * This file is part of the BEAR.Resource package
  *
- * @package Ray.Aop
+ * @package BEAR.Resource
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace Ray\Aop;
+namespace BEAR\Resource;
 
 /**
- * Bind method name to interceptors
+ * Resource object marker interface
  *
- * @package Ray.Aop
+ * @package BEAR.Resource
  */
-interface BindInterface
+interface ObjectInterface
 {
-    /**
-     * Bind method to interceptors
-     *
-     * @param string $method
-     * @param array  $interceptors
-     * @param object $annotation   Binding annotation if annotate bind
-     *
-     * @return Bind
-     */
-    public function bindInterceptors($method, array $interceptors, $annotation = null);
-    /**
-     * Get matched Interceptor
-     *
-     * @param string $name class name
-     *
-     * @return mixed string|boolean matched method name
-     */
-    public function __invoke($name);
-    /**
-     * Make pointcuts to binding information
-     *
-     * @param string $class
-     * @param array  $pointcuts
-     *
-     * @return Bind
-     */
-    public function bind($class, array $pointcuts);
+    
 }
 /**
- * This file is part of the Ray.Aop package
+ * This file is part of the BEAR.Resource package
  *
- * @package Ray.Aop
+ * @package BEAR.Resource
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace Ray\Aop;
+namespace BEAR\Resource;
 
-use ReflectionClass;
-use ReflectionMethod;
-use ArrayObject;
+use ArrayIterator;
+use Traversable;
 /**
- * Bind method name to interceptors
+ * Trait for array access
  *
- * @package Ray.Aop
+ * @package BEAR.Resource
  */
-final class Bind extends ArrayObject implements BindInterface
+trait BodyArrayAccessTrait
 {
     /**
-     * Annotated binding annotation
+     * Body
      *
-     * @var array [$method => $annotations]
+     * @var mixed
      */
-    public $annotation = array();
+    public $body;
     /**
-     * Bind method to interceptors
+     * Returns the body value at the specified index
      *
-     * @param string $method
-     * @param array  $interceptors
-     * @param object $annotation   Binding annotation if annotate bind
+     * @param mixed $offset offset
      *
-     * @return Bind
+     * @return mixed
+     * @ignore
      */
-    /**
-     * (non-PHPDoc)
-     * @see \Ray\Aop\BindInterface::bindInterceptors()
-     */
-    public function bindInterceptors($method, array $interceptors, $annotation = null)
+    public function offsetGet($offset)
     {
-        if (!isset($this[$method])) {
-            $this[$method] = $interceptors;
-        } else {
-            $this[$method] = array_merge($this[$method], $interceptors);
-        }
-        if ($annotation) {
-            $this->annotation[$method] = $annotation;
-        }
+        return $this->body[$offset];
+    }
+    /**
+     * Sets the body value at the specified index to renew
+     *
+     * @param mixed $offset offset
+     * @param mixed $value  value
+     *
+     * @return void
+     * @ignore
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->body[$offset] = $value;
+    }
+    /**
+     * Returns whether the requested index in body exists
+     *
+     * @param mixed $offset offset
+     *
+     * @return bool
+     * @ignore
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->body[$offset]);
+    }
+    /**
+     * Set the value at the specified index
+     *
+     * @param mixed $offset offset
+     *
+     * @return void
+     * @ignore
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->body[$offset]);
+    }
+    /**
+     * Get the number of public properties in the ArrayObject
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->body);
+    }
+    /**
+     * Sort the entries by key
+     *
+     * @return bool
+     * @ignore
+     */
+    public function ksort()
+    {
+        return ksort($this->body);
+    }
+    /**
+     * Sort the entries by key
+     *
+     * @return bool
+     * @ignore
+     */
+    public function asort()
+    {
+        return asort($this->body);
+    }
+    /**
+     * Get array iterator
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return is_array($this->body) || $this->body instanceof Traversable ? new ArrayIterator($this->body) : new ArrayIterator(array());
+    }
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use Exception;
+/**
+ * Trait for resource string
+ *
+ * @package BEAR.Resource
+ */
+trait RenderTrait
+{
+    /**
+     * Renderer
+     *
+     * @var \BEAR\Resource\RenderInterface
+     */
+    protected $renderer;
+    /**
+     * Set renderer
+     *
+     * @param RenderInterface $renderer
+     *
+     * @return RenderTrait
+     * @Inject(optional = true)
+     */
+    public function setRenderer(RenderInterface $renderer)
+    {
+        $this->renderer = $renderer;
         return $this;
     }
     /**
-     * (non-PHPDoc)
-     * @see \Ray\Aop\BindInterface::hasBinding()
-     */
-    public function hasBinding()
-    {
-        $hasImplicitBinding = count($this) ? true : false;
-        return $hasImplicitBinding;
-    }
-    /**
-     * (non-PHPDoc)
-     * @see \Ray\Aop\BindInterface::bind()
-     */
-    public function bind($class, array $pointcuts)
-    {
-        foreach ($pointcuts as $pointcut) {
-            /** @var $pointcut Pointcut */
-            $classMatcher = $pointcut->classMatcher;
-            $isClassMatch = $classMatcher($class, Matcher::TARGET_CLASS);
-            if ($isClassMatch === true) {
-                $method = $pointcut->methodMatcher->isAnnotateBinding() ? 'bindByAnnotateBinding' : 'bindByCallable';
-                $this->{$method}($class, $pointcut->methodMatcher, $pointcut->interceptors);
-            }
-        }
-        return $this;
-    }
-    /**
-     * Bind interceptor by callable matcher
+     * Return representational string
      *
-     * @param string  $class
-     * @param Matcher $methodMatcher
-     * @param array   $interceptors
-     *
-     * @return void
-     * @noinspection PhpUnusedPrivateMethodInspection
-     */
-    private function bindByCallable($class, Matcher $methodMatcher, array $interceptors)
-    {
-        $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
-        foreach ($methods as $method) {
-            $isMethodMatch = $methodMatcher($method->name, Matcher::TARGET_METHOD) === true;
-            if ($isMethodMatch) {
-                $this->bindInterceptors($method->name, $interceptors);
-            }
-        }
-    }
-    /**
-     * Bind interceptor by annotation binding
-     *
-     * @param string  $class
-     * @param Matcher $methodMatcher
-     * @param array   $interceptors
-     *
-     * @return void
-     * @noinspection PhpUnusedPrivateMethodInspection
-     */
-    private function bindByAnnotateBinding($class, Matcher $methodMatcher, array $interceptors)
-    {
-        $matches = (array) $methodMatcher($class, Matcher::TARGET_METHOD);
-        if (!$matches) {
-            return;
-        }
-        foreach ($matches as $matched) {
-            if ($matched instanceof Matched) {
-                $this->bindInterceptors($matched->methodName, $interceptors, $matched->annotation);
-            }
-        }
-    }
-    /**
-     * Get matched Interceptor
-     *
-     * @param string $name class name
-     *
-     * @return mixed string|boolean matched method name
-     */
-    public function __invoke($name)
-    {
-        // pre compiled implicit matcher
-        $interceptors = isset($this[$name]) ? $this[$name] : false;
-        return $interceptors;
-    }
-    /**
-     * to String
-     *
-     * for logging
+     * Return object hash if representation renderer is not set.
      *
      * @return string
      */
     public function __toString()
     {
-        $binds = array();
-        foreach ($this as $method => $interceptors) {
-            $inspectorsInfo = array();
-            foreach ($interceptors as $interceptor) {
-                $inspectorsInfo[] .= get_class($interceptor);
-            }
-            $inspectorsInfo = implode(',', $inspectorsInfo);
-            $binds[] = "{$method} => " . $inspectorsInfo;
+        /** @var $this AbstractObject  */
+        if (is_string($this->view)) {
+            return $this->view;
         }
-        $result = implode(',', $binds);
-        return $result;
+        if ($this->renderer instanceof RenderInterface) {
+            try {
+                $view = $this->renderer->render($this);
+            } catch (Exception $e) {
+                $view = '';
+                error_log('Exception cached in ' . __METHOD__);
+                error_log((string) $e);
+            }
+        } elseif (is_scalar($this->body)) {
+            return (string) $this->body;
+        } else {
+            $view = '';
+        }
+        return $view;
     }
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use Ray\Di\Di\Inject;
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
+/**
+ * Abstract resource object
+ *
+ * @package BEAR.Resource
+ */
+abstract class AbstractObject implements ObjectInterface, ArrayAccess, Countable, IteratorAggregate
+{
+    // (array)
+    use BodyArrayAccessTrait;
+    // (string)
+    use RenderTrait;
+    /**
+     * URI
+     *
+     * @var string
+     */
+    public $uri = '';
+    /**
+     * Resource status code
+     *
+     * @var int
+     */
+    public $code = 200;
+    /**
+     * Resource header
+     *
+     * @var array
+     */
+    public $headers = array();
+    /**
+     * Resource representation
+     *
+     * @var string
+     */
+    public $view;
+    /**
+     * Resource links
+     *
+     * @var array
+     */
+    public $links = array();
+}
+/**
+ * @package    Sandbox
+ * @subpackage Resource
+ */
+namespace Sandbox\Resource\App\First\Greeting;
+
+use BEAR\Resource\AbstractObject;
+/**
+ * My first AOP
+ *
+ * @package    Sandbox
+ * @subpackage Resource
+ */
+class Aop extends AbstractObject
+{
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function onGet($name = 'anonymous')
+    {
+        return "Hello, {$name}";
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Inject;
+
+use BEAR\Resource\ResourceInterface;
+/**
+ * Inject resource client
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Inject
+ */
+trait ResourceInject
+{
+    /**
+     * @var ResourceInterface
+     */
+    protected $resource;
+    /**
+     * Set resource
+     *
+     * @param ResourceInterface $resource
+     *
+     * @Ray\Di\Di\Inject
+     */
+    public function setResource(ResourceInterface $resource)
+    {
+        $this->resource = $resource;
+    }
+}
+/**
+ * App resource
+ *
+ * @package    Sandbox
+ * @subpackage Resource
+ */
+namespace Sandbox\Resource\Page\Blog\Posts;
+
+use BEAR\Resource\AbstractObject as Page;
+use BEAR\Sunday\Inject\ResourceInject;
+use Ray\Di\Di\Inject;
+use BEAR\Resource\Link;
+use BEAR\Sunday\Annotation\Form;
+/**
+ * New post page
+ *
+ * @package    Sandbox
+ * @subpackage Resource
+ */
+class Newpost extends Page
+{
+    use ResourceInject;
+    /**
+     * @var array
+     */
+    public $body = array('errors' => array('title' => '', 'body' => ''), 'submit' => array('title' => '', 'body' => ''), 'code' => 200);
+    /**
+     * @var array
+     */
+    public $links = array('back' => array(Link::HREF => 'page://self/blog/posts'));
+    /**
+     * @return Newpost
+     */
+    public function onGet()
+    {
+        return $this;
+    }
+    /**
+     * @param string $title
+     * @param string $body
+     *
+     * @Form
+     */
+    public function onPost($title, $body)
+    {
+        // create post
+        $response = $this->resource->post->uri('app://self/blog/posts')->withQuery(array('title' => $title, 'body' => $body))->eager->request();
+        $this['code'] = $response->code;
+        $this->links += $response->links;
+        // redirect
+        //      $this->code = 303;
+        //      $this->headers = ['Location' => '/blog/posts'];
+        return $this;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Extension\Application;
+
+/**
+ * Interface for application context
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Application
+ */
+interface AppInterface
+{
+    
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\Application;
+
+use BEAR\Sunday\Extension\Application\AppInterface;
+use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
+use BEAR\Sunday\Extension\Router\RouterInterface;
+use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
+use BEAR\Resource\ResourceInterface;
+use BEAR\Resource\AbstractObject as Page;
+use Ray\Di\InjectorInterface;
+use Ray\Di\Di\Inject;
+/**
+ * Application
+ *
+ * available run mode:
+ *
+ * 'Prod'
+ * 'Api'
+ * 'Dev'
+ * 'Stab;
+ * 'Test'
+ *
+ * @package BEAR.Package
+ */
+abstract class AbstractApp implements AppInterface
+{
+    /**
+     * Dependency injector
+     *
+     * @var InjectorInterface
+     */
+    public $injector;
+    /**
+     * Resource client
+     *
+     * @var ResourceInterface
+     */
+    public $resource;
+    /**
+     * Response
+     *
+     * @var ResponseInterface
+     */
+    public $response;
+    /**
+     * Exception handler
+     *
+     * @var ExceptionHandlerInterface
+     */
+    public $exceptionHandler;
+    /**
+     * Router
+     *
+     * @var RouterInterface
+     */
+    public $router;
+    /**
+     * Resource logger
+     *
+     * @var ApplicationLoggerInterface
+     */
+    public $logger;
+    /**
+     * Response page object
+     *
+     * @var Page
+     */
+    public $page;
+    /**
+     * Constructor
+     *
+     * @param InjectorInterface          $injector         Dependency Injector
+     * @param ResourceInterface          $resource         Resource client
+     * @param ExceptionHandlerInterface  $exceptionHandler Exception handler
+     * @param ApplicationLoggerInterface $logger           Application logger
+     * @param ResponseInterface          $response         Web / Console response
+     * @param RouterInterface            $router           URI Router
+     *
+     * @Inject
+     */
+    public function __construct(InjectorInterface $injector, ResourceInterface $resource, ExceptionHandlerInterface $exceptionHandler, ApplicationLoggerInterface $logger, ResponseInterface $response, RouterInterface $router)
+    {
+        $this->injector = $injector;
+        $this->resource = $resource;
+        $this->response = $response;
+        $this->exceptionHandler = $exceptionHandler;
+        $this->logger = $logger;
+        $this->router = $router;
+    }
+}
+/**
+ * Sandbox
+ *
+ * @package Sandbox
+ */
+namespace Sandbox;
+
+use BEAR\Package\Provide\Application\AbstractApp;
+/**
+ * Application
+ *
+ * @package Sandbox
+ */
+final class App extends AbstractApp
+{
+    /** application dir path @var string */
+    const DIR = '/Users/akihito/git/BEAR.Package/apps/Sandbox';
 }
 /**
  * This file is part of the BEAR.Resource package
@@ -5523,6 +6919,145 @@ interface ResourceInterface
      * @return mixed
      */
     public function attachParamProvider($signal, HandleInterface $argProvider);
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Debug\ExceptionHandle;
+
+use Exception;
+/**
+ * Interface for exception handler
+ *
+ * @package BEAR.Package
+ */
+interface ExceptionHandlerInterface
+{
+    /**
+     * Handle exception
+     *
+     * @param Exception $e
+     */
+    public function handle(Exception $e);
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Extension;
+
+/**
+ * Interface for application extension
+ *
+ * @package BEAR.Sunday
+ */
+interface ExtensionInterface
+{
+    
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Extension\ApplicationLogger;
+
+use BEAR\Sunday\Extension\ExtensionInterface;
+use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
+use BEAR\Sunday\Extension\Application\AppInterface;
+use Ray\Di\Di\Inject;
+/**
+ * Extension interface for application logger
+ *
+ * @package BEAR.Sunday
+ */
+interface ApplicationLoggerInterface extends ExtensionInterface
+{
+    /**
+     * Set resource logger
+     *
+     * @param ResourceLoggerInterface $resourceLogger
+     *
+     * @Inject
+     */
+    public function __construct(ResourceLoggerInterface $resourceLogger);
+    /**
+     * Register log function on shutdown
+     *
+     * called in bootstrap
+     *
+     * @param AppInterface $app
+     */
+    public function register(AppInterface $app);
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Extension\WebResponse;
+
+use BEAR\Sunday\Extension\ExtensionInterface;
+/**
+ * Interface for http response
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Web
+ */
+interface ResponseInterface extends ExtensionInterface
+{
+    /**
+     * @param $page
+     *
+     * @return mixed
+     */
+    public function setResource($page);
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Extension\Router;
+
+/**
+ * Interface for router
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Web
+ */
+interface RouterInterface
+{
+    /**
+     * Set globals
+     *
+     * @param mixed $globals array | \ArrayAccess
+     *
+     * @return self
+     */
+    public function setGlobals($globals);
+    /**
+     * Set argv
+     *
+     * @param $argv array | \ArrayAccess
+     *
+     * @return mixed
+     */
+    public function setArgv($argv);
+    /**
+     * Match route
+     *
+     * @return array [$method, $pageUri, $query]
+     */
+    public function match();
 }
 /**
  * This file is part of the BEAR.Resource package
@@ -5825,6 +7360,181 @@ class Resource implements ResourceInterface
  */
 namespace BEAR\Resource;
 
+use BEAR\Resource\Adapter\AdapterInterface;
+use ArrayObject;
+/**
+ * Resource scheme collection
+ *
+ * @package BEAR.Resource
+ */
+class SchemeCollection extends ArrayObject
+{
+    /**
+     * Scheme
+     *
+     * @var string
+     */
+    private $scheme;
+    /**
+     * Host
+     *
+     * @var string
+     */
+    private $host;
+    /**
+     * Set scheme
+     *
+     * @param $scheme
+     *
+     * @return SchemeCollection
+     */
+    public function scheme($scheme)
+    {
+        $this->scheme = $scheme;
+        return $this;
+    }
+    /**
+     * Set host
+     *
+     * @param $host
+     *
+     * @return SchemeCollection
+     */
+    public function host($host)
+    {
+        $this->host = $host;
+        return $this;
+    }
+    /**
+     * Set resource adapter
+     *
+     * @param AdapterInterface $adapter
+     *
+     * @return SchemeCollection
+     */
+    public function toAdapter(AdapterInterface $adapter)
+    {
+        $this[$this->scheme][$this->host] = $adapter;
+        $this->scheme = $this->host = null;
+        return $this;
+    }
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use Ray\Di\Di\ImplementedBy;
+/**
+ * Interface for resource factory
+ *
+ * @package BEAR.Resource
+ *
+ * @ImplementedBy("Factory")
+ */
+interface FactoryInterface
+{
+    /**
+     * Return new resource object instance
+     *
+     * @param string $uri resource URI
+     *
+     * @return \BEAR\Resource\ObjectInterface;
+     */
+    public function newInstance($uri);
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+/**
+ * Resource object factory.
+ *
+ * @package BEAR.Resource
+ *
+ * @Scope("singleton")
+ */
+class Factory implements FactoryInterface
+{
+    /**
+     * Resource adapter biding config
+     *
+     * @var SchemeCollection
+     */
+    private $scheme = array();
+    /**
+     * Constructor
+     *
+     * @param SchemeCollection  $scheme
+     *
+     * @Inject
+     */
+    public function __construct(SchemeCollection $scheme)
+    {
+        $this->scheme = $scheme;
+    }
+    /**
+     * Set scheme collection
+     *
+     * @param SchemeCollection $scheme
+     *
+     * @Inject(optional = true)
+     */
+    public function setSchemeCollection(SchemeCollection $scheme)
+    {
+        $this->scheme = $scheme;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see BEAR\Resource.FactoryInterface::newInstance()
+     * @throws Exception\Scheme
+     */
+    public function newInstance($uri)
+    {
+        $parsedUrl = parse_url($uri);
+        if (!(isset($parsedUrl['scheme']) && isset($parsedUrl['scheme']))) {
+            throw new Exception\Uri();
+        }
+        $scheme = $parsedUrl['scheme'];
+        $host = $parsedUrl['host'];
+        if (!isset($this->scheme[$scheme])) {
+            throw new Exception\Scheme($uri);
+        }
+        if (!isset($this->scheme[$scheme][$host])) {
+            if (!isset($this->scheme[$scheme]['*'])) {
+                throw new Exception\Scheme($uri);
+            }
+            $host = '*';
+        }
+        try {
+            $adapter = $this->scheme[$scheme][$host];
+            if ($adapter instanceof ProviderInterface) {
+                $adapter = $adapter->get($uri);
+            }
+        } catch (\Exception $e) {
+            throw new Exception\ResourceNotFound($uri, 0, $e);
+        }
+        $adapter->uri = $uri;
+        return $adapter;
+    }
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
 use Ray\Di\Di\ImplementedBy;
 /**
  * Resource request invoke interface
@@ -5865,6 +7575,365 @@ interface InvokerInterface
      * @param ResourceInterface $resource
      */
     public function setResourceClient(ResourceInterface $resource);
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use Ray\Di\Di\ImplementedBy;
+/**
+ * Interface for resource client
+ *
+ * @package BEAR.Resource
+ *
+ * @ImplementedBy("BEAR\Resource\Request")
+ *
+ */
+interface RequestInterface
+{
+    /**
+     * Constructor
+     *
+     * @param InvokerInterface $invoker
+     *
+     * @Inject
+     */
+    public function __construct(InvokerInterface $invoker);
+    /**
+     * InvokerInterface resource request
+     *
+     * @param array $query
+     *
+     * @return AbstractObject
+     */
+    public function __invoke(array $query = null);
+    /**
+     * To Request URI string
+     *
+     * @return string
+     */
+    public function toUri();
+    /**
+     * To Request URI string with request method
+     *
+     * @return string
+     */
+    public function toUriWithMethod();
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use IteratorAggregate;
+use ArrayAccess;
+use ArrayIterator;
+use OutOfBoundsException;
+use Traversable;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+/**
+ * Interface for resource adapter provider.
+ *
+ * @package BEAR.Resource
+ *
+ * @Scope("prototype")
+ */
+final class Request implements RequestInterface, ArrayAccess, IteratorAggregate
+{
+    use BodyArrayAccessTrait;
+    /**
+     * object URI scheme
+     *
+     * @var string
+     */
+    const SCHEME_OBJECT = 'object';
+    /**
+     * URI
+     *
+     * @var string
+     */
+    public $uri;
+    /**
+     * Resource object
+     *
+     * @var \BEAR\Resource\AbstractObject
+     */
+    public $ro;
+    /**
+     * Method
+     *
+     * @var string
+     */
+    public $method = '';
+    /**
+     * Query
+     *
+     * @var array
+     */
+    public $query = array();
+    /**
+     * Options
+     *
+     * @var array
+     */
+    public $options = array();
+    /**
+     * Request option (eager or lazy)
+     *
+     * @var string
+     */
+    public $in;
+    /**
+     * Links
+     *
+     * @var array
+     */
+    public $links = array();
+    /**
+     * Request Result
+     *
+     * @var Object
+     */
+    private $result;
+    /**
+     * (non-PHPdoc)
+     * @see BEAR\Resource.RequestInterface::__construct()
+     *
+     * @Inject
+     */
+    public function __construct(InvokerInterface $invoker)
+    {
+        $this->invoker = $invoker;
+    }
+    /**
+     * Set
+     *
+     * @param AbstractObject $ro
+     * @param string         $uri
+     * @param string         $method
+     * @param array          $query
+     */
+    public function set(AbstractObject $ro, $uri, $method, array $query)
+    {
+        $this->ro = $ro;
+        $this->uri = $uri;
+        $this->method = $method;
+        $this->query = $query;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see BEAR\Resource.RequestInterface::__invoke()
+     */
+    public function __invoke(array $query = null)
+    {
+        if (!is_null($query)) {
+            $this->query = array_merge($this->query, $query);
+        }
+        $result = $this->invoker->invoke($this);
+        return $result;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see BEAR\Resource.RequestInterface::toUri()
+     */
+    public function toUri()
+    {
+        $query = http_build_query($this->query, null, '&', PHP_QUERY_RFC3986);
+        $uri = isset($this->ro->uri) && $this->ro->uri ? $this->ro->uri : $this->uri;
+        if (isset(parse_url($uri)['query'])) {
+            $queryString = $uri;
+        } else {
+            $queryString = "{$uri}" . ($query ? '?' : '') . $query;
+        }
+        return $queryString;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see BEAR\Resource.RequestInterface::toUriWithMethod()
+     */
+    public function toUriWithMethod()
+    {
+        return "{$this->method} " . $this->toUri();
+    }
+    /**
+     * Render view
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        if (is_null($this->result)) {
+            $this->result = $this->__invoke();
+        }
+        return (string) $this->result;
+    }
+    /**
+     * Returns the body value at the specified index
+     *
+     * @param mixed $offset offset
+     *
+     * @return mixed
+     * @throws OutOfBoundsException
+     */
+    public function offsetGet($offset)
+    {
+        if (is_null($this->result)) {
+            $this->result = $this->__invoke();
+        }
+        if (!isset($this->result->body[$offset])) {
+            throw new OutOfBoundsException("[{$offset}] for object[" . get_class($this->result) . ']');
+        }
+        return $this->result->body[$offset];
+    }
+    /**
+     * Returns whether the requested index in body exists
+     *
+     * @param mixed $offset offset
+     *
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        if (is_null($this->result)) {
+            $this->result = $this->__invoke();
+        }
+        return isset($this->result->body[$offset]);
+    }
+    /**
+     * Get array iterator
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        if (is_null($this->result)) {
+            $this->result = $this->__invoke();
+        }
+        $isArray = is_array($this->result->body) || $this->result->body instanceof Traversable;
+        $iterator = $isArray ? new ArrayIterator($this->result->body) : new ArrayIterator(array());
+        return $iterator;
+    }
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+/**
+ * Interface for resource adapter provider.
+ *
+ * @package BEAR.Resource
+ */
+interface ProviderInterface
+{
+    /**
+     * Get resource adapter
+     *
+     * @param string $uri
+     */
+    public function get($uri);
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource\Adapter;
+
+/**
+ * Interface for resource adapter
+ */
+interface AdapterInterface
+{
+    
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource\Adapter;
+
+use BEAR\Resource\ObjectInterface;
+use BEAR\Resource\ProviderInterface;
+use Ray\Di\InjectorInterface;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+use RuntimeException;
+/**
+ * App resource (app:://self/path/to/resource)
+ *
+ * @package BEAR.Resource
+ *
+ * @Scope("prototype")
+ */
+class App implements ObjectInterface, ProviderInterface, AdapterInterface
+{
+    /**
+     * Application dependency injector
+     *
+     * @var \Ray\Di\Injector
+     */
+    private $injector;
+    /**
+     * Resource adapter namespace
+     *
+     * @var array
+     */
+    private $namespace;
+    /**
+     * Resource adapter path
+     *
+     * @var array
+     */
+    private $path;
+    /**
+     * Constructor
+     *
+     * @param InjectorInterface $injector  Application dependency injector
+     * @param string            $namespace Resource adapter namespace
+     * @param string            $path      Resource adapter path
+     *
+     * @Inject
+     * @throws RuntimeException
+     */
+    public function __construct(InjectorInterface $injector, $namespace, $path)
+    {
+        if (!is_string($namespace)) {
+            throw new RuntimeException('namespace not string');
+        }
+        $this->injector = $injector;
+        $this->namespace = $namespace;
+        $this->path = $path;
+    }
+    /**
+     * (non-PHPdoc)
+     *
+     * @see    BEAR\Resource.ProviderInterface::get()
+     */
+    public function get($uri)
+    {
+        $parsedUrl = parse_url($uri);
+        $path = str_replace('/', ' ', $parsedUrl['path']);
+        $path = ucwords($path);
+        $path = str_replace(' ', '\\', $path);
+        $className = "{$this->namespace}\\{$this->path}{$path}";
+        $instance = $this->injector->getInstance($className);
+        return $instance;
+    }
 }
 /**
  * This file is part of the BEAR.Resource package
@@ -6214,273 +8283,6 @@ interface LinkerInterface
     public function invoke(ResourceObject $ro, Request $request, $linkValue);
 }
 /**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-use BEAR\Resource\AbstractObject as ResourceObject;
-use BEAR\Resource\Annotation\Link as AnnotationLink;
-use BEAR\Resource\Exception\BadLinkRequest;
-use Ray\Di\Di\Scope;
-use Doctrine\Common\Annotations\Reader;
-use SplQueue;
-use ReflectionMethod;
-use Ray\Di\Di\Inject;
-/**
- * Resource linker
- *
- * @package BEAR.Resource
- *
- * @Scope("singleton")
- */
-final class Linker implements LinkerInterface
-{
-    /**
-     * Method name
-     *
-     * @var string
-     */
-    private $method;
-    /**
-     * Resource client
-     *
-     * @var ResourceInterface
-     */
-    private $resource;
-    /**
-     * Set resource
-     *
-     * @param $resource $resource
-     */
-    public function setResource(ResourceInterface $resource)
-    {
-        $this->resource = $resource;
-    }
-    /**
-     * Constructor
-     *
-     * @param \Doctrine\Common\Annotations\Reader $reader
-     *
-     * @Inject
-     */
-    public function __construct(Reader $reader)
-    {
-        $this->reader = $reader;
-    }
-    /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.LinkerInterface::invoke()
-     * @throws Exception\Link
-     */
-    public function invoke(ResourceObject $ro, Request $request, $sourceValue)
-    {
-        $this->method = 'on' . ucfirst($request->method);
-        $links = $request->links;
-        $hasTargeted = false;
-        $refValue =& $sourceValue;
-        $q = new SplQueue();
-        $q->setIteratorMode(\SplQueue::IT_MODE_DELETE);
-        // has links
-        foreach ($links as $link) {
-            $cnt = $q->count();
-            if ($cnt !== 0) {
-                for ($i = 0; $i < $cnt; $i++) {
-                    list($item, $ro) = $q->dequeue();
-                    $request = $this->getLinkResult($ro, $link->key, (array) $item);
-                    if (!$request instanceof Request) {
-                        throw new Exception\Link('From list to instance link is not currently supported.');
-                    }
-                    $ro = $request->ro;
-                    $requestResult = $request();
-                    /** @var $requestResult AbstractObject */
-                    $a = $requestResult->body;
-                    $item[$link->key] = $a;
-                    $item = (array) $item;
-                }
-                continue;
-            }
-            if ($this->isList($refValue)) {
-                foreach ($refValue as &$item) {
-                    $request = $this->getLinkResult($ro, $link->key, $item);
-                    /** @noinspection PhpUndefinedFieldInspection */
-                    $requestResult = is_callable($request) ? $request()->body : $request;
-                    $requestResult = is_array($requestResult) ? new \ArrayObject($requestResult) : $requestResult;
-                    $item[$link->key] = $requestResult;
-                    $q->enqueue(array($requestResult, $request->ro));
-                }
-                $refValue =& $requestResult;
-                continue;
-            }
-            $request = $this->getLinkResult($ro, $link->key, $refValue);
-            if (!$request instanceof Request) {
-                return $request;
-            }
-            $ro = $request->ro;
-            $requestResult = $request();
-            switch ($link->type) {
-                case LinkType::NEW_LINK:
-                    if (!$hasTargeted) {
-                        $sourceValue = array($sourceValue, $requestResult->body);
-                        $hasTargeted = true;
-                    } else {
-                        $sourceValue[] = $requestResult->body;
-                    }
-                    $refValue =& $requestResult;
-                    break;
-                case LinkType::CRAWL_LINK:
-                    $refValue[$link->key] = $requestResult->body;
-                    $refValue =& $requestResult;
-                    break;
-                case LinkType::SELF_LINK:
-                default:
-                    $refValue = $requestResult->body;
-            }
-        }
-        array_walk_recursive($sourceValue, function (&$in) {
-            if ($in instanceof \ArrayObject) {
-                $in = (array) $in;
-            }
-        });
-        return $sourceValue;
-    }
-    /**
-     * Call link method
-     *
-     * @param mixed  $ro
-     * @param string $linkKey
-     * @param mixed  $input
-     *
-     * @return mixed
-     * @throws BadLinkRequest
-     */
-    private function getLinkResult($ro, $linkKey, $input)
-    {
-        $method = 'onLink' . ucfirst($linkKey);
-        if (!method_exists($ro, $method)) {
-            $annotations = $this->reader->getMethodAnnotations(new ReflectionMethod($ro, $this->method));
-            foreach ($annotations as $annotation) {
-                if ($annotation instanceof AnnotationLink) {
-                    if ($annotation->rel === $linkKey) {
-                        $uri = $annotation->href;
-                    }
-                    $method = $annotation->method;
-                    if ($input instanceof AbstractObject) {
-                        $input = $input->body;
-                    }
-                    /** @noinspection PhpUndefinedMethodInspection */
-                    /** @noinspection PhpUndefinedVariableInspection */
-                    $result = $this->resource->{$method}->uri($uri)->withQuery($input)->eager->request();
-                    return $result;
-                }
-            }
-            throw new BadLinkRequest(get_class($ro) . "::{$method}");
-        }
-        if (!$input instanceof AbstractObject) {
-            $ro->body = $input;
-            $input = $ro;
-        }
-        $result = call_user_func(array($ro, $method), $input);
-        return $result;
-    }
-    /**
-     * Is data list ?
-     *
-     * @param mixed $list
-     *
-     * @return boolean
-     */
-    private function isList($list)
-    {
-        if (!is_array($list)) {
-            return false;
-        }
-        $list = array_values((array) $list);
-        $result = count($list) > 1 && isset($list[0]) && isset($list[1]) && is_array($list[0]) && is_array($list[1]) && array_keys($list[0]) === array_keys($list[1]);
-        return $result;
-    }
-}
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
- */
-namespace Doctrine\Common\Cache;
-
-/**
- * APC cache provider.
- *
- * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    www.doctrine-project.org
- * @since   2.0
- * @author  Benjamin Eberlei <kontakt@beberlei.de>
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
- * @author  David Abdemoulaie <dave@hobodave.com>
- */
-class ApcCache extends CacheProvider
-{
-    /**
-     * {@inheritdoc}
-     */
-    protected function doFetch($id)
-    {
-        return apc_fetch($id);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doContains($id)
-    {
-        return apc_exists($id);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doSave($id, $data, $lifeTime = 0)
-    {
-        return (bool) apc_store($id, $data, (int) $lifeTime);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doDelete($id)
-    {
-        return apc_delete($id);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doFlush()
-    {
-        return apc_clear_cache() && apc_clear_cache('user');
-    }
-    /**
-     * {@inheritdoc}
-     */
-    protected function doGetStats()
-    {
-        $info = apc_cache_info();
-        $sma = apc_sma_info();
-        return array(Cache::STATS_HITS => $info['num_hits'], Cache::STATS_MISSES => $info['num_misses'], Cache::STATS_UPTIME => $info['start_time'], Cache::STATS_MEMORY_USAGE => $info['mem_size'], Cache::STATS_MEMORY_AVAILIABLE => $sma['avail_mem']);
-    }
-}
-/**
  * 
  * This file is part of the Aura Project for PHP.
  * 
@@ -6721,6 +8523,236 @@ class Manager
     }
 }
 /**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use IteratorAggregate;
+use BEAR\Resource\AbstractObject as ResourceObject;
+/**
+ * Interface for resource logger
+ *
+ * @package BEAR.Resource
+ */
+interface LoggerInterface extends IteratorAggregate
+{
+    /**
+     * Log
+     *
+     * @param RequestInterface $request
+     * @param ResourceObject   $result
+     *
+     * @return void
+     */
+    public function log(RequestInterface $request, ResourceObject $result);
+    /**
+     * Set log writer
+     *
+     * @param LogWriterInterface $writer
+     *
+     * @return void
+     */
+    public function setWriter(LogWriterInterface $writer);
+    /**
+     * write log
+     *
+     * @return void
+     */
+    public function write();
+}
+/**
+ * This file is part of the BEAR.Resource package
+ *
+ * @package BEAR.Resource
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Resource;
+
+use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\Annotation\Link as AnnotationLink;
+use BEAR\Resource\Exception\BadLinkRequest;
+use Ray\Di\Di\Scope;
+use Doctrine\Common\Annotations\Reader;
+use SplQueue;
+use ReflectionMethod;
+use Ray\Di\Di\Inject;
+/**
+ * Resource linker
+ *
+ * @package BEAR.Resource
+ *
+ * @Scope("singleton")
+ */
+final class Linker implements LinkerInterface
+{
+    /**
+     * Method name
+     *
+     * @var string
+     */
+    private $method;
+    /**
+     * Resource client
+     *
+     * @var ResourceInterface
+     */
+    private $resource;
+    /**
+     * Set resource
+     *
+     * @param $resource $resource
+     */
+    public function setResource(ResourceInterface $resource)
+    {
+        $this->resource = $resource;
+    }
+    /**
+     * Constructor
+     *
+     * @param \Doctrine\Common\Annotations\Reader $reader
+     *
+     * @Inject
+     */
+    public function __construct(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
+    /**
+     * (non-PHPdoc)
+     * @see BEAR\Resource.LinkerInterface::invoke()
+     * @throws Exception\Link
+     */
+    public function invoke(ResourceObject $ro, Request $request, $sourceValue)
+    {
+        $this->method = 'on' . ucfirst($request->method);
+        $links = $request->links;
+        $hasTargeted = false;
+        $refValue =& $sourceValue;
+        $q = new SplQueue();
+        $q->setIteratorMode(\SplQueue::IT_MODE_DELETE);
+        // has links
+        foreach ($links as $link) {
+            $cnt = $q->count();
+            if ($cnt !== 0) {
+                for ($i = 0; $i < $cnt; $i++) {
+                    list($item, $ro) = $q->dequeue();
+                    $request = $this->getLinkResult($ro, $link->key, (array) $item);
+                    if (!$request instanceof Request) {
+                        throw new Exception\Link('From list to instance link is not currently supported.');
+                    }
+                    $ro = $request->ro;
+                    $requestResult = $request();
+                    /** @var $requestResult AbstractObject */
+                    $a = $requestResult->body;
+                    $item[$link->key] = $a;
+                    $item = (array) $item;
+                }
+                continue;
+            }
+            if ($this->isList($refValue)) {
+                foreach ($refValue as &$item) {
+                    $request = $this->getLinkResult($ro, $link->key, $item);
+                    /** @noinspection PhpUndefinedFieldInspection */
+                    $requestResult = is_callable($request) ? $request()->body : $request;
+                    $requestResult = is_array($requestResult) ? new \ArrayObject($requestResult) : $requestResult;
+                    $item[$link->key] = $requestResult;
+                    $q->enqueue(array($requestResult, $request->ro));
+                }
+                $refValue =& $requestResult;
+                continue;
+            }
+            $request = $this->getLinkResult($ro, $link->key, $refValue);
+            if (!$request instanceof Request) {
+                return $request;
+            }
+            $ro = $request->ro;
+            $requestResult = $request();
+            switch ($link->type) {
+                case LinkType::NEW_LINK:
+                    if (!$hasTargeted) {
+                        $sourceValue = array($sourceValue, $requestResult->body);
+                        $hasTargeted = true;
+                    } else {
+                        $sourceValue[] = $requestResult->body;
+                    }
+                    $refValue =& $requestResult;
+                    break;
+                case LinkType::CRAWL_LINK:
+                    $refValue[$link->key] = $requestResult->body;
+                    $refValue =& $requestResult;
+                    break;
+                case LinkType::SELF_LINK:
+                default:
+                    $refValue = $requestResult->body;
+            }
+        }
+        array_walk_recursive($sourceValue, function (&$in) {
+            if ($in instanceof \ArrayObject) {
+                $in = (array) $in;
+            }
+        });
+        return $sourceValue;
+    }
+    /**
+     * Call link method
+     *
+     * @param mixed  $ro
+     * @param string $linkKey
+     * @param mixed  $input
+     *
+     * @return mixed
+     * @throws BadLinkRequest
+     */
+    private function getLinkResult($ro, $linkKey, $input)
+    {
+        $method = 'onLink' . ucfirst($linkKey);
+        if (!method_exists($ro, $method)) {
+            $annotations = $this->reader->getMethodAnnotations(new ReflectionMethod($ro, $this->method));
+            foreach ($annotations as $annotation) {
+                if ($annotation instanceof AnnotationLink) {
+                    if ($annotation->rel === $linkKey) {
+                        $uri = $annotation->href;
+                    }
+                    $method = $annotation->method;
+                    if ($input instanceof AbstractObject) {
+                        $input = $input->body;
+                    }
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    /** @noinspection PhpUndefinedVariableInspection */
+                    $result = $this->resource->{$method}->uri($uri)->withQuery($input)->eager->request();
+                    return $result;
+                }
+            }
+            throw new BadLinkRequest(get_class($ro) . "::{$method}");
+        }
+        if (!$input instanceof AbstractObject) {
+            $ro->body = $input;
+            $input = $ro;
+        }
+        $result = call_user_func(array($ro, $method), $input);
+        return $result;
+    }
+    /**
+     * Is data list ?
+     *
+     * @param mixed $list
+     *
+     * @return boolean
+     */
+    private function isList($list)
+    {
+        if (!is_array($list)) {
+            return false;
+        }
+        $list = array_values((array) $list);
+        $result = count($list) > 1 && isset($list[0]) && isset($list[1]) && is_array($list[0]) && is_array($list[1]) && array_keys($list[0]) === array_keys($list[1]);
+        return $result;
+    }
+}
+/**
  * 
  * This file is part of the Aura Project for PHP.
  * 
@@ -6762,6 +8794,50 @@ class HandlerFactory
     {
         $params = array_merge($this->params, $params);
         return new Handler($params['sender'], $params['signal'], $params['callback']);
+    }
+}
+/**
+ * 
+ * This file is part of the Aura Project for PHP.
+ * 
+ * @package Aura.Signal
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ */
+namespace Aura\Signal;
+
+/**
+ * 
+ * A factory to create Result objects.
+ * 
+ * @package Aura.Signal
+ * 
+ */
+class ResultFactory
+{
+    /**
+     * 
+     * An array of default parameters for Result objects.
+     * 
+     * @var array
+     * 
+     */
+    protected $params = array('origin' => null, 'sender' => null, 'signal' => null, 'value' => null);
+    /**
+     * 
+     * Creates and returns a new Option object.
+     * 
+     * @param array $params An array of key-value pairs corresponding to
+     * Result constructor params.
+     * 
+     * @return Result
+     * 
+     */
+    public function newInstance(array $params)
+    {
+        $params = array_merge($this->params, $params);
+        return new Result($params['origin'], $params['sender'], $params['signal'], $params['value']);
     }
 }
 /**
@@ -6825,91 +8901,6 @@ class ResultCollection extends \ArrayObject
             return $last->value === Manager::STOP;
         }
     }
-}
-/**
- * 
- * This file is part of the Aura Project for PHP.
- * 
- * @package Aura.Signal
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- */
-namespace Aura\Signal;
-
-/**
- * 
- * A factory to create Result objects.
- * 
- * @package Aura.Signal
- * 
- */
-class ResultFactory
-{
-    /**
-     * 
-     * An array of default parameters for Result objects.
-     * 
-     * @var array
-     * 
-     */
-    protected $params = array('origin' => null, 'sender' => null, 'signal' => null, 'value' => null);
-    /**
-     * 
-     * Creates and returns a new Option object.
-     * 
-     * @param array $params An array of key-value pairs corresponding to
-     * Result constructor params.
-     * 
-     * @return Result
-     * 
-     */
-    public function newInstance(array $params)
-    {
-        $params = array_merge($this->params, $params);
-        return new Result($params['origin'], $params['sender'], $params['signal'], $params['value']);
-    }
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-use IteratorAggregate;
-use BEAR\Resource\AbstractObject as ResourceObject;
-/**
- * Interface for resource logger
- *
- * @package BEAR.Resource
- */
-interface LoggerInterface extends IteratorAggregate
-{
-    /**
-     * Log
-     *
-     * @param RequestInterface $request
-     * @param ResourceObject   $result
-     *
-     * @return void
-     */
-    public function log(RequestInterface $request, ResourceObject $result);
-    /**
-     * Set log writer
-     *
-     * @param LogWriterInterface $writer
-     *
-     * @return void
-     */
-    public function setWriter(LogWriterInterface $writer);
-    /**
-     * write log
-     *
-     * @return void
-     */
-    public function write();
 }
 /**
  * This file is part of the BEAR.Resource package
@@ -7249,28 +9240,6 @@ final class Zf2Log implements LogWriterInterface
     }
 }
 /**
- * This file is part of the Ray package.
- *
- * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di;
-
-/**
- * Interface for object provider. (lazy-loading)
- *
- * @package Ray.Di
- */
-interface ProviderInterface
-{
-    /**
-     * Get object
-     *
-     * @return object
-     */
-    public function get();
-}
-/**
  * This file is part of the BEAR.Package package
  *
  * @package BEAR.Package
@@ -7316,6 +9285,1160 @@ final class Zf2LogProvider implements ProviderInterface
         $writer = new Db($this->db, 'log');
         $this->zf2Log->addWriter($writer);
         return $this->zf2Log;
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log;
+
+use Traversable;
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ */
+interface LoggerInterface
+{
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function emerg($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function alert($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function crit($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function err($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function warn($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function notice($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function info($message, $extra = array());
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return LoggerInterface
+     */
+    public function debug($message, $extra = array());
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log;
+
+use DateTime;
+use ErrorException;
+use Traversable;
+use Zend\Stdlib\ArrayUtils;
+use Zend\Stdlib\SplPriorityQueue;
+/**
+ * Logging messages with a stack of backends
+ *
+ * @category   Zend
+ * @package    Zend_Log
+ */
+class Logger implements LoggerInterface
+{
+    /**
+     * @const int defined from the BSD Syslog message severities
+     * @link http://tools.ietf.org/html/rfc3164
+     */
+    const EMERG = 0;
+    const ALERT = 1;
+    const CRIT = 2;
+    const ERR = 3;
+    const WARN = 4;
+    const NOTICE = 5;
+    const INFO = 6;
+    const DEBUG = 7;
+    /**
+     * Map of PHP error constants to log priorities
+     *
+     * @var array
+     */
+    protected static $errorPriorityMap = array(E_NOTICE => self::NOTICE, E_USER_NOTICE => self::NOTICE, E_WARNING => self::WARN, E_CORE_WARNING => self::WARN, E_USER_WARNING => self::WARN, E_ERROR => self::ERR, E_USER_ERROR => self::ERR, E_CORE_ERROR => self::ERR, E_RECOVERABLE_ERROR => self::ERR, E_STRICT => self::DEBUG, E_DEPRECATED => self::DEBUG, E_USER_DEPRECATED => self::DEBUG);
+    /**
+     * List of priority code => priority (short) name
+     *
+     * @var array
+     */
+    protected $priorities = array(self::EMERG => 'EMERG', self::ALERT => 'ALERT', self::CRIT => 'CRIT', self::ERR => 'ERR', self::WARN => 'WARN', self::NOTICE => 'NOTICE', self::INFO => 'INFO', self::DEBUG => 'DEBUG');
+    /**
+     * Writers
+     *
+     * @var SplPriorityQueue
+     */
+    protected $writers;
+    /**
+     * Writer plugins
+     *
+     * @var WriterPluginManager
+     */
+    protected $writerPlugins;
+    /**
+     * Registered error handler
+     *
+     * @var bool
+     */
+    protected static $registeredErrorHandler = false;
+    /**
+     * Registered exception handler
+     *
+     * @var bool
+     */
+    protected static $registeredExceptionHandler = false;
+    /**
+     * Constructor
+     *
+     * @todo support configuration (writers, dateTimeFormat, and writer plugin manager)
+     * @return Logger
+     */
+    public function __construct()
+    {
+        $this->writers = new SplPriorityQueue();
+    }
+    /**
+     * Shutdown all writers
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        foreach ($this->writers as $writer) {
+            try {
+                $writer->shutdown();
+            } catch (\Exception $e) {
+                
+            }
+        }
+    }
+    /**
+     * Get writer plugin manager
+     *
+     * @return WriterPluginManager
+     */
+    public function getWriterPluginManager()
+    {
+        if (null === $this->writerPlugins) {
+            $this->setWriterPluginManager(new WriterPluginManager());
+        }
+        return $this->writerPlugins;
+    }
+    /**
+     * Set writer plugin manager
+     *
+     * @param  string|WriterPluginManager $plugins
+     * @return Logger
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setWriterPluginManager($plugins)
+    {
+        if (is_string($plugins)) {
+            $plugins = new $plugins();
+        }
+        if (!$plugins instanceof WriterPluginManager) {
+            throw new Exception\InvalidArgumentException(sprintf('Writer plugin manager must extend %s\\WriterPluginManager; received %s', __NAMESPACE__, is_object($plugins) ? get_class($plugins) : gettype($plugins)));
+        }
+        $this->writerPlugins = $plugins;
+        return $this;
+    }
+    /**
+     * Get writer instance
+     *
+     * @param string $name
+     * @param array|null $options
+     * @return Writer\WriterInterface
+     */
+    public function writerPlugin($name, array $options = null)
+    {
+        return $this->getWriterPluginManager()->get($name, $options);
+    }
+    /**
+     * Add a writer to a logger
+     *
+     * @param  string|Writer\WriterInterface $writer
+     * @param  int $priority
+     * @param  array|null $options
+     * @return Logger
+     * @throws Exception\InvalidArgumentException
+     */
+    public function addWriter($writer, $priority = 1, array $options = null)
+    {
+        if (is_string($writer)) {
+            $writer = $this->writerPlugin($writer, $options);
+        } elseif (!$writer instanceof Writer\WriterInterface) {
+            throw new Exception\InvalidArgumentException(sprintf('Writer must implement Zend\\Log\\Writer; received "%s"', is_object($writer) ? get_class($writer) : gettype($writer)));
+        }
+        $this->writers->insert($writer, $priority);
+        return $this;
+    }
+    /**
+     * Get writers
+     *
+     * @return SplPriorityQueue
+     */
+    public function getWriters()
+    {
+        return $this->writers;
+    }
+    /**
+     * Set the writers
+     *
+     * @param  SplPriorityQueue $writers
+     * @return Logger
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setWriters(SplPriorityQueue $writers)
+    {
+        foreach ($writers->toArray() as $writer) {
+            if (!$writer instanceof Writer\WriterInterface) {
+                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Zend\\Log\\Writer');
+            }
+        }
+        $this->writers = $writers;
+        return $this;
+    }
+    /**
+     * Add a message as a log entry
+     *
+     * @param  int $priority
+     * @param  mixed $message
+     * @param  array|Traversable $extra
+     * @return Logger
+     * @throws Exception\InvalidArgumentException if message can't be cast to string
+     * @throws Exception\InvalidArgumentException if extra can't be iterated over
+     * @throws Exception\RuntimeException if no log writer specified
+     */
+    public function log($priority, $message, $extra = array())
+    {
+        if (!is_int($priority) || $priority < 0 || $priority >= count($this->priorities)) {
+            throw new Exception\InvalidArgumentException(sprintf('$priority must be an integer > 0 and < %d; received %s', count($this->priorities), var_export($priority, 1)));
+        }
+        if (is_object($message) && !method_exists($message, '__toString')) {
+            throw new Exception\InvalidArgumentException('$message must implement magic __toString() method');
+        }
+        if (!is_array($extra) && !$extra instanceof Traversable) {
+            throw new Exception\InvalidArgumentException('$extra must be an array or implement Traversable');
+        } elseif ($extra instanceof Traversable) {
+            $extra = ArrayUtils::iteratorToArray($extra);
+        }
+        if ($this->writers->count() === 0) {
+            throw new Exception\RuntimeException('No log writer specified');
+        }
+        $timestamp = new DateTime();
+        if (is_array($message)) {
+            $message = var_export($message, true);
+        }
+        foreach ($this->writers->toArray() as $writer) {
+            $writer->write(array('timestamp' => $timestamp, 'priority' => (int) $priority, 'priorityName' => $this->priorities[$priority], 'message' => (string) $message, 'extra' => $extra));
+        }
+        return $this;
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function emerg($message, $extra = array())
+    {
+        return $this->log(self::EMERG, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function alert($message, $extra = array())
+    {
+        return $this->log(self::ALERT, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function crit($message, $extra = array())
+    {
+        return $this->log(self::CRIT, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function err($message, $extra = array())
+    {
+        return $this->log(self::ERR, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function warn($message, $extra = array())
+    {
+        return $this->log(self::WARN, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function notice($message, $extra = array())
+    {
+        return $this->log(self::NOTICE, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function info($message, $extra = array())
+    {
+        return $this->log(self::INFO, $message, $extra);
+    }
+    /**
+     * @param string $message
+     * @param array|Traversable $extra
+     * @return Logger
+     */
+    public function debug($message, $extra = array())
+    {
+        return $this->log(self::DEBUG, $message, $extra);
+    }
+    /**
+     * Register logging system as an error handler to log PHP errors
+     *
+     * @link http://www.php.net/manual/en/function.set-error-handler.php
+     * @param  Logger $logger
+     * @return bool
+     * @throws Exception\InvalidArgumentException if logger is null
+     */
+    public static function registerErrorHandler(Logger $logger)
+    {
+        // Only register once per instance
+        if (static::$registeredErrorHandler) {
+            return false;
+        }
+        if ($logger === null) {
+            throw new Exception\InvalidArgumentException('Invalid Logger specified');
+        }
+        $errorHandlerMap = static::$errorPriorityMap;
+        set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) use($errorHandlerMap, $logger) {
+            $errorLevel = error_reporting();
+            if ($errorLevel & $errno) {
+                if (isset($errorHandlerMap[$errno])) {
+                    $priority = $errorHandlerMap[$errno];
+                } else {
+                    $priority = Logger::INFO;
+                }
+                $logger->log($priority, $errstr, array('errno' => $errno, 'file' => $errfile, 'line' => $errline, 'context' => $errcontext));
+            }
+        });
+        static::$registeredErrorHandler = true;
+        return true;
+    }
+    /**
+     * Unregister error handler
+     *
+     */
+    public static function unregisterErrorHandler()
+    {
+        restore_error_handler();
+        static::$registeredErrorHandler = false;
+    }
+    /**
+     * Register logging system as an exception handler to log PHP exceptions
+     *
+     * @link http://www.php.net/manual/en/function.set-exception-handler.php
+     * @param Logger $logger
+     * @return bool
+     * @throws Exception\InvalidArgumentException if logger is null
+     */
+    public static function registerExceptionHandler(Logger $logger)
+    {
+        // Only register once per instance
+        if (static::$registeredExceptionHandler) {
+            return false;
+        }
+        if ($logger === null) {
+            throw new Exception\InvalidArgumentException('Invalid Logger specified');
+        }
+        $errorPriorityMap = static::$errorPriorityMap;
+        set_exception_handler(function ($exception) use($logger, $errorPriorityMap) {
+            $logMessages = array();
+            do {
+                $priority = Logger::ERR;
+                if ($exception instanceof ErrorException && isset($errorPriorityMap[$exception->getSeverity()])) {
+                    $priority = $errorPriorityMap[$exception->getSeverity()];
+                }
+                $extra = array('file' => $exception->getFile(), 'line' => $exception->getLine(), 'trace' => $exception->getTrace());
+                if (isset($exception->xdebug_message)) {
+                    $extra['xdebug'] = $exception->xdebug_message;
+                }
+                $logMessages[] = array('priority' => $priority, 'message' => $exception->getMessage(), 'extra' => $extra);
+                $exception = $exception->getPrevious();
+            } while ($exception);
+            foreach (array_reverse($logMessages) as $logMessage) {
+                $logger->log($logMessage['priority'], $logMessage['message'], $logMessage['extra']);
+            }
+        });
+        static::$registeredExceptionHandler = true;
+        return true;
+    }
+    /**
+     * Unregister exception handler
+     */
+    public static function unregisterExceptionHandler()
+    {
+        restore_exception_handler();
+        static::$registeredExceptionHandler = false;
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Stdlib
+ */
+namespace Zend\Stdlib;
+
+use Serializable;
+/**
+ * Serializable version of SplPriorityQueue
+ *
+ * Also, provides predictable heap order for datums added with the same priority
+ * (i.e., they will be emitted in the same order they are enqueued).
+ *
+ * @category   Zend
+ * @package    Zend_Stdlib
+ */
+class SplPriorityQueue extends \SplPriorityQueue implements Serializable
+{
+    /**
+     * @var int Seed used to ensure queue order for items of the same priority
+     */
+    protected $serial = PHP_INT_MAX;
+    /**
+     * Insert a value with a given priority
+     *
+     * Utilizes {@var $serial} to ensure that values of equal priority are
+     * emitted in the same order in which they are inserted.
+     *
+     * @param  mixed $datum
+     * @param  mixed $priority
+     * @return void
+     */
+    public function insert($datum, $priority)
+    {
+        if (!is_array($priority)) {
+            $priority = array($priority, $this->serial--);
+        }
+        parent::insert($datum, $priority);
+    }
+    /**
+     * Serialize to an array
+     *
+     * Array will be priority => data pairs
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = array();
+        foreach (clone $this as $item) {
+            $array[] = $item;
+        }
+        return $array;
+    }
+    /**
+     * Serialize
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        $clone = clone $this;
+        $clone->setExtractFlags(self::EXTR_BOTH);
+        $data = array();
+        foreach ($clone as $item) {
+            $data[] = $item;
+        }
+        return serialize($data);
+    }
+    /**
+     * Deserialize
+     *
+     * @param  string $data
+     * @return void
+     */
+    public function unserialize($data)
+    {
+        foreach (unserialize($data) as $item) {
+            $this->insert($item['data'], $item['priority']);
+        }
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Writer;
+
+use Zend\Log\Filter\FilterInterface as Filter;
+use Zend\Log\Formatter\FormatterInterface as Formatter;
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ */
+interface WriterInterface
+{
+    /**
+     * Add a log filter to the writer
+     *
+     * @param  int|Filter $filter
+     * @return WriterInterface
+     */
+    public function addFilter($filter);
+    /**
+     * Set a message formatter for the writer
+     *
+     * @param Formatter $formatter
+     * @return WriterInterface
+     */
+    public function setFormatter(Formatter $formatter);
+    /**
+     * Write a log message
+     *
+     * @param  array $event
+     * @return WriterInterface
+     */
+    public function write(array $event);
+    /**
+     * Perform shutdown activities
+     *
+     * @return void
+     */
+    public function shutdown();
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Writer;
+
+use Zend\Log\Exception;
+use Zend\Log\Filter;
+use Zend\Log\Formatter\FormatterInterface as Formatter;
+use Zend\Stdlib\ErrorHandler;
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ * @subpackage Writer
+ */
+abstract class AbstractWriter implements WriterInterface
+{
+    /**
+     * Filter plugins
+     *
+     * @var FilterPluginManager
+     */
+    protected $filterPlugins;
+    /**
+     * Filter chain
+     *
+     * @var Filter\FilterInterface[]
+     */
+    protected $filters = array();
+    /**
+     * Formats the log message before writing
+     *
+     * @var Formatter
+     */
+    protected $formatter;
+    /**
+     * Use Zend\Stdlib\ErrorHandler to report errors during calls to write
+     *
+     * @var bool
+     */
+    protected $convertWriteErrorsToExceptions = true;
+    /**
+     * Error level passed to Zend\Stdlib\ErrorHandler::start for errors reported during calls to write
+     *
+     * @var bool
+     */
+    protected $errorsToExceptionsConversionLevel = E_WARNING;
+    /**
+     * Add a filter specific to this writer.
+     *
+     * @param  int|string|Filter\FilterInterface $filter
+     * @param  array|null $options
+     * @return AbstractWriter
+     * @throws Exception\InvalidArgumentException
+     */
+    public function addFilter($filter, array $options = null)
+    {
+        if (is_int($filter)) {
+            $filter = new Filter\Priority($filter);
+        }
+        if (is_string($filter)) {
+            $filter = $this->filterPlugin($filter, $options);
+        }
+        if (!$filter instanceof Filter\FilterInterface) {
+            throw new Exception\InvalidArgumentException(sprintf('Writer must implement Zend\\Log\\Filter\\FilterInterface; received "%s"', is_object($filter) ? get_class($filter) : gettype($filter)));
+        }
+        $this->filters[] = $filter;
+        return $this;
+    }
+    /**
+     * Get filter plugin manager
+     *
+     * @return FilterPluginManager
+     */
+    public function getFilterPluginManager()
+    {
+        if (null === $this->filterPlugins) {
+            $this->setFilterPluginManager(new FilterPluginManager());
+        }
+        return $this->filterPlugins;
+    }
+    /**
+     * Set filter plugin manager
+     *
+     * @param  string|FilterPluginManager $plugins
+     * @return self
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setFilterPluginManager($plugins)
+    {
+        if (is_string($plugins)) {
+            $plugins = new $plugins();
+        }
+        if (!$plugins instanceof FilterPluginManager) {
+            throw new Exception\InvalidArgumentException(sprintf('Writer plugin manager must extend %s\\FilterPluginManager; received %s', __NAMESPACE__, is_object($plugins) ? get_class($plugins) : gettype($plugins)));
+        }
+        $this->filterPlugins = $plugins;
+        return $this;
+    }
+    /**
+     * Get filter instance
+     *
+     * @param string $name
+     * @param array|null $options
+     * @return Filter\FilterInterface
+     */
+    public function filterPlugin($name, array $options = null)
+    {
+        return $this->getFilterPluginManager()->get($name, $options);
+    }
+    /**
+     * Log a message to this writer.
+     *
+     * @param array $event log data event
+     * @return void
+     */
+    public function write(array $event)
+    {
+        foreach ($this->filters as $filter) {
+            if (!$filter->filter($event)) {
+                return;
+            }
+        }
+        $errorHandlerStarted = false;
+        if ($this->convertWriteErrorsToExceptions && !ErrorHandler::started()) {
+            ErrorHandler::start($this->errorsToExceptionsConversionLevel);
+            $errorHandlerStarted = true;
+        }
+        try {
+            $this->doWrite($event);
+        } catch (\Exception $e) {
+            if ($errorHandlerStarted) {
+                ErrorHandler::stop();
+                $errorHandlerStarted = false;
+            }
+            throw $e;
+        }
+        if ($errorHandlerStarted) {
+            $error = ErrorHandler::stop();
+            $errorHandlerStarted = false;
+            if ($error) {
+                throw new Exception\RuntimeException('Unable to write', 0, $error);
+            }
+        }
+    }
+    /**
+     * Set a new formatter for this writer
+     *
+     * @param  Formatter $formatter
+     * @return self
+     */
+    public function setFormatter(Formatter $formatter)
+    {
+        $this->formatter = $formatter;
+        return $this;
+    }
+    /**
+     * Set convert write errors to exception flag
+     *
+     * @param bool $ignoreWriteErrors
+     */
+    public function setConvertWriteErrorsToExceptions($convertErrors)
+    {
+        $this->convertWriteErrorsToExceptions = $convertErrors;
+    }
+    /**
+     * Perform shutdown activities such as closing open resources
+     *
+     * @return void
+     */
+    public function shutdown()
+    {
+        
+    }
+    /**
+     * Write a message to the log
+     *
+     * @param array $event log data event
+     * @return void
+     */
+    protected abstract function doWrite(array $event);
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Writer;
+
+use Zend\Log\Exception;
+use Zend\Log\Logger;
+use Zend\Log\Formatter\Simple as SimpleFormatter;
+/**
+ * Writes log messages to syslog
+ *
+ * @category   Zend
+ * @package    Zend_Log
+ * @subpackage Writer
+ */
+class Syslog extends AbstractWriter
+{
+    /**
+     * Maps Zend_Log priorities to PHP's syslog priorities
+     *
+     * @var array
+     */
+    protected $priorities = array(Logger::EMERG => LOG_EMERG, Logger::ALERT => LOG_ALERT, Logger::CRIT => LOG_CRIT, Logger::ERR => LOG_ERR, Logger::WARN => LOG_WARNING, Logger::NOTICE => LOG_NOTICE, Logger::INFO => LOG_INFO, Logger::DEBUG => LOG_DEBUG);
+    /**
+     * The default log priority - for unmapped custom priorities
+     *
+     * @var string
+     */
+    protected $defaultPriority = LOG_NOTICE;
+    /**
+     * Last application name set by a syslog-writer instance
+     *
+     * @var string
+     */
+    protected static $lastApplication;
+    /**
+     * Last facility name set by a syslog-writer instance
+     *
+     * @var string
+     */
+    protected static $lastFacility;
+    /**
+     * Application name used by this syslog-writer instance
+     *
+     * @var string
+     */
+    protected $appName = 'Zend\\Log';
+    /**
+     * Facility used by this syslog-writer instance
+     *
+     * @var int
+     */
+    protected $facility = LOG_USER;
+    /**
+     * Types of program available to logging of message
+     *
+     * @var array
+     */
+    protected $validFacilities = array();
+    /**
+     * Constructor
+     *
+     * @param  array $params Array of options; may include "application" and "facility" keys
+     * @return Syslog
+     */
+    public function __construct(array $params = array())
+    {
+        if (isset($params['application'])) {
+            $this->appName = $params['application'];
+        }
+        $runInitializeSyslog = true;
+        if (isset($params['facility'])) {
+            $this->setFacility($params['facility']);
+            $runInitializeSyslog = false;
+        }
+        if ($runInitializeSyslog) {
+            $this->initializeSyslog();
+        }
+        $this->setFormatter(new SimpleFormatter('%message%'));
+    }
+    /**
+     * Initialize values facilities
+     *
+     * @return void
+     */
+    protected function initializeValidFacilities()
+    {
+        $constants = array('LOG_AUTH', 'LOG_AUTHPRIV', 'LOG_CRON', 'LOG_DAEMON', 'LOG_KERN', 'LOG_LOCAL0', 'LOG_LOCAL1', 'LOG_LOCAL2', 'LOG_LOCAL3', 'LOG_LOCAL4', 'LOG_LOCAL5', 'LOG_LOCAL6', 'LOG_LOCAL7', 'LOG_LPR', 'LOG_MAIL', 'LOG_NEWS', 'LOG_SYSLOG', 'LOG_USER', 'LOG_UUCP');
+        foreach ($constants as $constant) {
+            if (defined($constant)) {
+                $this->validFacilities[] = constant($constant);
+            }
+        }
+    }
+    /**
+     * Initialize syslog / set application name and facility
+     *
+     * @return void
+     */
+    protected function initializeSyslog()
+    {
+        static::$lastApplication = $this->appName;
+        static::$lastFacility = $this->facility;
+        openlog($this->appName, LOG_PID, $this->facility);
+    }
+    /**
+     * Set syslog facility
+     *
+     * @param int $facility Syslog facility
+     * @return Syslog
+     * @throws Exception\InvalidArgumentException for invalid log facility
+     */
+    public function setFacility($facility)
+    {
+        if ($this->facility === $facility) {
+            return $this;
+        }
+        if (!count($this->validFacilities)) {
+            $this->initializeValidFacilities();
+        }
+        if (!in_array($facility, $this->validFacilities)) {
+            throw new Exception\InvalidArgumentException('Invalid log facility provided; please see http://php.net/openlog for a list of valid facility values');
+        }
+        if ('WIN' == strtoupper(substr(PHP_OS, 0, 3)) && $facility !== LOG_USER) {
+            throw new Exception\InvalidArgumentException('Only LOG_USER is a valid log facility on Windows');
+        }
+        $this->facility = $facility;
+        $this->initializeSyslog();
+        return $this;
+    }
+    /**
+     * Set application name
+     *
+     * @param string $appName Application name
+     * @return Syslog
+     */
+    public function setApplicationName($appName)
+    {
+        if ($this->appName === $appName) {
+            return $this;
+        }
+        $this->appName = $appName;
+        $this->initializeSyslog();
+        return $this;
+    }
+    /**
+     * Close syslog.
+     *
+     * @return void
+     */
+    public function shutdown()
+    {
+        closelog();
+    }
+    /**
+     * Write a message to syslog.
+     *
+     * @param array $event event data
+     * @return void
+     */
+    protected function doWrite(array $event)
+    {
+        if (array_key_exists($event['priority'], $this->priorities)) {
+            $priority = $this->priorities[$event['priority']];
+        } else {
+            $priority = $this->defaultPriority;
+        }
+        if ($this->appName !== static::$lastApplication || $this->facility !== static::$lastFacility) {
+            $this->initializeSyslog();
+        }
+        $message = $this->formatter->format($event);
+        syslog($priority, $message);
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Formatter;
+
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ */
+interface FormatterInterface
+{
+    /**
+     * Default format specifier for DateTime objects is ISO 8601
+     *
+     * @see http://php.net/manual/en/function.date.php
+     */
+    const DEFAULT_DATETIME_FORMAT = 'c';
+    /**
+     * Formats data into a single line to be written by the writer.
+     *
+     * @param array $event event data
+     * @return string formatted line to write to the log
+     */
+    public function format($event);
+    /**
+     * Get the format specifier for DateTime objects
+     *
+     * @return string
+     */
+    public function getDateTimeFormat();
+    /**
+     * Set the format specifier for DateTime objects
+     *
+     * @see http://php.net/manual/en/function.date.php
+     * @param string $dateTimeFormat DateTime format
+     * @return FormatterInterface
+     */
+    public function setDateTimeFormat($dateTimeFormat);
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Formatter;
+
+use DateTime;
+use Traversable;
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ * @subpackage Formatter
+ */
+class Base implements FormatterInterface
+{
+    /**
+     * Format specifier for DateTime objects in event data (default: ISO 8601)
+     *
+     * @see http://php.net/manual/en/function.date.php
+     * @var string
+     */
+    protected $dateTimeFormat = self::DEFAULT_DATETIME_FORMAT;
+    /**
+     * Class constructor
+     *
+     * @see http://php.net/manual/en/function.date.php
+     * @param null|string $dateTimeFormat Format for DateTime objects
+     */
+    public function __construct($dateTimeFormat = null)
+    {
+        if (null !== $dateTimeFormat) {
+            $this->dateTimeFormat = $dateTimeFormat;
+        }
+    }
+    /**
+     * Formats data to be written by the writer.
+     *
+     * @param array $event event data
+     * @return array
+     */
+    public function format($event)
+    {
+        foreach ($event as $key => $value) {
+            // Keep extra as an array
+            if ('extra' === $key) {
+                $event[$key] = self::format($value);
+            } else {
+                $event[$key] = $this->normalize($value);
+            }
+        }
+        return $event;
+    }
+    /**
+     * Normalize all non-scalar data types (except null) in a string value
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function normalize($value)
+    {
+        if (is_scalar($value) || null === $value) {
+            return $value;
+        }
+        if ($value instanceof DateTime) {
+            $value = $value->format($this->getDateTimeFormat());
+        } elseif (is_array($value) || $value instanceof Traversable) {
+            if ($value instanceof Traversable) {
+                $value = iterator_to_array($value);
+            }
+            foreach ($value as $key => $subvalue) {
+                $value[$key] = $this->normalize($subvalue);
+            }
+            $value = json_encode($value);
+        } elseif (is_object($value) && !method_exists($value, '__toString')) {
+            $value = sprintf('object(%s) %s', get_class($value), json_encode($value));
+        } elseif (is_resource($value)) {
+            $value = sprintf('resource(%s)', get_resource_type($value));
+        } elseif (!is_object($value)) {
+            $value = gettype($value);
+        }
+        return (string) $value;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function getDateTimeFormat()
+    {
+        return $this->dateTimeFormat;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function setDateTimeFormat($dateTimeFormat)
+    {
+        $this->dateTimeFormat = (string) $dateTimeFormat;
+        return $this;
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Formatter;
+
+use Zend\Log\Exception;
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ * @subpackage Formatter
+ */
+class Simple extends Base
+{
+    const DEFAULT_FORMAT = '%timestamp% %priorityName% (%priority%): %message% %extra%';
+    /**
+     * Format specifier for log messages
+     *
+     * @var string
+     */
+    protected $format;
+    /**
+     * Class constructor
+     *
+     * @see http://php.net/manual/en/function.date.php
+     * @param null|string $format Format specifier for log messages
+     * @param null|string $dateTimeFormat Format specifier for DateTime objects in event data
+     * @throws Exception\InvalidArgumentException
+     */
+    public function __construct($format = null, $dateTimeFormat = null)
+    {
+        if (isset($format) && !is_string($format)) {
+            throw new Exception\InvalidArgumentException('Format must be a string');
+        }
+        $this->format = isset($format) ? $format : static::DEFAULT_FORMAT;
+        parent::__construct($dateTimeFormat);
+    }
+    /**
+     * Formats data into a single line to be written by the writer.
+     *
+     * @param array $event event data
+     * @return string formatted line to write to the log
+     */
+    public function format($event)
+    {
+        $output = $this->format;
+        $event = parent::format($event);
+        foreach ($event as $name => $value) {
+            if ('extra' == $name && count($value)) {
+                $value = $this->normalize($value);
+            } elseif ('extra' == $name) {
+                // Don't print an empty array
+                $value = '';
+            }
+            $output = str_replace("%{$name}%", $value, $output);
+        }
+        if (isset($event['extra']) && empty($event['extra']) && false !== strpos($this->format, '%extra%')) {
+            $output = rtrim($output, ' ');
+        }
+        return $output;
     }
 }
 /**
@@ -9771,2190 +12894,6 @@ class ResultSet extends AbstractResultSet
     }
 }
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log;
-
-use Traversable;
-/**
- * @category   Zend
- * @package    Zend_Log
- */
-interface LoggerInterface
-{
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function emerg($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function alert($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function crit($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function err($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function warn($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function notice($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function info($message, $extra = array());
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return LoggerInterface
-     */
-    public function debug($message, $extra = array());
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log;
-
-use DateTime;
-use ErrorException;
-use Traversable;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Stdlib\SplPriorityQueue;
-/**
- * Logging messages with a stack of backends
- *
- * @category   Zend
- * @package    Zend_Log
- */
-class Logger implements LoggerInterface
-{
-    /**
-     * @const int defined from the BSD Syslog message severities
-     * @link http://tools.ietf.org/html/rfc3164
-     */
-    const EMERG = 0;
-    const ALERT = 1;
-    const CRIT = 2;
-    const ERR = 3;
-    const WARN = 4;
-    const NOTICE = 5;
-    const INFO = 6;
-    const DEBUG = 7;
-    /**
-     * Map of PHP error constants to log priorities
-     *
-     * @var array
-     */
-    protected static $errorPriorityMap = array(E_NOTICE => self::NOTICE, E_USER_NOTICE => self::NOTICE, E_WARNING => self::WARN, E_CORE_WARNING => self::WARN, E_USER_WARNING => self::WARN, E_ERROR => self::ERR, E_USER_ERROR => self::ERR, E_CORE_ERROR => self::ERR, E_RECOVERABLE_ERROR => self::ERR, E_STRICT => self::DEBUG, E_DEPRECATED => self::DEBUG, E_USER_DEPRECATED => self::DEBUG);
-    /**
-     * List of priority code => priority (short) name
-     *
-     * @var array
-     */
-    protected $priorities = array(self::EMERG => 'EMERG', self::ALERT => 'ALERT', self::CRIT => 'CRIT', self::ERR => 'ERR', self::WARN => 'WARN', self::NOTICE => 'NOTICE', self::INFO => 'INFO', self::DEBUG => 'DEBUG');
-    /**
-     * Writers
-     *
-     * @var SplPriorityQueue
-     */
-    protected $writers;
-    /**
-     * Writer plugins
-     *
-     * @var WriterPluginManager
-     */
-    protected $writerPlugins;
-    /**
-     * Registered error handler
-     *
-     * @var bool
-     */
-    protected static $registeredErrorHandler = false;
-    /**
-     * Registered exception handler
-     *
-     * @var bool
-     */
-    protected static $registeredExceptionHandler = false;
-    /**
-     * Constructor
-     *
-     * @todo support configuration (writers, dateTimeFormat, and writer plugin manager)
-     * @return Logger
-     */
-    public function __construct()
-    {
-        $this->writers = new SplPriorityQueue();
-    }
-    /**
-     * Shutdown all writers
-     *
-     * @return void
-     */
-    public function __destruct()
-    {
-        foreach ($this->writers as $writer) {
-            try {
-                $writer->shutdown();
-            } catch (\Exception $e) {
-                
-            }
-        }
-    }
-    /**
-     * Get writer plugin manager
-     *
-     * @return WriterPluginManager
-     */
-    public function getWriterPluginManager()
-    {
-        if (null === $this->writerPlugins) {
-            $this->setWriterPluginManager(new WriterPluginManager());
-        }
-        return $this->writerPlugins;
-    }
-    /**
-     * Set writer plugin manager
-     *
-     * @param  string|WriterPluginManager $plugins
-     * @return Logger
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setWriterPluginManager($plugins)
-    {
-        if (is_string($plugins)) {
-            $plugins = new $plugins();
-        }
-        if (!$plugins instanceof WriterPluginManager) {
-            throw new Exception\InvalidArgumentException(sprintf('Writer plugin manager must extend %s\\WriterPluginManager; received %s', __NAMESPACE__, is_object($plugins) ? get_class($plugins) : gettype($plugins)));
-        }
-        $this->writerPlugins = $plugins;
-        return $this;
-    }
-    /**
-     * Get writer instance
-     *
-     * @param string $name
-     * @param array|null $options
-     * @return Writer\WriterInterface
-     */
-    public function writerPlugin($name, array $options = null)
-    {
-        return $this->getWriterPluginManager()->get($name, $options);
-    }
-    /**
-     * Add a writer to a logger
-     *
-     * @param  string|Writer\WriterInterface $writer
-     * @param  int $priority
-     * @param  array|null $options
-     * @return Logger
-     * @throws Exception\InvalidArgumentException
-     */
-    public function addWriter($writer, $priority = 1, array $options = null)
-    {
-        if (is_string($writer)) {
-            $writer = $this->writerPlugin($writer, $options);
-        } elseif (!$writer instanceof Writer\WriterInterface) {
-            throw new Exception\InvalidArgumentException(sprintf('Writer must implement Zend\\Log\\Writer; received "%s"', is_object($writer) ? get_class($writer) : gettype($writer)));
-        }
-        $this->writers->insert($writer, $priority);
-        return $this;
-    }
-    /**
-     * Get writers
-     *
-     * @return SplPriorityQueue
-     */
-    public function getWriters()
-    {
-        return $this->writers;
-    }
-    /**
-     * Set the writers
-     *
-     * @param  SplPriorityQueue $writers
-     * @return Logger
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setWriters(SplPriorityQueue $writers)
-    {
-        foreach ($writers->toArray() as $writer) {
-            if (!$writer instanceof Writer\WriterInterface) {
-                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Zend\\Log\\Writer');
-            }
-        }
-        $this->writers = $writers;
-        return $this;
-    }
-    /**
-     * Add a message as a log entry
-     *
-     * @param  int $priority
-     * @param  mixed $message
-     * @param  array|Traversable $extra
-     * @return Logger
-     * @throws Exception\InvalidArgumentException if message can't be cast to string
-     * @throws Exception\InvalidArgumentException if extra can't be iterated over
-     * @throws Exception\RuntimeException if no log writer specified
-     */
-    public function log($priority, $message, $extra = array())
-    {
-        if (!is_int($priority) || $priority < 0 || $priority >= count($this->priorities)) {
-            throw new Exception\InvalidArgumentException(sprintf('$priority must be an integer > 0 and < %d; received %s', count($this->priorities), var_export($priority, 1)));
-        }
-        if (is_object($message) && !method_exists($message, '__toString')) {
-            throw new Exception\InvalidArgumentException('$message must implement magic __toString() method');
-        }
-        if (!is_array($extra) && !$extra instanceof Traversable) {
-            throw new Exception\InvalidArgumentException('$extra must be an array or implement Traversable');
-        } elseif ($extra instanceof Traversable) {
-            $extra = ArrayUtils::iteratorToArray($extra);
-        }
-        if ($this->writers->count() === 0) {
-            throw new Exception\RuntimeException('No log writer specified');
-        }
-        $timestamp = new DateTime();
-        if (is_array($message)) {
-            $message = var_export($message, true);
-        }
-        foreach ($this->writers->toArray() as $writer) {
-            $writer->write(array('timestamp' => $timestamp, 'priority' => (int) $priority, 'priorityName' => $this->priorities[$priority], 'message' => (string) $message, 'extra' => $extra));
-        }
-        return $this;
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function emerg($message, $extra = array())
-    {
-        return $this->log(self::EMERG, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function alert($message, $extra = array())
-    {
-        return $this->log(self::ALERT, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function crit($message, $extra = array())
-    {
-        return $this->log(self::CRIT, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function err($message, $extra = array())
-    {
-        return $this->log(self::ERR, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function warn($message, $extra = array())
-    {
-        return $this->log(self::WARN, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function notice($message, $extra = array())
-    {
-        return $this->log(self::NOTICE, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function info($message, $extra = array())
-    {
-        return $this->log(self::INFO, $message, $extra);
-    }
-    /**
-     * @param string $message
-     * @param array|Traversable $extra
-     * @return Logger
-     */
-    public function debug($message, $extra = array())
-    {
-        return $this->log(self::DEBUG, $message, $extra);
-    }
-    /**
-     * Register logging system as an error handler to log PHP errors
-     *
-     * @link http://www.php.net/manual/en/function.set-error-handler.php
-     * @param  Logger $logger
-     * @return bool
-     * @throws Exception\InvalidArgumentException if logger is null
-     */
-    public static function registerErrorHandler(Logger $logger)
-    {
-        // Only register once per instance
-        if (static::$registeredErrorHandler) {
-            return false;
-        }
-        if ($logger === null) {
-            throw new Exception\InvalidArgumentException('Invalid Logger specified');
-        }
-        $errorHandlerMap = static::$errorPriorityMap;
-        set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) use($errorHandlerMap, $logger) {
-            $errorLevel = error_reporting();
-            if ($errorLevel & $errno) {
-                if (isset($errorHandlerMap[$errno])) {
-                    $priority = $errorHandlerMap[$errno];
-                } else {
-                    $priority = Logger::INFO;
-                }
-                $logger->log($priority, $errstr, array('errno' => $errno, 'file' => $errfile, 'line' => $errline, 'context' => $errcontext));
-            }
-        });
-        static::$registeredErrorHandler = true;
-        return true;
-    }
-    /**
-     * Unregister error handler
-     *
-     */
-    public static function unregisterErrorHandler()
-    {
-        restore_error_handler();
-        static::$registeredErrorHandler = false;
-    }
-    /**
-     * Register logging system as an exception handler to log PHP exceptions
-     *
-     * @link http://www.php.net/manual/en/function.set-exception-handler.php
-     * @param Logger $logger
-     * @return bool
-     * @throws Exception\InvalidArgumentException if logger is null
-     */
-    public static function registerExceptionHandler(Logger $logger)
-    {
-        // Only register once per instance
-        if (static::$registeredExceptionHandler) {
-            return false;
-        }
-        if ($logger === null) {
-            throw new Exception\InvalidArgumentException('Invalid Logger specified');
-        }
-        $errorPriorityMap = static::$errorPriorityMap;
-        set_exception_handler(function ($exception) use($logger, $errorPriorityMap) {
-            $logMessages = array();
-            do {
-                $priority = Logger::ERR;
-                if ($exception instanceof ErrorException && isset($errorPriorityMap[$exception->getSeverity()])) {
-                    $priority = $errorPriorityMap[$exception->getSeverity()];
-                }
-                $extra = array('file' => $exception->getFile(), 'line' => $exception->getLine(), 'trace' => $exception->getTrace());
-                if (isset($exception->xdebug_message)) {
-                    $extra['xdebug'] = $exception->xdebug_message;
-                }
-                $logMessages[] = array('priority' => $priority, 'message' => $exception->getMessage(), 'extra' => $extra);
-                $exception = $exception->getPrevious();
-            } while ($exception);
-            foreach (array_reverse($logMessages) as $logMessage) {
-                $logger->log($logMessage['priority'], $logMessage['message'], $logMessage['extra']);
-            }
-        });
-        static::$registeredExceptionHandler = true;
-        return true;
-    }
-    /**
-     * Unregister exception handler
-     */
-    public static function unregisterExceptionHandler()
-    {
-        restore_exception_handler();
-        static::$registeredExceptionHandler = false;
-    }
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Stdlib
- */
-namespace Zend\Stdlib;
-
-use Serializable;
-/**
- * Serializable version of SplPriorityQueue
- *
- * Also, provides predictable heap order for datums added with the same priority
- * (i.e., they will be emitted in the same order they are enqueued).
- *
- * @category   Zend
- * @package    Zend_Stdlib
- */
-class SplPriorityQueue extends \SplPriorityQueue implements Serializable
-{
-    /**
-     * @var int Seed used to ensure queue order for items of the same priority
-     */
-    protected $serial = PHP_INT_MAX;
-    /**
-     * Insert a value with a given priority
-     *
-     * Utilizes {@var $serial} to ensure that values of equal priority are
-     * emitted in the same order in which they are inserted.
-     *
-     * @param  mixed $datum
-     * @param  mixed $priority
-     * @return void
-     */
-    public function insert($datum, $priority)
-    {
-        if (!is_array($priority)) {
-            $priority = array($priority, $this->serial--);
-        }
-        parent::insert($datum, $priority);
-    }
-    /**
-     * Serialize to an array
-     *
-     * Array will be priority => data pairs
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $array = array();
-        foreach (clone $this as $item) {
-            $array[] = $item;
-        }
-        return $array;
-    }
-    /**
-     * Serialize
-     *
-     * @return string
-     */
-    public function serialize()
-    {
-        $clone = clone $this;
-        $clone->setExtractFlags(self::EXTR_BOTH);
-        $data = array();
-        foreach ($clone as $item) {
-            $data[] = $item;
-        }
-        return serialize($data);
-    }
-    /**
-     * Deserialize
-     *
-     * @param  string $data
-     * @return void
-     */
-    public function unserialize($data)
-    {
-        foreach (unserialize($data) as $item) {
-            $this->insert($item['data'], $item['priority']);
-        }
-    }
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Writer;
-
-use Zend\Log\Filter\FilterInterface as Filter;
-use Zend\Log\Formatter\FormatterInterface as Formatter;
-/**
- * @category   Zend
- * @package    Zend_Log
- */
-interface WriterInterface
-{
-    /**
-     * Add a log filter to the writer
-     *
-     * @param  int|Filter $filter
-     * @return WriterInterface
-     */
-    public function addFilter($filter);
-    /**
-     * Set a message formatter for the writer
-     *
-     * @param Formatter $formatter
-     * @return WriterInterface
-     */
-    public function setFormatter(Formatter $formatter);
-    /**
-     * Write a log message
-     *
-     * @param  array $event
-     * @return WriterInterface
-     */
-    public function write(array $event);
-    /**
-     * Perform shutdown activities
-     *
-     * @return void
-     */
-    public function shutdown();
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Writer;
-
-use Zend\Log\Exception;
-use Zend\Log\Filter;
-use Zend\Log\Formatter\FormatterInterface as Formatter;
-use Zend\Stdlib\ErrorHandler;
-/**
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Writer
- */
-abstract class AbstractWriter implements WriterInterface
-{
-    /**
-     * Filter plugins
-     *
-     * @var FilterPluginManager
-     */
-    protected $filterPlugins;
-    /**
-     * Filter chain
-     *
-     * @var Filter\FilterInterface[]
-     */
-    protected $filters = array();
-    /**
-     * Formats the log message before writing
-     *
-     * @var Formatter
-     */
-    protected $formatter;
-    /**
-     * Use Zend\Stdlib\ErrorHandler to report errors during calls to write
-     *
-     * @var bool
-     */
-    protected $convertWriteErrorsToExceptions = true;
-    /**
-     * Error level passed to Zend\Stdlib\ErrorHandler::start for errors reported during calls to write
-     *
-     * @var bool
-     */
-    protected $errorsToExceptionsConversionLevel = E_WARNING;
-    /**
-     * Add a filter specific to this writer.
-     *
-     * @param  int|string|Filter\FilterInterface $filter
-     * @param  array|null $options
-     * @return AbstractWriter
-     * @throws Exception\InvalidArgumentException
-     */
-    public function addFilter($filter, array $options = null)
-    {
-        if (is_int($filter)) {
-            $filter = new Filter\Priority($filter);
-        }
-        if (is_string($filter)) {
-            $filter = $this->filterPlugin($filter, $options);
-        }
-        if (!$filter instanceof Filter\FilterInterface) {
-            throw new Exception\InvalidArgumentException(sprintf('Writer must implement Zend\\Log\\Filter\\FilterInterface; received "%s"', is_object($filter) ? get_class($filter) : gettype($filter)));
-        }
-        $this->filters[] = $filter;
-        return $this;
-    }
-    /**
-     * Get filter plugin manager
-     *
-     * @return FilterPluginManager
-     */
-    public function getFilterPluginManager()
-    {
-        if (null === $this->filterPlugins) {
-            $this->setFilterPluginManager(new FilterPluginManager());
-        }
-        return $this->filterPlugins;
-    }
-    /**
-     * Set filter plugin manager
-     *
-     * @param  string|FilterPluginManager $plugins
-     * @return self
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setFilterPluginManager($plugins)
-    {
-        if (is_string($plugins)) {
-            $plugins = new $plugins();
-        }
-        if (!$plugins instanceof FilterPluginManager) {
-            throw new Exception\InvalidArgumentException(sprintf('Writer plugin manager must extend %s\\FilterPluginManager; received %s', __NAMESPACE__, is_object($plugins) ? get_class($plugins) : gettype($plugins)));
-        }
-        $this->filterPlugins = $plugins;
-        return $this;
-    }
-    /**
-     * Get filter instance
-     *
-     * @param string $name
-     * @param array|null $options
-     * @return Filter\FilterInterface
-     */
-    public function filterPlugin($name, array $options = null)
-    {
-        return $this->getFilterPluginManager()->get($name, $options);
-    }
-    /**
-     * Log a message to this writer.
-     *
-     * @param array $event log data event
-     * @return void
-     */
-    public function write(array $event)
-    {
-        foreach ($this->filters as $filter) {
-            if (!$filter->filter($event)) {
-                return;
-            }
-        }
-        $errorHandlerStarted = false;
-        if ($this->convertWriteErrorsToExceptions && !ErrorHandler::started()) {
-            ErrorHandler::start($this->errorsToExceptionsConversionLevel);
-            $errorHandlerStarted = true;
-        }
-        try {
-            $this->doWrite($event);
-        } catch (\Exception $e) {
-            if ($errorHandlerStarted) {
-                ErrorHandler::stop();
-                $errorHandlerStarted = false;
-            }
-            throw $e;
-        }
-        if ($errorHandlerStarted) {
-            $error = ErrorHandler::stop();
-            $errorHandlerStarted = false;
-            if ($error) {
-                throw new Exception\RuntimeException('Unable to write', 0, $error);
-            }
-        }
-    }
-    /**
-     * Set a new formatter for this writer
-     *
-     * @param  Formatter $formatter
-     * @return self
-     */
-    public function setFormatter(Formatter $formatter)
-    {
-        $this->formatter = $formatter;
-        return $this;
-    }
-    /**
-     * Set convert write errors to exception flag
-     *
-     * @param bool $ignoreWriteErrors
-     */
-    public function setConvertWriteErrorsToExceptions($convertErrors)
-    {
-        $this->convertWriteErrorsToExceptions = $convertErrors;
-    }
-    /**
-     * Perform shutdown activities such as closing open resources
-     *
-     * @return void
-     */
-    public function shutdown()
-    {
-        
-    }
-    /**
-     * Write a message to the log
-     *
-     * @param array $event log data event
-     * @return void
-     */
-    protected abstract function doWrite(array $event);
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Writer;
-
-use Zend\Log\Exception;
-use Zend\Log\Logger;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
-/**
- * Writes log messages to syslog
- *
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Writer
- */
-class Syslog extends AbstractWriter
-{
-    /**
-     * Maps Zend_Log priorities to PHP's syslog priorities
-     *
-     * @var array
-     */
-    protected $priorities = array(Logger::EMERG => LOG_EMERG, Logger::ALERT => LOG_ALERT, Logger::CRIT => LOG_CRIT, Logger::ERR => LOG_ERR, Logger::WARN => LOG_WARNING, Logger::NOTICE => LOG_NOTICE, Logger::INFO => LOG_INFO, Logger::DEBUG => LOG_DEBUG);
-    /**
-     * The default log priority - for unmapped custom priorities
-     *
-     * @var string
-     */
-    protected $defaultPriority = LOG_NOTICE;
-    /**
-     * Last application name set by a syslog-writer instance
-     *
-     * @var string
-     */
-    protected static $lastApplication;
-    /**
-     * Last facility name set by a syslog-writer instance
-     *
-     * @var string
-     */
-    protected static $lastFacility;
-    /**
-     * Application name used by this syslog-writer instance
-     *
-     * @var string
-     */
-    protected $appName = 'Zend\\Log';
-    /**
-     * Facility used by this syslog-writer instance
-     *
-     * @var int
-     */
-    protected $facility = LOG_USER;
-    /**
-     * Types of program available to logging of message
-     *
-     * @var array
-     */
-    protected $validFacilities = array();
-    /**
-     * Constructor
-     *
-     * @param  array $params Array of options; may include "application" and "facility" keys
-     * @return Syslog
-     */
-    public function __construct(array $params = array())
-    {
-        if (isset($params['application'])) {
-            $this->appName = $params['application'];
-        }
-        $runInitializeSyslog = true;
-        if (isset($params['facility'])) {
-            $this->setFacility($params['facility']);
-            $runInitializeSyslog = false;
-        }
-        if ($runInitializeSyslog) {
-            $this->initializeSyslog();
-        }
-        $this->setFormatter(new SimpleFormatter('%message%'));
-    }
-    /**
-     * Initialize values facilities
-     *
-     * @return void
-     */
-    protected function initializeValidFacilities()
-    {
-        $constants = array('LOG_AUTH', 'LOG_AUTHPRIV', 'LOG_CRON', 'LOG_DAEMON', 'LOG_KERN', 'LOG_LOCAL0', 'LOG_LOCAL1', 'LOG_LOCAL2', 'LOG_LOCAL3', 'LOG_LOCAL4', 'LOG_LOCAL5', 'LOG_LOCAL6', 'LOG_LOCAL7', 'LOG_LPR', 'LOG_MAIL', 'LOG_NEWS', 'LOG_SYSLOG', 'LOG_USER', 'LOG_UUCP');
-        foreach ($constants as $constant) {
-            if (defined($constant)) {
-                $this->validFacilities[] = constant($constant);
-            }
-        }
-    }
-    /**
-     * Initialize syslog / set application name and facility
-     *
-     * @return void
-     */
-    protected function initializeSyslog()
-    {
-        static::$lastApplication = $this->appName;
-        static::$lastFacility = $this->facility;
-        openlog($this->appName, LOG_PID, $this->facility);
-    }
-    /**
-     * Set syslog facility
-     *
-     * @param int $facility Syslog facility
-     * @return Syslog
-     * @throws Exception\InvalidArgumentException for invalid log facility
-     */
-    public function setFacility($facility)
-    {
-        if ($this->facility === $facility) {
-            return $this;
-        }
-        if (!count($this->validFacilities)) {
-            $this->initializeValidFacilities();
-        }
-        if (!in_array($facility, $this->validFacilities)) {
-            throw new Exception\InvalidArgumentException('Invalid log facility provided; please see http://php.net/openlog for a list of valid facility values');
-        }
-        if ('WIN' == strtoupper(substr(PHP_OS, 0, 3)) && $facility !== LOG_USER) {
-            throw new Exception\InvalidArgumentException('Only LOG_USER is a valid log facility on Windows');
-        }
-        $this->facility = $facility;
-        $this->initializeSyslog();
-        return $this;
-    }
-    /**
-     * Set application name
-     *
-     * @param string $appName Application name
-     * @return Syslog
-     */
-    public function setApplicationName($appName)
-    {
-        if ($this->appName === $appName) {
-            return $this;
-        }
-        $this->appName = $appName;
-        $this->initializeSyslog();
-        return $this;
-    }
-    /**
-     * Close syslog.
-     *
-     * @return void
-     */
-    public function shutdown()
-    {
-        closelog();
-    }
-    /**
-     * Write a message to syslog.
-     *
-     * @param array $event event data
-     * @return void
-     */
-    protected function doWrite(array $event)
-    {
-        if (array_key_exists($event['priority'], $this->priorities)) {
-            $priority = $this->priorities[$event['priority']];
-        } else {
-            $priority = $this->defaultPriority;
-        }
-        if ($this->appName !== static::$lastApplication || $this->facility !== static::$lastFacility) {
-            $this->initializeSyslog();
-        }
-        $message = $this->formatter->format($event);
-        syslog($priority, $message);
-    }
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Formatter;
-
-/**
- * @category   Zend
- * @package    Zend_Log
- */
-interface FormatterInterface
-{
-    /**
-     * Default format specifier for DateTime objects is ISO 8601
-     *
-     * @see http://php.net/manual/en/function.date.php
-     */
-    const DEFAULT_DATETIME_FORMAT = 'c';
-    /**
-     * Formats data into a single line to be written by the writer.
-     *
-     * @param array $event event data
-     * @return string formatted line to write to the log
-     */
-    public function format($event);
-    /**
-     * Get the format specifier for DateTime objects
-     *
-     * @return string
-     */
-    public function getDateTimeFormat();
-    /**
-     * Set the format specifier for DateTime objects
-     *
-     * @see http://php.net/manual/en/function.date.php
-     * @param string $dateTimeFormat DateTime format
-     * @return FormatterInterface
-     */
-    public function setDateTimeFormat($dateTimeFormat);
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Formatter;
-
-use DateTime;
-use Traversable;
-/**
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Formatter
- */
-class Base implements FormatterInterface
-{
-    /**
-     * Format specifier for DateTime objects in event data (default: ISO 8601)
-     *
-     * @see http://php.net/manual/en/function.date.php
-     * @var string
-     */
-    protected $dateTimeFormat = self::DEFAULT_DATETIME_FORMAT;
-    /**
-     * Class constructor
-     *
-     * @see http://php.net/manual/en/function.date.php
-     * @param null|string $dateTimeFormat Format for DateTime objects
-     */
-    public function __construct($dateTimeFormat = null)
-    {
-        if (null !== $dateTimeFormat) {
-            $this->dateTimeFormat = $dateTimeFormat;
-        }
-    }
-    /**
-     * Formats data to be written by the writer.
-     *
-     * @param array $event event data
-     * @return array
-     */
-    public function format($event)
-    {
-        foreach ($event as $key => $value) {
-            // Keep extra as an array
-            if ('extra' === $key) {
-                $event[$key] = self::format($value);
-            } else {
-                $event[$key] = $this->normalize($value);
-            }
-        }
-        return $event;
-    }
-    /**
-     * Normalize all non-scalar data types (except null) in a string value
-     *
-     * @param mixed $value
-     * @return mixed
-     */
-    protected function normalize($value)
-    {
-        if (is_scalar($value) || null === $value) {
-            return $value;
-        }
-        if ($value instanceof DateTime) {
-            $value = $value->format($this->getDateTimeFormat());
-        } elseif (is_array($value) || $value instanceof Traversable) {
-            if ($value instanceof Traversable) {
-                $value = iterator_to_array($value);
-            }
-            foreach ($value as $key => $subvalue) {
-                $value[$key] = $this->normalize($subvalue);
-            }
-            $value = json_encode($value);
-        } elseif (is_object($value) && !method_exists($value, '__toString')) {
-            $value = sprintf('object(%s) %s', get_class($value), json_encode($value));
-        } elseif (is_resource($value)) {
-            $value = sprintf('resource(%s)', get_resource_type($value));
-        } elseif (!is_object($value)) {
-            $value = gettype($value);
-        }
-        return (string) $value;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public function getDateTimeFormat()
-    {
-        return $this->dateTimeFormat;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public function setDateTimeFormat($dateTimeFormat)
-    {
-        $this->dateTimeFormat = (string) $dateTimeFormat;
-        return $this;
-    }
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Formatter;
-
-use Zend\Log\Exception;
-/**
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Formatter
- */
-class Simple extends Base
-{
-    const DEFAULT_FORMAT = '%timestamp% %priorityName% (%priority%): %message% %extra%';
-    /**
-     * Format specifier for log messages
-     *
-     * @var string
-     */
-    protected $format;
-    /**
-     * Class constructor
-     *
-     * @see http://php.net/manual/en/function.date.php
-     * @param null|string $format Format specifier for log messages
-     * @param null|string $dateTimeFormat Format specifier for DateTime objects in event data
-     * @throws Exception\InvalidArgumentException
-     */
-    public function __construct($format = null, $dateTimeFormat = null)
-    {
-        if (isset($format) && !is_string($format)) {
-            throw new Exception\InvalidArgumentException('Format must be a string');
-        }
-        $this->format = isset($format) ? $format : static::DEFAULT_FORMAT;
-        parent::__construct($dateTimeFormat);
-    }
-    /**
-     * Formats data into a single line to be written by the writer.
-     *
-     * @param array $event event data
-     * @return string formatted line to write to the log
-     */
-    public function format($event)
-    {
-        $output = $this->format;
-        $event = parent::format($event);
-        foreach ($event as $name => $value) {
-            if ('extra' == $name && count($value)) {
-                $value = $this->normalize($value);
-            } elseif ('extra' == $name) {
-                // Don't print an empty array
-                $value = '';
-            }
-            $output = str_replace("%{$name}%", $value, $output);
-        }
-        if (isset($event['extra']) && empty($event['extra']) && false !== strpos($this->format, '%extra%')) {
-            $output = rtrim($output, ' ');
-        }
-        return $output;
-    }
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-use Ray\Di\Di\ImplementedBy;
-/**
- * Interface for resource client
- *
- * @package BEAR.Resource
- *
- * @ImplementedBy("BEAR\Resource\Request")
- *
- */
-interface RequestInterface
-{
-    /**
-     * Constructor
-     *
-     * @param InvokerInterface $invoker
-     *
-     * @Inject
-     */
-    public function __construct(InvokerInterface $invoker);
-    /**
-     * InvokerInterface resource request
-     *
-     * @param array $query
-     *
-     * @return AbstractObject
-     */
-    public function __invoke(array $query = null);
-    /**
-     * To Request URI string
-     *
-     * @return string
-     */
-    public function toUri();
-    /**
-     * To Request URI string with request method
-     *
-     * @return string
-     */
-    public function toUriWithMethod();
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-use ArrayIterator;
-use Traversable;
-/**
- * Trait for array access
- *
- * @package BEAR.Resource
- */
-trait BodyArrayAccessTrait
-{
-    /**
-     * Body
-     *
-     * @var mixed
-     */
-    public $body;
-    /**
-     * Returns the body value at the specified index
-     *
-     * @param mixed $offset offset
-     *
-     * @return mixed
-     * @ignore
-     */
-    public function offsetGet($offset)
-    {
-        return $this->body[$offset];
-    }
-    /**
-     * Sets the body value at the specified index to renew
-     *
-     * @param mixed $offset offset
-     * @param mixed $value  value
-     *
-     * @return void
-     * @ignore
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->body[$offset] = $value;
-    }
-    /**
-     * Returns whether the requested index in body exists
-     *
-     * @param mixed $offset offset
-     *
-     * @return bool
-     * @ignore
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->body[$offset]);
-    }
-    /**
-     * Set the value at the specified index
-     *
-     * @param mixed $offset offset
-     *
-     * @return void
-     * @ignore
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->body[$offset]);
-    }
-    /**
-     * Get the number of public properties in the ArrayObject
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->body);
-    }
-    /**
-     * Sort the entries by key
-     *
-     * @return bool
-     * @ignore
-     */
-    public function ksort()
-    {
-        return ksort($this->body);
-    }
-    /**
-     * Sort the entries by key
-     *
-     * @return bool
-     * @ignore
-     */
-    public function asort()
-    {
-        return asort($this->body);
-    }
-    /**
-     * Get array iterator
-     *
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        return is_array($this->body) || $this->body instanceof Traversable ? new ArrayIterator($this->body) : new ArrayIterator(array());
-    }
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-use IteratorAggregate;
-use ArrayAccess;
-use ArrayIterator;
-use OutOfBoundsException;
-use Traversable;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Scope;
-/**
- * Interface for resource adapter provider.
- *
- * @package BEAR.Resource
- *
- * @Scope("prototype")
- */
-final class Request implements RequestInterface, ArrayAccess, IteratorAggregate
-{
-    use BodyArrayAccessTrait;
-    /**
-     * object URI scheme
-     *
-     * @var string
-     */
-    const SCHEME_OBJECT = 'object';
-    /**
-     * URI
-     *
-     * @var string
-     */
-    public $uri;
-    /**
-     * Resource object
-     *
-     * @var \BEAR\Resource\AbstractObject
-     */
-    public $ro;
-    /**
-     * Method
-     *
-     * @var string
-     */
-    public $method = '';
-    /**
-     * Query
-     *
-     * @var array
-     */
-    public $query = array();
-    /**
-     * Options
-     *
-     * @var array
-     */
-    public $options = array();
-    /**
-     * Request option (eager or lazy)
-     *
-     * @var string
-     */
-    public $in;
-    /**
-     * Links
-     *
-     * @var array
-     */
-    public $links = array();
-    /**
-     * Request Result
-     *
-     * @var Object
-     */
-    private $result;
-    /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::__construct()
-     *
-     * @Inject
-     */
-    public function __construct(InvokerInterface $invoker)
-    {
-        $this->invoker = $invoker;
-    }
-    /**
-     * Set
-     *
-     * @param AbstractObject $ro
-     * @param string         $uri
-     * @param string         $method
-     * @param array          $query
-     */
-    public function set(AbstractObject $ro, $uri, $method, array $query)
-    {
-        $this->ro = $ro;
-        $this->uri = $uri;
-        $this->method = $method;
-        $this->query = $query;
-    }
-    /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::__invoke()
-     */
-    public function __invoke(array $query = null)
-    {
-        if (!is_null($query)) {
-            $this->query = array_merge($this->query, $query);
-        }
-        $result = $this->invoker->invoke($this);
-        return $result;
-    }
-    /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::toUri()
-     */
-    public function toUri()
-    {
-        $query = http_build_query($this->query, null, '&', PHP_QUERY_RFC3986);
-        $uri = isset($this->ro->uri) && $this->ro->uri ? $this->ro->uri : $this->uri;
-        if (isset(parse_url($uri)['query'])) {
-            $queryString = $uri;
-        } else {
-            $queryString = "{$uri}" . ($query ? '?' : '') . $query;
-        }
-        return $queryString;
-    }
-    /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::toUriWithMethod()
-     */
-    public function toUriWithMethod()
-    {
-        return "{$this->method} " . $this->toUri();
-    }
-    /**
-     * Render view
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (is_null($this->result)) {
-            $this->result = $this->__invoke();
-        }
-        return (string) $this->result;
-    }
-    /**
-     * Returns the body value at the specified index
-     *
-     * @param mixed $offset offset
-     *
-     * @return mixed
-     * @throws OutOfBoundsException
-     */
-    public function offsetGet($offset)
-    {
-        if (is_null($this->result)) {
-            $this->result = $this->__invoke();
-        }
-        if (!isset($this->result->body[$offset])) {
-            throw new OutOfBoundsException("[{$offset}] for object[" . get_class($this->result) . ']');
-        }
-        return $this->result->body[$offset];
-    }
-    /**
-     * Returns whether the requested index in body exists
-     *
-     * @param mixed $offset offset
-     *
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        if (is_null($this->result)) {
-            $this->result = $this->__invoke();
-        }
-        return isset($this->result->body[$offset]);
-    }
-    /**
-     * Get array iterator
-     *
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        if (is_null($this->result)) {
-            $this->result = $this->__invoke();
-        }
-        $isArray = is_array($this->result->body) || $this->result->body instanceof Traversable;
-        $iterator = $isArray ? new ArrayIterator($this->result->body) : new ArrayIterator(array());
-        return $iterator;
-    }
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Extension;
-
-/**
- * Interface for application extension
- *
- * @package BEAR.Sunday
- */
-interface ExtensionInterface
-{
-    
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Extension\WebResponse;
-
-use BEAR\Sunday\Extension\ExtensionInterface;
-/**
- * Interface for http response
- *
- * @package    BEAR.Sunday
- * @subpackage Web
- */
-interface ResponseInterface extends ExtensionInterface
-{
-    /**
-     * @param $page
-     *
-     * @return mixed
-     */
-    public function setResource($page);
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Inject;
-
-use Guzzle\Log\LogAdapterInterface;
-use Ray\Di\Di\Inject;
-/**
- * Inject logger
- *
- * @package    BEAR.Sunday
- * @subpackage Inject
- */
-trait LogInject
-{
-    /**
-     * Logger
-     *
-     * @var LogAdapterInterface
-     */
-    private $log;
-    /**
-     * Logger setter
-     *
-     * @param LogAdapterInterface $log
-     *
-     * @return void
-     * @Ray\Di\Di\Inject
-     */
-    public function setLog(LogAdapterInterface $log)
-    {
-        $this->log = $log;
-    }
-}
-/**
- * This file is part of the BEAR.Package package
- *
- * @package BEAR.Package
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Package\Provide\WebResponse;
-
-use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
-use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
-use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
-use BEAR\Sunday\Exception\InvalidResourceType;
-use BEAR\Sunday\Inject\LogInject;
-use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
-use BEAR\Resource\Logger;
-use BEAR\Resource\ObjectInterface as ResourceObject;
-use BEAR\Resource\AbstractObject as Page;
-use Symfony\Component\HttpFoundation\Response;
-use Ray\Aop\Weave;
-use Ray\Di\Di\Inject;
-use Exception;
-/**
- * Output with using Symfony HttpFoundation
- *
- * @package    BEAR.Sunday
- * @subpackage Web
- */
-final class HttpFoundation implements ResponseInterface
-{
-    use LogInject;
-    /**
-     * Exception
-     *
-     * @var Exception
-     */
-    private $e;
-    /**
-     * Resource object
-     *
-     * @var \BEAR\Resource\AbstractObject
-     */
-    private $resource;
-    /**
-     * Response resource object
-     *
-     * @var Response
-     */
-    private $response;
-    /**
-     * @var int
-     */
-    private $code;
-    /**
-     * @var array
-     */
-    private $headers;
-    /**
-     * @var string
-     */
-    private $body;
-    /**
-     * @var string
-     */
-    private $view;
-    /**
-     * @var ConsoleOutputInterface
-     */
-    private $consoleOutput;
-    /**
-     * @var AppLogger
-     */
-    private $appLogger;
-    /**
-     * Set application logger
-     *
-     * @param AppLogger $appLogger
-     *
-     * @Inject
-     */
-    public function setAppLogger(AppLogger $appLogger)
-    {
-        $this->appLogger = $appLogger;
-    }
-    /**
-     * Constructor
-     *
-     * @param ConsoleOutputInterface $consoleOutput
-     *
-     * @Inject
-     */
-    public function __construct(ConsoleOutputInterface $consoleOutput)
-    {
-        $this->consoleOutput = $consoleOutput;
-    }
-    /**
-     * Set Resource
-     *
-     * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
-     *
-     * @throws InvalidResourceType
-     * @return self
-     */
-    public function setResource($resource)
-    {
-        if ($resource instanceof Weave) {
-            $resource = $resource->___getObject();
-        }
-        if ($resource instanceof ResourceObject === false && $resource instanceof Weave === false) {
-            $type = is_object($resource) ? get_class($resource) : gettype($resource);
-            throw new InvalidResourceType($type);
-        }
-        $this->resource = $resource;
-        return $this;
-    }
-    /**
-     * Set Exception
-     *
-     * @param \Exception $e
-     * @param int        $exceptionId
-     *
-     * @return self
-     */
-    public function setException(Exception $e, $exceptionId)
-    {
-        $this->e = $e;
-        $this->code = $e->getCode();
-        $this->headers = array();
-        $this->body = $exceptionId;
-        return $this;
-    }
-    /**
-     * Render
-     *
-     * @param Callable $renderer
-     *
-     * @return self
-     */
-    public function render(callable $renderer = null)
-    {
-        if (is_callable($renderer)) {
-            $this->view = $renderer($this->body);
-        } else {
-            $this->view = (string) $this->resource;
-        }
-        return $this;
-    }
-    /**
-     * Make response object with RFC 2616 compliant HTTP header
-     *
-     * @return self
-     * @deprecated
-     */
-    public function prepare()
-    {
-        trigger_error('unnecessary science 0.6.0', E_USER_DEPRECATED);
-        return $this;
-    }
-    /**
-     * Transfer representational state to http client (or console output)
-     *
-     * @return ResponseInterface
-     */
-    public function send()
-    {
-        $this->response = new Response($this->view, $this->resource->code, (array) $this->resource->headers);
-        // compliant with RFC 2616.
-        $this->response;
-        if (PHP_SAPI === 'cli') {
-            if ($this->resource instanceof Page) {
-                $this->resource->headers = $this->response->headers->all();
-            }
-            $statusText = Response::$statusTexts[$this->resource->code];
-            $this->consoleOutput->send($this->resource, $statusText, ConsoleOutput::MODE_REQUEST);
-        } else {
-            $this->response->send();
-        }
-        return $this;
-    }
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Extension\ConsoleOutput;
-
-use BEAR\Sunday\Extension\ExtensionInterface;
-/**
- * Interface for console output
- *
- * @package    BEAR.Sunday
- */
-interface ConsoleOutputInterface extends ExtensionInterface
-{
-    
-}
-/**
- * This file is part of the BEAR.Package package
- *
- * @package BEAR.Package
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Package\Provide\ConsoleOutput;
-
-use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
-use BEAR\Resource\AbstractObject as ResourceObject;
-use Guzzle\Parser\UriTemplate\UriTemplate;
-/**
- * Cli Output
- *
- * @package    BEAR.Sunday
- * @subpackage Web
- */
-final class ConsoleOutput implements ConsoleOutputInterface
-{
-    const MODE_REQUEST = 'request';
-    const MODE_VIEW = 'view';
-    const MODE_VALUE = 'value';
-    /**
-     * Send CLI output
-     *
-     * @param ResourceObject $resource
-     * @param string         $statusText
-     * @param string         $mode
-     */
-    public function send(ResourceObject $resource, $statusText = '', $mode = self::MODE_VIEW)
-    {
-        $label = '[1;32m';
-        $label1 = '[1;33m';
-        $label2 = '[4;30m';
-        $close = '[0m';
-        // code
-        $codeMsg = $label . $resource->code . ' ' . $statusText . $close . PHP_EOL;
-        echo $codeMsg;
-        // resource headers
-        foreach ($resource->headers as $name => $value) {
-            $value = is_array($value) ? json_encode($value, true) : $value;
-            echo "{$label1}{$name}: {$close}{$value}" . PHP_EOL;
-        }
-        // body
-        echo "{$label}[BODY]{$close}" . PHP_EOL;
-        if ($resource->view) {
-            echo $resource->view;
-            goto complete;
-        }
-        $isTraversable = is_array($resource->body) || $resource->body instanceof \Traversable;
-        if (!$isTraversable) {
-            $resource->body;
-            goto complete;
-        }
-        foreach ($resource->body as $key => $body) {
-            if ($body instanceof \BEAR\Resource\Request) {
-                switch ($mode) {
-                    case self::MODE_REQUEST:
-                        $body = "{$label2}" . $body->toUri() . $close;
-                        break;
-                    case self::MODE_VALUE:
-                        $value = $body();
-                        $body = var_export($value, true) . " {$label2}" . $body->toUri() . $close;
-                        break;
-                    case self::MODE_VIEW:
-                    default:
-                        $body = (string) $body . " {$label2}" . $body->toUri() . $close;
-                        break;
-                }
-            }
-            $body = is_array($body) ? var_export($body, true) : $body;
-            echo "{$label1}{$key}{$close}:" . $body . PHP_EOL;
-        }
-        // @codingStandardsIgnoreStart
-        complete:
-        // @codingStandardsIgnoreEnd
-        // links
-        echo PHP_EOL;
-    }
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Extension\ApplicationLogger;
-
-use BEAR\Sunday\Extension\ExtensionInterface;
-use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
-use BEAR\Sunday\Extension\Application\AppInterface;
-use Ray\Di\Di\Inject;
-/**
- * Extension interface for application logger
- *
- * @package BEAR.Sunday
- */
-interface ApplicationLoggerInterface extends ExtensionInterface
-{
-    /**
-     * Set resource logger
-     *
-     * @param ResourceLoggerInterface $resourceLogger
-     *
-     * @Inject
-     */
-    public function __construct(ResourceLoggerInterface $resourceLogger);
-    /**
-     * Register log function on shutdown
-     *
-     * called in bootstrap
-     *
-     * @param AppInterface $app
-     */
-    public function register(AppInterface $app);
-}
-/**
- * This file is part of the BEAR.Package package
- *
- * @package BEAR.Package
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Package\Provide\ApplicationLogger;
-
-use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
-use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
-use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Resource\Logger as ResourceLogger;
-use Ray\Di\Di\Inject;
-/**
- * Logger
- *
- * @package BEAR.Package
- */
-final class ApplicationLogger implements ApplicationLoggerInterface
-{
-    /**
-     * Resource logs
-     *
-     * @var ResourceLoggerInterface
-     */
-    private $logger;
-    /**
-     * @param ResourceLoggerInterface $logger
-     *
-     * @Inject
-     */
-    public function __construct(ResourceLoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function register(AppInterface $app)
-    {
-        register_shutdown_function(function () {
-            $this->logger->write();
-        });
-    }
-}
-namespace Guzzle\Log;
-
-/**
- * Adapter class that allows Guzzle to log data to various logging implementations.
- */
-interface LogAdapterInterface
-{
-    /**
-     * Log a message at a priority
-     *
-     * @param string  $message  Message to log
-     * @param integer $priority Priority of message (use the \LOG_* constants of 0 - 7)
-     * @param mixed   $extras   Extra information to log in event
-     */
-    public function log($message, $priority = LOG_INFO, $extras = null);
-}
-namespace Guzzle\Log;
-
-/**
- * Adapter class that allows Guzzle to log data using various logging implementations
- */
-abstract class AbstractLogAdapter implements LogAdapterInterface
-{
-    protected $log;
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogObject()
-    {
-        return $this->log;
-    }
-}
-namespace Guzzle\Log;
-
-use Zend\Log\Logger;
-/**
- * Adapts a Zend Framework 2 logger object
- */
-class Zf2LogAdapter extends AbstractLogAdapter
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(Logger $logObject)
-    {
-        $this->log = $logObject;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function log($message, $priority = LOG_INFO, $extras = null)
-    {
-        $this->log->log($priority, $message, $extras ?: array());
-    }
-}
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
- */
-namespace Zend\Log\Writer;
-
-use Traversable;
-use Zend\Log\Exception;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
-use Zend\Stdlib\ErrorHandler;
-/**
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Writer
- */
-class Stream extends AbstractWriter
-{
-    /**
-     * Separator between log entries
-     *
-     * @var string
-     */
-    protected $logSeparator = PHP_EOL;
-    /**
-     * Holds the PHP stream to log to.
-     *
-     * @var null|stream
-     */
-    protected $stream = null;
-    /**
-     * Constructor
-     *
-     * @param  string|resource|array|Traversable $streamOrUrl Stream or URL to open as a stream
-     * @param  string|null $mode Mode, only applicable if a URL is given
-     * @param  null|string $logSeparator Log separator string
-     * @return Stream
-     * @throws Exception\InvalidArgumentException
-     * @throws Exception\RuntimeException
-     */
-    public function __construct($streamOrUrl, $mode = null, $logSeparator = null)
-    {
-        if ($streamOrUrl instanceof Traversable) {
-            $streamOrUrl = iterator_to_array($streamOrUrl);
-        }
-        if (is_array($streamOrUrl)) {
-            $mode = isset($streamOrUrl['mode']) ? $streamOrUrl['mode'] : null;
-            $logSeparator = isset($streamOrUrl['log_separator']) ? $streamOrUrl['log_separator'] : null;
-            $streamOrUrl = isset($streamOrUrl['stream']) ? $streamOrUrl['stream'] : null;
-        }
-        // Setting the default mode
-        if (null === $mode) {
-            $mode = 'a';
-        }
-        if (is_resource($streamOrUrl)) {
-            if ('stream' != get_resource_type($streamOrUrl)) {
-                throw new Exception\InvalidArgumentException(sprintf('Resource is not a stream; received "%s', get_resource_type($streamOrUrl)));
-            }
-            if ('a' != $mode) {
-                throw new Exception\InvalidArgumentException(sprintf('Mode must be "a" on existing streams; received "%s"', $mode));
-            }
-            $this->stream = $streamOrUrl;
-        } else {
-            ErrorHandler::start();
-            $this->stream = fopen($streamOrUrl, $mode, false);
-            $error = ErrorHandler::stop();
-            if (!$this->stream) {
-                throw new Exception\RuntimeException(sprintf('"%s" cannot be opened with mode "%s"', $streamOrUrl, $mode), 0, $error);
-            }
-        }
-        if (null !== $logSeparator) {
-            $this->setLogSeparator($logSeparator);
-        }
-        $this->formatter = new SimpleFormatter();
-    }
-    /**
-     * Write a message to the log.
-     *
-     * @param array $event event data
-     * @return void
-     * @throws Exception\RuntimeException
-     */
-    protected function doWrite(array $event)
-    {
-        $line = $this->formatter->format($event) . $this->logSeparator;
-        fwrite($this->stream, $line);
-    }
-    /**
-     * Set log separator string
-     *
-     * @param  string $logSeparator
-     * @return Stream
-     */
-    public function setLogSeparator($logSeparator)
-    {
-        $this->logSeparator = (string) $logSeparator;
-        return $this;
-    }
-    /**
-     * Get log separator string
-     *
-     * @return string
-     */
-    public function getLogSeparator()
-    {
-        return $this->logSeparator;
-    }
-    /**
-     * Close the stream resource.
-     *
-     * @return void
-     */
-    public function shutdown()
-    {
-        if (is_resource($this->stream)) {
-            fclose($this->stream);
-        }
-    }
-}
-/**
- * This file is part of the BEAR.Package package
- *
- * @package BEAR.Package
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Package\Debug\ExceptionHandle;
-
-use Exception;
-/**
- * Interface for exception handler
- *
- * @package BEAR.Package
- */
-interface ExceptionHandlerInterface
-{
-    /**
-     * Handle exception
-     *
-     * @param Exception $e
-     */
-    public function handle(Exception $e);
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Inject;
-
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
-/**
- * Inject log dir
- *
- * @package    BEAR.Sunday
- * @subpackage Inject
- */
-trait LogDirInject
-{
-    /**
-     * Tmp dir
-     *
-     * @var string
-     */
-    private $logDir;
-    /**
-     * Set tmp dir path
-     *
-     * @param string $logDir
-     *
-     * @Ray\Di\Di\Inject
-     * @Ray\Di\Di\Named("log_dir")
-     */
-    public function setLogDir($logDir)
-    {
-        $this->logDir = $logDir;
-    }
-}
-/**
  * This file is part of the BEAR.Package package
  *
  * @package    BEAR.Sunday
@@ -12195,67 +13134,632 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     }
 }
 /**
- * This file is part of the BEAR.Resource package
+ * This file is part of the BEAR.Sunday package
  *
- * @package BEAR.Resource
+ * @package BEAR.Sunday
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Resource;
+namespace BEAR\Sunday\Inject;
 
-use Exception;
+use Guzzle\Log\LogAdapterInterface;
+use Ray\Di\Di\Inject;
 /**
- * Trait for resource string
+ * Inject logger
  *
- * @package BEAR.Resource
+ * @package    BEAR.Sunday
+ * @subpackage Inject
  */
-trait RenderTrait
+trait LogInject
 {
     /**
-     * Renderer
+     * Logger
      *
-     * @var \BEAR\Resource\RenderInterface
+     * @var LogAdapterInterface
      */
-    protected $renderer;
+    private $log;
     /**
-     * Set renderer
+     * Logger setter
      *
-     * @param RenderInterface $renderer
+     * @param LogAdapterInterface $log
      *
-     * @return RenderTrait
-     * @Inject(optional = true)
+     * @return void
+     * @Ray\Di\Di\Inject
      */
-    public function setRenderer(RenderInterface $renderer)
+    public function setLog(LogAdapterInterface $log)
     {
-        $this->renderer = $renderer;
+        $this->log = $log;
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\WebResponse;
+
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
+use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
+use BEAR\Sunday\Exception\InvalidResourceType;
+use BEAR\Sunday\Inject\LogInject;
+use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
+use BEAR\Resource\Logger;
+use BEAR\Resource\ObjectInterface as ResourceObject;
+use BEAR\Resource\AbstractObject as Page;
+use Symfony\Component\HttpFoundation\Response;
+use Ray\Aop\Weave;
+use Ray\Di\Di\Inject;
+use Exception;
+/**
+ * Output with using Symfony HttpFoundation
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Web
+ */
+final class HttpFoundation implements ResponseInterface
+{
+    use LogInject;
+    /**
+     * Exception
+     *
+     * @var Exception
+     */
+    private $e;
+    /**
+     * Resource object
+     *
+     * @var \BEAR\Resource\AbstractObject
+     */
+    private $resource;
+    /**
+     * Response resource object
+     *
+     * @var Response
+     */
+    private $response;
+    /**
+     * @var int
+     */
+    private $code;
+    /**
+     * @var array
+     */
+    private $headers;
+    /**
+     * @var string
+     */
+    private $body;
+    /**
+     * @var string
+     */
+    private $view;
+    /**
+     * @var ConsoleOutputInterface
+     */
+    private $consoleOutput;
+    /**
+     * @var AppLogger
+     */
+    private $appLogger;
+    /**
+     * Set application logger
+     *
+     * @param AppLogger $appLogger
+     *
+     * @Inject
+     */
+    public function setAppLogger(AppLogger $appLogger)
+    {
+        $this->appLogger = $appLogger;
+    }
+    /**
+     * Constructor
+     *
+     * @param ConsoleOutputInterface $consoleOutput
+     *
+     * @Inject
+     */
+    public function __construct(ConsoleOutputInterface $consoleOutput)
+    {
+        $this->consoleOutput = $consoleOutput;
+    }
+    /**
+     * Set Resource
+     *
+     * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
+     *
+     * @throws InvalidResourceType
+     * @return self
+     */
+    public function setResource($resource)
+    {
+        if ($resource instanceof Weave) {
+            $resource = $resource->___getObject();
+        }
+        if ($resource instanceof ResourceObject === false && $resource instanceof Weave === false) {
+            $type = is_object($resource) ? get_class($resource) : gettype($resource);
+            throw new InvalidResourceType($type);
+        }
+        $this->resource = $resource;
         return $this;
     }
     /**
-     * Return representational string
+     * Set Exception
      *
-     * Return object hash if representation renderer is not set.
+     * @param \Exception $e
+     * @param int        $exceptionId
+     *
+     * @return self
+     */
+    public function setException(Exception $e, $exceptionId)
+    {
+        $this->e = $e;
+        $this->code = $e->getCode();
+        $this->headers = array();
+        $this->body = $exceptionId;
+        return $this;
+    }
+    /**
+     * Render
+     *
+     * @param Callable $renderer
+     *
+     * @return self
+     */
+    public function render(callable $renderer = null)
+    {
+        if (is_callable($renderer)) {
+            $this->view = $renderer($this->body);
+        } else {
+            $this->view = (string) $this->resource;
+        }
+        return $this;
+    }
+    /**
+     * Make response object with RFC 2616 compliant HTTP header
+     *
+     * @return self
+     * @deprecated
+     */
+    public function prepare()
+    {
+        trigger_error('unnecessary science 0.6.0', E_USER_DEPRECATED);
+        return $this;
+    }
+    /**
+     * Transfer representational state to http client (or console output)
+     *
+     * @return ResponseInterface
+     */
+    public function send()
+    {
+        $this->response = new Response($this->view, $this->resource->code, (array) $this->resource->headers);
+        // compliant with RFC 2616.
+        $this->response;
+        if (PHP_SAPI === 'cli') {
+            if ($this->resource instanceof Page) {
+                $this->resource->headers = $this->response->headers->all();
+            }
+            $statusText = Response::$statusTexts[$this->resource->code];
+            $this->consoleOutput->send($this->resource, $statusText, ConsoleOutput::MODE_REQUEST);
+        } else {
+            $this->response->send();
+        }
+        return $this;
+    }
+}
+/**
+ * This file is part of the BEAR.Sunday package
+ *
+ * @package BEAR.Sunday
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Sunday\Extension\ConsoleOutput;
+
+use BEAR\Sunday\Extension\ExtensionInterface;
+/**
+ * Interface for console output
+ *
+ * @package    BEAR.Sunday
+ */
+interface ConsoleOutputInterface extends ExtensionInterface
+{
+    
+}
+namespace Guzzle\Log;
+
+/**
+ * Adapter class that allows Guzzle to log data to various logging implementations.
+ */
+interface LogAdapterInterface
+{
+    /**
+     * Log a message at a priority
+     *
+     * @param string  $message  Message to log
+     * @param integer $priority Priority of message (use the \LOG_* constants of 0 - 7)
+     * @param mixed   $extras   Extra information to log in event
+     */
+    public function log($message, $priority = LOG_INFO, $extras = null);
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ApplicationLogger;
+
+use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
+use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
+use BEAR\Sunday\Extension\Application\AppInterface;
+use BEAR\Resource\Logger as ResourceLogger;
+use Ray\Di\Di\Inject;
+/**
+ * Logger
+ *
+ * @package BEAR.Package
+ */
+final class ApplicationLogger implements ApplicationLoggerInterface
+{
+    /**
+     * Resource logs
+     *
+     * @var ResourceLoggerInterface
+     */
+    private $logger;
+    /**
+     * @param ResourceLoggerInterface $logger
+     *
+     * @Inject
+     */
+    public function __construct(ResourceLoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function register(AppInterface $app)
+    {
+        register_shutdown_function(function () {
+            $this->logger->write();
+        });
+    }
+}
+/**
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
+namespace BEAR\Package\Provide\ConsoleOutput;
+
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
+use BEAR\Resource\AbstractObject as ResourceObject;
+use Guzzle\Parser\UriTemplate\UriTemplate;
+/**
+ * Cli Output
+ *
+ * @package    BEAR.Sunday
+ * @subpackage Web
+ */
+final class ConsoleOutput implements ConsoleOutputInterface
+{
+    const MODE_REQUEST = 'request';
+    const MODE_VIEW = 'view';
+    const MODE_VALUE = 'value';
+    /**
+     * Send CLI output
+     *
+     * @param ResourceObject $resource
+     * @param string         $statusText
+     * @param string         $mode
+     */
+    public function send(ResourceObject $resource, $statusText = '', $mode = self::MODE_VIEW)
+    {
+        $label = '[1;32m';
+        $label1 = '[1;33m';
+        $label2 = '[4;30m';
+        $close = '[0m';
+        // code
+        $codeMsg = $label . $resource->code . ' ' . $statusText . $close . PHP_EOL;
+        echo $codeMsg;
+        // resource headers
+        foreach ($resource->headers as $name => $value) {
+            $value = is_array($value) ? json_encode($value, true) : $value;
+            echo "{$label1}{$name}: {$close}{$value}" . PHP_EOL;
+        }
+        // body
+        echo "{$label}[BODY]{$close}" . PHP_EOL;
+        if ($resource->view) {
+            echo $resource->view;
+            goto complete;
+        }
+        $isTraversable = is_array($resource->body) || $resource->body instanceof \Traversable;
+        if (!$isTraversable) {
+            $resource->body;
+            goto complete;
+        }
+        foreach ($resource->body as $key => $body) {
+            if ($body instanceof \BEAR\Resource\Request) {
+                switch ($mode) {
+                    case self::MODE_REQUEST:
+                        $body = "{$label2}" . $body->toUri() . $close;
+                        break;
+                    case self::MODE_VALUE:
+                        $value = $body();
+                        $body = var_export($value, true) . " {$label2}" . $body->toUri() . $close;
+                        break;
+                    case self::MODE_VIEW:
+                    default:
+                        $body = (string) $body . " {$label2}" . $body->toUri() . $close;
+                        break;
+                }
+            }
+            $body = is_array($body) ? var_export($body, true) : $body;
+            echo "{$label1}{$key}{$close}:" . $body . PHP_EOL;
+        }
+        // @codingStandardsIgnoreStart
+        complete:
+        // @codingStandardsIgnoreEnd
+        // links
+        echo PHP_EOL;
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Log
+ */
+namespace Zend\Log\Writer;
+
+use Traversable;
+use Zend\Log\Exception;
+use Zend\Log\Formatter\Simple as SimpleFormatter;
+use Zend\Stdlib\ErrorHandler;
+/**
+ * @category   Zend
+ * @package    Zend_Log
+ * @subpackage Writer
+ */
+class Stream extends AbstractWriter
+{
+    /**
+     * Separator between log entries
+     *
+     * @var string
+     */
+    protected $logSeparator = PHP_EOL;
+    /**
+     * Holds the PHP stream to log to.
+     *
+     * @var null|stream
+     */
+    protected $stream = null;
+    /**
+     * Constructor
+     *
+     * @param  string|resource|array|Traversable $streamOrUrl Stream or URL to open as a stream
+     * @param  string|null $mode Mode, only applicable if a URL is given
+     * @param  null|string $logSeparator Log separator string
+     * @return Stream
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
+    public function __construct($streamOrUrl, $mode = null, $logSeparator = null)
+    {
+        if ($streamOrUrl instanceof Traversable) {
+            $streamOrUrl = iterator_to_array($streamOrUrl);
+        }
+        if (is_array($streamOrUrl)) {
+            $mode = isset($streamOrUrl['mode']) ? $streamOrUrl['mode'] : null;
+            $logSeparator = isset($streamOrUrl['log_separator']) ? $streamOrUrl['log_separator'] : null;
+            $streamOrUrl = isset($streamOrUrl['stream']) ? $streamOrUrl['stream'] : null;
+        }
+        // Setting the default mode
+        if (null === $mode) {
+            $mode = 'a';
+        }
+        if (is_resource($streamOrUrl)) {
+            if ('stream' != get_resource_type($streamOrUrl)) {
+                throw new Exception\InvalidArgumentException(sprintf('Resource is not a stream; received "%s', get_resource_type($streamOrUrl)));
+            }
+            if ('a' != $mode) {
+                throw new Exception\InvalidArgumentException(sprintf('Mode must be "a" on existing streams; received "%s"', $mode));
+            }
+            $this->stream = $streamOrUrl;
+        } else {
+            ErrorHandler::start();
+            $this->stream = fopen($streamOrUrl, $mode, false);
+            $error = ErrorHandler::stop();
+            if (!$this->stream) {
+                throw new Exception\RuntimeException(sprintf('"%s" cannot be opened with mode "%s"', $streamOrUrl, $mode), 0, $error);
+            }
+        }
+        if (null !== $logSeparator) {
+            $this->setLogSeparator($logSeparator);
+        }
+        $this->formatter = new SimpleFormatter();
+    }
+    /**
+     * Write a message to the log.
+     *
+     * @param array $event event data
+     * @return void
+     * @throws Exception\RuntimeException
+     */
+    protected function doWrite(array $event)
+    {
+        $line = $this->formatter->format($event) . $this->logSeparator;
+        fwrite($this->stream, $line);
+    }
+    /**
+     * Set log separator string
+     *
+     * @param  string $logSeparator
+     * @return Stream
+     */
+    public function setLogSeparator($logSeparator)
+    {
+        $this->logSeparator = (string) $logSeparator;
+        return $this;
+    }
+    /**
+     * Get log separator string
      *
      * @return string
      */
-    public function __toString()
+    public function getLogSeparator()
     {
-        /** @var $this AbstractObject  */
-        if (is_string($this->view)) {
-            return $this->view;
+        return $this->logSeparator;
+    }
+    /**
+     * Close the stream resource.
+     *
+     * @return void
+     */
+    public function shutdown()
+    {
+        if (is_resource($this->stream)) {
+            fclose($this->stream);
         }
-        if ($this->renderer instanceof RenderInterface) {
-            try {
-                $view = $this->renderer->render($this);
-            } catch (Exception $e) {
-                $view = '';
-                error_log('Exception cached in ' . __METHOD__);
-                error_log((string) $e);
-            }
-        } elseif (is_scalar($this->body)) {
-            return (string) $this->body;
-        } else {
-            $view = '';
+    }
+}
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_Stdlib
+ */
+namespace Zend\Stdlib;
+
+use ErrorException;
+/**
+ * ErrorHandler that can be used to catch internal PHP errors
+ * and convert to a ErrorException instance.
+ *
+ * @category   Zend
+ * @package    Zend_Stdlib
+ */
+abstract class ErrorHandler
+{
+    /**
+     * Flag to mark started
+     *
+     * @var bool
+     */
+    protected static $started = false;
+    /**
+     * All errors as one instance of ErrorException
+     * using the previous exception support.
+     *
+     * @var null|ErrorException
+     */
+    protected static $errorException = null;
+    /**
+     * If the error handler has been started.
+     *
+     * @return bool
+     */
+    public static function started()
+    {
+        return static::$started;
+    }
+    /**
+     * Starting the error handler
+     *
+     * @param int $errorLevel
+     * @throws Exception\LogicException If already started
+     */
+    public static function start($errorLevel = \E_WARNING)
+    {
+        if (static::started() === true) {
+            throw new Exception\LogicException('ErrorHandler already started');
         }
-        return $view;
+        static::$started = true;
+        static::$errorException = null;
+        set_error_handler(array(get_called_class(), 'addError'), $errorLevel);
+    }
+    /**
+     * Stopping the error handler
+     *
+     * @param  bool $throw Throw the ErrorException if any
+     * @return null|ErrorException
+     * @throws Exception\LogicException If not started before
+     * @throws ErrorException If an error has been catched and $throw is true
+     */
+    public static function stop($throw = false)
+    {
+        if (static::started() === false) {
+            throw new Exception\LogicException('ErrorHandler not started');
+        }
+        $errorException = static::$errorException;
+        static::$started = false;
+        static::$errorException = null;
+        restore_error_handler();
+        if ($errorException && $throw) {
+            throw $errorException;
+        }
+        return $errorException;
+    }
+    /**
+     * Add an error to the stack.
+     *
+     * @param int    $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param int    $errline
+     * @return void
+     */
+    public static function addError($errno, $errstr = '', $errfile = '', $errline = 0)
+    {
+        static::$errorException = new ErrorException($errstr, 0, $errno, $errfile, $errline, static::$errorException);
+    }
+}
+namespace Guzzle\Log;
+
+/**
+ * Adapter class that allows Guzzle to log data using various logging implementations
+ */
+abstract class AbstractLogAdapter implements LogAdapterInterface
+{
+    protected $log;
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogObject()
+    {
+        return $this->log;
+    }
+}
+namespace Guzzle\Log;
+
+use Zend\Log\Logger;
+/**
+ * Adapts a Zend Framework 2 logger object
+ */
+class Zf2LogAdapter extends AbstractLogAdapter
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(Logger $logObject)
+    {
+        $this->log = $logObject;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function log($message, $priority = LOG_INFO, $extras = null)
+    {
+        $this->log->log($priority, $message, $extras ?: array());
     }
 }
 /**
@@ -12266,51 +13770,21 @@ trait RenderTrait
  */
 namespace BEAR\Resource;
 
-use Ray\Di\Di\Inject;
-use ArrayAccess;
-use Countable;
-use IteratorAggregate;
 /**
- * Abstract resource object
+ * Interface for render view
  *
  * @package BEAR.Resource
  */
-abstract class AbstractObject implements ObjectInterface, ArrayAccess, Countable, IteratorAggregate
+interface RenderInterface
 {
-    // (array)
-    use BodyArrayAccessTrait;
-    // (string)
-    use RenderTrait;
     /**
-     * URI
+     * Render
      *
-     * @var string
-     */
-    public $uri = '';
-    /**
-     * Resource status code
+     * @param AbstractObject $resourceObject
      *
-     * @var int
+     * @return self
      */
-    public $code = 200;
-    /**
-     * Resource header
-     *
-     * @var array
-     */
-    public $headers = array();
-    /**
-     * Resource representation
-     *
-     * @var string
-     */
-    public $view;
-    /**
-     * Resource links
-     *
-     * @var array
-     */
-    public $links = array();
+    public function render(AbstractObject $resourceObject);
 }
 /**
  * This file is part of the BEAR.Package package
@@ -12354,30 +13828,6 @@ final class ErrorPage extends AbstractPage
     {
         
     }
-}
-/**
- * This file is part of the BEAR.Resource package
- *
- * @package BEAR.Resource
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Resource;
-
-/**
- * Interface for render view
- *
- * @package BEAR.Resource
- */
-interface RenderInterface
-{
-    /**
-     * Render
-     *
-     * @param AbstractObject $resourceObject
-     *
-     * @return self
-     */
-    public function render(AbstractObject $resourceObject);
 }
 /**
  * This file is part of the BEAR.Sunday package
@@ -12645,45 +14095,6 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     {
         return $this->template;
     }
-}
-/**
- * This file is part of the BEAR.Sunday package
- *
- * @package BEAR.Sunday
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace BEAR\Sunday\Extension\Router;
-
-/**
- * Interface for router
- *
- * @package    BEAR.Sunday
- * @subpackage Web
- */
-interface RouterInterface
-{
-    /**
-     * Set globals
-     *
-     * @param mixed $globals array | \ArrayAccess
-     *
-     * @return self
-     */
-    public function setGlobals($globals);
-    /**
-     * Set argv
-     *
-     * @param $argv array | \ArrayAccess
-     *
-     * @return mixed
-     */
-    public function setArgv($argv);
-    /**
-     * Match route
-     *
-     * @return array [$method, $pageUri, $query]
-     */
-    public function match();
 }
 /**
  * This file is part of the BEAR.Package package
@@ -13195,6 +14606,46 @@ namespace Aura\Router;
 
 /**
  * 
+ * A factory to create Definition objects.
+ * 
+ * @package Aura.Router
+ * 
+ */
+class DefinitionFactory
+{
+    /**
+     * 
+     * Returns a new Definition instance.
+     * 
+     * @param string $type The type of definition, 'single' or 'attach'.
+     * 
+     * @param array|callable $spec The definition spec: either an array, or a
+     * callable that returns an array.
+     * 
+     * @param string $path_prefix For 'attach' definitions, use this as the 
+     * prefix for attached paths.
+     * 
+     * @return Route
+     * 
+     */
+    public function newInstance($type, $spec, $path_prefix = null)
+    {
+        return new Definition($type, $spec, $path_prefix);
+    }
+}
+/**
+ * 
+ * This file is part of the Aura Project for PHP.
+ * 
+ * @package Aura.Router
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ */
+namespace Aura\Router;
+
+/**
+ * 
  * A factory to create Route objects.
  * 
  * @package Aura.Router
@@ -13224,45 +14675,5 @@ class RouteFactory
     {
         $params = array_merge($this->params, $params);
         return new Route($params['name'], $params['path'], $params['params'], $params['values'], $params['method'], $params['secure'], $params['routable'], $params['is_match'], $params['generate'], $params['name_prefix'], $params['path_prefix']);
-    }
-}
-/**
- * 
- * This file is part of the Aura Project for PHP.
- * 
- * @package Aura.Router
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- */
-namespace Aura\Router;
-
-/**
- * 
- * A factory to create Definition objects.
- * 
- * @package Aura.Router
- * 
- */
-class DefinitionFactory
-{
-    /**
-     * 
-     * Returns a new Definition instance.
-     * 
-     * @param string $type The type of definition, 'single' or 'attach'.
-     * 
-     * @param array|callable $spec The definition spec: either an array, or a
-     * callable that returns an array.
-     * 
-     * @param string $path_prefix For 'attach' definitions, use this as the 
-     * prefix for attached paths.
-     * 
-     * @return Route
-     * 
-     */
-    public function newInstance($type, $spec, $path_prefix = null)
-    {
-        return new Definition($type, $spec, $path_prefix);
     }
 }
