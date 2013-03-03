@@ -10,6 +10,7 @@
  * @global  $mode
  */
 use BEAR\Resource\Exception\Parameter as BadRequest;
+use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 /**
@@ -40,6 +41,9 @@ try {
     $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 } catch (NotFound $e) {
     $code = 404;
+    goto ERROR;
+} catch (MethodNotAllowed $e) {
+    $code = 405;
     goto ERROR;
 } catch (BadRequest $e) {
     $code = 400;
