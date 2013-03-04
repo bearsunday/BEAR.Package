@@ -38,14 +38,17 @@ Console
 Make your own application
 ----------------------------------
 
-install:
+### install
+
     $ php bin/new_app.php MyApp
 
-test:
-    $ cd apps/MyApp
-    $ phpunit;
+### test
 
-run:
+    $ cd apps/MyApp
+    $ phpunit
+
+### run
+
     $ cd public
     // Console
     $ php web.php get /
