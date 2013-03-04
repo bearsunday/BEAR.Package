@@ -33,7 +33,7 @@ require  dirname(__DIR__) . '/bootstrap.php';
 require  $packageDir . '/scripts/dev/load.php';
 
 // profiler
-require  $packageDir . '/scripts/dev/profile.php';
+//require  $packageDir . '/scripts/dev/profile.php';
 
 // set exception handler for development
 set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler.php');
