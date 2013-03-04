@@ -6,8 +6,6 @@
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Sunday\Inject\TmpDirInject;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Payment

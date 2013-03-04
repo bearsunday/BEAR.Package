@@ -7,9 +7,6 @@ namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Resource\Link;
-use BEAR\Resource\Code;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Order

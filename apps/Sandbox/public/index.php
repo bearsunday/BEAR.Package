@@ -13,6 +13,13 @@ use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 /**
+ * Compiled preloader for production
+ *
+ * @see https://github.com/koriym/ClassPreloader
+ */
+require dirname(dirname(dirname(__DIR__))) . '/scripts/preloader.php';
+
+/**
  * Here we get the production application instance. No $mode variable is needed as it defaults to Prod.
  *
  * @var $app \BEAR\Package\Provide\Application\AbstractApp

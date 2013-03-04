@@ -2,7 +2,7 @@
     "name":"bear/package",
     "type":"library",
     "description":"BEAR.Sunday application package",
-    "version":"0.6.1",
+    "version":"0.6.2",
     "keywords":[
         "BEAR.Sunday",
         "application skeleton",
@@ -48,12 +48,12 @@
         "printo/printo":"*",
         "facebook/xhprof":"0.9.*",
         "firephp/firephp-core":"dev-master",
-        "twig/twig":">=1.0.0"
+        "twig/twig":">=1.0.0",
+        "classpreloader/classpreloader": "dev-master"
     },
     "autoload":{
         "psr-0":{
             "BEAR\\Package":"src/",
-            "BEAR\\Installer":"src/",
             "BEAR\\Ace":"src/",
             "Helloworld\\":"apps/",
             "Sandbox\\":"apps/",
@@ -62,7 +62,8 @@
     },
     "minimum-stability":"dev",
     "scripts"   :{
-        "post-install-cmd": "BEAR\\Installer\\Composer::postInstall"
+        "post-install-cmd": "php bin/env.php",
+        "post-autoload-dump": ["php bin/setup.php", "php bin/loader.php"]
     },
     "repositories":[
         {

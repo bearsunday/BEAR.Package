@@ -1,6 +1,5 @@
 <?php
 /**
- * @global $xstack stack data
  * @global $file
  * @global $line
  * @global $num
@@ -100,6 +99,7 @@ functions: {
 }
 
 view_logic: {
+    $xstack = (function_exists('xdebug_get_function_stack')) ? xdebug_get_function_stack() : debug_backtrace();
     $fileContents = htmlspecialchars(file_get_contents($file));
     $files = get_included_files();
     $includeFiles = $server = '';

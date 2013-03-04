@@ -7,7 +7,6 @@ namespace Sandbox\Resource\Page\First;
 
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
-use Ray\Di\Di\Inject;
 
 /**
  * Greeting page
