@@ -38,9 +38,15 @@ Console
 Make your own application
 ----------------------------------
 
-    $ cd bear/apps
-    $ php ../../composer.phar create-project -s dev --dev bear/skeleton ./MyApp
-    $ cd MyApp/public
+install:
+    $ php bin/new_app.php MyApp
+
+test:
+    $ cd apps/MyApp
+    $ phpunit;
+
+run:
+    $ cd public
     // Console
     $ php web.php get /
     // Web
