@@ -13,7 +13,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 error_reporting(E_ALL);
 
 ob_start(); // to hide checker message
-$isInstallOk = require dirname(__DIR__) . '/scripts/check_env.php';
+$isInstallOk = require dirname(__DIR__) . '/bin/env.php';
 if (!$isInstallOk) {
     echo "Please fix the install problem before tests." . PHP_EOL;
     exit(1);

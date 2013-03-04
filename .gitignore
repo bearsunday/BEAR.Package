@@ -18,3 +18,5 @@ composer.phar
 resource.db
 
 apps/Skeleton/
+
+apps/Sandbox/tests/Resource/App/First/GreetingTest.php

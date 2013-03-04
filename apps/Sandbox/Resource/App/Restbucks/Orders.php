@@ -11,8 +11,6 @@ use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Resource\AbstractObject;
 use BEAR\Resource\Link;
 use DirectoryIterator;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Orders

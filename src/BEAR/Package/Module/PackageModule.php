@@ -12,6 +12,7 @@ use BEAR\Package\Module;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 /**
  * Package module
@@ -32,6 +33,7 @@ class PackageModule extends AbstractModule
         parent::__construct($module);
         $this->scheme = $scheme;
     }
+
     /**
      * (non-PHPdoc)
      * @see Ray\Di.AbstractModule::configure()
@@ -61,5 +63,6 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule\Resource\ApcModule);
         $this->install(new SundayModule\WebContext\AuraWebModule);
         $this->install(new SundayModule\Cqrs\CacheModule($this));
+
     }
 }
