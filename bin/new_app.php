@@ -19,14 +19,14 @@
  * php -S localhost:8088 web.php
  *
  */
-if (! isset($argv[1])) {
-    throw new \LogicException('new application name required. usage: new_app.php MyApp');
-}
+$appName = isset($argv[1]) ? ucwords($argv[1]) : 'NewApp';
 
-if (! file_exists('../../composer.phar')) {
-    $composerCmd = 'cd ../..; curl -s https://getcomposer.org/installer | php';
+$composerPath = dirname(__DIR__) . '/composer.phar';
+if (! file_exists($composerPath)) {
+    $composerCmd = 'curl -s https://getcomposer.org/installer | php';
     passthru($composerCmd);
+    $composerPath = dirname(__DIR__) . '/composer.phar';
 }
-$dir = dirname(__DIR__) . '/apps/';
-$cmd = "php ../../composer.phar create-project -s dev --dev bear/skeleton {$dir}/{$argv[1]}";
+$dir = dirname(__DIR__) . '/apps';
+$cmd = "php {$composerPath} create-project -s dev --dev bear/skeleton {$dir}/$appName";
 passthru($cmd);
