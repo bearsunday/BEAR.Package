@@ -15,13 +15,13 @@ control: {
     $appReflector = new ApplicationReflector($app);
     $view['app_name'] = $appReflector->appName;
     $resources = $appReflector->getResources();
-    if (! isset($_GET['uri'])) {
+    if (! isset($_POST['uri'])) {
         $body = '';
         goto output;
     }
     // post
     try {
-        list($filePath, $fileContents) = $appReflector->getNewResource($_GET['uri']);
+        list($filePath, $fileContents) = $appReflector->getNewResource($_POST['uri']);
         $appReflector->filePutContents($filePath, $fileContents);
         $code = 201;
         $status = 'Created';
@@ -35,7 +35,7 @@ control: {
 
 view: {
     $view['app_name'] = $appReflector->appName;
-    $uri = $_GET['uri'];
+    $uri = $_POST['uri'];
     $contents = '<pre>' . highlight_string($fileContents, true) . '</pre>';
     $file = urlencode($filePath);
     $edit = ($code === 201) ? "<a href=\"../edit/?file={$file}\"><span class=\"btn\">Edit</span></a>" : '';
@@ -60,7 +60,7 @@ output: {
     <li class="active">New</li>
     </ul>
 
-    <form action="new.php" method="get">
+    <form action="new.php" method="POST">
     <fieldset>
     <legend>Create resource</legend>
     <label>URI</label>
