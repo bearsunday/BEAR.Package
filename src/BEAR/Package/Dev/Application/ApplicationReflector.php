@@ -83,7 +83,9 @@ class ApplicationReflector
         $fileContents = str_replace('{$app}', $this->appName, $fileContents);
         $array = explode('/', $this->appName . $path);
         $class = array_pop($array);
-        $namespace = implode('\\', $array);
+        $appName = array_shift($array);
+        $scheme = ucwords($url['scheme']);
+        $namespace = "{$appName}\\Resource\\{$scheme}\\" . implode('\\', $array);
         $fileContents = str_replace('{$namespace}', $namespace, $fileContents);
         $fileContents = str_replace('{$class}', $class, $fileContents);
         return [$filePath, $fileContents];
