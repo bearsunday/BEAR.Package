@@ -5,7 +5,7 @@
  */
 namespace {$namespace};
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
 
@@ -15,13 +15,10 @@ use Ray\Di\Di\Inject;
  * @package    {$app}
  * @subpackage Resource
  */
-class {$class} extends Page
+class {$class} extends AbstractObject
 {
     use ResourceInject;
 
-    /**
-     * @var array
-     */
     public $body = [
         'greeting' =>  ''
     ];
