@@ -27,6 +27,7 @@ class StubModule extends AbstractModule
      */
     public function __construct(array $stub)
     {
+        parent::__construct();
         $this->stub = $stub;
     }
 
