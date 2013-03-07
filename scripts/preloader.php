@@ -1192,7 +1192,7 @@ class Injector implements InjectorInterface
         if (is_object($bound)) {
             return $bound;
         }
-        $isNotRecursive = debug_backtrace()[0]['file'] !== '/Users/akihito/git/BEAR.Package/vendor/ray/di/src/Ray/Di/Injector.php';
+        $isNotRecursive = debug_backtrace()[0]['file'] !== '/Users/kooriyama/git/BEAR.Package/vendor/ray/di/src/Ray/Di/Injector.php';
         $isFirstLoadInThisSession = !in_array($class, $loaded);
         $useCache = $this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession;
         $loaded[] = $class;
@@ -4038,7 +4038,7 @@ class PackageModule extends AbstractModule
     protected function configure()
     {
         $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $packageDir = dirname(dirname(dirname(dirname(dirname('/Users/akihito/git/BEAR.Package/src/BEAR/Package/Module')))));
+        $packageDir = dirname(dirname(dirname(dirname(dirname('/Users/kooriyama/git/BEAR.Package/src/BEAR/Package/Module')))));
         $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule());
@@ -4119,7 +4119,7 @@ class ConstantModule extends AbstractModule
     protected function configure()
     {
         $this->bind('')->annotatedWith('is_prod')->toInstance(false);
-        $sundayDir = dirname(dirname(dirname(dirname(dirname('/Users/akihito/git/BEAR.Package/vendor/bear/sunday/src/BEAR/Sunday/Module/Framework')))));
+        $sundayDir = dirname(dirname(dirname(dirname(dirname('/Users/kooriyama/git/BEAR.Package/vendor/bear/sunday/src/BEAR/Sunday/Module/Framework')))));
         $this->bind('')->annotatedWith('sunday_dir')->toInstance($sundayDir);
     }
 }
@@ -4204,7 +4204,6 @@ class ResourceModule extends AbstractModule
         $this->bind('BEAR\\Resource\\LoggerInterface')->annotatedWith('resource_logger')->to('BEAR\\Resource\\Logger');
         $this->bind('BEAR\\Resource\\LoggerInterface')->toProvider('BEAR\\Sunday\\Module\\Provider\\ResourceLoggerProvider');
         $this->bind('BEAR\\Resource\\HrefInterface')->to('BEAR\\Resource\\A');
-        $this->bind('BEAR\\Sunday\\Resource\\CacheControl\\TagInterface')->to('BEAR\\Sunday\\Resource\\CacheControl\\Etag');
         $this->bind('Aura\\Signal\\Manager')->toProvider('BEAR\\Sunday\\Module\\Provider\\SignalProvider')->in(Scope::SINGLETON);
         $this->bind('Guzzle\\Parser\\UriTemplate\\UriTemplateInterface')->to('Guzzle\\Parser\\UriTemplate\\UriTemplate');
     }
@@ -4412,8 +4411,6 @@ class ApcModule extends AbstractModule
  */
 namespace BEAR\Sunday\Inject;
 
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 /**
  * Inject tmp_dir
  *
@@ -4572,8 +4569,6 @@ class ApplicationLoggerModule extends AbstractModule
  */
 namespace BEAR\Sunday\Inject;
 
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 /**
  * Inject log dir
  *
@@ -4732,7 +4727,7 @@ class SmartyProvider implements Provide
     {
         $smarty = new Smarty();
         $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
-        $frameworkPlugin = '/Users/akihito/git/BEAR.Package/src/BEAR/Package/Provide/TemplateEngine/Smarty' . '/plugin';
+        $frameworkPlugin = '/Users/kooriyama/git/BEAR.Package/src/BEAR/Package/Provide/TemplateEngine/Smarty' . '/plugin';
         $smarty->setCompileDir($this->tmpDir . '/smarty/template_c')->setCacheDir($this->tmpDir . '/smarty/cache')->setTemplateDir($this->appDir . '/Resource/View')->setPluginsDir(array_merge($smarty->getPluginsDir(), array($appPlugin, $frameworkPlugin)));
         return $smarty;
     }
@@ -5511,7 +5506,7 @@ class HandleModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('')->annotatedWith('exceptionTpl')->toInstance('/Users/akihito/git/BEAR.Package/src/BEAR/Package/Module/ExceptionHandle' . '/template/view.php');
+        $this->bind('')->annotatedWith('exceptionTpl')->toInstance('/Users/kooriyama/git/BEAR.Package/src/BEAR/Package/Module/ExceptionHandle' . '/template/view.php');
         $this->bind('BEAR\\Resource\\AbstractObject')->annotatedWith('errorPage')->to('BEAR\\Package\\Debug\\ExceptionHandle\\ErrorPage');
         $this->bind('BEAR\\Package\\Debug\\ExceptionHandle\\ExceptionHandlerInterface')->to('BEAR\\Package\\Debug\\ExceptionHandle\\ExceptionHandler');
     }
@@ -5733,8 +5728,10 @@ use BEAR\Resource\AbstractObject as ResourceObject;
 trait EtagTrait
 {
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Sunday\Resource\CacheControl.TagInterface::getEtag()
+     * @param $object
+     * @param $args
+     *
+     * @return int
      */
     public function getEtag($object, $args)
     {
@@ -5794,8 +5791,7 @@ class CacheLoader implements MethodInterceptor
         $this->cache = $cache;
     }
     /**
-     * (non-PHPdoc)
-     * @see Ray\Aop.MethodInterceptor::invoke()
+     * {@inheritdoc}
      */
     public function invoke(MethodInvocation $invocation)
     {
@@ -6012,8 +6008,7 @@ class CacheUpdater implements MethodInterceptor
         $this->cache = $cache;
     }
     /**
-     * (non-PHPdoc)
-     * @see Ray\Aop.MethodInterceptor::invoke()
+     * {@inheritdoc}
      */
     public function invoke(MethodInvocation $invocation)
     {
@@ -6330,7 +6325,7 @@ trait RenderTrait
      */
     public function __toString()
     {
-        /** @var $this AbstractObject  */
+        /** @var $this AbstractObject */
         if (is_string($this->view)) {
             return $this->view;
         }
@@ -6635,7 +6630,7 @@ interface ResourceInterface
     /**
      *  Attach argument provider
      *
-     * @param  string              $signal
+     * @param  string                       $signal
      * @param SignalHandler\HandleInterface $argProvider
      *
      * @return mixed
@@ -6878,8 +6873,7 @@ class Resource implements ResourceInterface
         $this->invoker->setResourceClient($this);
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::newInstance()
+     * {@inheritdoc}
      */
     public function newInstance($uri)
     {
@@ -6902,8 +6896,7 @@ class Resource implements ResourceInterface
         return $instance;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::object()
+     * {@inheritdoc}
      */
     public function object($ro)
     {
@@ -6911,8 +6904,7 @@ class Resource implements ResourceInterface
         return $this;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::uri()
+     * {@inheritdoc}
      */
     public function uri($uri)
     {
@@ -6944,8 +6936,7 @@ class Resource implements ResourceInterface
         throw new Exception\Uri();
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::withQuery()
+     * {@inheritdoc}
      */
     public function withQuery(array $query)
     {
@@ -6953,8 +6944,7 @@ class Resource implements ResourceInterface
         return $this;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::addQuery()
+     * {@inheritdoc}
      */
     public function addQuery(array $query)
     {
@@ -6962,8 +6952,7 @@ class Resource implements ResourceInterface
         return $this;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::linkSelf()
+     * {@inheritdoc}
      */
     public function linkSelf($linkKey)
     {
@@ -6974,8 +6963,7 @@ class Resource implements ResourceInterface
         return $this;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::linkNew()
+     * {@inheritdoc}
      */
     public function linkNew($linkKey)
     {
@@ -6986,8 +6974,7 @@ class Resource implements ResourceInterface
         return $this;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::linkCrawl()
+     * {@inheritdoc}
      */
     public function linkCrawl($linkKey)
     {
@@ -6998,8 +6985,7 @@ class Resource implements ResourceInterface
         return $this;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::request()
+     * {@inheritdoc}
      */
     public function request()
     {
@@ -7026,8 +7012,7 @@ class Resource implements ResourceInterface
         return $this->request;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::attachParamProvider()
+     * {@inheritdoc}
      */
     public function attachParamProvider($signal, HandleInterface $argProvider)
     {
@@ -7035,8 +7020,7 @@ class Resource implements ResourceInterface
         $this->invoker->getSignal()->handler('\\BEAR\\Resource\\Invoker', \BEAR\Resource\Invoker::SIGNAL_PARAM . $signal, $argProvider);
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.Resource::__get($name)
+     * {@inheritdoc}
      * @throws Exception\Request
      */
     public function __get($name)
@@ -7179,7 +7163,7 @@ namespace BEAR\Resource;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Scope;
 /**
- * Resource object factory.
+ * Resource object factory
  *
  * @package BEAR.Resource
  *
@@ -7216,8 +7200,7 @@ class Factory implements FactoryInterface
         $this->scheme = $scheme;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.FactoryInterface::newInstance()
+     * {@inheritdoc}
      * @throws Exception\Scheme
      */
     public function newInstance($uri)
@@ -7426,8 +7409,7 @@ final class Request implements RequestInterface, ArrayAccess, IteratorAggregate
      */
     private $result;
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::__construct()
+     * {@inheritdoc}
      *
      * @Inject
      */
@@ -7451,8 +7433,7 @@ final class Request implements RequestInterface, ArrayAccess, IteratorAggregate
         $this->query = $query;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::__invoke()
+     * {@inheritdoc}
      */
     public function __invoke(array $query = null)
     {
@@ -7463,8 +7444,7 @@ final class Request implements RequestInterface, ArrayAccess, IteratorAggregate
         return $result;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::toUri()
+     * {@inheritdoc}
      */
     public function toUri()
     {
@@ -7478,8 +7458,7 @@ final class Request implements RequestInterface, ArrayAccess, IteratorAggregate
         return $queryString;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RequestInterface::toUriWithMethod()
+     * {@inheritdoc}
      */
     public function toUriWithMethod()
     {
@@ -7669,12 +7648,14 @@ use Aura\Di\ConfigInterface;
 use Aura\Signal\Manager as Signal;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Annotation\ParamSignal;
+use BEAR\Resource\Exception\MethodNotAllowed;
 use Ray\Aop\Weave;
 use Ray\Aop\ReflectiveMethodInvocation;
 use ReflectionParameter;
 use Ray\Di\Di\Scope;
 use Ray\Di\Config;
 use Ray\Di\Definition;
+use ReflectionException;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 /**
@@ -7735,8 +7716,7 @@ class Invoker implements InvokerInterface
         $this->signal = $signal;
     }
     /**
-     * (non-PHPDoc)
-     * @see \BEAR\Resource\InvokderInterface::setResourceClient()
+     * {@inheritdoc}
      */
     public function setResourceClient(ResourceInterface $resource)
     {
@@ -7763,8 +7743,7 @@ class Invoker implements InvokerInterface
         return $this->config;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.InvokerInterface::invoke()
+     * {@inheritdoc}
      * @throws Exception\Request
      */
     public function invoke(Request $request)
@@ -7817,8 +7796,7 @@ class Invoker implements InvokerInterface
         return $result;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.InvokerInterface::invokeTraversal()
+     * {@inheritdoc}
      */
     public function invokeTraversal(\Traversable $requests)
     {
@@ -7836,11 +7814,16 @@ class Invoker implements InvokerInterface
      * @param string $method
      * @param array  $args
      *
+     * @throws Exception\MethodNotAllowed
      * @return array
      */
     public function getParams($object, $method, array $args)
     {
-        $parameters = (new \ReflectionMethod($object, $method))->getParameters();
+        try {
+            $parameters = (new \ReflectionMethod($object, $method))->getParameters();
+        } catch (ReflectionException $e) {
+            throw new MethodNotAllowed();
+        }
         if ($parameters === array()) {
             return array();
         }
@@ -7880,7 +7863,7 @@ class Invoker implements InvokerInterface
     private function getArgumentBySignal(ReflectionParameter $parameter, $object, $method, array $args)
     {
         $definition = $this->config->fetch(get_class($object))[Config::INDEX_DEFINITION];
-        /** @var $definition \Ray\Di\Definition  */
+        /** @var $definition \Ray\Di\Definition */
         $userAnnotation = $definition->getUserAnnotationByMethod($method);
         $signalAnnotations = isset($userAnnotation['ParamSignal']) ? $userAnnotation['ParamSignal'] : array();
         $signalIds = array('Provides');
@@ -7944,8 +7927,7 @@ class Invoker implements InvokerInterface
         return $result;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.InvokerInterface::invokeSync()
+     * {@inheritdoc}
      */
     public function invokeSync(\SplObjectStorage $requests)
     {
@@ -8343,8 +8325,7 @@ final class Linker implements LinkerInterface
         $this->reader = $reader;
     }
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.LinkerInterface::invoke()
+     * {@inheritdoc}
      * @throws Exception\Link
      */
     public function invoke(ResourceObject $ro, Request $request, $sourceValue)
@@ -12864,7 +12845,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
 namespace BEAR\Sunday\Inject;
 
 use Guzzle\Log\LogAdapterInterface;
-use Ray\Di\Di\Inject;
 /**
  * Inject logger
  *
