@@ -85,7 +85,10 @@ class ApplicationReflector
         $class = array_pop($array);
         $appName = array_shift($array);
         $scheme = ucwords($url['scheme']);
-        $namespace = "{$appName}\\Resource\\{$scheme}\\" . implode('\\', $array);
+        $namespace = "{$appName}\\Resource\\{$scheme}";
+        if (isset($array)) {
+            $namespace .=  '\\' . implode('\\', $array);
+        }
         $fileContents = str_replace('{$namespace}', $namespace, $fileContents);
         $fileContents = str_replace('{$class}', $class, $fileContents);
         return [$filePath, $fileContents];
