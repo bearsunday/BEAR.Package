@@ -105,10 +105,6 @@ class SymfonyRouter implements RouterInterface
         if (count($argv) < 3) {
             throw new BadRequest('Usage: [get|post|put|delete] [uri]');
         }
-        $isMethodAllowed = in_array($argv[1], ['get', 'post', 'put', 'delete', 'options']);
-        if (!$isMethodAllowed) {
-            throw new MethodNotAllowed($argv[1]);
-        }
         $context = new RequestContext;
         $context->setPathInfo(parse_url($argv[2], PHP_URL_PATH));
         $context->setMethod(strtoupper($argv[1]));
