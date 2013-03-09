@@ -264,16 +264,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.7.0",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.7.0"
+                "reference": "0.7.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.7.0",
-                "reference": "0.7.0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.7.1",
+                "reference": "0.7.1",
                 "shasum": ""
             },
             "require": {
@@ -313,7 +313,7 @@
                 "rest",
                 "service layer"
             ],
-            "time": "2013-03-04 07:33:51"
+            "time": "2013-03-09 17:12:15"
         },
         {
             "name": "bear/sunday",
@@ -375,7 +375,7 @@
             "version": "2.3.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/common",
+                "url": "https://github.com/doctrine/common.git",
                 "reference": "bb0aebbf234db52df476a2b473d434745b34221c"
             },
             "dist": {
@@ -409,7 +409,7 @@
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Guilherme Blanco",
+                    "name": "Christoph Dorn",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -422,9 +422,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -444,17 +444,17 @@
             "version": "2.3.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/dbal",
-                "reference": "fd45c6f6baa618d871f3201fabe76df5043abb1e"
+                "url": "https://github.com/doctrine/dbal.git",
+                "reference": "569f1aed578585df904c7dbfc43aa39cb09877cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/fd45c6f6baa618d871f3201fabe76df5043abb1e",
-                "reference": "fd45c6f6baa618d871f3201fabe76df5043abb1e",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/569f1aed578585df904c7dbfc43aa39cb09877cc",
+                "reference": "569f1aed578585df904c7dbfc43aa39cb09877cc",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": "2.3.*",
+                "doctrine/common": ">=2.3.0,<2.5-dev",
                 "php": ">=5.3.2"
             },
             "type": "library",
@@ -479,7 +479,7 @@
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Guilherme Blanco",
+                    "name": "Christoph Dorn",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -500,7 +500,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-01-20 11:50:36"
+            "time": "2013-03-04 22:37:48"
         },
         {
             "name": "guzzle/guzzle",
@@ -508,12 +508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "62f34582779fcb007b92fb57dbe0a9441b808165"
+                "reference": "c3f285970120f3f2dd7db4e734c91e2980c9328a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/62f34582779fcb007b92fb57dbe0a9441b808165",
-                "reference": "62f34582779fcb007b92fb57dbe0a9441b808165",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c3f285970120f3f2dd7db4e734c91e2980c9328a",
+                "reference": "c3f285970120f3f2dd7db4e734c91e2980c9328a",
                 "shasum": ""
             },
             "require": {
@@ -593,7 +593,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-03-04 06:35:49"
+            "time": "2013-03-07 22:30:20"
         },
         {
             "name": "nocarrier/hal",
@@ -936,7 +936,7 @@
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/EventDispatcher",
+                "url": "https://github.com/symfony/EventDispatcher.git",
                 "reference": "2e1fce7bb3ea06d9e42756f1dd3edf966420c755"
             },
             "dist": {
@@ -990,7 +990,7 @@
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/HttpFoundation",
+                "url": "https://github.com/symfony/HttpFoundation.git",
                 "reference": "c5b764a66430507fd8c93d6e48f0ee9ba0dffea8"
             },
             "dist": {
@@ -1033,12 +1033,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "3a97436e581bae44d0eec454a74bbb4f93593e78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/3a97436e581bae44d0eec454a74bbb4f93593e78",
+                "reference": "3a97436e581bae44d0eec454a74bbb4f93593e78",
                 "shasum": ""
             },
             "require": {
@@ -1082,7 +1082,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-11 11:24:47"
+            "time": "2013-03-06 19:31:19"
         },
         {
             "name": "symfony/yaml",
@@ -1090,7 +1090,7 @@
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Yaml",
+                "url": "https://github.com/symfony/Yaml.git",
                 "reference": "f198ac28048eeceae852419c076123aaee59cd1c"
             },
             "dist": {
@@ -1146,7 +1146,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-02-08 06:13:13"
+            "time": "2013-03-01 05:24:27"
         },
         {
             "name": "zendframework/zend-db",
@@ -1155,7 +1155,7 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/zendframework/Component_ZendDb.git",
-                "reference": "a11f64faab1f8b510928267fee60816abd5c45c4"
+                "reference": "b61830c29ea770f0d1f37911486eda0712ec5fd5"
             },
             "dist": {
                 "type": "zip",
@@ -1189,7 +1189,7 @@
                 "db",
                 "zf2"
             ],
-            "time": "2013-02-20 16:01:24"
+            "time": "2013-02-22 17:13:49"
         },
         {
             "name": "zendframework/zend-log",
@@ -1343,7 +1343,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/firephp/firephp-core",
+                "url": "https://github.com/firephp/firephp-core.git",
                 "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a"
             },
             "dist": {
@@ -1380,18 +1380,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "75ec7a3e78bd1fca42ede6def41ce25a9b81c7ab"
+                "reference": "5fca55702b4e035b60a7b1cbac538572db47121d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/75ec7a3e78bd1fca42ede6def41ce25a9b81c7ab",
-                "reference": "75ec7a3e78bd1fca42ede6def41ce25a9b81c7ab",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/5fca55702b4e035b60a7b1cbac538572db47121d",
+                "reference": "5fca55702b4e035b60a7b1cbac538572db47121d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "PHPParser": "lib/"
@@ -1411,7 +1416,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2013-02-14 20:49:08"
+            "time": "2013-03-05 14:42:24"
         },
         {
             "name": "printo/printo",
@@ -1556,12 +1561,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "39d94faabcea7d60b90c2996d51e1b6691ab39d2"
+                "reference": "b6c2171579b4ab8c193322796ef757a185729cb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/39d94faabcea7d60b90c2996d51e1b6691ab39d2",
-                "reference": "39d94faabcea7d60b90c2996d51e1b6691ab39d2",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/b6c2171579b4ab8c193322796ef757a185729cb8",
+                "reference": "b6c2171579b4ab8c193322796ef757a185729cb8",
                 "shasum": ""
             },
             "require": {
@@ -1597,7 +1602,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-02-28 14:08:49"
+            "time": "2013-03-07 06:57:14"
         }
     ],
     "aliases": [
