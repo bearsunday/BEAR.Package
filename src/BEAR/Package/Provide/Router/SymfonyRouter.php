@@ -48,11 +48,6 @@ class SymfonyRouter implements RouterInterface
      */
     private $collection;
 
-    /**
-     * @var Request
-     */
-    private $request;
-
     const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
     const METHOD_OVERRIDE_GET = '_method';
 
