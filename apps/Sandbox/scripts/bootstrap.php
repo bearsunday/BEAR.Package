@@ -23,7 +23,6 @@ framework: {
     AnnotationRegistry::registerLoader([$loader, 'loadClass']);
     AnnotationReader::addGlobalIgnoredName('noinspection'); // for phpStorm
     AnnotationReader::addGlobalIgnoredName('returns'); // for Mr.Smarty. :(
-    require $packageDir . '/vendor/smarty/smarty/distribution/libs/Smarty.class.php';
 }
 
 application: {
