@@ -53,48 +53,16 @@ final class Fire implements LogWriterInterface
      * Fire resource object log
      *
      * @param ResourceObject $result
+     *
+     * @return void
      */
     private function fireResourceObjectLog(ResourceObject $result)
     {
         // code
         $this->fire->log($result->code, 'code');
-
-        // headers
-        $headers = [];
-        $headers[] = ['name', 'value'];
-        foreach ($result->headers as $name => $value) {
-            $headers[] = [$name, $value];
-        }
-        $this->fire->table('headers', $headers);
-
-        // body
-        $body = $this->normalize($result->body);
-        $isTable = is_array($body)
-            && isset($body[0])
-            && isset($body[1])
-            && (array_keys($body[0]) === array_keys($body[1]));
-        if ($isTable) {
-            $table = [];
-            $table[] = (array_values(array_keys($body[0])));
-            foreach ((array)$body as $val) {
-                $table[] = array_values((array)$val);
-            }
-            $this->fire->table('body', $table);
-        } else {
-            $this->fire->log($body, 'body');
-        }
-
-        // links
-        $links = [['rel', 'uri']];
-        foreach ($result->links as $rel => $uri) {
-            $links[] = [$rel, $uri];
-        }
-        if (count($links) > 1) {
-            $this->fire->table('links', $links);
-        }
-        $this->fire->group('view', ['Collapsed' => true]);
-        $this->fire->log($result->view);
-        $this->fire->groupEnd();
+        $this->fireHeader($result);
+        $this->fireBody($result);
+        $this->fireLink($result);
     }
 
     /**
@@ -137,4 +105,66 @@ final class Fire implements LogWriterInterface
 
         return $body;
     }
+
+    /**
+     * @param ResourceObject $result
+     *
+     * @return void
+     */
+    private function fireHeader(ResourceObject $result)
+    {
+        // headers
+        $headers = [];
+        $headers[] = ['name', 'value'];
+        foreach ($result->headers as $name => $value) {
+            $headers[] = [$name, $value];
+        }
+        $this->fire->table('headers', $headers);
+    }
+
+    /**
+     * @param ResourceObject $result
+     *
+     * @return void
+     */
+    private function fireBody(ResourceObject $result)
+    {
+        // body
+        $body = $this->normalize($result->body);
+        $isTable = is_array($body)
+            && isset($body[0])
+            && isset($body[1])
+            && (array_keys($body[0]) === array_keys($body[1]));
+        if ($isTable) {
+            $table = [];
+            $table[] = (array_values(array_keys($body[0])));
+            foreach ((array)$body as $val) {
+                $table[] = array_values((array)$val);
+            }
+            $this->fire->table('body', $table);
+        } else {
+            $this->fire->log($body, 'body');
+        }
+    }
+
+    /**
+     * @param ResourceObject $result
+     *
+     * @return void
+     */
+    private function fireLink(ResourceObject $result)
+    {
+        // links
+        $links = [['rel', 'uri']];
+        foreach ($result->links as $rel => $uri) {
+            $links[] = [$rel, $uri];
+        }
+        if (count($links) > 1) {
+            $this->fire->table('links', $links);
+        }
+        $this->fire->group('view', ['Collapsed' => true]);
+        $this->fire->log($result->view);
+        $this->fire->groupEnd();
+    }
+
 }
