@@ -35,7 +35,7 @@ try {
     $pdo = new \PDO("mysql:host=localhost;", $id, $password);
     $isDbConnectionOk = $ok;
 } catch (Exception $e) {
-    $isDbConnectionOk = $e->getMessage();
+    $isDbConnectionOk = $ng . $e->getMessage();
 }
 echo "{$isDbConnectionOk}DB connect({$id}/{$password})" . PHP_EOL;
 
