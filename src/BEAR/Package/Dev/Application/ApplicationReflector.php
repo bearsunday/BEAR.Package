@@ -66,6 +66,21 @@ class ApplicationReflector
     }
 
     /**
+     * Create new resource
+     *
+     * @param $uri
+     *
+     * @return int
+     */
+    public function newResource($uri)
+    {
+        list($filePath, $fileContents) = $this->getNewResource($uri);
+        $bytes = $this->filePutContents($filePath, $fileContents);
+
+        return [$bytes, $filePath];
+    }
+
+    /**
      * @param $uri
      *
      * @return array
@@ -99,6 +114,7 @@ class ApplicationReflector
      * @param $path
      * @param $contents
      *
+     * @return int size of file
      * @throws \RuntimeException
      */
     public function filePutContents($path, $contents)
@@ -116,16 +132,18 @@ class ApplicationReflector
         }
         $file = "$dir/$file";
         if (file_exists($file)) {
-            throw new \RuntimeException("File already exits file", 500);
+            throw new \RuntimeException("File already exits [{$file}]", 500);
         }
-        file_put_contents($file, $contents);
+        $result = file_put_contents($file, $contents);
         if (!is_writable($file)) {
             throw new \RuntimeException("Not writable file [$file]", 500);
         }
+
+        return $result;
     }
 
     /**
-     * @param \BEAR\Resource\AbstractObject $ro
+     * @param ResourceObject $ro
      *
      * @return array
      */
@@ -165,7 +183,10 @@ class ApplicationReflector
     {
         $resources = [];
         $resourceDir = $this->appDir . '/Resource';
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($resourceDir), RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($resourceDir),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
         foreach ($iterator as $item) {
             /** @var $item \SplFileInfo */
             if ($item->isFile() && substr($item->getFilename(), -3) === 'php') {
