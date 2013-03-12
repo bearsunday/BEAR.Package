@@ -21,6 +21,8 @@ class DevWeb
      *
      * @param                                                 $pagePath
      * @param \BEAR\Sunday\Extension\Application\AppInterface $app
+     *
+     * @return int exit code
      */
     public function service($pagePath, AppInterface $app = null)
     {
