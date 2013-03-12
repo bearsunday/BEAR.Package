@@ -45,8 +45,8 @@ register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_err
 if ($isDevTool) {
     $isAjaxReq = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
     $app = $isAjaxReq ? null : (require dirname(__DIR__) . '/instance.php');
-    (new DevWeb)->service($_SERVER['REQUEST_URI'], $app);
-    exit(0);
+    $code = (new DevWeb)->service($_SERVER['REQUEST_URI'], $app);
+    exit($code);
 }
 
 // Application

@@ -39,14 +39,14 @@ class DevWeb
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
             require $scriptFile;
-            exit(0);
+            return 0;
         }
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             require $scriptFile;
-            exit(0);
+            return 0;
         }
         echo "404";
-        exit(1);
+        return 1;
     }
 }
