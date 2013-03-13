@@ -32,10 +32,10 @@ echo "{$isAPCVersionOk}APC:" . phpversion("apc") . PHP_EOL;
 $id = isset($_SERVER['BEAR_DB_ID']) ? $_SERVER['BEAR_DB_ID'] : 'root';
 $password = isset($_SERVER['BEAR_DB_PASSWORD']) ? $_SERVER['BEAR_DB_PASSWORD'] : '';
 try {
-    $pdo = new \PDO("mysql:host=localhost; dbname=blogbeartest", $id, $password);
+    $pdo = new \PDO("mysql:host=localhost;", $id, $password);
     $isDbConnectionOk = $ok;
 } catch (Exception $e) {
-    $isDbConnectionOk = $e->getMessage();
+    $isDbConnectionOk = $ng . $e->getMessage();
 }
 echo "{$isDbConnectionOk}DB connect({$id}/{$password})" . PHP_EOL;
 
