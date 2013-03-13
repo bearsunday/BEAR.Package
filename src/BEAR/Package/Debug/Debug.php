@@ -8,7 +8,7 @@ namespace BEAR\Package\Debug;
 class Debug
 {
     /**
-     * debug print
+     * Debug print
      *
      * @param array $trace
      * @param null  $var
@@ -16,28 +16,18 @@ class Debug
      */
     public static function printR(array $trace, $var = null, $level = 2)
     {
-        list ($reporting, $htmlErrors, $isCli) = self::init($level);
-        ob_start();
-        var_dump($var); // sometimes notice with reason unknown
-        $varDump = ob_get_clean();
-        error_reporting($reporting);
-
-        if ($isCli) {
-            $varDump = strip_tags(html_entity_decode($varDump));
-        }
+        list ($htmlErrors, $isCli) = self::init($level);
+        $varDump = self::getVarDump($var, $isCli);
         ini_set('html_errors', $htmlErrors);
 
         // label
         $receiver = $trace[0];
-
-        $file = $receiver['file'];
-        $line = $receiver['line'];
-        $funcName = $receiver['function'];
         $method = (isset($trace[1]['class'])) ? " ({$trace[1]['class']}" . '::' . "{$trace[1]['function']})" : '';
-        $fileArray = file($file);
-        $p = trim($fileArray[$line - 1]);
-        unset($fileArray);
-        preg_match("/{$funcName}\((.+)[\s,\)]/is", $p, $matches);
+        preg_match(
+            "/{$receiver['function']}\((.+)[\s,\)]/is",
+            trim(file($receiver['file'])[$receiver['line'] - 1]),
+            $matches
+        );
         if (isset($matches[1])) {
             $varName = $matches[1];
         } else {
@@ -45,47 +35,18 @@ class Debug
             $varDump = '<br>';
         }
 
-        if (PHP_SAPI === 'cli') {
+        if ($isCli) {
             self::outputCli($varName, $var, $receiver, $method);
             return;
         }
-        $file = "<a href=\"/dev/edit/index.php?file={$file}&line={$line}\">$file</a>";
-        $varNameCss = <<<EOT
-    background-color: green;
-    color: white;
-    border: 1px solid #E1E1E8;
-    padding: 2px 4px;
-    margin 20px 40px;
-EOT;
-        $fileCss = <<<EOT
-    background-color: #F7F7F9;
-    color: #DD1144;
-    border: 1px solid #E1E1E8;
-    padding: 2px 4px;
-EOT;
         if (class_exists('FB', false)) {
-            $label = __FUNCTION__ . '() in ' . $receiver['file'] . ' on line ' . $receiver['line'];
-            /** @noinspection PhpUndefinedClassInspection */
-            /** @noinspection PhpUndefinedMethodInspection */
-            FB::group($label);
-            /** @noinspection PhpUndefinedMethodInspection */
-            /** @noinspection PhpUndefinedClassInspection */
-            FB::error($var);
-            /** @noinspection PhpUndefinedMethodInspection */
-            /** @noinspection PhpUndefinedClassInspection */
-            FB::groupEnd();
+            self::outputFb($var, $receiver['file'], $receiver['line']);
         }
-        $file = <<<EOT
-<span style="font-size:12px;color:gray"> in {$file} on line <b>{$line}</b> <code>$method</code></span>
-EOT;
-        $label = <<<EOT
-<span style="$varNameCss">$varName</span><span style="$fileCss">$file</span>
-EOT;
 
+        $label = self::getLabel($receiver['file'], $receiver['line'], $varName, $method);
 
         // output
-        echo $label;
-        echo "$varDump</div>";
+        echo "{$label}{$varDump}</div>";
     }
 
     /**
@@ -106,12 +67,12 @@ EOT;
         } else {
             ini_set('html_errors', 'On');
         }
-        $reporting = error_reporting(0);
-
-        return [$reporting, $htmlErrors, $isCli];
+        return [$htmlErrors, $isCli];
     }
 
     /**
+     * Console output
+     *
      * @param string $varName
      * @param string $var
      * @param array  $receiver
@@ -125,9 +86,73 @@ EOT;
         $colorOpenBold = "\033[1;32m";
         $colorOpenPlain = "\033[0;32m";
         $colorClose = "\033[0m";
-        echo $colorOpenReverse . "$varName" . $colorClose . " = ";
+        echo "{$colorOpenReverse}{$varName}{$colorClose} = ";
         var_dump($var);
         echo $colorOpenPlain . "in {$colorOpenBold}{$receiver['file']}{$colorClose}{$colorOpenPlain}";
-        echo "on line {$receiver['line']}$method" . $colorClose . "\n";
+        echo "on line {$receiver['line']}{$method}{$colorClose}\n";
+    }
+
+    /**
+     * FirePHP output
+     *
+     * @param mixed  $var
+     * @param string $file
+     * @param int    $line
+     */
+    private static function outputFb($var, $file, $line)
+    {
+        $label = __FUNCTION__ . "() in {$file} on line {$line}";
+        /** @noinspection PhpUndefinedClassInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
+        FB::group($label);
+        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpUndefinedClassInspection */
+        FB::error($var);
+        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpUndefinedClassInspection */
+        FB::groupEnd();
+    }
+
+    /**
+     * @param $file
+     * @param $line
+     * @param $varName
+     * @param $method
+     *
+     * @return string
+     */
+    private static function getLabel($file, $line, $varName, $method)
+    {
+        $file = "<a href=\"/dev/edit/index.php?file={$file}&line={$line}\">$file</a>";
+        $varNameCss = "background-color: green; color: white; border: 1px solid #E1E1E8; padding: 2px 4px; margin 20px 40px;";
+        $fileCss = "background-color: #F7F7F9; color: #DD1144; border: 1px solid #E1E1E8; padding: 2px 4px;";
+        $file = <<<EOT
+<span style="font-size:12px;color:gray"> in {$file} on line <b>{$line}</b> <code>$method</code></span>
+EOT;
+        $label = <<<EOT
+<span style="$varNameCss">$varName</span><span style="$fileCss">$file</span>
+EOT;
+
+        return $label;
+    }
+
+    /**
+     * @param $var
+     * @param $isCli
+     *
+     * @return string
+     */
+    private static function getVarDump($var, $isCli)
+    {
+        $reporting = error_reporting(0);
+        ob_start();
+        var_dump($var); // sometimes notice with reason unknown
+        $varDump = ob_get_clean();
+        error_reporting($reporting);
+        if ($isCli) {
+            $varDump = strip_tags(html_entity_decode($varDump));
+        }
+
+        return $varDump;
     }
 }
