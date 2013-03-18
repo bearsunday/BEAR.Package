@@ -12,7 +12,7 @@ use Doctrine\DBAL\Driver\Connection;
 /**
  * Set Db
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Inject
  */
 trait DbSetterTrait

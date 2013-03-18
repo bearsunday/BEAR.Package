@@ -25,7 +25,7 @@ use Ray\Di\Di\Named;
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  * @SuppressWarnings(PHPMD)
  */

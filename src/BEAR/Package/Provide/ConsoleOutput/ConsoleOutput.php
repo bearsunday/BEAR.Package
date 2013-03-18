@@ -14,7 +14,7 @@ use Guzzle\Parser\UriTemplate\UriTemplate;
 /**
  * Cli Output
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Web
  */
 final class ConsoleOutput implements ConsoleOutputInterface

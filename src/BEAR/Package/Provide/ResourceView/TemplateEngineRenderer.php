@@ -17,7 +17,7 @@ use Ray\Di\Di\Inject;
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  */
 class TemplateEngineRenderer implements TemplateEngineRendererInterface

@@ -13,7 +13,7 @@ use Ray\Di\Di\Scope;
 /**
  * Application logger module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class ApplicationLoggerModule extends AbstractModule

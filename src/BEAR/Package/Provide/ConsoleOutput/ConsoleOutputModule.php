@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Output console module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class ConsoleOutputModule extends AbstractModule

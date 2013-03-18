@@ -16,7 +16,7 @@ use Ray\Di\Di\Named;
 /**
  * Log Interceptor
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Interceptor
  */
 class Logger implements MethodInterceptor

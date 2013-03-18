@@ -18,7 +18,7 @@ use Ray\Di\Di\Named;
 /**
  * Zend log provider
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class ZfLogProvider implements Provide

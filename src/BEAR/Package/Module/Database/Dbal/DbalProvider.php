@@ -13,7 +13,7 @@ use Ray\Di\ProviderInterface as Provide;
 /**
  * PDO provider
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class DbalProvider implements Provide

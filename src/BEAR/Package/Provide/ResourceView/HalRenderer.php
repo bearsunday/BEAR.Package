@@ -16,7 +16,7 @@ use Nocarrier\Hal;
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  */
 class HalRenderer implements RenderInterface

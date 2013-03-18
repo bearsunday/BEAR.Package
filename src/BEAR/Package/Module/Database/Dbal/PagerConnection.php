@@ -16,7 +16,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 /**
  * Pager enabled connection
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class PagerConnection extends DbalConnection implements DriverConnection

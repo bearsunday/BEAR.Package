@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Web response module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class HttpFoundationModule extends AbstractModule

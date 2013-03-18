@@ -14,7 +14,7 @@ use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
 /**
  * DBAL module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class DbalModule extends AbstractModule

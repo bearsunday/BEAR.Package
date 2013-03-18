@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Router module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class SymfonyRouterModule extends AbstractModule

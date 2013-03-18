@@ -13,7 +13,7 @@ use Ray\Di\Scope;
 /**
  * Aura.Web Context module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class AuraWebModule extends AbstractModule

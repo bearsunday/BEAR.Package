@@ -15,7 +15,7 @@ use Ray\Di\Di\Inject;
 /**
  * Cache interceptor interface
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Interceptor
  */
 class Stub implements MethodInterceptor

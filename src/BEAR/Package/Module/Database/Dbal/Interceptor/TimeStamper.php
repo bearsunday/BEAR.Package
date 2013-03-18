@@ -13,7 +13,7 @@ use Ray\Aop\MethodInvocation;
 /**
  * Log Interceptor
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Interceptor
  */
 class TimeStamper implements MethodInterceptor
