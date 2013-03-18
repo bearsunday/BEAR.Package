@@ -2,35 +2,33 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Exception
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Debug\ExceptionHandle;
 
-use BEAR\Resource\Exception\BadRequest;
-use Ray\Di\InjectorInterface;
-use Ray\Di\AbstractModule;
-use Ray\Di\Exception\NotBound;
-
 use BEAR\Resource\AbstractObject as ResourceObject;
-use BEAR\Resource\Exception\ResourceNotFound;
+use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter;
+use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Resource\Exception\Scheme;
 use BEAR\Resource\Exception\Uri;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogDirInject;
 use Exception;
+use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Binding;
-
+use Ray\Di\Exception\NotBound;
+use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
  * Exception handler for development
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Exception
  */
 final class ExceptionHandler implements ExceptionHandlerInterface
@@ -73,6 +71,26 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     ];
 
     /**
+     * Set response
+     *
+     * @param mixed             $exceptionTpl
+     * @param ResponseInterface $response
+     * @param ResourceObject    $errorPage
+     *
+     * @Inject
+     * @Named("exceptionTpl=exceptionTpl,errorPage=errorPage")
+     */
+    public function __construct(
+        $exceptionTpl = null,
+        ResponseInterface $response,
+        ResourceObject $errorPage = null
+    ) {
+        $this->viewTemplate = $exceptionTpl;
+        $this->response = $response;
+        $this->errorPage = $errorPage ? : new ErrorPage;
+    }
+
+    /**
      * Set message
      *
      * @param array $message
@@ -94,26 +112,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     public function setModule(InjectorInterface $injector)
     {
         $this->injector = $injector;
-    }
-
-    /**
-     * Set response
-     *
-     * @param mixed             $exceptionTpl
-     * @param ResponseInterface $response
-     * @param ResourceObject    $errorPage
-     *
-     * @Inject
-     * @Named("exceptionTpl=exceptionTpl,errorPage=errorPage")
-     */
-    public function __construct(
-        $exceptionTpl = null,
-        ResponseInterface $response,
-        ResourceObject $errorPage = null
-    ) {
-        $this->viewTemplate = $exceptionTpl;
-        $this->response = $response;
-        $this->errorPage = $errorPage ? : new ErrorPage;
     }
 
     /**
@@ -183,7 +181,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         METHOD_NOT_ALLOWED:
         INVALID_URI:
 
-
         if (PHP_SAPI === 'cli') {
         } else {
             $response->view = $this->getView($e);
@@ -200,7 +197,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         $response->headers['X-EXCEPTION-PREVIOUS'] = $previous;
         $response->headers['X-EXCEPTION-ID'] = $exceptionId;
         $response->headers['X-EXCEPTION-ID-FILE'] = $this->getLogFilePath($exceptionId);
-
 
         return $response;
     }
@@ -231,6 +227,36 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     }
 
     /**
+     * @param \Exception $e
+     * @param array      $view
+     *
+     * @return mixed
+     */
+    private function getViewTemplate(
+        /** @noinspection PhpUnusedParameterInspection */
+        \Exception $e,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $view = [
+            'dependency_bindings' => '',
+            'modules' => ''
+        ]
+    ) {
+        return include $this->viewTemplate;
+    }
+
+    /**
+     * Return log file path
+     *
+     * @param $exceptionId
+     *
+     * @return string
+     */
+    private function getLogFilePath($exceptionId)
+    {
+        return "{$this->logDir}/{$exceptionId}.log";
+    }
+
+    /**
      * Write exception logs
      *
      * @param Exception $e
@@ -251,35 +277,5 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         } else {
             error_log("{$file} is not writable");
         }
-    }
-
-    /**
-     * Return log file path
-     *
-     * @param $exceptionId
-     *
-     * @return string
-     */
-    private function getLogFilePath($exceptionId)
-    {
-        return "{$this->logDir}/{$exceptionId}.log";
-    }
-
-    /**
-     * @param \Exception $e
-     * @param array      $view
-     *
-     * @return mixed
-     */
-    private function getViewTemplate(
-        /** @noinspection PhpUnusedParameterInspection */
-        \Exception $e,
-        /** @noinspection PhpUnusedParameterInspection */
-        array $view = [
-            'dependency_bindings' => '',
-            'modules' => ''
-        ]
-    ) {
-        return require $this->viewTemplate;
     }
 }

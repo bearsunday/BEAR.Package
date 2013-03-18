@@ -6,8 +6,8 @@
 namespace Sandbox\Resource\App\First\Hypermedia;
 
 use BEAR\Resource\AbstractObject;
-use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Inject\AInject;
+use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * Greeting resource
@@ -28,22 +28,13 @@ class Shop extends AbstractObject
      */
     public function onPost($item, $card_no)
     {
-        $order = $this
-            ->resource
-            ->post
-            ->uri('app://self/first/hypermedia/order')
-            ->withQuery(['item' => $item])
-            ->eager
-            ->request();
+        $order = $this->resource->post->uri('app://self/first/hypermedia/order')->withQuery(
+                ['item' => $item]
+            )->eager->request();
 
         $payment = $this->a->href('payment', $order);
 
-        $this
-            ->resource
-            ->put
-            ->uri($payment)
-            ->withQuery(['card_no' => $card_no])
-            ->request();
+        $this->resource->put->uri($payment)->withQuery(['card_no' => $card_no])->request();
 
         $this->code = 204;
         return $this;

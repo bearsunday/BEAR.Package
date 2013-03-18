@@ -7,14 +7,11 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
-use BEAR\Sunday\Inject\TmpDirInject;
+// @codingStandardsIgnoreFile
 use BEAR\Sunday\Inject\AppDirInject;
+use BEAR\Sunday\Inject\TmpDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Smarty;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
-
-// @codingStandardsIgnoreFile
 
 /**
  * Smarty3
@@ -37,10 +34,10 @@ class SmartyProvider implements Provide
         $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
         $frameworkPlugin = __DIR__ . '/plugin';
         $smarty
-        ->setCompileDir($this->tmpDir . '/smarty/template_c')
-        ->setCacheDir($this->tmpDir . '/smarty/cache')
-        ->setTemplateDir($this->appDir . '/Resource/View')
-        ->setPluginsDir(array_merge($smarty->getPluginsDir(), [$appPlugin, $frameworkPlugin]));
+            ->setCompileDir($this->tmpDir . '/smarty/template_c')
+            ->setCacheDir($this->tmpDir . '/smarty/cache')
+            ->setTemplateDir($this->appDir . '/Resource/View')
+            ->setPluginsDir(array_merge($smarty->getPluginsDir(), [$appPlugin, $frameworkPlugin]) );
 
         return $smarty;
     }

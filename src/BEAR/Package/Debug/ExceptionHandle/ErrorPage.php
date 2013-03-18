@@ -8,10 +8,11 @@
 namespace BEAR\Package\Debug\ExceptionHandle;
 
 use BEAR\Resource\AbstractObject as AbstractPage;
+
 /**
  * Error page
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Page
  */
 final class ErrorPage extends AbstractPage

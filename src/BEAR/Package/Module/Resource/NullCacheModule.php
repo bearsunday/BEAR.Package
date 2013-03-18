@@ -9,11 +9,10 @@ namespace BEAR\Package\Module\Resource;
 
 use Ray\Di\AbstractModule;
 
-
 /**
  * Resource null cache module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class NullCacheModule extends AbstractModule

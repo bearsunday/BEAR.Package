@@ -52,50 +52,6 @@ class Screen
     }
 
     /**
-     * Return headers
-     *
-     * @param \Exception $e
-     * @param string     $type
-     *
-     * @return string
-     */
-    public function getHeader(\Exception $e, $type = "error")
-    {
-        $title = get_class($e);
-        $subTitle = $e->getMessage();
-        $file = $e->getFile();
-        $line = $e->getLine();
-
-        return <<<EOT
-      <div class="alert alert-block alert-{$type} fade in">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <h2 class="alert-heading">{$title}</h2>
-        <h3>{$subTitle}</h3>
-        <p>in {$file} on line {$line}</p>
-        <a class="btn" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
-      </div>
-EOT;
-    }
-
-    /**
-     * Return editor link
-     *
-     * @param      $file
-     * @param      $line
-     * @param null $systemRoot
-     *
-     * @return string
-     */
-    public function getEditorLink($file, $line, $systemRoot = null)
-    {
-        $href = '/dev/edit/index.php?file=';
-        $href .= $systemRoot ? str_replace($systemRoot, '', $file) : $file;
-        $href .= "&line={$line}";
-        $link = "<a target=\"code_edit\" href=\"{$href}\" >{$file} : {$line}</a>";
-        return $link;
-    }
-
-    /**
      * Return trace
      *
      * @param $trace
@@ -165,7 +121,7 @@ EOT;
      */
     private function getArgsAsString(array &$args)
     {
-        if (! $args) {
+        if (!$args) {
             return '<i>(void)</i>';
         }
         $html = '<table class="table table-condensed table-bordered params-table">';
@@ -175,11 +131,11 @@ EOT;
             $type = gettype($arg);
             if (is_object($arg)) {
                 $divObject = $this->divObject($arg);
-                $objHash =  spl_object_hash($arg);
+                $objHash = spl_object_hash($arg);
                 $link = "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#obj{$objHash}\">";
                 $arg = $link . '(object) ' . $this->getObjectName($arg) . '</a>';
             }
-            if (! is_scalar($arg)) {
+            if (!is_scalar($arg)) {
                 $this->makeArgsElementsScalar($arg);
                 $arg = var_export($arg, true);
             }
@@ -187,36 +143,6 @@ EOT;
         }
         $html .= '</table>';
         return $html . $divObject;
-    }
-
-    /**
-     * Return object name
-     *
-     * @param $obj
-     *
-     * @return string
-     */
-    private function getObjectName($obj)
-    {
-        return '<strong>' . get_class($obj). '</strong><span class="weak">#' . spl_object_hash($obj) . '</span>';
-    }
-
-    /**
-     * @param array $args
-     */
-    private function makeArgsElementsScalar(array &$args)
-    {
-        $params = [];
-        foreach ($args as &$arg) {
-            if (is_object($arg)) {
-                $arg = $this->getObjectName($arg);
-            }
-            if (is_array($arg)) {
-                $this->makeArgsElementsScalar($arg);
-            }
-            $params[] = $arg;
-        }
-        $args = $params;
     }
 
     /**
@@ -238,7 +164,7 @@ EOT;
             $name = $prop->getName();
             $prop->setAccessible(true);
             $value = $prop->getValue($obj);
-            if (is_object($value) || 1 && ! isset($this->propTables[$index])) {
+            if (is_object($value) || 1 && !isset($this->propTables[$index])) {
                 $this->propTables[$index] = '';
                 //$this->divObject($value);
                 $value = $this->getObjectName($obj);
@@ -253,5 +179,79 @@ EOT;
         $propTables .= "</div>";
         $this->propTables[$index] = $propTables;
         return $propTables;
+    }
+
+    /**
+     * Return object name
+     *
+     * @param $obj
+     *
+     * @return string
+     */
+    private function getObjectName($obj)
+    {
+        return '<strong>' . get_class($obj) . '</strong><span class="weak">#' . spl_object_hash($obj) . '</span>';
+    }
+
+    /**
+     * @param array $args
+     */
+    private function makeArgsElementsScalar(array &$args)
+    {
+        $params = [];
+        foreach ($args as &$arg) {
+            if (is_object($arg)) {
+                $arg = $this->getObjectName($arg);
+            }
+            if (is_array($arg)) {
+                $this->makeArgsElementsScalar($arg);
+            }
+            $params[] = $arg;
+        }
+        $args = $params;
+    }
+
+    /**
+     * Return headers
+     *
+     * @param \Exception $e
+     * @param string     $type
+     *
+     * @return string
+     */
+    public function getHeader(\Exception $e, $type = "error")
+    {
+        $title = get_class($e);
+        $subTitle = $e->getMessage();
+        $file = $e->getFile();
+        $line = $e->getLine();
+
+        return <<<EOT
+      <div class="alert alert-block alert-{$type} fade in">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <h2 class="alert-heading">{$title}</h2>
+        <h3>{$subTitle}</h3>
+        <p>in {$file} on line {$line}</p>
+        <a class="btn" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
+      </div>
+EOT;
+    }
+
+    /**
+     * Return editor link
+     *
+     * @param      $file
+     * @param      $line
+     * @param null $systemRoot
+     *
+     * @return string
+     */
+    public function getEditorLink($file, $line, $systemRoot = null)
+    {
+        $href = '/dev/edit/index.php?file=';
+        $href .= $systemRoot ? str_replace($systemRoot, '', $file) : $file;
+        $href .= "&line={$line}";
+        $link = "<a target=\"code_edit\" href=\"{$href}\" >{$file} : {$line}</a>";
+        return $link;
     }
 }

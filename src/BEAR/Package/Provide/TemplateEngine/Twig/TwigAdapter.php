@@ -7,21 +7,26 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Twig;
 
+use BEAR\Sunday\Exception\TemplateNotFound;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Twig_Environment;
-use BEAR\Sunday\Exception\TemplateNotFound;
 use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
-use Ray\Di\Di\PostConstruct;
 
 /**
  * Smarty adapter
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class TwigAdapter implements TemplateEngineAdapterInterface
 {
+    /**
+     * File extension
+     *
+     * @var string
+     */
+    const EXT = 'twig';
+
     /**
      * Twig
      *
@@ -40,13 +45,6 @@ class TwigAdapter implements TemplateEngineAdapterInterface
      * @var array
      */
     private $values;
-
-    /**
-     * File extension
-     *
-     * @var string
-     */
-    const EXT = 'twig';
 
     /**
      * Constructor
@@ -87,7 +85,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
         $this->template = $tplWithoutExtension . self::EXT;
         $this->fileExists($this->template);
         $fileContents = file_get_contents($this->template);
-        $rendered =  $this->twig->render($fileContents, $this->values);
+        $rendered = $this->twig->render($fileContents, $this->values);
         return $rendered;
     }
 

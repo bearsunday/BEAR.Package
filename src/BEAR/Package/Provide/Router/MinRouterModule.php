@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Router module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class MinRouterModule extends AbstractModule
@@ -23,8 +23,6 @@ class MinRouterModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('BEAR\Sunday\Extension\Router\RouterInterface')
-            ->to(__NAMESPACE__ . '\MinRouter');
+        $this->bind('BEAR\Sunday\Extension\Router\RouterInterface')->to(__NAMESPACE__ . '\MinRouter');
     }
 }

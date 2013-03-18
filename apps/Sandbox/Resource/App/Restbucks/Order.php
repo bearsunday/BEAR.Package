@@ -5,8 +5,8 @@
  */
 namespace Sandbox\Resource\App\Restbucks;
 
-use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Resource\Link;
+use BEAR\Sunday\Inject\TmpDirInject;
 
 /**
  * Order

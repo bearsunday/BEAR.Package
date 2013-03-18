@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Resource renderer module - PROD
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class TemplateEngineRendererModule extends AbstractModule
@@ -24,8 +24,6 @@ class TemplateEngineRendererModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('BEAR\Resource\RenderInterface')
-            ->to(__NAMESPACE__ . '\TemplateEngineRenderer');
+        $this->bind('BEAR\Resource\RenderInterface')->to(__NAMESPACE__ . '\TemplateEngineRenderer');
     }
 }

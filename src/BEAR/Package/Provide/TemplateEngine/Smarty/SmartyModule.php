@@ -13,7 +13,7 @@ use Ray\Di\Scope;
 /**
  * Smarty module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class SmartyModule extends AbstractModule
@@ -29,8 +29,9 @@ class SmartyModule extends AbstractModule
             ->bind('BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface')
             ->to(__NAMESPACE__ . '\SmartyAdapter')
             ->in(Scope::SINGLETON);
-        $this->bind('Smarty')->toProvider(__NAMESPACE__ . '\SmartyProvider')->in(
-            Scope::SINGLETON
-        );
+        $this
+            ->bind('Smarty')
+            ->toProvider(__NAMESPACE__ . '\SmartyProvider')
+            ->in(Scope::SINGLETON);
     }
 }

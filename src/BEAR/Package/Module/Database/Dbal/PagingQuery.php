@@ -16,7 +16,7 @@ use IteratorAggregate;
 /**
  * Paging Query
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class PagingQuery implements Countable, IteratorAggregate
