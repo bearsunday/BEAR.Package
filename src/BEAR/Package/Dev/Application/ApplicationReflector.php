@@ -11,6 +11,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\Exception\ResourceNotFound;
 
 /**
  * Application reflector
@@ -58,7 +59,7 @@ class ApplicationReflector
                     'options' => $response->headers,
                     'links' => $response->links
                 ];
-            } catch (\BEAR\Resource\Exception\ResourceNotFound $e) {
+            } catch (ResourceNotFound $e) {
             }
         }
 

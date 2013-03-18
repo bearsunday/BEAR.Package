@@ -12,6 +12,7 @@ use BEAR\Resource\LogWriterInterface;
 use FirePHP;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use Traversable;
+use Doctrine\DBAL\Connection;
 use Ray\Di\Di\Inject;
 
 /**
@@ -91,7 +92,7 @@ final class Fire implements LogWriterInterface
                 if ($value instanceof \PDO || $value instanceof \PDOStatement) {
                     $value = '(PDO) ' . get_class($value);
                 }
-                if ($value instanceof \Doctrine\DBAL\Connection) {
+                if ($value instanceof Connection) {
                     $value = '(\Doctrine\DBAL\Connection) ' . get_class($value);
                 }
                 if (is_resource($value)) {

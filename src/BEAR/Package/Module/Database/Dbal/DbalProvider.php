@@ -8,7 +8,8 @@
 namespace BEAR\Package\Module\Database\Dbal;
 
 use Ray\Di\ProviderInterface as Provide;
-
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
 
 /**
  * PDO provider
@@ -43,14 +44,14 @@ class DbalProvider implements Provide
      */
     public function get()
     {
-        $config = new \Doctrine\DBAL\Configuration();
+        $config = new Configuration;
         $connectionParams = [
             'driver' => 'pdo_sqlite',
             'path' => $this->dsn,
             'user' => null,
             'password' => null
         ];
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        $conn = DriverManager::getConnection($connectionParams, $config);
 
         return $conn;
     }

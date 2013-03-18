@@ -9,6 +9,7 @@ namespace BEAR\Package\Provide\ConsoleOutput;
 
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\Request;
 use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
@@ -78,10 +79,16 @@ final class ConsoleOutput implements ConsoleOutputInterface
         return $header;
     }
 
+    /**
+     * @param ResourceObject $resource
+     * @param string         $mode
+     *
+     * @return string
+     */
     private function getBody(ResourceObject $resource, $mode)
     {
         foreach ($resource->body as $key => $body) {
-            if ($body instanceof \BEAR\Resource\Request) {
+            if ($body instanceof Request) {
                 switch ($mode) {
                     case self::MODE_REQUEST:
                         $body = self::LABEL2 . $body->toUri() . self::CLOSE;
