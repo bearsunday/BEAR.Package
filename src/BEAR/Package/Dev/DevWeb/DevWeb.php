@@ -45,7 +45,7 @@ class DevWeb
         }
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
-            require $scriptFile;
+            include $scriptFile;
             return 0;
         }
         echo "404";
