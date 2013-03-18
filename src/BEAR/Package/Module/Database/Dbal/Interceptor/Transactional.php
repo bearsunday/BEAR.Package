@@ -15,7 +15,7 @@ use Exception;
 /**
  * Transaction interceptor
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Interceptor
  */
 class Transactional implements MethodInterceptor

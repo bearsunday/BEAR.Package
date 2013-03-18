@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Resource renderer module - PROD
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class TemplateEngineRendererModule extends AbstractModule

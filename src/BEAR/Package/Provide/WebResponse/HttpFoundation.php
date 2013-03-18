@@ -25,7 +25,7 @@ use Exception;
 /**
  * Output with using Symfony HttpFoundation
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Web
  */
 final class HttpFoundation implements ResponseInterface

@@ -14,7 +14,7 @@ use BEAR\Resource\RenderInterface;
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  */
 class JsonRenderer implements RenderInterface

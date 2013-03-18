@@ -15,7 +15,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 /**
  * Paging query
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class Pager

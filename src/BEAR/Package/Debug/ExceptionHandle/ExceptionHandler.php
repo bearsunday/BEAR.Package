@@ -2,7 +2,7 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Exception
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
@@ -30,7 +30,7 @@ use Ray\Di\Di\Named;
 /**
  * Exception handler for development
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Exception
  */
 final class ExceptionHandler implements ExceptionHandlerInterface

@@ -13,7 +13,7 @@ use Ray\Di\Scope;
 /**
  * Hal render module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class HalModule extends AbstractModule

@@ -17,7 +17,7 @@ use Ray\Di\Di\PostConstruct;
 /**
  * Smarty adapter
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class TwigAdapter implements TemplateEngineAdapterInterface
