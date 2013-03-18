@@ -280,6 +280,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             'modules' => ''
         ]
     ) {
-        return require $this->viewTemplate;
+        return include $this->viewTemplate;
     }
 }
