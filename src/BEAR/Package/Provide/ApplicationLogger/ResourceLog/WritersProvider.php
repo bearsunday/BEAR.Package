@@ -13,6 +13,8 @@ use Zend\Log\Logger;
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Zf2Log;
 use Ray\Di\ProviderInterface;
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
+use BEAR\Sunday\Inject\LogDirInject;
+
 
 /**
  * Writer provider
@@ -23,7 +25,7 @@ use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
 class WritersProvider implements ProviderInterface
 {
 
-    use \BEAR\Sunday\Inject\LogDirInject;
+    use LogDirInject;
 
     /**
      * @return Writer\Collection|object
