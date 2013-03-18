@@ -5,8 +5,8 @@
  */
 namespace Sandbox\Module;
 
-use Ray\Di\AbstractModule;
 use BEAR\Package\Module\Stub\StubModule as PackageStubModule;
+use Ray\Di\AbstractModule;
 
 /**
  * Stub module

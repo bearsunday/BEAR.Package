@@ -4,12 +4,12 @@
  *
  * @package BEAR.Package
  */
+use BEAR\Package\Debug\Debug;
 
 /**
  * p - debug print function
  *
  */
-use BEAR\Package\Debug\Debug;
 
 /**
  * Debug print
@@ -17,7 +17,7 @@ use BEAR\Package\Debug\Debug;
  * @package BEAR.Package
  *
  * @param mixed $var
- * @param int  $level
+ * @param int   $level
  */
 function p($var, $level = 2)
 {

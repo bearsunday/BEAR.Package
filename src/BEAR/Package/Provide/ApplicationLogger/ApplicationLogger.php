@@ -7,11 +7,10 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger;
 
-use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
+use BEAR\Resource\Logger as ResourceLogger;
 use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Resource\Logger as ResourceLogger;
-
+use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
 use Ray\Di\Di\Inject;
 
 /**
@@ -27,7 +26,6 @@ final class ApplicationLogger implements ApplicationLoggerInterface
      * @var ResourceLoggerInterface
      */
     private $logger;
-
 
     /**
      * @param ResourceLoggerInterface $logger

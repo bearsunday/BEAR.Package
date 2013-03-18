@@ -7,15 +7,16 @@
  */
 namespace BEAR\Package\Provide\Application;
 
+use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
+use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
-use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface;
-use BEAR\Resource\ResourceInterface;
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Inject;
+
 
 /**
  * Application

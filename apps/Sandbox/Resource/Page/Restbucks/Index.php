@@ -8,10 +8,10 @@
 namespace Sandbox\Resource\Page\Restbucks;
 
 use BEAR\Resource\AbstractObject as Page;
-use BEAR\Sunday\Inject\ResourceInject;
-use BEAR\Sunday\Inject\AInject;
-use BEAR\Resource\LoggerInterface;
 use BEAR\Resource\Code;
+use BEAR\Resource\LoggerInterface;
+use BEAR\Sunday\Inject\AInject;
+use BEAR\Sunday\Inject\ResourceInject;
 use RuntimeException;
 use Ray\Di\Di\Inject;
 
@@ -55,13 +55,12 @@ class Index extends Page
     {
         // Story 1: As a customer, I want to order a coffee so that Restbucks can prepare my drink
         // （お客）ドリンクを注文
-        $orderResponse = $this
-            ->resource
+        $orderResponse = $this->resource
             ->post
             ->uri('app://self/restbucks/order')
-            ->withQuery(['drink' => $drink])
-            ->eager
-            ->request();
+            ->withQuery(
+                ['drink' => $drink]
+            )->eager->request();
 
         if ($orderResponse->code !== 201) {
             throw new RuntimeException('Sorry, Not available. Try "latte"');
@@ -74,13 +73,10 @@ class Index extends Page
             ->resource
             ->put
             ->uri('app://self/restbucks/order')
-            ->withQuery(
-                [
-                    'id' => $orderId,
-                    'addition' => 'shot'
-                ]
-        )
-            ->eager
+            ->withQuery([
+                'id' => $orderId,
+                'addition' => 'shot'
+            ])->eager
             ->request();
 
         // Story 3: As a customer. I want to be able to pay my bill to receive my drink
@@ -91,50 +87,31 @@ class Index extends Page
             ->resource
             ->put
             ->uri($paymentUri)
-            ->addQuery(
-            [
+            ->addQuery([
                 'id' => $orderId,
                 'card_no' => '0000123408010908',
                 'expires' => '021014',
                 'name' => 'BEAR SUNDAY',
                 'amount' => 1
-            ]
-        )
-            ->eager
+            ])->eager
             ->request();
 
         // Story 4: As a barista, I want to see the list of drinks that I need to make, so that I can serve my customers.
         // （店）お客さんに提供するために注文をみて、注文を"準備中"に変更する
 
         // get one order
-        $ordersResponse = $this
-            ->resource
-            ->get
-            ->uri('app://self/restbucks/orders')
-            ->eager
-            ->request();
+        $ordersResponse = $this->resource->get->uri('app://self/restbucks/orders')->eager->request();
         $order = $ordersResponse->body['order'][0];
         // change status
         $editUri = $order['_links']['edit']['href'];
         /** @noinspection PhpUnusedLocalVariableInspection */
-        $response = $this
-            ->resource
-            ->put
-            ->uri($editUri)
-            ->addQuery(['status' => 'preparing'])
-            ->eager
-            ->request();
+        $response = $this->resource->put->uri($editUri)->addQuery(['status' => 'preparing'])->eager->request();
 
         // Story 5: As a barista, I want to check that a customer has paid for their drink so that I can serve it
         // (店) ドリンクを渡すために支払いを確認
         $paymentUri = $order['_links']['payment']['href'];
 
-        $paymentResponse = $this
-            ->resource
-            ->get
-            ->uri($paymentUri)
-            ->eager
-            ->request();
+        $paymentResponse = $this->resource->get->uri($paymentUri)->eager->request();
         if ($paymentResponse->code !== 200) {
             throw new \RuntimeException('Payment needed', $paymentResponse->code);
         }
@@ -142,12 +119,7 @@ class Index extends Page
         // Story 6: As a barista, I want to remove drinks I have made from the pending list so that I don't make duplicates
         // （店）ダブってつくらないように注文を削除
         $orderUri = $order['_links']['self']['href'];
-        $this
-            ->resource
-            ->delete
-            ->uri($orderUri)
-            ->eager
-            ->request();
+        $this->resource->delete->uri($orderUri)->eager->request();
 
         $this['ordered'] = true;
 

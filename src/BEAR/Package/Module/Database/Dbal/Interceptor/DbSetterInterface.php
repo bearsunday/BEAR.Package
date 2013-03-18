@@ -12,7 +12,7 @@ use Doctrine\DBAL\Driver\Connection as DriverConnection;
 /**
  * Interface for Db setter
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Intercetor
  */
 interface DbSetterInterface

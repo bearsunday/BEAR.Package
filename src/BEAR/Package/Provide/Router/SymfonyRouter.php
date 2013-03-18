@@ -7,16 +7,16 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
-use Symfony\Component\HttpFoundation\Request;
+use BEAR\Sunday\Extension\Router\RouterInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -27,6 +27,10 @@ use Ray\Di\Di\Named;
  */
 class SymfonyRouter implements RouterInterface
 {
+
+    const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
+
+    const METHOD_OVERRIDE_GET = '_method';
 
     /**
      * @var RequestContext
@@ -47,9 +51,6 @@ class SymfonyRouter implements RouterInterface
      * @var RouteCollection
      */
     private $collection;
-
-    const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
-    const METHOD_OVERRIDE_GET = '_method';
 
     /**
      * Sets the location of the routes file
@@ -84,7 +85,6 @@ class SymfonyRouter implements RouterInterface
         $this->context = $context;
     }
 
-
     /**
      * Set argv
      *
@@ -118,27 +118,6 @@ class SymfonyRouter implements RouterInterface
     }
 
     /**
-     * Sets context
-     *
-     * @param \Symfony\Component\Routing\RequestContext $context
-     */
-    public function setContext(RequestContext $context = null)
-    {
-        if ($this->context && !$context) {
-            return;
-        }
-        if (!$context) {
-            $context = new RequestContext();
-            $request = Request::createFromGlobals();
-            $context->fromRequest($request);
-            $get = $request->query->all();
-            $post = $request->request->all();
-            $context->setParameters(array_merge($get, $post));
-        }
-        $this->context = $context;
-    }
-
-    /**
      * Match route
      *
      * @return array [$method, $pageUri, $query]
@@ -168,6 +147,27 @@ class SymfonyRouter implements RouterInterface
     }
 
     /**
+     * Sets context
+     *
+     * @param \Symfony\Component\Routing\RequestContext $context
+     */
+    public function setContext(RequestContext $context = null)
+    {
+        if ($this->context && !$context) {
+            return;
+        }
+        if (!$context) {
+            $context = new RequestContext();
+            $request = Request::createFromGlobals();
+            $context->fromRequest($request);
+            $get = $request->query->all();
+            $post = $request->request->all();
+            $context->setParameters(array_merge($get, $post));
+        }
+        $this->context = $context;
+    }
+
+    /**
      * Loads Symfony Yml Files
      */
     private function loadSymfonyRouteFiles()
@@ -178,7 +178,6 @@ class SymfonyRouter implements RouterInterface
         $locator = new FileLocator(array($this->fileLocation));
         $loader = new YamlFileLoader($locator);
         $this->collection = $loader->load($this->fileName ? : 'routes.yml');
-
     }
 
     /**

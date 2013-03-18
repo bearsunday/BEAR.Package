@@ -13,7 +13,7 @@ use Ray\Di\Di\Scope;
 /**
  * Application logger module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class ApplicationLoggerModule extends AbstractModule
@@ -40,6 +40,5 @@ class ApplicationLoggerModule extends AbstractModule
             ->bind('Ray\Di\LoggerInterface')
             ->to('BEAR\Package\Provide\Application\DiLogger')
             ->in(Scope::SINGLETON);
-
     }
 }

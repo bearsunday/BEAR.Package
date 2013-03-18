@@ -8,13 +8,13 @@
 namespace BEAR\Package\Provide\ResourceView;
 
 use BEAR\Resource\AbstractObject;
-use BEAR\Resource\RequestInterface;
 use BEAR\Resource\RenderInterface;
+use BEAR\Resource\RequestInterface;
 
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  */
 class JsonRenderer implements RenderInterface

@@ -7,15 +7,14 @@ namespace Sandbox\Resource\App\Blog;
 
 use BEAR\Package\Module\Database\Dbal\Setter\DbSetterTrait;
 use BEAR\Resource\AbstractObject as ResourceObject;
-use BEAR\Resource\Link;
 use BEAR\Resource\Code;
-use PDO;
-
+use BEAR\Resource\Link;
+use BEAR\Sunday\Annotation\Cache;
+use BEAR\Sunday\Annotation\CacheUpdate;
 use BEAR\Sunday\Annotation\Db;
 use BEAR\Sunday\Annotation\Time;
 use BEAR\Sunday\Annotation\Transactional;
-use BEAR\Sunday\Annotation\Cache;
-use BEAR\Sunday\Annotation\CacheUpdate;
+use PDO;
 
 /**
  * Posts
@@ -35,11 +34,6 @@ class Posts extends ResourceObject
     public $time;
 
     /**
-     * @var string
-     */
-    protected $table = 'posts';
-
-    /**
      * @var array
      */
     public $links = [
@@ -48,6 +42,11 @@ class Posts extends ResourceObject
         'page_edit' => [Link::HREF => 'page://self/blog/posts/edit{?id}', Link::TEMPLATED => true],
         'page_delete' => [Link::HREF => 'page://self/blog/posts?_method=delete{&id}', Link::TEMPLATED => true]
     ];
+
+    /**
+     * @var string
+     */
+    protected $table = 'posts';
 
     /**
      * @param int $id
@@ -67,32 +66,34 @@ class Posts extends ResourceObject
             $stmt->execute();
             $this->body = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
         return $this;
     }
 
-        /**
-         * @param string $title
-         * @param string $body
-         *
-         * @Time
-         * @Transactional
-         * @CacheUpdate
-         */
-        public function onPost($title, $body)
-        {
-            $values = [
-                'title' => $title,
-                'body' => $body,
-                'created' => $this->time
-            ];
-            $this->db->insert($this->table, $values);
-            //
-            $lastId = $this->db->lastInsertId('id');
-            $this->code = Code::CREATED;
-            $this->links['new_post'] = [Link::HREF => "app://self/posts/post?id={$lastId}"];
-            $this->links['page_new_post'] = [Link::HREF => "page://self/blog/posts/post?id={$lastId}"];
-            return $this;
-        }
+    /**
+     * @param string $title
+     * @param string $body
+     *
+     * @Time
+     * @Transactional
+     * @CacheUpdate
+     */
+    public function onPost($title, $body)
+    {
+        $values = [
+            'title' => $title,
+            'body' => $body,
+            'created' => $this->time
+        ];
+        $this->db->insert($this->table, $values);
+        //
+        $lastId = $this->db->lastInsertId('id');
+        $this->code = Code::CREATED;
+        $this->links['new_post'] = [Link::HREF => "app://self/posts/post?id={$lastId}"];
+        $this->links['page_new_post'] = [Link::HREF => "page://self/blog/posts/post?id={$lastId}"];
+
+        return $this;
+    }
 
     /**
      * @param int    $id
@@ -111,6 +112,7 @@ class Posts extends ResourceObject
         ];
         $this->db->update($this->table, $values, ['id' => $id]);
         $this->code = Code::NO_CONTENT;
+
         return $this;
     }
 
@@ -123,6 +125,7 @@ class Posts extends ResourceObject
     {
         $this->db->delete($this->table, ['id' => $id]);
         $this->code = Code::NO_CONTENT;
+
         return $this;
     }
 }

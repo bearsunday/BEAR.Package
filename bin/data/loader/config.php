@@ -18,12 +18,11 @@ $config = ClassLoader::getIncludes(
     }
 );
 
-// Add a regex filter that requires all classes to match the regex
-// $config->addInclusiveFilter('/Foo/');
-
 // Add a regex filter that requires that a class does not match the filter
-$config->addExclusiveFilter('/Sandbox/');
-$config->addExclusiveFilter('/Doctrine\/Common\/Annotation/');
-$config->addExclusiveFilter('/FirePHP/');
+$config
+    ->addExclusiveFilter('/Sandbox/')
+    ->addExclusiveFilter('/Doctrine\/Common\/Annotation/')
+    ->addExclusiveFilter('/FirePHP/')
+    ->addExclusiveFilter('/Smarty/');
 
 return $config;

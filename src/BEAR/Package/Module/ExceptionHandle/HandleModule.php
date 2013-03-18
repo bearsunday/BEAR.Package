@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Exception handle module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class HandleModule extends AbstractModule
