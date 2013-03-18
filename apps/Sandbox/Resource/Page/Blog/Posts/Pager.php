@@ -9,7 +9,6 @@ namespace Sandbox\Resource\Page\Blog\Posts;
 
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
-use Ray\Di\Di\Inject;
 
 /**
  * Blog entry pager page
@@ -30,12 +29,8 @@ class Pager extends Page
 
     public function onGet()
     {
-        $this['posts'] = $this
-            ->resource
-            ->get
-            ->uri('app://self/blog/posts/pager')
-            ->eager
-            ->request();
+        $this['posts'] = $this->resource->get->uri('app://self/blog/posts/pager')->eager->request();
+
         return $this;
     }
 }

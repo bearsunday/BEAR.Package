@@ -13,7 +13,7 @@ use Pagerfanta\Adapter\AdapterInterface;
 /**
  * DoctrineDbal adapter.
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class PagerfantaDbalAdapter implements AdapterInterface

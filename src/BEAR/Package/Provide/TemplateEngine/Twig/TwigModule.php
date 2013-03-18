@@ -13,7 +13,7 @@ use Ray\Di\Scope;
 /**
  * Smarty module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class TwigModule extends AbstractModule

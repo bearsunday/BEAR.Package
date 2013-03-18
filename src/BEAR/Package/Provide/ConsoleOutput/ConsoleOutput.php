@@ -7,25 +7,31 @@
  */
 namespace BEAR\Package\Provide\ConsoleOutput;
 
-use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\Request;
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
  * Cli Output
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Web
  */
 final class ConsoleOutput implements ConsoleOutputInterface
 {
     const MODE_REQUEST = 'request';
+
     const MODE_VIEW = 'view';
+
     const MODE_VALUE = 'value';
 
     const LABEL = "\033[1;32m";
+
     const LABEL1 = "\033[1;33m";
+
     const LABEL2 = "\e[4;30m";
+
     const CLOSE = "\033[0m";
 
     /**
@@ -78,10 +84,16 @@ final class ConsoleOutput implements ConsoleOutputInterface
         return $header;
     }
 
+    /**
+     * @param ResourceObject $resource
+     * @param string         $mode
+     *
+     * @return string
+     */
     private function getBody(ResourceObject $resource, $mode)
     {
         foreach ($resource->body as $key => $body) {
-            if ($body instanceof \BEAR\Resource\Request) {
+            if ($body instanceof Request) {
                 switch ($mode) {
                     case self::MODE_REQUEST:
                         $body = self::LABEL2 . $body->toUri() . self::CLOSE;
@@ -94,11 +106,10 @@ final class ConsoleOutput implements ConsoleOutputInterface
                     default:
                         $body = (string)$body . ' ' . self::LABEL1 . $body->toUri() . self::CLOSE;
                         break;
-
                 }
             }
             $body = is_array($body) ? var_export($body, true) : $body;
-            $body =  self::LABEL1 . $key . self::CLOSE . $body . PHP_EOL;
+            $body = self::LABEL1 . $key . self::CLOSE . $body . PHP_EOL;
 
             return $body;
         }

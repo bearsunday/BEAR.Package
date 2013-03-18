@@ -7,16 +7,16 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
+use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Link;
-use BEAR\Resource\AbstractObject as ReosurceObject;
-use BEAR\Resource\RequestInterface;
 use BEAR\Resource\RenderInterface;
+use BEAR\Resource\RequestInterface;
 use Nocarrier\Hal;
 
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  */
 class HalRenderer implements RenderInterface
@@ -25,7 +25,7 @@ class HalRenderer implements RenderInterface
      * (non-PHPdoc)
      * @see BEAR\Resource.RenderInterface::render()
      */
-    public function render(ReosurceObject $ro)
+    public function render(ResourceObject $ro)
     {
         // evaluate all request in body.
         $isArrayAccess = is_array($ro->body) || $ro->body instanceof \Traversable;
@@ -33,7 +33,7 @@ class HalRenderer implements RenderInterface
             $this->valuateElements($ro);
         }
         // HAL
-        $data = $ro->body ?: [];
+        $data = $ro->body ? : [];
         if (is_scalar($data)) {
             $data = ['value' => $data];
         }
@@ -47,7 +47,7 @@ class HalRenderer implements RenderInterface
     /**
      * @param \BEAR\Resource\AbstractObject $ro
      */
-    private function valuateElements(ReosurceObject &$ro)
+    private function valuateElements(ResourceObject &$ro)
     {
         array_walk_recursive(
             $ro->body,
@@ -63,12 +63,12 @@ class HalRenderer implements RenderInterface
     /**
      * Return hal
      *
-     * @param \BEAR\Resource\AbstractObject $ro
-     * @param                               $data
+     * @param ResourceObject $ro
+     * @param mixed          $data
      *
-     * @return \Nocarrier\Hal
+     * @return Hal
      */
-    private function getHal(ReosurceObject $ro, $data)
+    private function getHal(ResourceObject $ro, $data)
     {
         $hal = new Hal($ro->uri, $data);
         foreach ($ro->links as $rel => $link) {

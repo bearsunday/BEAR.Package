@@ -7,17 +7,17 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
-use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\AbstractObject;
-use BEAR\Resource\Request;
 use BEAR\Resource\DevInvoker;
+use BEAR\Resource\Request;
+use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
+use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use BEAR\Sunday\Module\Cqrs\Interceptor\CacheLoader;
+use DateInterval;
+use DateTime;
 use ReflectionClass;
 use ReflectionObject;
-use DateTime;
-use DateInterval;
 use Traversable;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -25,7 +25,7 @@ use Ray\Di\Di\Named;
 /**
  * Request renderer
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage View
  * @SuppressWarnings(PHPMD)
  */
@@ -34,16 +34,13 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
     const NO_CACHE = '';
     const WRITE_CACHE = 'label-important';
     const READ_CACHE = 'label-success';
-
     const BADGE_ARGS = '<span class="badge badge-info">Arguments</span>';
     const BADGE_CACHE = '<span class="badge badge-info">Cache</span>';
     const BADGE_INTERCEPTORS = '<span class="badge badge-info">Interceptors</span>';
     const BADGE_PROFILE = '<span class="badge badge-info">Profile</span>';
-
     const ICON_LIFE = '<span class="icon-refresh"></span>';
     const ICON_TIME = '<span class="icon-time"></span>';
     const ICON_NA = '<span class="icon-ban-circle"></span>';
-
     const DIV_WELL = '<div style="padding:10px;">';
 
     /**
@@ -66,6 +63,18 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
      * @var string
      */
     private $sundayDir;
+
+    /**
+     * ViewRenderer Setter
+     *
+     * @param TemplateEngineAdapterInterface $templateEngineAdapter
+     *
+     * @Inject
+     */
+    public function __construct(TemplateEngineAdapterInterface $templateEngineAdapter)
+    {
+        $this->templateEngineAdapter = $templateEngineAdapter;
+    }
 
     /**
      * Set packageDir
@@ -94,18 +103,6 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
     }
 
     /**
-     * ViewRenderer Setter
-     *
-     * @param TemplateEngineAdapterInterface $templateEngineAdapter
-     *
-     * @Inject
-     */
-    public function __construct(TemplateEngineAdapterInterface $templateEngineAdapter)
-    {
-        $this->templateEngineAdapter = $templateEngineAdapter;
-    }
-
-    /**
      * (non-PHPdoc)
      * @see BEAR\Resource.RenderInterface::render()
      */
@@ -129,7 +126,11 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         if (is_array($resourceObject->body) || $resourceObject->body instanceof Traversable) {
             $this->templateEngineAdapter->assignAll($resourceObject->body);
         }
-        $templateFileBase = $dir . DIRECTORY_SEPARATOR . substr(basename($pageFile), 0, strlen(basename($pageFile)) - 3);
+        $templateFileBase = $dir . DIRECTORY_SEPARATOR . substr(
+            basename($pageFile),
+            0,
+            strlen(basename($pageFile)) - 3
+        );
 
         // add tool bar
         $resourceObject->view = $body = $this->templateEngineAdapter->fetch($templateFileBase);
@@ -139,21 +140,6 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         $label = $this->getLabel($body, $resourceObject, $templateFile);
 
         return $label;
-    }
-
-    /**
-     * Get relative path from system root.
-     *
-     * @param string $file
-     *
-     * @return mixed
-     * @return string
-     */
-    private function makeRelativePath($file)
-    {
-        $file = str_replace($this->packageDir, '', $file);
-        $file = str_replace($this->sundayDir, '/vendor/bear/sunday', $file);
-        return $file;
     }
 
     /**
@@ -168,11 +154,26 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         if (strpos($body, '</body>') === false) {
             return $body;
         }
-        $bootstrapCss = strpos($body, '/assets/css/bootstrap.css') ? '' : '<link href="/assets/css/bootstrap.css" rel="stylesheet">';
-        $tooltipJs = strpos($body, '/assets/js/bootstrap-tooltip.js') ? '' : '<script src="/assets/js/bootstrap-tooltip.js"></script>';
-        $popoverJs = strpos($body, '/assets/js/bootstrap-popover.js') ? '' : '<script src="/assets/js/bootstrap-popover.js"></script>';
-        $collapseJs = strpos($body, '/assets/js/bootstrap-collapse.js') ? '' : '<script src="/assets/js/bootstrap-collapse.js"></script>';
-        $tabJs = strpos($body, '/assets/js/bootstrap-tab.js') ? '' : '<script src="/assets/js/bootstrap-tab.js"></script>';
+        $bootstrapCss = strpos(
+            $body,
+            '/assets/css/bootstrap.css'
+        ) ? '' : '<link href="/assets/css/bootstrap.css" rel="stylesheet">';
+        $tooltipJs = strpos(
+            $body,
+            '/assets/js/bootstrap-tooltip.js'
+        ) ? '' : '<script src="/assets/js/bootstrap-tooltip.js"></script>';
+        $popoverJs = strpos(
+            $body,
+            '/assets/js/bootstrap-popover.js'
+        ) ? '' : '<script src="/assets/js/bootstrap-popover.js"></script>';
+        $collapseJs = strpos(
+            $body,
+            '/assets/js/bootstrap-collapse.js'
+        ) ? '' : '<script src="/assets/js/bootstrap-collapse.js"></script>';
+        $tabJs = strpos(
+            $body,
+            '/assets/js/bootstrap-tab.js'
+        ) ? '' : '<script src="/assets/js/bootstrap-tab.js"></script>';
         $toolLoad = <<<EOT
 <!-- BEAR.Sunday dev tool load -->
 <script src="//www.google.com/jsapi"></script>
@@ -200,17 +201,35 @@ EOT;
     }
 
     /**
+     * Get relative path from system root.
+     *
+     * @param string $file
+     *
+     * @return mixed
+     * @return string
+     */
+    private function makeRelativePath($file)
+    {
+        $file = str_replace($this->packageDir, '', $file);
+        $file = str_replace($this->sundayDir, '/vendor/bear/sunday', $file);
+        return $file;
+    }
+
+    /**
      * Return label
      *
-     * @param string         $body
+     * @param string $body
      * @param AbstractObject $resourceObject
-     * @param string         $templateFile
+     * @param string $templateFile
      *
      * @return string
      */
     private function getLabel($body, AbstractObject $resourceObject, $templateFile)
     {
-        $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode($resourceObject->headers[CacheLoader::HEADER_CACHE], true) : false;
+        $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode(
+            $resourceObject->headers[CacheLoader::HEADER_CACHE],
+            true
+        ) : false;
         if ($cache === false) {
             $labelColor = self::NO_CACHE;
         } elseif ($cache['mode'] === 'W') {
@@ -355,42 +374,6 @@ EOT;
     }
 
     /**
-     * Return cache info
-     *
-     * @param ResourceObject $resourceObject
-     *
-     * @return string
-     * @return string
-     */
-    private function getCacheInfo(ResourceObject $resourceObject)
-    {
-        $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode($resourceObject->headers[CacheLoader::HEADER_CACHE], true) : false;
-        $result = self::BADGE_CACHE . self::DIV_WELL;
-        if ($cache === false) {
-            return $result . 'n/a' . '</div>';
-        }
-        $iconLife = self::ICON_LIFE;
-        $iconTime = self::ICON_TIME;
-
-        $life = $cache['life'] ? "{$cache['life']} sec" : 'Unlimited';
-        if ($cache['mode'] === 'W') {
-            $result .= "Write {$iconLife} {$life}";
-        } else {
-            if ($cache['life'] === false) {
-                $time = $cache['date'];
-            } else {
-                $created = new DateTime($cache['date']);
-                $interval = new DateInterval("PT{$cache['life']}S");
-                $expire = $created->add($interval);
-                $time = $expire->diff(new DateTime('now'))->format('%h hours %i min %s sec left');
-            }
-            $result .= "Read {$iconLife} {$life} {$iconTime} {$time}";
-        }
-
-        return $result . '</div>';
-    }
-
-    /**
      * Return resource meta info
      *
      * @param ResourceObject $resourceObject
@@ -416,6 +399,45 @@ EOT;
         $result .= '</ul></div>';
 
         return $result;
+    }
+
+    /**
+     * Return cache info
+     *
+     * @param ResourceObject $resourceObject
+     *
+     * @return string
+     * @return string
+     */
+    private function getCacheInfo(ResourceObject $resourceObject)
+    {
+        $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode(
+            $resourceObject->headers[CacheLoader::HEADER_CACHE],
+            true
+        ) : false;
+        $result = self::BADGE_CACHE . self::DIV_WELL;
+        if ($cache === false) {
+            return $result . 'n/a' . '</div>';
+        }
+        $iconLife = self::ICON_LIFE;
+        $iconTime = self::ICON_TIME;
+
+        $life = $cache['life'] ? "{$cache['life']} sec" : 'Unlimited';
+        if ($cache['mode'] === 'W') {
+            $result .= "Write {$iconLife} {$life}";
+        } else {
+            if ($cache['life'] === false) {
+                $time = $cache['date'];
+            } else {
+                $created = new DateTime($cache['date']);
+                $interval = new DateInterval("PT{$cache['life']}S");
+                $expire = $created->add($interval);
+                $time = $expire->diff(new DateTime('now'))->format('%h hours %i min %s sec left');
+            }
+            $result .= "Read {$iconLife} {$life} {$iconTime} {$time}";
+        }
+
+        return $result . '</div>';
     }
 
     /**

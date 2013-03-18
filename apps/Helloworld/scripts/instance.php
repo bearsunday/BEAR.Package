@@ -19,5 +19,5 @@ if ($app) {
 $injector = Injector::create([new AppModule]);
 $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
 
-$hasApc ? apc_store('app-helloworld', $app): null;
+$hasApc ? apc_store('app-helloworld', $app) : null;
 return $app;

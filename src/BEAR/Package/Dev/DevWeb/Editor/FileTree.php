@@ -15,6 +15,13 @@ namespace BEAR\Package\Dev\DevWeb\Editor;
  */
 class FileTree
 {
+    /**
+     * Cmd
+     *
+     * @var string
+     */
+    public $cmd = '';
+
     private $root;
 
     /**
@@ -24,13 +31,6 @@ class FileTree
     {
         $this->root = $root;
     }
-
-    /**
-     * Cmd
-     *
-     * @var string
-     */
-    public $cmd = '';
 
     /**
      * @param $placeholder

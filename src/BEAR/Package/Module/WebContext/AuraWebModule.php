@@ -13,7 +13,7 @@ use Ray\Di\Scope;
 /**
  * Aura.Web Context module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class AuraWebModule extends AbstractModule
@@ -25,10 +25,8 @@ class AuraWebModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('Ray\Di\ProviderInterface')
-            ->annotatedWith('webContext')
-            ->to('BEAR\Sunday\Module\Provider\WebContextProvider')
-            ->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\ProviderInterface')->annotatedWith('webContext')->to(
+                'BEAR\Sunday\Module\Provider\WebContextProvider'
+            )->in(Scope::SINGLETON);
     }
 }

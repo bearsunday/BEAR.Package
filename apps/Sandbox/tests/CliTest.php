@@ -23,7 +23,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
     {
         $cli = 'php ' . $this->systemRoot . '/public/web.php get /index';
         exec($cli, $return);
-        $this->assertContains('<!DOCTYPE html>', $return, $return);
+        $this->assertContains('<!DOCTYPE html>', $return);
     }
 
     public function test_devApiPhp()

@@ -7,9 +7,9 @@
  */
 namespace BEAR\Package\Module\Resource;
 
-use Ray\Di\AbstractModule;
-use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Provide as ProvideModule;
+use BEAR\Sunday\Module as SundayModule;
+use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
 /**
@@ -52,5 +52,4 @@ class DevResourceModule extends AbstractModule
             [$logger]
         );
     }
-
 }

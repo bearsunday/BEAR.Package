@@ -10,13 +10,13 @@ namespace BEAR\Package\Module\Database\Dbal;
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Pagerfanta\Pagerfanta;
-use Pagerfanta\View\ViewInterface;
 use Pagerfanta\View\TwitterBootstrapView;
+use Pagerfanta\View\ViewInterface;
 
 /**
  * Pager enabled connection
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class PagerConnection extends DbalConnection implements DriverConnection

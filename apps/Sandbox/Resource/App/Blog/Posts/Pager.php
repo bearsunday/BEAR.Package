@@ -42,6 +42,7 @@ class Pager extends Posts
             $stmt->execute();
             $this->body = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
         return $this;
     }
 }
