@@ -24,8 +24,6 @@ class DevRendererModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('BEAR\Resource\RenderInterface')
-            ->to(__NAMESPACE__ . '\DevTemplateEngineRenderer');
+        $this->bind('BEAR\Resource\RenderInterface')->to(__NAMESPACE__ . '\DevTemplateEngineRenderer');
     }
 }

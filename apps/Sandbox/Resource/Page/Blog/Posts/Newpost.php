@@ -8,10 +8,9 @@
 namespace Sandbox\Resource\Page\Blog\Posts;
 
 use BEAR\Resource\AbstractObject as Page;
-use BEAR\Sunday\Inject\ResourceInject;
-use Ray\Di\Di\Inject;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Annotation\Form;
+use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * New post page
@@ -56,17 +55,19 @@ class Newpost extends Page
     public function onPost($title, $body)
     {
         // create post
-        $response = $this->resource
+        $response = $this
+            ->resource
             ->post
             ->uri('app://self/blog/posts')
-            ->withQuery(['title' => $title, 'body' => $body])
-            ->eager->request();
+            ->withQuery(
+                ['title' => $title, 'body' => $body]
+            )
+            ->eager
+            ->request();
 
         $this['code'] = $response->code;
         $this->links += $response->links;
-        // redirect
-//      $this->code = 303;
-//      $this->headers = ['Location' => '/blog/posts'];
+
         return $this;
     }
 }

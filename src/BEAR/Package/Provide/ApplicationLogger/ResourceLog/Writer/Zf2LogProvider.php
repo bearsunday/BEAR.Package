@@ -7,10 +7,10 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use Ray\Di\ProviderInterface;
-use Zend\Log\Logger;
 use BEAR\Sunday\Inject\LogDirInject;
+use Ray\Di\ProviderInterface;
 use Zend\Db\Adapter\Adapter;
+use Zend\Log\Logger;
 use Zend\Log\Writer\Db;
 use Zend\Log\Writer\Syslog;
 
@@ -42,12 +42,16 @@ final class Zf2LogProvider implements ProviderInterface
         ];
         $this->db = new Adapter($dbConfig);
     }
+
     /**
      * @return Logger
      */
     public function get()
     {
-        $this->db->query('CREATE TABLE IF NOT EXISTS log(timestamp, message, priority, priorityName, extra_page)', Adapter::QUERY_MODE_EXECUTE);
+        $this->db->query(
+            'CREATE TABLE IF NOT EXISTS log(timestamp, message, priority, priorityName, extra_page)',
+            Adapter::QUERY_MODE_EXECUTE
+        );
         $writer = new Db($this->db, 'log');
         $this->zf2Log->addWriter($writer);
 

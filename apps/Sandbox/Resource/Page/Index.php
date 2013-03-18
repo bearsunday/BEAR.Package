@@ -9,7 +9,6 @@ use BEAR\Resource\AbstractObject as Page;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Version;
-use Ray\Di\Di\Inject;
 
 /**
  * Index page
@@ -25,11 +24,10 @@ class Index extends Page
      * @var array
      */
     public $body = [
-        'greeting' =>  'Hello BEAR.Sunday !',
+        'greeting' => 'Hello BEAR.Sunday !',
         'version' => '',
         'loaded_extensions' => []
     ];
-
     /**
      * @var array
      */
@@ -44,7 +42,9 @@ class Index extends Page
         $this['version'] = [
             'php' => phpversion(),
             'BEAR' => Version::VERSION,
-            'Package' => json_decode(file_get_contents(dirname(dirname(dirname(dirname(__DIR__)))) . '/composer.json'))->version
+            'Package' => json_decode(
+                file_get_contents(dirname(dirname(dirname(dirname(__DIR__)))) . '/composer.json')
+            )->version
         ];
         $this['extensions'] = [
             'apc' => extension_loaded('apc') ? phpversion('apc') : 'n/a',
@@ -60,7 +60,9 @@ class Index extends Page
 
     public function onGet()
     {
-        $cache = (PHP_SAPI !== 'cli' && function_exists('apc_cache_info')) ? apc_cache_info('user') : ['num_entries' => 0, 'mem_size' => 0];
+        $cache = (PHP_SAPI !== 'cli' && function_exists('apc_cache_info')) ? apc_cache_info(
+            'user'
+        ) : ['num_entries' => 0, 'mem_size' => 0];
         $this['apc'] = [
             'total' => $cache['num_entries'],
             'size' => $cache['mem_size']

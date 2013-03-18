@@ -40,6 +40,5 @@ class ApplicationLoggerModule extends AbstractModule
             ->bind('Ray\Di\LoggerInterface')
             ->to('BEAR\Package\Provide\Application\DiLogger')
             ->in(Scope::SINGLETON);
-
     }
 }

@@ -6,8 +6,9 @@
 namespace Sandbox\Resource\Page\Blog\Posts;
 
 use BEAR\Resource\AbstractObject as Page;
-use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Annotation\Form;
+use BEAR\Sunday\Inject\ResourceInject;
+
 /**
  * Edit post page
  *
@@ -31,13 +32,14 @@ class Edit extends Page
      */
     public function onGet($id)
     {
-        $this['submit'] = $this->resource->get->uri('app://self/blog/posts')->withQuery(['id' => $id])->eager->request()->body;
+        $this['submit'] = $this->resource->get->uri('app://self/blog/posts')->withQuery(['id' => $id])->eager->request(
+        )->body;
         $this['id'] = $id;
         return $this;
     }
 
     /**
-     * @param int    $id
+     * @param int $id
      * @param string $title
      * @param string $body
      *
@@ -46,11 +48,9 @@ class Edit extends Page
     public function onPut($id, $title, $body)
     {
         // create post
-        $this->resource
-            ->put
-            ->uri('app://self/blog/posts')
-            ->withQuery(['id' => $id, 'title' => $title, 'body' => $body])
-            ->eager->request();
+        $this->resource->put->uri('app://self/blog/posts')->withQuery(
+                ['id' => $id, 'title' => $title, 'body' => $body]
+            )->eager->request();
 
         // redirect
         $this->code = 303;

@@ -23,8 +23,6 @@ class MinRouterModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('BEAR\Sunday\Extension\Router\RouterInterface')
-            ->to(__NAMESPACE__ . '\MinRouter');
+        $this->bind('BEAR\Sunday\Extension\Router\RouterInterface')->to(__NAMESPACE__ . '\MinRouter');
     }
 }

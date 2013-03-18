@@ -36,7 +36,7 @@ class DiLogger implements LoggerInterface
                 if (is_object($param)) {
                     $param = get_class($param) . '#' . spl_object_hash($param);
                 } elseif (is_scalar($param)) {
-                    $param = '(' . gettype($param) . ') ' . (string) $param;
+                    $param = '(' . gettype($param) . ') ' . (string)$param;
                 } elseif (is_callable($param)) {
                     $param = '(Callable)';
                 }
@@ -45,7 +45,7 @@ class DiLogger implements LoggerInterface
         };
         $constructor = $toStr($params);
         $constructor = $constructor ? $constructor : '';
-        $setter = $setter ? "setter[" . implode(', ', array_keys($setter)) . ']': '';
+        $setter = $setter ? "setter[" . implode(', ', array_keys($setter)) . ']' : '';
         $logMessage = "[DI] {$class} construct[$constructor] {$setter}";
         $this->logMessages[] = $logMessage;
     }
@@ -57,5 +57,4 @@ class DiLogger implements LoggerInterface
     {
         return implode(PHP_EOL, $this->logMessages);
     }
-
 }

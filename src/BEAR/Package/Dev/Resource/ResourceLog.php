@@ -24,7 +24,6 @@ class ResourceLog
      */
     private $file;
 
-
     /**
      * @param $file string
      */

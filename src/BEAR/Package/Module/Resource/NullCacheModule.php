@@ -9,7 +9,6 @@ namespace BEAR\Package\Module\Resource;
 
 use Ray\Di\AbstractModule;
 
-
 /**
  * Resource null cache module
  *

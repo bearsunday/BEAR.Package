@@ -5,8 +5,8 @@
  */
 namespace Sandbox\Module;
 
-use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Provide as PackageModule;
+use BEAR\Sunday\Module as SundayModule;
 
 /**
  * Application module for API

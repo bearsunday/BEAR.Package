@@ -10,7 +10,6 @@ namespace BEAR\Package\Module\Stub;
 use BEAR\Sunday\Inject\LogInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use Ray\Di\Di\Inject;
 
 /**
  * Cache interceptor interface

@@ -7,11 +7,9 @@
  */
 namespace BEAR\Package\Module\Resource;
 
+use BEAR\Sunday\Inject\LogInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use BEAR\Sunday\Inject\LogInject;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Log Interceptor

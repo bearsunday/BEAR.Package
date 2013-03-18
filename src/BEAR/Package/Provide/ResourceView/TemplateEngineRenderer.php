@@ -7,9 +7,9 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
+use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
-use BEAR\Resource\AbstractObject;
 use Ray\Aop\Weave;
 use ReflectionClass;
 use Ray\Di\Di\Inject;
@@ -54,7 +54,9 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
             return (string)$resourceObject->body;
         }
 
-        $class = ($resourceObject instanceof Weave) ? get_class($resourceObject->___getObject()) : get_class($resourceObject);
+        $class = ($resourceObject instanceof Weave) ? get_class($resourceObject->___getObject()) : get_class(
+            $resourceObject
+        );
         $file = (new ReflectionClass($class))->getFileName();
 
         // assign 'resource'

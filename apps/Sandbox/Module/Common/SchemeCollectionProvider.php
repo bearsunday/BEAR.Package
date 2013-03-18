@@ -5,11 +5,11 @@
  */
 namespace Sandbox\Module\Common;
 
-use Ray\Di\ProviderInterface as Provide;
 use BEAR\Resource\Adapter\App as AppAdapter;
 use BEAR\Resource\SchemeCollection;
 use BEAR\Sunday\Inject\AppNameInject;
 use BEAR\Sunday\Inject\InjectorInject;
+use Ray\Di\ProviderInterface as Provide;
 
 /**
  * Scheme collection

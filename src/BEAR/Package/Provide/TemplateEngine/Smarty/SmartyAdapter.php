@@ -7,9 +7,9 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
-use Smarty;
-use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use BEAR\Sunday\Exception\TemplateNotFound;
+use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
+use Smarty;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
@@ -22,6 +22,13 @@ use Ray\Di\Di\PostConstruct;
  */
 class SmartyAdapter implements TemplateEngineAdapterInterface
 {
+    /**
+     * File extension
+     *
+     * @var string
+     */
+    const EXT = 'tpl';
+
     /**
      * smarty
      *
@@ -42,11 +49,16 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     private $isProd;
 
     /**
-     * File extension
+     * Constructor
      *
-     * @var string
+     * Smarty $smarty
+     *
+     * @Inject
      */
-    const EXT = 'tpl';
+    public function __construct(Smarty $smarty)
+    {
+        $this->smarty = $smarty;
+    }
 
     /**
      * Is production ?
@@ -59,18 +71,6 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     public function setIsProd($isProd)
     {
         $this->isProd = $isProd;
-    }
-
-    /**
-     * Constructor
-     *
-     * Smarty $smarty
-     *
-     * @Inject
-     */
-    public function __construct(Smarty $smarty)
-    {
-        $this->smarty = $smarty;
     }
 
     /**
