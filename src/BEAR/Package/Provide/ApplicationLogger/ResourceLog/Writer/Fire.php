@@ -7,10 +7,11 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use BEAR\Resource\RequestInterface;
-use BEAR\Resource\LogWriterInterface;
-use FirePHP;
 use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\LogWriterInterface;
+use BEAR\Resource\RequestInterface;
+use Doctrine\DBAL\Connection;
+use FirePHP;
 use Traversable;
 use Ray\Di\Di\Inject;
 
@@ -32,7 +33,7 @@ final class Fire implements LogWriterInterface
      */
     public function __construct(FirePHP $fire = null)
     {
-        $this->fire = $fire ?: FirePHP::getInstance(true);
+        $this->fire = $fire ? : FirePHP::getInstance(true);
     }
 
     /**
@@ -66,6 +67,46 @@ final class Fire implements LogWriterInterface
     }
 
     /**
+     * @param ResourceObject $result
+     *
+     * @return void
+     */
+    private function fireHeader(ResourceObject $result)
+    {
+        // headers
+        $headers = [];
+        $headers[] = ['name', 'value'];
+        foreach ($result->headers as $name => $value) {
+            $headers[] = [$name, $value];
+        }
+        $this->fire->table('headers', $headers);
+    }
+
+    /**
+     * @param ResourceObject $result
+     *
+     * @return void
+     */
+    private function fireBody(ResourceObject $result)
+    {
+        // body
+        $body = $this->normalize($result->body);
+        $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys(
+            $body[1]
+        ));
+        if ($isTable) {
+            $table = [];
+            $table[] = (array_values(array_keys($body[0])));
+            foreach ((array)$body as $val) {
+                $table[] = array_values((array)$val);
+            }
+            $this->fire->table('body', $table);
+        } else {
+            $this->fire->log($body, 'body');
+        }
+    }
+
+    /**
      * Format log data
      *
      * @param  mixed $body
@@ -91,7 +132,7 @@ final class Fire implements LogWriterInterface
                 if ($value instanceof \PDO || $value instanceof \PDOStatement) {
                     $value = '(PDO) ' . get_class($value);
                 }
-                if ($value instanceof \Doctrine\DBAL\Connection) {
+                if ($value instanceof Connection) {
                     $value = '(\Doctrine\DBAL\Connection) ' . get_class($value);
                 }
                 if (is_resource($value)) {
@@ -104,47 +145,6 @@ final class Fire implements LogWriterInterface
         );
 
         return $body;
-    }
-
-    /**
-     * @param ResourceObject $result
-     *
-     * @return void
-     */
-    private function fireHeader(ResourceObject $result)
-    {
-        // headers
-        $headers = [];
-        $headers[] = ['name', 'value'];
-        foreach ($result->headers as $name => $value) {
-            $headers[] = [$name, $value];
-        }
-        $this->fire->table('headers', $headers);
-    }
-
-    /**
-     * @param ResourceObject $result
-     *
-     * @return void
-     */
-    private function fireBody(ResourceObject $result)
-    {
-        // body
-        $body = $this->normalize($result->body);
-        $isTable = is_array($body)
-            && isset($body[0])
-            && isset($body[1])
-            && (array_keys($body[0]) === array_keys($body[1]));
-        if ($isTable) {
-            $table = [];
-            $table[] = (array_values(array_keys($body[0])));
-            foreach ((array)$body as $val) {
-                $table[] = array_values((array)$val);
-            }
-            $this->fire->table('body', $table);
-        } else {
-            $this->fire->log($body, 'body');
-        }
     }
 
     /**
@@ -166,5 +166,4 @@ final class Fire implements LogWriterInterface
         $this->fire->log($result->view);
         $this->fire->groupEnd();
     }
-
 }

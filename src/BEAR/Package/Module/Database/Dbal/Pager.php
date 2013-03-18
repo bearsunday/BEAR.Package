@@ -7,15 +7,15 @@
  */
 namespace BEAR\Package\Module\Database\Dbal;
 
-use Pagerfanta\Pagerfanta;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
-use Pagerfanta\View\ViewInterface;
+use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrapView;
+use Pagerfanta\View\ViewInterface;
 
 /**
  * Paging query
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class Pager
@@ -50,9 +50,59 @@ class Pager
     ];
 
     private $view;
+
     private $pager = [];
+
     private $currentPage;
+
     private $routeGenerator;
+
+    /**
+     * Constructor
+     *
+     * @param DriverConnection $db
+     * @param Pagerfanta       $pagerfanta
+     */
+    public function __construct(DriverConnection $db, Pagerfanta $pagerfanta)
+    {
+        $this->db = $db;
+
+        $currentPage = $this->currentPage ? : (isset($_GET[$this->pageKey]) ? $_GET[$this->pageKey] : 1);
+        $this->firstResult = ($currentPage - 1) * $this->maxPerPage;
+        $pagerfanta->setMaxPerPage($this->maxPerPage);
+        $pagerfanta->setCurrentPage($currentPage, false, true);
+        //view
+        $this->pager = [
+            'maxPerPage' => $this->maxPerPage,
+            'current' => $currentPage,
+            'total' => $pagerfanta->getNbResults(),
+            'hasNext' => $pagerfanta->hasNextPage(),
+            'hasPrevious' => $pagerfanta->hasPreviousPage(),
+            'html' => $this->getHtml($pagerfanta)
+        ];
+    }
+
+    /**
+     * Return paging html
+     *
+     * @param \Pagerfanta\Pagerfanta $pagerfanta
+     *
+     * @return string
+     */
+    private function getHtml(Pagerfanta $pagerfanta)
+    {
+        $view = $this->view ? : new TwitterBootstrapView;
+        $routeGenerator = $this->routeGenerator ? : function ($page) {
+            return "?{$this->pageKey}={$page}";
+        };
+        $html = $view->render(
+            $pagerfanta,
+            $routeGenerator,
+            $this->viewOptions
+        );
+
+        return $html;
+    }
 
     /**
      * @param $maxPerPage
@@ -128,31 +178,6 @@ class Pager
     }
 
     /**
-     * Constructor
-     *
-     * @param DriverConnection $db
-     * @param Pagerfanta       $pagerfanta
-     */
-    public function __construct(DriverConnection $db, Pagerfanta $pagerfanta)
-    {
-        $this->db = $db;
-
-        $currentPage = $this->currentPage ? : (isset($_GET[$this->pageKey]) ? $_GET[$this->pageKey] : 1);
-        $this->firstResult = ($currentPage - 1) * $this->maxPerPage;
-        $pagerfanta->setMaxPerPage($this->maxPerPage);
-        $pagerfanta->setCurrentPage($currentPage, false, true);
-        //view
-        $this->pager = [
-            'maxPerPage' => $this->maxPerPage,
-            'current' => $currentPage,
-            'total' => $pagerfanta->getNbResults(),
-            'hasNext' => $pagerfanta->hasNextPage(),
-            'hasPrevious' => $pagerfanta->hasPreviousPage(),
-            'html' => $this->getHtml($pagerfanta)
-        ];
-    }
-
-    /**
      * Return pagered query result
      *
      * @param $query
@@ -164,27 +189,5 @@ class Pager
         $pagerQuery = $this->db->getDatabasePlatform()->modifyLimitQuery($query, $this->maxPerPage, $this->firstResult);
 
         return $pagerQuery;
-    }
-
-    /**
-     * Return paging html
-     *
-     * @param \Pagerfanta\Pagerfanta $pagerfanta
-     *
-     * @return string
-     */
-    private function getHtml(Pagerfanta $pagerfanta)
-    {
-        $view = $this->view ? : new TwitterBootstrapView;
-        $routeGenerator = $this->routeGenerator ? : function ($page) {
-            return "?{$this->pageKey}={$page}";
-        };
-        $html = $view->render(
-            $pagerfanta,
-            $routeGenerator,
-            $this->viewOptions
-        );
-
-        return $html;
     }
 }

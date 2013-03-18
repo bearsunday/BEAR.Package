@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Zf2 log module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class ZfLogModule extends AbstractModule

@@ -4,13 +4,13 @@
  *
  * @package BEAR.Package
  */
+use BEAR\Package\Debug\Debug;
+use BEAR\Package\Debug\Exception\Debug as DebugException;
 
 /**
  * p - debug exception
  *
  */
-use BEAR\Package\Debug\Debug;
-use BEAR\Package\Debug\Exception\Debug as DebugException;
 
 /**
  * Throw exception
@@ -23,7 +23,7 @@ use BEAR\Package\Debug\Exception\Debug as DebugException;
  */
 function e($var = null, $level = 2)
 {
-    if (! is_null($var)) {
+    if (!is_null($var)) {
         Debug::printR(debug_backtrace(), $var, $level);
     }
     throw new DebugException;

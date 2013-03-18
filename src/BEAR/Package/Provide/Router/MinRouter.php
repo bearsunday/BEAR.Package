@@ -8,22 +8,26 @@
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Router\Map;
-use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
+use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
 
 /**
  * Standard min router
  *
  * The constructor can accepts "Aura.Route" routing
- * @see https://github.com/auraphp/Aura.Router
+ * @see        https://github.com/auraphp/Aura.Router
  *
  * @package    BEAR.Package
  * @subpackage Route
  */
 final class MinRouter implements RouterInterface
 {
+    const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
+
+    const METHOD_OVERRIDE_GET = '_method';
+
     /**
      * $GLOBALS
      *
@@ -38,13 +42,11 @@ final class MinRouter implements RouterInterface
      */
     private $map;
 
-    const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
-    const METHOD_OVERRIDE_GET = '_method';
-
     /**
      * Constructor
      *
      * @param Map $map
+     *
      * @Inject(optional=true)
      */
     public function __construct(Map $map = null)
@@ -88,7 +90,7 @@ final class MinRouter implements RouterInterface
      */
     public function match()
     {
-        $this->globals = $this->globals ?: $GLOBALS;
+        $this->globals = $this->globals ? : $GLOBALS;
         $globals = $this->globals;
         $uri = $globals['_SERVER']['REQUEST_URI'];
         $route = $this->map ? $this->map->match(parse_url($uri, PHP_URL_PATH), $globals['_SERVER']) : false;

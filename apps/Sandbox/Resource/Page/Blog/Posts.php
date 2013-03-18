@@ -39,6 +39,7 @@ class Posts extends Page
             ->get
             ->uri('app://self/blog/posts')
             ->request();
+
         return $this;
     }
 
@@ -57,6 +58,7 @@ class Posts extends Page
 
         // redirect
         $this->headers['location'] = '/blog/posts';
+
         return $this;
     }
 }

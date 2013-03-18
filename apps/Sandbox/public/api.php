@@ -1,8 +1,5 @@
 <?php
 
-use BEAR\Resource\Exception\Parameter as BadRequest;
-use BEAR\Resource\Exception\ResourceNotFound as NotFound;
-
 /**
  * CLI Built-in web server for API
  *
@@ -21,6 +18,8 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
  * @package BEAR.Package
  * @global  $mode
  */
+use BEAR\Resource\Exception\Parameter as BadRequest;
+use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 /**
  * The cache is cleared on each request via the following script. We understand that you may want to debug

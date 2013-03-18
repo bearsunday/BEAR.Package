@@ -7,8 +7,8 @@
  */
 namespace BEAR\Package\Module\WebContext;
 
-use Ray\Di\ProviderInterface;
 use Aura\Web\Context;
+use Ray\Di\ProviderInterface;
 
 /**
  * WebContext (Aura.Web)

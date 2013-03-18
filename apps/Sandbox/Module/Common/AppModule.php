@@ -49,12 +49,11 @@ class AppModule extends AbstractModule
         // dependency binding for application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Sandbox\App');
         $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
-        $this->bind('BEAR\Resource\RenderInterface')
-            ->annotatedWith('hal')
-            ->to('BEAR\Package\Provide\ResourceView\HalRenderer')
-            ->in(
-            Scope::SINGLETON
-        );
+        $this->bind('BEAR\Resource\RenderInterface')->annotatedWith('hal')->to(
+                'BEAR\Package\Provide\ResourceView\HalRenderer'
+            )->in(
+                Scope::SINGLETON
+            );
         // aspect weaving for application
         $this->installTimeMessage();
         $this->installNewPostFormValidator();

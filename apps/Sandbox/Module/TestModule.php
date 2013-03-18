@@ -5,10 +5,10 @@
  */
 namespace Sandbox\Module;
 
-use Sandbox\Module\ProdModule;
+use BEAR\Package\Module as PackageModule;
 use BEAR\Sunday\Module;
 use BEAR\Sunday\Module\Constant;
-use BEAR\Package\Module as PackageModule;
+use Sandbox\Module\ProdModule;
 
 /**
  * Production module

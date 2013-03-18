@@ -7,14 +7,14 @@
  */
 namespace BEAR\Package\Module\Database\Dbal;
 
-use Ray\Di\AbstractModule;
 use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
 use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
+use Ray\Di\AbstractModule;
 
 /**
  * DBAL module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class DbalModule extends AbstractModule

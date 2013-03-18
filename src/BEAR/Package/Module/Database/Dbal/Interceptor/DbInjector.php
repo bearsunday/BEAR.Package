@@ -6,19 +6,19 @@
  */
 namespace BEAR\Package\Module\Database\Dbal\Interceptor;
 
+use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Logging\SQLLogger;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
  * Cache interceptor
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Intercetor
  */
 final class DbInjector implements MethodInterceptor
@@ -48,6 +48,21 @@ final class DbInjector implements MethodInterceptor
     private $slaveDb;
 
     /**
+     * Constructor
+     *
+     * @param  array $masterDb
+     * @@param array $slaveDb
+     *
+     * @Inject
+     * @Named("masterDb=master_db,slaveDb=slave_db")
+     */
+    public function __construct(array $masterDb, array $slaveDb)
+    {
+        $this->masterDb = $masterDb;
+        $this->slaveDb = $slaveDb;
+    }
+
+    /**
      * Set annotation reader
      *
      * @param Reader $reader
@@ -70,21 +85,6 @@ final class DbInjector implements MethodInterceptor
     public function setSqlLogger(SQLLogger $sqlLogger)
     {
         $this->sqlLogger = $sqlLogger;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param  array $masterDb
-     * @@param array $slaveDb
-     *
-     * @Inject
-     * @Named("masterDb=master_db,slaveDb=slave_db")
-     */
-    public function __construct(array $masterDb, array $slaveDb)
-    {
-        $this->masterDb = $masterDb;
-        $this->slaveDb = $slaveDb;
     }
 
     /**

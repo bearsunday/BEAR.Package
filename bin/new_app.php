@@ -22,7 +22,7 @@
 $appName = isset($argv[1]) ? ucwords($argv[1]) : 'NewApp';
 
 $composerPath = dirname(__DIR__) . '/composer.phar';
-if (! file_exists($composerPath)) {
+if (!file_exists($composerPath)) {
     $composerCmd = 'curl -s https://getcomposer.org/installer | php';
     passthru($composerCmd);
     $composerPath = dirname(__DIR__) . '/composer.phar';

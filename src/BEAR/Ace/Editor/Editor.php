@@ -52,7 +52,6 @@ class Editor
     public function setBasePath($base)
     {
         $this->base = $base;
-
         return $this;
     }
 
@@ -67,7 +66,6 @@ class Editor
     {
         $this->path = $path;
         $fullPath = "{$this->base}/{$path}";
-
         // readable ?
         if (!is_readable($fullPath)) {
             throw new \InvalidArgumentException("Not found. {$path} : {$fullPath} is not readable.");
@@ -76,7 +74,6 @@ class Editor
         if (strpos($fullPath, $this->base) !== 0) {
             throw new \OutOfRangeException($fullPath);
         }
-
         $this->file = $fullPath;
 
         return $this;
@@ -90,7 +87,6 @@ class Editor
     public function setLine($line)
     {
         $this->line = $line;
-
         return $this;
     }
 
@@ -102,7 +98,6 @@ class Editor
     public function setMessage($message)
     {
         $this->message = $message;
-
         return $this;
     }
 
@@ -114,7 +109,6 @@ class Editor
     public function setSaveUrl($saveUrl)
     {
         $this->saveUrl = $saveUrl;
-
         return $this;
     }
 
@@ -126,7 +120,6 @@ class Editor
         $fullPath = $this->file;
         $line = $this->line;
         $relativePath = $this->path;
-
         // set variable for view
         $view = [];
         $view['file'] = $fullPath;
@@ -139,26 +132,10 @@ class Editor
         $view['is_writable_label'] = $view['is_writable'] ? "" : " Read Only";
         $view['auth'] = md5(session_id() . $id);
         $view['error'] = (isset($_GET['error'])) ? ($_GET['error']) : '';
-
         // get html view
         $view = $this->getView($view);
 
         return $view;
-    }
-
-    /**
-     * Save contents
-     *
-     * @param $contents
-     *
-     * @return string
-     */
-    public function save($contents)
-    {
-        $result = (string)file_put_contents($this->file, $contents, LOCK_EX | FILE_TEXT);
-        $log = "codeEdit saved:{$this->path} addr:{$_SERVER["REMOTE_ADDR"]} result:{$result}";
-
-        return $log;
     }
 
     /**
@@ -174,7 +151,21 @@ class Editor
         $view['error'] = $view['error'] ? '' : '';
         $view['save_url'] = $this->saveUrl;
         $view['message'] = $this->message ? "<span class=\"error\">{$this->message}</span>" : '';
-
         return require __DIR__ . '/view.php';
+    }
+
+    /**
+     * Save contents
+     *
+     * @param $contents
+     *
+     * @return string
+     */
+    public function save($contents)
+    {
+        $result = (string)file_put_contents($this->file, $contents, LOCK_EX | FILE_TEXT);
+        $log = "codeEdit saved:{$this->path} addr:{$_SERVER["REMOTE_ADDR"]} result:{$result}";
+
+        return $log;
     }
 }

@@ -13,7 +13,7 @@ use Ray\Di\Scope;
 /**
  * Json render module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class JsonModule extends AbstractModule

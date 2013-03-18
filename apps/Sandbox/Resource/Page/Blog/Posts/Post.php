@@ -43,8 +43,9 @@ class Post extends Page
             ->resource
             ->get
             ->uri('app://self/blog/posts')
-            ->withQuery(['id' => $id])
-            ->eager
+            ->withQuery(
+                ['id' => $id]
+            )->eager
             ->request()
             ->body;
         return $this;

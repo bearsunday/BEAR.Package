@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 /**
  * Output console module
  *
- * @package    BEAR.Sunday
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class ConsoleOutputModule extends AbstractModule
@@ -24,8 +24,6 @@ class ConsoleOutputModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface')
-            ->to(__NAMESPACE__ . '\ConsoleOutput');
+        $this->bind('BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface')->to(__NAMESPACE__ . '\ConsoleOutput');
     }
 }
