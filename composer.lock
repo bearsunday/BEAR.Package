@@ -445,12 +445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "569f1aed578585df904c7dbfc43aa39cb09877cc"
+                "reference": "8df9cd3668363f017dfea56b5ad448ea74dae49b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/569f1aed578585df904c7dbfc43aa39cb09877cc",
-                "reference": "569f1aed578585df904c7dbfc43aa39cb09877cc",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/8df9cd3668363f017dfea56b5ad448ea74dae49b",
+                "reference": "8df9cd3668363f017dfea56b5ad448ea74dae49b",
                 "shasum": ""
             },
             "require": {
@@ -479,7 +479,7 @@
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Christoph Dorn",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -500,7 +500,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-03-04 22:37:48"
+            "time": "2013-03-14 21:55:05"
         },
         {
             "name": "guzzle/guzzle",
@@ -508,12 +508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "c3f285970120f3f2dd7db4e734c91e2980c9328a"
+                "reference": "fab9eb485948a812dc58a07ab84396ae108ca7f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c3f285970120f3f2dd7db4e734c91e2980c9328a",
-                "reference": "c3f285970120f3f2dd7db4e734c91e2980c9328a",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fab9eb485948a812dc58a07ab84396ae108ca7f0",
+                "reference": "fab9eb485948a812dc58a07ab84396ae108ca7f0",
                 "shasum": ""
             },
             "require": {
@@ -593,7 +593,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-03-07 22:30:20"
+            "time": "2013-03-17 20:22:36"
         },
         {
             "name": "nocarrier/hal",
@@ -646,12 +646,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "878aee5e274ca75fbdf74262efd05d1207c31669"
+                "reference": "ae0ff215b3be2c3bd0b131a8b8daa9b15568c6db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/878aee5e274ca75fbdf74262efd05d1207c31669",
-                "reference": "878aee5e274ca75fbdf74262efd05d1207c31669",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/ae0ff215b3be2c3bd0b131a8b8daa9b15568c6db",
+                "reference": "ae0ff215b3be2c3bd0b131a8b8daa9b15568c6db",
                 "shasum": ""
             },
             "require": {
@@ -698,7 +698,7 @@
                 "page",
                 "paging"
             ],
-            "time": "2013-02-19 13:51:25"
+            "time": "2013-03-12 22:52:44"
         },
         {
             "name": "ray/aop",
@@ -1033,12 +1033,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "3a97436e581bae44d0eec454a74bbb4f93593e78"
+                "reference": "a8599d5735c5f1f994cfbf91f59851add9c9f627"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/3a97436e581bae44d0eec454a74bbb4f93593e78",
-                "reference": "3a97436e581bae44d0eec454a74bbb4f93593e78",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/a8599d5735c5f1f994cfbf91f59851add9c9f627",
+                "reference": "a8599d5735c5f1f994cfbf91f59851add9c9f627",
                 "shasum": ""
             },
             "require": {
@@ -1082,7 +1082,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-06 19:31:19"
+            "time": "2013-03-14 09:39:13"
         },
         {
             "name": "symfony/yaml",
@@ -1146,7 +1146,7 @@
                 "shasum": null
             },
             "type": "library",
-            "time": "2013-03-01 05:24:27"
+            "time": "2013-03-15 05:21:06"
         },
         {
             "name": "zendframework/zend-db",
@@ -1155,7 +1155,7 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/zendframework/Component_ZendDb.git",
-                "reference": "b61830c29ea770f0d1f37911486eda0712ec5fd5"
+                "reference": "4431d86238cd4f246ab196c0e0e6e8b8cc14f35a"
             },
             "dist": {
                 "type": "zip",
@@ -1189,15 +1189,20 @@
                 "db",
                 "zf2"
             ],
-            "time": "2013-02-22 17:13:49"
+            "time": "2013-03-05 14:10:33"
         },
         {
             "name": "zendframework/zend-log",
-            "version": "2.0.7",
+            "version": "2.0.8",
             "target-dir": "Zend/Log",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/zendframework/Component_ZendLog.git",
+                "reference": "release-2.0.8"
+            },
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Log-2.0.7.zip",
+                "url": "https://packages.zendframework.com/composer/Zend_Log-2.0.8.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1237,11 +1242,16 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.0.7",
+            "version": "2.0.8",
             "target-dir": "Zend/Stdlib",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/zendframework/Component_ZendStdlib.git",
+                "reference": "release-2.0.8"
+            },
             "dist": {
                 "type": "zip",
-                "url": "http://packages.zendframework.com/composer/Zend_Stdlib-2.0.7.zip",
+                "url": "https://packages.zendframework.com/composer/Zend_Stdlib-2.0.8.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1561,12 +1571,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "b6c2171579b4ab8c193322796ef757a185729cb8"
+                "reference": "ba67e2cf8e2ca6cada1de5a316a724df648c52ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/b6c2171579b4ab8c193322796ef757a185729cb8",
-                "reference": "b6c2171579b4ab8c193322796ef757a185729cb8",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ba67e2cf8e2ca6cada1de5a316a724df648c52ac",
+                "reference": "ba67e2cf8e2ca6cada1de5a316a724df648c52ac",
                 "shasum": ""
             },
             "require": {
@@ -1602,7 +1612,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-03-07 06:57:14"
+            "time": "2013-03-10 07:23:01"
         }
     ],
     "aliases": [
@@ -1621,5 +1631,12 @@
         "nocarrier/hal": 20,
         "firephp/firephp-core": 20,
         "classpreloader/classpreloader": 20
-    }
+    },
+    "platform": {
+        "php": ">=5.4.0",
+        "ext-curl": "*"
+    },
+    "platform-dev": [
+
+    ]
 }
