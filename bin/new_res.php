@@ -1,7 +1,5 @@
 <?php
 
-use BEAR\Package\Dev\Application\ApplicationReflector;
-
 /**
  * New resource
  *
@@ -10,11 +8,13 @@ use BEAR\Package\Dev\Application\ApplicationReflector;
  * $ php bin/new_res.php MyApp page://self/hello/world
  *
  */
+use BEAR\Package\Dev\Application\ApplicationReflector;
+
 $appName = isset($argv[1]) ? $argv[1] : error();
 $uri = isset($argv[2]) ? $argv[2] : error();
 $appFile = "apps/{$appName}/scripts/instance.php";
-if (! file_exists($appFile)) {
-   error("Invalid application name: {$appName}");
+if (!file_exists($appFile)) {
+    error("Invalid application name: {$appName}");
 }
 $app = require $appFile;
 $appReflector = new ApplicationReflector($app);

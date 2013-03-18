@@ -12,8 +12,6 @@ use Guzzle\Log\Zf2LogAdapter;
 use Ray\Di\ProviderInterface as Provide;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Zend log provider

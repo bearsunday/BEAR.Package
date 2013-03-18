@@ -7,8 +7,8 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use BEAR\Resource\RequestInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\RequestInterface;
 
 /**
  * Resource log write interface

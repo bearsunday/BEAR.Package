@@ -9,8 +9,8 @@
  * @package BEAR.Package
  * @global  $mode
  */
-use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
+use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 /**

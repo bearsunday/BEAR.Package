@@ -7,9 +7,9 @@
  */
 namespace BEAR\Package\Module\Database\Dbal;
 
-use Ray\Di\ProviderInterface as Provide;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
+use Ray\Di\ProviderInterface as Provide;
 
 /**
  * PDO provider

@@ -7,20 +7,19 @@
  */
 namespace BEAR\Package\Provide\WebResponse;
 
-use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
-use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
-use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
-use BEAR\Sunday\Exception\InvalidResourceType;
-use BEAR\Sunday\Inject\LogInject;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
+use BEAR\Resource\AbstractObject as Page;
 use BEAR\Resource\Logger;
 use BEAR\Resource\ObjectInterface as ResourceObject;
-
-use BEAR\Resource\AbstractObject as Page;
-use Symfony\Component\HttpFoundation\Response;
-use Ray\Aop\Weave;
-use Ray\Di\Di\Inject;
+use BEAR\Sunday\Exception\InvalidResourceType;
+use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
+use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
+use BEAR\Sunday\Inject\LogInject;
 use Exception;
+use Ray\Aop\Weave;
+use Symfony\Component\HttpFoundation\Response;
+use Ray\Di\Di\Inject;
 
 /**
  * Output with using Symfony HttpFoundation
@@ -84,18 +83,6 @@ final class HttpFoundation implements ResponseInterface
     private $appLogger;
 
     /**
-     * Set application logger
-     *
-     * @param AppLogger $appLogger
-     *
-     * @Inject
-     */
-    public function setAppLogger(AppLogger $appLogger)
-    {
-        $this->appLogger = $appLogger;
-    }
-
-    /**
      * Constructor
      *
      * @param ConsoleOutputInterface $consoleOutput
@@ -105,6 +92,18 @@ final class HttpFoundation implements ResponseInterface
     public function __construct(ConsoleOutputInterface $consoleOutput)
     {
         $this->consoleOutput = $consoleOutput;
+    }
+
+    /**
+     * Set application logger
+     *
+     * @param AppLogger $appLogger
+     *
+     * @Inject
+     */
+    public function setAppLogger(AppLogger $appLogger)
+    {
+        $this->appLogger = $appLogger;
     }
 
     /**

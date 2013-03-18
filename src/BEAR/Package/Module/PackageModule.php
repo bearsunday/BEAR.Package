@@ -63,6 +63,5 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule\Resource\ApcModule);
         $this->install(new SundayModule\WebContext\AuraWebModule);
         $this->install(new SundayModule\Cqrs\CacheModule($this));
-
     }
 }

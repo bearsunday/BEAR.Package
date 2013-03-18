@@ -7,11 +7,11 @@
  */
 namespace BEAR\Package\Dev\Application;
 
-use BEAR\Sunday\Extension\Application\AppInterface;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Exception\ResourceNotFound;
+use BEAR\Sunday\Extension\Application\AppInterface;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Application reflector
@@ -67,6 +67,45 @@ class ApplicationReflector
     }
 
     /**
+     * @return array resource uri list
+     */
+    private function getResourcesUris()
+    {
+        $resources = [];
+        $resourceDir = $this->appDir . '/Resource';
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($resourceDir), RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $item) {
+            /** @var $item \SplFileInfo */
+            if ($item->isFile() && substr($item->getFilename(), -3) === 'php') {
+                $uri = $this->getUri($item, $resourceDir);
+                if ($uri) {
+                    $resources[] = $uri;
+                }
+            }
+        }
+
+        return $resources;
+    }
+
+    /**
+     * @param \SplFileInfo $file
+     * @param string       $resourceDir
+     *
+     * @return string
+     */
+    private function getUri(\SplFileInfo $file, $resourceDir)
+    {
+        $relativePath = strtolower(str_replace($resourceDir . '/', '', (string)$file));
+        $path = explode('/', $relativePath);
+        $scheme = array_shift($path);
+        $appName = 'self';
+        $uri = "{$scheme}://{$appName}/" . implode('/', $path);
+        $uri = substr($uri, 0, -4);
+
+        return $uri;
+    }
+
+    /**
      * Create new resource
      *
      * @param $uri
@@ -103,12 +142,11 @@ class ApplicationReflector
         $scheme = ucwords($url['scheme']);
         $namespace = "{$appName}\\Resource\\{$scheme}";
         if (count($array) > 0) {
-            $namespace .=  '\\' . implode('\\', $array);
+            $namespace .= '\\' . implode('\\', $array);
         }
         $fileContents = str_replace('{$namespace}', $namespace, $fileContents);
         $fileContents = str_replace('{$class}', $class, $fileContents);
         return [$filePath, $fileContents];
-
     }
 
     /**
@@ -175,47 +213,5 @@ class ApplicationReflector
         $result = ['allow' => $allow, 'params' => $params];
 
         return $result;
-    }
-
-    /**
-     * @return array resource uri list
-     */
-    private function getResourcesUris()
-    {
-        $resources = [];
-        $resourceDir = $this->appDir . '/Resource';
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($resourceDir),
-            RecursiveIteratorIterator::SELF_FIRST
-        );
-        foreach ($iterator as $item) {
-            /** @var $item \SplFileInfo */
-            if ($item->isFile() && substr($item->getFilename(), -3) === 'php') {
-                $uri = $this->getUri($item, $resourceDir);
-                if ($uri) {
-                    $resources[] = $uri;
-                }
-            }
-        }
-
-        return $resources;
-    }
-
-    /**
-     * @param \SplFileInfo $file
-     * @param string       $resourceDir
-     *
-     * @return string
-     */
-    private function getUri(\SplFileInfo $file, $resourceDir)
-    {
-        $relativePath = strtolower(str_replace($resourceDir . '/', '', (string)$file));
-        $path = explode('/', $relativePath);
-        $scheme = array_shift($path);
-        $appName = 'self';
-        $uri = "{$scheme}://{$appName}/" . implode('/', $path);
-        $uri = substr($uri, 0, -4);
-
-        return $uri;
     }
 }

@@ -7,10 +7,10 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\Link;
 use BEAR\Resource\AbstractObject as ResourceObject;
-use BEAR\Resource\RequestInterface;
+use BEAR\Resource\Link;
 use BEAR\Resource\RenderInterface;
+use BEAR\Resource\RequestInterface;
 use Nocarrier\Hal;
 
 /**
@@ -33,7 +33,7 @@ class HalRenderer implements RenderInterface
             $this->valuateElements($ro);
         }
         // HAL
-        $data = $ro->body ?: [];
+        $data = $ro->body ? : [];
         if (is_scalar($data)) {
             $data = ['value' => $data];
         }

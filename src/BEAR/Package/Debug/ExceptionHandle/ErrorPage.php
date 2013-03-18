@@ -8,6 +8,7 @@
 namespace BEAR\Package\Debug\ExceptionHandle;
 
 use BEAR\Resource\AbstractObject as AbstractPage;
+
 /**
  * Error page
  *

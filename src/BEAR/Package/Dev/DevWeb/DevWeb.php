@@ -1,10 +1,10 @@
 <?php
 /**
-* This file is part of the BEAR.Package package
-*
-* @package BEAR.Package
-* @license http://opensource.org/licenses/bsd-license.php BSD
-*/
+ * This file is part of the BEAR.Package package
+ *
+ * @package BEAR.Package
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ */
 namespace BEAR\Package\Dev\DevWeb;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -34,7 +34,7 @@ class DevWeb
         }
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
-        if ($path == '' || substr($path, -1, 1) === '/'){
+        if ($path == '' || substr($path, -1, 1) === '/') {
             $path .= 'index.php';
         }
         $scriptFile = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/docs/dev/public/' . $path;

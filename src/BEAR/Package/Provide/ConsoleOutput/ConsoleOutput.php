@@ -7,9 +7,9 @@
  */
 namespace BEAR\Package\Provide\ConsoleOutput;
 
-use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Request;
+use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
@@ -21,12 +21,17 @@ use Guzzle\Parser\UriTemplate\UriTemplate;
 final class ConsoleOutput implements ConsoleOutputInterface
 {
     const MODE_REQUEST = 'request';
+
     const MODE_VIEW = 'view';
+
     const MODE_VALUE = 'value';
 
     const LABEL = "\033[1;32m";
+
     const LABEL1 = "\033[1;33m";
+
     const LABEL2 = "\e[4;30m";
+
     const CLOSE = "\033[0m";
 
     /**
@@ -101,11 +106,10 @@ final class ConsoleOutput implements ConsoleOutputInterface
                     default:
                         $body = (string)$body . ' ' . self::LABEL1 . $body->toUri() . self::CLOSE;
                         break;
-
                 }
             }
             $body = is_array($body) ? var_export($body, true) : $body;
-            $body =  self::LABEL1 . $key . self::CLOSE . $body . PHP_EOL;
+            $body = self::LABEL1 . $key . self::CLOSE . $body . PHP_EOL;
 
             return $body;
         }

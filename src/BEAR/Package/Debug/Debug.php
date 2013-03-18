@@ -71,6 +71,26 @@ class Debug
     }
 
     /**
+     * @param $var
+     * @param $isCli
+     *
+     * @return string
+     */
+    private static function getVarDump($var, $isCli)
+    {
+        $reporting = error_reporting(0);
+        ob_start();
+        var_dump($var); // sometimes notice with reason unknown
+        $varDump = ob_get_clean();
+        error_reporting($reporting);
+        if ($isCli) {
+            $varDump = strip_tags(html_entity_decode($varDump));
+        }
+
+        return $varDump;
+    }
+
+    /**
      * Console output
      *
      * @param string $varName
@@ -134,25 +154,5 @@ EOT;
 EOT;
 
         return $label;
-    }
-
-    /**
-     * @param $var
-     * @param $isCli
-     *
-     * @return string
-     */
-    private static function getVarDump($var, $isCli)
-    {
-        $reporting = error_reporting(0);
-        ob_start();
-        var_dump($var); // sometimes notice with reason unknown
-        $varDump = ob_get_clean();
-        error_reporting($reporting);
-        if ($isCli) {
-            $varDump = strip_tags(html_entity_decode($varDump));
-        }
-
-        return $varDump;
     }
 }

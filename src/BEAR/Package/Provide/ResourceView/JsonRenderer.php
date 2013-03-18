@@ -8,8 +8,8 @@
 namespace BEAR\Package\Provide\ResourceView;
 
 use BEAR\Resource\AbstractObject;
-use BEAR\Resource\RequestInterface;
 use BEAR\Resource\RenderInterface;
+use BEAR\Resource\RequestInterface;
 
 /**
  * Request renderer

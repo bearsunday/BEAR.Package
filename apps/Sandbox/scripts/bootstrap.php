@@ -10,8 +10,8 @@
  */
 namespace Sandbox;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 umask(0);
 

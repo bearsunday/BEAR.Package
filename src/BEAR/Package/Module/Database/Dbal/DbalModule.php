@@ -7,9 +7,9 @@
  */
 namespace BEAR\Package\Module\Database\Dbal;
 
-use Ray\Di\AbstractModule;
 use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
 use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
+use Ray\Di\AbstractModule;
 
 /**
  * DBAL module

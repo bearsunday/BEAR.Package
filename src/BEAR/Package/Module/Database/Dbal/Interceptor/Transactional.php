@@ -7,10 +7,10 @@
  */
 namespace BEAR\Package\Module\Database\Dbal\Interceptor;
 
+use Exception;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use ReflectionProperty;
-use Exception;
 
 /**
  * Transaction interceptor

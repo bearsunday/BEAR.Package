@@ -24,8 +24,6 @@ class ConsoleOutputModule extends AbstractModule
      */
     protected function configure()
     {
-        $this
-            ->bind('BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface')
-            ->to(__NAMESPACE__ . '\ConsoleOutput');
+        $this->bind('BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface')->to(__NAMESPACE__ . '\ConsoleOutput');
     }
 }

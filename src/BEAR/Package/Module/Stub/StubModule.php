@@ -44,6 +44,5 @@ class StubModule extends AbstractModule
                 [new Stub($value)]
             );
         }
-
     }
 }
