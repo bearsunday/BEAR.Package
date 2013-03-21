@@ -4,18 +4,18 @@
  *
  * @package BEAR.Framework
  */
-namespace Sandbox\Interceptor;
+namespace Sandbox\Interceptor\Form;
 
+use BEAR\Sunday\Inject\NamedArgsInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-
+use Ray\Aop\NamedArgsInterface;
 /**
  * Form validator
  */
-class PostFormValidator implements MethodInterceptor
+class BlogPost implements MethodInterceptor
 {
-    const TITLE = 0;
-    const BODY = 1;
+    use NamedArgsInject;
 
     /**
      * Error
@@ -34,21 +34,21 @@ class PostFormValidator implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         // retrieve page and query
-        $args = $invocation->getArguments();
+        $args = $this->namedArgs->get($invocation);
         $page = $invocation->getThis();
 
         // strip tags
         foreach ($args as &$arg) {
-            $arg = strip_tags($arg);
+            $param = strip_tags($arg);
         }
 
         // required title
-        if ($args[self::TITLE] === '') {
+        if ($args['title'] === '') {
             $this->errors['title'] = 'title required.';
         }
 
         // required body
-        if ($args[self::BODY] === '') {
+        if ($args['body'] === '') {
             $this->errors['body'] = 'body required.';
         }
 
@@ -60,8 +60,8 @@ class PostFormValidator implements MethodInterceptor
         // error, modify 'GET' page wih error message.
         $page['errors'] = $this->errors;
         $page['submit'] = [
-            'title' => $args[self::TITLE],
-            'body' => $args[self::BODY]
+            'title' => $args['title'],
+            'body' => $args['body']
         ];
 
         return $page->onGet();
