@@ -57,6 +57,7 @@ class PackageModule extends AbstractModule
         $this->install(new Package\Module\Database\Dbal\DbalModule($this));
         $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
+        $this->install(new Package\Module\Aop\NamedArgsModule);
 
         // Sunday module
         $this->install(new SundayModule\SchemeModule($this->scheme));
