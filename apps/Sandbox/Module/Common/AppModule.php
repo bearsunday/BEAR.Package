@@ -8,7 +8,7 @@ namespace Sandbox\Module\Common;
 use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module as PackageModule;
 use BEAR\Package\Provide as ProvideModule;
-use Sandbox\Interceptor\PostFormValidator;
+use Sandbox\Interceptor\Form\BlogPost;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
@@ -56,18 +56,19 @@ class AppModule extends AbstractModule
             );
         // aspect weaving for application
         $this->installTimeMessage();
-        $this->installNewPostFormValidator();
+        $this->installNewBlogPost();
     }
 
     /**
      * @Form - bind form validator
      */
-    private function installNewPostFormValidator()
+    private function installNewBlogPost()
     {
+        $blogPost = $this->requestInjection('Sandbox\Interceptor\Form\BlogPost');
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Sandbox\Resource\Page\Blog\Posts\Newpost'),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Form'),
-            [new PostFormValidator]
+            [$blogPost]
         );
     }
 
