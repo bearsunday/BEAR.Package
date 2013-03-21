@@ -1,5 +1,5 @@
 {
-    "hash": "840d440e94186bb5b0478b612bf091f3",
+    "hash": "24accb411ad47c854ecd5cba696bf128",
     "packages": [
         {
             "name": "aura/di",
@@ -321,12 +321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "0.6.1"
+                "reference": "e63989355c43d547e8ab2cd37b85d03b57745e16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/0.6.1",
-                "reference": "0.6.1",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/e63989355c43d547e8ab2cd37b85d03b57745e16",
+                "reference": "e63989355c43d547e8ab2cd37b85d03b57745e16",
                 "shasum": ""
             },
             "require": {
@@ -337,8 +337,8 @@
                 "guzzle/guzzle": "3.3.*",
                 "nocarrier/hal": "dev-master",
                 "php": ">=5.4.0",
-                "ray/aop": ">=1.0.0-beta2",
-                "ray/di": ">=1.0.0-beta3"
+                "ray/aop": "1.0.*",
+                "ray/di": "1.0.*"
             },
             "type": "library",
             "autoload": {
@@ -368,7 +368,7 @@
                 "resource",
                 "roa"
             ],
-            "time": "2013-03-04 08:24:26"
+            "time": "2013-03-21 03:26:58"
         },
         {
             "name": "doctrine/common",
@@ -404,12 +404,12 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
                 {
-                    "name": "Christoph Dorn",
+                    "name": "Guilherme Blanco",
                     "email": "guilhermeblanco@gmail.com",
                     "homepage": "http://www.instaclick.com"
                 },
@@ -422,7 +422,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -508,12 +508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "fab9eb485948a812dc58a07ab84396ae108ca7f0"
+                "reference": "f582f74f0789ddee11edcd7d3a87b68f32a06047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fab9eb485948a812dc58a07ab84396ae108ca7f0",
-                "reference": "fab9eb485948a812dc58a07ab84396ae108ca7f0",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f582f74f0789ddee11edcd7d3a87b68f32a06047",
+                "reference": "f582f74f0789ddee11edcd7d3a87b68f32a06047",
                 "shasum": ""
             },
             "require": {
@@ -549,6 +549,7 @@
                 "doctrine/cache": "*",
                 "monolog/monolog": "1.*",
                 "phpunit/phpunit": "3.7.*",
+                "psr/log": "1.0.*",
                 "symfony/class-loader": "*",
                 "zend/zend-cache1": "1.12",
                 "zend/zend-log1": "1.12",
@@ -593,7 +594,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-03-17 20:22:36"
+            "time": "2013-03-21 00:13:21"
         },
         {
             "name": "nocarrier/hal",
@@ -601,12 +602,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal.git",
-                "reference": "9e48789bd342f1f33bc98f8beb1741740a780ff0"
+                "reference": "0.9.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blongden/hal/zipball/9e48789bd342f1f33bc98f8beb1741740a780ff0",
-                "reference": "9e48789bd342f1f33bc98f8beb1741740a780ff0",
+                "url": "https://api.github.com/repos/blongden/hal/zipball/0.9.1",
+                "reference": "0.9.1",
                 "shasum": ""
             },
             "require": {
@@ -638,7 +639,7 @@
                 "rest",
                 "xml"
             ],
-            "time": "2013-02-14 13:48:25"
+            "time": "2013-03-20 11:14:31"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -702,16 +703,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0-beta2",
+            "version": "1.0.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0-beta2"
+                "reference": "1.0.0-beta3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/Ray.Aop/zipball/1.0.0-beta2",
-                "reference": "1.0.0-beta2",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0-beta3",
+                "reference": "1.0.0-beta3",
                 "shasum": ""
             },
             "require": {
@@ -743,7 +744,7 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2012-10-17 00:13:53"
+            "time": "2013-03-21 01:56:25"
         },
         {
             "name": "ray/di",
@@ -895,12 +896,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "da9d86bbc5336cde92f00079c0fb2108ab7bf5e9"
+                "reference": "v2.0.23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/da9d86bbc5336cde92f00079c0fb2108ab7bf5e9",
-                "reference": "da9d86bbc5336cde92f00079c0fb2108ab7bf5e9",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.0.23",
+                "reference": "v2.0.23",
                 "shasum": ""
             },
             "require": {
@@ -991,12 +992,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "c5b764a66430507fd8c93d6e48f0ee9ba0dffea8"
+                "reference": "v2.0.23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/c5b764a66430507fd8c93d6e48f0ee9ba0dffea8",
-                "reference": "c5b764a66430507fd8c93d6e48f0ee9ba0dffea8",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.0.23",
+                "reference": "v2.0.23",
                 "shasum": ""
             },
             "require": {
@@ -1631,12 +1632,5 @@
         "nocarrier/hal": 20,
         "firephp/firephp-core": 20,
         "classpreloader/classpreloader": 20
-    },
-    "platform": {
-        "php": ">=5.4.0",
-        "ext-curl": "*"
-    },
-    "platform-dev": [
-
-    ]
+    }
 }
