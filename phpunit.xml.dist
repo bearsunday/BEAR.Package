@@ -23,6 +23,7 @@
         <blacklist>
             <directory suffix=".php">scripts</directory>
             <directory suffix=".php">vendor</directory>
+            <directory suffix=".php">apps</directory>
         </blacklist>
     </filter>
 </phpunit>
