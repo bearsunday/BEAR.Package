@@ -15,7 +15,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     {
         static $app;
         parent::setUp();
-        if (! $app) {
+        if (!$app) {
             $app = require dirname(dirname(__DIR__)) . '/apps/Sandbox/scripts/instance.php';
         }
         $this->appReflector = new ApplicationReflector($app);
@@ -46,7 +46,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResources(array $resources)
     {
-        $this->assertSame(20, count($resources));
+        $this->assertSame(22, count($resources));
     }
 
     /**
@@ -67,8 +67,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testGetResourcesOptions(array $resources)
     {
         $expected = [
-            'allow' =>
-            [
+            'allow' => [
                 0 => 'get',
             ],
             'param-get' => '',
@@ -85,17 +84,14 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     {
 //        var_export($resources['page://self/index']['links']);
         $expected = [
-            'helloworld' =>
-                [
+            'helloworld' => [
                 'href' => 'page://self/hello/world',
-                ],
-            'blog' =>
-            [
+            ],
+            'blog' => [
                 'href' => 'page://self/blog/posts',
             ],
-            'restbucks' =>
-            [
-               'href' => 'page://self/restbucks/index',
+            'restbucks' => [
+                'href' => 'page://self/restbucks/index',
             ],
         ];
         $this->assertSame($expected, $resources['page://self/index']['links']);
