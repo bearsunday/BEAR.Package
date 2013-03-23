@@ -39,12 +39,10 @@ class Index extends Page
 
     public function __construct()
     {
+        $version = file_get_contents(dirname(dirname(dirname(dirname(__DIR__)))) . '/VERSION');
         $this['version'] = [
             'php' => phpversion(),
-            'BEAR' => Version::VERSION,
-            'Package' => json_decode(
-                file_get_contents(dirname(dirname(dirname(dirname(__DIR__)))) . '/composer.json')
-            )->version
+            'BEAR' => $version
         ];
         $this['extensions'] = [
             'apc' => extension_loaded('apc') ? phpversion('apc') : 'n/a',
