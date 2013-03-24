@@ -1582,12 +1582,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/print_o.git",
-                "reference": "4fb9a94aec0c8740515d61c1f5b28a9fd0d6edfe"
+                "reference": "0.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/print_o/zipball/4fb9a94aec0c8740515d61c1f5b28a9fd0d6edfe",
-                "reference": "4fb9a94aec0c8740515d61c1f5b28a9fd0d6edfe",
+                "url": "https://api.github.com/repos/koriym/print_o/zipball/0.1.1",
+                "reference": "0.1.1",
                 "shasum": ""
             },
             "require": {
@@ -1615,9 +1615,9 @@
             "homepage": "https://github.com/koriym/print_o",
             "keywords": [
                 "debug",
-                "object"
+                "object graph"
             ],
-            "time": "2013-02-19 18:41:54"
+            "time": "2013-03-24 13:10:53"
         },
         {
             "name": "twig/twig",
