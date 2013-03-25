@@ -1,5 +1,5 @@
 <?php
-namespace BEAR\Package\tests\Provide\ApplicationLogger\ResourceLog\Writer;
+namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
 

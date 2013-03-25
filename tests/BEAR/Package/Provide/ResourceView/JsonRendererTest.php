@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\tests\Provide\ResourceView;
+namespace BEAR\Package\Provide\ResourceView;
 
 use Ray\Di\Config;
 use Ray\Di\Annotation;
