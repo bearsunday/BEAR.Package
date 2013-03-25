@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\tests\Provide\WebResponse;
+namespace BEAR\Package\Provide\WebResponse;
 
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Resource\AbstractObject;

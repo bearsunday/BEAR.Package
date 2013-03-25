@@ -1,5 +1,5 @@
 <?php
-namespace BEAR\Package\tests\Dev;
+namespace BEAR\Package\Dev;
 
 use BEAR\Package\Dev\Application\ApplicationReflector;
 
@@ -16,10 +16,9 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         static $app;
         parent::setUp();
         if (!$app) {
-            $app = require dirname(dirname(__DIR__)) . '/apps/Sandbox/scripts/instance.php';
+            $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/instance.php';
         }
         $this->appReflector = new ApplicationReflector($app);
-
     }
 
     public function testNew()

@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\tests\Provide\Router;
+namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Provide\Router\MinRouter;
 
