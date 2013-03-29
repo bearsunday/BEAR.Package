@@ -60,5 +60,21 @@ namespace BEAR\Package\Provide\Application {
             $app = $this->applicationFactory->newInstance('Sandbox', 'Prod');
             $this->assertInstanceOf('Sandbox\App', $app);
         }
+
+        /**
+         * @expectedException \BEAR\Package\Provide\Application\Exception\InvalidMode
+         */
+        public function testNewInstanceInvalidMode()
+        {
+            $app = $this->applicationFactory->newInstance('Sandbox', 'NON_VALID');
+        }
+
+        public function testNewInstanceCached()
+        {
+            $this->applicationFactory->newInstance('Mock', 'Standard');
+            $app = $this->applicationFactory->newInstance('Mock', 'Standard');
+            $this->assertInstanceOf('Mock\App', $app);
+        }
+
     }
 }

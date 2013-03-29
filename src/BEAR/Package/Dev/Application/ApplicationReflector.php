@@ -7,11 +7,16 @@
  */
 namespace BEAR\Package\Dev\Application;
 
+use Aura\Di\Exception;
+use BEAR\Package\Dev\Application\Exception\FileAlreadyExists;
+use BEAR\Package\Dev\Application\Exception\InvalidUri;
+use BEAR\Package\Dev\Application\Exception\NotWritable;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use BEAR\Resource\Exception\Uri;
 
 /**
  * Application reflector
@@ -60,8 +65,9 @@ class ApplicationReflector
                     'links' => $response->links
                 ];
             } catch (ResourceNotFound $e) {
+            } catch (Uri $e) {
             }
-        }
+    }
 
         return $list;
     }
@@ -123,29 +129,33 @@ class ApplicationReflector
     /**
      * @param $uri
      *
-     * @return array
-     * @throws \RuntimeException
+     * @return array [$filePath, $fileContents]
+     * @throws InvalidUri
      */
     public function getNewResource($uri)
     {
         $url = parse_url($uri);
         if (!(isset($url['scheme']) && isset($url['host']))) {
-            throw new \RuntimeException("Invalid URI [$uri]", 400);
+            throw new InvalidUri($uri, 400);
         }
-        $path = implode('/', array_map('ucwords', explode('/', $url['path'])));
+
+        $path = substr($url['path'], 1);
+        $path = implode('/', array_map('ucwords', explode('/', $path)));
+        // cut head /
         $filePath = $this->appDir . '/' . 'Resource/' . ucwords($url['scheme']) . $path . '.php';
         $fileContents = file_get_contents(__DIR__ . '/resource.tpl');
         $fileContents = str_replace('{$app}', $this->appName, $fileContents);
-        $array = explode('/', $this->appName . $path);
-        $class = array_pop($array);
-        $appName = array_shift($array);
+        $paths = explode('/', $this->appName . $path);
+        $class = array_pop($paths);
+        $appName = array_shift($paths);
         $scheme = ucwords($url['scheme']);
         $namespace = "{$appName}\\Resource\\{$scheme}";
-        if (count($array) > 0) {
-            $namespace .= '\\' . implode('\\', $array);
+        if (count($paths) > 0) {
+            $namespace .= '\\' . implode('\\', $paths);
         }
         $fileContents = str_replace('{$namespace}', $namespace, $fileContents);
         $fileContents = str_replace('{$class}', $class, $fileContents);
+
         return [$filePath, $fileContents];
     }
 
@@ -154,7 +164,7 @@ class ApplicationReflector
      * @param $contents
      *
      * @return int size of file
-     * @throws \RuntimeException
+     * @throws NotWritable
      */
     public function filePutContents($path, $contents)
     {
@@ -163,20 +173,17 @@ class ApplicationReflector
         $dir = '';
         foreach ($parts as $part) {
             if (!is_dir($dir .= "/$part")) {
-                mkdir($dir);
-                if (!is_writable($dir)) {
-                    throw new \RuntimeException("Not writable dir [$dir]", 500);
+                if (!is_writable(dirname($dir))) {
+                    throw new NotWritable($dir, 500);
                 }
+                mkdir($dir);
             }
         }
         $file = "$dir/$file";
         if (file_exists($file)) {
-            throw new \RuntimeException("File already exits [{$file}]", 500);
+            throw new FileAlreadyExists("File already exits [{$file}]", 500);
         }
         $result = file_put_contents($file, $contents);
-        if (!is_writable($file)) {
-            throw new \RuntimeException("Not writable file [$file]", 500);
-        }
 
         return $result;
     }
