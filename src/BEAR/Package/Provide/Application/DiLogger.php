@@ -35,10 +35,12 @@ class DiLogger implements LoggerInterface
             foreach ($params as &$param) {
                 if (is_object($param)) {
                     $param = get_class($param) . '#' . spl_object_hash($param);
+                } elseif (is_callable($param)) {
+                    $param = "(Callable) {$param}";
                 } elseif (is_scalar($param)) {
                     $param = '(' . gettype($param) . ') ' . (string)$param;
-                } elseif (is_callable($param)) {
-                    $param = '(Callable)';
+                } elseif (is_array($param)) {
+                    $param = $str = str_replace(["\n", " "], '', print_r($param, true));
                 }
             }
             return implode(', ', $params);
