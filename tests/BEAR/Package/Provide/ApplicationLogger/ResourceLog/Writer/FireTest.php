@@ -1,40 +1,92 @@
 <?php
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
-
-require_once __DIR__ . '/Mock.php';
+ob_start();
 
 class FireTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Void
+     * @var Fire
      */
-    protected $object;
+    private $fire;
+
+    /**
+     * @var Mock
+     */
+    private $ro;
 
     protected function setUp()
     {
-        $this->object = new Fire(\FirePHP::getInstance(true));
+        parent::setUp();
+        ob_start(); // <-- very important!
+        $_SERVER['HTTP_USER_AGENT'] = 'User-Agent:  FirePHP/0.7.1';
+        $this->fire = new Fire(\FirePHP::getInstance(true));
         $this->request = require _BEAR_TEST_DIR . '/scripts/instance/request.php';
+        $this->request->set(new Mock, 'nop://mock', 'get', []);
+        $this->ro = new Mock;
+        $this->request->set(new Mock, 'nop://mock', 'get', []);
+        $this->ro->onGet(1, 2);
+        $this->ro->headers = [
+            'header1' => 1,
+            'header2' => 2
+        ];
+
     }
 
-    /**
-     * ob_start() does'nt work
-     * this test does not ensure whole functionality.
-     *
-     * @covers BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire::write
-     *
-     * @expectedException Exception
-     */
-    public function testLog()
+    protected function tearDown()
     {
-        $ro = new Mock;
-        $this->request->set(new Mock, 'nop://mock', 'get', []);
-        $ro->onGet(1, 2);
+        parent::tearDown();
+        header_remove(); // <-- VERY important.
+        unset($_SERVER['HTTP_USER_AGENT']);
+    }
 
-        ob_start();
-        $this->object->write($this->request, $ro);
-        $headers_list = headers_list();
-        header_remove();
+    public function testWrite()
+    {
+        $this->fire->write($this->request, $this->ro);
+        $headersList = print_r(xdebug_get_headers(), true);
+        $this->assertContains('"Type":"TABLE","Label":"headers","File"', $headersList);
+    }
+
+    public function testWriteBodyCanBeTable()
+    {
+        $this->ro->body = [
+            ['name' => 'bear'],
+            ['name' => 'koriym']
+        ];
+        $this->fire->write($this->request, $this->ro);
+        $headersList = print_r(xdebug_get_headers(), true);
+        $this->assertContains('[["name"],["bear"],["koriym"]]', $headersList);
+    }
+
+    public function testFireLinks()
+    {
+        $this->ro->links = [
+            'rel1' => 'page://self/rel1',
+            'rel2' => 'page://self/rel2'
+        ];
+        $this->fire->write($this->request, $this->ro);
+        $headersList = print_r(xdebug_get_headers(), true);
+        $this->assertContains('["rel1","page:\\/\\/self\\/rel1"]', $headersList);
+    }
+
+    public function testFireVariousBody()
+    {
+        $ro1 = clone $this->ro;
+        $this->ro->body = [
+            'object' => new \stdClass,
+            'ro' => $ro1,
+            'request' => $this->request
+        ];
+        $this->fire->write($this->request, $this->ro);
+        $headersList = print_r(xdebug_get_headers(), true);
+        $this->assertContains('"request":"(Request) nop:\\/\\/mock"', $headersList);
+    }
+
+    public function testFireVariousBodyIsString()
+    {
+        $this->ro->body = 'body_is_string';
+        $this->fire->write($this->request, $this->ro);
+        $headersList = print_r(xdebug_get_headers(), true);
+        $this->assertContains('"body_is_string"', $headersList);
     }
 }

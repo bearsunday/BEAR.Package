@@ -10,7 +10,6 @@ namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
-use Doctrine\DBAL\Connection;
 use FirePHP;
 use Traversable;
 use Ray\Di\Di\Inject;
@@ -41,9 +40,6 @@ final class Fire implements LogWriterInterface
      */
     public function write(RequestInterface $request, ResourceObject $result)
     {
-        if (headers_sent()) {
-            return;
-        }
         $requestLabel = $request->toUriWithMethod();
         $this->fire->group($requestLabel);
         $this->fireResourceObjectLog($result);
@@ -59,11 +55,11 @@ final class Fire implements LogWriterInterface
      */
     private function fireResourceObjectLog(ResourceObject $result)
     {
-        // code
         $this->fire->log($result->code, 'code');
         $this->fireHeader($result);
         $this->fireBody($result);
         $this->fireLink($result);
+        $this->fireView($result);
     }
 
     /**
@@ -73,7 +69,6 @@ final class Fire implements LogWriterInterface
      */
     private function fireHeader(ResourceObject $result)
     {
-        // headers
         $headers = [];
         $headers[] = ['name', 'value'];
         foreach ($result->headers as $name => $value) {
@@ -89,7 +84,6 @@ final class Fire implements LogWriterInterface
      */
     private function fireBody(ResourceObject $result)
     {
-        // body
         $body = $this->normalize($result->body);
         $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys(
             $body[1]
@@ -129,15 +123,6 @@ final class Fire implements LogWriterInterface
                     /** @var $value ResourceObject */
                     $value = '(ResourceObject) ' . get_class($value) . json_encode($value->body);
                 }
-                if ($value instanceof \PDO || $value instanceof \PDOStatement) {
-                    $value = '(PDO) ' . get_class($value);
-                }
-                if ($value instanceof Connection) {
-                    $value = '(\Doctrine\DBAL\Connection) ' . get_class($value);
-                }
-                if (is_resource($value)) {
-                    $value = '(resource) ' . gettype($value);
-                }
                 if (is_object($value)) {
                     $value = '(object) ' . get_class($value);
                 }
@@ -154,7 +139,6 @@ final class Fire implements LogWriterInterface
      */
     private function fireLink(ResourceObject $result)
     {
-        // links
         $links = [['rel', 'uri']];
         foreach ($result->links as $rel => $uri) {
             $links[] = [$rel, $uri];
@@ -162,6 +146,15 @@ final class Fire implements LogWriterInterface
         if (count($links) > 1) {
             $this->fire->table('links', $links);
         }
+    }
+
+    /**
+     * @param ResourceObject $result
+     *
+     * @return void
+     */
+    private function fireView(ResourceObject $result)
+    {
         $this->fire->group('view', ['Collapsed' => true]);
         $this->fire->log($result->view);
         $this->fire->groupEnd();
