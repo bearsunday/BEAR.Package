@@ -56,7 +56,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResources(array $resources)
     {
-        $this->assertSame(22, count($resources));
+        $this->assertSame(23, count($resources));
     }
 
     /**
