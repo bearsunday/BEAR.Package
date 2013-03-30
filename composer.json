@@ -55,9 +55,8 @@
     },
     "minimum-stability":"beta",
     "scripts"   :{
-        "post-install-cmd": ["php bin/setup.php"],
-        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php bin/loader.php"],
-        "post-package-update": ["php bin/env.php"]
+        "post-install-cmd": ["php bin/setup.php", "php bin/env.php"],
+        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php bin/loader.php"]
     },
     "repositories":[
         {
