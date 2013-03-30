@@ -98,8 +98,8 @@ final class MinRouter implements RouterInterface
             list($method, $query,) = $this->getMethodQuery();
             $pageUri = $this->getPageKey();
         } else {
-            $method = $route->values['action'];
-            $pageUri = $route->values['page'];
+            $method = $route->values['method'];
+            $pageUri = $route->values['path'];
             $query = [];
             $keys = array_keys($route->params);
             foreach ($keys as $key) {
@@ -139,13 +139,9 @@ final class MinRouter implements RouterInterface
      * Return page key
      *
      * @return array [$method, $pagekey]
-     * @throws \InvalidArgumentException
      */
     private function getPageKey()
     {
-        if (!isset($this->globals['_SERVER']['REQUEST_URI'])) {
-            return '404';
-        }
         $pageKey = substr($this->globals['_SERVER']['REQUEST_URI'], 1);
 
         return $pageKey;
