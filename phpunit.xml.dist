@@ -20,10 +20,8 @@
         <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
     </logging>
     <filter>
-        <blacklist>
-            <directory suffix=".php">scripts</directory>
-            <directory suffix=".php">vendor</directory>
-            <directory suffix=".php">apps</directory>
-        </blacklist>
+        <whitelist>
+            <directory suffix=".php">src/BEAR/Package</directory>
+        </whitelist>
     </filter>
 </phpunit>
