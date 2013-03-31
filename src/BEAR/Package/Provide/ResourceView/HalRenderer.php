@@ -67,6 +67,7 @@ class HalRenderer implements RenderInterface
      * @param mixed          $data
      *
      * @return Hal
+     * @throws \BEAR\Package\Provide\ResourceView\Exception\HrefNotFound
      */
     private function getHal(ResourceObject $ro, $data)
     {
@@ -77,7 +78,7 @@ class HalRenderer implements RenderInterface
             if (isset($link[Link::HREF])) {
                 $hal->addLink($rel, $link[Link::HREF], $title, $attr);
             } else {
-                trigger_error('"href" is required in link', E_USER_WARNING);
+                throw new Exception\HrefNotFound($rel);
             }
         }
 
