@@ -192,7 +192,7 @@ final class HttpFoundation implements ResponseInterface
                 $this->resource->headers = $this->response->headers->all();
             }
             $statusText = Response::$statusTexts[$this->resource->code];
-            $this->consoleOutput->send($this->resource, $statusText, ConsoleOutput::MODE_REQUEST);
+            $this->consoleOutput->send($this->resource, $statusText);
         } else {
             $this->response->send();
         }
