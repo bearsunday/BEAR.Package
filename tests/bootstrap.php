@@ -13,7 +13,7 @@ AnnotationReader::addGlobalIgnoredName('noinspection');
 AnnotationReader::addGlobalIgnoredName('returns');
 $loader->add('BEAR\Package', [__DIR__]);
 
-define('_BEAR_TEST_DIR', __DIR__);
+$GLOBALS['_BEAR_TEST_DIR'] = __DIR__;
 $GLOBALS['_BEAR_PACKAGE_DIR'] = dirname(__DIR__);
 
 ini_set('error_log', sys_get_temp_dir() . '/error.log');
