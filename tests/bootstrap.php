@@ -7,9 +7,11 @@ error_reporting(E_ALL);
 
 // loader
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
+/** @var $loader \Composer\Autoload\ClassLoader */
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 AnnotationReader::addGlobalIgnoredName('noinspection');
 AnnotationReader::addGlobalIgnoredName('returns');
+$loader->add('BEAR\Package', [__DIR__]);
 
 define('_BEAR_TEST_DIR', __DIR__);
 $GLOBALS['_BEAR_PACKAGE_DIR'] = dirname(__DIR__);
