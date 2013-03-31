@@ -66,7 +66,7 @@ namespace BEAR\Package\Provide\Application {
          */
         public function testNewInstanceInvalidMode()
         {
-            $app = $this->applicationFactory->newInstance('Sandbox', 'NON_VALID');
+            $this->applicationFactory->newInstance('Sandbox', 'NON_VALID');
         }
 
         public function testNewInstanceCached()
