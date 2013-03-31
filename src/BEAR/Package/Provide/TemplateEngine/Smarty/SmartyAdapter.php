@@ -7,7 +7,7 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
-use BEAR\Sunday\Exception\TemplateNotFound;
+use BEAR\Package\Provide\TemplateEngine\AdapterTrait;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Smarty;
 use Ray\Di\Di\Inject;
@@ -22,6 +22,8 @@ use Ray\Di\Di\PostConstruct;
  */
 class SmartyAdapter implements TemplateEngineAdapterInterface
 {
+    use AdapterTrait;
+
     /**
      * File extension
      *
@@ -35,13 +37,6 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
      * @var Smarty
      */
     private $smarty;
-
-    /**
-     * Template file
-     *
-     * @var string
-     */
-    private $template;
 
     /**
      * @var bool
@@ -63,14 +58,17 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     /**
      * Is production ?
      *
-     * @param bool $isProd
+     * @param $isProd
      *
+     * @return $this
      * @Inject
      * @Named("is_prod")
      */
     public function setIsProd($isProd)
     {
         $this->isProd = $isProd;
+
+        return $this;
     }
 
     /**
@@ -116,27 +114,4 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
         return $this->smarty->fetch($this->template);
     }
 
-    /**
-     * Return file exists
-     *
-     * @param string $template
-     *
-     * @throws TemplateNotFound
-     */
-    private function fileExists($template)
-    {
-        if (!file_exists($template)) {
-            throw new TemplateNotFound($template);
-        }
-    }
-
-    /**
-     * Return template full path.
-     *
-     * @return string
-     */
-    public function getTemplateFile()
-    {
-        return $this->template;
-    }
 }
