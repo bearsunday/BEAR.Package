@@ -172,6 +172,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $argv = ['api.php','post'];
         $this->router->setArgv($argv);
-        $result = $this->router->match();
+        $this->router->match();
     }
 }

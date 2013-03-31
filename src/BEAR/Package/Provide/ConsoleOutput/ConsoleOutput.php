@@ -54,8 +54,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
         $statusText = ''
     ) {
         // code
-        $codeMsg = self::LABEL . $resource->code . ' ' . $statusText . self::CLOSE . PHP_EOL;
-        $output = $codeMsg;
+        $output = self::LABEL . $resource->code . ' ' . $statusText . self::CLOSE . PHP_EOL;
         // resource headers
         $header = $this->getHeader($resource);
         // body

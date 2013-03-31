@@ -169,7 +169,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testGetNewResourceInvalidUri()
     {
         $uri = "invalid_uri///";
-        list(,$filePath) = $this->appReflector->getNewResource($uri);
+        $this->appReflector->getNewResource($uri);
     }
 
     /**
@@ -178,7 +178,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testFilePutContents()
     {
         $Path = __DIR__ . '/NotWritable/new_dir/Resource.php';
-        list(,$filePath) = $this->appReflector->filePutContents($Path, '');
+        $this->appReflector->filePutContents($Path, '');
     }
 
     public function testGetResourceOptions()
