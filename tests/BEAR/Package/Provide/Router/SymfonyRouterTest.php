@@ -6,7 +6,6 @@ use BEAR\Package\Provide\Router\SymfonyRouter;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class SymfonyRouterTest extends \PHPUnit_Framework_TestCase
 {
