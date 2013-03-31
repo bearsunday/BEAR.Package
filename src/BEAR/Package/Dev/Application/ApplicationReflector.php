@@ -165,6 +165,7 @@ class ApplicationReflector
      *
      * @return int size of file
      * @throws NotWritable
+     * @throws FileAlreadyExists
      */
     public function filePutContents($path, $contents)
     {
