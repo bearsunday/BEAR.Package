@@ -11,14 +11,14 @@ use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Resource\Logger;
 use BEAR\Resource\ObjectInterface as ResourceObject;
+use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogInject;
-use Exception;
-use Ray\Aop\Weave;
 use Symfony\Component\HttpFoundation\Response;
+use Ray\Aop\Weave;
 use Ray\Di\Di\Inject;
 
 /**
@@ -30,13 +30,6 @@ use Ray\Di\Di\Inject;
 final class HttpFoundation implements ResponseInterface
 {
     use LogInject;
-
-    /**
-     * Exception
-     *
-     * @var Exception
-     */
-    private $e;
 
     /**
      * Resource object
@@ -65,11 +58,6 @@ final class HttpFoundation implements ResponseInterface
     /**
      * @var string
      */
-    private $body;
-
-    /**
-     * @var string
-     */
     private $view;
 
     /**
@@ -83,6 +71,11 @@ final class HttpFoundation implements ResponseInterface
     private $appLogger;
 
     /**
+     * @var bool
+     */
+    private $isCli;
+
+    /**
      * Constructor
      *
      * @param ConsoleOutputInterface $consoleOutput
@@ -92,6 +85,19 @@ final class HttpFoundation implements ResponseInterface
     public function __construct(ConsoleOutputInterface $consoleOutput)
     {
         $this->consoleOutput = $consoleOutput;
+        $this->isCli = (PHP_SAPI === 'cli');
+    }
+
+    /**
+     * @param $isCli
+     *
+     * @return self
+     */
+    public function setIsCli($isCli)
+    {
+        $this->isCli = $isCli;
+
+        return $this;
     }
 
     /**
@@ -119,7 +125,7 @@ final class HttpFoundation implements ResponseInterface
         if ($resource instanceof Weave) {
             $resource = $resource->___getObject();
         }
-        if ($resource instanceof ResourceObject === false && $resource instanceof Weave === false) {
+        if ($resource instanceof ResourceObject === false) {
             $type = (is_object($resource)) ? get_class($resource) : gettype($resource);
             throw new InvalidResourceType($type);
         }
@@ -129,50 +135,20 @@ final class HttpFoundation implements ResponseInterface
     }
 
     /**
-     * Set Exception
-     *
-     * @param \Exception $e
-     * @param int        $exceptionId
-     *
-     * @return self
-     */
-    public function setException(Exception $e, $exceptionId)
-    {
-        $this->e = $e;
-        $this->code = $e->getCode();
-        $this->headers = [];
-        $this->body = $exceptionId;
-
-        return $this;
-    }
-
-    /**
      * Render
      *
-     * @param Callable $renderer
+     * @param RenderInterface $renderer
      *
-     * @return self
+     * @return $this
      */
-    public function render(Callable $renderer = null)
+    public function render(RenderInterface $renderer = null)
     {
-        if (is_callable($renderer)) {
-            $this->view = $renderer($this->body);
-        } else {
+        if (is_null($renderer)) {
             $this->view = (string)$this->resource;
+        } else {
+            $this->view = $renderer->render($this->resource);
         }
 
-        return $this;
-    }
-
-    /**
-     * Make response object with RFC 2616 compliant HTTP header
-     *
-     * @return self
-     * @deprecated
-     */
-    public function prepare()
-    {
-        trigger_error('unnecessary science 0.6.0', E_USER_DEPRECATED);
         return $this;
     }
 
@@ -187,7 +163,7 @@ final class HttpFoundation implements ResponseInterface
         // compliant with RFC 2616.
         $this->response;
 
-        if (PHP_SAPI === 'cli') {
+        if ($this->isCli) {
             if ($this->resource instanceof Page) {
                 $this->resource->headers = $this->response->headers->all();
             }
