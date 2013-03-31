@@ -15,7 +15,7 @@ class NullTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->object = new Null;
-        $this->request = require _BEAR_TEST_DIR . '/scripts/instance/request.php';
+        $this->request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
     }
 
     protected function tearDown()

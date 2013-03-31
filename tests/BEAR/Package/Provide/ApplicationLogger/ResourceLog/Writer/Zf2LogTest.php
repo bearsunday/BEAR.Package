@@ -19,7 +19,7 @@ class Zf2LogTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->zf2Logger = new \BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Zf2Log(new Zf2LogProvider(__DIR__));
-        $this->request = require _BEAR_TEST_DIR . '/scripts/instance/request.php';
+        $this->request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
         $this->ro = new Mock;
         $this->request->set(new Mock, 'nop://mock', 'get', []);
         $this->ro->onGet(1, 2);
