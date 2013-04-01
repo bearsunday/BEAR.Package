@@ -13,7 +13,7 @@ use BEAR\Resource\AbstractObject as AbstractPage;
  * Error page
  *
  * @package    BEAR.Package
- * @subpackage Page
+ * @subpackage Dev
  */
 final class ErrorPage extends AbstractPage
 {
