@@ -1,5 +1,5 @@
 {
-    "hash": "0c471d7ff6c67b83a9534da6c6f8bbd9",
+    "hash": "4d55dfe54d7138c295c9e576997139b1",
     "packages": [
         {
             "name": "aura/di",
@@ -211,16 +211,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.7.2",
+            "version": "0.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.7.2"
+                "reference": "0.7.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.7.2",
-                "reference": "0.7.2",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.7.4",
+                "reference": "0.7.4",
                 "shasum": ""
             },
             "require": {
@@ -257,7 +257,7 @@
                 "rest",
                 "service layer"
             ],
-            "time": "2013-03-22 15:57:42"
+            "time": "2013-03-31 16:14:52"
         },
         {
             "name": "bear/sunday",
@@ -480,17 +480,17 @@
             "time": "2013-01-10 22:43:46"
         },
         {
-            "name": "doctrine/common",
-            "version": "2.3.0",
+            "name": "doctrine/collections",
+            "version": "v1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/common",
-                "reference": "2.3.0"
+                "url": "https://github.com/doctrine/collections.git",
+                "reference": "v1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/common/zipball/2.3.0",
-                "reference": "2.3.0",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/v1.1",
+                "reference": "v1.1",
                 "shasum": ""
             },
             "require": {
@@ -499,12 +499,12 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "Doctrine\\Common": "lib/"
+                    "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -513,7 +513,79 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Collections Abstraction library",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "array",
+                "collections",
+                "iterator"
+            ],
+            "time": "2013-03-07 12:15:54"
+        },
+        {
+            "name": "doctrine/common",
+            "version": "2.4.0-RC1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/common.git",
+                "reference": "2.4.0-RC1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/2.4.0-RC1",
+                "reference": "2.4.0-RC1",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "1.*",
+                "doctrine/cache": "1.*",
+                "doctrine/collections": "1.*",
+                "doctrine/inflector": "1.*",
+                "doctrine/lexer": "1.*",
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -546,24 +618,24 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2012-09-19 22:55:18"
+            "time": "2013-03-24 17:52:34"
         },
         {
             "name": "doctrine/dbal",
-            "version": "2.3.2",
+            "version": "2.3.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/dbal",
-                "reference": "2.3.2"
+                "url": "https://github.com/doctrine/dbal.git",
+                "reference": "2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/archive/2.3.2.zip",
-                "reference": "2.3.2",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2.3.3",
+                "reference": "2.3.3",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": "2.3.*",
+                "doctrine/common": ">=2.3.0,<2.5-dev",
                 "php": ">=5.3.2"
             },
             "type": "library",
@@ -583,7 +655,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/"
                 },
@@ -609,7 +681,70 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-01-07 20:03:43"
+            "time": "2013-03-24 19:16:29"
+        },
+        {
+            "name": "doctrine/inflector",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/inflector.git",
+                "reference": "v1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/doctrine/inflector/archive/v1.0.zip",
+                "reference": "v1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "inflection",
+                "pluarlize",
+                "singuarlize",
+                "string"
+            ],
+            "time": "2013-01-10 21:49:15"
         },
         {
             "name": "doctrine/lexer",
@@ -801,12 +936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal.git",
-                "reference": "0.9.1"
+                "reference": "0.9.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blongden/hal/zipball/0.9.1",
-                "reference": "0.9.1",
+                "url": "https://api.github.com/repos/blongden/hal/zipball/0.9.2",
+                "reference": "0.9.2",
                 "shasum": ""
             },
             "require": {
@@ -838,7 +973,7 @@
                 "rest",
                 "xml"
             ],
-            "time": "2013-03-20 11:14:31"
+            "time": "2013-03-25 09:59:05"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -846,12 +981,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "ae0ff215b3be2c3bd0b131a8b8daa9b15568c6db"
+                "reference": "c7e8a72fe1ffb691010a94c930db13065aa48dd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/ae0ff215b3be2c3bd0b131a8b8daa9b15568c6db",
-                "reference": "ae0ff215b3be2c3bd0b131a8b8daa9b15568c6db",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/c7e8a72fe1ffb691010a94c930db13065aa48dd1",
+                "reference": "c7e8a72fe1ffb691010a94c930db13065aa48dd1",
                 "shasum": ""
             },
             "require": {
@@ -862,7 +997,7 @@
                 "doctrine/orm": "2.*",
                 "mandango/mandango": "*",
                 "propel/propel1": ">=1.6,<2.0",
-                "solarium/solarium": "3.*"
+                "solarium/solarium": "dev-develop"
             },
             "suggest": {
                 "doctrine/mongodb-odm": "To use the DoctrineODMMongoDBAdapter.",
@@ -898,20 +1033,20 @@
                 "page",
                 "paging"
             ],
-            "time": "2013-03-12 22:52:44"
+            "time": "2013-03-31 23:09:54"
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0-beta4",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0-beta4"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0-beta4",
-                "reference": "1.0.0-beta4",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
@@ -942,28 +1077,29 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2013-03-21 09:39:57"
+            "time": "2013-03-31 11:58:17"
         },
         {
             "name": "ray/di",
-            "version": "1.0.0-beta5",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.0-beta5"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.0-beta5",
-                "reference": "1.0.0-beta5",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.0",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
                 "aura/di": "1.0.*",
                 "aura/installer-default": "1.0.*",
                 "doctrine/annotations": "1.*",
+                "doctrine/cache": "1.*",
                 "php": ">=5.4.0",
-                "ray/aop": "1.0.*@beta"
+                "ray/aop": "1.0.*"
             },
             "type": "library",
             "autoload": {
@@ -995,7 +1131,7 @@
                 "jsr",
                 "method interception"
             ],
-            "time": "2013-03-21 10:02:04"
+            "time": "2013-03-31 12:46:44"
         },
         {
             "name": "smarty/smarty",
@@ -1521,13 +1657,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/xhprof.git",
-                "reference": "c93037e4c50b4b7f28f8dd856d85756814ad7daa"
+                "reference": "3425f7fe3aeff711091811906319d8cebd82fc06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/xhprof/zipball/c93037e4c50b4b7f28f8dd856d85756814ad7daa",
-                "reference": "c93037e4c50b4b7f28f8dd856d85756814ad7daa",
+                "url": "https://api.github.com/repos/facebook/xhprof/zipball/3425f7fe3aeff711091811906319d8cebd82fc06",
+                "reference": "3425f7fe3aeff711091811906319d8cebd82fc06",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
             },
             "type": "library",
             "autoload": {
@@ -1537,8 +1676,16 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
             "description": "XHProf: A Hierarchical Profiler for PHP",
-            "time": "2013-02-06 17:42:37"
+            "homepage": "http://pecl.php.net/package/xhprof",
+            "keywords": [
+                "performance",
+                "profiling"
+            ],
+            "time": "2013-03-26 22:23:06"
         },
         {
             "name": "firephp/firephp-core",
