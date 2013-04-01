@@ -6,7 +6,7 @@
  * @subpackage Exception
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Debug\ExceptionHandle;
+namespace BEAR\Package\Dev\Debug\ExceptionHandle;
 
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Exception\BadRequest;

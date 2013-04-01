@@ -1,6 +1,6 @@
 <?php
 
-use BEAR\Package\Debug\ExceptionHandle\Screen;
+use BEAR\Package\Dev\Debug\ExceptionHandle\Screen;
 
 /**
  * @var \Exception $e
