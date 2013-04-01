@@ -10,7 +10,7 @@ class ResourceLogTest extends \PHPUnit_Framework_TestCase {
 
     public function setUp()
     {
-        $this->file = __DIR__ . '/resource.db';
+        $this->file = __DIR__ . '/resource.test.db';
         $this->log = new ResourceLog($this->file);
     }
 
