@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Dev\DevWeb;
+namespace BEAR\Package\Dev\Web;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 
@@ -14,7 +14,7 @@ require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/printo/p
 /**
  * Dev web tools
  */
-class DevWeb
+class Web
 {
     /**
      * Service dev web tool
