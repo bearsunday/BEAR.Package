@@ -4,7 +4,7 @@
  *
  * @package BEAR.Package
  */
-use BEAR\Package\Debug\Debug;
+use BEAR\Package\Dev\Debug\Debug;
 
 /**
  * p - debug print function

@@ -4,8 +4,8 @@
  *
  * @package BEAR.Package
  */
-use BEAR\Package\Debug\Debug;
-use BEAR\Package\Debug\Exception\Debug as DebugException;
+use BEAR\Package\Dev\Debug\Debug;
+use BEAR\Package\Dev\Debug\Exception\Debug as DebugException;
 
 /**
  * p - debug exception
@@ -19,7 +19,7 @@ use BEAR\Package\Debug\Exception\Debug as DebugException;
  * @param int  $level
  *
  * @package BEAR.Package
- * @throws BEAR\Package\Debug\Exception\Debug
+ * @throws BEAR\Package\Dev\Debug\Exception\Debug
  */
 function e($var = null, $level = 2)
 {

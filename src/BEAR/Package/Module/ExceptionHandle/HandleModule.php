@@ -31,9 +31,9 @@ class HandleModule extends AbstractModule
         $this
             ->bind('BEAR\Resource\AbstractObject')
             ->annotatedWith('errorPage')
-            ->to('BEAR\Package\Debug\ExceptionHandle\ErrorPage');
+            ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ErrorPage');
         $this
-            ->bind('BEAR\Package\Debug\ExceptionHandle\ExceptionHandlerInterface')
-            ->to('BEAR\Package\Debug\ExceptionHandle\ExceptionHandler');
+            ->bind('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandlerInterface')
+            ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandler');
     }
 }

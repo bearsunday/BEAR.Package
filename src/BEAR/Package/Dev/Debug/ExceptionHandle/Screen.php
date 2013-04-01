@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\Debug\ExceptionHandle;
+namespace BEAR\Package\Dev\Debug\ExceptionHandle;
 
 /**
  * Development screen helper

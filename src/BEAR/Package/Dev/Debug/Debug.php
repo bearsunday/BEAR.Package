@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\Debug;
+namespace BEAR\Package\Dev\Debug;
 
 /**
  * Debug tools
