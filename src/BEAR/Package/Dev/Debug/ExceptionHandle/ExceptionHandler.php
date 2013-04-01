@@ -29,7 +29,7 @@ use Ray\Di\Di\Named;
  * Exception handler for development
  *
  * @package    BEAR.Package
- * @subpackage Exception
+ * @subpackage Dev
  */
 final class ExceptionHandler implements ExceptionHandlerInterface
 {

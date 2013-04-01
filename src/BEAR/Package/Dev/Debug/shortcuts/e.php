@@ -8,11 +8,6 @@ use BEAR\Package\Dev\Debug\Debug;
 use BEAR\Package\Dev\Debug\Exception\Debug as DebugException;
 
 /**
- * p - debug exception
- *
- */
-
-/**
  * Throw exception
  *
  * @param null $var

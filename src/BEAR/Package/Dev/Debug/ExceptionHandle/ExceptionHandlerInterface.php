@@ -12,7 +12,8 @@ use Exception;
 /**
  * Interface for exception handler
  *
- * @package BEAR.Package
+ * @package    BEAR.Package
+ * @subpackage Dev
  */
 interface ExceptionHandlerInterface
 {

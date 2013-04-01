@@ -11,7 +11,7 @@ namespace BEAR\Package\Dev\Debug\Exception;
  * Debug exception
  *
  * @package   BEAR.Package
- * @subpackge Debug
+ * @subpackge Dev
  */
 class Debug extends \RuntimeException
 {
