@@ -5,7 +5,7 @@
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Dev\DevWeb\Editor;
+namespace BEAR\Package\Dev\Web\Editor;
 
 /**
  * File tree
