@@ -7,10 +7,9 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Twig;
 
-use BEAR\Sunday\Exception\TemplateNotFound;
+use BEAR\Package\Provide\TemplateEngine\AdapterTrait;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Twig_Environment;
-use Ray\Di\Di\Inject;
 
 /**
  * Smarty adapter
@@ -20,6 +19,8 @@ use Ray\Di\Di\Inject;
  */
 class TwigAdapter implements TemplateEngineAdapterInterface
 {
+    use AdapterTrait;
+
     /**
      * File extension
      *
@@ -33,13 +34,6 @@ class TwigAdapter implements TemplateEngineAdapterInterface
      * @var @return BEAR
      */
     private $twig;
-
-    /**
-     * Template file
-     *
-     * @var string
-     */
-    private $template;
 
     /**
      * @var array
@@ -86,30 +80,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
         $this->fileExists($this->template);
         $fileContents = file_get_contents($this->template);
         $rendered = $this->twig->render($fileContents, $this->values);
+
         return $rendered;
-    }
-
-    /**
-     * Return file exists
-     *
-     * @param string $template
-     *
-     * @throws TemplateNotFound
-     */
-    private function fileExists($template)
-    {
-        if (!file_exists($template)) {
-            throw new TemplateNotFound($template);
-        }
-    }
-
-    /**
-     * Return template full path.
-     *
-     * @return string
-     */
-    public function getTemplateFile()
-    {
-        return $this->template;
     }
 }

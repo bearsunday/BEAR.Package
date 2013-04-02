@@ -1,6 +1,6 @@
 <?php
 
-use BEAR\Package\Dev\DevWeb\Editor\FileTree;
+use BEAR\Package\Dev\Web\Editor\FileTree;
 
 $projectDir = '';
 

@@ -1,7 +1,6 @@
 <?php
 /**
- * @package    {$app}
- * @subpackage Resource
+ * @package {$app}
  */
 namespace {$namespace};
 
@@ -10,17 +9,16 @@ use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
 
 /**
- * untitled
+ * Untitled
  *
- * @package    {$app}
- * @subpackage Resource
+ * @package {$app}
  */
 class {$class} extends AbstractObject
 {
     use ResourceInject;
 
     public $body = [
-        'greeting' =>  ''
+        'name' => ''
     ];
 
     public function onGet()

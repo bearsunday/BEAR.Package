@@ -7,7 +7,7 @@
  */
 
 // Init
-use BEAR\Package\Dev\DevWeb\DevWeb;
+use BEAR\Package\Dev\Web\Web;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -47,7 +47,7 @@ if ($isDevTool) {
         $_SERVER['HTTP_X_REQUESTED_WITH']
     ) === 'xmlhttprequest');
     $app = $isAjaxReq ? null : (require dirname(__DIR__) . '/instance.php');
-    $code = (new DevWeb)->service($_SERVER['REQUEST_URI'], $app);
+    $code = (new Web)->service($_SERVER['REQUEST_URI'], $app);
     exit($code);
 }
 
