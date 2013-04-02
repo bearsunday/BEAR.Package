@@ -2,7 +2,8 @@
 
 namespace BEAR\Package\Dev\Resource;
 
-class ResourceLogTest extends \PHPUnit_Framework_TestCase {
+class ResourceLogTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @var  ResourceLog;
      */
