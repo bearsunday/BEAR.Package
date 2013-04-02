@@ -11,7 +11,10 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource 
 Installation
 ------------
 
-    $ curl -s https://getcomposer.org/installer | php
+    $ curl -s http://install.bear-project.net/ | sh -s ./bear
+or
+
+    $ php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
     $ php composer.phar create-project --dev bear/package ./bear
 
 More information is availavle at [wiki:install](http://code.google.com/p/bearsunday/wiki/install).
