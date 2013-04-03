@@ -121,6 +121,13 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         return [$contents, $filePath];
     }
 
+    public function testNewResourceFileTopLevel()
+    {
+        $uri = "page://self/hello";
+        list($filePath,) = $this->appReflector->getNewResource($uri);
+        $this->assertContains('apps/Sandbox/Resource/Page/Hello.php', $filePath);
+    }
+
     /**
      * @depends testNewResource
      */
@@ -129,6 +136,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $filePath = $newResource[1];
         $this->assertContains('apps/Sandbox/Resource/Page/One/Two/Three/Resource.php', $filePath);
     }
+
 
     /**
      * @depends testNewResource
@@ -208,4 +216,5 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 
         return $options;
     }
+
 }
