@@ -138,9 +138,9 @@ class ApplicationReflector
         if (!(isset($url['scheme']) && isset($url['host']))) {
             throw new InvalidUri($uri, 400);
         }
-
-        $path = substr($url['path'], 1);
+        $path = $url['path'];
         $path = implode('/', array_map('ucwords', explode('/', $path)));
+        $path = str_replace('//', '/', $path);
         // cut head /
         $filePath = $this->appDir . '/' . 'Resource/' . ucwords($url['scheme']) . $path . '.php';
         $fileContents = file_get_contents(__DIR__ . '/resource.tpl');
