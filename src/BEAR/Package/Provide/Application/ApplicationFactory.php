@@ -57,8 +57,8 @@ class ApplicationFactory
             throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
         }
         $injector = (new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new CachedReader(new AnnotationReader, $this->cache))))), new $moduleName))->setCache(
-                $this->cache
-            );
+            $this->cache
+        );
         $diLogger = $injector->getInstance('BEAR\Package\Provide\Application\DiLogger');
         $injector->setLogger($diLogger);
 

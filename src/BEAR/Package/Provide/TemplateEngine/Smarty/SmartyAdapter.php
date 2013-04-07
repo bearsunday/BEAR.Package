@@ -113,5 +113,4 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
 
         return $this->smarty->fetch($this->template);
     }
-
 }

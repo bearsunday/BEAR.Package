@@ -67,7 +67,7 @@ class ApplicationReflector
             } catch (ResourceNotFound $e) {
             } catch (Uri $e) {
             }
-    }
+        }
 
         return $list;
     }

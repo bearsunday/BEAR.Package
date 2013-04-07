@@ -17,7 +17,6 @@ use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Inject;
 
-
 /**
  * Application
  *

@@ -15,7 +15,7 @@ class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->exceptionHandler = new ExceptionHandler('dummy.tpl', new HttpFoundation(new ConsoleOutput));
+        $this->exceptionHandler = new ExceptionHandler(new HttpFoundation(new ConsoleOutput), 'dummy.tpl');
     }
 
     public function testNew()

@@ -81,8 +81,8 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * @Named("exceptionTpl=exceptionTpl,errorPage=errorPage")
      */
     public function __construct(
-        $exceptionTpl = null,
         ResponseInterface $response,
+        $exceptionTpl = null,
         ResourceObject $errorPage = null
     ) {
         $this->viewTemplate = $exceptionTpl;
@@ -237,8 +237,8 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         \Exception $e,
         /** @noinspection PhpUnusedParameterInspection */
         array $view = [
-            'dependency_bindings' => '',
-            'modules' => ''
+        'dependency_bindings' => '',
+        'modules' => ''
         ]
     ) {
         return include $this->viewTemplate;

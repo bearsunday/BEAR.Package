@@ -25,6 +25,6 @@ class Installer
         $hash = $event->getComposer()->getLocker()->getLockData()['hash'];
         $bearRoot = dirname(dirname(dirname(__DIR__)));
         file_put_contents($bearRoot . '/VERSION', $version);
-        file_put_contents($bearRoot . '/ID',$hash);
+        file_put_contents($bearRoot . '/ID', $hash);
     }
 }
