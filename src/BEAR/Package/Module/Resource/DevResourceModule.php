@@ -25,8 +25,7 @@ use Ray\Di\Scope;
 class DevResourceModule extends AbstractModule
 {
     /**
-     * (non-PHPdoc)
-     * @see Ray\Di.AbstractModule::configure()
+     * {@inheritdoc}
      */
     protected function configure()
     {

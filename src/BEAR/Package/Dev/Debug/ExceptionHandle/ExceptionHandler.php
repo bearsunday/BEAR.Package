@@ -115,9 +115,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see BEAR\Package\Exception.ExceptionHandlerInterface::handle()
+     * {@inheritdoc}
      */
     public function handle(Exception $e)
     {

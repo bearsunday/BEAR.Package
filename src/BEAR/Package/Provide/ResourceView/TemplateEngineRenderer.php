@@ -43,8 +43,7 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RenderInterface::render()
+     * {@inheritdoc}
      * @SuppressWarnings("long")
      */
     public function render(AbstractObject $resourceObject)

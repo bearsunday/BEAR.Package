@@ -20,8 +20,7 @@ use BEAR\Resource\RequestInterface;
 class JsonRenderer implements RenderInterface
 {
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RenderInterface::render()
+     * {@inheritdoc}
      */
     public function render(AbstractObject $ro)
     {

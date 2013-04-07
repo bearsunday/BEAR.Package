@@ -103,8 +103,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RenderInterface::render()
+     * {@inheritdoc}
      */
     public function render(AbstractObject $resourceObject)
     {

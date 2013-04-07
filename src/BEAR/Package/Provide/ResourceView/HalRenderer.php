@@ -22,8 +22,7 @@ use Nocarrier\Hal;
 class HalRenderer implements RenderInterface
 {
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Resource.RenderInterface::render()
+     * {@inheritdoc}
      */
     public function render(ResourceObject $ro)
     {

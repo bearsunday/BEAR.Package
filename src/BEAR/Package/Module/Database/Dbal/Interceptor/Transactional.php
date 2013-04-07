@@ -21,8 +21,7 @@ use ReflectionProperty;
 class Transactional implements MethodInterceptor
 {
     /**
-     * (non-PHPdoc)
-     * @see Ray\Aop.MethodInterceptor::invoke()
+     * {@inheritdoc}
      */
     public function invoke(MethodInvocation $invocation)
     {

@@ -159,8 +159,7 @@ class PagerConnection extends DbalConnection implements DriverConnection
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Doctrine\DBAL.Connection::query()
+     * {@inheritdoc}
      */
     public function query()
     {

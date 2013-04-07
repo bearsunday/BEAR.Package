@@ -32,8 +32,7 @@ class StubModule extends AbstractModule
     }
 
     /**
-     * (non-PHPdoc)
-     * @see Ray\Di.AbstractModule::configure()
+     * {@inheritdoc}
      */
     protected function configure()
     {

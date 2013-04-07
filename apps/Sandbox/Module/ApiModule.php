@@ -17,8 +17,7 @@ use BEAR\Sunday\Module as SundayModule;
 class ApiModule extends ProdModule
 {
     /**
-     * (non-PHPdoc)
-     * @see Ray\Di.AbstractModule::configure()
+     * {@inheritdoc}
      */
     protected function configure()
     {

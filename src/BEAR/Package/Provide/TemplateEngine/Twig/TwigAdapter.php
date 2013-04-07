@@ -53,8 +53,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Sunday\Resource\View.TemplateEngineAdapter::assign()
+     * {@inheritdoc}
      */
     public function assign($tplVar, $value)
     {
@@ -62,8 +61,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Sunday\Resource\View.TemplateEngineAdapter::assignAll()
+     * {@inheritdoc}
      */
     public function assignAll(array $values)
     {
@@ -71,8 +69,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     }
 
     /**
-     * (non-PHPdoc)
-     * @see BEAR\Sunday\View.Render::fetch()
+     * {@inheritdoc}
      */
     public function fetch($tplWithoutExtension)
     {
