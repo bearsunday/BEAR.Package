@@ -9,8 +9,6 @@ namespace BEAR\Package\Dev\Web;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 
-require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/printo/printo/src.php';
-
 /**
  * Dev web tools
  */

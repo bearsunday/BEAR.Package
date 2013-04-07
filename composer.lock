@@ -981,12 +981,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "c7e8a72fe1ffb691010a94c930db13065aa48dd1"
+                "reference": "4fded9adde16a4133b4db9f14815efadbbd268d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/c7e8a72fe1ffb691010a94c930db13065aa48dd1",
-                "reference": "c7e8a72fe1ffb691010a94c930db13065aa48dd1",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/4fded9adde16a4133b4db9f14815efadbbd268d1",
+                "reference": "4fded9adde16a4133b4db9f14815efadbbd268d1",
                 "shasum": ""
             },
             "require": {
@@ -1033,7 +1033,7 @@
                 "page",
                 "paging"
             ],
-            "time": "2013-03-31 23:09:54"
+            "time": "2013-04-04 17:07:12"
         },
         {
             "name": "ray/aop",
@@ -1220,17 +1220,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1274,17 +1274,17 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1321,17 +1321,17 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "v2.2.0"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.2.0",
-                "reference": "v2.2.0",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1364,7 +1364,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-28 14:06:36"
+            "time": "2013-04-01 07:51:50"
         },
         {
             "name": "symfony/http-foundation",
@@ -1410,17 +1410,17 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "v2.2.0-RC3"
+                "reference": "v2.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.0-RC3",
-                "reference": "v2.2.0-RC3",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.1",
+                "reference": "v2.2.1",
                 "shasum": ""
             },
             "require": {
@@ -1464,7 +1464,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-11 11:24:47"
+            "time": "2013-03-23 12:03:22"
         },
         {
             "name": "twitter/bootstrap",
@@ -1729,12 +1729,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/print_o.git",
-                "reference": "0.1.1"
+                "reference": "f18dfb8e7c7133aba4507245f3283f24ee5a7c2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/print_o/zipball/0.1.1",
-                "reference": "0.1.1",
+                "url": "https://api.github.com/repos/koriym/print_o/zipball/f18dfb8e7c7133aba4507245f3283f24ee5a7c2b",
+                "reference": "f18dfb8e7c7133aba4507245f3283f24ee5a7c2b",
                 "shasum": ""
             },
             "require": {
@@ -1742,9 +1742,11 @@
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "src/Printo/Printo.php",
-                    "src/Printo/print_o.php"
+                "psr-0": {
+                    "Printo\\": "src/"
+                },
+                "files": [
+                    "src/print_o.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1764,7 +1766,7 @@
                 "debug",
                 "object graph"
             ],
-            "time": "2013-03-24 13:10:53"
+            "time": "2013-04-07 18:21:00"
         },
         {
             "name": "twig/twig",
