@@ -1,9 +1,11 @@
 <?php
 /**
- * Helloworld
+ * Application instance
  *
  * @package Helloworld
  */
+namespace Helloworld;
+
 use Helloworld\Module\AppModule;
 use Ray\Di\Injector;
 
