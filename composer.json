@@ -42,7 +42,8 @@
         "printo/printo":"dev-master",
         "facebook/xhprof":"dev-master",
         "firephp/firephp-core":"dev-master",
-        "twig/twig":"1.*"
+        "twig/twig":"1.*",
+        "phptal/phptal": "dev-master"
     },
     "autoload":{
         "psr-0":{
