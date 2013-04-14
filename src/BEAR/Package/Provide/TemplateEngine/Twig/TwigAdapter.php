@@ -10,6 +10,9 @@ namespace BEAR\Package\Provide\TemplateEngine\Twig;
 use BEAR\Package\Provide\TemplateEngine\AdapterTrait;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Twig_Environment;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+use Ray\Di\Di\PostConstruct;
 
 /**
  * Smarty adapter
