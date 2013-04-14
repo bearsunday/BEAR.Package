@@ -11,9 +11,8 @@ use Ray\Di\Injector;
 require_once __DIR__ . '/load.php';
 
 $hasApc = function_exists('apc_fetch');
-$app = $hasApc && apc_fetch('app-helloworld');
-if ($app) {
-    return $app;
+if ($hasApc && apc_exists('app-helloworld')) {
+    return apc_fetch('app-helloworld');
 }
 
 $injector = Injector::create([new AppModule]);
