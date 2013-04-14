@@ -1,10 +1,9 @@
 <?php
 /**
- * Sandbox
+ * Helloworld
  *
- * @package App.Sandbox
+ * @package Helloworld
  */
-
 use Helloworld\Module\AppModule;
 use Ray\Di\Injector;
 
@@ -14,9 +13,7 @@ $hasApc = function_exists('apc_fetch');
 if ($hasApc && apc_exists('app-helloworld')) {
     return apc_fetch('app-helloworld');
 }
-
-$injector = Injector::create([new AppModule]);
-$app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
-
+$app = Injector::create([new AppModule])->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
 $hasApc ? apc_store('app-helloworld', $app) : null;
+
 return $app;
