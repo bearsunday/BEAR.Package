@@ -18,7 +18,7 @@ class TestObject
     {
     }
 
-    public function setCallable(Callable $c)
+    public function setCallable(callable $c)
     {
     }
 }
@@ -63,7 +63,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $setter = ['setA' => null, 'setB' => null];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
-        $expected = '[DI] Class construct[(double) 1, (Callable) BEAR\Package\Provide\Application\someFunction] setter[setA, setB]';
+        $expected = '[DI] Class construct[(double) 1, (callable) BEAR\Package\Provide\Application\someFunction] setter[setA, setB]';
         $this->assertSame($expected, (string)$this->diLogger);
     }
 

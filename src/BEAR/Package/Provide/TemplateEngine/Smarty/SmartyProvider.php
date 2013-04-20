@@ -38,7 +38,6 @@ class SmartyProvider implements Provide
             ->setCacheDir($this->tmpDir . '/smarty/cache')
             ->setTemplateDir($this->appDir . '/Resource/View')
             ->setPluginsDir(array_merge($smarty->getPluginsDir(), [$appPlugin, $frameworkPlugin]) );
-
         return $smarty;
     }
 }

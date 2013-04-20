@@ -39,11 +39,6 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     private $smarty;
 
     /**
-     * @var bool
-     */
-    private $isProd;
-
-    /**
      * Constructor
      *
      * Smarty $smarty
@@ -53,35 +48,9 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     public function __construct(Smarty $smarty)
     {
         $this->smarty = $smarty;
-    }
 
-    /**
-     * Is production ?
-     *
-     * @param $isProd
-     *
-     * @return $this
-     * @Inject
-     * @Named("is_prod")
-     */
-    public function setIsProd($isProd)
-    {
-        $this->isProd = $isProd;
-
-        return $this;
-    }
-
-    /**
-     * Init
-     *
-     * @PostConstruct
-     */
-    public function init()
-    {
-        if ($this->isProd) {
-            $this->smarty->force_compile = false;
-            $this->smarty->compile_check = false;
-        }
+        $this->smarty->force_compile = false;
+        $this->smarty->compile_check = false;
     }
 
     /**
@@ -113,5 +82,4 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
 
         return $this->smarty->fetch($this->template);
     }
-
 }

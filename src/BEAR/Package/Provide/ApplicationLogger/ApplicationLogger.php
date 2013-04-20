@@ -43,11 +43,11 @@ final class ApplicationLogger implements ApplicationLoggerInterface
     public function register(AppInterface $app)
     {
         register_shutdown_function(
-        // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
             function () {
                 $this->logger->write();
             }
-        // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         );
     }
 }

@@ -62,7 +62,7 @@ class PagerConnection extends DbalConnection implements DriverConnection
     /**
      * Route generator
      *
-     * @var Callable
+     * @var callable
      */
     private $routeGenerator;
 
@@ -132,11 +132,11 @@ class PagerConnection extends DbalConnection implements DriverConnection
     /**
      * Set route generator
      *
-     * @param Callable $routeGenerator
+     * @param callable $routeGenerator
      *
      * @return $this
      */
-    public function setRouteGenerator(Callable $routeGenerator)
+    public function setRouteGenerator(callable $routeGenerator)
     {
         $this->routeGenerator = $routeGenerator;
 

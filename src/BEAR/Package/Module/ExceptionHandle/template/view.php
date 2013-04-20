@@ -6,7 +6,7 @@ use BEAR\Package\Dev\Debug\ExceptionHandle\Screen;
  * @var \Exception $e
  * @var array      $view
  */
-view_logic: {
+VIEW_LOGIC: {
     $screen = new Screen;
     $traceAsString = $screen->getTraceAsJsString($e->getTrace());
     $fileLink = $screen->getEditorLink($e->getFile(), $e->getLine());
