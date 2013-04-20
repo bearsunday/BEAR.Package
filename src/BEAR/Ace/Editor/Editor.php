@@ -64,15 +64,15 @@ class Editor
      */
     public function setPath($path)
     {
-        $this->path = $path;
-        $fullPath = "{$this->base}/{$path}";
-        // readable ?
-        if (!is_readable($fullPath)) {
-            throw new \InvalidArgumentException("Not found. {$path} : {$fullPath} is not readable.");
-        }
-        // allow only under project
-        if (strpos($fullPath, $this->base) !== 0) {
-            throw new \OutOfRangeException($fullPath);
+        if (is_readable($path)) {
+            $fullPath = $path;
+        } else {
+            $fullPath = "{$this->base}/{$path}";
+            // readable ?
+            if (!is_readable($fullPath)) {
+                var_dump($path);
+                throw new \InvalidArgumentException("Not readable: [{$fullPath}]");
+            }
         }
         $this->file = $fullPath;
 
