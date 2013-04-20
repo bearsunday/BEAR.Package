@@ -28,8 +28,7 @@ class AppModule extends AbstractModule
     {
         // di - application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Helloworld\App');
-        $this->install(new SundayModule\Constant\NamedModule((require __DIR__ . '/config.php')));
-        $this->install(new SundayModule\SchemeModule(__NAMESPACE__ . '\SchemeCollectionProvider'));
+        $this->install(new SundayModule\Constant\NamedModule(require __DIR__ . '/config.php'));
         $this->install(new SundayModule\Framework\FrameworkModule($this));
     }
 }

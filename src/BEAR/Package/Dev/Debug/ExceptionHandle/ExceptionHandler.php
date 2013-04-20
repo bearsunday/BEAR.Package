@@ -71,6 +71,18 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     ];
 
     /**
+     * Set message
+     *
+     * @param array $message
+     *
+     * @Inject(optional = true);
+     */
+    public function setMessage(array $message)
+    {
+        $this->message = $message;
+    }
+
+    /**
      * Set response
      *
      * @param mixed             $exceptionTpl
@@ -81,25 +93,13 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * @Named("exceptionTpl=exceptionTpl,errorPage=errorPage")
      */
     public function __construct(
-        $exceptionTpl = null,
         ResponseInterface $response,
+        $exceptionTpl = null,
         ResourceObject $errorPage = null
     ) {
         $this->viewTemplate = $exceptionTpl;
         $this->response = $response;
         $this->errorPage = $errorPage ? : new ErrorPage;
-    }
-
-    /**
-     * Set message
-     *
-     * @param array $message
-     *
-     * @Inject(optional = true);
-     */
-    public function setMessage(array $message)
-    {
-        $this->message = $message;
     }
 
     /**

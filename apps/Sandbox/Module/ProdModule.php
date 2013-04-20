@@ -17,14 +17,8 @@ use Ray\Di\AbstractModule;
  */
 class ProdModule extends AbstractModule
 {
-    /**
-     * (non-PHPdoc)
-     * @see Ray\Di.AbstractModule::configure()
-     */
     protected function configure()
     {
-        $config = require __DIR__ . '/config/prod.php';
-        /** @var $config array */
-        $this->install(new Common\AppModule($config));
+        $this->install(new App\AppModule('prod'));
     }
 }

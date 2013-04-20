@@ -65,6 +65,7 @@ class ApplicationReflector
                     'links' => $response->links
                 ];
             } catch (ResourceNotFound $e) {
+            } catch (\Ray\Di\Exception\NotInstantiable $e) {
             } catch (Uri $e) {
             }
     }
