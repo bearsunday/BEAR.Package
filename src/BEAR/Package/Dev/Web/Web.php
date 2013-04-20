@@ -9,8 +9,6 @@ namespace BEAR\Package\Dev\Web;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 
-require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/printo/printo/src.php';
-
 /**
  * Dev web tools
  */
@@ -19,7 +17,7 @@ class Web
     /**
      * Service dev web tool
      *
-     * @param                                                 $pagePath
+     * @param string                                          $pagePath
      * @param \BEAR\Sunday\Extension\Application\AppInterface $app
      *
      * @return int exit code
@@ -45,6 +43,7 @@ class Web
         }
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
+            /** @noinspection PhpIncludeInspection */
             include $scriptFile;
             return 0;
         }

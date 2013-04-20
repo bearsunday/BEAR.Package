@@ -237,10 +237,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         \Exception $e,
         /** @noinspection PhpUnusedParameterInspection */
         array $view = [
-            'dependency_bindings' => '',
-            'modules' => ''
+        'dependency_bindings' => '',
+        'modules' => ''
         ]
     ) {
+        /** @noinspection PhpIncludeInspection */
         return include $this->viewTemplate;
     }
 

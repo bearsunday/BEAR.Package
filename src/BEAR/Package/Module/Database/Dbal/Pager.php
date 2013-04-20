@@ -157,7 +157,7 @@ class Pager
      *
      * @return Pager
      */
-    public function setRouteGenerator(Callable $routeGenerator)
+    public function setRouteGenerator(callable $routeGenerator)
     {
         $this->routeGenerator = $routeGenerator;
 

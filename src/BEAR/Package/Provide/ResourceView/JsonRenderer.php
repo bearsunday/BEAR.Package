@@ -32,7 +32,7 @@ class JsonRenderer implements RenderInterface
                 $ro->body,
                 function (&$element) {
                     if ($element instanceof RequestInterface) {
-                        /** @var $element Callable */
+                        /** @var $element callable */
                         $element = $element();
                     }
                 }

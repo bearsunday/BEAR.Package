@@ -31,10 +31,12 @@ class WritersProvider implements ProviderInterface
      */
     public function get()
     {
-        $writers = new Collection([
+        $writers = new Collection(
+            [
             new Fire,
             new Zf2Log(new Zf2LogProvider($this->logDir))
-        ]);
+            ]
+        );
 
         return $writers;
     }

@@ -14,6 +14,7 @@ use BEAR\Package\Dev\Application\Exception\NotWritable;
 use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Ray\Di\Exception\NotInstantiable;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use BEAR\Resource\Exception\Uri;
@@ -65,10 +66,10 @@ class ApplicationReflector
                     'links' => $response->links
                 ];
             } catch (ResourceNotFound $e) {
-            } catch (\Ray\Di\Exception\NotInstantiable $e) {
+            } catch (NotInstantiable $e) {
             } catch (Uri $e) {
             }
-    }
+        }
 
         return $list;
     }

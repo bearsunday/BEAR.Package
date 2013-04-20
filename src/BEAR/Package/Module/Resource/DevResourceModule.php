@@ -35,7 +35,7 @@ class DevResourceModule extends AbstractModule
         // Common debug
         $this->bind('BEAR\Resource\InvokerInterface')->to('BEAR\Resource\DevInvoker')->in(Scope::SINGLETON);
         $this->install(new ProvideModule\ResourceView\DevRendererModule($this));
-//        $this->installDevLogger();
+        $this->installDevLogger();
     }
 
     /**
