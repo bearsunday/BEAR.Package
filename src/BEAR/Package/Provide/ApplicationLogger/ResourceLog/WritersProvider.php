@@ -33,8 +33,8 @@ class WritersProvider implements ProviderInterface
     {
         $writers = new Collection(
             [
-                new Fire,
-                new Zf2Log(new Zf2LogProvider($this->logDir))
+            new Fire,
+            new Zf2Log(new Zf2LogProvider($this->logDir))
             ]
         );
 

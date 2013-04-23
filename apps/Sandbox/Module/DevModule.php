@@ -6,8 +6,10 @@
 namespace Sandbox\Module;
 
 use BEAR\Package\Module as PackageModule;
+use BEAR\Package\Provide\TemplateEngine\Smarty\DevSmartyModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
 
 /**
  * Dev module
@@ -22,14 +24,16 @@ class DevModule extends AbstractModule
      */
     protected function configure()
     {
-        $config = (require __DIR__ . '/config/dev.php') + (require __DIR__ . '/config/prod.php');
-
         /** @var $config array */
-        $this->install(new Common\AppModule($config));
+        $this->install(new App\AppModule('dev'));
         $this->install(new PackageModule\Resource\DevResourceModule($this));
         // aspect weaving (AOP)
         $this->installWritableChecker();
+        // configure for development
+//        $this->requestInjection('BEAR\Package\Provide\TemplateEngine\Smarty\DevSmartyModule');
     }
+
+
 
     /**
      * Check writable directory

@@ -3,15 +3,17 @@
  * @package    Sandbox
  * @subpackage Module
  */
-namespace Sandbox\Module\Common;
+namespace Sandbox\Module\App;
 
 use BEAR\Sunday\Module as SundayModule;
-use BEAR\Package\Module as PackageModule;
+use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Provide as ProvideModule;
+use Ray\Di\Injector;
 use Sandbox\Interceptor\Form\BlogPost;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+use Zend\Stdlib\Exception\LogicException;
 
 /**
  * Application module
@@ -26,33 +28,35 @@ class AppModule extends AbstractModule
      */
     private $config;
 
-    public function __construct(array $config)
+    public function __construct($mode)
     {
-        $this->config = $config;
+        $packageDir = dirname(dirname(__DIR__));
+
+        $modeConfig = $packageDir . "/config/{$mode}.php";
+        if (! file_exists($modeConfig)) {
+            throw new LogicException("Invalid mode {$mode}");
+        }
+        $this->config = (require $modeConfig) + (require $packageDir . '/config/prod.php');
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         // install package module
-        $this->install(new SundayModule\Constant\NamedModule($this->config));
-        $scheme = __NAMESPACE__ . '\SchemeCollectionProvider';
-        $this->install(new PackageModule\PackageModule($this, $scheme));
+        $this->install(new PackageModule($this->config));
 
         // install twig
-        //$this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
+//        $this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
 
         // dependency binding for application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Sandbox\App');
         $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
-        $this->bind('BEAR\Resource\RenderInterface')->annotatedWith('hal')->to(
-                'BEAR\Package\Provide\ResourceView\HalRenderer'
-            )->in(
-                Scope::SINGLETON
-            );
+        $this
+            ->bind('BEAR\Resource\RenderInterface')
+            ->annotatedWith('hal')
+            ->to( 'BEAR\Package\Provide\ResourceView\HalRenderer')
+            ->in(Scope::SINGLETON);
+
         // aspect weaving for application
         $this->installTimeMessage();
         $this->installNewBlogPost();

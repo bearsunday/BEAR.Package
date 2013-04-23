@@ -8,7 +8,6 @@
 namespace BEAR\Package\Provide\Application;
 
 use Aura\Di\Exception;
-use BEAR\Package\Provide\Application\DiLogger;
 use BEAR\Package\Provide\Application\Exception\InvalidMode;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -22,6 +21,7 @@ use Ray\Di\Definition;
 use Ray\Di\Exception\Exception as DiException;
 use Ray\Di\Forge;
 use Ray\Di\Injector;
+use Ray\Di\Module\InjectorModule;
 
 /**
  * Application object factory
@@ -56,9 +56,12 @@ class ApplicationFactory
         if (!class_exists($moduleName)) {
             throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
         }
-        $injector = (new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new CachedReader(new AnnotationReader, $this->cache))))), new $moduleName))->setCache(
-            $this->cache
-        );
+        $injector = (
+            new Injector(
+                new Container(new Forge(new Config(new Annotation(new Definition, new CachedReader(new AnnotationReader, $this->cache))))),
+                new InjectorModule(new $moduleName)
+            )
+        )->setCache($this->cache);
         $diLogger = $injector->getInstance('BEAR\Package\Provide\Application\DiLogger');
         $injector->setLogger($diLogger);
 

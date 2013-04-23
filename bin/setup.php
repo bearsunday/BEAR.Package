@@ -23,7 +23,7 @@ function chmodWritable($path)
 $iterator = new RecursiveDirectoryIterator($packageDir . '/apps');
 foreach ($iterator as $dir) {
     if ($iterator->hasChildren()) {
-        $dataDir = $dir . '/data';
+        $dataDir = $dir . '';
         echo "chmod:{$dataDir}" . PHP_EOL;
         chmodWritable($dataDir);
         $clear = $dir . '/scripts/clear.php';

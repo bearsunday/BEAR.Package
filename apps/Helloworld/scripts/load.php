@@ -12,4 +12,5 @@ require_once $packageDir . '/vendor/autoload.php';
 // Annotation auto loader
 $loader = require $packageDir . '/vendor/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+AnnotationReader::addGlobalIgnoredName('noinspection');
 unset($packageDir);

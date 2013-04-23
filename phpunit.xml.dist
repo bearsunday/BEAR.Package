@@ -6,7 +6,7 @@
          colors="true"
          timeoutForSmallTests="90"
          stopOnError="false"
-         stopOnFailure="false"
+         stopOnFailure="true"
          verbose="true">
     <testsuites>
         <testsuite name="BEAR.Package.Apps">

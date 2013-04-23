@@ -21,8 +21,7 @@ class StubModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->install(new DevModule);
-        $stub = include __DIR__ . '/config/stub/resource.php';
+        $this->install(new App\AppModule('stub'));
         /** @var $stub array */
         $this->install(new PackageStubModule($stub));
     }

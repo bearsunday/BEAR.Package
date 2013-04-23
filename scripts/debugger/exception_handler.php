@@ -14,8 +14,8 @@ use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 
 return function (\Exception $e) {
     $handler = new ExceptionHandler(
-        dirname(dirname(__DIR__)) . '/src/BEAR/Package/Module/ExceptionHandle/template/view.php',
-        new SymfonyResponse(new ConsoleOutput)
+        new SymfonyResponse(new ConsoleOutput),
+        dirname(dirname(__DIR__)) . '/src/BEAR/Package/Module/ExceptionHandle/template/view.php'
     );
     $handler->setLogDir(dirname(__DIR__) . '/data/log');
     $handler->handle($e);

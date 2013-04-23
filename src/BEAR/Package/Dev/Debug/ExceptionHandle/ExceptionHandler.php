@@ -71,6 +71,18 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     ];
 
     /**
+     * Set message
+     *
+     * @param array $message
+     *
+     * @Inject(optional = true);
+     */
+    public function setMessage(array $message)
+    {
+        $this->message = $message;
+    }
+
+    /**
      * Set response
      *
      * @param mixed             $exceptionTpl
@@ -88,18 +100,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         $this->viewTemplate = $exceptionTpl;
         $this->response = $response;
         $this->errorPage = $errorPage ? : new ErrorPage;
-    }
-
-    /**
-     * Set message
-     *
-     * @param array $message
-     *
-     * @Inject(optional = true);
-     */
-    public function setMessage(array $message)
-    {
-        $this->message = $message;
     }
 
     /**
@@ -239,6 +239,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         'modules' => ''
         ]
     ) {
+        /** @noinspection PhpIncludeInspection */
         return include $this->viewTemplate;
     }
 

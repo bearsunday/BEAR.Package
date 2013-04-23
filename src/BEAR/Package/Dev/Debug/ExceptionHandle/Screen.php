@@ -143,7 +143,7 @@ class Screen
                 $link = "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#obj{$objHash}\">";
                 $arg = $link . '(object) ' . $this->getObjectName($arg) . '</a>';
             }
-            if (!is_scalar($arg)) {
+            if (is_array($arg)) {
                 $this->makeArgsElementsScalar($arg);
                 $arg = var_export($arg, true);
             }

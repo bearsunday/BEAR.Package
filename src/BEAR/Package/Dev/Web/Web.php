@@ -17,7 +17,7 @@ class Web
     /**
      * Service dev web tool
      *
-     * @param                                                 $pagePath
+     * @param string                                          $pagePath
      * @param \BEAR\Sunday\Extension\Application\AppInterface $app
      *
      * @return int exit code
@@ -43,6 +43,7 @@ class Web
         }
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
+            /** @noinspection PhpIncludeInspection */
             include $scriptFile;
             return 0;
         }

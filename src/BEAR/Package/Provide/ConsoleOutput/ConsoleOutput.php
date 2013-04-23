@@ -62,7 +62,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
         $output .= self::LABEL . '[BODY]' . self::CLOSE . PHP_EOL;
         if (is_scalar($resource->body)) {
             $output .= (string) $resource->body;
-            goto complete;
+            goto COMPLETE;
         }
         $isTraversable = is_array($resource->body) || $resource->body instanceof \Traversable;
         if ($isTraversable) {
@@ -75,7 +75,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
             $output .= self::LABEL . '[VIEW]' . self::CLOSE . PHP_EOL . $resource->view;
         }
 
-        complete:
+        COMPLETE:
         if ($this->enableOutput) {
             // @codeCoverageIgnoreStart
             echo $output . PHP_EOL;

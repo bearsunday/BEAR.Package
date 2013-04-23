@@ -1,11 +1,9 @@
 <?php
 /**
- * Module
- *
- * @package    Sandbox
+ * @package    BEAR.Package
  * @subpackage Module
  */
-namespace BEAR\Package\Module;
+namespace BEAR\Package\Module\Package;
 
 use BEAR\Package;
 use BEAR\Package\Module;
@@ -13,44 +11,43 @@ use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
+use Ray\Di\Module\InjectorModule;
 
 /**
  * Package module
  *
- * @package    Sandbox
+ * @package    BEAR.Package
  * @subpackage Module
  */
 class PackageModule extends AbstractModule
 {
-    private $scheme;
+    private $config;
 
     /**
-     * @param \Ray\Di\AbstractModule $module
-     * @param \Ray\Aop\Matcher       $scheme
+     * @param array $config
      */
-    public function __construct(AbstractModule $module, $scheme)
+    public function __construct(array $config)
     {
-        parent::__construct($module);
-        $this->scheme = $scheme;
+        $this->config = $config;
+        parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
-        $this->install(new SundayModule\Framework\FrameworkModule($this));
         $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+
+        // Constants (can be injected @Named("constant_name"))
+        $this->install(new SundayModule\Constant\NamedModule($this->config));
         $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
 
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
-        $this->install(new ProvideModule\TemplateEngine\Smarty\SmartyModule);
         $this->install(new ProvideModule\WebResponse\HttpFoundationModule);
         $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule);
         $this->install(new ProvideModule\Router\MinRouterModule);
         $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule);
         $this->install(new ProvideModule\ResourceView\HalModule);
+        $this->install(new ProvideModule\TemplateEngine\Smarty\SmartyModule);
 
         // Package module
         $this->install(new Package\Module\Database\Dbal\DbalModule($this));
@@ -58,10 +55,9 @@ class PackageModule extends AbstractModule
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
         $this->install(new Package\Module\Aop\NamedArgsModule);
 
-        // Sunday module
-        $this->install(new SundayModule\SchemeModule($this->scheme));
-        $this->install(new SundayModule\Resource\ApcModule);
-        $this->install(new SundayModule\WebContext\AuraWebModule);
-        $this->install(new SundayModule\Cqrs\CacheModule($this));
+        // Framework core module
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
+        // Injector module ('Injected injector' knows all bindings)
+        $this->install(new InjectorModule($this));
     }
 }
