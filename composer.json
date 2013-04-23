@@ -16,6 +16,9 @@
             "homepage": "https://github.com/koriym/BEAR.Package/graphs/contributors"
         }
     ],
+    "provide":{
+        "bear/framework": "0.7.0"
+    },
     "require":{
         "php":">=5.4.0",
         "ext-curl":"*",
@@ -33,13 +36,13 @@
         "symfony/http-foundation":"2.0.*",
         "symfony/routing": "2.2.*",
         "twitter/bootstrap":"2.3.*",
-        "zendframework/zend-log":"dev-master",
+        "zendframework/zend-log":"2.1.*",
         "zendframework/zend-db": "2.1.*",
-        "zendframework/zend-stdlib": "dev-master",
+        "zendframework/zend-stdlib": "2.1.*",
         "classpreloader/classpreloader": "1.*"
     },
     "require-dev":{
-        "printo/printo":"dev-master",
+        "printo/printo":"0.1.*",
         "facebook/xhprof":"dev-master",
         "firephp/firephp-core":"dev-master",
         "twig/twig":"1.*"
@@ -53,7 +56,6 @@
         },
         "class-map": ["Installer.php", "."]
     },
-    "minimum-stability":"beta",
     "scripts"   :{
         "post-install-cmd": ["php bin/setup.php", "php bin/env.php"],
         "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php bin/loader.php"]

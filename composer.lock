@@ -1,5 +1,9 @@
 {
-    "hash": "8fdc6009ed26063fed1294c13e8ae44b",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "57aa3e037dc41131167978c5b727fd5b",
     "packages": [
         {
             "name": "aura/di",
@@ -464,9 +468,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -479,103 +483,31 @@
             "time": "2013-01-10 22:43:46"
         },
         {
-            "name": "doctrine/collections",
-            "version": "v1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/collections.git",
-                "reference": "v1.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/v1.1",
-                "reference": "v1.1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Collections\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
-                    "role": "Developer of wrapped JMSSerializerBundle"
-                }
-            ],
-            "description": "Collections Abstraction library",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "array",
-                "collections",
-                "iterator"
-            ],
-            "time": "2013-03-07 12:15:54"
-        },
-        {
             "name": "doctrine/common",
-            "version": "2.4.0-RC1",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/common.git",
-                "reference": "2.4.0-RC1"
+                "url": "https://github.com/doctrine/common",
+                "reference": "2.3.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/2.4.0-RC1",
-                "reference": "2.4.0-RC1",
+                "url": "https://github.com/doctrine/common/zipball/2.3.0",
+                "reference": "2.3.0",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "1.*",
-                "doctrine/cache": "1.*",
-                "doctrine/collections": "1.*",
-                "doctrine/inflector": "1.*",
-                "doctrine/lexer": "1.*",
                 "php": ">=5.3.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.3.x-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "Doctrine\\Common\\": "lib/"
+                    "Doctrine\\Common": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -617,7 +549,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-03-24 17:52:34"
+            "time": "2012-09-19 22:55:18"
         },
         {
             "name": "doctrine/dbal",
@@ -681,69 +613,6 @@
                 "queryobject"
             ],
             "time": "2013-03-24 19:16:29"
-        },
-        {
-            "name": "doctrine/inflector",
-            "version": "v1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/inflector.git",
-                "reference": "v1.0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/doctrine/inflector/archive/v1.0.zip",
-                "reference": "v1.0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Inflector\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
-                    "role": "Developer of wrapped JMSSerializerBundle"
-                }
-            ],
-            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "inflection",
-                "pluarlize",
-                "singuarlize",
-                "string"
-            ],
-            "time": "2013-01-10 21:49:15"
         },
         {
             "name": "doctrine/lexer",
@@ -1539,7 +1408,7 @@
         },
         {
             "name": "zendframework/zend-log",
-            "version": "dev-master",
+            "version": "2.1.5",
             "target-dir": "Zend/Log",
             "source": {
                 "type": "git",
@@ -1548,9 +1417,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.zendframework.com/composer/zendframework-zend-log-dev-master-release-2.1.5-acb4f2.zip",
-                "reference": "dev-master",
-                "shasum": "218f624ff5607eb63743a9a3413c89c914d621af"
+                "url": "https://packages.zendframework.com/composer/zendframework-zend-log-2.1.5-release-2.1.5-acb4f2.zip",
+                "reference": "2.1.5",
+                "shasum": "bfaee5599bb0b94e832b1ee881212f896487a2b5"
             },
             "require": {
                 "php": ">=5.3.3",
@@ -1591,7 +1460,7 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "dev-master",
+            "version": "2.1.5",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
@@ -1600,9 +1469,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.zendframework.com/composer/zendframework-zend-stdlib-dev-master-release-2.1.5-acb4f2.zip",
-                "reference": "dev-master",
-                "shasum": "2c866a9253a16c08d392bdd6de12e21edae42084"
+                "url": "https://packages.zendframework.com/composer/zendframework-zend-stdlib-2.1.5-release-2.1.5-acb4f2.zip",
+                "reference": "2.1.5",
+                "shasum": "3f15c56a0bee96fbc32778715ae7d070541b906f"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1711,16 +1580,16 @@
         },
         {
             "name": "printo/printo",
-            "version": "dev-master",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/print_o.git",
-                "reference": "f18dfb8e7c7133aba4507245f3283f24ee5a7c2b"
+                "reference": "0.1.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/print_o/zipball/f18dfb8e7c7133aba4507245f3283f24ee5a7c2b",
-                "reference": "f18dfb8e7c7133aba4507245f3283f24ee5a7c2b",
+                "url": "https://api.github.com/repos/koriym/print_o/zipball/0.1.3",
+                "reference": "0.1.3",
                 "shasum": ""
             },
             "require": {
@@ -1732,7 +1601,8 @@
                     "Printo\\": "src/"
                 },
                 "files": [
-                    "src/print_o.php"
+                    "src/print_o.php",
+                    "libs/debuglib/debuglib.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1752,7 +1622,7 @@
                 "debug",
                 "object graph"
             ],
-            "time": "2013-04-07 18:21:00"
+            "time": "2013-04-07 17:58:08"
         },
         {
             "name": "twig/twig",
@@ -1807,12 +1677,9 @@
     "aliases": [
 
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "stability-flags": {
         "pagerfanta/pagerfanta": 20,
-        "zendframework/zend-log": 20,
-        "zendframework/zend-stdlib": 20,
-        "printo/printo": 20,
         "facebook/xhprof": 20,
         "firephp/firephp-core": 20
     },
