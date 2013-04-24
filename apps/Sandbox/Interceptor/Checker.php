@@ -1,9 +1,5 @@
 <?php
-/**
- * Check env interceptor
- *
- * @package BEAR.Framework
- */
+
 namespace Sandbox\Interceptor;
 
 use Ray\Aop\MethodInterceptor;

@@ -1,15 +1,12 @@
 <?php
-/**
- * Env setting checker
- *
- * @package BEAR.Framework
- */
+
 namespace Sandbox\Interceptor\Form;
 
 use BEAR\Sunday\Inject\NamedArgsInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Aop\NamedArgsInterface;
+
 /**
  * Form validator
  */

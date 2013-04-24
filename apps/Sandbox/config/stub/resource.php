@@ -6,8 +6,6 @@
  *
  * $resourceUri => $resourceBody
  *
- * @package    Sandbox
- * @subpackage Module
  */
 $stub = [
     'Sandbox\Resource\App\Blog\Posts' => [

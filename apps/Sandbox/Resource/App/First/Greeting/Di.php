@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\First\Greeting;
 
 use BEAR\Resource\AbstractObject;
@@ -11,9 +8,6 @@ use Ray\Di\Di\Named;
 
 /**
  * Greeting resource
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Di extends AbstractObject
 {

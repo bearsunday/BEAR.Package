@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Module
- */
+
 namespace Sandbox\Module;
 
 use BEAR\Package\Provide as PackageModule;
@@ -10,9 +7,6 @@ use BEAR\Sunday\Module as SundayModule;
 
 /**
  * Application module for API
- *
- * @package    Sandbox
- * @subpackage Module
  */
 class ApiModule extends ProdModule
 {

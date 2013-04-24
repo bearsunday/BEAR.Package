@@ -1,8 +1,4 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
 namespace Sandbox\Resource\App\First;
 
 use BEAR\Resource\AbstractObject;
@@ -10,8 +6,6 @@ use BEAR\Resource\AbstractObject;
 /**
  * Greeting resource
  *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Greeting extends AbstractObject
 {

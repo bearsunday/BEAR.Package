@@ -1,10 +1,5 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\Blog\Posts;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -12,9 +7,6 @@ use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * Blog entry pager page
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Pager extends Page
 {

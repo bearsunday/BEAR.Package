@@ -1,19 +1,11 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App;
 
 use BEAR\Resource\AbstractObject;
 
 /**
  * Performance
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Performance extends AbstractObject
 {

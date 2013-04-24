@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\Blog\Posts;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -11,9 +8,6 @@ use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * Edit post page
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Edit extends Page
 {

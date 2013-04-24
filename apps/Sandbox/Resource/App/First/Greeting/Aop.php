@@ -1,17 +1,11 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\First\Greeting;
 
 use BEAR\Resource\AbstractObject;
 
 /**
  * My first AOP
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Aop extends AbstractObject
 {

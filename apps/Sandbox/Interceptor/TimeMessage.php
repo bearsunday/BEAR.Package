@@ -1,8 +1,6 @@
 <?php
 /**
  * Time message
- *
- * @package BEAR.Framework
  */
 namespace Sandbox\Interceptor;
 

@@ -19,8 +19,6 @@ use Ray\Di\Scope;
  * + Resource log
  * + Resource dev rendering
  *
- * @package    Sandbox
- * @subpackage Module
  */
 class DevResourceModule extends AbstractModule
 {

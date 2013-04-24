@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Resource\Link;
@@ -11,8 +8,6 @@ use BEAR\Sunday\Inject\TmpDirInject;
 /**
  * Order
  *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Order extends AbstractHal
 {

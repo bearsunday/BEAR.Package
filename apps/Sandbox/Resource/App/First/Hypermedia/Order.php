@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\First\Hypermedia;
 
 use BEAR\Resource\AbstractObject;
@@ -11,8 +8,6 @@ use BEAR\Resource\Link;
 /**
  * Greeting resource
  *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Order extends AbstractObject
 {

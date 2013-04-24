@@ -1,17 +1,10 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
 namespace Sandbox\Resource\Page\Hello;
 
 use BEAR\Resource\AbstractObject as Page;
 
 /**
  * Hello World page
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class World extends Page
 {

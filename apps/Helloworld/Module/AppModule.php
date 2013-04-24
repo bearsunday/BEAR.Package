@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Module
- */
+
 namespace Helloworld\Module;
 
 use Ray\Di\AbstractModule;
@@ -15,9 +12,6 @@ use BEAR\Package\Module\Package\PackageModule;
 
 /**
  * Production module
- *
- * @package    Sandbox
- * @subpackage Module
  */
 class AppModule extends AbstractModule
 {

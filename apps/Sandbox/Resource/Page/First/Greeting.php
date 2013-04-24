@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\First;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -10,9 +7,6 @@ use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * Greeting page
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Greeting extends Page
 {

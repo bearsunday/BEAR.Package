@@ -1,10 +1,5 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\Blog;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -14,9 +9,6 @@ use BEAR\Sunday\Annotation\Cache;
 
 /**
  * Blog index page
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Posts extends Page
 {

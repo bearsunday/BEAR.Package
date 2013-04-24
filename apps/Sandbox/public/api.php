@@ -15,7 +15,6 @@
  *
  * $ php -S localhost:8089 api.php
  *
- * @package BEAR.Package
  * @global  $mode
  */
 use BEAR\Resource\Exception\Parameter as BadRequest;

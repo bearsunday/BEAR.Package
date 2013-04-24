@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Module
- */
+
 namespace Sandbox\Module;
 
 use BEAR\Package\Module as PackageModule;
@@ -13,9 +10,6 @@ use Ray\Di\Injector;
 
 /**
  * Dev module
- *
- * @package    Sandbox
- * @subpackage Module
  */
 class DevModule extends AbstractModule
 {

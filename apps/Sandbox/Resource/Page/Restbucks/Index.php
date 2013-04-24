@@ -1,10 +1,5 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\Restbucks;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -17,9 +12,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Restbucks order
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Index extends Page
 {

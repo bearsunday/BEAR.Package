@@ -1,8 +1,6 @@
 <?php
 /**
  * Helloworld
- *
- * @package Skeleton
  */
 namespace Helloworld;
 
@@ -12,8 +10,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Application
- *
- * @package Skeleton
  */
 final class App extends AbstractApp
 {

@@ -1,10 +1,5 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\Blog\Posts;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -15,8 +10,6 @@ use BEAR\Sunday\Inject\ResourceInject;
 /**
  * New post page
  *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Newpost extends Page
 {

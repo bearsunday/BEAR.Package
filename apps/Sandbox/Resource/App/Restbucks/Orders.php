@@ -1,10 +1,5 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Resource\AbstractObject;
@@ -14,9 +9,6 @@ use DirectoryIterator;
 
 /**
  * Orders
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Orders extends AbstractObject
 {

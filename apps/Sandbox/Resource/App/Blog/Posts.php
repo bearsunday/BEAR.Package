@@ -1,8 +1,4 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
 namespace Sandbox\Resource\App\Blog;
 
 use BEAR\Package\Module\Database\Dbal\Setter\DbSetterTrait;
@@ -18,9 +14,6 @@ use PDO;
 
 /**
  * Posts
- *
- * @package    Sandbox
- * @subpackage Resource
  *
  * @Db
  */

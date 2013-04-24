@@ -1,19 +1,11 @@
 <?php
-/**
- * App resource
- *
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\Page\Test;
 
 use BEAR\Resource\AbstractObject as Page;
 
 /**
  * Redirect page
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Redirect extends Page
 {

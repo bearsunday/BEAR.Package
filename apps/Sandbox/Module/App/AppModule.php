@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Module
- */
+
 namespace Sandbox\Module\App;
 
 use BEAR\Sunday\Module as SundayModule;
@@ -17,9 +14,6 @@ use Zend\Stdlib\Exception\LogicException;
 
 /**
  * Application module
- *
- * @package    Sandbox
- * @subpackage Module
  */
 class AppModule extends AbstractModule
 {

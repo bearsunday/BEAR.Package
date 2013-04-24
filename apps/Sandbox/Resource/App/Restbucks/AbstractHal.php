@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Resource\AbstractObject;
@@ -12,9 +9,6 @@ use Ray\Di\Di\Named;
 
 /**
  * Resource objects using Hal renderer
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 abstract class AbstractHal extends AbstractObject
 {

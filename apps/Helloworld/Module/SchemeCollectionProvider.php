@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Helloworld
- * @subpackage Module
- */
+
 namespace Helloworld\Module;
 
 use Ray\Di\ProviderInterface as Provide;
@@ -13,9 +10,6 @@ use BEAR\Sunday\Inject\InjectorInject;
 
 /**
  * Scheme collection provider
- *
- * @package    Helloworld
- * @subpackage Module
  */
 class SchemeCollectionProvider implements Provide
 {

@@ -1,17 +1,11 @@
 <?php
-/**
- * @package    HelloWorld
- * @subpackage Resource
- */
+
 namespace Helloworld\Resource\App;
 
 use BEAR\Resource\AbstractObject as Page;
 
 /**
  * Hello world
- *
- * @package    HelloWorld
- * @subpackage Resource
  */
 class Hello extends Page
 {

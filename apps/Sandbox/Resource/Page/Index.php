@@ -1,8 +1,4 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
 namespace Sandbox\Resource\Page;
 
 use BEAR\Resource\AbstractObject as Page;
@@ -13,8 +9,6 @@ use BEAR\Sunday\Version;
 /**
  * Index page
  *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Index extends Page
 {

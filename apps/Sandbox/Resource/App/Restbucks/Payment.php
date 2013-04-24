@@ -1,17 +1,11 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Sunday\Inject\TmpDirInject;
 
 /**
  * Payment
- *
- * @package    Sandbox
- * @subpackage Resource
  */
 class Payment extends AbstractHal
 {

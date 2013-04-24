@@ -1,8 +1,5 @@
 <?php
-/**
- * @package    Sandbox
- * @subpackage Resource
- */
+
 namespace Sandbox\Resource\App\Blog\Posts;
 
 use PDO;
@@ -13,9 +10,6 @@ use BEAR\Sunday\Annotation\DbPager;
 
 /**
  * Paged posts
- *
- * @package    Sandbox
- * @subpackage Resource
  *
  * @Db
  */
