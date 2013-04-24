@@ -5,7 +5,6 @@ use BEAR\Resource\AbstractObject;
 
 /**
  * Greeting resource
- *
  */
 class Greeting extends AbstractObject
 {

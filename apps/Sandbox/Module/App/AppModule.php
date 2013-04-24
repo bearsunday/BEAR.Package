@@ -22,6 +22,9 @@ class AppModule extends AbstractModule
      */
     private $config;
 
+    /**
+     * @param string $mode
+     */
     public function __construct($mode)
     {
         $packageDir = dirname(dirname(__DIR__));

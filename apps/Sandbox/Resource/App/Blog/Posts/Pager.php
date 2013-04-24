@@ -9,7 +9,7 @@ use BEAR\Sunday\Annotation\Cache;
 use BEAR\Sunday\Annotation\DbPager;
 
 /**
- * Paged posts
+ * Pagered posts
  *
  * @Db
  */

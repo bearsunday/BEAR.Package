@@ -6,8 +6,7 @@ use BEAR\Resource\AbstractObject;
 use BEAR\Resource\Link;
 
 /**
- * Greeting resource
- *
+ * Order resource
  */
 class Order extends AbstractObject
 {

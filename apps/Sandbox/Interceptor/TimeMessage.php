@@ -8,7 +8,7 @@ use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
 /**
- * +Time  message add interceptor
+ * +Time message add interceptor
  */
 class TimeMessage implements MethodInterceptor
 {

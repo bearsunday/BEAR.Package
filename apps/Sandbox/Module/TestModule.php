@@ -8,7 +8,7 @@ use BEAR\Sunday\Module\Constant;
 use Sandbox\Module\ProdModule;
 
 /**
- * Production module
+ * Test module
  */
 class TestModule extends ProdModule
 {

@@ -5,7 +5,7 @@ namespace Sandbox\Resource\App\First\Hypermedia;
 use BEAR\Resource\AbstractObject;
 
 /**
- * Greeting resource
+ * Payment resource
  */
 class Payment extends AbstractObject
 {

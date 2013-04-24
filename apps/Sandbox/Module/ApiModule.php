@@ -10,9 +10,6 @@ use BEAR\Sunday\Module as SundayModule;
  */
 class ApiModule extends ProdModule
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->install(new ProdModule);

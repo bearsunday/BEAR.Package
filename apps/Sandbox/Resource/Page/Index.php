@@ -8,7 +8,6 @@ use BEAR\Sunday\Version;
 
 /**
  * Index page
- *
  */
 class Index extends Page
 {

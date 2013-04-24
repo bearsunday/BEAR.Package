@@ -5,7 +5,9 @@ namespace Sandbox\Resource\Page\Error;
 use BEAR\Resource\AbstractObject;
 
 /**
- * Exception page
+ * Error page
+ *
+ * throw exception in resource method.
  */
 class Exception extends AbstractObject
 {

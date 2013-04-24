@@ -9,7 +9,6 @@ use Ray\Di\Di\Named;
 
 /**
  * Check env interceptor
- *
  */
 class Checker implements MethodInterceptor
 {

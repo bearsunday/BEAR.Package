@@ -9,7 +9,6 @@ use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * New post page
- *
  */
 class Newpost extends Page
 {

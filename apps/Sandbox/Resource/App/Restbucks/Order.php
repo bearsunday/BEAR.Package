@@ -7,7 +7,6 @@ use BEAR\Sunday\Inject\TmpDirInject;
 
 /**
  * Order
- *
  */
 class Order extends AbstractHal
 {

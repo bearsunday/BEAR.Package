@@ -11,6 +11,11 @@ class Payment extends AbstractHal
 {
     use TmpDirInject;
 
+    /**
+     * @param $id
+     *
+     * @return $this
+     */
     public function onGet($id)
     {
         $resourceFile = "{$this->tmpDir}/payment{$id}";

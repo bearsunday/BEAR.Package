@@ -9,6 +9,8 @@ use BEAR\Sunday\Annotation\Cache;
 
 /**
  * Blog index page
+ *
+ * Blog entries listed with edit/delete button
  */
 class Posts extends Page
 {

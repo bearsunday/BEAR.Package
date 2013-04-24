@@ -13,9 +13,6 @@ use Ray\Di\Injector;
  */
 class DevModule extends AbstractModule
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         /** @var $config array */

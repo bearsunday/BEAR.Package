@@ -7,7 +7,7 @@ use BEAR\Sunday\Inject\AInject;
 use BEAR\Sunday\Inject\ResourceInject;
 
 /**
- * Greeting resource
+ * Shop resource
  */
 class Shop extends AbstractObject
 {

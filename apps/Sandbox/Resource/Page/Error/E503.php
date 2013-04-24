@@ -5,8 +5,9 @@ use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Inject\ResourceInject;
 
 /**
- * Error
+ * Error page
  *
+ * return 503 header
  */
 class E503 extends AbstractObject
 {

@@ -10,9 +10,6 @@ use Ray\Di\AbstractModule;
  */
 class StubModule extends AbstractModule
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->install(new App\AppModule('stub'));

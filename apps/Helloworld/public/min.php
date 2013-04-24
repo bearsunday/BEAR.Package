@@ -2,9 +2,9 @@
 /**
  * Hello World - Min
  *
- * no router
- * no view
- * no app resource
+ * - fixed page resource
+ * - no template engine
+ * - page resource only
  */
 
 // profiler

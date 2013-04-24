@@ -8,7 +8,7 @@ use Ray\Aop\MethodInvocation;
 use Ray\Aop\NamedArgsInterface;
 
 /**
- * Form validator
+ * Post form
  */
 class BlogPost implements MethodInterceptor
 {
