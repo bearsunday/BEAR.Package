@@ -119,6 +119,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     public function handle(Exception $e)
     {
+        $isAjax = isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] === 'XMLHttpRequest';
         $page = $this->buildErrorPage($e, $this->errorPage);
         $id = $page->headers['X-EXCEPTION-ID'];
         $this->writeExceptionLog($e, $id);
