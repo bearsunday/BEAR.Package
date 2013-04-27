@@ -24,7 +24,7 @@ ob_start();
  * the dev instance provides debugging tools and defaults to help you the development of your application.
  */
 $mode = 'Dev';
-$app = require dirname(__DIR__) . '/scripts/bootstrap/dev_instance.php';
+$app = require dirname(__DIR__) . '/scripts/develop/instance.php';
 
 /**
  * The cache is cleared on each request via the following script. We understand that you may want to debug

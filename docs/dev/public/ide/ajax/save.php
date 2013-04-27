@@ -1,18 +1,16 @@
 <?php
-$rootDir = require_once '../ini.php';
 
-$file = realpath($_POST['file']);
-$data = $_POST['contents'];
+use BEAR\Ace\Editor;
 
-// readable ?
-if (!is_readable($file)) {
-    throw new \InvalidArgumentException("Not found. {$file} is not readable.");
-}
-// allow only under project
-if (strpos($file, $rootDir) !== 0) {
-    throw new \OutOfRangeException($fullPath);
+if (! isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+    throw new \BadMethodCallException;
 }
 
-$result = file_put_contents($file, $data, LOCK_EX | FILE_TEXT);
-$msg = ($result === false) ? 'save error for ' . $path : ' saved';
-echo $msg;
+$post = $_POST;
+try {
+    $log = (new Editor)->setRootPath('/')->setPath($post['file'])->save($post['contents']);
+    echo $log;
+} catch (\BEAR\Ace\Exception $e) {
+    http_response_code($e->getCode());
+    echo $e;
+}

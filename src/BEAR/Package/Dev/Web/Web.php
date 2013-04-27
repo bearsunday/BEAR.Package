@@ -15,10 +15,23 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 class Web
 {
     /**
+     * @var array
+     */
+    private $server;
+
+    /**
+     * @param array $server
+     */
+    public function __construct(array $server = [])
+    {
+        $this->server = $server ?: $_SERVER;
+    }
+
+    /**
      * Service dev web tool
      *
-     * @param string                                          $pagePath
-     * @param \BEAR\Sunday\Extension\Application\AppInterface $app
+     * @param string       $pagePath
+     * @param AppInterface $app
      *
      * @return int exit code
      */
@@ -38,8 +51,10 @@ class Web
         $scriptFile = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/docs/dev/public/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
+            ob_start();
             require $scriptFile;
-            return 0;
+            $html = ob_get_clean();
+            return $html;
         }
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
@@ -49,5 +64,20 @@ class Web
         }
         echo "404";
         return 1;
+    }
+
+    /**
+     * Return isDevWebService
+     *
+     * @param $sapiName
+     * @param $requestUri
+     *
+     * @return bool
+     */
+    public function isDevWebService($sapiName, $requestUri)
+    {
+        $isDevTool = ($sapiName !== 'cli') && substr($requestUri, 0, 5) === '/dev/';
+
+        return $isDevTool;
     }
 }
