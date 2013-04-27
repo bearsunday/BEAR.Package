@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "57aa3e037dc41131167978c5b727fd5b",
+    "hash": "a76be14e333687d0612cd8b7812a3503",
     "packages": [
         {
             "name": "aura/di",
@@ -212,6 +212,35 @@
                 "signal slots"
             ],
             "time": "2012-11-28 00:00:00"
+        },
+        {
+            "name": "bear/ace",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koriym/BEAR.Ace.git",
+                "reference": "0.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.1.0",
+                "reference": "0.1.0",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym"
+                }
+            ],
+            "description": "Ace online editor utility",
+            "time": "2013-04-26 17:22:04"
         },
         {
             "name": "bear/resource",
@@ -468,9 +497,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -849,12 +878,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "48ed04c9797e96c70cfc514d0dc0ded8546f2b55"
+                "reference": "65c24acf84410837aa873801f5a09b4039a5735b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/48ed04c9797e96c70cfc514d0dc0ded8546f2b55",
-                "reference": "48ed04c9797e96c70cfc514d0dc0ded8546f2b55",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/65c24acf84410837aa873801f5a09b4039a5735b",
+                "reference": "65c24acf84410837aa873801f5a09b4039a5735b",
                 "shasum": ""
             },
             "require": {
@@ -903,7 +932,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-04-16 21:43:21"
+            "time": "2013-04-24 11:37:27"
         },
         {
             "name": "ray/aop",
@@ -1548,12 +1577,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firephp/firephp-core.git",
-                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a"
+                "reference": "v0.4.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firephp/firephp-core/zipball/f60753a8dd7817e4da6bc73e0e717387a9a0866a",
-                "reference": "f60753a8dd7817e4da6bc73e0e717387a9a0866a",
+                "url": "https://api.github.com/repos/firephp/firephp-core/zipball/v0.4.0",
+                "reference": "v0.4.0",
                 "shasum": ""
             },
             "type": "library",
@@ -1576,7 +1605,7 @@
             ],
             "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
             "homepage": "https://github.com/firephp/firephp-core",
-            "time": "2013-01-19 22:55:24"
+            "time": "2013-04-23 15:28:20"
         },
         {
             "name": "printo/printo",

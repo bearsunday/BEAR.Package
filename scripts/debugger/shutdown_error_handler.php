@@ -1,5 +1,5 @@
 <?php
-use BEAR\Ace\Editor\Editor;
+use BEAR\Ace\Editor;
 return function() {
     if (PHP_SAPI === 'cli') {
         return;

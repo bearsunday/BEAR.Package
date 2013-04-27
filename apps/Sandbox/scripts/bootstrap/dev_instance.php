@@ -39,7 +39,7 @@ require  $packageDir . '/scripts/dev/load.php';
 set_exception_handler(include $packageDir . '/scripts/debugger/exception_handler.php');
 
 // set fatal error handler
-register_shutdown_function(include $packageDir . '/scripts/debugger/shutdown_error_handler.php');
+(new \BEAR\Ace\ErrorEditor)->registerSyntaxErrorEdit();
 
 // debug web service (/dev)
 if ($isDevTool) {

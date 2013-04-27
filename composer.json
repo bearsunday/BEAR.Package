@@ -24,6 +24,7 @@
         "ext-curl":"*",
         "bear/resource":"0.7.*",
         "bear/sunday":"0.7.*",
+        "bear/ace":"0.1.*",
         "aura/router":"1.0.*",
         "doctrine/annotations":"1.*",
         "doctrine/cache":"1.*",
@@ -50,7 +51,7 @@
     "autoload":{
         "psr-0":{
             "BEAR\\Package":"src/",
-            "BEAR\\Ace":"src/",
+            "BEAR\\Ace":"vendor/bear/ace/src/",
             "Helloworld\\":"apps/",
             "Sandbox\\":"apps/"
         },
