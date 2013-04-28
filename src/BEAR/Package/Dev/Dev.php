@@ -87,9 +87,9 @@ class Dev
     {
         set_exception_handler(
             function (\Exception $e) use ($logDir) {
-                $handler = new ExceptionHandler(new SymfonyResponse(new ConsoleOutput), dirname(
-                    dirname(__DIR__)
-                ) . '/src/BEAR/Package/Module/ExceptionHandle/template/view.php');
+                $handler = new ExceptionHandler(
+                    new SymfonyResponse(new ConsoleOutput),
+                    dirname(dirname(__DIR__)) . '/src/BEAR/Package/Module/ExceptionHandle/template/view.php');
                 $handler->setLogDir($logDir);
                 $handler->handle($e);
             }

@@ -144,7 +144,7 @@ class ApplicationReflector
         $path = implode('/', array_map('ucwords', explode('/', $path)));
         $path = str_replace('//', '/', $path);
         // cut head /
-        $filePath = $this->appDir . '/' . 'Resource/' . ucwords($url['scheme']) . $path . '.php';
+        $filePath = $this->appDir . '/Resource/' . ucwords($url['scheme']) . $path . '.php';
         $fileContents = file_get_contents(__DIR__ . '/resource.tpl');
         $fileContents = str_replace('{$app}', $this->appName, $fileContents);
         $paths = explode('/', $this->appName . $path);
