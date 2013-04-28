@@ -10,6 +10,7 @@ use BEAR\Package\Dev\Dev;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+ini_set('xhprof.output_dir', sys_get_temp_dir());
 
 require dirname(__DIR__) . '/bootstrap.php';
 
