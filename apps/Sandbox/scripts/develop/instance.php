@@ -24,6 +24,14 @@ Dev::registerSyntaxErrorEdit();
 $logDir = dirname(dirname(__DIR__)) . '/data/log';
 Dev::registerExceptionHandler($logDir);
 
+$dev = new Dev;
+
+// direct file for built in web server
+if ($dev->directAccessFile() === false) {
+    return false;
+}
+
+
 // console args
 $mode = isset($argv[3]) ? $argv[3] : $mode;
 $app = require dirname(__DIR__) . '/instance.php';
@@ -36,12 +44,8 @@ if (PHP_SAPI === 'cli') {
     $argv = [];
 }
 
-$dev = new Dev($argv);
 
-// direct file for built in web server
-if ($dev->directAccessFile() === false) {
-    return false;
-}
+error_log(print_r($_SERVER, true));
 
 // /dev web service
 $dev->setApp($app)->webService();
