@@ -28,5 +28,5 @@ if (!file_exists($composerPath)) {
     $composerPath = dirname(__DIR__) . '/composer.phar';
 }
 $dir = dirname(__DIR__) . '/apps';
-$cmd = "php {$composerPath} create-project -s dev --dev bear/skeleton {$dir}/$appName";
+$cmd = "php {$composerPath} create-project --dev bear/skeleton {$dir}/$appName";
 passthru($cmd);
