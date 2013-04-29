@@ -24,6 +24,7 @@ class AppModule extends AbstractModule
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Helloworld\App');
 
         $this->install(new SundayModule\Framework\FrameworkModule);
+        $this->install(new SundayModule\Resource\ApcModule);
         $this->install(new SundayModule\Constant\NamedModule(require __DIR__ . '/config.php'));
         $this->install(new InjectorModule($this));
 
