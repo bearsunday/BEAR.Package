@@ -12,10 +12,15 @@ use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
+ini_set('display_errors', false);
+
 /**
- * Compiled preloader for production
- *
- * @see https://github.com/koriym/ClassPreloader
+ * Profiler
+ */
+//require dirname(dirname(dirname(__DIR__))) . '/scripts/dev/profile.php';
+
+/**
+ * Compiled preloader
  */
 require dirname(dirname(dirname(__DIR__))) . '/scripts/preloader.php';
 
