@@ -44,9 +44,6 @@ if (PHP_SAPI === 'cli') {
     $argv = [];
 }
 
-
-error_log(print_r($_SERVER, true));
-
 // /dev web service
 $dev->setApp($app)->webService();
 
