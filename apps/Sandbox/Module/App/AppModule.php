@@ -6,11 +6,10 @@ use BEAR\Sunday\Module as SundayModule;
 use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Provide as ProvideModule;
 use Ray\Di\Injector;
-use Sandbox\Interceptor\Form\BlogPost;
 use Sandbox\Interceptor\TimeMessage;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-use Zend\Stdlib\Exception\LogicException;
+use BEAR\Package\Module\Resource\SignalParamModule;
 
 /**
  * Application module
@@ -21,19 +20,22 @@ class AppModule extends AbstractModule
      * @var array
      */
     private $config;
+    private $params;
 
     /**
      * @param string $mode
      */
     public function __construct($mode)
     {
-        $packageDir = dirname(dirname(__DIR__));
-
-        $modeConfig = $packageDir . "/config/{$mode}.php";
+        $appDir = dirname(dirname(__DIR__));
+        $modeConfig = $appDir . "/config/{$mode}.php";
         if (! file_exists($modeConfig)) {
             throw new LogicException("Invalid mode {$mode}");
         }
-        $this->config = (require $modeConfig) + (require $packageDir . '/config/prod.php');
+        $this->config = (require $modeConfig) + (require $appDir . '/config/prod.php');
+        // signal parameter
+        $paramConfig = $appDir . "/Params/config/{$mode}.php";
+        $this->params = (require $paramConfig) + (require $appDir . '/Params/config/prod.php');
         parent::__construct();
     }
 
@@ -41,6 +43,7 @@ class AppModule extends AbstractModule
     {
         // install package module
         $this->install(new PackageModule($this->config));
+        $this->install(new SignalParamModule($this, $this->params));
 
         // install twig
 //        $this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
@@ -51,7 +54,7 @@ class AppModule extends AbstractModule
         $this
             ->bind('BEAR\Resource\RenderInterface')
             ->annotatedWith('hal')
-            ->to( 'BEAR\Package\Provide\ResourceView\HalRenderer')
+            ->to('BEAR\Package\Provide\ResourceView\HalRenderer')
             ->in(Scope::SINGLETON);
 
         // aspect weaving for application
