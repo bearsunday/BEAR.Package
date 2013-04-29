@@ -57,6 +57,8 @@ class PackageModule extends AbstractModule
 
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
+        $this->install(new SundayModule\Resource\ApcModule);
+
         // Injector module ('Injected injector' knows all bindings)
         $this->install(new InjectorModule($this));
     }
