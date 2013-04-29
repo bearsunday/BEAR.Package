@@ -1,5 +1,5 @@
 <?php
-namespace Sandbox\Resource\Page\Error;
+namespace Sandbox\Resource\Page\Demo\Error;
 
 use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Inject\ResourceInject;
@@ -9,7 +9,7 @@ use BEAR\Sunday\Inject\ResourceInject;
  *
  * return 503 header
  */
-class E503 extends AbstractObject
+class e503 extends AbstractObject
 {
     public function onGet()
     {

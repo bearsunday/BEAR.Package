@@ -1,6 +1,6 @@
 <?php
 
-namespace Sandbox\Resource\Page\Test;
+namespace Sandbox\Resource\Page\Demo;
 
 use BEAR\Resource\AbstractObject as Page;
 

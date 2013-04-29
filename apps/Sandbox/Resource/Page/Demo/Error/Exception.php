@@ -1,6 +1,6 @@
 <?php
 
-namespace Sandbox\Resource\Page\Error;
+namespace Sandbox\Resource\Page\Demo\Error;
 
 use BEAR\Resource\AbstractObject;
 
