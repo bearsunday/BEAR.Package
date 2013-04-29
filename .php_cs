@@ -10,6 +10,10 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->notName('*.tpl.php')
     ->notName('*.xml')
     ->notName('*.twig')
+    ->exclude('tmp')
+    ->exclude('apc')
+    ->exclude('memcache')
+    ->exclude('build')
     ->in(__DIR__ . '/src')
 ;
 
