@@ -18,12 +18,8 @@ if (! $enable) {
     return;
 }
 
-require_once dirname(dirname(__DIR__)) . '/vendor/facebook/xhprof/xhprof_lib/utils/xhprof_lib.php';
-require_once dirname(dirname(__DIR__)) . '/vendor/facebook/xhprof/xhprof_lib/utils/xhprof_runs.php';
-
 // ob start
 ob_start();
-
 // start
 xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
