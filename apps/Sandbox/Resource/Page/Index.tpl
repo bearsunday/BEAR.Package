@@ -142,22 +142,14 @@
 
             <h2>Development</h2>
 
-            <p>
-                <a class="btn" href="/dev/"
-                   id="dev">Dev Tool &raquo;</a>
-
-            {if !$is_cli_server}
-            <p>
-                <a class="btn btn-success" href="/dev/apc.php?SCOPE=A&SORT1=H&SORT2=D&COUNT=20&OB=3&object_only"
-                   id="apc" rel="tooltip" title="APC stored object">APC
-                    Objects &raquo;</a>
-            </p>
-            <a class="btn" href="_dev/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC
-                Admin &raquo;</a>
-            <p><a class="btn" href="_dev/memcache.php" id="memcache" rel="tooltip"
-                  title="Open memcache admin carroll panel">Memcache Admin &raquo;</a>
-            </p>
+            {if $is_cli_server}
+                <a class="btn" href="/dev/" id="dev">Dev Tool &raquo;</a>
+            {else}
+                <a class="btn" href="/admin/apc/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC Admin &raquo;</a> <br />
+                <br />
+                <a class="btn" href="/admin/memcache/" id="memcache" rel="tooltip" title="Open memcache admin carroll panel">Memcache Admin &raquo;</a>
             {/if}
+
             <h2>Links</h2>
             <ul>
                 <li><i class="icon-book"></i><a href="http://code.google.com/p/bearsunday/wiki/manual?tm=6">BEAR.Sunday
