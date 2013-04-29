@@ -51,9 +51,7 @@
     "autoload":{
         "psr-0":{
             "BEAR\\Package":"src/",
-            "BEAR\\Ace":"vendor/bear/ace/src/",
-            "Helloworld\\":"apps/",
-            "Sandbox\\":"apps/"
+            "BEAR\\Ace":"vendor/bear/ace/src/"
         },
         "class-map": ["Installer.php", "."]
     },
