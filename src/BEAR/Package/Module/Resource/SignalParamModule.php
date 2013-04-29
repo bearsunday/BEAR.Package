@@ -16,7 +16,7 @@ use Ray\Di\Injector;
 
 /**
  * Signal parameter module
- * 
+ *
  */
 class SignalParamModule extends AbstractModule
 {

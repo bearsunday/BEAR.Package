@@ -9,7 +9,7 @@ use BEAR\Resource\Param;
  * Provide current clock
  *
  */
-class CurrentTime implements ParamProviderInterface
+class DateTime implements ParamProviderInterface
 {
     public function __invoke(Param $param)
     {
