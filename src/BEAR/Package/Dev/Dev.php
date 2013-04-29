@@ -59,11 +59,12 @@ class Dev
      * @throws \BadMethodCallException
      */
     public function __construct(
-        array $argv,
         array $server = null,
         $web = null,
         $sapiName = null
     ) {
+        global $argv;
+
         $this->web = $web ? : new Web;
         if (is_null($server) && isset($_SERVER)) {
             $server = $_SERVER;
@@ -89,7 +90,7 @@ class Dev
             function (\Exception $e) use ($logDir) {
                 $handler = new ExceptionHandler(
                     new SymfonyResponse(new ConsoleOutput),
-                    dirname(dirname(__DIR__)) . '/src/BEAR/Package/Module/ExceptionHandle/template/view.php');
+                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/view.php');
                 $handler->setLogDir($logDir);
                 $handler->handle($e);
             }
