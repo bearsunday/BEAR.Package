@@ -4,9 +4,6 @@ namespace BEAR\Package\Dev\Debug;
 
 /**
  * Debug utility
- *
- * @package    BEAR.Package
- * @subpackage Dev
  */
 class Debug
 {

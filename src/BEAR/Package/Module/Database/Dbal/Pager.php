@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Database\Dbal;
@@ -14,9 +13,6 @@ use Pagerfanta\View\ViewInterface;
 
 /**
  * Paging query
- *
- * @package    BEAR.Package
- * @subpackage Module
  */
 class Pager
 {

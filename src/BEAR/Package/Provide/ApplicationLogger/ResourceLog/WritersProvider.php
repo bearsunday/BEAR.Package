@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog;
@@ -17,9 +16,6 @@ use Zend\Log\Logger;
 
 /**
  * Writer provider
- *
- * @package    BEAR.Package
- * @subpackage Module
  */
 class WritersProvider implements ProviderInterface
 {

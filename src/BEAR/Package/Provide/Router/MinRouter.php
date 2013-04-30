@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\Router;
@@ -18,9 +17,6 @@ use Ray\Di\Di\Inject;
  *
  * The constructor can accepts "Aura.Route" routing
  * @see        https://github.com/auraphp/Aura.Router
- *
- * @package    BEAR.Package
- * @subpackage Route
  */
 final class MinRouter implements RouterInterface
 {

@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Dev\Debug\ExceptionHandle;
@@ -11,9 +10,6 @@ use BEAR\Resource\AbstractObject as AbstractPage;
 
 /**
  * Error page
- *
- * @package    BEAR.Package
- * @subpackage Dev
  */
 final class ErrorPage extends AbstractPage
 {

@@ -1,8 +1,6 @@
 <?php
 /**
  * Global namespace debug function for short cut typing
- *
- * @package BEAR.Package
  */
 use BEAR\Package\Dev\Debug\Debug;
 use BEAR\Package\Dev\Debug\Exception\Debug as DebugException;
@@ -13,7 +11,6 @@ use BEAR\Package\Dev\Debug\Exception\Debug as DebugException;
  * @param null $var
  * @param int  $level
  *
- * @package BEAR.Package
  * @throws BEAR\Package\Dev\Debug\Exception\Debug
  */
 function e($var = null, $level = 2)

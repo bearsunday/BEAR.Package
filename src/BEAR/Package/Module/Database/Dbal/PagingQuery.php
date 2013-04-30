@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Database\Dbal;
@@ -15,9 +14,6 @@ use IteratorAggregate;
 
 /**
  * Paging Query
- *
- * @package    BEAR.Package
- * @subpackage Module
  */
 class PagingQuery implements Countable, IteratorAggregate
 {

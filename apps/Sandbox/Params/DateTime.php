@@ -7,7 +7,6 @@ use BEAR\Resource\Param;
 
 /**
  * Provide current clock
- *
  */
 class DateTime implements ParamProviderInterface
 {

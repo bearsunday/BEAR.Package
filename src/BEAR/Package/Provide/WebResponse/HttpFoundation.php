@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\WebResponse;
@@ -23,9 +22,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Output with using Symfony HttpFoundation
- *
- * @package    BEAR.Package
- * @subpackage Web
  */
 final class HttpFoundation implements ResponseInterface
 {

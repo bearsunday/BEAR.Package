@@ -1,8 +1,4 @@
 <?php
-/**
- * @package    BEAR.Package
- * @subpackage Module
- */
 namespace BEAR\Package\Module\Package;
 
 use BEAR\Package;
@@ -15,9 +11,6 @@ use Ray\Di\Module\InjectorModule;
 
 /**
  * Package module
- *
- * @package    BEAR.Package
- * @subpackage Module
  */
 class PackageModule extends AbstractModule
 {

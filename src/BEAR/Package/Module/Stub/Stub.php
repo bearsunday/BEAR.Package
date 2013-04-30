@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Stub;
@@ -13,9 +12,6 @@ use Ray\Aop\MethodInvocation;
 
 /**
  * Cache interceptor interface
- *
- * @package    BEAR.Package
- * @subpackage Interceptor
  */
 class Stub implements MethodInterceptor
 {

@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\ConsoleOutput;
@@ -14,9 +13,6 @@ use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
  * Cli Output
- *
- * @package    BEAR.Package
- * @subpackage Web
  */
 final class ConsoleOutput implements ConsoleOutputInterface
 {

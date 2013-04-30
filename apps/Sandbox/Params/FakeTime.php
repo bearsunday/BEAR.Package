@@ -7,7 +7,6 @@ use BEAR\Resource\Param;
 
 /**
  * Provide current time
- *
  */
 class FakeTime implements ParamProviderInterface
 {

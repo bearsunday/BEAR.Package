@@ -3,7 +3,6 @@
  * Return application instance with development setup
  *
  * @global $mode
- *
  */
 
 use BEAR\Package\Dev\Dev;

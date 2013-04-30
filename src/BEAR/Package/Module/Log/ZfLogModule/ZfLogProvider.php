@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Log\ZfLogModule;
@@ -15,9 +14,6 @@ use Zend\Log\Writer\Stream;
 
 /**
  * Zend log provider
- *
- * @package    BEAR.Package
- * @subpackage Module
  */
 class ZfLogProvider implements Provide
 {

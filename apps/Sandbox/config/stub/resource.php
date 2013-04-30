@@ -5,7 +5,6 @@
  * format:
  *
  * $resourceUri => $resourceBody
- *
  */
 $stub = [
     'Sandbox\Resource\App\Blog\Posts' => [

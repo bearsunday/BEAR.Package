@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\TemplateEngine\Twig;
@@ -16,9 +15,6 @@ use Ray\Di\Di\PostConstruct;
 
 /**
  * Smarty adapter
- *
- * @package    BEAR.Package
- * @subpackage Module
  */
 class TwigAdapter implements TemplateEngineAdapterInterface
 {

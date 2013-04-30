@@ -2,8 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package    BEAR.Package
- * @subpackage Exception
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Dev\Debug\ExceptionHandle;
@@ -27,9 +25,6 @@ use Ray\Di\Di\Named;
 
 /**
  * Exception handler for development
- *
- * @package    BEAR.Package
- * @subpackage Dev
  */
 final class ExceptionHandler implements ExceptionHandlerInterface
 {

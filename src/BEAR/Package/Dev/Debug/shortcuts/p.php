@@ -1,15 +1,12 @@
 <?php
 /**
  * Global namespace debug function for short cut typing
- *
- * @package BEAR.Package
  */
 use BEAR\Package\Dev\Debug\Debug;
 
 /**
  * Debug print
  *
- * @package BEAR.Package
  *
  * @param mixed $var
  * @param int   $level

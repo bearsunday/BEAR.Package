@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Dev\Resource;
@@ -12,8 +11,6 @@ use Zend\Db\ResultSet\ResultSet;
 
 /**
  * Resource log db
- *
- * @package BEAR.Package
  */
 class ResourceLog
 {
