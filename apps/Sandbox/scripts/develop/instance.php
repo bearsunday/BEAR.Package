@@ -11,6 +11,7 @@ use BEAR\Package\Dev\Dev;
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('xhprof.output_dir', sys_get_temp_dir());
+ini_set('xdebug.collect_params', 2);
 
 require dirname(__DIR__) . '/bootstrap.php';
 
