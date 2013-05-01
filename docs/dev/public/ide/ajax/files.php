@@ -13,14 +13,15 @@
 // 1.00 - released (24 March 2008)
 //
 //
-$root = require __DIR__ . '/../ini.php';
-
 $files = unserialize(urldecode($_POST['dir']));
-echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
+$html = "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
 // All files
 foreach ($files as $file) {
     $ext = preg_replace('/^.*\./', '', $file);
-    $shortfileName = str_replace(dirname($file) . DIRECTORY_SEPARATOR, '', $file);
-    echo "<li class=\"file ext_$ext\"><a href=\"#\" alt=\"{$file}\" rel=\"" . htmlspecialchars($file) . "\">" . htmlspecialchars($shortfileName) . "</a></li>";
+    $shortFileName = str_replace(dirname($file) . DIRECTORY_SEPARATOR, '', $file);
+    $html .= "<li class=\"file ext_$ext\"><a href=\"#\" alt=\"{$file}\" rel=\"" . htmlspecialchars($file);
+    $html .= "\">" . htmlspecialchars($shortFileName) . "</a></li>";
 }
-echo "</ul><!-- tree -->";
+$html .=  "</ul>";
+
+echo $html;

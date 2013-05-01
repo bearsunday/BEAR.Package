@@ -1,5 +1,5 @@
 <?php
-echo "<i></i>"; // ??? reason unknown, doesn't work without output.
+echo "<i></i>"; // ??? reason unknown, doesn't work without output. plz PR you if got clue.
 return <<<EOT
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +34,7 @@ return <<<EOT
         <script src="codeEdit.js" type="text/javascript" charset="utf-8"></script>
         <script src="jquery.easing.js" type="text/javascript"></script>
         <script src="jqueryFileTree/jqueryFileTree.js" type="text/javascript"></script>
-        <script src="init.js.php" type="text/javascript"></script>
+        <script src="init.js.php?root={$root}" type="text/javascript"></script>
         <script src="index.js?root={$root}" type="text/javascript"></script>
 </body>
 </html>
