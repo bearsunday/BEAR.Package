@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a76be14e333687d0612cd8b7812a3503",
+    "hash": "6e03a8f81761c0283d2ef98f2cfb0c60",
     "packages": [
         {
             "name": "aura/di",
@@ -215,19 +215,24 @@
         },
         {
             "name": "bear/ace",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Ace.git",
-                "reference": "0.1.0"
+                "reference": "0.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.1.0",
-                "reference": "0.1.0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.1.1",
+                "reference": "0.1.1",
                 "shasum": ""
             },
             "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BEAR\\Ace": "src"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -240,7 +245,12 @@
                 }
             ],
             "description": "Ace online editor utility",
-            "time": "2013-04-26 17:22:04"
+            "keywords": [
+                "ace",
+                "editor",
+                "online editor"
+            ],
+            "time": "2013-05-01 07:15:33"
         },
         {
             "name": "bear/resource",
@@ -293,23 +303,23 @@
         },
         {
             "name": "bear/sunday",
-            "version": "0.7.0",
+            "version": "0.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "0.7.0"
+                "reference": "0.7.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/0.7.0",
-                "reference": "0.7.0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/0.7.3",
+                "reference": "0.7.3",
                 "shasum": ""
             },
             "require": {
-                "bear/resource": "*",
-                "ext-curl": "*",
-                "nocarrier/hal": "0.9.*",
                 "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "bear/resource": "0.7.*"
             },
             "type": "library",
             "autoload": {
@@ -335,7 +345,7 @@
                 "framework",
                 "rest"
             ],
-            "time": "2013-04-20 15:56:47"
+            "time": "2013-05-01 10:32:41"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -497,9 +507,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],

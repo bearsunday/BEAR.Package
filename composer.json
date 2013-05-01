@@ -19,6 +19,9 @@
     "provide":{
         "bear/framework": "0.7.0"
     },
+    "suggest": {
+        "bear/phptal-module": "PHPTAL template-engine module"
+    },
     "require":{
         "php":">=5.4.0",
         "ext-curl":"*",
