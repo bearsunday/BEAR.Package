@@ -1,7 +1,5 @@
 <?php
-/**
- * @package {$app}
- */
+
 namespace {$namespace};
 
 use BEAR\Resource\AbstractObject;
@@ -10,8 +8,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Untitled
- *
- * @package {$app}
  */
 class {$class} extends AbstractObject
 {
