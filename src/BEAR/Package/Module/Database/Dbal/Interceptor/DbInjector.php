@@ -17,9 +17,6 @@ use Ray\Di\Di\Named;
 
 /**
  * Cache interceptor
- *
- * @package    BEAR.Package
- * @subpackage Intercetor
  */
 final class DbInjector implements MethodInterceptor
 {

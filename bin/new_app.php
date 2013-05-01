@@ -17,7 +17,6 @@
  * cd public;
  * php web.php get /
  * php -S localhost:8088 web.php
- *
  */
 $appName = isset($argv[1]) ? ucwords($argv[1]) : 'NewApp';
 

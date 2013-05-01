@@ -6,7 +6,6 @@
  * usage:
  *
  * $ php bin/env.php;
- *
  */
 
 $ok = "\e[07;32m" . ' OK ' . "\033[0m";

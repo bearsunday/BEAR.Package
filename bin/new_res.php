@@ -6,7 +6,6 @@
  * usage:
  *
  * $ php bin/new_res.php MyApp page://self/hello/world
- *
  */
 use BEAR\Package\Dev\Application\ApplicationReflector;
 

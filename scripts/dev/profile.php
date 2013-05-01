@@ -9,7 +9,6 @@
  * // at bootstrap
  * include /path/to/profile.php
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 

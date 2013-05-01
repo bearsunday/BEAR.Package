@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Module\Database\Dbal\Interceptor;
@@ -12,9 +11,6 @@ use Ray\Aop\MethodInvocation;
 
 /**
  * Log Interceptor
- *
- * @package    BEAR.Package
- * @subpackage Interceptor
  */
 class TimeStamper implements MethodInterceptor
 {

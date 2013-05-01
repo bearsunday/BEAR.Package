@@ -2,7 +2,6 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 use BEAR\Resource\Link;
@@ -10,9 +9,6 @@ use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
  * Smarty plugin
- *
- * @package    Smarty
- * @subpackage PluginsFunction
  */
 
 /**
@@ -34,7 +30,6 @@ use Guzzle\Parser\UriTemplate\UriTemplate;
  * {href rel="entry" data=$resource->body}
  * </pre>
  *
- * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  * @param array                    $params   parameters
