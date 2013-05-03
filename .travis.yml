@@ -15,7 +15,7 @@ before_install:
  - pear install pear.phpunit.de/PHP_Invoker
  - pear install pear.phpunit.de/DbUnit
  - wget http://getcomposer.org/composer.phar
- - php composer.phar install --dev
+ - php composer.phar install --dev --prefer-source
 
 script:
  - php tests/bin/run_apps_tests.php
