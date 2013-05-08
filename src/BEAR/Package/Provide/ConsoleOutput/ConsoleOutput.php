@@ -68,7 +68,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
         }
         $output .= $body;
         if ($resource->view) {
-            $output .= self::LABEL . '[VIEW]' . self::CLOSE . PHP_EOL . $resource->view;
+            $output .= PHP_EOL . self::LABEL . '[VIEW]' . self::CLOSE . PHP_EOL . $resource->view;
         }
 
         COMPLETE:
@@ -92,9 +92,8 @@ final class ConsoleOutput implements ConsoleOutputInterface
         $header = '';
         foreach ($resource->headers as $name => $value) {
             $value = (is_array($value)) ? json_encode($value, true) : $value;
-            $header = self::LABEL1 . "{$name}: " . self::CLOSE . "{$value}" . PHP_EOL;
+            $header .= self::LABEL1 . "{$name}: " . self::CLOSE . "{$value}" . PHP_EOL;
         }
-
         return $header;
     }
 

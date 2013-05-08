@@ -61,4 +61,13 @@ class CliTest extends \PHPUnit_Framework_TestCase
         $pos = strpos($html, 'Hello BEAR.Sunday');
         $this->assertTrue(is_int($pos));
     }
+
+    public function test_devOptions()
+    {
+        $cli = 'php ' . $this->systemRoot . '/public/api.php options page://self/blog/posts';
+        exec($cli, $return);
+        $html = implode('', $return);
+        $pos = strpos($html, '["get","delete"]');
+        $this->assertTrue(is_int($pos));
+    }
 }
