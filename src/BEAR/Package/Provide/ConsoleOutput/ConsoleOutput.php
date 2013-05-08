@@ -68,7 +68,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
         }
         $output .= $body;
         if ($resource->view) {
-            $output .= self::LABEL . '[VIEW]' . self::CLOSE . PHP_EOL . $resource->view;
+            $output .= PHP_EOL . self::LABEL . '[VIEW]' . self::CLOSE . PHP_EOL . $resource->view;
         }
 
         COMPLETE:
