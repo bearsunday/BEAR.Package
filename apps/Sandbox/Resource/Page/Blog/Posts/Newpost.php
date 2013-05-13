@@ -57,7 +57,7 @@ class Newpost extends Page
             ->eager
             ->request();
 
-        $this['code'] = $response->code;
+        $this->code = $this['code'] = $response->code;
         $this->links += $response->links;
 
         return $this;
