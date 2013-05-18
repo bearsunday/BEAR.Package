@@ -3,9 +3,7 @@
 <phpunit bootstrap="tests/bootstrap.php"
          backupGlobals="false"
          backupStaticAttributes="false"
-         strict="true"
          colors="true"
-         timeoutForSmallTests="10"
          verbose="true">
     <testsuites>
         <testsuite name="BEAR.Package.Sandbox">

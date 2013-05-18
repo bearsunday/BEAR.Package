@@ -14,4 +14,4 @@
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 $response = $app->resource->get->uri('page://self/minhello')->eager->request();
 
-echo $response->body;
+echo $response->body . PHP_EOL;

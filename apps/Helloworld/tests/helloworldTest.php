@@ -32,14 +32,14 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
     public function testBasic()
     {
         // resource request
-        $this->expectOutputString('Hello World !');
+        $this->expectOutputString('Hello World !' . PHP_EOL);
         require dirname(__DIR__) . '/public/basic.php';
     }
 
     public function testMin()
     {
         // resource request
-        $this->expectOutputString('Hello World !');
+        $this->expectOutputString('Hello World !' . PHP_EOL);
         require dirname(__DIR__) . '/public/min.php';
     }
 

@@ -137,6 +137,7 @@
                 <li><a href="{href rel="helloworld"}">Hello World</a></li>
                 <li><a href="{href rel="blog"}">Blog tutorial</a></li>
                 <li><a href="{href rel="restbucks"}">RESTBucks</a></li>
+                <li><a href="{href rel="demo"}">Demo</a></li>
             </ul>
             <p><a class="btn" href="http://code.google.com/p/bearsunday/wiki/blog">Try tutorial &raquo;</a></p>
 

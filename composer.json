@@ -27,7 +27,7 @@
         "ext-curl":"*",
         "bear/resource":"0.7.*",
         "bear/sunday":"0.7.*",
-        "bear/ace":"0.1.*",
+        "bear/ace":"*",
         "aura/router":"1.0.*",
         "doctrine/annotations":"1.*",
         "doctrine/cache":"1.*",
