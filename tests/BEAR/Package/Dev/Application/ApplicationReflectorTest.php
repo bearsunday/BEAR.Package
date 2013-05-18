@@ -56,7 +56,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResources(array $resources)
     {
-        $this->assertSame(25, count($resources));
+        $this->assertSame(30, count($resources));
     }
 
     /**
@@ -102,6 +102,9 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
             'restbucks' => [
                 'href' => 'page://self/restbucks/index',
             ],
+            'demo' => [
+                'href' => 'page://self/demo/index'
+            ]
         ];
         $this->assertSame($expected, $resources['page://self/index']['links']);
     }
