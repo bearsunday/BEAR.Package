@@ -14,4 +14,4 @@ $response = $app->resource->get->uri('page://self/hello')->withQuery(['name' => 
 foreach ($response->headers as $header) {
     header($header);
 }
-echo $response->body;
+echo $response->body . PHP_EOL;
