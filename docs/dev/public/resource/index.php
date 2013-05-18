@@ -22,7 +22,7 @@ view: {
     <thead>
     <tr>
         <th>URI</th>
-        <th>OPTIONS</th>
+        <th style="width:200px">OPTIONS</th>
         <th>LINKS</th>
     </tr>
 </thead>
