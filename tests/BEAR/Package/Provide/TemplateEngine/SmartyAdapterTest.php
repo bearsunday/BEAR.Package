@@ -57,13 +57,4 @@ class SmartyAdapterTest extends \PHPUnit_Framework_TestCase
         $templateFile = $this->smartyAdapter->getTemplateFile();
         $this->assertSame(__DIR__ . '/test.tpl', $templateFile);
     }
-
-    public function no_testProd()
-    {
-        $this->smartyAdapter->setIsProd(true)->init();
-        $this->smartyAdapter->assignAll(['greeting' => 'adios']);
-        $this->smartyAdapter->fetch($this->tpl);
-        $templateFile = $this->smartyAdapter->getTemplateFile();
-        $this->assertSame(__DIR__ . '/test.tpl', $templateFile);
-    }
 }

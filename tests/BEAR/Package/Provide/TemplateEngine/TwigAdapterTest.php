@@ -59,13 +59,4 @@ class TwigAdapterTest extends \PHPUnit_Framework_TestCase
         $templateFile = $this->TwigAdapter->getTemplateFile();
         $this->assertSame(__DIR__ . '/test.twig', $templateFile);
     }
-
-    public function estProd()
-    {
-        $this->TwigAdapter->setIsProd(true)->init();
-        $this->TwigAdapter->assignAll(['greeting' => 'adios']);
-        $this->TwigAdapter->fetch($this->tpl);
-        $templateFile = $this->TwigAdapter->getTemplateFile();
-        $this->assertSame(__DIR__ . '/test.tpl', $templateFile);
-    }
 }
