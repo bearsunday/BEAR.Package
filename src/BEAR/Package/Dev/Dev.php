@@ -81,7 +81,7 @@ class Dev
      *
      * @param $logDir
      */
-    public static function registerExceptionHandler($logDir)
+    public function registerExceptionHandler($logDir)
     {
         set_exception_handler(
             function (\Exception $e) use ($logDir) {
@@ -92,6 +92,8 @@ class Dev
                 $handler->handle($e);
             }
         );
+
+        return $this;
     }
 
     /**
@@ -99,9 +101,11 @@ class Dev
      *
      * @return void
      */
-    public static function registerSyntaxErrorEdit()
+    public function registerSyntaxErrorEdit()
     {
         (new ErrorEditor)->registerSyntaxErrorEdit();
+
+        return $this;
     }
 
     /**
@@ -145,7 +149,7 @@ class Dev
     /**
      * Register fatal error handler
      */
-    public static function registerFatalErrorHandler()
+    public function registerFatalErrorHandler()
     {
         register_shutdown_function(
             function () {
@@ -171,6 +175,8 @@ class Dev
                 exit(1);
             }
         );
+
+        return $this;
     }
 
     /**
@@ -279,5 +285,16 @@ class Dev
         if ($argv && $this->sapiName === 'cli' && isset($argv)) {
             $app->router->setArgv($argv);
         }
+    }
+
+    /**
+     * Load debug function
+     */
+    public function loadDevFunctions()
+    {
+        require_once __DIR__ . '/function/e.php';
+        require_once __DIR__ . '/function/p.php';
+
+        return $this;
     }
 }
