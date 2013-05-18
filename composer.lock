@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6e03a8f81761c0283d2ef98f2cfb0c60",
+    "hash": "57dd800a2514765a19888a3af007d3be",
     "packages": [
         {
             "name": "aura/di",
@@ -160,16 +160,16 @@
         },
         {
             "name": "aura/signal",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/auraphp/Aura.Signal",
-                "reference": "1.0.0"
+                "url": "https://github.com/auraphp/Aura.Signal.git",
+                "reference": "1.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Signal/archive/1.0.0.zip",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/auraphp/Aura.Signal/zipball/1.0.1",
+                "reference": "1.0.1",
                 "shasum": ""
             },
             "require": {
@@ -200,6 +200,10 @@
                 {
                     "name": "Aura.Signal Contributors",
                     "homepage": "https://github.com/auraphp/Aura.Signal/contributors"
+                },
+                {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com"
                 }
             ],
             "description": "A SignalSlots/EventHandler implementation for PHP; with it, we can invoke handlers (\"slots\" or \"hooks\") whenever an object sends a signal (\"notification\" or \"event\") to the signal manager.",
@@ -211,27 +215,30 @@
                 "signal",
                 "signal slots"
             ],
-            "time": "2012-11-28 00:00:00"
+            "time": "2013-05-10 00:00:00"
         },
         {
             "name": "bear/ace",
-            "version": "0.1.1",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Ace.git",
-                "reference": "0.1.1"
+                "reference": "0.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.1.1",
-                "reference": "0.1.1",
+                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.2.0",
+                "reference": "0.2.0",
                 "shasum": ""
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "BEAR\\Ace": "src"
-                }
+                },
+                "files": [
+                    "src/edit.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -240,8 +247,7 @@
             "authors": [
                 {
                     "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym"
+                    "email": "akihito.koriyama@gmail.com"
                 }
             ],
             "description": "Ace online editor utility",
@@ -250,7 +256,7 @@
                 "editor",
                 "online editor"
             ],
-            "time": "2013-05-01 07:15:33"
+            "time": "2013-05-18 02:34:17"
         },
         {
             "name": "bear/resource",
@@ -592,16 +598,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "2.3.3",
+            "version": "2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "2.3.3"
+                "reference": "2.3.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2.3.3",
-                "reference": "2.3.3",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2.3.4",
+                "reference": "2.3.4",
                 "shasum": ""
             },
             "require": {
@@ -651,7 +657,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2013-03-24 19:16:29"
+            "time": "2013-05-11 07:45:37"
         },
         {
             "name": "doctrine/lexer",
@@ -888,12 +894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "65c24acf84410837aa873801f5a09b4039a5735b"
+                "reference": "55544f3af5b409d4ee9d618934f4d92ef874672c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/65c24acf84410837aa873801f5a09b4039a5735b",
-                "reference": "65c24acf84410837aa873801f5a09b4039a5735b",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/55544f3af5b409d4ee9d618934f4d92ef874672c",
+                "reference": "55544f3af5b409d4ee9d618934f4d92ef874672c",
                 "shasum": ""
             },
             "require": {
@@ -942,7 +948,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-04-24 11:37:27"
+            "time": "2013-05-16 12:46:53"
         },
         {
             "name": "ray/aop",
@@ -1374,16 +1380,16 @@
         },
         {
             "name": "twitter/bootstrap",
-            "version": "v2.3.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twitter/bootstrap.git",
-                "reference": "v2.3.1"
+                "reference": "v2.3.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twitter/bootstrap/zipball/v2.3.1",
-                "reference": "v2.3.1",
+                "url": "https://api.github.com/repos/twitter/bootstrap/zipball/v2.3.2",
+                "reference": "v2.3.2",
                 "shasum": ""
             },
             "type": "library",
@@ -1397,7 +1403,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-03-01 05:24:27"
+            "time": "2013-05-17 17:26:09"
         },
         {
             "name": "zendframework/zend-db",
@@ -1665,16 +1671,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.12.3",
+            "version": "v1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "v1.12.3"
+                "reference": "v1.13.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.12.3",
-                "reference": "v1.12.3",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.0",
+                "reference": "v1.13.0",
                 "shasum": ""
             },
             "require": {
@@ -1683,7 +1689,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12-dev"
+                    "dev-master": "1.13-dev"
                 }
             },
             "autoload": {
@@ -1710,7 +1716,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-04-08 12:40:11"
+            "time": "2013-05-10 15:12:43"
         }
     ],
     "aliases": [
