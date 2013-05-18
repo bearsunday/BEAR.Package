@@ -2,9 +2,7 @@
 <phpunit bootstrap="tests/bootstrap.php"
          backupGlobals="false"
          backupStaticAttributes="false"
-         strict="true"
          colors="true"
-         timeoutForSmallTests="90"
          stopOnError="false"
          stopOnFailure="true"
          verbose="true">
