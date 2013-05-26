@@ -28,6 +28,8 @@
         "bear/resource":"0.7.*",
         "bear/sunday":"0.7.*",
         "bear/ace":"*",
+        "aura/input": "1.0.0-beta1",
+        "aura/view": "1.1.2",
         "aura/router":"1.0.*",
         "doctrine/annotations":"1.*",
         "doctrine/cache":"1.*",
