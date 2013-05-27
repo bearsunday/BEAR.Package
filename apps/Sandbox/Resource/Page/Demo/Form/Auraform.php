@@ -5,6 +5,7 @@ namespace Sandbox\Resource\Page\Demo\Form;
 use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
+use BEAR\Sunday\Annotation\Form;
 
 /**
  * Contact form using Aura.Input
