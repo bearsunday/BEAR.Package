@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "76f7c45db3ac667b7a3a8bd9716e9bf0",
+    "hash": "f36c9a04b1b92b6bfc89f0c788a2114a",
     "packages": [
         {
             "name": "aura/di",
@@ -323,16 +323,16 @@
         },
         {
             "name": "bear/ace",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Ace.git",
-                "reference": "0.2.0"
+                "reference": "0.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.2.0",
-                "reference": "0.2.0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.2.1",
+                "reference": "0.2.1",
                 "shasum": ""
             },
             "type": "library",
@@ -351,7 +351,8 @@
             "authors": [
                 {
                     "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym"
                 }
             ],
             "description": "Ace online editor utility",
@@ -360,20 +361,20 @@
                 "editor",
                 "online editor"
             ],
-            "time": "2013-05-18 02:34:17"
+            "time": "2013-05-25 06:42:37"
         },
         {
             "name": "bear/resource",
-            "version": "0.7.7",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.7.7"
+                "reference": "0.8.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.7.7",
-                "reference": "0.7.7",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.8.0",
+                "reference": "0.8.0",
                 "shasum": ""
             },
             "require": {
@@ -399,7 +400,8 @@
             "authors": [
                 {
                     "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym"
                 }
             ],
             "description": "RESTful service layer framework",
@@ -409,20 +411,20 @@
                 "rest",
                 "service layer"
             ],
-            "time": "2013-04-20 12:20:56"
+            "time": "2013-05-28 07:45:16"
         },
         {
             "name": "bear/sunday",
-            "version": "0.7.3",
+            "version": "0.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "0.7.3"
+                "reference": "0.7.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/0.7.3",
-                "reference": "0.7.3",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/0.7.4",
+                "reference": "0.7.4",
                 "shasum": ""
             },
             "require": {
@@ -455,7 +457,7 @@
                 "framework",
                 "rest"
             ],
-            "time": "2013-05-01 10:32:41"
+            "time": "2013-05-28 05:56:24"
         },
         {
             "name": "classpreloader/classpreloader",
