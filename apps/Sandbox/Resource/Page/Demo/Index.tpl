@@ -9,6 +9,7 @@
     <li><a href="redirect">redirect</a></li>
     <li><a href="param">signal Parameter</a></li>
     <li><a href="form/auraform">form (Aura.Input)</a></li>
+    <li><a href="resource/graph">@ResourceGraph annotation</a></li>
   </ul>
 
 <h3>dev function</h3>
