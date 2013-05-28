@@ -4,6 +4,7 @@ namespace Sandbox\Module\App;
 
 use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
+use BEAR\Package\Module\Resource\ResourceGraphModule;
 use BEAR\Package\Module\Resource\SignalParamModule;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
@@ -50,11 +51,14 @@ class AppModule extends AbstractModule
     {
         // install package module
         $this->install(new PackageModule($this->config));
-        $this->install(new SignalParamModule($this, $this->params));
-        $this->install(new AuraFormModule);
 
         // install twig
         // $this->install(new ProvideModule\TemplateEngine\Twig\TwigModule($this));
+
+        // install optional package
+        $this->install(new SignalParamModule($this, $this->params));
+        $this->install(new AuraFormModule);
+        $this->install(new ResourceGraphModule($this));
 
         // dependency binding for application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Sandbox\App');
@@ -63,7 +67,7 @@ class AppModule extends AbstractModule
             'BEAR\Package\Provide\ResourceView\HalRenderer'
         )->in(Scope::SINGLETON);
 
-        // aspect weaving for application
+        // install application aspect
         $this->installTimeMessage();
         $this->installNewBlogPost();
         $this->installAuraContactForm();
