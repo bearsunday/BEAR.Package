@@ -29,7 +29,7 @@ class Graph extends Page
     public function onGet($name = 'Resource Graph')
     {
         $this['greeting'] = $this->body['greeting']->withQuery(['name' => $name]);
-        
+
         return $this;
     }
 }
