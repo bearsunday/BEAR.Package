@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f651398fe6960dcb3398139d3b49a5c6",
+    "hash": "76f7c45db3ac667b7a3a8bd9716e9bf0",
     "packages": [
         {
             "name": "aura/di",
@@ -66,20 +66,20 @@
         },
         {
             "name": "aura/input",
-            "version": "1.0.0-beta1",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Input.git",
-                "reference": "1.0.0-beta1"
+                "reference": "61f4ab164a88fd4df45c17397b3b8ea5f17824b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/1.0.0-beta1",
-                "reference": "1.0.0-beta1",
+                "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/5c949cf1fe504f7da8d730c974ef36378ef40551",
+                "reference": "61f4ab164a88fd4df45c17397b3b8ea5f17824b3",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
+                "aura/installer-default": "1.0.0",
                 "php": ">=5.4.0"
             },
             "type": "aura-package",
@@ -94,23 +94,19 @@
             ],
             "authors": [
                 {
-                    "name": "Paul M. Jones",
-                    "email": "pmjones88@gmail.com",
-                    "homepage": "http://paul-m-jones.com"
-                },
-                {
-                    "name": "Hari KT",
-                    "email": "kthari85@gmail.com",
-                    "homepage": "http://harikt.com"
-                },
-                {
-                    "name": "Aura.Input Contributors",
+                    "name": "Aura Contributors",
                     "homepage": "https://github.com/auraphp/Aura.Input/contributors"
                 }
             ],
-            "description": "This package contains tools to describe and filter user inputs from an HTML form, including sub-forms/sub-fieldsets, fieldset collections, an interface for injecting custom filter systems, and CSRF protection. Note that this package does not include output functionality, although the \"hints\" provided by the Form object can be used with any presentation system to generate an HTML form.",
+            "description": "The Aura Input package provides tools to decribe HTML forms and fields.",
             "homepage": "http://auraphp.github.com/Aura.Input",
-            "time": "2013-05-09 00:00:00"
+            "keywords": [
+                "field",
+                "form",
+                "html",
+                "input"
+            ],
+            "time": "2013-05-27 02:55:13"
         },
         {
             "name": "aura/installer-default",
@@ -621,9 +617,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1832,7 +1828,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "aura/input": 10,
+        "aura/input": 20,
         "pagerfanta/pagerfanta": 20,
         "facebook/xhprof": 20,
         "firephp/firephp-core": 20
