@@ -64,7 +64,14 @@ class ApplicationFactory
         $diLogger = $injector->getInstance('BEAR\Package\Provide\Application\DiLogger');
         $injector->setLogger($diLogger);
 
+        // suppress xdebug.max_nesting_level > 100 error
+        $nestingLevel = ini_get('xdebug.max_nesting_level');
+        ini_set('xdebug.max_nesting_level', 300);
+
+        // get application instance
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        ini_set('xdebug.max_nesting_level', $nestingLevel);
+
         /** @var $app \BEAR\Sunday\Extension\Application\AppInterface */
         $this->cache->save($appKey, $app);
 
