@@ -47,7 +47,6 @@ class PageIndexTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('greeting', $page->body);
         $this->assertArrayHasKey('version', $page->body);
         $this->assertArrayHasKey('extensions', $page->body);
-        $this->assertArrayHasKey('apc', $page->body);
         $this->assertArrayHasKey('performance', $page->body);
     }
 
