@@ -77,7 +77,7 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
                     'two' => null,
                 ),
                 'uri' => 'test://self/path/to/resource',
-                'view' => '',
+                'view' => null,
                 'links' => []
             ),
         );
