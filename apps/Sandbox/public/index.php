@@ -17,7 +17,7 @@ ini_set('display_errors', false);
 /**
  * Profiler
  */
-//require dirname(dirname(dirname(__DIR__))) . '/scripts/dev/profile.php';
+//require dirname(dirname(dirname(__DIR__))) . '/scripts/develop/profile.php';
 
 /**
  * Compiled preloader
