@@ -25,7 +25,7 @@ VIEW_FUNCTIONS: {
         $hitLineOriginal = isset($fileArray[$line - 1]) ? $fileArray[$line - 1] : '';
         $fileArray[$line - 1] = "<span class=\"hit-line\">{$hitLineOriginal}</span>";
         $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
-        $shortListArray[$num - 1] = '<strog>' . $fileArray[$line - 1] . '</strong>';
+        $shortListArray[$num - 1] = '<strong>' . $fileArray[$line - 1] . '</strong>';
         $shortList = implode('', $shortListArray);
         $shortList = '<pre class="short-list" style="background-color: #F0F0F9;">' . $shortList . '</pre>';
         $result .= $shortList . '</div>';
@@ -168,7 +168,7 @@ return <<<EOT
         </a><br>
         in {$file} on line {$line}
         </div>
-        <a class="btn" rel="tooltip" title="" target="_brank" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
+        <a class="btn" rel="tooltip" title="" target="_blank" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
     </div>
     <ul id="tab" class="nav nav-tabs">
         <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
