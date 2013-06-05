@@ -16,11 +16,10 @@ use Ray\Di\ProviderInterface;
  */
 class AuraFormProvider implements ProviderInterface
 {
-
     /**
      * Return instance
      *
-     * @return
+     * @return Form
      */
     public function get()
     {

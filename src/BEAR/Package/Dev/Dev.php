@@ -48,10 +48,9 @@ class Dev
     /**
      * Constructor
      *
-     * @param array  $argv
-     * @param array  $server
-     * @param Web    $web
-     * @param string $sapiName
+     * @param array $server
+     * @param null  $web
+     * @param null  $sapiName
      *
      * @throws \BadMethodCallException
      */
@@ -80,6 +79,8 @@ class Dev
      * Register exception handler
      *
      * @param $logDir
+     *
+     * @return self
      */
     public function registerExceptionHandler($logDir)
     {
@@ -99,7 +100,7 @@ class Dev
     /**
      * Register syntax error editor
      *
-     * @return void
+     * @return self
      */
     public function registerSyntaxErrorEdit()
     {
