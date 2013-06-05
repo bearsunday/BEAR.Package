@@ -7,6 +7,7 @@
 namespace BEAR\Package\Module\Resource\Interceptor;
 
 use BEAR\Ace\Exception;
+use BEAR\Resource\Exception\Uri;
 use BEAR\Resource\ResourceInterface;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\DBAL\DriverManager;
@@ -45,7 +46,7 @@ final class ResourceGraph implements MethodInterceptor
         foreach ($page->body as $slot => $uri) {
             try {
                 $page->body[$slot] = $this->resource->get->uri($uri)->request();
-            } catch (\BEAR\Resource\Exception\Uri $e) {
+            } catch (Uri $e) {
             }
         }
         return $invocation->proceed();

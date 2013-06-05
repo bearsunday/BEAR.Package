@@ -1,13 +1,12 @@
 <?php
-
-use Aura\View\HelperLocator;
 use Aura\View\Helper\Form\Field;
 use Aura\View\Helper\Form\Input;
+use Aura\View\Helper\Form\Input\Checked;
 use Aura\View\Helper\Form\Radios;
 use Aura\View\Helper\Form\Repeat;
 use Aura\View\Helper\Form\Select;
 use Aura\View\Helper\Form\Textarea;
-use Aura\View\Helper\Form\Input\Checked;
+use Aura\View\HelperLocator;
 
 /**
  * Aura.Input form helper
