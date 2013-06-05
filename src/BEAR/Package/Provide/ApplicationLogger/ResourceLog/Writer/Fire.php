@@ -11,7 +11,6 @@ use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
 use FirePHP;
 use Traversable;
-use Ray\Di\Di\Inject;
 
 /**
  * Fire logger
@@ -54,6 +53,7 @@ final class Fire implements LogWriterInterface
      */
     private function fireResourceObjectLog(ResourceObject $result)
     {
+        /** @noinspection PhpParamsInspection */
         $this->fire->log($result->code, 'code');
         $this->fireHeader($result);
         $this->fireBody($result);
@@ -85,8 +85,8 @@ final class Fire implements LogWriterInterface
     {
         $body = $this->normalize($result->body);
         $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys(
-            $body[1]
-        ));
+                    $body[1]
+                ));
         if ($isTable) {
             $table = [];
             $table[] = (array_values(array_keys($body[0])));
@@ -155,6 +155,7 @@ final class Fire implements LogWriterInterface
     private function fireView(ResourceObject $result)
     {
         $this->fire->group('view', ['Collapsed' => true]);
+        /** @noinspection PhpParamsInspection */
         $this->fire->log($result->view);
         $this->fire->groupEnd();
     }
