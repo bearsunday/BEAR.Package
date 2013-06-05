@@ -224,22 +224,6 @@ class Dev
     }
 
     /**
-     * Run development web service
-     *
-     * @param array $argv
-     *
-     * @return mixed
-     */
-    public function runWebService(array $argv = [])
-    {
-        if ($this->web->isDevWebService($this->sapiName, $this->requestUri)) {
-            return $this->web->service($this->requestUri, $argv);
-        }
-
-        return null;
-    }
-
-    /**
      * Web service
      *
      * @param null $requestUri
