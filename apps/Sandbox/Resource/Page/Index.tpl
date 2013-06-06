@@ -97,11 +97,10 @@
             <h3>required</h3>
             <ul>
                 <li><a href="http://www.php.net/curl">curl</a> <code>{$extensions.curl}</code></li>
-                <li><a href="http://www.php.net/apc">apc</a> <code>{$extensions.apc}</code></li>
             </ul>
             <h3>optional</h3>
             <ul>
-
+                <li><a href="http://www.php.net/apc">apc</a> <code>{$extensions.apc}</code></li>
                 <li><a href="http://xdebug.org/">Xdebug</a> <code>{$extensions.Xdebug}</code></li>
                 <li><a href="http://www.php.net/xhprof">xhprof</a> <code>{$extensions.xhprof}</code></li>
                 <li><a href="http://www.php.net/memcache">memcache <code>{$extensions.memcache}</code></li>
@@ -130,12 +129,12 @@
                     src="https://secure.travis-ci.org/koriym/BEAR.Resource.png"></a></p>
         </div>
         <div class="span4">
-            <h2>Sample apps</h2>
+            <h2>Apps</h2>
             <ul>
                 <li><a href="{href rel="helloworld"}">Hello World</a></li>
                 <li><a href="{href rel="blog"}">Blog tutorial</a></li>
                 <li><a href="{href rel="restbucks"}">RESTBucks</a></li>
-                <li><a href="{href rel="demo"}">Demo</a></li>
+                <li><a href="{href rel="demo"}">BEAR.Demo</a></li>
             </ul>
             <p><a class="btn" href="http://code.google.com/p/bearsunday/wiki/blog">Try tutorial &raquo;</a></p>
 
