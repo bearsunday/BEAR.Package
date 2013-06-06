@@ -28,6 +28,11 @@ use Ray\Di\Module\InjectorModule;
 class ApplicationFactory
 {
     /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
      * @param \Doctrine\Common\Cache\Cache $cache
      */
     public function __construct(Cache $cache)
