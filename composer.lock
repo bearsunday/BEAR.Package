@@ -1102,16 +1102,16 @@
         },
         {
             "name": "ray/di",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.2"
+                "reference": "1.0.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.2",
-                "reference": "1.0.2",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.3",
+                "reference": "1.0.3",
                 "shasum": ""
             },
             "require": {
@@ -1134,7 +1134,8 @@
             "authors": [
                 {
                     "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym"
                 }
             ],
             "description": "Guice style annotation-driven dependency injection framework",
@@ -1148,7 +1149,7 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2013-04-19 08:42:37"
+            "time": "2013-06-06 17:24:33"
         },
         {
             "name": "smarty/smarty",
