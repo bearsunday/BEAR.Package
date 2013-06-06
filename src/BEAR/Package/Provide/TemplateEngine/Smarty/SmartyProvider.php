@@ -29,6 +29,12 @@ class SmartyProvider implements Provide
      */
     public function get()
     {
+        static $smarty;
+
+        if ($smarty) {
+            return $smarty;
+        }
+
         $smarty = new Smarty;
         $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
         $frameworkPlugin = __DIR__ . '/plugin';
@@ -37,6 +43,10 @@ class SmartyProvider implements Provide
             ->setCacheDir($this->tmpDir . '/smarty/cache')
             ->setTemplateDir($this->appDir . '/Resource/View')
             ->setPluginsDir(array_merge($smarty->getPluginsDir(), [$appPlugin, $frameworkPlugin]) );
+
+        $smarty->force_compile = false;
+        $smarty->compile_check = false;
+
         return $smarty;
     }
 }
