@@ -17,9 +17,12 @@ class Index extends Page
      */
     public $body = [
         'greeting' => 'Hello BEAR.Sunday !',
-        'version' => '',
-        'loaded_extensions' => []
+        'version' => [],
+        'extensions' => [],
+        'is_cli_server' => false,
+        'performance' => ''
     ];
+
     /**
      * @var array
      */
