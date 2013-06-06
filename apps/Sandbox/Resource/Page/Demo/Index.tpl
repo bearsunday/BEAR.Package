@@ -26,11 +26,13 @@
         </ul>
         <li>aspect annotations</li>
         <ul>
-            <li><a href="/demo/aspect/cachepage">@Cache</a></li>
-            <li><a href="">@Time</a></li>
-            <li><a href="">@Db</a></li>
-            <li><a href="">@Transaction</a></li>
-            <li><a href="resource/graph">@ResourceGraph</a></li>
+            <li><a href="/demo/aspect/cache/">@Cache</a></li>
+            <li><a href="/demo/aspect/time/">@Time</a></li>
+            <li><a href="/demo/aspect/resourcegraph/">@ResourceGraph</a></li>
+            <li><a href="/dev/edit/?file=/apps/Sandbox/Resource/App/Blog/Posts.php&line=18">@Db</a></li>
+            <li><a href="/dev/edit/?file=/apps/Sandbox/Resource/App/Blog/Posts/Pager.php&line=24">@Pager</a></li>
+            <li><a href="/dev/edit/?file=/apps/Sandbox/Resource/App/Blog/Posts.php&line=71">@Transaction</a></li>
+            <li><a href="/dev/edit/?file=/apps/Sandbox/Resource/App/Blog/Posts.php&line=72">@CacheUpdate</a></li>
         </ul>
 
         <li>error</li>

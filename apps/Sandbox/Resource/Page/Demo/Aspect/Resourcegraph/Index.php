@@ -1,6 +1,6 @@
 <?php
 
-namespace Sandbox\Resource\Page\Demo\Resource;
+namespace Sandbox\Resource\Page\Demo\Aspect\Resourcegraph;
 
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
@@ -11,7 +11,7 @@ use BEAR\Sunday\Annotation\ResourceGraph;
 /**
  * Resource graph annotation
  */
-class Graph extends Page
+class Index extends Page
 {
     use ResourceInject;
 
@@ -23,11 +23,11 @@ class Graph extends Page
     /**
      * @param string $name
      *
-     * @Cache(5)
      * @ResourceGraph
      */
     public function onGet($name = 'Resource Graph')
     {
+        // add query for app://self/first/greeting resource
         $this['greeting'] = $this->body['greeting']->withQuery(['name' => $name]);
 
         return $this;

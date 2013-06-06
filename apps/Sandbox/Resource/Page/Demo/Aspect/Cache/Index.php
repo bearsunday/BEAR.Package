@@ -1,6 +1,6 @@
 <?php
 
-namespace Sandbox\Resource\Page\Demo\Aspect;
+namespace Sandbox\Resource\Page\Demo\Aspect\Cache;
 
 use BEAR\Resource\AbstractObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
@@ -10,7 +10,7 @@ use Smarty;
 /**
  * Cache page
  */
-class Cachepage extends Page
+class Index extends Page
 {
     public $body = [
         'num' => ''
