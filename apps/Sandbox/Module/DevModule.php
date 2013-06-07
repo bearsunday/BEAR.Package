@@ -18,12 +18,20 @@ class DevModule extends AbstractModule
         /** @var $config array */
         $this->install(new App\AppModule('dev'));
         $this->install(new PackageModule\Resource\DevResourceModule($this));
+
         // aspect weaving (AOP)
         $this->installWritableChecker();
+
         // configure for development
-//        $this->requestInjection('BEAR\Package\Provide\TemplateEngine\Smarty\DevSmartyModule');
+        $this->modifySmarty();
     }
 
+    private function modifySmarty()
+    {
+        $smarty = $this->requestInjection('Smarty');
+        /** @var $smarty \Smarty */
+        $smarty->force_compile = true;
+    }
 
 
     /**

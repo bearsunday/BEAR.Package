@@ -48,10 +48,9 @@ class Dev
     /**
      * Constructor
      *
-     * @param array  $argv
-     * @param array  $server
-     * @param Web    $web
-     * @param string $sapiName
+     * @param array $server
+     * @param null  $web
+     * @param null  $sapiName
      *
      * @throws \BadMethodCallException
      */
@@ -80,6 +79,8 @@ class Dev
      * Register exception handler
      *
      * @param $logDir
+     *
+     * @return self
      */
     public function registerExceptionHandler($logDir)
     {
@@ -99,7 +100,7 @@ class Dev
     /**
      * Register syntax error editor
      *
-     * @return void
+     * @return self
      */
     public function registerSyntaxErrorEdit()
     {
@@ -220,22 +221,6 @@ class Dev
         }
 
         return true;
-    }
-
-    /**
-     * Run development web service
-     *
-     * @param array $argv
-     *
-     * @return mixed
-     */
-    public function runWebService(array $argv = [])
-    {
-        if ($this->web->isDevWebService($this->sapiName, $this->requestUri)) {
-            return $this->web->service($this->requestUri, $argv);
-        }
-
-        return null;
     }
 
     /**

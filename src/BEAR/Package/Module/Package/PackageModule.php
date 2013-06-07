@@ -8,6 +8,7 @@ use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 use Ray\Di\Module\InjectorModule;
+use BEAR\Sunday\Module\Cqrs\CacheModule as CqrsModule;
 
 /**
  * Package module
@@ -54,5 +55,9 @@ class PackageModule extends AbstractModule
 
         // Injector module ('Injected injector' knows all bindings)
         $this->install(new InjectorModule($this));
+
+        // CQRS Cache Module
+        $this->install(new CqrsModule($this));
+
     }
 }

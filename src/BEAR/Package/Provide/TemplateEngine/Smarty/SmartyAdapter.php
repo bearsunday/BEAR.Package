@@ -44,9 +44,6 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     public function __construct(Smarty $smarty)
     {
         $this->smarty = $smarty;
-
-        $this->smarty->force_compile = false;
-        $this->smarty->compile_check = false;
     }
 
     /**

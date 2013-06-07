@@ -56,7 +56,9 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResources(array $resources)
     {
-        $this->assertSame(30, count($resources));
+        $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Helloworld/scripts/instance.php';
+        $resources = (new ApplicationReflector($app))->getResources();
+        $this->assertSame(3, count($resources));
     }
 
     /**

@@ -11,6 +11,7 @@
  * @see https://github.com/mtdowling/ClassPreloader
  */
 $packageDir = dirname(__DIR__);
+require $packageDir . '/scripts/develop/ini.php';
 $preLoader = $packageDir . '/vendor/classpreloader/classpreloader/classpreloader.php';
 $config = __DIR__ . '/data/loader/config.php';
 $output = $packageDir . '/scripts/preloader.php';

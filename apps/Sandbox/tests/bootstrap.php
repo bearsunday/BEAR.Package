@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('xdebug.max_nesting_level', 300);
+
 // init
 require_once dirname(__DIR__) . '/scripts/bootstrap.php';
 

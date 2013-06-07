@@ -16,10 +16,13 @@ class Index extends Page
      * @var array
      */
     public $body = [
-        'greeting' => 'Hello BEAR.Sunday !',
-        'version' => '',
-        'loaded_extensions' => []
+        'greeting' => 'Hello BEAR.Sunday',
+        'version' => [],
+        'extensions' => [],
+        'is_cli_server' => false,
+        'performance' => ''
     ];
+
     /**
      * @var array
      */
@@ -51,13 +54,6 @@ class Index extends Page
 
     public function onGet()
     {
-        $cache = (PHP_SAPI !== 'cli' && function_exists('apc_cache_info')) ? apc_cache_info(
-            'user'
-        ) : ['num_entries' => 0, 'mem_size' => 0];
-        $this['apc'] = [
-            'total' => $cache['num_entries'],
-            'size' => $cache['mem_size']
-        ];
         // page speed.
         $this['performance'] = $this->resource->get->uri('app://self/performance')->request();
 
