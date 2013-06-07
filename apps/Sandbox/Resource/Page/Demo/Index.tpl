@@ -26,6 +26,8 @@
         <ul>
             <li><a href="resource/param/">signal parameter</a></li>
             <li><a href="resource/hypermedia/">hyper media client</a></li>
+            <li><a href="resource/http/">http resource (single request)</a></li>
+            <li><a href="resource/http/multi">http resource (multi request)</a></li>
         </ul>
         <li>aspect annotations</li>
         <ul>
