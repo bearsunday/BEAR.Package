@@ -13,12 +13,7 @@ class Multi extends Page
         'xml' => ''
     ];
 
-    /**
-     * @param $now
-     *
-     * @return $this
-     */
-    public function onGet($now)
+    public function onGet()
     {
         $response = $this->resource
             ->get
