@@ -12,10 +12,11 @@ Installation
 ------------
 
     $ curl -s http://install.bear-project.net/ | sh -s ./bear
+
 or
 
     $ php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-    $ php composer.phar create-project --dev bear/package ./bear
+    $ php composer.phar create-project --dev --prefer-source bear/package ./bear
 
 More information is availavle at [wiki:install](http://code.google.com/p/bearsunday/wiki/install).
 
