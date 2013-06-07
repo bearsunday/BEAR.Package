@@ -16,7 +16,7 @@ class Index extends Page
      * @var array
      */
     public $body = [
-        'greeting' => 'Hello BEAR.Sunday !',
+        'greeting' => 'BEAR.Sunday',
         'version' => [],
         'extensions' => [],
         'is_cli_server' => false,

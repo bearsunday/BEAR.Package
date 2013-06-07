@@ -19,7 +19,7 @@
         }
         .effect {
             color: white;
-            text-shadow: 4px 4px 12px #00BF7F, -3px -3px 8px #BF7F00
+            text-shadow: 2px 14px 12px #EEEEEE, -3px -3px 18px #BF7F00
         }
 
         .sub-title {
