@@ -9,7 +9,7 @@ use BEAR\Resource\Link;
  * help
  *
  */
-class Profile extends Page
+class profile extends Page
 {
     public $links = [
         'back'   => [Link::HREF => 'page://self/demo/page/hyperlink/']

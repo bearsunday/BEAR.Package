@@ -16,7 +16,7 @@ class Index extends Page
 
     public $body = [
         'paymentUri' => '',
-        'payment' => ''        
+        'payment' => ''
     ];
 
     public function onGet()
