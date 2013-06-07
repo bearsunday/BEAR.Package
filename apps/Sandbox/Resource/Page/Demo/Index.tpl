@@ -24,7 +24,7 @@
         <li>resource object</li>
         <ul>
             <li><a href="resource/param/">signal parameter</a></li>
-            <li><a href="resource/param/">signal parameter</a></li>
+            <li><a href="resource/hypermedia/">hyper media client</a></li>
         </ul>
         <li>aspect annotations</li>
         <ul>
