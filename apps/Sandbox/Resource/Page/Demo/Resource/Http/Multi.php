@@ -10,7 +10,7 @@ class Multi extends Page
     use ResourceInject;
 
     public $body = [
-        'news' => ''
+        'xml' => ''
     ];
 
     /**
