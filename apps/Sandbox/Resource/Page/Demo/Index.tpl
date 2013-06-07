@@ -13,6 +13,7 @@
         <ul>
             <li><a href="/hello/world?name=WORLD">hello world</a></li>
             <li><a href="page/redirect/">redirect</a></li>
+            <li><a href="page/http/">http status code</a></li>
             <li><a href="page/hyperlink/">hyper link</a></li>
         </ul>
         <li>database</li>
