@@ -12,11 +12,12 @@ before_install:
  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS blogbeartest;USE blogbeartest;CREATE TABLE IF NOT EXISTS posts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);" -u root; fi
  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS blogbear;USE blogbear;CREATE TABLE IF NOT EXISTS posts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);" -u root; fi
  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
- - pear config-set auto_discover 1
- - pear install pear.phpunit.de/PHP_Invoker
- - pear install pear.phpunit.de/DbUnit
+ - wget http://pear2.php.net/pyrus.phar
+ - php pyrus.phar config-set auto_discover 1
+ - php pyrus.phar install pear.phpunit.de/PHP_Invoker
+ - php pyrus.phar install pear.phpunit.de/DbUnit
  - wget http://getcomposer.org/composer.phar
- - php composer.phar install --dev --prefer-source
+ - php composer.phar install --dev
 
 script:
  - php tests/bin/run_apps_tests.php
