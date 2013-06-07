@@ -12,7 +12,7 @@
         <li>page</li>
         <ul>
             <li><a href="/hello/world?name=WORLD">hello world</a></li>
-            <li><a href="redirect">redirect</a></li>
+            <li><a href="page/redirect/">redirect</a></li>
             <li><a href="page/hyperlink/">hyper link</a></li>
         </ul>
         <li>database</li>
@@ -23,7 +23,8 @@
         </ul>
         <li>resource object</li>
         <ul>
-            <li><a href="param">signal parameter</a></li>
+            <li><a href="resource/param/">signal parameter</a></li>
+            <li><a href="resource/param/">signal parameter</a></li>
         </ul>
         <li>aspect annotations</li>
         <ul>

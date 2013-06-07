@@ -1,13 +1,13 @@
 <?php
 
-namespace Sandbox\Resource\Page\Demo;
+namespace Sandbox\Resource\Page\Demo\Page\Redirect;
 
 use BEAR\Resource\AbstractObject as Page;
 
 /**
  * Redirect page
  */
-class Redirect extends Page
+class Index extends Page
 {
     /**
      * @return Redirect

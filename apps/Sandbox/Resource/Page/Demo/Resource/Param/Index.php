@@ -1,10 +1,10 @@
 <?php
 
-namespace Sandbox\Resource\Page\Demo;
+namespace Sandbox\Resource\Page\Demo\Resource\Param;
 
 use BEAR\Resource\AbstractObject as Page;
 
-class Param extends Page
+class Index extends Page
 {
     public $body = [
         'now' => 'n/a'
