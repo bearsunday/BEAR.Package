@@ -6,6 +6,7 @@
  */
 
 use BEAR\Package\Dev\Dev;
+use BEAR\Package\Dev\Resource\ResourceLog;
 
 require dirname(__DIR__) . '/bootstrap.php';
 require $packageDir . '/scripts/develop/ini.php';
@@ -28,6 +29,7 @@ if ($dev->directAccessFile() === false) {
 // console args
 $mode = isset($argv[3]) ? $argv[3] : $mode;
 $app = require dirname(__DIR__) . '/instance.php';
+/** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
 // Use cli parameter for routing (web.php get /)
 if (PHP_SAPI === 'cli') {
@@ -37,7 +39,10 @@ if (PHP_SAPI === 'cli') {
     $argv = [];
 }
 
-// /dev web service
+// development web service (/dev)
 $dev->setApp($app)->webService();
+
+// resource log
+$app->logger->register($app);
 
 return $app;

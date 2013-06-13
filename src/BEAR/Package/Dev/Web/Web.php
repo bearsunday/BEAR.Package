@@ -58,8 +58,10 @@ class Web
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
+            ob_start();
             include $scriptFile;
-            return 0;
+            $html = ob_get_clean();
+            return $html;
         }
         echo "404";
         return 1;
