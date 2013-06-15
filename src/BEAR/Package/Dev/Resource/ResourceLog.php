@@ -41,7 +41,7 @@ class ResourceLog
         $db = new Adapter($dbConfig);
         try {
             $pages = $db->query(
-                'SELECT DISTINCT extra_page FROM log ORDER BY extra_page',
+                'SELECT DISTINCT extra_page FROM log ORDER BY timestamp DESC',
                 Adapter::QUERY_MODE_EXECUTE
             )->toArray();
         } catch (\PDOException $e) {
@@ -68,7 +68,7 @@ class ResourceLog
     private function getPageLog(Adapter $db, $page)
     {
         $result = $db->query(
-            'SELECT * FROM `log` WHERE `extra_page` = ' . "'{$page}'",
+            'SELECT * FROM `log` WHERE `extra_page` = ' . "'{$page}' ORDER BY id ASC",
             Adapter::QUERY_MODE_EXECUTE
         )->toArray();
         $logs = [];
