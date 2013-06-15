@@ -81,6 +81,7 @@ class ResourceLog
                 $value = substr($keyValue, $pos + 1);
                 $log[$key] = $value;
             }
+            $log['timestamp'] = (new \DateTime($row['timestamp']))->format('H:i:s');
             unset($row['message']);
             $logs[] = $log;
         }
@@ -98,11 +99,13 @@ class ResourceLog
         $tableBody = '';
         foreach ($logs as $log) {
             $code = $this->getCode($log['code']);
+            $body = print_a(json_decode($log['body'], true), "return:1");
             $tableBody .= <<<EOT
                 <tr>
-                    <td width="200"><tt>{$log['req']}</tt></td>
+                    <td width="80"><tt>{$log['timestamp']}</tt></td>
                     <td width="30">$code</td>
-                    <td>{$log['body']}</td>
+                    <td width="300"><tt>{$log['req']}</tt></td>
+                    <td>$body</td>
                 </tr>
 EOT;
         }
@@ -142,8 +145,9 @@ EOT;
   <table class="table table-hover table-condensed">
     <thead>
     <tr>
-        <th>Request</th>
+        <th>Time</th>
         <th>Status</th>
+        <th>Request</th>
         <th>Result</th>
     </tr>
     </thead>
