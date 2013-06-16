@@ -100,6 +100,10 @@ class ResourceLog
         foreach ($logs as $log) {
             $code = $this->getCode($log['code']);
             $body = print_a(json_decode($log['body'], true), "return:1");
+            $meta = $this->getHeaderInfo($log['req'], $log['header']);
+            if ($meta) {
+                $body .= '<i class="icon-info-sign"></i><br>' . print_a($meta, "return:1");
+            }
             $tableBody .= <<<EOT
                 <tr>
                     <td width="80"><tt>{$log['timestamp']}</tt></td>
@@ -154,5 +158,30 @@ EOT;
 EOT;
 
         return $tableOpen;
+    }
+
+    private function getHeaderInfo($req, $header)
+    {
+        $meta = [];
+
+        $method = substr($req, 0 , 3);
+        $onMethod = 'on' . ucwords($method);
+        $header = json_decode($header, true);
+
+        // interceptors
+        if (isset($header['x-interceptors'])) {
+            $interceptors = json_decode($header['x-interceptors']);
+            if (isset($interceptors->$onMethod)) {
+                $appliedInterceptors = $interceptors->$onMethod;
+                $meta['interceptor'] = $appliedInterceptors;
+            }
+        }
+
+        // cache
+        if (isset($header['x-cache'])) {
+            $meta['@Cache'] = json_decode($header['x-cache']);
+        }
+
+        return $meta;
     }
 }
