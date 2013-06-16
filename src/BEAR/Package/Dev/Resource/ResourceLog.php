@@ -182,6 +182,11 @@ EOT;
             $meta['@Cache'] = json_decode($header['x-cache']);
         }
 
+        // cache
+        if (isset($header['x-sql'])) {
+            $meta['SQL'] = $header['x-sql'];
+        }
+
         return $meta;
     }
 }
