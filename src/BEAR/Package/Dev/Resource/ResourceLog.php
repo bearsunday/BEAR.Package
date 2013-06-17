@@ -106,15 +106,17 @@ class ResourceLog
             }
             $tableBody .= <<<EOT
                 <tr>
-                    <td width="80"><tt>{$log['timestamp']}</tt></td>
                     <td width="30">$code</td>
-                    <td width="300"><tt>{$log['req']}</tt></td>
+                    <td><tt>{$log['req']}</tt></td>
+                </tr>
+                <tr>
+                    <td></td>
                     <td>$body</td>
                 </tr>
 EOT;
         }
         $path = isset($log['path']) ? $log['path'] : '';
-        $body = $this->getTableOpen($path) . $tableBody . self::TABLE_CLOSE;
+        $body = $this->getTableOpen($path, $logs) . $tableBody . self::TABLE_CLOSE;
 
         return $body;
     }
@@ -138,21 +140,23 @@ EOT;
 
     /**
      * @param string $path
+     * @param        $time
      *
      * @return string
      */
-    private function getTableOpen($path = '')
+    private function getTableOpen($path = '', array $logs)
     {
+        $time = $logs[0]['timestamp'];
+        $requestNum = count($logs);
         $tableOpen = <<<EOT
-<div class="well">
+  <div class="well">
+  <div align="right"><i class="icon-time" style="margin-left:auto;"></i> {$time} <i class="icon-leaf" title="number of request(s)"></i> {$requestNum}</div>
   <span class="label">{$path}</span>
   <table class="table table-hover table-condensed">
     <thead>
     <tr>
-        <th>Time</th>
         <th>Status</th>
         <th>Request</th>
-        <th>Result</th>
     </tr>
     </thead>
 EOT;
