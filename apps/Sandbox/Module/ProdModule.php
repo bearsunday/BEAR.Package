@@ -14,5 +14,7 @@ class ProdModule extends AbstractModule
     protected function configure()
     {
         $this->install(new App\AppModule('prod'));
+        $this->install(new App\AopModule($this));
+
     }
 }

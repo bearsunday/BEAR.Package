@@ -44,7 +44,6 @@ class PackageModule extends AbstractModule
         $this->install(new ProvideModule\TemplateEngine\Smarty\SmartyModule);
 
         // Package module
-        $this->install(new Package\Module\Database\Dbal\DbalModule($this));
         $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
         $this->install(new Package\Module\Aop\NamedArgsModule);
@@ -53,8 +52,6 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule\Framework\FrameworkModule($this));
         $this->install(new SundayModule\Resource\ApcModule);
 
-        // Injector module ('Injected injector' knows all bindings)
-        $this->install(new InjectorModule($this));
 
         // CQRS Cache Module
         $this->install(new CqrsModule($this));

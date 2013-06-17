@@ -15,6 +15,7 @@ class TestModule extends ProdModule
     protected function configure()
     {
         $this->install(new App\AppModule('test'));
+        $this->install(new App\AopModule($this));
         $this->install(new PackageModule\Resource\NullCacheModule($this));
     }
 }

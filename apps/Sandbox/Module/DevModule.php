@@ -15,12 +15,13 @@ class DevModule extends AbstractModule
 {
     protected function configure()
     {
-        /** @var $config array */
         $this->install(new App\AppModule('dev'));
-        $this->install(new PackageModule\Resource\DevResourceModule($this));
+        $this->install(new PackageModule\Resource\DevResourceModule);
+        $this->install(new App\AopModule($this));
 
         // aspect weaving (AOP)
         $this->installWritableChecker();
+        $this->installDevLogger();
 
         // configure for development
         $this->modifySmarty();
@@ -45,6 +46,22 @@ class DevModule extends AbstractModule
             $this->matcher->subclassesOf('Sandbox\Resource\Page\Index'),
             $this->matcher->startWith('on'),
             [$checker]
+        );
+    }
+
+
+    /**
+     * Provide debug information
+     *
+     * depends FrameworkModule
+     */
+    private function installDevLogger()
+    {
+        $logger = $this->requestInjection('BEAR\Package\Module\Resource\Logger');
+        $this->bindInterceptor(
+            $this->matcher->subclassesOf('BEAR\Resource\Object'),
+            $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Log'),
+            [$logger]
         );
     }
 }
