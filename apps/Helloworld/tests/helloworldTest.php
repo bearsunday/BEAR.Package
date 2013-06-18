@@ -14,11 +14,13 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        static $resource;
+
         parent::setUp();
-        if (!$this->resource) {
-            $injector = Injector::create([new AppModule]);
-            $this->resource = $injector->getInstance('BEAR\Resource\ResourceInterface');
+        if (! $resource) {
+            $resource = Injector::create([new AppModule])->getInstance('BEAR\Resource\ResourceInterface');
         }
+        $this->resource = $resource;
     }
 
     public function testPage()

@@ -2,7 +2,6 @@
 
 namespace BEAR\Sunday\Tests;
 
-
 /**
  * Test class for Annotation.
  */
