@@ -3,17 +3,17 @@ namespace BEAR\Package\Module\Package;
 
 use BEAR\Package;
 use BEAR\Package\Module;
+use BEAR\Package\Module\Database\Dbal\DbalModule;
+use BEAR\Package\Module\Resource\DevResourceModule;
+use BEAR\Package\Module\Resource\NullCacheModule;
 use BEAR\Package\Provide as ProvideModule;
-use BEAR\Resource\AbstractObject;
+use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
+use BEAR\Sunday\Module\Cqrs\CacheModule as CqrsModule;
+use BEAR\Sunday\Module\Resource\ApcModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
-use BEAR\Sunday\Module\Cqrs\CacheModule as CqrsModule;
 use Ray\Di\Module\InjectorModule;
-use BEAR\Package\Module\Resource\NullCacheModule;
-use BEAR\Package\Module\Resource\DevResourceModule;
-use BEAR\Package\Module\Database\Dbal\DbalModule;
-use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
 
 /**
  * Package module
@@ -35,6 +35,7 @@ class PackageModule extends AbstractModule
     /**
      * @param AbstractModule $module
      * @param string         $appClass
+     * @param string         $mode
      */
     public function __construct(AbstractModule $module, $appClass, $mode)
     {
@@ -68,6 +69,7 @@ class PackageModule extends AbstractModule
         $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
         $this->install(new Package\Module\Aop\NamedArgsModule);
+
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
         $this->install(new SundayModule\Resource\ApcModule);
@@ -79,11 +81,17 @@ class PackageModule extends AbstractModule
             $this->install(new DevResourceModule($this));
         }
         $this->install(new DbalModule($this));
-        // install view package
-        $this->install(new SmartyModule($this));
+
+        // end of configuration in production
+        if ($this->mode === 'prod') {
+            $this->install(new ApcModule($this));
+        }
+
+        if ($this->mode === 'test') {
+            $this->install(new NullCacheModule($this));
+        }
+
         // install injector
         $this->install(new InjectorModule($this));
-
-
     }
 }

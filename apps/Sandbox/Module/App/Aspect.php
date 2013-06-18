@@ -1,20 +1,16 @@
 <?php
 
-namespace Sandbox\Module;
+namespace Sandbox\Module\App;
 
 use BEAR\Package;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
-use Ray\Di\Scope;
 use Sandbox\Interceptor\TimeMessage;
-use BEAR\Package\Module\Database\Dbal\DbalModule;
-use BEAR\Package\Module\Resource\ResourceGraphModule;
-use BEAR\Sunday\Module\Cqrs\CacheModule;
-use Ray\Di\Module\InjectorModule;
+
 /**
- * Application module
+ * Application Aspect
  */
-class AopModule extends AbstractModule
+class Aspect extends AbstractModule
 {
     /**
      * @var array
