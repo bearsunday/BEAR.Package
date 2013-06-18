@@ -4,14 +4,12 @@ namespace Sandbox\Module\App;
 
 use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
-use BEAR\Package\Module\Resource\ResourceGraphModule;
 use BEAR\Package\Module\Resource\SignalParamModule;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use Ray\Di\Scope;
-use Sandbox\Interceptor\TimeMessage;
 
 /**
  * Application module
@@ -62,8 +60,6 @@ class AppModule extends AbstractModule
         // dependency binding for application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to('Sandbox\App');
         $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
-        $this->bind('BEAR\Resource\RenderInterface')->annotatedWith('hal')->to(
-            'BEAR\Package\Provide\ResourceView\HalRenderer'
-        )->in(Scope::SINGLETON);
+        $this->bind('BEAR\Resource\RenderInterface')->annotatedWith('hal')->to('BEAR\Package\Provide\ResourceView\HalRenderer')->in(Scope::SINGLETON);
     }
 }
