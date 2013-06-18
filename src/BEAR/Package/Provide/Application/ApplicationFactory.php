@@ -21,6 +21,8 @@ use Ray\Di\Exception\Exception as DiException;
 use Ray\Di\Forge;
 use Ray\Di\Injector;
 use Ray\Di\Module\InjectorModule;
+use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\FilesystemCache;
 
 /**
  * Application object factory
@@ -35,9 +37,9 @@ class ApplicationFactory
     /**
      * @param \Doctrine\Common\Cache\Cache $cache
      */
-    public function __construct(Cache $cache)
+    public function __construct(Cache $cache = nul)
     {
-        $this->cache = $cache;
+        $this->cache = $cache ?: ($cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(getcwd() . '/data/tmp/cache')));
     }
 
     /**
