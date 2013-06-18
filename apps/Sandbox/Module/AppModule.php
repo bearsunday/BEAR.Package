@@ -71,7 +71,7 @@ class AppModule extends AbstractModule
 
         // install develop module
         if ($this->mode === 'dev') {
-            $this->install(new DevModule);
+            $this->install(new DevModule($this));
         }
 
         // install API module
