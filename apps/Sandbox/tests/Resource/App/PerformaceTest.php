@@ -16,9 +16,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        if (! $this->resource) {
-            $this->resource = Injector::create([new AppModule('test')])->getInstance('\BEAR\Resource\Resource');
-        }
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**

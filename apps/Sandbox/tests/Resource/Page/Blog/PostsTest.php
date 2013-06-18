@@ -9,6 +9,13 @@ use Ray\Di\Injector;
 class PostsTest extends \PHPUnit_Extensions_Database_TestCase
 {
     /**
+     * Resource client
+     *
+     * @var \BEAR\Resource\Resource
+     */
+    private $resource;
+
+    /**
      * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
@@ -26,19 +33,10 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
         return $this->createMySQLXMLDataSet($GLOBALS['APP_DIR'] . '/tests/seed.xml');
     }
 
-    /**
-     * Resource client
-     *
-     * @var \BEAR\Resource\Resource
-     */
-    private $resource;
-
     protected function setUp()
     {
         parent::setUp();
-        if (! $this->resource) {
-            $this->resource = Injector::create([new AppModule('test')])->getInstance('\BEAR\Resource\Resource');
-        }
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**

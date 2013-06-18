@@ -15,12 +15,8 @@ class GreetingTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        static $app;
         parent::setUp();
-        if (! $app) {
-            $app = Injector::create([new AppModule('test')])->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
-        }
-        $this->resource = $app->resource;
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**
