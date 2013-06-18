@@ -37,9 +37,9 @@ class ApplicationFactory
     /**
      * @param \Doctrine\Common\Cache\Cache $cache
      */
-    public function __construct(Cache $cache = nul)
+    public function __construct(Cache $cache = null)
     {
-        $this->cache = $cache ?: ($cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(getcwd() . '/data/tmp/cache')));
+        $this->cache = $cache ?: ($cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(getcwd() . '/data/tmp/cache'));
     }
 
     /**
@@ -58,14 +58,16 @@ class ApplicationFactory
         if ($app) {
             return $app;
         }
-        $moduleName = $appName . '\Module\\' . $mode . 'Module';
-        if (!class_exists($moduleName)) {
-            throw new InvalidMode("Invalid mode [{$mode}], [$moduleName] class unavailable");
+        $moduleName = $appName . '\Module\\' . 'AppModule';
+        $appModuleFile = (new \ReflectionClass(($moduleName)))->getFileName();
+        $configFile = dirname(dirname($appModuleFile)) . '/config/' . strtolower($mode) . '.php';
+        if (!file_exists($configFile)) {
+            throw new InvalidMode("Invalid mode [{$mode}], [$configFile] file missing");
         }
         $injector = (
             new Injector(
                 new Container(new Forge(new Config(new Annotation(new Definition, new CachedReader(new AnnotationReader, $this->cache))))),
-                new InjectorModule(new $moduleName)
+                new InjectorModule(new $moduleName($mode))
             )
         )->setCache($this->cache);
         $diLogger = $injector->getInstance('BEAR\Package\Provide\Application\DiLogger');

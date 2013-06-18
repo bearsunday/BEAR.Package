@@ -174,7 +174,8 @@ EOT;
 
         // interceptors
         if (isset($header['x-interceptors'])) {
-            $interceptors = json_decode($header['x-interceptors']);
+            $xInterceptors = is_array($header['x-interceptors']) ? $header['x-interceptors'][0] : $header['x-interceptors'];
+            $interceptors = json_decode($xInterceptors);
             if (isset($interceptors->$onMethod)) {
                 $appliedInterceptors = $interceptors->$onMethod;
                 $meta['interceptor'] = $appliedInterceptors;

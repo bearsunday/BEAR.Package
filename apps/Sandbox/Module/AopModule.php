@@ -1,14 +1,16 @@
 <?php
 
-namespace Sandbox\Module\App;
+namespace Sandbox\Module;
 
 use BEAR\Package;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use Ray\Di\Scope;
 use Sandbox\Interceptor\TimeMessage;
-use Ray\Di\Module\InjectorModule;
+use BEAR\Package\Module\Database\Dbal\DbalModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
+use BEAR\Sunday\Module\Cqrs\CacheModule;
+use Ray\Di\Module\InjectorModule;
 /**
  * Application module
  */
@@ -21,13 +23,6 @@ class AopModule extends AbstractModule
 
     protected function configure()
     {
-        $this->install(new Package\Module\Database\Dbal\DbalModule($this));
-        $this->install(new InjectorModule($this));
-        $this->install(new ResourceGraphModule($this));
-        // install package aop
-
-        // Injector module ('Injected injector' knows all bindings)
-
         // install application aspect
         $this->installTimeMessage();
         $this->installNewBlogPost();

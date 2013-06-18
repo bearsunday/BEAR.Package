@@ -4,6 +4,8 @@
          backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
+         stopOnError="true"
+         stopOnFailure="true"
          verbose="true">
     <testsuites>
         <testsuite name="BEAR.Package.Sandbox">

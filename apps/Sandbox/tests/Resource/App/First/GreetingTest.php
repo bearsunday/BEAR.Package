@@ -1,7 +1,7 @@
 <?php
-namespace Sandbox\tests\Resource\App\Blog;
+namespace Sandbox\tests\Resource\App\First;
 
-use Sandbox\Module\TestModule;
+use Sandbox\Module\AppModule;
 use Ray\Di\Injector;
 
 class GreetingTest extends \PHPUnit_Framework_TestCase
@@ -18,7 +18,7 @@ class GreetingTest extends \PHPUnit_Framework_TestCase
         static $app;
         parent::setUp();
         if (! $app) {
-            $app = Injector::create([new TestModule])->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+            $app = Injector::create([new AppModule('test')])->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         }
         $this->resource = $app->resource;
     }

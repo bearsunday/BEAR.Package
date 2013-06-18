@@ -1,8 +1,7 @@
 <?php
 namespace Sandbox\tests\Resource\App\Blog;
 
-use Sandbox\App;
-use Sandbox\Module\TestModule;
+use Sandbox\Module\AppModule;
 use Ray\Di\Injector;
 
 class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
@@ -36,7 +35,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         parent::setUp();
         if (! $this->resource) {
-            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
+            $this->resource = Injector::create([new AppModule('test')])->getInstance('\BEAR\Resource\Resource');
         }
     }
 

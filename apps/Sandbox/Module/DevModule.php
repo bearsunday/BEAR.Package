@@ -15,9 +15,7 @@ class DevModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->install(new App\AppModule('dev'));
-        $this->install(new PackageModule\Resource\DevResourceModule);
-        $this->install(new App\AopModule($this));
+        $this->install(new PackageModule\Resource\DevResourceModule($this));
 
         // aspect weaving (AOP)
         $this->installWritableChecker();

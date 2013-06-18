@@ -3,7 +3,7 @@ namespace Sandbox\tests\Resource\Page\Blog;
 
 use Sandbox\App;
 use Doctrine\Common\Cache\ArrayCache;
-use Sandbox\Module\TestModule;
+use Sandbox\Module\AppModule;
 use Ray\Di\Injector;
 
 class PostsTest extends \PHPUnit_Extensions_Database_TestCase
@@ -37,7 +37,7 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         parent::setUp();
         if (! $this->resource) {
-            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
+            $this->resource = Injector::create([new AppModule('test')])->getInstance('\BEAR\Resource\Resource');
         }
     }
 
