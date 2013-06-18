@@ -16,7 +16,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->systemRoot = dirname(__DIR__);
+        $this->systemRoot = dirname(dirname(__DIR__));
     }
 
     public function test_devWebPhp()
