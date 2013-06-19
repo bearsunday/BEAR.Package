@@ -19,15 +19,13 @@
         }
         .effect {
             color: white;
-            text-shadow: 2px 14px 12px #EEEEEE, -3px -3px 18px #BF7F00
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
         }
 
         .sub-title {
-            font-family: "Montserrat Subrayada" sans-serif;
         }
 
         .hero-unit h1 {
-            color: white;
         }
     </style>
 
@@ -76,8 +74,9 @@
     <div class="hero-unit">
         <h1 class="effect">{$greeting}</h1>
 
-        <p class="sub-title">A Resource Oriented Framework for PHP5.4
-            <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
+        <p class="sub-title">
+        <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
+        A Resource Oriented Framework for PHP5.4 - v0.8
         </p>
 
         <p><a class="btn btn-primary btn-large" href="https://github.com/koriym/BEAR.Sunday">View project on
