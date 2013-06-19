@@ -1,10 +1,9 @@
 <?php
 namespace Sandbox;
 
-use Ray\Di\Injector;
-use Doctrine\Common\Cache\FilesystemCache;
-use Sandbox\Module\AppModule;
 
+use Doctrine\Common\Cache\FilesystemCache;
+use Ray\Di\Injector;
 
 class PageIndexTest extends \PHPUnit_Framework_TestCase
 {

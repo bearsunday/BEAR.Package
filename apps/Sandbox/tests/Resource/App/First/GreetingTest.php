@@ -1,7 +1,6 @@
 <?php
 namespace Sandbox\tests\Resource\App\First;
 
-use Sandbox\Module\AppModule;
 use Ray\Di\Injector;
 
 class GreetingTest extends \PHPUnit_Framework_TestCase
@@ -27,7 +26,9 @@ class GreetingTest extends \PHPUnit_Framework_TestCase
     public function resource()
     {
         // resource request
-        $resource = $this->resource->get->uri('app://self/first/greeting')->withQuery(['name' => 'BEAR'])->eager->request();
+        $resource = $this->resource->get->uri('app://self/first/greeting')->withQuery(
+            ['name' => 'BEAR']
+        )->eager->request();
         $this->assertSame(200, $resource->code);
 
         return $resource;
@@ -48,7 +49,7 @@ class GreetingTest extends \PHPUnit_Framework_TestCase
      * Renderable ?
      *
      * @depends resource
-     * test
+     *          test
      */
     public function render($resource)
     {

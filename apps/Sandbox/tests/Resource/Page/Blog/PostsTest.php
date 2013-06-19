@@ -1,9 +1,7 @@
 <?php
 namespace Sandbox\tests\Resource\Page\Blog;
 
-use Sandbox\App;
 use Doctrine\Common\Cache\ArrayCache;
-use Sandbox\Module\AppModule;
 use Ray\Di\Injector;
 
 class PostsTest extends \PHPUnit_Extensions_Database_TestCase
