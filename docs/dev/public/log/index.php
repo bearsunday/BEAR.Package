@@ -15,7 +15,8 @@ dependency: {
 control: {
     if ($cacheClear) {
         unlink($file);
-        header('Location: index');
+        header('Location: /dev/log/index');
+        exit;
     }
 }
 
