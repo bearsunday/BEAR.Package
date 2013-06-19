@@ -54,7 +54,7 @@ class AppModule extends AbstractModule
 
     protected function configure()
     {
-        // this is main module
+        // $this is main module
         $this->bind('Ray\Di\AbstractModule')->toInstance($this);
 
         // install core package
