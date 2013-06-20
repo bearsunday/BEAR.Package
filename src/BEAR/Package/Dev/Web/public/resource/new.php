@@ -62,7 +62,7 @@ output: {
 
     <form action="new.php" method="POST">
     <fieldset>
-    <legend>Create resource</legend>
+    <legend>Create a new resource</legend>
     <label>URI</label>
     <input type="text" class="input-xxlarge" name="uri" placeholder="page://self/index">
     <br>
