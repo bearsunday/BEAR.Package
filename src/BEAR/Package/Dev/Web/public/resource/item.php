@@ -1,5 +1,5 @@
 <?php
-namespace BEAR\Package\Dev\Web
+namespace BEAR\Package\Dev\Web;
 
 use BEAR\Package\Dev\Application\ApplicationReflector;
 use BEAR\Sunday\Extension\Application\AppInterface;
