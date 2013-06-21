@@ -9,10 +9,10 @@ use BEAR\Ace\Editor;
 use BEAR\Ace\Exception;
 
 // config
-$rootPath = dirname(dirname(dirname(dirname(__DIR__))));
+$packageRootPath = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
 
 try {
-    $editor = (new Editor)->setRootPath($rootPath)->handle($_GET, $_POST, $_SERVER);
+    $editor = (new Editor)->setRootPath($packageRootPath)->handle($_GET, $_POST, $_SERVER);
     echo $editor;
 } catch (Exception $e) {
     http_response_code($e->getCode());
