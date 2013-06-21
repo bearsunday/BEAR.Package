@@ -164,6 +164,14 @@ EOT;
         return $tableOpen;
     }
 
+    /**
+     * Place meta info to header from log
+     *
+     * @param $req
+     * @param $header
+     *
+     * @return array
+     */
     private function getHeaderInfo($req, $header)
     {
         $meta = [];
