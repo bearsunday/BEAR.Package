@@ -89,6 +89,7 @@
             <h2>Version</h2>
             <ul>
                 <li>BEAR.Sunday <code>{$version.BEAR}</code></li>
+                <li>Latest Stable <a href="https://packagist.org/packages/bear/package"><img src="https://poser.pugx.org/bear/package/v/stable.png"></a></li>
                 <li>PHP <code>{$version.php}</code></li>
             </ul>
             <h2>Extension</h2>
