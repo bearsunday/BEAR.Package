@@ -27,7 +27,7 @@
         "ext-curl":"*",
         "bear/resource":"0.8.*",
         "bear/sunday":"0.7.*",
-        "bear/ace":"*",
+        "bear/ace":"1.0.*",
         "aura/input": "dev-develop#21cd3be9fa724862566b52ed6ef1b83b787639e4",
         "aura/view": "1.1.2",
         "aura/router":"1.0.*",

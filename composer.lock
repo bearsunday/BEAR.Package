@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5b84f7c53239d0c570df6f4a849874ce",
+    "hash": "2b83d2d7dff82864f1e810b36614a044",
     "packages": [
         {
             "name": "aura/di",
@@ -70,12 +70,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Input.git",
-                "reference": "21cd3be9fa724862566b52ed6ef1b83b787639e4"
+                "reference": "61f4ab164a88fd4df45c17397b3b8ea5f17824b3"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/5c949cf1fe504f7da8d730c974ef36378ef40551",
-                "reference": "21cd3be9fa724862566b52ed6ef1b83b787639e4",
+                "reference": "61f4ab164a88fd4df45c17397b3b8ea5f17824b3",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "html",
                 "input"
             ],
-            "time": "2013-05-28 03:00:33"
+            "time": "2013-05-27 02:55:13"
         },
         {
             "name": "aura/installer-default",
@@ -323,16 +323,16 @@
         },
         {
             "name": "bear/ace",
-            "version": "0.2.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Ace.git",
-                "reference": "0.2.1"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/koriym/BEAR.Ace/zipball/1.0.0",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "type": "library",
@@ -361,7 +361,7 @@
                 "editor",
                 "online editor"
             ],
-            "time": "2013-05-25 06:42:37"
+            "time": "2013-06-21 04:38:46"
         },
         {
             "name": "bear/resource",
@@ -619,9 +619,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1000,12 +1000,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a"
+                "reference": "55544f3af5b409d4ee9d618934f4d92ef874672c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/55544f3af5b409d4ee9d618934f4d92ef874672c",
+                "reference": "55544f3af5b409d4ee9d618934f4d92ef874672c",
                 "shasum": ""
             },
             "require": {
@@ -1054,7 +1054,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-06-13 22:25:28"
+            "time": "2013-05-16 12:46:53"
         },
         {
             "name": "ray/aop",
