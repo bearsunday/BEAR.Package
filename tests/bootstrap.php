@@ -16,6 +16,7 @@ AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 AnnotationReader::addGlobalIgnoredName('noinspection');
 AnnotationReader::addGlobalIgnoredName('returns');
 $loader->add('BEAR\Package', [__DIR__]);
+$loader->add('Sandbox', dirname(__DIR__) . '/apps/');
 
 $GLOBALS['_BEAR_TEST_DIR'] = __DIR__;
 $GLOBALS['_BEAR_PACKAGE_DIR'] = dirname(__DIR__);
