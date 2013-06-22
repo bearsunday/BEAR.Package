@@ -15,10 +15,19 @@ class FireTest extends \PHPUnit_Framework_TestCase
      */
     private $ro;
 
+    public static function setUpBeforeClass()
+    {
+        ob_start(); // <-- very important!
+    }
+
+    public static function tearDownAfterClass()
+    {
+        ob_end_clean();
+    }
+
     protected function setUp()
     {
         parent::setUp();
-        ob_start(); // <-- very important!
         $_SERVER['HTTP_USER_AGENT'] = 'User-Agent:  FirePHP/0.7.1';
         $this->fire = new Fire(\FirePHP::getInstance(true));
         $this->request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
@@ -30,7 +39,6 @@ class FireTest extends \PHPUnit_Framework_TestCase
             'header1' => 1,
             'header2' => 2
         ];
-
     }
 
     protected function tearDown()
@@ -42,9 +50,11 @@ class FireTest extends \PHPUnit_Framework_TestCase
 
     public function testWrite()
     {
+        ob_start();
         $this->fire->write($this->request, $this->ro);
         $headersList = print_r(xdebug_get_headers(), true);
         $this->assertContains('"Type":"TABLE","Label":"headers","File"', $headersList);
+        ob_end_clean();
     }
 
     public function testWriteBodyCanBeTable()
