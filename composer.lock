@@ -70,12 +70,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Input.git",
-                "reference": "61f4ab164a88fd4df45c17397b3b8ea5f17824b3"
+                "reference": "21cd3be9fa724862566b52ed6ef1b83b787639e4"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/5c949cf1fe504f7da8d730c974ef36378ef40551",
-                "reference": "61f4ab164a88fd4df45c17397b3b8ea5f17824b3",
+                "reference": "21cd3be9fa724862566b52ed6ef1b83b787639e4",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
             "authors": [
                 {
                     "name": "Aura Contributors",
-                    "homepage": "https://github.com/auraphp/Aura.Input/contributors"
+                    "homepage": "https://github.com/auraphp/Aura.Filter/contributors"
                 }
             ],
             "description": "The Aura Input package provides tools to decribe HTML forms and fields.",
@@ -106,7 +106,7 @@
                 "html",
                 "input"
             ],
-            "time": "2013-05-27 02:55:13"
+            "time": "2013-05-28 03:00:33"
         },
         {
             "name": "aura/installer-default",
@@ -685,7 +685,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1000,12 +1000,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "55544f3af5b409d4ee9d618934f4d92ef874672c"
+                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/55544f3af5b409d4ee9d618934f4d92ef874672c",
-                "reference": "55544f3af5b409d4ee9d618934f4d92ef874672c",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
+                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
                 "shasum": ""
             },
             "require": {
@@ -1054,7 +1054,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-05-16 12:46:53"
+            "time": "2013-06-13 22:25:28"
         },
         {
             "name": "ray/aop",
@@ -1102,16 +1102,16 @@
         },
         {
             "name": "ray/di",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.3"
+                "reference": "1.0.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.3",
-                "reference": "1.0.3",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.4",
+                "reference": "1.0.4",
                 "shasum": ""
             },
             "require": {
@@ -1149,7 +1149,7 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2013-06-06 17:24:33"
+            "time": "2013-06-22 14:22:09"
         },
         {
             "name": "smarty/smarty",
@@ -1428,17 +1428,17 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v2.2.2",
+            "version": "v2.2.3",
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "v2.2.2"
+                "reference": "v2.2.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.2",
-                "reference": "v2.2.2",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.3",
+                "reference": "v2.2.3",
                 "shasum": ""
             },
             "require": {
