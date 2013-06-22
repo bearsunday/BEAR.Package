@@ -14,8 +14,9 @@ $contentsForLayout =<<<EOT
 
     <div class="well">
         <ul>
-            <li><a href="resource/"><i class="icon-th-list"></i> Resource</a></li>
             <li><a href="log/"><i class="icon-th-list"></i> Log</a></li>
+            <li><a href="resource/"><i class="icon-th-list"></i> Resource</a>
+            <a href="resource/new" class="btn-mini btn-primary btn-large">+new</a></li>
             <li><a href="refresh/"><i class="icon-refresh"></i> Refresh</a></li>
             <li><a href="di/"><i class="icon-info-sign"></i> Di Log</a></li>
         </ul>
@@ -31,7 +32,7 @@ $contentsForLayout =<<<EOT
             <li><a href="phpinfo/"><i class="icon-info-sign"></i> phpinfo</a></li>
         </ul>
         <hr>
-            <a href="/"><i class="icon-arrow-left"></i> Back</a>
+        <a href="/"><i class="icon-arrow-left small"></i> Back</a>
     </div>
 EOT;
 echo include __DIR__ . '/view/layout.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sandbox\Module;
+namespace Sandbox\Module\Mode;
 
 use BEAR\Package\Module as PackageModule;
 use BEAR\Package\Provide\TemplateEngine\Smarty\DevSmartyModule;
@@ -15,30 +15,11 @@ class DevModule extends AbstractModule
 {
     protected function configure()
     {
-        /** @var $config array */
-        $this->install(new App\AppModule('dev'));
-        $this->install(new PackageModule\Resource\DevResourceModule($this));
-
-        // aspect weaving (AOP)
-        $this->installWritableChecker();
-
-        // configure for development
-        $this->modifySmarty();
-    }
-
-    private function modifySmarty()
-    {
+        // smarty
         $smarty = $this->requestInjection('Smarty');
         /** @var $smarty \Smarty */
         $smarty->force_compile = true;
-    }
 
-
-    /**
-     * Check writable directory
-     */
-    private function installWritableChecker()
-    {
         // bind tmp writable checker
         $checker = $this->requestInjection('\Sandbox\Interceptor\Checker');
         $this->bindInterceptor(

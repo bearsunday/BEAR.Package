@@ -15,7 +15,8 @@ dependency: {
 control: {
     if ($cacheClear) {
         unlink($file);
-        header('Location: index');
+        header('Location: /dev/log/index');
+        exit;
     }
 }
 
@@ -24,7 +25,7 @@ view: {
     $view['log'] = (new ResourceLog($file))->toTable();
 }
 output: {
-    $contentsForLayout = <<<EOT
+    $contentsForLayout = \DbugL::$css . <<<EOT
     <ul class="breadcrumb">
     <li><a href="../">Home</a> <span class="divider">/</span></li>
     <li class="active">Log</li>
