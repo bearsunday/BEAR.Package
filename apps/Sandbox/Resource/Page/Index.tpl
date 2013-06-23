@@ -134,7 +134,9 @@
                 <li><a href="{href rel="helloworld"}">Hello World</a></li>
                 <li><a href="{href rel="blog"}">Blog tutorial</a></li>
                 <li><a href="{href rel="restbucks"}">RESTBucks</a></li>
+                {if $is_cli_server}
                 <li><a href="{href rel="demo"}">BEAR.Demo</a></li>
+                {/if}
             </ul>
             <p><a class="btn" href="http://code.google.com/p/bearsunday/wiki/blog">Try tutorial &raquo;</a></p>
 
