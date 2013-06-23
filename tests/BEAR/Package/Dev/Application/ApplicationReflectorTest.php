@@ -27,6 +27,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         static $app;
         parent::setUp();
         if (!$app) {
+            require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/clear.php';
             $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/instance.php';
         }
         $this->appReflector = new ApplicationReflector($app);
@@ -220,6 +221,12 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $options);
 
         return $options;
+    }
+
+    public function testCompileAllResources()
+    {
+        $num = $this->appReflector->compileAllResources();
+        $this->assertInternalType('integer', $num);
     }
 
 }
