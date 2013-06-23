@@ -3,46 +3,24 @@
  * Return application instance with development setup
  *
  * @global $mode
+ *
+ * @return BEAR\Sunday\Extension\Application\AppInterface
  */
 
 use BEAR\Package\Dev\Dev;
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('xhprof.output_dir', sys_get_temp_dir());
-ini_set('xdebug.collect_params', 0);
-ini_set('xdebug.var_display_max_depth', 1);
+// set application root as current directory
+chdir(dirname(dirname(__DIR__)));
 
-require dirname(__DIR__) . '/bootstrap.php';
+require 'scripts/bootstrap.php';
 
-$logDir = dirname(dirname(__DIR__)) . '/data/log';
-
-// dev tools: fatal error / syntax error / exception handler
-$dev = new Dev;
-$dev->loadDevFunctions()
+// development configuration
+$app = (new Dev)
+    ->iniSet()
+    ->loadDevFunctions()
     ->registerFatalErrorHandler()
-    ->registerExceptionHandler($logDir)
-    ->registerSyntaxErrorEdit();
-
-// direct file for built in web server
-if ($dev->directAccessFile() === false) {
-    return false;
-}
-
-
-// console args
-$mode = isset($argv[3]) ? $argv[3] : $mode;
-$app = require dirname(__DIR__) . '/instance.php';
-
-// Use cli parameter for routing (web.php get /)
-if (PHP_SAPI === 'cli') {
-    $app->router->setArgv($argv);
-} else {
-    $app->router->setGlobals($GLOBALS);
-    $argv = [];
-}
-
-// /dev web service
-$dev->setApp($app)->webService();
+    ->registerExceptionHandler('/data/log')
+    ->registerSyntaxErrorEdit()
+    ->getDevApplication($mode);
 
 return $app;

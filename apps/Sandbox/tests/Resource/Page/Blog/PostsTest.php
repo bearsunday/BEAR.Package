@@ -1,13 +1,18 @@
 <?php
 namespace Sandbox\tests\Resource\Page\Blog;
 
-use Sandbox\App;
 use Doctrine\Common\Cache\ArrayCache;
-use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
 
 class PostsTest extends \PHPUnit_Extensions_Database_TestCase
 {
+    /**
+     * Resource client
+     *
+     * @var \BEAR\Resource\Resource
+     */
+    private $resource;
+
     /**
      * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
@@ -26,19 +31,10 @@ class PostsTest extends \PHPUnit_Extensions_Database_TestCase
         return $this->createMySQLXMLDataSet($GLOBALS['APP_DIR'] . '/tests/seed.xml');
     }
 
-    /**
-     * Resource client
-     *
-     * @var \BEAR\Resource\Resource
-     */
-    private $resource;
-
     protected function setUp()
     {
         parent::setUp();
-        if (! $this->resource) {
-            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
-        }
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**

@@ -4,11 +4,11 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
+use ClassPreloader\ClassLoader;
 
 $packageDir = dirname(dirname(dirname(__DIR__)));
-
+require $packageDir . '/scripts/develop/ini.php';
 require $packageDir . '/vendor/classpreloader/classpreloader/src/ClassPreloader/ClassLoader.php';
-use ClassPreloader\ClassLoader;
 
 $config = ClassLoader::getIncludes(
     function (ClassLoader $loader) use ($packageDir) {

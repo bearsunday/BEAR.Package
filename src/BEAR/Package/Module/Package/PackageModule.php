@@ -3,8 +3,14 @@ namespace BEAR\Package\Module\Package;
 
 use BEAR\Package;
 use BEAR\Package\Module;
+use BEAR\Package\Module\Database\Dbal\DbalModule;
+use BEAR\Package\Module\Resource\DevResourceModule;
+use BEAR\Package\Module\Resource\NullCacheModule;
 use BEAR\Package\Provide as ProvideModule;
+use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
+use BEAR\Sunday\Module\Cqrs\CacheModule as CqrsModule;
+use BEAR\Sunday\Module\Resource\ApcModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 use Ray\Di\Module\InjectorModule;
@@ -14,24 +20,42 @@ use Ray\Di\Module\InjectorModule;
  */
 class PackageModule extends AbstractModule
 {
-    private $config;
+    /**
+     * Application class name
+     *
+     * @var string
+     */
+    private $appClass;
 
     /**
-     * @param array $config
+     * @var string
      */
-    public function __construct(array $config)
+    private $mode;
+
+    /**
+     * @param AbstractModule $module
+     * @param string         $appClass
+     * @param string         $mode
+     */
+    public function __construct(AbstractModule $module, $appClass, $mode)
     {
-        $this->config = $config;
-        parent::__construct();
+        $this->mode = $mode;
+        $this->appClass = $appClass;
+        parent::__construct($module);
     }
 
     protected function configure()
     {
         $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
 
-        // Constants (can be injected @Named("constant_name"))
-        $this->install(new SundayModule\Constant\NamedModule($this->config));
+        // application
+        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
+
         $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
+
+        if ($this->mode === 'test') {
+            $this->install(new NullCacheModule($this));
+        }
 
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
@@ -40,10 +64,8 @@ class PackageModule extends AbstractModule
         $this->install(new ProvideModule\Router\MinRouterModule);
         $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule);
         $this->install(new ProvideModule\ResourceView\HalModule);
-        $this->install(new ProvideModule\TemplateEngine\Smarty\SmartyModule);
 
         // Package module
-        $this->install(new Package\Module\Database\Dbal\DbalModule($this));
         $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
         $this->install(new Package\Module\Aop\NamedArgsModule);
@@ -52,7 +74,24 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule\Framework\FrameworkModule($this));
         $this->install(new SundayModule\Resource\ApcModule);
 
-        // Injector module ('Injected injector' knows all bindings)
+        // CQRS Cache Module
+        $this->install(new CqrsModule($this));
+
+        if ($this->mode === 'dev') {
+            $this->install(new DevResourceModule($this));
+        }
+        $this->install(new DbalModule($this));
+
+        // end of configuration in production
+        if ($this->mode === 'prod') {
+            $this->install(new ApcModule($this));
+        }
+
+        if ($this->mode === 'test') {
+            $this->install(new NullCacheModule($this));
+        }
+
+        // install injector
         $this->install(new InjectorModule($this));
     }
 }

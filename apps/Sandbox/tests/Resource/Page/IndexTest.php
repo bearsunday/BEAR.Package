@@ -1,10 +1,9 @@
 <?php
 namespace Sandbox;
 
-use Ray\Di\Injector;
-use Doctrine\Common\Cache\FilesystemCache;
-use Sandbox\Module\TestModule;
 
+use Doctrine\Common\Cache\FilesystemCache;
+use Ray\Di\Injector;
 
 class PageIndexTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,9 +17,7 @@ class PageIndexTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        if (! $this->resource) {
-            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
-        }
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**
@@ -47,7 +44,6 @@ class PageIndexTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('greeting', $page->body);
         $this->assertArrayHasKey('version', $page->body);
         $this->assertArrayHasKey('extensions', $page->body);
-        $this->assertArrayHasKey('apc', $page->body);
         $this->assertArrayHasKey('performance', $page->body);
     }
 

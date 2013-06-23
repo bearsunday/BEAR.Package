@@ -1,7 +1,6 @@
 <?php
 namespace Sandbox\tests\Resource\App;
 
-use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
 
 class PerformanceTest extends \PHPUnit_Framework_TestCase
@@ -16,9 +15,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        if (! $this->resource) {
-            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
-        }
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**

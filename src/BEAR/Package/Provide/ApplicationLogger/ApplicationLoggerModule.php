@@ -24,7 +24,8 @@ class ApplicationLoggerModule extends AbstractModule
         // log register
         $this
             ->bind('BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface')
-            ->to(__NAMESPACE__ . '\ApplicationLogger');
+            ->to(__NAMESPACE__ . '\ApplicationLogger')
+            ->in(Scope::SINGLETON);
 
         // log writer
         $this

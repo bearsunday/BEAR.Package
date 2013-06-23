@@ -48,10 +48,9 @@ class Dev
     /**
      * Constructor
      *
-     * @param array  $argv
-     * @param array  $server
-     * @param Web    $web
-     * @param string $sapiName
+     * @param array $server
+     * @param null  $web
+     * @param null  $sapiName
      *
      * @throws \BadMethodCallException
      */
@@ -74,38 +73,6 @@ class Dev
             throw new \BadMethodCallException;
         }
         $this->sapiName = $sapiName ? : php_sapi_name();
-    }
-
-    /**
-     * Register exception handler
-     *
-     * @param $logDir
-     */
-    public function registerExceptionHandler($logDir)
-    {
-        set_exception_handler(
-            function (\Exception $e) use ($logDir) {
-                $handler = new ExceptionHandler(
-                    new SymfonyResponse(new ConsoleOutput),
-                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/view.php');
-                $handler->setLogDir($logDir);
-                $handler->handle($e);
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Register syntax error editor
-     *
-     * @return void
-     */
-    public function registerSyntaxErrorEdit()
-    {
-        (new ErrorEditor)->registerSyntaxErrorEdit();
-
-        return $this;
     }
 
     /**
@@ -144,6 +111,52 @@ class Dev
                 }
             }
         );
+    }
+
+    public function iniSet()
+    {
+        ini_set('display_errors', 1);
+        ini_set('xhprof.output_dir', sys_get_temp_dir());
+        ini_set('xdebug.collect_params', 0);
+        ini_set('xdebug.max_nesting_level', 500);
+        ini_set('xdebug.var_display_max_depth', 1);
+        ini_set('xdebug.file_link_format', '/dev/edit/?file=%f&line=$l');
+
+        return $this;
+    }
+
+    /**
+     * Register exception handler
+     *
+     * @param $logDir
+     *
+     * @return self
+     */
+    public function registerExceptionHandler($logDir)
+    {
+        set_exception_handler(
+            function (\Exception $e) use ($logDir) {
+                $handler = new ExceptionHandler(new SymfonyResponse(new ConsoleOutput), (dirname(
+                        __DIR__
+                    )) . '/Module/ExceptionHandle/template/view.php');
+                $handler->setLogDir($logDir);
+                $handler->handle($e);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Register syntax error editor
+     *
+     * @return self
+     */
+    public function registerSyntaxErrorEdit()
+    {
+        (new ErrorEditor)->registerSyntaxErrorEdit();
+
+        return $this;
     }
 
     /**
@@ -223,22 +236,6 @@ class Dev
     }
 
     /**
-     * Run development web service
-     *
-     * @param array $argv
-     *
-     * @return mixed
-     */
-    public function runWebService(array $argv = [])
-    {
-        if ($this->web->isDevWebService($this->sapiName, $this->requestUri)) {
-            return $this->web->service($this->requestUri, $argv);
-        }
-
-        return null;
-    }
-
-    /**
      * Web service
      *
      * @param null $requestUri
@@ -255,25 +252,6 @@ class Dev
         }
 
         return false;
-    }
-
-    /**
-     * Output
-     *
-     * @param $code
-     * @param $html
-     *
-     * @return array
-     */
-    private function output($code, $html)
-    {
-        if ($this->return) {
-            return [$code, $html];
-        } else {
-            http_response_code($code);
-            echo $html;
-            exit(0);
-        }
     }
 
     /**
@@ -296,5 +274,62 @@ class Dev
         require_once __DIR__ . '/function/p.php';
 
         return $this;
+    }
+
+    /**
+     * @param $mode
+     *
+     * @return AbstractApp|bool
+     */
+    public function getDevApplication($mode)
+    {
+        global $argv;
+        global $mode;
+
+        // direct file for built in web server
+        if ($this->directAccessFile() === false) {
+            return false;
+        }
+
+        // console args
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $mode = isset($argv[3]) ? $argv[3] : $mode;
+        $app = require 'scripts/instance.php';
+        /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
+
+        // Use cli parameter for routing (web.php get /)
+        if (PHP_SAPI === 'cli') {
+            $app->router->setArgv($argv);
+        } else {
+            $app->router->setGlobals($GLOBALS);
+            $argv = [];
+        }
+
+        // development web service (/dev)
+        $this->setApp($app)->webService();
+
+        // resource log
+        $app->logger->register($app);
+
+        return $app;
+    }
+
+    /**
+     * Output
+     *
+     * @param $code
+     * @param $html
+     *
+     * @return array
+     */
+    private function output($code, $html)
+    {
+        if ($this->return) {
+            return [$code, $html];
+        } else {
+            http_response_code($code);
+            echo $html;
+            exit(0);
+        }
     }
 }

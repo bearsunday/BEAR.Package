@@ -47,7 +47,7 @@ class Web
         if ($path == '' || substr($path, -1, 1) === '/') {
             $path .= 'index.php';
         }
-        $scriptFile = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/docs/dev/public/' . $path;
+        $scriptFile = __DIR__ . '/public/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
             ob_start();
@@ -58,8 +58,10 @@ class Web
         $scriptFile .= '.php';
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
+            ob_start();
             include $scriptFile;
-            return 0;
+            $html = ob_get_clean();
+            return $html;
         }
         echo "404";
         return 1;

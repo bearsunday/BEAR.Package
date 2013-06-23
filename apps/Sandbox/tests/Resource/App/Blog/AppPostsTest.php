@@ -1,18 +1,24 @@
 <?php
 namespace Sandbox\tests\Resource\App\Blog;
 
-use Sandbox\App;
-use Sandbox\Module\TestModule;
 use Ray\Di\Injector;
 
 class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
 {
+    /**
+     * Resource client
+     *
+     * @var \BEAR\Resource\Resource
+     */
+    private $resource;
+
     /**
      * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
      */
     public function getConnection()
     {
         $pdo = require $GLOBALS['APP_DIR'] . '/tests/scripts/db.php';
+
         return $this->createDefaultDBConnection($pdo, 'mysql');
     }
 
@@ -22,22 +28,14 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     public function getDataSet()
     {
         $seed = $this->createMySQLXMLDataSet($GLOBALS['APP_DIR'] . '/tests/seed.xml');
+
         return $seed;
     }
-
-    /**
-     * Resource client
-     *
-     * @var \BEAR\Resource\Resource
-     */
-    private $resource;
 
     protected function setUp()
     {
         parent::setUp();
-        if (! $this->resource) {
-            $this->resource = Injector::create([new TestModule])->getInstance('\BEAR\Resource\Resource');
-        }
+        $this->resource = clone $GLOBALS['RESOURCE'];
     }
 
     /**
@@ -93,21 +91,13 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         // inc 1
         $before = $this->getConnection()->getRowCount('posts');
-        $this->resource
-            ->post
-            ->uri('app://self/blog/posts')
-            ->withQuery(['title' => 'test_title', 'body' => 'test_body'])
-            ->eager
-            ->request();
+        $this->resource->post->uri('app://self/blog/posts')->withQuery(
+                ['title' => 'test_title', 'body' => 'test_body']
+            )->eager->request();
         $this->assertEquals($before + 1, $this->getConnection()->getRowCount('posts'), "failed to add post");
 
         // new post
-        $body = $this->resource
-            ->get
-            ->uri('app://self/blog/posts')
-            ->withQuery(['id' => 4])
-            ->eager
-            ->request()->body;
+        $body = $this->resource->get->uri('app://self/blog/posts')->withQuery(['id' => 4])->eager->request()->body;
 
         return $body;
     }
@@ -129,12 +119,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         // dec 1
         $before = $this->getConnection()->getRowCount('posts');
-        $this->resource
-            ->delete
-            ->uri('app://self/blog/posts')
-            ->withQuery(['id' => 1])
-            ->eager
-            ->request();
+        $this->resource->delete->uri('app://self/blog/posts')->withQuery(['id' => 1])->eager->request();
         $this->assertEquals($before - 1, $this->getConnection()->getRowCount('posts'), "failed to delete post");
     }
 }

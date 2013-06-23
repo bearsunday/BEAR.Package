@@ -47,13 +47,18 @@ final class Zf2LogProvider implements ProviderInterface
      */
     public function get()
     {
-        $this->db->query(
-            'CREATE TABLE IF NOT EXISTS log(timestamp, message, priority, priorityName, extra_page)',
-            Adapter::QUERY_MODE_EXECUTE
-        );
-        $writer = new Db($this->db, 'log');
-        $this->zf2Log->addWriter($writer);
+        static $zf2Log;
 
-        return $this->zf2Log;
+        if (! $zf2Log) {
+            $this->db->query(
+                'CREATE TABLE IF NOT EXISTS log(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp, message, priority, priorityName, extra_page)',
+                Adapter::QUERY_MODE_EXECUTE
+            );
+            $writer = new Db($this->db, 'log');
+            $this->zf2Log->addWriter($writer);
+            $zf2Log = $this->zf2Log;
+        }
+
+        return $zf2Log;
     }
 }

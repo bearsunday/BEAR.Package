@@ -19,15 +19,13 @@
         }
         .effect {
             color: white;
-            text-shadow: 4px 4px 12px #00BF7F, -3px -3px 8px #BF7F00
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
         }
 
         .sub-title {
-            font-family: "Montserrat Subrayada" sans-serif;
         }
 
         .hero-unit h1 {
-            color: white;
         }
     </style>
 
@@ -76,15 +74,14 @@
     <div class="hero-unit">
         <h1 class="effect">{$greeting}</h1>
 
-        <p class="sub-title">A Resource Oriented Framework for PHP5.4
-            <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
+        <p class="sub-title">
+        <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
+        A Resource Oriented Framework for PHP5.4 - v0.8
         </p>
 
         <p><a class="btn btn-primary btn-large" href="https://github.com/koriym/BEAR.Sunday">View project on
             GitHub &raquo;</a>
-            <a rel="tooltip" title="{$apc.size} bytes of {$apc.total} user APC entries will be cleared."
-               class="btn btn-primary btn-large btn btn-warning"
-               href="/dev/refresh/"><i class="icon-refresh"></i> Refresh</a></p>
+            <a rel="tooltip" title="APC entries will be cleared." class="btn btn-primary btn-large btn btn-warning" href="/dev/refresh/"><i class="icon-refresh"></i> Refresh</a></p>
     </div>
     <!-- Example row of columns -->
     <div class="row">
@@ -92,6 +89,7 @@
             <h2>Version</h2>
             <ul>
                 <li>BEAR.Sunday <code>{$version.BEAR}</code></li>
+                <li>Latest Stable <a href="https://packagist.org/packages/bear/package"><img src="https://poser.pugx.org/bear/package/v/stable.png"></a></li>
                 <li>PHP <code>{$version.php}</code></li>
             </ul>
             <h2>Extension</h2>
@@ -99,11 +97,10 @@
             <h3>required</h3>
             <ul>
                 <li><a href="http://www.php.net/curl">curl</a> <code>{$extensions.curl}</code></li>
-                <li><a href="http://www.php.net/apc">apc</a> <code>{$extensions.apc}</code></li>
             </ul>
             <h3>optional</h3>
             <ul>
-
+                <li><a href="http://www.php.net/apc">apc</a> <code>{$extensions.apc}</code></li>
                 <li><a href="http://xdebug.org/">Xdebug</a> <code>{$extensions.Xdebug}</code></li>
                 <li><a href="http://www.php.net/xhprof">xhprof</a> <code>{$extensions.xhprof}</code></li>
                 <li><a href="http://www.php.net/memcache">memcache <code>{$extensions.memcache}</code></li>
@@ -132,12 +129,12 @@
                     src="https://secure.travis-ci.org/koriym/BEAR.Resource.png"></a></p>
         </div>
         <div class="span4">
-            <h2>Sample apps</h2>
+            <h2>Apps</h2>
             <ul>
                 <li><a href="{href rel="helloworld"}">Hello World</a></li>
                 <li><a href="{href rel="blog"}">Blog tutorial</a></li>
                 <li><a href="{href rel="restbucks"}">RESTBucks</a></li>
-                <li><a href="{href rel="demo"}">Demo</a></li>
+                <li><a href="{href rel="demo"}">BEAR.Demo</a></li>
             </ul>
             <p><a class="btn" href="http://code.google.com/p/bearsunday/wiki/blog">Try tutorial &raquo;</a></p>
 

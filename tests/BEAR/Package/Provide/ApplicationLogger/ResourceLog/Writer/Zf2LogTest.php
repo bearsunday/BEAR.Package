@@ -28,7 +28,6 @@ class Zf2LogTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        @unlink(__DIR__ . '/resource.db');
         unset($_SERVER['PATH_INFO']);
     }
 

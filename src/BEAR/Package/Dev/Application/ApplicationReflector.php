@@ -223,4 +223,17 @@ class ApplicationReflector
 
         return $result;
     }
+
+    /**
+     * Compile all resources
+     *
+     * @return int the number of cached resource
+     */
+    public function compileAllResources()
+    {
+        // this call make all resources cached when resource client has cache.
+        $cachedUriCount = count($this->getResources());
+
+        return $cachedUriCount;
+    }
 }

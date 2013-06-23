@@ -14,6 +14,7 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
     ->exclude('apc')
     ->exclude('memcache')
     ->exclude('build')
+    ->exclude('public')
     ->in(__DIR__ . '/src')
 ;
 
