@@ -7,6 +7,7 @@
  */
 namespace Sandbox;
 
+use BEAR\Package\Dev\Application\ApplicationReflector;
 use BEAR\Package\Provide\Application\DiLogger;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -30,6 +31,9 @@ $diLogger = new DiLogger;
 $injector = Injector::create([new Module\AppModule($mode)], $cache)->setLogger($diLogger);
 $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
 $cache->save($appKey, $app);
+
+// resource compile
+(new ApplicationReflector($app))->compileAllResources();
 
 // di log
 file_put_contents(dirname(__DIR__) . '/data/log/di.log', (string)$injector . (string)$diLogger);
