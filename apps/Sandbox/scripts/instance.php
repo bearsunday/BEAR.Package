@@ -16,7 +16,7 @@ use Ray\Di\Injector;
 require_once __DIR__ . '/bootstrap.php';
 
 // mode
-$mode = isset($mode) ? $mode : 'Prod';
+$mode = isset($mode) ? $mode : 'prod';
 
 $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(dirname(__DIR__) . '/data/tmp/cache');
 $appKey = __NAMESPACE__ . $mode;
@@ -33,7 +33,9 @@ $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface')
 $cache->save($appKey, $app);
 
 // resource compile
-(new ApplicationReflector($app))->compileAllResources();
+if ($mode === 'prod') {
+    (new ApplicationReflector($app))->compileAllResources();
+}
 
 // di log
 file_put_contents(dirname(__DIR__) . '/data/log/di.log', (string)$injector . (string)$diLogger);
