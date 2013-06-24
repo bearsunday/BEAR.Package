@@ -27,10 +27,10 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 require dirname(__DIR__) . '/scripts/clear.php';
 
 /**
- * Here we get an application instance by setting a $mode variable such as (Prod, Dev, Api, Stub, Test)
+ * Here we get an application instance by setting a $mode variable such as (prod, dev, api, stub, test)
  * the dev instance provides debugging tools and defaults to help you the development of your application.
  */
-$mode = 'Api';
+$mode = 'api';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 
 /**

@@ -46,7 +46,7 @@ class AppModule extends AbstractModule
     public function __construct($mode = 'prod')
     {
         $dir = dirname(__DIR__);
-        $this->mode = $mode = strtolower($mode);
+        $this->mode = $mode;
         $this->config = (require "{$dir}/config/{$mode}.php") + (require "{$dir}/config/prod.php");
         $this->params = (require "{$dir}/Params/config/{$mode}.php") + (require "{$dir}/Params/config/prod.php");
         parent::__construct();
