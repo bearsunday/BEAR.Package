@@ -25,7 +25,7 @@ ini_set('display_errors', false);
 //require dirname(dirname(dirname(__DIR__))) . '/scripts/preloader.php';
 
 /**
- * Here we get the production application instance. No $mode variable is needed as it defaults to Prod.
+ * Here we get the production application instance. No $mode variable is needed as it defaults to prod.
  *
  * @var $app \BEAR\Package\Provide\Application\AbstractApp
  */
