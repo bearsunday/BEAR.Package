@@ -92,6 +92,6 @@ class PackageModule extends AbstractModule
         }
 
         // install injector
-        $this->install(new InjectorModule($this));
+        $this->bind('Ray\Di\InjectorInterface')->toInstance($this->dependencyInjector);
     }
 }
