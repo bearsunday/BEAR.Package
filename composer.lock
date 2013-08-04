@@ -366,16 +366,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.8.1",
+            "version": "0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.8.1"
+                "reference": "0.8.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.8.1",
-                "reference": "0.8.1",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.8.2",
+                "reference": "0.8.2",
                 "shasum": ""
             },
             "require": {
@@ -413,7 +413,7 @@
                 "rest",
                 "service layer"
             ],
-            "time": "2013-06-22 14:50:53"
+            "time": "2013-08-04 02:41:35"
         },
         {
             "name": "bear/sunday",
