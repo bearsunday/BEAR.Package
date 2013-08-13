@@ -153,19 +153,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         $bootstrapCss = strpos(
             $body,
             '/assets/css/bootstrap.css'
-        ) ? '' : '<link href="/assets/css/bootstrap.css" rel="stylesheet">';
-        $tooltipJs = strpos(
-            $body,
-            '/assets/js/bootstrap-tooltip.js'
-        ) ? '' : '<script src="/assets/js/bootstrap-tooltip.js"></script>';
-        $popoverJs = strpos(
-            $body,
-            '/assets/js/bootstrap-popover.js'
-        ) ? '' : '<script src="/assets/js/bootstrap-popover.js"></script>';
-        $collapseJs = strpos(
-            $body,
-            '/assets/js/bootstrap-collapse.js'
-        ) ? '' : '<script src="/assets/js/bootstrap-collapse.js"></script>';
+        ) ? '' : '<link href="/assets/css/bootstrap.simple.min.css" rel="stylesheet">';
         $tabJs = strpos(
             $body,
             '/assets/js/bootstrap-tab.js'
@@ -178,20 +166,54 @@ if (typeof jQuery == "undefined") {
     google.load("jquery", "1.7.1");
 }
 </script>
-{$bootstrapCss}{$tooltipJs}{$popoverJs}{$collapseJs}{$tabJs}
-<script>
-$(function(){
-  jQuery.noConflict();
-  jQuery('[rel=tooltip]').tooltip();
-  jQuery('[rel=popover]').popover();
-  jQuery('.home').click();
-});
-</script>
+{$bootstrapCss}{$tabJs}
+
+<style>
+
+.frame {
+    position: relative;
+}
+
+.frame::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    width: 100%;
+    height: 100%;
+    -webkit-box-shadow: rgba(113, 135, 164, .2) 0px 0px 0px 10px inset;
+    box-shadow: rgba(113, 135, 164, .2) 0px 0px 0px 10px inset;
+    z-index:9999;
+}
+
+.toolbar {
+    position: absolute;
+    z-index: 10000;
+    background: rgba(255, 255, 255, .5);
+    border-radius: 3px;
+    padding: 0 5px;
+}
+
+.label {
+    font-weight: normal;
+}
+
+.edit {
+    margin-left: 5px;
+}
+
+.tab-wrap {
+    position: relative;
+    padding: 25px;
+    background: #fff;
+}
+
+</style>
 <!-- /BEAR.Sunday dev tool load -->
 </body>
 EOT;
         $toolLoad = str_replace(["\n", "  "], '', $toolLoad);
-        $body = str_replace('</html>', "{$toolLoad}\n</html>", $body);
+        $body = str_replace('<head>', "<head>\n{$toolLoad}", $body);
         // $body = $body .  $toolLoad;
         return $body;
     }
@@ -250,25 +272,40 @@ EOT;
         };
         $result = <<<EOT
 <!-- {$resourceName} -->
-<span class="label {$labelColor}">{$resourceName}</span>
-  <a data-toggle="tab" href="#{$resourceKey}_body" class="home"><span class="icon-home" rel="tooltip" title="Home"></span></a>
-  <a data-toggle="tab" href="#{$resourceKey}_var"><span class="icon-zoom-in" rel="tooltip" title="Status"></span></a>
-  <a data-toggle="tab" href="#{$resourceKey}_html"><span class="icon-font" rel="tooltip" title="View"></span></a>
-  <a data-toggle="tab" href="#{$resourceKey}_info"><span class="icon-info-sign" rel="tooltip" title="Info"></span></a>
-<span style="padding:4px;"></span>
-  <a target="_blank" href="/dev/edit/index.php?file={$codeFile}"><span class="icon-edit" rel="tooltip" title="Code ({$codeFile})"></span></a>
-  <a target="_blank" href="/dev/edit/index.php?file={$templateFile}"><span class="icon-file" rel="tooltip" title="Template ({$templateFile})"></span></a>
-</span>
-<div class="tab-content">
-  <div id="{$resourceKey}_body" class="tab-pane fade active in"><div style="border: 1px dashed gray">
+
+<div class="toolbar">
+    <span class="label {$labelColor}">{$resourceName}</span>
+    <a data-toggle="tab" href="#{$resourceKey}_body" class="home"><span class="icon-home" rel="tooltip" title="Home"></span></a>
+    <a data-toggle="tab" href="#{$resourceKey}_var"><span class="icon-zoom-in" rel="tooltip" title="Status"></span></a>
+    <a data-toggle="tab" href="#{$resourceKey}_html"><span class="icon-font" rel="tooltip" title="View"></span></a>
+    <a data-toggle="tab" href="#{$resourceKey}_info"><span class="icon-info-sign" rel="tooltip" title="Info"></span></a>
+    <span class="edit">
+        <a target="_blank" href="/dev/edit/index.php?file={$codeFile}"><span class="icon-edit" rel="tooltip" title="Code ({$codeFile})"></span></a>
+        <a target="_blank" href="/dev/edit/index.php?file={$templateFile}"><span class="icon-file" rel="tooltip" title="Template ({$templateFile})"></span></a>
+    </span>
+</div>
+
+<div class="tab-content frame">
+    <div id="{$resourceKey}_body" class="tab-pane fade active in">
 EOT;
         $result = $rmReturn($result);
         $result .= $body;
         $label = <<<EOT
-<!-- /{$resourceName} --></div></div>
-  <div id="{$resourceKey}_var" class="tab-pane fade active"><div class="well"><div class="badge badge-info">Resource state</div>{$var}</div></div>
-  <div id="{$resourceKey}_html" class="tab-pane fade"><div class="well"><div class="badge badge-info">Resource representation</div>{$html}</div></div>
-  <div id="{$resourceKey}_info" class="tab-pane fade"><div class="well">{$info}</div></div>
+<!-- /{$resourceName} -->
+    </div>
+    <div id="{$resourceKey}_var" class="tab-pane">
+        <div class="tab-wrap">
+            <span class="badge badge-info">Resource state</span><br>{$var}
+        </div>
+    </div>
+    <div id="{$resourceKey}_html" class="tab-pane">
+        <div class="tab-wrap">
+            <span class="badge badge-info">Resource representation</span><br>{$html}
+        </div>
+    </div>
+    <div id="{$resourceKey}_info" class="tab-pane">
+        <div class="tab-wrap">{$info}</div>
+    </div>
 </div>
 EOT;
         $result .= $rmReturn($label);
@@ -389,7 +426,7 @@ EOT;
             $interceptorFile = (new ReflectionClass($interceptor))->getFileName();
             $interceptorFile = $this->makeRelativePath($interceptorFile);
             $result .= <<<EOT
-<li><a target="_blank" href="/dev/edit/index.php?file={$interceptorFile}"><span class="icon-arrow-right"></span>{$interceptor}</a></li>
+<li style="height: 26px;"><a target="_blank" href="/dev/edit/index.php?file={$interceptorFile}"><span class="icon-arrow-right"></span>{$interceptor}</a></li>
 EOT;
         }
         $result .= '</ul></div>';
