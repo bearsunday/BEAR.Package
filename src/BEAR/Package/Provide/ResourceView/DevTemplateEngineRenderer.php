@@ -153,7 +153,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         $bootstrapCss = strpos(
             $body,
             '/assets/css/bootstrap.css'
-        ) ? '' : '<link href="/assets/css/bootstrap.simple.min.css" rel="stylesheet">';
+        ) ? '' : '<link href="/devtool/css/bootstrap.min.css" rel="stylesheet">';
         $tabJs = strpos(
             $body,
             '/assets/js/bootstrap-tab.js'
