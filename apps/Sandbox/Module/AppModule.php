@@ -6,6 +6,7 @@ use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
 use BEAR\Package\Module\Resource\SignalParamModule;
+use BEAR\Package\Module\Stub\StubModule;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Package\Provide\ResourceView;
 use BEAR\Package\Provide\ResourceView\HalModule;
@@ -31,7 +32,7 @@ class AppModule extends AbstractModule
     /**
      * @var array
      */
-    private $params;
+    private $params = [];
 
     /**
      * @var string
@@ -83,5 +84,8 @@ class AppModule extends AbstractModule
 
         // install application aspect
         $this->install(new App\Aspect($this));
+
+        // install stub data
+        //$this->install(new StubModule(require dirname(__DIR__) . '/config/stub/resource.php'));
     }
 }
