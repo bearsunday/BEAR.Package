@@ -92,5 +92,7 @@ class AppModule extends AbstractModule
             // install stub data
             $this->install(new StubModule(require __DIR__ . '/config/stub/resource.php'));
         }
+        // install stub data
+        //$this->install(new StubModule(require dirname(__DIR__) . '/config/stub/resource.php'));
     }
 }
