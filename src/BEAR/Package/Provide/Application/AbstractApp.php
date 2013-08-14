@@ -18,14 +18,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Application
- *
- * available run mode:
- *
- * 'Prod'
- * 'Api'
- * 'Dev'
- * 'Stab;
- * 'Test'
  */
 abstract class AbstractApp implements AppInterface
 {
