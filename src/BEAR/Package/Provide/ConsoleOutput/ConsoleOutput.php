@@ -110,7 +110,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
                 $body = $this->getRequestString($body);
             }
             if (is_array($body)) {
-                $body = str_replace(["\n", " "], '', var_export($body, true));
+                $body = var_export($body, true);
             }
             $string .= self::LABEL1 . $key . self::CLOSE . " {$body}" . PHP_EOL;
         }
