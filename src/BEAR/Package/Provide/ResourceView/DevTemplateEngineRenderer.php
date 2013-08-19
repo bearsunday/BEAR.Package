@@ -184,6 +184,7 @@ if (typeof jQuery == "undefined") {
     -webkit-box-shadow: rgba(113, 135, 164, .2) 0px 0px 0px 10px inset;
     box-shadow: rgba(113, 135, 164, .2) 0px 0px 0px 10px inset;
     z-index:9999;
+    pointer-events: none;
 }
 
 .toolbar {
