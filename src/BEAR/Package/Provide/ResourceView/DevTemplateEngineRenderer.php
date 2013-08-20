@@ -114,7 +114,11 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         }
         // resource code editor
         $class = get_class($resourceObject);
-        $pageFile = (new ReflectionClass($class))->getFileName();
+        $ref = new ReflectionClass($class);
+        $pageFile = $ref->getFileName();
+        if ($resourceObject instanceof \Ray\Aop\WeavedInterface) {
+            $pageFile = $ref->getParentClass()->getFileName();
+        }
 
         // resource template editor
         $dir = pathinfo($pageFile, PATHINFO_DIRNAME);
