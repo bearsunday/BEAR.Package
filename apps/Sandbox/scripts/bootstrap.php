@@ -15,16 +15,12 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 umask(0);
 
-// framework
-framework: {
-    $packageDir = dirname(dirname(dirname(__DIR__)));
-    $loader = require $packageDir . '/vendor/autoload.php';
-    /** @var $loader \Composer\Autoload\ClassLoader */
-    $loader->set('Sandbox', dirname(dirname(__DIR__)));
-    AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-    AnnotationReader::addGlobalIgnoredName('noinspection'); // for phpStorm
-    AnnotationReader::addGlobalIgnoredName('returns'); // for Mr.Smarty. :(
-}
+$packageDir = dirname(dirname(dirname(__DIR__)));
+$loader = require $packageDir . '/vendor/autoload.php';
+/** @var $loader \Composer\Autoload\ClassLoader */
+$loader->set('Sandbox', dirname(dirname(__DIR__)));
+$loader->set('', dirname(__DIR__) . '/data/aop');
 
-application: {
-}
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+AnnotationReader::addGlobalIgnoredName('noinspection'); // for phpStorm
+AnnotationReader::addGlobalIgnoredName('returns'); // for Mr.Smarty. :(

@@ -10,34 +10,25 @@ namespace Sandbox;
 use BEAR\Package\Dev\Application\ApplicationReflector;
 use BEAR\Package\Provide\Application\DiLogger;
 use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
+use Ray\Di\CacheInjector;
+use Ray\Di\CacheInjectorTest;
 use Ray\Di\Injector;
+use Ray\Di\InjectorInterface;
+use BEAR\Sunday\Extension\Application\AppInterface;
 
 require_once __DIR__ . '/bootstrap.php';
 
 // mode
 $mode = isset($mode) ? $mode : 'prod';
 
-$cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(dirname(__DIR__) . '/data/tmp/cache');
-$appKey = __NAMESPACE__ . $mode;
-
-// return cached application
-if ($cache->contains($appKey)) {
-    return $cache->fetch($appKey);
-}
-
-// new application instance
-$diLogger = new DiLogger;
-$injector = Injector::create([new Module\AppModule($mode)], $cache)->setLogger($diLogger);
-$app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
-$cache->save($appKey, $app);
-
-// resource compile
-if ($mode === 'prod') {
+$module = function() use ($mode) {return new Module\AppModule($mode);};
+$init = function(InjectorInterface $injector, AppInterface $app) {
     (new ApplicationReflector($app))->compileAllResources();
-}
-
-// di log
-file_put_contents(dirname(__DIR__) . '/data/log/di.log', (string)$injector . (string)$diLogger);
+    file_put_contents(dirname(__DIR__) . '/data/log/di.log', (string)$injector);
+};
+$injector = new CacheInjector($module, dirname(__DIR__) . '/data/aop', new ApcCache);
+$app = $injector->setInit($init)->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
 
 return $app;
