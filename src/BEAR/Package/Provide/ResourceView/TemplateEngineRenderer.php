@@ -10,6 +10,7 @@ use BEAR\Resource\AbstractObject;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Ray\Aop\Weave;
+use Ray\Aop\WeavedInterface;
 use ReflectionClass;
 use Ray\Di\Di\Inject;
 
@@ -48,11 +49,11 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
             $resourceObject->view = $resourceObject->body;
             return (string)$resourceObject->body;
         }
-
-        $class = ($resourceObject instanceof Weave) ? get_class($resourceObject->___getObject()) : get_class(
-            $resourceObject
-        );
-        $file = (new ReflectionClass($class))->getFileName();
+        if ($resourceObject instanceof WeavedInterface) {
+            $file = (new ReflectionClass($resourceObject))->getParentClass()->getFileName();
+        } else {
+            $file = (new ReflectionClass($resourceObject))->getFileName();
+        }
 
         // assign 'resource'
         $this->templateEngineAdapter->assign('resource', $resourceObject);

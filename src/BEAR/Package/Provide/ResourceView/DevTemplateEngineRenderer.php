@@ -20,7 +20,7 @@ use ReflectionObject;
 use Traversable;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-
+use Ray\Aop\WeavedInterface;
 /**
  * Request renderer
  *
@@ -113,11 +113,10 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
             return (new TemplateEngineRenderer($this->templateEngineAdapter))->render($resourceObject);
         }
         // resource code editor
-        $class = get_class($resourceObject);
-        $ref = new ReflectionClass($class);
-        $pageFile = $ref->getFileName();
-        if ($resourceObject instanceof \Ray\Aop\WeavedInterface) {
-            $pageFile = $ref->getParentClass()->getFileName();
+        if ($resourceObject instanceof WeavedInterface) {
+            $pageFile = (new ReflectionClass($resourceObject))->getParentClass()->getFileName();
+        } else {
+            $pageFile = (new ReflectionClass($resourceObject))->getFileName();
         }
 
         // resource template editor
