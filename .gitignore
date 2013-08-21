@@ -10,6 +10,7 @@ vendor
 cache.properties
 build
 tmp
+aop
 *.log
 *.tpl.php
 di.log.txt
