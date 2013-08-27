@@ -11,7 +11,7 @@ use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
 use Ray\Di\Di\Inject;
-
+use Ray\Di\Di\PreDestroy;
 /**
  * Logger
  */
@@ -35,16 +35,10 @@ final class ApplicationLogger implements ApplicationLoggerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @PreDestroy
      */
-    public function register(AppInterface $app)
+    public function onShutDown()
     {
-        register_shutdown_function(
-            // @codeCoverageIgnoreStart
-            function () {
-                $this->logger->write();
-            }
-            // @codeCoverageIgnoreEnd
-        );
+        $this->logger->write();
     }
 }
