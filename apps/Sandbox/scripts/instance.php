@@ -13,7 +13,6 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\CacheInjector;
-use Ray\Di\CacheInjectorTest;
 use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -29,6 +28,11 @@ $init = function(InjectorInterface $injector, AppInterface $app) {
     file_put_contents(dirname(__DIR__) . '/data/log/di.log', (string)$injector);
 };
 $injector = new CacheInjector($module, dirname(__DIR__) . '/data/aop', new ApcCache);
+$logger = function(){ return new DiLogger;};
+$cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(dirname(__DIR__) . '/data/tmp');
+$cache->setNamespace(__NAMESPACE__);
+$injector = new CacheInjector($module, dirname(__DIR__) . '/data/aop', $cache, $logger);
 $app = $injector->setInit($init)->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
+/* @var $app \BEAR\Sunday\Extension\Application\AppInterface */
 
 return $app;
