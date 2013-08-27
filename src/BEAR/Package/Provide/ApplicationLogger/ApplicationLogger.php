@@ -35,9 +35,10 @@ final class ApplicationLogger implements ApplicationLoggerInterface
     }
 
     /**
+     * {@inheritdoc}
      * @PreDestroy
      */
-    public function onShutDown()
+    public function write()
     {
         $this->logger->write();
     }
