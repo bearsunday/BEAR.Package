@@ -308,9 +308,6 @@ class Dev
         // development web service (/dev)
         $this->setApp($app)->webService();
 
-        // resource log
-        $app->logger->register($app);
-
         return $app;
     }
 

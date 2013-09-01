@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "16bbc532e4eec3a28b6184d91a5a31f6",
+    "hash": "9cfea29b9026e607988e62e937cc0051",
     "packages": [
         {
             "name": "aura/di",
@@ -70,12 +70,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Input.git",
-                "reference": "21cd3be9fa724862566b52ed6ef1b83b787639e4"
+                "reference": "5c949cf1fe504f7da8d730c974ef36378ef40551"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/5c949cf1fe504f7da8d730c974ef36378ef40551",
-                "reference": "21cd3be9fa724862566b52ed6ef1b83b787639e4",
+                "reference": "5c949cf1fe504f7da8d730c974ef36378ef40551",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "html",
                 "input"
             ],
-            "time": "2013-05-28 03:00:33"
+            "time": "2013-05-09 21:22:23"
         },
         {
             "name": "aura/installer-default",
@@ -366,16 +366,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.8.2",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.8.2"
+                "reference": "a346f6010cd11a7bf4f236c10dbe3bf9165475b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.8.2",
-                "reference": "0.8.2",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/a346f6010cd11a7bf4f236c10dbe3bf9165475b6",
+                "reference": "a346f6010cd11a7bf4f236c10dbe3bf9165475b6",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,8 @@
                 "doctrine/cache": "1.*",
                 "guzzle/guzzle": "3.3.*",
                 "php": ">=5.4.0",
-                "ray/di": "1.0.*"
+                "ray/aop": "dev-develop",
+                "ray/di": "dev-develop"
             },
             "require-dev": {
                 "facebook/xhprof": "dev-master"
@@ -413,7 +414,7 @@
                 "rest",
                 "service layer"
             ],
-            "time": "2013-08-04 02:41:35"
+            "time": "2013-08-21 11:19:19"
         },
         {
             "name": "bear/sunday",
@@ -1003,16 +1004,16 @@
         },
         {
             "name": "pagerfanta/pagerfanta",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a"
+                "reference": "4d5f15a3700a769bd0af364ccd7ecadb07d91d78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
-                "reference": "1a3cb8addb92df6396e59a2c44c3b7f216b4218a",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/4d5f15a3700a769bd0af364ccd7ecadb07d91d78",
+                "reference": "4d5f15a3700a769bd0af364ccd7ecadb07d91d78",
                 "shasum": ""
             },
             "require": {
@@ -1061,24 +1062,25 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-06-13 22:25:28"
+            "time": "2013-04-24 11:35:36"
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0"
+                "reference": "bd2af8655aaf90ce12d09de72ddc62649b24f231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/bd2af8655aaf90ce12d09de72ddc62649b24f231",
+                "reference": "bd2af8655aaf90ce12d09de72ddc62649b24f231",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
+                "nikic/php-parser": "*",
                 "php": ">=5.4.0"
             },
             "type": "library",
@@ -1105,28 +1107,29 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2013-03-31 11:58:17"
+            "time": "2013-08-21 10:30:57"
         },
         {
             "name": "ray/di",
-            "version": "1.0.5",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "1.0.5"
+                "reference": "f260cd8a950ebe01b5497943bbb22b44ab54715a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1.0.5",
-                "reference": "1.0.5",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/f260cd8a950ebe01b5497943bbb22b44ab54715a",
+                "reference": "f260cd8a950ebe01b5497943bbb22b44ab54715a",
                 "shasum": ""
             },
             "require": {
                 "aura/di": "1.1.*",
                 "doctrine/annotations": "1.*",
                 "doctrine/cache": "1.*",
+                "nikic/php-parser": "*",
                 "php": ">=5.4.0",
-                "ray/aop": "1.0.*"
+                "ray/aop": "dev-develop#bd2af8655aaf90ce12d09de72ddc62649b24f231"
             },
             "type": "library",
             "autoload": {
@@ -1162,7 +1165,7 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2013-07-12 04:03:52"
+            "time": "2013-08-21 10:47:22"
         },
         {
             "name": "smarty/smarty",
@@ -1210,17 +1213,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.0.23",
+            "version": "v2.0.24",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "v2.0.23"
+                "reference": "v2.0.24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.0.23",
-                "reference": "v2.0.23",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.0.24",
+                "reference": "v2.0.24",
                 "shasum": ""
             },
             "require": {
@@ -1252,17 +1255,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "v2.3.2"
+                "reference": "41c9826457c65fa3cf746f214985b7ca9cba42f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/41c9826457c65fa3cf746f214985b7ca9cba42f8",
+                "reference": "41c9826457c65fa3cf746f214985b7ca9cba42f8",
                 "shasum": ""
             },
             "require": {
@@ -1302,21 +1305,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-13 14:36:40"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "v2.3.2"
+                "reference": "87acbbef6d35ba649f96f09cc572c45119b360c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/87acbbef6d35ba649f96f09cc572c45119b360c3",
+                "reference": "87acbbef6d35ba649f96f09cc572c45119b360c3",
                 "shasum": ""
             },
             "require": {
@@ -1349,21 +1352,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-04 15:02:05"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "v2.3.2"
+                "reference": "v2.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.3.2",
-                "reference": "v2.3.2",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.3.3",
+                "reference": "v2.3.3",
                 "shasum": ""
             },
             "require": {
@@ -1396,21 +1399,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-01 12:17:23"
+            "time": "2013-07-21 12:12:18"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.0.23",
+            "version": "v2.0.24",
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "v2.0.23"
+                "reference": "f16943f90d8197a76b6cafcf5c7c73aff47b82fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.0.23",
-                "reference": "v2.0.23",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/f16943f90d8197a76b6cafcf5c7c73aff47b82fd",
+                "reference": "f16943f90d8197a76b6cafcf5c7c73aff47b82fd",
                 "shasum": ""
             },
             "require": {
@@ -1438,21 +1441,21 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-02-07 16:36:12"
+            "time": "2013-08-06 07:14:49"
         },
         {
             "name": "symfony/routing",
-            "version": "v2.2.4",
+            "version": "v2.2.5",
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "v2.2.4"
+                "reference": "f2265e3500f121ac69409138eebd70f0467f5a30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.2.4",
-                "reference": "v2.2.4",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/f2265e3500f121ac69409138eebd70f0467f5a30",
+                "reference": "f2265e3500f121ac69409138eebd70f0467f5a30",
                 "shasum": ""
             },
             "require": {
@@ -1496,7 +1499,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-23 06:56:04"
+            "time": "2013-07-30 11:22:46"
         },
         {
             "name": "twitter/bootstrap",
@@ -1677,12 +1680,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/xhprof.git",
-                "reference": "62638e0b4126823dbf3f02deb6e68753a4f0f7e6"
+                "reference": "ec8b884ffdae5dfa5e1e271ab6762115123989c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/xhprof/zipball/62638e0b4126823dbf3f02deb6e68753a4f0f7e6",
-                "reference": "62638e0b4126823dbf3f02deb6e68753a4f0f7e6",
+                "url": "https://api.github.com/repos/facebook/xhprof/zipball/ec8b884ffdae5dfa5e1e271ab6762115123989c5",
+                "reference": "ec8b884ffdae5dfa5e1e271ab6762115123989c5",
                 "shasum": ""
             },
             "require": {
@@ -1705,7 +1708,7 @@
                 "performance",
                 "profiling"
             ],
-            "time": "2013-07-19 22:03:53"
+            "time": "2013-08-09 16:22:45"
         },
         {
             "name": "firephp/firephp-core",
@@ -1713,12 +1716,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firephp/firephp-core.git",
-                "reference": "v0.4.0"
+                "reference": "fabad0f2503f9577fe8dd2cb1d1c7cd73ed2aacf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firephp/firephp-core/zipball/v0.4.0",
-                "reference": "v0.4.0",
+                "url": "https://api.github.com/repos/firephp/firephp-core/zipball/fabad0f2503f9577fe8dd2cb1d1c7cd73ed2aacf",
+                "reference": "fabad0f2503f9577fe8dd2cb1d1c7cd73ed2aacf",
                 "shasum": ""
             },
             "type": "library",
@@ -1845,8 +1848,10 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "bear/resource": 20,
+        "ray/di": 20,
+        "ray/aop": 20,
         "aura/input": 20,
-        "pagerfanta/pagerfanta": 20,
         "facebook/xhprof": 20,
         "firephp/firephp-core": 20
     },
