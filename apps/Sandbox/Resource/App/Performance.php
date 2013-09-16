@@ -2,12 +2,12 @@
 
 namespace Sandbox\Resource\App;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 
 /**
  * Performance
  */
-class Performance extends AbstractObject
+class Performance extends ResourceObject
 {
     /**
      * @return string

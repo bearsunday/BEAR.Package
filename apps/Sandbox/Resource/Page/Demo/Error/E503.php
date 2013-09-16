@@ -2,12 +2,12 @@
 
 namespace Sandbox\Resource\Page\Demo\Error;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 
 /**
  * 503
  */
-class E503 extends AbstractObject
+class E503 extends ResourceObject
 {
     public function onGet()
     {

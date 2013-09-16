@@ -1,8 +1,8 @@
 <?php
 
-namespace Sandbox\Resource\App\Restbucks;
+namespace Sandbox\Resource\AbstractResource;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\RenderInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -10,7 +10,7 @@ use Ray\Di\Di\Named;
 /**
  * Resource objects using Hal renderer
  */
-abstract class AbstractHal extends AbstractObject
+abstract class AbstractHal extends ResourceObject
 {
     /**
      * Set HalRenderer

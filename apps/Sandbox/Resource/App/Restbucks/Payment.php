@@ -2,12 +2,15 @@
 
 namespace Sandbox\Resource\App\Restbucks;
 
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\TmpDirInject;
+use BEAR\Resource\RenderInterface;
+use Ray\Di\Di\Named;
 
 /**
  * Payment
  */
-class Payment extends AbstractHal
+class Payment extends ResourceObject
 {
     use TmpDirInject;
 
@@ -51,5 +54,18 @@ class Payment extends AbstractHal
         // save
         file_put_contents($resourceFile, json_encode($this->body));
         return $this;
+    }
+
+    /**
+     * Set HalRenderer
+     *
+     * @param RenderInterface $renderer
+     *
+     * @Ray\Di\Di\Inject
+     * @Named("hal")
+     */
+    public function setRenderer(RenderInterface $renderer)
+    {
+        $this->renderer = $renderer;
     }
 }

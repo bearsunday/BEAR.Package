@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Ray\Aop\Weave;
@@ -43,7 +43,7 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
      * {@inheritdoc}
      * @SuppressWarnings("long")
      */
-    public function render(AbstractObject $resourceObject)
+    public function render(ResourceObject $resourceObject)
     {
         if (is_scalar($resourceObject->body)) {
             $resourceObject->view = $resourceObject->body;

@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Page\Redirect;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 
 /**
  * Redirect page

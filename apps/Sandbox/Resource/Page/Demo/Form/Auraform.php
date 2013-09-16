@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Form;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
 use BEAR\Sunday\Annotation\Form;
@@ -10,7 +10,7 @@ use BEAR\Sunday\Annotation\Form;
 /**
  * Contact form using Aura.Input
  */
-class Auraform extends AbstractObject
+class Auraform extends ResourceObject
 {
     use ResourceInject;
 

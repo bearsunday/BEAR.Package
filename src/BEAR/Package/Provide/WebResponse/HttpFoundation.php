@@ -7,9 +7,9 @@
 namespace BEAR\Package\Provide\WebResponse;
 
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\Logger;
-use BEAR\Resource\ObjectInterface as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
@@ -30,7 +30,7 @@ final class HttpFoundation implements ResponseInterface
     /**
      * Resource object
      *
-     * @var \BEAR\Resource\AbstractObject
+     * @var \BEAR\Resource\ResourceObject
      */
     private $resource;
 

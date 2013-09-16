@@ -2,14 +2,14 @@
 
 namespace Sandbox\Resource\App\First\Hypermedia;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\AInject;
 use BEAR\Sunday\Inject\ResourceInject;
 
 /**
  * Shop resource
  */
-class Shop extends AbstractObject
+class Shop extends ResourceObject
 {
     use ResourceInject;
     use AInject;

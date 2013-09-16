@@ -2,7 +2,7 @@
 namespace Sandbox\Resource\App\Blog;
 
 use BEAR\Package\Module\Database\Dbal\Setter\DbSetterTrait;
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Code;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Annotation\Cache;

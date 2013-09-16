@@ -1,7 +1,7 @@
 <?php
 namespace Sandbox\Resource\Page;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Inject\ResourceInject;
 

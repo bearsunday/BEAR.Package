@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Blog\Posts;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Annotation\Form;
 use BEAR\Sunday\Inject\ResourceInject;

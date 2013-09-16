@@ -3,12 +3,15 @@
 namespace Sandbox\Resource\App\Restbucks;
 
 use BEAR\Resource\Link;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\TmpDirInject;
+use BEAR\Resource\RenderInterface;
+use Ray\Di\Di\Named;
 
 /**
  * Order
  */
-class Order extends AbstractHal
+class Order extends ResourceObject
 {
     use TmpDirInject;
 
@@ -104,4 +107,16 @@ class Order extends AbstractHal
         return $this;
     }
 
+    /**
+     * Set HalRenderer
+     *
+     * @param RenderInterface $renderer
+     *
+     * @Ray\Di\Di\Inject
+     * @Named("hal")
+     */
+    public function setRenderer(RenderInterface $renderer)
+    {
+        $this->renderer = $renderer;
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Aspect\Time;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 use BEAR\Sunday\Annotation\Time;
 

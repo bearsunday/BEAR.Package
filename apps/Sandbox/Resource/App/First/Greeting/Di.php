@@ -2,14 +2,14 @@
 
 namespace Sandbox\Resource\App\First\Greeting;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
  * Greeting resource
  */
-class Di extends AbstractObject
+class Di extends ResourceObject
 {
     /**
      * @param string $message

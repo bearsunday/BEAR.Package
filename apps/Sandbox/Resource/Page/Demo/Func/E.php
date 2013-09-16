@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Func;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\RenderInterface;
 
 /**

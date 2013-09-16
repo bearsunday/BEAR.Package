@@ -2,12 +2,12 @@
 
 namespace Sandbox\Resource\App\First\Greeting;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 
 /**
  * My first AOP
  */
-class Aop extends AbstractObject
+class Aop extends ResourceObject
 {
     /**
      * @param string $name

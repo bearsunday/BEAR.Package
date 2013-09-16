@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Resource\Http;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 
 class Multi extends Page

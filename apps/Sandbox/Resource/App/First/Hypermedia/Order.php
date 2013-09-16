@@ -2,13 +2,13 @@
 
 namespace Sandbox\Resource\App\First\Hypermedia;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Link;
 
 /**
  * Order resource
  */
-class Order extends AbstractObject
+class Order extends ResourceObject
 {
     /**
      * @var array

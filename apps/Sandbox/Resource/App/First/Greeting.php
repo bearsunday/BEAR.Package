@@ -1,12 +1,12 @@
 <?php
 namespace Sandbox\Resource\App\First;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 
 /**
  * Greeting resource
  */
-class Greeting extends AbstractObject
+class Greeting extends ResourceObject
 {
     /**
      * @param string $name

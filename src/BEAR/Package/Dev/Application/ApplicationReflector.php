@@ -10,7 +10,7 @@ use Aura\Di\Exception;
 use BEAR\Package\Dev\Application\Exception\FileAlreadyExists;
 use BEAR\Package\Dev\Application\Exception\InvalidUri;
 use BEAR\Package\Dev\Application\Exception\NotWritable;
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\Exception\NotInstantiable;

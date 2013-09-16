@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Dev\Debug\ExceptionHandle;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter;
@@ -126,9 +126,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * Return error page
      *
      * @param                               $e
-     * @param \BEAR\Resource\AbstractObject $response
+     * @param \BEAR\Resource\ResourceObject $response
      *
-     * @return \BEAR\Resource\AbstractObject
+     * @return \BEAR\Resource\ResourceObject
      * @throws
      */
     private function buildErrorPage($e, ResourceObject $response)

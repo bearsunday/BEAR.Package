@@ -2,14 +2,14 @@
 
 namespace Sandbox\Resource\Page\Demo\Error;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 
 /**
  * Error page
  *
  * throw exception in resource method.
  */
-class Exception extends AbstractObject
+class Exception extends ResourceObject
 {
     public function onGet()
     {

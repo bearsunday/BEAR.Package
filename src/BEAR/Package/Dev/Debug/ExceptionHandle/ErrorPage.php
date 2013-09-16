@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Dev\Debug\ExceptionHandle;
 
-use BEAR\Resource\AbstractObject as AbstractPage;
+use BEAR\Resource\ResourceObject as AbstractPage;
 
 /**
  * Error page

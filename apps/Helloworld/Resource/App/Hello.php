@@ -2,12 +2,12 @@
 
 namespace Helloworld\Resource\App;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject;
 
 /**
  * Hello world
  */
-class Hello extends Page
+class Hello extends ResourceObject
 {
     /**
      * @param string $name

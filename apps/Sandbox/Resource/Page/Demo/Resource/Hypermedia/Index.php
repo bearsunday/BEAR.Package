@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Resource\Hypermedia;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
 use BEAR\Sunday\Inject\AInject;

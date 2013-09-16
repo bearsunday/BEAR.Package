@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ConsoleOutput;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Request;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use Guzzle\Parser\UriTemplate\UriTemplate;

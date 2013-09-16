@@ -6,8 +6,7 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\DevInvoker;
 use BEAR\Resource\Request;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
@@ -102,7 +101,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(AbstractObject $resourceObject)
+    public function render(ResourceObject $resourceObject)
     {
         if (is_scalar($resourceObject->body)) {
             $resourceObject->view = $resourceObject->body;
@@ -241,12 +240,12 @@ EOT;
      * Return label
      *
      * @param string $body
-     * @param AbstractObject $resourceObject
+     * @param ResourceObject $resourceObject
      * @param string $templateFile
      *
      * @return string
      */
-    private function getLabel($body, AbstractObject $resourceObject, $templateFile)
+    private function getLabel($body, ResourceObject $resourceObject, $templateFile)
     {
         $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode(
             $resourceObject->headers[CacheLoader::HEADER_CACHE],
@@ -262,7 +261,8 @@ EOT;
         $resourceName = ($resourceObject->uri ? : get_class($resourceObject));
 
         // code editor
-        $codeFile = (new ReflectionObject($resourceObject))->getFileName();
+        $ref = new ReflectionObject($resourceObject);
+        $codeFile = ($resourceObject instanceof WeavedInterface) ? $ref->getParentClass()->getFileName(): $ref->getFileName();
         $codeFile = $this->makeRelativePath($codeFile);
 
         // var
@@ -355,11 +355,11 @@ EOT;
     /**
      * Return resource meta info
      *
-     * @param AbstractObject $resourceObject
+     * @param ResourceObject $resourceObject
      *
      * @return string
      */
-    private function getResourceInfo(AbstractObject $resourceObject)
+    private function getResourceInfo(ResourceObject $resourceObject)
     {
         $info = $this->getParamsInfo($resourceObject);
         $info .= $this->getInterceptorInfo($resourceObject);
@@ -372,12 +372,12 @@ EOT;
     /**
      * Return method invocation arguments info
      *
-     * @param AbstractObject $resourceObject
+     * @param ResourceObject $resourceObject
      *
      * @return string
      * @return string
      */
-    private function getParamsInfo(AbstractObject $resourceObject)
+    private function getParamsInfo(ResourceObject $resourceObject)
     {
         $result = self::BADGE_ARGS . self::DIV_WELL;
         if (isset($resourceObject->headers[DevInvoker::HEADER_PARAMS])) {

@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\App\Demo\Hypermedia;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Link;
 use BEAR\Sunday\Inject\TmpDirInject;
 

@@ -2,12 +2,12 @@
 
 namespace Helloworld\Resource\Page;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject;
 
 /**
  * Hello world - min
  */
-class Minhello extends Page
+class Minhello extends ResourceObject
 {
     /**
      * @var string

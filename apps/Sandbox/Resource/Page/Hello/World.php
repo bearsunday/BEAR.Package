@@ -1,7 +1,7 @@
 <?php
 namespace Sandbox\Resource\Page\Hello;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 
 /**
  * Hello World page

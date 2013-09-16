@@ -2,12 +2,12 @@
 
 namespace Sandbox\Resource\App\First\Hypermedia;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 
 /**
  * Payment resource
  */
-class Payment extends AbstractObject
+class Payment extends ResourceObject
 {
     /**
      * @param string $card_no

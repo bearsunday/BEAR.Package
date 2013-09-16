@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
@@ -40,7 +40,7 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * @param \BEAR\Resource\AbstractObject $ro
+     * @param \BEAR\Resource\ResourceObject $ro
      */
     private function valuateElements(ResourceObject &$ro)
     {

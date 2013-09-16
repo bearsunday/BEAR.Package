@@ -2,7 +2,7 @@
 
 namespace Sandbox\Resource\Page\Demo\Resource\Param;
 
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 
 class Index extends Page
 {
