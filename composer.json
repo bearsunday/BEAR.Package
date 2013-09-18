@@ -28,7 +28,7 @@
         "bear/resource":"dev-develop",
         "ray/di":"dev-develop",
         "ray/aop":"dev-develop",
-        "bear/sunday":"0.7.*",
+        "bear/sunday":"dev-develop",
         "bear/ace":"1.0.*",
         "aura/input": "dev-develop",
         "aura/view": "1.1.2",
