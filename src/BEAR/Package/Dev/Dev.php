@@ -38,7 +38,7 @@ class Dev
     /**
      * @var string
      */
-    private $requestUri;
+    private $requestUri = '';
 
     /**
      * @var string
@@ -69,8 +69,6 @@ class Dev
             $this->requestUri = $server['REQUEST_URI'];
         } elseif (isset($argv[2])) {
             $this->requestUri = $argv[2];
-        } else {
-            throw new \BadMethodCallException;
         }
         $this->sapiName = $sapiName ? : php_sapi_name();
     }
@@ -115,7 +113,6 @@ class Dev
 
     public function iniSet()
     {
-        ini_set('display_errors', 1);
         ini_set('xhprof.output_dir', sys_get_temp_dir());
         ini_set('xdebug.collect_params', 0);
         ini_set('xdebug.max_nesting_level', 500);
@@ -272,7 +269,7 @@ class Dev
     {
         require_once __DIR__ . '/function/e.php';
         require_once __DIR__ . '/function/p.php';
-
+        require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor/printo/printo/src.php';
         return $this;
     }
 

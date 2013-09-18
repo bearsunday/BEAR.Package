@@ -37,7 +37,7 @@ $postInject = function(AppInterface $app){
 //
 // get application instance with cache key
 //
-$injector = new CacheInjector($injector, $postInject, __NAMESPACE__ . $mode, new ArrayCache);
+$injector = new CacheInjector($injector, $postInject, __NAMESPACE__ . $mode, new ApcCache);
 $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
 
 /* @var $app \BEAR\Sunday\Extension\Application\AppInterface */

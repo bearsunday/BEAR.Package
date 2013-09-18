@@ -49,7 +49,6 @@ class ResourceGraphTest extends \PHPUnit_Framework_TestCase
     {
         $resource = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/vendor/bear/resource/scripts/instance.php';
         /** @var $resource \BEAR\Resource\Resource */
-        $injector = new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))));
         $scheme = new SchemeCollection;
         $scheme->scheme('http')->host('*')->toAdapter(
             new Http

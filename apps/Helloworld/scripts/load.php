@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 $packageDir = dirname(dirname(dirname(__DIR__)));
-
+ini_set('xdebug.max_nesting_level', 200);
 // Annotation auto loader
 $loader = require $packageDir . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */

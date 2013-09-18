@@ -55,9 +55,10 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      *
      * @covers BEAR\Package\Dev\Application\ApplicationReflector::getResources
      */
-    public function testGetResources(array $resources)
+    public function estGetResources(array $resources)
     {
         $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Helloworld/scripts/instance.php';
+        $this->assertInstanceOf('BEAR\Sunday\Extension\Application\AppInterface', $app);
         $resources = (new ApplicationReflector($app))->getResources();
         $this->assertSame(3, count($resources));
     }
@@ -159,7 +160,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testNewResourceNameClass(array $newResource)
     {
         $contents = $newResource[0];
-        $this->assertContains('class Resource extends AbstractObject', $contents);
+        $this->assertContains('class Resource extends ResourceObject', $contents);
     }
 
 

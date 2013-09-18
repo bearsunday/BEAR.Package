@@ -25,7 +25,7 @@ class HandleModule extends AbstractModule
             ->annotatedWith('exceptionTpl')
             ->toInstance(__DIR__ . '/template/view.php');
         $this
-            ->bind('BEAR\Resource\AbstractObject')
+            ->bind('BEAR\Resource\ResourceObject')
             ->annotatedWith('errorPage')
             ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ErrorPage');
         $this

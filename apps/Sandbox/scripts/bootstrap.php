@@ -15,6 +15,9 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 umask(0);
 
+ini_set('xdebug.max_nesting_level', 200);
+ini_set('display_errors', 0);
+
 $packageDir = dirname(dirname(dirname(__DIR__)));
 $loader = require $packageDir . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */

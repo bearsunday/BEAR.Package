@@ -40,6 +40,8 @@ final class ApplicationLogger implements ApplicationLoggerInterface
      */
     public function write()
     {
-        $this->logger->write();
+        if ($this->logger instanceof ResourceLoggerInterface) {
+            $this->logger->write();
+        }
     }
 }
