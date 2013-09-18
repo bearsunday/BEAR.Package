@@ -1,12 +1,14 @@
 {
     "name":"bear/package",
-    "description":"BEAR.Sunday application package",
+    "description":"BEAR.Sunday framework package",
     "keywords":[
         "BEAR.Sunday",
-        "framework",
         "DI",
         "AOP",
-        "REST"
+        "REST",
+        "framework",
+        "hypermedia",
+        "API"
     ],
     "homepage":"https://github.com/koriym/BEAR.Package",
     "license":"BSD-3-Clause",
@@ -17,7 +19,7 @@
         }
     ],
     "provide":{
-        "bear/framework": "0.7.0"
+        "bear/framework": "0.8.0"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
