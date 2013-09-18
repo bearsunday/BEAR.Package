@@ -11,7 +11,7 @@ use BEAR\Resource\DevInvoker;
 use BEAR\Resource\Request;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
-use BEAR\Sunday\Module\Cqrs\Interceptor\CacheLoader;
+use BEAR\Package\Module\Cache\Interceptor\CacheLoader;
 use DateInterval;
 use DateTime;
 use ReflectionClass;

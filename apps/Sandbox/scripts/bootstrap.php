@@ -17,6 +17,7 @@ umask(0);
 
 ini_set('xdebug.max_nesting_level', 200);
 ini_set('display_errors', 0);
+ob_start();
 
 $packageDir = dirname(dirname(dirname(__DIR__)));
 $loader = require $packageDir . '/vendor/autoload.php';

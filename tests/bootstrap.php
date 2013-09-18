@@ -5,6 +5,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 error_reporting(E_ALL);
 ini_set('xdebug.max_nesting_level', 300);
+ob_start();
 
 require dirname(__DIR__) . '/apps/Helloworld/scripts/clear.php';
 require dirname(__DIR__) . '/apps/Sandbox/scripts/clear.php';
