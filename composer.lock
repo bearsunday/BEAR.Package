@@ -375,6 +375,63 @@
             "time": "2013-05-16 00:00:00"
         },
         {
+            "name": "aura/web",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/auraphp/Aura.Web.git",
+                "reference": "494f5082989e4a479ea3e7e5304c26ffa520cf3e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/494f5082989e4a479ea3e7e5304c26ffa520cf3e",
+                "reference": "494f5082989e4a479ea3e7e5304c26ffa520cf3e",
+                "shasum": ""
+            },
+            "require": {
+                "aura/installer-default": ">=1.0.0",
+                "php": ">=5.4.0"
+            },
+            "type": "aura-package",
+            "autoload": {
+                "psr-0": {
+                    "Aura\\Web": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Paul M. Jones",
+                    "email": "pmjones88@gmail.com",
+                    "homepage": "http://paul-m-jones.com"
+                },
+                {
+                    "name": "Hari KT",
+                    "email": "kthari85@gmail.com",
+                    "homepage": "http://harikt.com"
+                },
+                {
+                    "name": "Aura.Web Contributors",
+                    "homepage": "https://github.com/auraphp/Aura.Web/contributors"
+                },
+                {
+                    "name": "Pascal Borrelli",
+                    "email": "pascal@borreli.com"
+                }
+            ],
+            "description": "The Aura Web package provides tools to build web page controllers, including an AbstractPage for action methods, a Context class for disovering the request environment, and a Response transfer object that describes the eventual HTTP response.",
+            "homepage": "http://auraphp.com/Aura.Web",
+            "keywords": [
+                "controller",
+                "page controller",
+                "web controller"
+            ],
+            "time": "2013-09-10 00:00:00"
+        },
+        {
             "name": "bear/ace",
             "version": "1.0.0",
             "source": {
@@ -423,12 +480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "32c980d84c7747ef26d4767e54021720902e1f23"
+                "reference": "3661035f1c1c8f018b99b8aee3612160c487a3bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/32c980d84c7747ef26d4767e54021720902e1f23",
-                "reference": "32c980d84c7747ef26d4767e54021720902e1f23",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/3661035f1c1c8f018b99b8aee3612160c487a3bb",
+                "reference": "3661035f1c1c8f018b99b8aee3612160c487a3bb",
                 "shasum": ""
             },
             "require": {
@@ -458,6 +515,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -472,7 +530,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2013-09-17 15:29:13"
+            "time": "2013-09-18 11:08:36"
         },
         {
             "name": "bear/sunday",
@@ -480,15 +538,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "7f37e450ca5730fdf4ff46f930f6644d6dd8121f"
+                "reference": "64560f43f92fcab0e1e67761fd23ee86fed427e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/7f37e450ca5730fdf4ff46f930f6644d6dd8121f",
-                "reference": "7f37e450ca5730fdf4ff46f930f6644d6dd8121f",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/64560f43f92fcab0e1e67761fd23ee86fed427e8",
+                "reference": "64560f43f92fcab0e1e67761fd23ee86fed427e8",
                 "shasum": ""
             },
             "require": {
+                "aura/web": "*",
                 "bear/resource": "dev-develop",
                 "php": ">=5.4.0",
                 "ray/aop": "dev-develop",
@@ -519,7 +578,7 @@
                 "hypermedia",
                 "rest"
             ],
-            "time": "2013-09-17 23:54:23"
+            "time": "2013-09-18 13:43:51"
         },
         {
             "name": "classpreloader/classpreloader",
