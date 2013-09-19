@@ -1,7 +1,6 @@
 <?php
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-ob_start();
 
 class FireTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +21,7 @@ class FireTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        ob_end_clean();
+        ob_end_flush();
     }
 
     protected function setUp()
@@ -48,15 +47,20 @@ class FireTest extends \PHPUnit_Framework_TestCase
         unset($_SERVER['HTTP_USER_AGENT']);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testWrite()
     {
-        ob_start();
         $this->fire->write($this->request, $this->ro);
         $headersList = print_r(xdebug_get_headers(), true);
         $this->assertContains('"Type":"TABLE","Label":"headers","File"', $headersList);
         ob_end_clean();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testWriteBodyCanBeTable()
     {
         $this->ro->body = [
