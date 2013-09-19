@@ -4,8 +4,7 @@ namespace BEAR\Sunday\Module\Cache;
 
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Annotation\Cache as CacheAnnotation;
-use BEAR\Sunday\Module\Cqrs\Interceptor\CacheLoader;
-use BEAR\Sunday\Module\Mock\ResourceObject\MockResource;
+use BEAR\Package\Mock\ResourceObject\MockResource;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\PhpFileCache;

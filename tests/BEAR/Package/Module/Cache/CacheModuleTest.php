@@ -9,7 +9,6 @@ use Ray\Di\Injector;
 use Guzzle\Cache\CacheAdapterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-use BEAR\Sunday\Annotation\Cache;
 
 class CacheModuleTestClass
 {
@@ -33,7 +32,6 @@ class CacheModuleTestClass
     {
         return rand(0, 100);
     }
-
 }
 
 class CacheModuleTest extends \PHPUnit_Framework_TestCase

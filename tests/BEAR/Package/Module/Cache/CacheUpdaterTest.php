@@ -11,7 +11,7 @@ use Doctrine\Common\Cache\ArrayCache as CacheStorage;
 use Ray\Aop\ReflectiveMethodInvocation;
 use BEAR\Sunday\Annotation\CacheUpdate;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
-use BEAR\Sunday\Module\Mock\ResourceObject\MockResource;
+use BEAR\Package\Mock\ResourceObject\MockResource;
 
 class CacheUpdaterTest extends \PHPUnit_Framework_TestCase
 {

@@ -47,7 +47,8 @@ class Web
         if ($path == '' || substr($path, -1, 1) === '/') {
             $path .= 'index.php';
         }
-        $scriptFile = __DIR__ . '/public/' . $path;
+        $packageRoot = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+        $scriptFile =  $packageRoot . '/dev/public' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
             ob_start();
