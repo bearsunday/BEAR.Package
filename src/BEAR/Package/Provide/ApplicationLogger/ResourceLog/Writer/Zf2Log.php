@@ -59,6 +59,11 @@ final class Zf2Log implements LogWriterInterface
         $this->logger->info($msg, ['page' => $this->pageId]);
     }
 
+    /**
+     * @param $hasServerInfo
+     *
+     * @return string
+     */
     private function getPath($hasServerInfo)
     {
         if (! $hasServerInfo) {

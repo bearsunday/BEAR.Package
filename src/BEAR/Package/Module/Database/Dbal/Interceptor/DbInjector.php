@@ -118,6 +118,12 @@ final class DbInjector implements MethodInterceptor
         return $result;
     }
 
+    /**
+     * @param       $pagerAnnotation
+     * @param array $connectionParams
+     *
+     * @return \BEAR\Package\Module\Database\Dbal\PagerConnection|\Doctrine\DBAL\Connection
+     */
     private function getDb($pagerAnnotation, array $connectionParams)
     {
         if (! $pagerAnnotation) {

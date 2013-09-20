@@ -42,7 +42,7 @@ class SmartyAdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \BEAR\Sunday\Exception\TemplateNotFound
+     * @expectedException \BEAR\Package\Provide\TemplateEngine\Exception\TemplateNotFound
      */
     public function testTemplateNotExists()
     {

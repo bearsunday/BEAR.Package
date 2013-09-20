@@ -111,6 +111,9 @@ class Dev
         );
     }
 
+    /**
+     * @return $this
+     */
     public function iniSet()
     {
         ini_set('xhprof.output_dir', sys_get_temp_dir());
@@ -302,6 +305,11 @@ class Dev
         return $app;
     }
 
+    /**
+     * @param AbstractApp $app
+     *
+     * @return AbstractApp
+     */
     private function route(AbstractApp $app)
     {
         global $argv;

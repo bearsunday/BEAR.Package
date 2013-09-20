@@ -53,6 +53,9 @@ trait AuraFormTrait
         return $page->onGet();
     }
 
+    /**
+     * @return array [$submit, $hasSabmit]
+     */
     private function getSubmit()
     {
         if (isset($_POST['submit'])) {
@@ -64,7 +67,11 @@ trait AuraFormTrait
 
     }
 
-
+    /**
+     * @param array $errorMessages
+     *
+     * @return string
+     */
     protected function getErrorMessage(array $errorMessages)
     {
         return implode(',', $errorMessages);
