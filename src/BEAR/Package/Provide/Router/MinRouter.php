@@ -11,6 +11,7 @@ use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
+use Aura\Router\Route as AuraRoute;
 
 /**
  * Standard min router
@@ -90,22 +91,38 @@ final class MinRouter implements RouterInterface
         $globals = $this->globals;
         $uri = $globals['_SERVER']['REQUEST_URI'];
         $route = $this->map ? $this->map->match(parse_url($uri, PHP_URL_PATH), $globals['_SERVER']) : false;
-        if ($route === false) {
-            list($method, $query,) = $this->getMethodQuery();
-            $pageUri = $this->getPageKey();
-        } else {
-            $method = $route->values['method'];
-            $pageUri = $route->values['path'];
-            $query = [];
-            $keys = array_keys($route->params);
-            foreach ($keys as $key) {
-                $query[$key] = $route->values[$key];
-            }
+
+        if ($route !== false) {
+            return $this->hasRoute($route);
+        }
+
+        list($method, $query,) = $this->getMethodQuery();
+        $method = strtolower($method);
+        $pageUri = $this->getPageKey();
+        unset($query[self::METHOD_OVERRIDE]);
+
+        return [$method, $pageUri, $query];
+    }
+
+    /**
+     * @param AuraRoute $route
+     *
+     * @return array
+     */
+    private function hasRoute(AuraRoute $route)
+    {
+        $method = $route->values['method'];
+        $pageUri = $route->values['path'];
+        $query = [];
+        $keys = array_keys($route->params);
+        foreach ($keys as $key) {
+            $query[$key] = $route->values[$key];
         }
         unset($query[self::METHOD_OVERRIDE]);
 
         return [$method, $pageUri, $query];
     }
+
 
     /**
      * Return request method
@@ -115,20 +132,22 @@ final class MinRouter implements RouterInterface
     private function getMethodQuery()
     {
         $globals = $this->globals;
+
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'GET' && isset($globals['_GET'][self::METHOD_OVERRIDE_GET])) {
-            $method = $globals['_GET'][self::METHOD_OVERRIDE_GET];
-            $query = $globals['_GET'];
+            return [
+                $globals['_GET'][self::METHOD_OVERRIDE_GET],
+                $globals['_GET']
+            ];
         } elseif ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
-            $method = $globals['_POST'][self::METHOD_OVERRIDE];
-            $query = $globals['_POST'];
-        } else {
-            $method = $globals['_SERVER']['REQUEST_METHOD'];
-            $query = $globals['_GET'];
+            return [
+                $globals['_POST'][self::METHOD_OVERRIDE],
+                $globals['_POST']
+            ];
         }
-
-        $method = strtolower($method);
-
-        return [$method, $query];
+        return [
+            $globals['_SERVER']['REQUEST_METHOD'],
+            $globals['_GET']
+        ];
     }
 
     /**

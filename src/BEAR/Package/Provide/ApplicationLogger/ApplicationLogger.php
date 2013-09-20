@@ -12,9 +12,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\PreDestroy;
-/**
- * Logger
- */
+
 final class ApplicationLogger implements ApplicationLoggerInterface
 {
     /**

@@ -49,11 +49,9 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
             $resourceObject->view = $resourceObject->body;
             return (string)$resourceObject->body;
         }
-        if ($resourceObject instanceof WeavedInterface) {
-            $file = (new ReflectionClass($resourceObject))->getParentClass()->getFileName();
-        } else {
-            $file = (new ReflectionClass($resourceObject))->getFileName();
-        }
+        $file =  ($resourceObject instanceof WeavedInterface) ?
+            (new ReflectionClass($resourceObject))->getParentClass()->getFileName() :
+            (new ReflectionClass($resourceObject))->getFileName();
 
         // assign 'resource'
         $this->templateEngineAdapter->assign('resource', $resourceObject);

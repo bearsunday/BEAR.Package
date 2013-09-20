@@ -72,21 +72,34 @@ class Screen
             if (isset($row['params'])) {
                 $row['args'] = $row['params'];
             }
-            if (isset($row['class'])) {
-                $row['statement'] = "{$row['class']}{$row['type']}{$row['function']}()";
-            } elseif (isset($row['function'])) {
-                $row['statement'] = "{$row['function']}()";
-            } elseif (isset($row['include_filename'])) {
-                $row['statement'] = "include_filename {$row['include_filename']}";
-            } else {
-                $row['statement'] = "...";
-            }
+            $this->rowStatement($row);
             $row['source'] = isset($row['file']) ? $this->getFiles($row['file'], $row['line']) : 'n/a';
             $stack[] = $row;
         }
 
         return $stack;
     }
+
+    /**
+     * Add statement
+     *
+     * @param $row
+     */
+    private function rowStatement(&$row)
+    {
+        if (isset($row['class'])) {
+            $row['statement'] = "{$row['class']}{$row['type']}{$row['function']}()";
+            return;
+        } elseif (isset($row['function'])) {
+            $row['statement'] = "{$row['function']}()";
+            return;
+        } elseif (isset($row['include_filename'])) {
+            $row['statement'] = "include_filename {$row['include_filename']}";
+            return;
+        }
+        $row['statement'] = "...";
+    }
+
 
     /**
      * Return files

@@ -133,9 +133,10 @@ class Dev
     {
         set_exception_handler(
             function (\Exception $e) use ($logDir) {
-                $handler = new ExceptionHandler(new SymfonyResponse(new ConsoleOutput), (dirname(
-                        __DIR__
-                    )) . '/Module/ExceptionHandle/template/view.php');
+                $handler = new ExceptionHandler(
+                    new SymfonyResponse(new ConsoleOutput),
+                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/view.php'
+                );
                 $handler->setLogDir($logDir);
                 $handler->handle($e);
             }
@@ -280,7 +281,6 @@ class Dev
      */
     public function getDevApplication($mode)
     {
-        global $argv;
         global $mode;
 
         // direct file for built in web server
@@ -294,19 +294,29 @@ class Dev
         $app = require 'scripts/instance.php';
         /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
-        // Use cli parameter for routing (web.php get /)
-        if (PHP_SAPI === 'cli') {
-            $app->router->setArgv($argv);
-        } else {
-            $app->router->setGlobals($GLOBALS);
-            $argv = [];
-        }
+        $app = $this->route($app);
 
         // development web service (/dev)
         $this->setApp($app)->webService();
 
         return $app;
     }
+
+    private function route(AbstractApp $app)
+    {
+        global $argv;
+
+        if (PHP_SAPI === 'cli') {
+            // Use cli parameter for routing (web.php get /)
+            $app->router->setArgv($argv);
+            return $app;
+        }
+        $app->router->setGlobals($GLOBALS);
+        $argv = [];
+
+        return $app;
+    }
+
 
     /**
      * Output
@@ -320,10 +330,9 @@ class Dev
     {
         if ($this->return) {
             return [$code, $html];
-        } else {
-            http_response_code($code);
-            echo $html;
-            exit(0);
         }
+        http_response_code($code);
+        echo $html;
+        exit(0);
     }
 }

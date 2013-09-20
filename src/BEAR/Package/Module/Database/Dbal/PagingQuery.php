@@ -95,11 +95,11 @@ class PagingQuery implements Countable, IteratorAggregate
         if ($this->params) {
             /** @noinspection PhpUndefinedMethodInspection */
             $result = $pdo->prepare($query)->execute($this->params)->fetchColumn();
-        } else {
-            /** @noinspection PhpUndefinedMethodInspection */
-            $result = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            return new ArrayIterator($result);
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
+        $result = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
         return new ArrayIterator($result);
     }
 
@@ -130,21 +130,18 @@ class PagingQuery implements Countable, IteratorAggregate
     {
         // be smart and try to guess the total number of records
         $countQuery = $this->getCountQuery($query);
-        if ($countQuery) {
-            if ($params) {
-                /** @noinspection PhpUndefinedMethodInspection */
-                $count = $this->pdo->prepare($countQuery)->execute($params)->fetchColumn();
-            } else {
-                /** @noinspection PhpUndefinedMethodInspection */
-                $count = $this->pdo->query($countQuery)->fetchColumn();
-            }
-        } else {
+        if (! $countQuery) {
             // GROUP BY => fetch the whole result set and count the rows returned
-            /** @noinspection PhpUndefinedMethodInspection */
             $result = $this->pdo->fetchAll($query);
             $count = count($result);
-        }
 
+            return (integer)$count;
+        }
+        if ($params) {
+            $count = $this->pdo->prepare($countQuery)->execute($params)->fetchColumn();
+            return (integer)$count;
+        }
+        $count = $this->pdo->query($countQuery)->fetchColumn();
         return (integer)$count;
     }
 

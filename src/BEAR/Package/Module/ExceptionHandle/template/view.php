@@ -24,8 +24,6 @@ VIEW_LOGIC: {
     if ($previousE) {
         $headers .= $screen->getHeader($previousE, 'warning');
     }
-    $dependencyBindings = $view['dependency_bindings'];
-    $modules = print_r($view['modules'], true);
 }
 $html = <<<EOT
 <!DOCTYPE html>
@@ -70,8 +68,6 @@ $html = <<<EOT
       <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
       <li><a href="#file" data-toggle="tab">File</a></li>
       <li><a href="#files" data-toggle="tab">Include Files</a></li>
-      <li><a href="#bindings" data-toggle="tab">Dependency Bindings</a></li>
-      <li><a href="#modules" data-toggle="tab">Installed Modules</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade in active" id="summary">
@@ -84,10 +80,6 @@ $html = <<<EOT
       <pre class="prettyprint linenums">
         {$file}
       </pre>
-    </div>
-
-    <div class="tab-pane" id="bindings">
-      <p><pre>{$dependencyBindings}</pre></p>
     </div>
 
     <div class="tab-pane" id="files">

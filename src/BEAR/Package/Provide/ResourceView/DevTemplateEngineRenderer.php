@@ -455,7 +455,7 @@ EOT;
         ) : false;
         $result = self::BADGE_CACHE . self::DIV_WELL;
         if ($cache === false) {
-            return $result . 'n/a' . '</div>';
+            return $result . 'n/a</div>';
         }
         $iconLife = self::ICON_LIFE;
         $iconTime = self::ICON_TIME;

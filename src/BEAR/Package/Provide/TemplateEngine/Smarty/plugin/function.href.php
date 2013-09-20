@@ -54,12 +54,9 @@ function smarty_function_href($params, $template)
     $data = (isset($params['data'])) ? $params['data'] : $template->smarty->tpl_vars['resource']->value->body;
     $resource = $template->smarty->tpl_vars['resource']->value;
     $link = $resource->links[$rel];
-    if (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) {
-        // get expanded url
-        $uri = (new UriTemplate)->expand($link[Link::HREF], (array)$data);
-    } else {
-        $uri = $link[Link::HREF];
-    }
+    $uri = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ?
+        (new UriTemplate)->expand($link[Link::HREF], (array)$data) :
+        $link[Link::HREF];
 
     // remove "page://self/"
     $uri = str_replace('page://self/', '/', $uri);

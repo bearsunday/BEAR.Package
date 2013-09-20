@@ -54,14 +54,20 @@ final class Zf2Log implements LogWriterInterface
         $msg .= "\tcode:" . $result->code;
         $msg .= "\tbody:" . json_encode($result->body);
         $msg .= "\theader:" . json_encode($result->headers);
-        if (isset($_SERVER['PATH_INFO'])) {
-            $path = $_SERVER['PATH_INFO'];
-            $path .= $_GET ? '?' : '';
-            $path .= http_build_query($_GET);
-        } else {
-            $path = '/';
-        }
+        $path = $this->getPath(isset($_SERVER['PATH_INFO']));
         $msg .= "\tpath:$path";
         $this->logger->info($msg, ['page' => $this->pageId]);
+    }
+
+    private function getPath($hasServerInfo)
+    {
+        if (! $hasServerInfo) {
+            return '/';
+        }
+        $path = $_SERVER['PATH_INFO'];
+        $path .= $_GET ? '?' : '';
+        $path .= http_build_query($_GET);
+
+        return $path;
     }
 }

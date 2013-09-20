@@ -114,7 +114,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     public function handle(Exception $e)
     {
-        $isAjax = isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] === 'XMLHttpRequest';
         $page = $this->buildErrorPage($e, $this->errorPage);
         $id = $page->headers['X-EXCEPTION-ID'];
         $this->writeExceptionLog($e, $id);
@@ -175,8 +174,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         METHOD_NOT_ALLOWED:
         INVALID_URI:
 
-        if (PHP_SAPI === 'cli') {
-        } else {
+        if (PHP_SAPI !== 'cli') {
             $response->view = $this->getView($e);
         }
         $response->headers['X-EXCEPTION-CLASS'] = get_class($e);
@@ -269,6 +267,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         $file = $this->getLogFilePath($exceptionId);
         if (is_writable($this->logDir)) {
             file_put_contents($file, $data);
+
         } else {
             error_log("{$file} is not writable");
         }

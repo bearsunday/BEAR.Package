@@ -19,17 +19,11 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        rmdir(__DIR__ . '/NotWritable');
     }
 
     protected function setUp()
     {
-        static $app;
-        parent::setUp();
-        if (!$app) {
-            require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/clear.php';
-            $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/instance.php';
-        }
+        $app = clone $GLOBALS['_BEAR_APP'];
         $this->appReflector = new ApplicationReflector($app);
     }
 
@@ -229,5 +223,4 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $num = $this->appReflector->compileAllResources();
         $this->assertInternalType('integer', $num);
     }
-
 }

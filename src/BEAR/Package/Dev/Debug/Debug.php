@@ -28,12 +28,7 @@ class Debug
             trim(file($receiver['file'])[$receiver['line'] - 1]),
             $matches
         );
-        if (isset($matches[1])) {
-            $varName = $matches[1];
-        } else {
-            $varName = '(void)';
-            $varDump = '<br>';
-        }
+        list($varName, $varDump)  = isset($matches[1]) ? [$matches[1], ''] : ['(void)', '<br>'];
 
         if ($isCli) {
             self::outputCli($varName, $var, $receiver, $method);
@@ -59,14 +54,12 @@ class Debug
         // contents
         $isCli = (PHP_SAPI === 'cli');
         $htmlErrors = ini_get('html_errors');
-        if (extension_loaded('xdebug')) {
-            if ($isCli) {
-                ini_set('xdebug.xdebug.cli_color', true);
-            }
-            ini_set('xdebug.var_display_max_depth', $level);
-        } else {
+        if (! extension_loaded('xdebug')) {
             ini_set('html_errors', 'On');
+            return [$htmlErrors, $isCli];
         }
+        ini_set('xdebug.xdebug.cli_color', true);
+        ini_set('xdebug.var_display_max_depth', $level);
         return [$htmlErrors, $isCli];
     }
 

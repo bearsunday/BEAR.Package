@@ -42,9 +42,9 @@ class Stub implements MethodInterceptor
         $object = $invocation->getThis();
         if (is_array($object->body)) {
             $object->body = array_merge($object->body, $this->stub);
-        } else {
-            $object->body = $this->stub;
+            return $object;
         }
+        $object->body = $this->stub;
         return $object;
     }
 }

@@ -37,20 +37,32 @@ class FileTree
      */
     public function tree($placeholder, $path, $label)
     {
-        if (is_array($path)) {
-            $isDir = 'false';
-            foreach ($path as &$file) {
-                if (strpos($file, $this->root, 0) === 0) {
-                    $file = substr($file, strlen($this->root));
-                }
-            }
-            $path = serialize($path);
-        } else {
-            $isDir = 'true';
-            $path = $this->root;
-        }
+        list($isDir, $path) = $this->getPath($path);
         $this->cmd .= "addTree('{$placeholder}', '{$path}/', {$isDir}, '{$label}');";
         return $this;
+    }
+
+    /**
+     * @param $path
+     *
+     * @return array
+     */
+    private function getPath($path)
+    {
+        if (! is_array($path)) {
+            $isDir = 'true';
+            $path = $this->root;
+            return [$isDir, $path];
+        }
+        $isDir = 'false';
+        foreach ($path as &$file) {
+            if (strpos($file, $this->root, 0) === 0) {
+                $file = substr($file, strlen($this->root));
+            }
+        }
+        $path = serialize($path);
+
+        return [$isDir, $path];
     }
 
     /**

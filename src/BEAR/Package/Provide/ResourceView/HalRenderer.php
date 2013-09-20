@@ -72,9 +72,9 @@ class HalRenderer implements RenderInterface
             $attr = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ? [Link::TEMPLATED => true] : [];
             if (isset($link[Link::HREF])) {
                 $hal->addLink($rel, $link[Link::HREF], $title, $attr);
-            } else {
-                throw new Exception\HrefNotFound($rel);
+                continue;
             }
+            throw new Exception\HrefNotFound($rel);
         }
 
         return $hal;

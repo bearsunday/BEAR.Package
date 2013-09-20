@@ -84,19 +84,17 @@ final class Fire implements LogWriterInterface
     private function fireBody(ResourceObject $result)
     {
         $body = $this->normalize($result->body);
-        $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys(
-                    $body[1]
-                ));
-        if ($isTable) {
-            $table = [];
-            $table[] = (array_values(array_keys($body[0])));
-            foreach ((array)$body as $val) {
-                $table[] = array_values((array)$val);
-            }
-            $this->fire->table('body', $table);
-        } else {
+        $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys($body[1]));
+        if (! $isTable) {
             $this->fire->log($body, 'body');
+            return;
         }
+        $table = [];
+        $table[] = (array_values(array_keys($body[0])));
+        foreach ((array)$body as $val) {
+            $table[] = array_values((array)$val);
+        }
+        $this->fire->table('body', $table);
     }
 
     /**
