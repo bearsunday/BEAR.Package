@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8a0375fa730decd5c074e566c75d04ae",
+    "hash": "d0ca84030bfabe489f02beb0841b0f17",
     "packages": [
         {
             "name": "any/serializer",
@@ -236,7 +236,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari K T",
+                    "name": "Hari KT",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
@@ -289,7 +289,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari K T",
+                    "name": "Hari KT",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
