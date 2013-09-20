@@ -30,8 +30,10 @@ $injector = function() use ($mode) {
 //
 // post injection procedure, this was called only one time in system startup.
 //
-$postInject = function(AppInterface $app){
-    (new ApplicationReflector($app))->compileAllResources();
+$postInject = function(AppInterface $app) use ($mode) {
+    if ($mode === 'prod') {
+        (new ApplicationReflector($app))->compileAllResources();
+    }
 };
 
 //
