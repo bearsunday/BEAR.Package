@@ -38,6 +38,9 @@ final class Fire implements LogWriterInterface
      */
     public function write(RequestInterface $request, ResourceObject $result)
     {
+        if (headers_sent()) {
+            return;
+        }
         $requestLabel = $request->toUriWithMethod();
         $this->fire->group($requestLabel);
         $this->fireResourceObjectLog($result);
