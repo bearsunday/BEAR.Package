@@ -30,7 +30,7 @@ $injector = function() use ($mode) {
 //
 // post injection procedure, this was called only one time in system startup.
 //
-$postInject = function(AppInterface $app) use ($mode) {
+$initialization = function(AppInterface $app) use ($mode) {
     if ($mode === 'prod') {
         (new ApplicationReflector($app))->compileAllResources();
     }
@@ -39,7 +39,7 @@ $postInject = function(AppInterface $app) use ($mode) {
 //
 // get application instance with cache key
 //
-$injector = new CacheInjector($injector, $postInject, __NAMESPACE__ . $mode, new ApcCache);
+$injector = new CacheInjector($injector, $initialization, __NAMESPACE__ . $mode, new ApcCache);
 $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
 
 /* @var $app \BEAR\Sunday\Extension\Application\AppInterface */

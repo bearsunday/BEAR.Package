@@ -17,6 +17,9 @@ class Aspect extends AbstractModule
      */
     private $params;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         // install application aspect

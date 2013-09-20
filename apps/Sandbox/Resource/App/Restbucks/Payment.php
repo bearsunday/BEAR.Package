@@ -7,9 +7,6 @@ use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Resource\RenderInterface;
 use Ray\Di\Di\Named;
 
-/**
- * Payment
- */
 class Payment extends ResourceObject
 {
     use TmpDirInject;

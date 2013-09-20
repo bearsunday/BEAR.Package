@@ -10,9 +10,6 @@ use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\Module\InjectorModule;
 use BEAR\Package\Module\Package\PackageModule;
 
-/**
- * Production module
- */
 class AppModule extends AbstractModule
 {
     /**

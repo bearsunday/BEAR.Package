@@ -7,16 +7,10 @@ use BEAR\Resource\Link;
 use BEAR\Sunday\Inject\TmpDirInject;
 use DirectoryIterator;
 
-/**
- * Orders
- */
 class Orders extends ResourceObject
 {
     use TmpDirInject;
 
-    /**
-     * @return Orders
-     */
     public function onGet()
     {
         // load

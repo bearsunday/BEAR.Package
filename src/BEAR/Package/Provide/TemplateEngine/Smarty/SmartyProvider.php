@@ -11,6 +11,8 @@ use BEAR\Sunday\Inject\AppDirInject;
 use BEAR\Sunday\Inject\TmpDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Smarty;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 /**
  * Smarty3
@@ -20,7 +22,29 @@ use Smarty;
 class SmartyProvider implements Provide
 {
     use TmpDirInject;
-    use AppDirInject;
+
+    /**
+     * App vendor path
+     *
+     * @var string
+     */
+    private $vendorDir;
+
+
+    /**
+     * App directory path setter
+     *
+     * @param string $vendorDir
+     *
+     * @return void
+     *
+     * @Inject
+     * @Named("vendor_dir")
+     */
+    public function setVendorDir($vendorDir)
+    {
+        $this->vendorDir = $vendorDir;
+    }
 
     /**
      * Return instance
@@ -36,14 +60,13 @@ class SmartyProvider implements Provide
         }
 
         $smarty = new Smarty;
-        $appPlugin = $this->appDir . '/vendor/libs/smarty/plugin/';
+        $appPlugin = $this->vendorDir . '/smarty/plugin/';
         $frameworkPlugin = __DIR__ . '/plugin';
         $smarty
             ->setCompileDir($this->tmpDir . '/smarty/template_c')
             ->setCacheDir($this->tmpDir . '/smarty/cache')
-            ->setTemplateDir($this->appDir . '/Resource/View')
+            ->setTemplateDir($this->vendorDir . '/smarty/template')
             ->setPluginsDir(array_merge($smarty->getPluginsDir(), [$appPlugin, $frameworkPlugin]) );
-
         $smarty->force_compile = false;
         $smarty->compile_check = false;
 

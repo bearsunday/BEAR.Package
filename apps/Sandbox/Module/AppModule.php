@@ -46,13 +46,16 @@ class AppModule extends AbstractModule
      */
     public function __construct($mode = 'prod')
     {
-        $dir = dirname(__DIR__);
+        $dir = __DIR__;
         $this->mode = $mode;
         $this->config = (require "{$dir}/config/{$mode}.php") + (require "{$dir}/config/prod.php");
-        $this->params = (require "{$dir}/Params/config/{$mode}.php") + (require "{$dir}/Params/config/prod.php");
+        $this->params = (require "{$dir}/config/params/{$mode}.php") + (require "{$dir}/config/params/prod.php");
         parent::__construct();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         // install core package
@@ -85,7 +88,9 @@ class AppModule extends AbstractModule
         // install application aspect
         $this->install(new App\Aspect($this));
 
-        // install stub data
-        //$this->install(new StubModule(require dirname(__DIR__) . '/config/stub/resource.php'));
+        if ($this->mode === 'stub') {
+            // install stub data
+            $this->install(new StubModule(require __DIR__ . '/config/stub/resource.php'));
+        }
     }
 }

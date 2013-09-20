@@ -12,6 +12,9 @@ use Ray\Di\Scope;
  */
 class Dependency extends AbstractModule
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         // application bindings

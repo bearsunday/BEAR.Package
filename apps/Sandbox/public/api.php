@@ -20,25 +20,24 @@
 use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
-/**
- * The cache is cleared on each request via the following script. We understand that you may want to debug
- * your application with caching turned on. When doing so just comment out the following.
- */
+//
+// The cache is cleared on each request via the following script. We understand that you may want to debug
+// your application with caching turned on. When doing so just comment out the following.
+//
 require dirname(__DIR__) . '/bin/clear.php';
 
-/**
- * Here we get an application instance by setting a $mode variable such as (prod, dev, api, stub, test)
- * the dev instance provides debugging tools and defaults to help you the development of your application.
- */
+//
+// Here we get an application instance by setting a $mode variable such as (prod, dev, api, stub, test)
+// the dev instance provides debugging tools and defaults to help you the development of your application.
+//
 $mode = 'api';
 $app = require dirname(__DIR__) . '/scripts/instance.php';
+/* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
-/**
- * When using the CLI we set the router arguments needed for CLI use.
- * Otherwise just get the path directly from the globals.
- *
- * @var $app \BEAR\Package\Provide\Application\AbstractApp
- */
+//
+// When using the CLI we set the router arguments needed for CLI use.
+// Otherwise just get the path directly from the globals.
+//
 if (PHP_SAPI === 'cli') {
     $app->router->setArgv($argv);
     $uri = $argv[2];
@@ -49,10 +48,10 @@ if (PHP_SAPI === 'cli') {
     $get = $_GET;
 }
 
-/**
- * Get the method from the router and attempt to request the resource and render.
- * On failure trigger the error handler.
- */
+//
+// Get the method from the router and attempt to request the resource and render.
+// On failure trigger the error handler.
+//
 try {
     list($method,) = $app->router->match();
     $app->page = $app->resource->$method->uri($uri)->withQuery($get)->eager->request();
@@ -71,10 +70,10 @@ try {
     goto ERROR;
 }
 
-/**
- * OK: Sets the response resources and renders
- * ERROR: sets the response code and loads error page.
- */
+//
+// OK: Sets the response resources and renders
+// ERROR: sets the response code and loads error page.
+//
 OK: {
     $app->response->setResource($app->page)->render()->send();
     exit(0);

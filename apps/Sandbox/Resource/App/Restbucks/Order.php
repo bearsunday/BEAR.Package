@@ -8,9 +8,6 @@ use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Resource\RenderInterface;
 use Ray\Di\Di\Named;
 
-/**
- * Order
- */
 class Order extends ResourceObject
 {
     use TmpDirInject;

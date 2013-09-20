@@ -11,7 +11,9 @@ use BEAR\Sunday\Inject\TmpDirInject;
  */
 class Order extends ResourceObject
 {
-
+    /**
+     * @var array
+     */
     public $links = [
         'payment' => ''
     ];

@@ -14,33 +14,32 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 ini_set('display_errors', false);
 
-/**
- * Profiler
- */
+//
+// Profiler
+//
 //require dirname(dirname(dirname(__DIR__))) . '/scripts/develop/profile.php';
 
-/**
- * Compiled preloader
- */
+//
+// Compiled preloader
+//
 //require dirname(dirname(dirname(__DIR__))) . '/scripts/preloader.php';
 
-/**
- * Here we get the production application instance. No $mode variable is needed as it defaults to prod.
- *
- * @var $app \BEAR\Package\Provide\Application\AbstractApp
- */
+//
+// Here we get the production application instance. No $mode variable is needed as it defaults to prod.
+//
+// @var $app \BEAR\Package\Provide\Application\AbstractApp
 $app = require dirname(__DIR__) . '/scripts/instance.php';
 
-/**
- * Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
- * in the page request.
- */
+//
+// Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
+// in the page request.
+//
 list($method, $pagePath, $query) = $app->router->match();
 
-/**
- * An attempt to request the page resource is made.
- * Upon failure the appropriate error code is assigned and forwarded to ERROR.
- */
+//
+// An attempt to request the page resource is made.
+// Upon failure the appropriate error code is assigned and forwarded to ERROR.
+//
 try {
     $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
 } catch (NotFound $e) {
@@ -58,10 +57,10 @@ try {
     goto ERROR;
 }
 
-/**
- * OK: Sets the response resources and renders
- * ERROR: sets the response code and loads error page.
- */
+//
+// OK: Sets the response resources and renders
+// ERROR: sets the response code and loads error page.
+//
 OK: {
     $app->response->setResource($app->page)->render()->send();
     exit(0);

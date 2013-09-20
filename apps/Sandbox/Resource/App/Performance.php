@@ -4,9 +4,6 @@ namespace Sandbox\Resource\App;
 
 use BEAR\Resource\ResourceObject;
 
-/**
- * Performance
- */
 class Performance extends ResourceObject
 {
     /**

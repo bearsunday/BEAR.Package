@@ -1,6 +1,6 @@
 <?php
 /**
- * boot
+ * load script
  *
  *  set composer auto loader
  *  set silent auto loader for doctrine annotation

@@ -1,5 +1,6 @@
 <?php
 
+use BEAR\Package\Dev\Dev;
 use Ray\Di\Injector;
 use Sandbox\Module\AppModule;
 
@@ -8,11 +9,13 @@ error_reporting(E_ALL);
 // set application root as current directory
 chdir(dirname(__DIR__));
 
-// init
+// load
 require_once 'scripts/load.php';
 
-// set the application path into the globals so we can access
-// it in the tests.
+// enable debug print p($var);
+(new Dev())->loadDevFunctions();
+
+// set the application path into the globals so we can access it in the tests.
 $GLOBALS['APP_DIR'] = dirname(__DIR__);
 
 // set the resource client
