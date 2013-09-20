@@ -32,8 +32,8 @@ $config = [
     'app_name' => __NAMESPACE__,
     'app_class_name' => __NAMESPACE__ . '\App',
     'app_dir' => $appDir,
-    'tmp_dir' => $appDir . '/data/tmp',
-    'log_dir' => $appDir . '/data/log',
+    'tmp_dir' => $appDir . '/var/tmp',
+    'log_dir' => $appDir . '/var/log',
     'package_dir' => dirname(dirname(dirname(__DIR__)))
 ];
 
