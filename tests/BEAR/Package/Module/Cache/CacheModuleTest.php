@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Sunday\Module\Cache;
+namespace BEAR\Package\Module\Cache;
 
 use BEAR\Sunday\Module\Constant\NamedModule;
 use BEAR\Sunday\Module\Resource\ResourceCacheModule;
@@ -9,6 +9,7 @@ use Ray\Di\Injector;
 use Guzzle\Cache\CacheAdapterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use BEAR\Sunday\Annotation\Cache;
 
 class CacheModuleTestClass
 {

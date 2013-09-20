@@ -1,8 +1,8 @@
 <?php
 
-namespace BEAR\Sunday\Module\Cache;
+namespace BEAR\Package\Module\Cache;
 
-use BEAR\Sunday\Module\Cqrs\Interceptor\CacheUpdater;
+use BEAR\Package\Module\Cache\Interceptor\CacheUpdater;
 use Ray\Di\Config;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
@@ -35,7 +35,7 @@ class CacheUpdaterTest extends \PHPUnit_Framework_TestCase
 
     public function testNew()
     {
-        $this->assertInstanceOf('BEAR\Sunday\Module\Cqrs\Interceptor\CacheUpdater', $this->cacheUpdater);
+        $this->assertInstanceOf('BEAR\Package\Module\Cache\Interceptor\CacheUpdater', $this->cacheUpdater);
     }
 
     public function testInvoke()

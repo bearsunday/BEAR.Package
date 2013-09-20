@@ -1,9 +1,10 @@
 <?php
 
-namespace BEAR\Sunday\Module\Cache;
+namespace BEAR\Package\Module\Cache;
 
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Annotation\Cache as CacheAnnotation;
+use BEAR\Package\Module\Cache\Interceptor\CacheLoader;
 use BEAR\Package\Mock\ResourceObject\MockResource;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\Common\Cache\ArrayCache;
@@ -42,7 +43,7 @@ class CacheLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testNew()
     {
-        $this->assertInstanceOf('BEAR\Sunday\Module\Cqrs\Interceptor\CacheLoader', $this->cacheLoader);
+        $this->assertInstanceOf('BEAR\Package\Module\Cache\Interceptor\CacheLoader', $this->cacheLoader);
     }
 
     public function testInvokeWrite()
