@@ -7,9 +7,10 @@ error_reporting(E_ALL);
 
 ini_set('xdebug.max_nesting_level', 300);
 ini_set('display_errors', 1);
+ob_start();
 
-require dirname(__DIR__) . '/apps/Helloworld/scripts/clear.php';
-require dirname(__DIR__) . '/apps/Sandbox/scripts/clear.php';
+require dirname(__DIR__) . '/apps/Helloworld/bin/clear.php';
+require dirname(__DIR__) . '/apps/Sandbox/bin/clear.php';
 
 // loader
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';

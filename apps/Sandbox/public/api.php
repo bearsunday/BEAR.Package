@@ -24,7 +24,7 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
  * The cache is cleared on each request via the following script. We understand that you may want to debug
  * your application with caching turned on. When doing so just comment out the following.
  */
-require dirname(__DIR__) . '/scripts/clear.php';
+require dirname(__DIR__) . '/bin/clear.php';
 
 /**
  * Here we get an application instance by setting a $mode variable such as (prod, dev, api, stub, test)

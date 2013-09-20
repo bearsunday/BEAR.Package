@@ -7,6 +7,8 @@ use BEAR\Sunday\Module\Di\InjectorModule;
 use Helloworld\Module\AppModule;
 use Ray\Di\Injector;
 
+ini_set('xdebug.max_nesting_level', 200);
+
 require_once __DIR__ . '/load.php';
 
 $hasApc = function_exists('apc_fetch');
