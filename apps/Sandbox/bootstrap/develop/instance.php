@@ -17,7 +17,7 @@ ob_start();
 // set application root as current directory
 chdir(dirname(dirname(__DIR__)));
 
-require 'scripts/load.php';
+require 'bootstrap/autoload.php';
 
 // development configuration
 $app = (new Dev)

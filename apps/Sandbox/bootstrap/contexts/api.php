@@ -31,7 +31,7 @@ require dirname(dirname(__DIR__)) . '/bin/clear.php';
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 //
 $mode = 'api';
-$app = require dirname(dirname(__DIR__)) . '/scripts/instance.php';
+$app = require dirname(dirname(__DIR__)) . '/bootstrap/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
 //

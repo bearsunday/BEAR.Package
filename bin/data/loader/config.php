@@ -13,7 +13,7 @@ require $packageDir . '/vendor/classpreloader/classpreloader/src/ClassPreloader/
 $config = ClassLoader::getIncludes(
     function (ClassLoader $loader) use ($packageDir) {
         $loader->register();
-        $app = require $packageDir . '/apps/Sandbox/scripts/instance.php';
+        $app = require $packageDir . '/apps/Sandbox/bootstrap/instance.php';
     }
 );
 

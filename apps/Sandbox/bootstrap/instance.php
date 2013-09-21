@@ -15,7 +15,7 @@ use Ray\Di\CacheInjector;
 use Ray\Di\Injector;
 use BEAR\Sunday\Extension\Application\AppInterface;
 
-require_once __DIR__ . '/load.php';
+require_once __DIR__ . '/autoload.php';
 
 // mode
 $mode = isset($mode) ? $mode : 'prod';

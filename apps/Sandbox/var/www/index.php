@@ -1,1 +1,1 @@
-../../scripts/app/dev.php
+../../bootstrap/contexts/dev.php

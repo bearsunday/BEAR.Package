@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 chdir(dirname(__DIR__));
 
 // load
-require_once 'scripts/load.php';
+require_once 'bootstrap/autoload.php';
 
 // enable debug print p($var);
 (new Dev())->loadDevFunctions();

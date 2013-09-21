@@ -294,7 +294,7 @@ class Dev
         // console args
         /** @noinspection PhpUnusedLocalVariableInspection */
         $mode = isset($argv[3]) ? $argv[3] : $mode;
-        $app = require 'scripts/instance.php';
+        $app = require 'bootstrap/instance.php';
         /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
         $app = $this->route($app);

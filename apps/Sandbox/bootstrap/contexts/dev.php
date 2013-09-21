@@ -26,7 +26,7 @@ $dir = dirname(dirname(__DIR__));
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 //
 $mode = 'dev';
-$app = require $dir . '/scripts/develop/instance.php';
+$app = require $dir . '/bootstrap/develop/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
 //
