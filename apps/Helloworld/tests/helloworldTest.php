@@ -35,20 +35,20 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
     {
         // resource request
         $this->expectOutputString('Hello World !' . PHP_EOL);
-        require dirname(__DIR__) . '/public/basic.php';
+        require dirname(__DIR__) . '/var/www/basic.php';
     }
 
     public function testMin()
     {
         // resource request
         $this->expectOutputString('Hello World !' . PHP_EOL);
-        require dirname(__DIR__) . '/public/min.php';
+        require dirname(__DIR__) . '/var/www/min.php';
     }
 
     public function testPull()
     {
         // resource request
         $this->expectOutputRegex("/^<html>\n/");
-        require dirname(__DIR__) . '/public/pull.php';
+        require dirname(__DIR__) . '/var/www/pull.php';
     }
 }
