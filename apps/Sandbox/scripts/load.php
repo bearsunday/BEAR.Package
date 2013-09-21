@@ -18,7 +18,7 @@ umask(0);
 $packageDir = dirname(dirname(dirname(__DIR__)));
 $loader = require $packageDir . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */
-$loader->set('Sandbox', dirname(dirname(__DIR__)));
+$loader->set('Sandbox', dirname(__DIR__) . '/src');
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 AnnotationReader::addGlobalIgnoredName('noinspection'); // for phpStorm

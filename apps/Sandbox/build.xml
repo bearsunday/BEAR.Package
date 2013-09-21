@@ -2,6 +2,7 @@
 
 <project name="BEAR" default="build">
     <property name="composer.path" value="${basedir}/composer.phar" />
+    <property name="app.path" value="../${basedir}" />
     <available property="composer.exists" file="${composer.path}" />
 
     <target name="build" depends="prepare, test, report"/>
@@ -64,9 +65,12 @@
         <delete dir="${basedir}/build/coverage"/>
         <delete dir="${basedir}/build/logs"/>
         <delete dir="${basedir}/build/pdepend"/>
+        <exec executable="php">
+            <arg value="${basedir}/bin/clear.php"/>
+        </exec>
     </target>
 
-    <target name="prepare" depends="clean, vendor" description="Prepare for build">
+    <target name="prepare" depends="clean" description="Prepare for build">
         <mkdir dir="${basedir}/build/api"/>
         <mkdir dir="${basedir}/build/docblox"/>
         <mkdir dir="${basedir}/build/code-browser"/>
@@ -118,7 +122,7 @@
     <target name="phpmd"
             description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpmd">
-            <arg path="${basedir}/Resource" />
+            <arg path="${basedir}/src" />
             <arg value="text" />
             <arg value="${basedir}/build/phpmd.xml" />
         </exec>
@@ -138,7 +142,7 @@
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpcs">
             <arg value="--standard=${basedir}/build/phpcs.xml" />
-            <arg path="${basedir}/Resource" />
+            <arg path="${basedir}/src" />
         </exec>
         <exec executable="phpcs">
             <arg value="--standard=${basedir}/build/phpcs.xml" />
