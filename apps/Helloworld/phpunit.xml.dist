@@ -23,7 +23,7 @@
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="false">
-            <directory suffix=".php">Resource</directory>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
 </phpunit>
