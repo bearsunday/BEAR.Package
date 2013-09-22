@@ -88,7 +88,7 @@ $html = <<<EOT
     </div>
 
     <div class="tab-pane" id="modules">
-      <p><pre>{$modules}</pre></p>
+      <p><pre></pre></p>
     </div>
 
 
