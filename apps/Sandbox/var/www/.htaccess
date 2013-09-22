@@ -1,5 +1,5 @@
 	order deny,allow
-	deny from /web.php
+	deny from /dev.php
 <IfModule mod_rewrite.c>
     # turn on rewriting
     RewriteEngine On

@@ -1,1 +1,1 @@
-../../bootstrap/contexts/dev.php
+../../bootstrap/contexts/prod.php
