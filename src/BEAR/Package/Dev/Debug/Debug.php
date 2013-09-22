@@ -28,7 +28,7 @@ class Debug
             trim(file($receiver['file'])[$receiver['line'] - 1]),
             $matches
         );
-        list($varName, $varDump)  = isset($matches[1]) ? [$matches[1], ''] : ['(void)', '<br>'];
+        list($varName, $varDump)  = isset($matches[1]) ? [$matches[1], $varDump] : ['(void)', '<br>'];
 
         if ($isCli) {
             self::outputCli($varName, $var, $receiver, $method);
@@ -39,7 +39,6 @@ class Debug
         }
 
         $label = self::getLabel($receiver['file'], $receiver['line'], $varName, $method);
-
         // output
         echo "{$label}{$varDump}</div>";
     }

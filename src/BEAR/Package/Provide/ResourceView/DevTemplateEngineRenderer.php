@@ -153,14 +153,8 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         if (strpos($body, '</body>') === false) {
             return $body;
         }
-        $bootstrapCss = strpos(
-            $body,
-            '/assets/css/bootstrap.css'
-        ) ? '' : '<link href="/devtool/css/bootstrap.min.css" rel="stylesheet">';
-        $tabJs = strpos(
-            $body,
-            '/assets/js/bootstrap-tab.js'
-        ) ? '' : '<script src="/assets/js/bootstrap-tab.js"></script>';
+        $bootstrapCss = strpos($body, '/assets/css/bootstrap.css') ? '' : '<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">';
+        $tabJs = strpos($body, '/assets/js/bootstrap-tab.js') ? '' : '<script src="/assets/js/bootstrap-tab.js"></script>';
         $toolLoad = <<<EOT
 <!-- BEAR.Sunday dev tool load -->
 <script src="//www.google.com/jsapi"></script>
@@ -240,18 +234,15 @@ EOT;
     /**
      * Return label
      *
-     * @param string $body
+     * @param                $body
      * @param ResourceObject $resourceObject
-     * @param string $templateFile
+     * @param                $templateFile
      *
      * @return string
      */
     private function getLabel($body, ResourceObject $resourceObject, $templateFile)
     {
-        $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode(
-            $resourceObject->headers[CacheLoader::HEADER_CACHE],
-            true
-        ) : false;
+        $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode($resourceObject->headers[CacheLoader::HEADER_CACHE], true) : false;
         if ($cache === false) {
             $labelColor = self::NO_CACHE;
         } elseif ($cache['mode'] === 'W') {
@@ -259,24 +250,48 @@ EOT;
         } else {
             $labelColor = self::READ_CACHE;
         }
-        $resourceName = ($resourceObject->uri ? : get_class($resourceObject));
 
+        // var
+        $result = $this->addResourceMetaInfo($resourceObject, $labelColor, $templateFile, $body);
+
+        return $result;
+    }
+
+    /**
+     * @param ResourceObject $resourceObject
+     * @param                $labelColor
+     * @param                $templateFile
+     * @param                $body
+     *
+     * @return string
+     */
+    private function addResourceMetaInfo(ResourceObject $resourceObject, $labelColor, $templateFile, $body)
+    {
+        $resourceName = ($resourceObject->uri ? : get_class($resourceObject));
         // code editor
         $ref = new ReflectionObject($resourceObject);
         $codeFile = ($resourceObject instanceof WeavedInterface) ? $ref->getParentClass()->getFileName(): $ref->getFileName();
         $codeFile = $this->makeRelativePath($codeFile);
-
-        // var
         $var = $this->getVar($resourceObject->body);
         $resourceKey = spl_object_hash($resourceObject);
-        $html = highlight_string($body, true);
+        $bodyIntTool = preg_replace('/<!-- BEAR\.Sunday dev tool load -->.*BEAR\.Sunday dev tool load -->/', '', $body);
 
+        $resourceBody = preg_replace_callback(
+            '/<!-- resource(.*?)resource_tab_end -->/s',
+            function ($matches) {
+                $uri = substr(explode(' ', $matches[1])[0], 1);
+                preg_match('/ <!-- resource_body_start -->(.*?)<!-- resource_body_end -->/s', $matches[1], $resourceBodyMatch);
+                return "<!-- resource:$uri -->{$resourceBodyMatch[1]}<!-- /resource:$uri -->";
+            },
+            $bodyIntTool
+        );
+        $resourceBodyHtml = highlight_string($resourceBody, true);
         $info = $this->getResourceInfo($resourceObject);
         $rmReturn = function ($str) {
             return str_replace("\n", '', $str);
         };
         $result = <<<EOT
-<!-- {$resourceName} -->
+<!-- resource:{$resourceName} -->
 
 <div class="toolbar">
     <span class="label {$labelColor}">{$resourceName}</span>
@@ -292,11 +307,14 @@ EOT;
 
 <div class="tab-content frame">
     <div id="{$resourceKey}_body" class="tab-pane fade active in">
+    <!-- resource_body_start -->
 EOT;
         $result = $rmReturn($result);
         $result .= $body;
         $label = <<<EOT
-<!-- /{$resourceName} -->
+<!-- resource_body_end -->
+<!-- /resource:'{$resourceName}' -->
+<!-- resource_tab_start -->
     </div>
     <div id="{$resourceKey}_var" class="tab-pane">
         <div class="tab-wrap">
@@ -305,13 +323,14 @@ EOT;
     </div>
     <div id="{$resourceKey}_html" class="tab-pane">
         <div class="tab-wrap">
-            <span class="badge badge-info">Resource representation</span><br>{$html}
+            <span class="badge badge-info">Resource representation</span><br>{$resourceBodyHtml}
         </div>
     </div>
     <div id="{$resourceKey}_info" class="tab-pane">
         <div class="tab-wrap">{$info}</div>
     </div>
 </div>
+<!-- resource_tab_end -->
 EOT;
         $result .= $rmReturn($label);
 
