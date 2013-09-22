@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "d0ca84030bfabe489f02beb0841b0f17",
+    "hash": "cbbf3591aacf2e86903f958d3a7652bc",
     "packages": [
         {
             "name": "any/serializer",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Any.Serializer.git",
-                "reference": "0f1f2a4afe254f801c6d2e2d3a499c8ebc35643d"
+                "reference": "cc9ef96fa131d45d28c87818e3239c916f157a12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Any.Serializer/zipball/0f1f2a4afe254f801c6d2e2d3a499c8ebc35643d",
-                "reference": "0f1f2a4afe254f801c6d2e2d3a499c8ebc35643d",
+                "url": "https://api.github.com/repos/koriym/Any.Serializer/zipball/cc9ef96fa131d45d28c87818e3239c916f157a12",
+                "reference": "cc9ef96fa131d45d28c87818e3239c916f157a12",
                 "shasum": ""
             },
             "type": "library",
@@ -34,14 +34,15 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Lead"
+                    "role": "Developer"
                 }
             ],
             "description": "Serialize any value for logging",
             "keywords": [
+                "make it possible",
                 "serialize"
             ],
-            "time": "2013-09-08 03:08:29"
+            "time": "2013-09-20 05:52:42"
         },
         {
             "name": "aura/di",
