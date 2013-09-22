@@ -8,6 +8,7 @@
 namespace Sandbox;
 
 use BEAR\Package\Dev\Application\ApplicationReflector;
+use BEAR\Package\Provide\Application\AbstractApp;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -30,7 +31,8 @@ $injector = function() use ($context) {
 //
 // post injection procedure, this was called only one time in system startup.
 //
-$initialization = function(AppInterface $app) use ($context) {
+$initialization = function(AbstractApp $app) use ($context) {
+    file_put_contents(dirname(__DIR__) . '/var/log/boot.log', (string)$app->injector . (string)$app->injector->getLogger());
     if ($context === 'prod') {
         (new ApplicationReflector($app))->compileAllResources();
     }
