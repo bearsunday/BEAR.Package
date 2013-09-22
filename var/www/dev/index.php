@@ -26,10 +26,6 @@ $contentsForLayout =<<<EOT
             <li><a href="ide/"><i class="icon-th-list"></i> IDE</a></li>
         </ul>
         <hr>
-        <ul>
-            <li><a href="phpinfo/"><i class="icon-info-sign"></i> phpinfo</a></li>
-        </ul>
-        <hr>
         <a href="/"><i class="icon-arrow-left small"></i> Back</a>
     </div>
 EOT;
