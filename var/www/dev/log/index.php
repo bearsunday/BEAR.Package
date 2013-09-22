@@ -8,7 +8,7 @@
 use BEAR\Package\Dev\Resource\ResourceLog;
 
 dependency: {
-    $file = $appDir . '/data/log/resource.db';
+    $file = $appDir . '/var/log/resource.db';
     $cacheClear = isset($_GET['clear']);
 }
 
