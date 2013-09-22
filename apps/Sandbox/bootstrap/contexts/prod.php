@@ -6,7 +6,7 @@
  * guideline and this procedural boot strap is gives you some defaults as a guide.
  * You are free to change and configure this script at will.
  *
- * @global  $mode
+ * @global  $context
  */
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter as BadRequest;
@@ -25,7 +25,7 @@ ini_set('display_errors', false);
 //require dirname(dirname(dirname(__DIR__))) . '/scripts/preloader.php';
 
 //
-// Here we get the production application instance. No $mode variable is needed as it defaults to prod.
+// Here we get the production application instance. No $context variable is needed as it defaults to prod.
 //
 // @var $app \BEAR\Package\Provide\Application\AbstractApp
 $app = require dirname(__DIR__) . '/scripts/instance.php';

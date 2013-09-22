@@ -15,7 +15,7 @@
  *
  * $ php -S localhost:8089 api.php
  *
- * @global  $mode
+ * @global  $context
  */
 use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
@@ -27,10 +27,10 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 require dirname(dirname(__DIR__)) . '/bin/clear.php';
 
 //
-// Here we get an application instance by setting a $mode variable such as (prod, dev, api, stub, test)
+// Here we get an application instance by setting a $context variable such as (prod, dev, api, stub, test)
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 //
-$mode = 'api';
+$context = 'api';
 $app = require dirname(dirname(__DIR__)) . '/bootstrap/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 

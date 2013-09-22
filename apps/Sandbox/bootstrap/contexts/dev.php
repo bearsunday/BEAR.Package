@@ -14,7 +14,7 @@
  * Built-in web server:
  * $ php -S localhost:8080 web.php
  *
- * @global  $mode string
+ * @global  $context string
  */
 
 ob_start();
@@ -22,10 +22,10 @@ ob_start();
 $dir = dirname(dirname(__DIR__));
 
 //
-// Here we get an application instance by setting a $mode variable such as (Prod, Dev, Api, Stub, Test)
+// Here we get an application instance by setting a $context variable such as (Prod, Dev, Api, Stub, Test)
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 //
-$mode = 'dev';
+$context = 'dev';
 $app = require $dir . '/bootstrap/develop/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 

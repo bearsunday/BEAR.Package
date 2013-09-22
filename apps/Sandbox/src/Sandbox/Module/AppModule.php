@@ -37,19 +37,19 @@ class AppModule extends AbstractModule
     /**
      * @var string
      */
-    private $mode;
+    private $context;
 
     /**
-     * @param string $mode
+     * @param string $context
      *
      * @throws \LogicException
      */
-    public function __construct($mode = 'prod')
+    public function __construct($context = 'prod')
     {
         $dir = __DIR__;
-        $this->mode = $mode;
-        $this->config = (require "{$dir}/config/{$mode}.php") + (require "{$dir}/config/prod.php");
-        $this->params = (require "{$dir}/config/params/{$mode}.php") + (require "{$dir}/config/params/prod.php");
+        $this->mode = $context;
+        $this->config = (require "{$dir}/config/{$context}.php") + (require "{$dir}/config/prod.php");
+        $this->params = (require "{$dir}/config/params/{$context}.php") + (require "{$dir}/config/params/prod.php");
         parent::__construct();
     }
 

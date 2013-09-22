@@ -2,7 +2,7 @@
 /**
  * Return application instance with development setup
  *
- * @global $mode
+ * @global $context
  *
  * @return BEAR\Sunday\Extension\Application\AppInterface
  */
@@ -26,6 +26,6 @@ $app = (new Dev)
     ->registerFatalErrorHandler()
     ->registerExceptionHandler('/var/log')
     ->registerSyntaxErrorEdit()
-    ->getDevApplication($mode);
+    ->getDevApplication($context);
 
 return $app;
