@@ -14,21 +14,17 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
 ini_set('display_errors', false);
 
-//
-// Profiler
-//
-//require dirname(dirname(dirname(__DIR__))) . '/scripts/develop/profile.php';
 
 //
 // Compiled preloader
 //
-//require dirname(dirname(dirname(__DIR__))) . '/scripts/preloader.php';
+$app = require dirname(__DIR__) . '/var/tmp/preloader/preload.php';
 
 //
 // Here we get the production application instance. No $context variable is needed as it defaults to prod.
 //
 // @var $app \BEAR\Package\Provide\Application\AbstractApp
-$app = require dirname(__DIR__) . '/scripts/instance.php';
+$app = require dirname(__DIR__) . '/bootstap/instance.php';
 
 //
 // Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used

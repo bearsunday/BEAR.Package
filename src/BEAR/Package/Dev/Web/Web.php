@@ -48,7 +48,7 @@ class Web
             $path .= 'index.php';
         }
         $packageRoot = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
-        $scriptFile =  $packageRoot . '/dev/public' . $path;
+        $scriptFile =  $packageRoot . '/var/www/dev/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
             ob_start();
