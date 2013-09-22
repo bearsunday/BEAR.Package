@@ -143,7 +143,7 @@
             <h2>Development</h2>
 
             {if $is_cli_server}
-                <a class="btn" href="/dev" id="dev">Dev Tool &raquo;</a>
+                <a class="btn" href="/dev/" id="dev">Dev Tool &raquo;</a>
             {else}
                 <a class="btn" href="/admin/apc/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC Admin &raquo;</a> <br />
                 <br />
