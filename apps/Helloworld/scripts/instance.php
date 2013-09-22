@@ -9,7 +9,7 @@ use Ray\Di\Injector;
 
 ini_set('xdebug.max_nesting_level', 200);
 
-require_once __DIR__ . '/load.php';
+require_once __DIR__ . '/autoload.php';
 
 $hasApc = function_exists('apc_fetch');
 if ($hasApc && apc_exists('app-helloworld')) {
