@@ -5,7 +5,6 @@ namespace Sandbox\Interceptor\Form;
 use BEAR\Sunday\Inject\NamedArgsInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use Ray\Aop\NamedArgsInterface;
 
 /**
  * Post form

@@ -3,7 +3,6 @@
 namespace Sandbox\Module\Mode;
 
 use BEAR\Package\Module as PackageModule;
-use BEAR\Package\Provide\TemplateEngine\Smarty\DevSmartyModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;

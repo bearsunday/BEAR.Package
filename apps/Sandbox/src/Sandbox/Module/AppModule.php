@@ -47,7 +47,7 @@ class AppModule extends AbstractModule
     public function __construct($context = 'prod')
     {
         $dir = __DIR__;
-        $this->mode = $context;
+        $this->context = $context;
         $this->config = (require "{$dir}/config/{$context}.php") + (require "{$dir}/config/prod.php");
         $this->params = (require "{$dir}/config/params/{$context}.php") + (require "{$dir}/config/params/prod.php");
         parent::__construct();
@@ -59,7 +59,7 @@ class AppModule extends AbstractModule
     protected function configure()
     {
         // install core package
-        $this->install(new PackageModule(new Constant($this->config), 'Sandbox\App', $this->mode));
+        $this->install(new PackageModule(new Constant($this->config), 'Sandbox\App', $this->context));
 
         // install view package
         $this->install(new SmartyModule($this));
@@ -71,12 +71,12 @@ class AppModule extends AbstractModule
         $this->install(new ResourceGraphModule($this));
 
         // install develop module
-        if ($this->mode === 'dev') {
+        if ($this->context === 'dev') {
             $this->install(new DevModule($this));
         }
 
         // install API module
-        if ($this->mode === 'api') {
+        if ($this->context === 'api') {
             // install api output view package
             $this->install(new HalModule($this));
             //$this->install(new JsonModule($this));
@@ -88,7 +88,7 @@ class AppModule extends AbstractModule
         // install application aspect
         $this->install(new App\Aspect($this));
 
-        if ($this->mode === 'stub') {
+        if ($this->context === 'stub') {
             // install stub data
             $this->install(new StubModule(require __DIR__ . '/config/stub/resource.php'));
         }

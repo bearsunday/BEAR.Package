@@ -13,11 +13,6 @@ use Sandbox\Interceptor\TimeMessage;
 class Aspect extends AbstractModule
 {
     /**
-     * @var array
-     */
-    private $params;
-
-    /**
      * {@inheritdoc}
      */
     protected function configure()

@@ -13,11 +13,6 @@ class Index extends Page
         'news' => ''
     ];
 
-    /**
-     * @param $now
-     *
-     * @return $this
-     */
     public function onGet()
     {
         $xml = $this->resource

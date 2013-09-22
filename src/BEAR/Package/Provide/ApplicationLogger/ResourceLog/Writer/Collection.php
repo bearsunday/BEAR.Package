@@ -23,7 +23,7 @@ final class Collection implements LogWriterInterface
     private $writers = [];
 
     /**
-     * @param array $writers
+     * @param \BEAR\Resource\LogWriterInterface[] $writers
      *
      * @Inject
      * @Named("log_writers")

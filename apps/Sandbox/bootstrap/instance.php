@@ -10,7 +10,6 @@ namespace Sandbox;
 use BEAR\Package\Dev\Application\ApplicationReflector;
 use BEAR\Package\Provide\Application\AbstractApp;
 use Doctrine\Common\Cache\ApcCache;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\CacheInjector;
 use Ray\Di\Injector;
@@ -24,15 +23,16 @@ $context = isset($context) ? $context : 'prod';
 //
 // return application injector
 //
-$injector = function() use ($context) {
+$injector = function () use ($context) {
     return Injector::create([new Module\AppModule($context)]);
 };
 
 //
 // post injection procedure, this was called only one time in system startup.
 //
-$initialization = function(AbstractApp $app) use ($context) {
-    file_put_contents(dirname(__DIR__) . '/var/log/boot.log', (string)$app->injector . (string)$app->injector->getLogger());
+$initialization = function (AbstractApp $app) use ($context) {
+    $diLog = (string)$app->injector . PHP_EOL . (string)$app->injector->getLogger();
+    file_put_contents(dirname(__DIR__) . '/var/log/boot.log', $diLog);
     if ($context === 'prod') {
         (new ApplicationReflector($app))->compileAllResources();
     }

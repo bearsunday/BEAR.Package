@@ -9,9 +9,6 @@ use BEAR\Resource\ResourceObject as Page;
  */
 class Index extends Page
 {
-    /**
-     * @return Redirect
-     */
     public function onGet()
     {
         $this->code = 302;

@@ -44,7 +44,7 @@
     <a href="index">One more ?</a> or <a href="/">No, Thanks.</a>
 
 {/if}
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="//code.jquery.com/jquery-latest.js"></script>
 </div>
 </body>
 </html>
