@@ -26,7 +26,6 @@ $dir = dirname(dirname(__DIR__));
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 //
 $context = 'dev';
-
 $app = require $dir . '/bootstrap/develop/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
@@ -34,7 +33,7 @@ $app = require $dir . '/bootstrap/develop/instance.php';
 // The cache is cleared on each request via the following script. We understand that you may want to debug
 // your application with caching turned on. When doing so just comment out the following.
 //
-require $dir . '/bin/clear.php';
+//require $dir . '/bin/clear.php';
 
 //
 // When using the built in file-server when directly accessing files the app instance will not be created and

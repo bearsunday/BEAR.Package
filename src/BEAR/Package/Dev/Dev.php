@@ -282,9 +282,9 @@ class Dev
      *
      * @return AbstractApp|bool
      */
-    public function getDevApplication($mode)
+    public function getDevApplication($context)
     {
-        global $mode;
+        global $context;
 
         // direct file for built in web server
         if ($this->directAccessFile() === false) {
@@ -293,7 +293,7 @@ class Dev
 
         // console args
         /** @noinspection PhpUnusedLocalVariableInspection */
-        $mode = isset($argv[3]) ? $argv[3] : $mode;
+        $context = isset($argv[3]) ? $argv[3] : $context;
         $app = require 'bootstrap/instance.php';
         /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 

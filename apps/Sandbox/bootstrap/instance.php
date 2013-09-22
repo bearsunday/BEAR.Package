@@ -17,7 +17,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 
 require_once __DIR__ . '/autoload.php';
 
-// mode
+// context
 $context = isset($context) ? $context : 'prod';
 
 //
