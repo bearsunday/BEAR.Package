@@ -7,6 +7,7 @@
 namespace BEAR\Package\Module\Log;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 /**
  * Zf2 log module
@@ -20,8 +21,6 @@ class ZfLogModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('Guzzle\Log\LogAdapterInterface')->toProvider(
-            'BEAR\Package\Module\Log\ZfLogModule\ZfLogProvider'
-        );
+        $this->bind('Guzzle\Log\LogAdapterInterface')->toProvider('BEAR\Package\Module\Log\ZfLogModule\ZfLogProvider')->in(Scope::SINGLETON);
     }
 }
