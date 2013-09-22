@@ -27,8 +27,6 @@ $contentsForLayout =<<<EOT
         </ul>
         <hr>
         <ul>
-            <li><a href="apc/"><i class="icon-zoom-in"></i> APC admin</a></li>
-            <li><a href="memcache/"><i class="icon-zoom-in"></i> Memcache admin</a></li>
             <li><a href="phpinfo/"><i class="icon-info-sign"></i> phpinfo</a></li>
         </ul>
         <hr>
