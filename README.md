@@ -6,41 +6,87 @@ BEAR.Package
 
 Introduction
 ------------
-BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource oriented framework package.
-
+BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource oriented framework implementation package.
 Installation
 ------------
 
-    $ curl -s http://install.bear-project.net/ | sh -s ./bear
-
-or
-
     $ php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-    $ php composer.phar create-project --dev --prefer-source bear/package ./bear
+    $ php composer.phar create-project --prefer-source bear/package ./bear.package
 
-More information is availavle at [wiki:install](http://code.google.com/p/bearsunday/wiki/install).
 
 built-in web server for development
 ------------------
 
-    $ cd bear/apps/Sandbox/public
-    $ php -S localhost:8088 web.php
-    $ php -S localhost:8089 api.php
+for Sandbox web page
+
+    $ cd /path/to/bear.package/apps/Sandbox/var/www/
+    $ php -S 0.0.0.0:8088 dev.php
+
+You can then open a browser and go to `http://0.0.0.0:8088` to see the "Hello BEAR.Sunday" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
+
+for systtem admin page
+
+    $ php -S 0.0.0.0:8090 -t /path/to/bear.package/var/www/admin
 
 Virtual Host for Production
 ------------
-Set up a virtual host to point to the public/ directory of the application.
+Set up a virtual host to point to the `/path/to/bear.package/apps/Sandbox/var/www/` directory of the application.
 
 Console
 -------
 
-    $ php web.php get /index
-    $ php api.php get page://self/index
-    $ php api.php get 'app://self/first/greeting?name=World'
-    $ php api.php get app://self/blog/posts
+### web access
+```bash
+
+$ cd /path/to/bear.package/apps/Sandbox
+$ php bin/web.php get /
+    
+200 OK
+x-interceptors: ["{\"onGet\":[\"Sandbox\\\\Interceptor\\\\Checker\"]}"]
+x-execution-time: [0.068794012069702]
+x-profile-id: ["523ee4ba886de"]
+cache-control: ["no-cache"]
+date: ["Sun, 22 Sep 2013 12:38:18 GMT"]
+[BODY]
+greeting: Hello BEAR.Sunday
+version: array (
+  'php' => '5.4.16',
+  'BEAR' => 'dev-develop',
+  'extensions' => 
+  array (
+    'apc' => '3.1.13',
+  ),
+)
+performance: app://self/performance
+
+[VIEW]
+<!DOCTYPE html>
+<html lang="en">
+...
+```
+
+
+### api access
+
+```bash
+$ php bin/api.php get page://self/index
+$ php bin/api.php get 'app://self/first/greeting?name=World'
+
+200 OK
+content-type: ["application\/hal+json; charset=UTF-8"]
+cache-control: ["no-cache"]
+date: ["Sun, 22 Sep 2013 12:42:48 GMT"]
+[BODY]
+Hello, World
+
+
+$ php bin/api.php get app://self/blog/posts
+```
 
 Make your own application
 ----------------------------------
+
+TBD.
 
 ### install
 
@@ -52,7 +98,6 @@ Make your own application
     $ phpunit
 
 ### run
-
     $ cd public
     // Console
     $ php web.php get /
