@@ -7,6 +7,7 @@
 namespace BEAR\Package\Module\ExceptionHandle;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 /**
  * Exception handle module
@@ -30,6 +31,7 @@ class HandleModule extends AbstractModule
             ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ErrorPage');
         $this
             ->bind('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandlerInterface')
-            ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandler');
+            ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandler')
+            ->in(Scope::SINGLETON);
     }
 }
