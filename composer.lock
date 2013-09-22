@@ -481,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "e828dc0e6d62e78771a6428e13ed1f8a984996f0"
+                "reference": "7499d5b3486282f8c54cf39cbd0d8b80defed506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/e828dc0e6d62e78771a6428e13ed1f8a984996f0",
-                "reference": "e828dc0e6d62e78771a6428e13ed1f8a984996f0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/7499d5b3486282f8c54cf39cbd0d8b80defed506",
+                "reference": "7499d5b3486282f8c54cf39cbd0d8b80defed506",
                 "shasum": ""
             },
             "require": {
@@ -531,7 +531,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2013-09-22 17:15:32"
+            "time": "2013-09-22 17:25:14"
         },
         {
             "name": "bear/sunday",
@@ -1337,12 +1337,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "0a443ea973b8a25382f6e28ecbaa6fafc050877c"
+                "reference": "7a5164072dcc09584b67cb9d95ff077dc9517860"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/0a443ea973b8a25382f6e28ecbaa6fafc050877c",
-                "reference": "0a443ea973b8a25382f6e28ecbaa6fafc050877c",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/7a5164072dcc09584b67cb9d95ff077dc9517860",
+                "reference": "7a5164072dcc09584b67cb9d95ff077dc9517860",
                 "shasum": ""
             },
             "require": {
@@ -1376,7 +1376,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2013-09-16 10:45:36"
+            "time": "2013-09-22 19:03:10"
         },
         {
             "name": "ray/di",

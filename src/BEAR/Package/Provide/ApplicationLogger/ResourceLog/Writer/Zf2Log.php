@@ -26,6 +26,7 @@ final class Zf2Log implements LogWriterInterface
      */
     private $pageId;
 
+
     /**
      * @param \Ray\Di\ProviderInterface $provider
      *
@@ -55,7 +56,6 @@ final class Zf2Log implements LogWriterInterface
         try {
             $logger->info($msg, ['page' => $this->pageId]);
         } catch (\Exception $e) {
-            $this->provider->get()->info($msg, ['page' => $this->pageId]);
         }
     }
 

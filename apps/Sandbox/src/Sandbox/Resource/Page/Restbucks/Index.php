@@ -22,6 +22,12 @@ class Index extends Page
         'ordered' => false
     ];
 
+
+    /**
+     * @var LoggerInterface
+     */
+    private $resourceLogger;
+
     /**
      * @param \BEAR\Resource\LoggerInterface $logger
      *
