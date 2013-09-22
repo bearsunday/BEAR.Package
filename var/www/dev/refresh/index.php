@@ -7,7 +7,7 @@
  */
 
 error_log('app files cleared by ' . __FILE__);
-require $appDir . '/scripts/clear.php';
+require $appDir . '/bin/clear.php';
 
 
 $view['app_name'] = get_class($app);

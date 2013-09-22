@@ -38,8 +38,9 @@ class Web
     {
         // application directory path
         global $appDir;
+
         if ($app instanceof AppInterface) {
-            $appDir = dirname((new \ReflectionObject($app))->getFileName());
+            $appDir = dirname(dirname(dirname((new \ReflectionObject($app))->getFileName())));
         }
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php

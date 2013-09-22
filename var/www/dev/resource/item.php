@@ -33,8 +33,7 @@ dependency: {
 
 control: {
     $mode = "Dev";
-//    $app = require $appDir . '/scripts/clear.php';
-    $app = require $appDir . '/scripts/instance.php';
+    $app = require $appDir . '/bootstrap/instance.php';
     /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
     $appReflector = new ApplicationReflector($app);
     $resourceInfo = $appReflector->getResources()[$_GET['uri']];

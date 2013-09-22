@@ -25,7 +25,8 @@ $dir = dirname(dirname(__DIR__));
 // Here we get an application instance by setting a $context variable such as (Prod, Dev, Api, Stub, Test)
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 //
-$context = 'prod';
+$context = 'dev';
+
 $app = require $dir . '/bootstrap/develop/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
@@ -38,7 +39,6 @@ $app = require $dir . '/bootstrap/develop/instance.php';
 //
 // When using the built in file-server when directly accessing files the app instance will not be created and
 // and the script will be exited.
-
 if (!$app) {
     return false;
 }
