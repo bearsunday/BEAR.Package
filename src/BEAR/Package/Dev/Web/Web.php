@@ -38,7 +38,6 @@ class Web
     {
         // application directory path
         global $appDir;
-
         if ($app instanceof AppInterface) {
             $appDir = dirname((new \ReflectionObject($app))->getFileName());
         }
@@ -78,7 +77,8 @@ class Web
      */
     public function isDevWebService($sapiName, $requestUri)
     {
-        $isDevTool = ($sapiName !== 'cli') && substr($requestUri, 0, 5) === '/dev/';
+        $path = substr($requestUri, 0, 5);
+        $isDevTool = ($sapiName !== 'cli') &&  ($path === '/dev' || $path === '/dev/');
 
         return $isDevTool;
     }
