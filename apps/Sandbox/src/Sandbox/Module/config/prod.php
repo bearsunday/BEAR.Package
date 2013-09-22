@@ -31,7 +31,7 @@ $config = [
     // constants
     'tmp_dir' => $appDir . '/var/tmp',        // set faster storage if possible
     'log_dir' => $appDir . '/var/log',
-    'vendor_dir' => $appDir . '/var/vendor',
+    'vendor_dir' => $appDir . '/var/lib',
 ];
 
 return $config;

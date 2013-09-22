@@ -68,6 +68,6 @@ OK: {
 
 ERROR: {
     http_response_code($code);
-    require dirname(__DIR__) . "/var/http/{$code}.php";
+    require dirname(__DIR__) . "/var/lib/http_response/{$code}.php";
     exit(1);
 }
