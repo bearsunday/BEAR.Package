@@ -481,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "3661035f1c1c8f018b99b8aee3612160c487a3bb"
+                "reference": "e828dc0e6d62e78771a6428e13ed1f8a984996f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/3661035f1c1c8f018b99b8aee3612160c487a3bb",
-                "reference": "3661035f1c1c8f018b99b8aee3612160c487a3bb",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/e828dc0e6d62e78771a6428e13ed1f8a984996f0",
+                "reference": "e828dc0e6d62e78771a6428e13ed1f8a984996f0",
                 "shasum": ""
             },
             "require": {
@@ -517,7 +517,7 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Lead"
+                    "role": "Developer"
                 }
             ],
             "description": "Hypermedia framework for object as a service",
@@ -531,7 +531,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2013-09-18 11:08:36"
+            "time": "2013-09-22 17:15:32"
         },
         {
             "name": "bear/sunday",

@@ -39,8 +39,10 @@ final class Collection implements LogWriterInterface
     public function write(RequestInterface $request, ResourceObject $result)
     {
         foreach ($this->writers as $writer) {
-            /** @var $writer \BEAR\Resource\LogWriterInterface */
-            $writer->write($request, $result);
+            if ($writer instanceof LogWriterInterface) {
+                /** @var $writer \BEAR\Resource\LogWriterInterface */
+                $writer->write($request, $result);
+            }
         }
     }
 }
