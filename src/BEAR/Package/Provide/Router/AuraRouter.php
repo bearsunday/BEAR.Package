@@ -14,12 +14,13 @@ use Ray\Di\Di\Inject;
 use Aura\Router\Route as AuraRoute;
 
 /**
- * Standard min router
+ * Standard router
  *
- * The constructor can accepts "Aura.Route" routing
- * @see        https://github.com/auraphp/Aura.Router
+ * This router accepts Aura.Router optionally.
+ *
+ * @see https://github.com/auraphp/Aura.Router
  */
-final class MinRouter implements RouterInterface
+class AuraRouter implements RouterInterface
 {
     const METHOD_OVERRIDE = 'X-HTTP-Method-Override';
 

@@ -2,7 +2,7 @@
 
 namespace BEAR\Package\Provide\Router;
 
-use BEAR\Package\Provide\Router\MinRouter;
+use BEAR\Package\Provide\Router\AuraRouter;
 use Aura\Router\Map;
 use Aura\Router\DefinitionFactory;
 use Aura\Router\RouteFactory;
@@ -13,7 +13,7 @@ use Aura\Router\RouteFactory;
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var MinRouter
+     * @var AuraRouter
      */
     private $router;
 
@@ -25,7 +25,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->router = new MinRouter;
+        $this->router = new AuraRouter;
         $this->map = new Map(new DefinitionFactory, new RouteFactory);
     }
 
@@ -66,7 +66,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'path'  => 'this/is/my/path'
             ],
         ]);
-        $router = new MinRouter($this->map);
+        $router = new AuraRouter($this->map);
         $router->setGlobals($globals);
         $match = $router->match();
         list($method, $pageUri, $query) = $match;
@@ -90,7 +90,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     'path'  => 'this/is/my/path'
                 ],
             ]);
-        $router = new MinRouter($this->map);
+        $router = new AuraRouter($this->map);
         $router->setGlobals($globals);
         $match = $router->match();
         list($method, $pageUri, $query) = $match;
@@ -117,7 +117,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     'path'  => 'archive'
                 ],
             ]);
-        $router = new MinRouter($this->map);
+        $router = new AuraRouter($this->map);
         $router->setGlobals($globals);
         $match = $router->match();
         list($method, $pageUri, $query) = $match;
@@ -133,7 +133,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_GET' => [MinRouter::METHOD_OVERRIDE_GET => 'post']
+            '_GET' => [AuraRouter::METHOD_OVERRIDE_GET => 'post']
         ];
         $this->router->setGlobals($globals);
         $match = $this->router->match();
@@ -148,7 +148,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'POST',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_POST' => [MinRouter::METHOD_OVERRIDE => 'get']
+            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'get']
         ];
         $this->router->setGlobals($global);
         $match = $this->router->match();

@@ -11,13 +11,13 @@ use Ray\Di\AbstractModule;
 /**
  * Router module
  */
-class MinRouterModule extends AbstractModule
+class AuraRouterModule extends AbstractModule
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->bind('BEAR\Sunday\Extension\Router\RouterInterface')->to(__NAMESPACE__ . '\MinRouter');
+        $this->bind('BEAR\Sunday\Extension\Router\RouterInterface')->to(__NAMESPACE__ . '\AuraRouter');
     }
 }
