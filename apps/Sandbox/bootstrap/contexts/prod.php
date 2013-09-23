@@ -12,19 +12,21 @@ use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
-ini_set('display_errors', false);
-
+//
+// Hierarchical profiler @see http://www.php.net/manual/en/book.xhprof.php
+//
+require dirname(dirname(dirname(dirname(__DIR__)))) . '/var/lib/profile.php';
 
 //
 // Compiled preloader
 //
-$app = require dirname(__DIR__) . '/var/tmp/preloader/preload.php';
+require dirname(dirname(__DIR__)) . '/var/tmp/preloader/preload.php';
 
 //
 // Here we get the production application instance. No $context variable is needed as it defaults to prod.
 //
-// @var $app \BEAR\Package\Provide\Application\AbstractApp
-$app = require dirname(__DIR__) . '/bootstap/instance.php';
+/* @var $app \BEAR\Package\Provide\Application\AbstractApp */
+$app = require dirname(__DIR__) . '/instance.php';
 
 //
 // Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
@@ -64,6 +66,6 @@ OK: {
 
 ERROR: {
     http_response_code($code);
-    require dirname(__DIR__) . "/var/lib/http_response/{$code}.php";
+    require dirname(dirname(__DIR__)) . "/var/lib/http_response/{$code}.php";
     exit(1);
 }
