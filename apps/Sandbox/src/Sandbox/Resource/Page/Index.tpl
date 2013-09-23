@@ -76,12 +76,11 @@
 
         <p class="sub-title">
         <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
-        A Resource Oriented Framework for PHP5.4 - v0.8
+        A Resource Oriented Framework for PHP5.4 - v0.9
         </p>
 
         <p><a class="btn btn-primary btn-large" href="https://github.com/koriym/BEAR.Sunday">View project on
             GitHub &raquo;</a>
-            <a rel="tooltip" title="APC entries will be cleared." class="btn btn-primary btn-large btn btn-warning" href="/dev/refresh/"><i class="icon-refresh"></i> Refresh</a></p>
     </div>
     <!-- Example row of columns -->
     <div class="row">
@@ -92,44 +91,24 @@
                 <li>Latest Stable <a href="https://packagist.org/packages/bear/package"><img src="https://poser.pugx.org/bear/package/v/stable.png"></a></li>
                 <li>PHP <code>{$version.php}</code></li>
             </ul>
-            <h2>Extension</h2>
-
-            <h3>required</h3>
-            <ul>
-                <li><a href="http://www.php.net/curl">curl</a> <code>{$version.extensions.curl}</code></li>
-            </ul>
-            <h3>optional</h3>
-            <ul>
-                <li><a href="http://www.php.net/apc">apc</a> <code>{$version.extensions.apc}</code></li>
-                <li><a href="http://xdebug.org/">Xdebug</a> <code>{$version.extensions.Xdebug}</code></li>
-                <li><a href="http://www.php.net/xhprof">xhprof</a> <code>{$version.extensions.xhprof}</code></li>
-                <li><a href="http://www.php.net/memcache">memcache <code>{$version.extensions.memcache}</code></li>
-                <li><a href="http://www.php.net/pdo_sqlite">pdo_sqlite</a> <code>{$version.extensions.pdo_sqlite}</code></li>
-                <li><a href="http://www.php.net/mysqlnd">mysqlnd</a> <code>{$version.extensions.mysqlnd}</code></li>
-            </ul>
         </div>
         <div class="span4">
-            <h2>Techniques</h2>
-            <ul>
-                <li>Dependency Injection</li>
-                <li>Aspect Oriented Design</li>
-                <li>Representational State Transfer</li>
-            </ul>
-            <p><code>Ray.Di</code> - Guice style annotation-driven dependency injection framework <a
+            <h2>Frameworks</h2>
+            <p><a href="https://github.com/koriym/Ray.Di"><code>Ray.Di</code></a>  - Guice style annotation-driven <strong>dependency injection framework</strong>  enables to build an object graph.<a
                     href="http://travis-ci.org/koriym/Ray.Di"><img
                     src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a></p>
 
-            <p><code>Ray.Aop</code> package provides method interception. This feature enables you to write code that is
+            <p><a href="https://github.com/koriym/Ray.Aop"><code>Ray.Aop</code></a> an<strong>aspect oriented framework</strong>,  Its feature enables you to write code that is
                 executed each time a matching method is invoked. <a
                         href="http://travis-ci.org/koriym/Ray.Aop"><img
                         src="https://secure.travis-ci.org/koriym/Ray.Aop.png"></a></p>
 
-            <p><code>BEAR.Resource</code> - RESTful service layer framework. <a
+            <p><a href="https://github.com/koriym/BEAR.Resource"><code>BEAR.Resource</code></a> - a <strong>hypermedia framework</strong> for object as a service that allows resources to behave as objects. <a
                     href="http://travis-ci.org/koriym/BEAR.Resource"><img
                     src="https://secure.travis-ci.org/koriym/BEAR.Resource.png"></a></p>
         </div>
         <div class="span4">
-            <h2>Apps</h2>
+            <h2>Applications</h2>
             <ul>
                 <li><a href="{href rel="helloworld"}">Hello World</a></li>
                 <li><a href="{href rel="blog"}">Blog tutorial</a></li>
@@ -138,17 +117,6 @@
                 <li><a href="{href rel="demo"}">BEAR.Demo</a></li>
                 {/if}
             </ul>
-            <p><a class="btn" href="http://code.google.com/p/bearsunday/wiki/blog">Try tutorial &raquo;</a></p>
-
-            <h2>Development</h2>
-
-            {if $is_cli_server}
-                <a class="btn" href="/dev/" id="dev">Dev Tool &raquo;</a>
-            {else}
-                <a class="btn" href="/admin/apc/apc.php" id="apc" rel="tooltip" title="Open APC admin control panel">APC Admin &raquo;</a> <br />
-                <br />
-                <a class="btn" href="/admin/memcache/" id="memcache" rel="tooltip" title="Open memcache admin carroll panel">Memcache Admin &raquo;</a>
-            {/if}
 
             <h2>Links</h2>
             <ul>
@@ -156,8 +124,7 @@
                     Manual</a></li>
                 <li><i class="icon-book"></i><a href="http://code.google.com/p/rayphp/wiki/Motivation?tm=6">Ray.Di /
                     Ray.AOP Manual</a></li>
-                <li><i class="icon-fire"></i><a href="https://github.com/koriym/BEAR.Sunday/issues">Issues</a></li>
-                <li><i class="icon-wrench"></i><a href="_dev/index.html">Dev Tools</a></li>
+                <li><i class="icon-fire"></i><a href="https://github.com/koriym/BEAR.Package/issues">Issues</a></li>
         </div>
     </div>
 
@@ -165,7 +132,7 @@
 
     <footer>
         <p>&copy; 2012 <a href="https://twitter.com/#!/bearsunday">@BEARSunday</a> ({$performance} page / sec)</p>
-        <p>Template Engine: Smarty</p>
+        <p>template engine: Smarty</p>
     </footer>
 
 </div>

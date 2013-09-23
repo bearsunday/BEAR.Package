@@ -44,10 +44,8 @@ class Index extends Page
         $bearVersion = file_get_contents($packageDir . '/VERSION');
         $this['version'] = [
             'php' => phpversion(),
-            'BEAR' => $bearVersion,
-            'extensions' => $this->extensionVersion()
+            'BEAR' => $bearVersion
         ];
-        $this['is_cli_server'] = (php_sapi_name() === 'cli-server');
     }
 
     public function onGet()
@@ -56,21 +54,5 @@ class Index extends Page
         $this['performance'] = $this->resource->get->uri('app://self/performance')->request();
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function extensionVersion()
-    {
-        return [
-            'apc' => extension_loaded('apc') ? phpversion('apc') : 'n/a',
-            'curl' => extension_loaded('curl') ? 'yes' : 'n/a',
-            'memcache' => extension_loaded('memcache') ? phpversion('memcache') : 'n/a',
-            'mysqlnd' => extension_loaded('mysqlnd') ? phpversion('mysqlnd') : 'n/a',
-            'pdo_sqlite' => extension_loaded('pdo_sqlite') ? phpversion('pdo_sqlite') : 'n/a',
-            'Xdebug' => extension_loaded('Xdebug') ? phpversion('Xdebug') : 'n/a',
-            'xhprof' => extension_loaded('xhprof') ? phpversion('xhprof') : 'n/a'
-        ];
     }
 }
