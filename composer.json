@@ -49,7 +49,8 @@
         "zendframework/zend-log":"2.1.*",
         "zendframework/zend-db": "2.1.*",
         "zendframework/zend-stdlib": "2.1.*",
-        "classpreloader/classpreloader": "1.*"
+        "classpreloader/classpreloader": "1.*",
+        "dg/adminer-custom": "v1.0.0"
     },
     "require-dev":{
         "printo/printo":"0.1.*",

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "cbbf3591aacf2e86903f958d3a7652bc",
+    "hash": "a52b1c8b9bfbe1639407dfa54b101f03",
     "packages": [
         {
             "name": "any/serializer",
@@ -627,6 +627,25 @@
                 "preload"
             ],
             "time": "2013-06-24 22:58:34"
+        },
+        {
+            "name": "dg/adminer-custom",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/adminer-custom.git",
+                "reference": "c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3",
+                "reference": "c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3",
+                "shasum": ""
+            },
+            "type": "project",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Customization for the best database management tool written in PHP, Adminer",
+            "time": "2013-07-01 12:56:59"
         },
         {
             "name": "doctrine/annotations",
