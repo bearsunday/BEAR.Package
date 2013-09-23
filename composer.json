@@ -27,12 +27,12 @@
     "require":{
         "php":">=5.4.0",
         "ext-curl":"*",
-        "bear/resource":"dev-develop",
-        "ray/di":"dev-develop",
-        "ray/aop":"dev-develop",
-        "bear/sunday":"dev-develop",
+        "bear/resource":"0.9.*",
+        "ray/di":"1.1.*",
+        "ray/aop":"1.1.*",
+        "bear/sunday":"0.9.*",
         "bear/ace":"1.0.*",
-        "aura/input": "dev-develop",
+        "aura/input": "1.1.*",
         "aura/view": "1.1.2",
         "aura/router":"1.0.*",
         "doctrine/annotations":"1.*",
@@ -49,13 +49,13 @@
         "zendframework/zend-log":"2.1.*",
         "zendframework/zend-db": "2.1.*",
         "zendframework/zend-stdlib": "2.1.*",
-        "classpreloader/classpreloader": "1.*",
-        "dg/adminer-custom": "v1.0.0"
+        "classpreloader/classpreloader": "1.*"
     },
     "require-dev":{
         "printo/printo":"0.1.*",
         "facebook/xhprof":"dev-master",
-        "firephp/firephp-core":"dev-master",
+        "firephp/firephp-core":"*",
+        "dg/adminer-custom": "1.*",
         "twig/twig":"1.*"
     },
     "autoload":{
