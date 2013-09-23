@@ -46,6 +46,7 @@ class Index extends Page
             'php' => phpversion(),
             'BEAR' => $bearVersion
         ];
+        $this['is_cli_server'] = (php_sapi_name() === 'cli-server');
     }
 
     public function onGet()
