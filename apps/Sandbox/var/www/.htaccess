@@ -1,5 +1,14 @@
 	order deny,allow
-	deny from /dev.php
+
+<Files "dev.php">
+	order allow,deny
+	deny from all
+</Files>
+<Files "dev.php">
+	order allow,deny
+	deny from all
+</Files>
+
 <IfModule mod_rewrite.c>
     # turn on rewriting
     RewriteEngine On
