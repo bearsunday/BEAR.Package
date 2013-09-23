@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a52b1c8b9bfbe1639407dfa54b101f03",
+    "hash": "ebd054fbe0f1af8b17add64c91d72d61",
     "packages": [
         {
             "name": "any/serializer",
@@ -109,16 +109,16 @@
         },
         {
             "name": "aura/input",
-            "version": "dev-develop",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Input.git",
-                "reference": "9aeb7386c2ecfd01ce6b080f87afc2dd6885d3b3"
+                "reference": "1b0fc65315f4bb01b4432f045262c0ce49a062ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/9aeb7386c2ecfd01ce6b080f87afc2dd6885d3b3",
-                "reference": "9aeb7386c2ecfd01ce6b080f87afc2dd6885d3b3",
+                "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/1b0fc65315f4bb01b4432f045262c0ce49a062ea",
+                "reference": "1b0fc65315f4bb01b4432f045262c0ce49a062ea",
                 "shasum": ""
             },
             "require": {
@@ -147,19 +147,28 @@
                     "homepage": "http://harikt.com"
                 },
                 {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com",
+                    "role": "Lead"
+                },
+                {
                     "name": "Aura.Input Contributors",
                     "homepage": "https://github.com/auraphp/Aura.Input/contributors"
+                },
+                {
+                    "name": "Daniel Haaker",
+                    "email": "d.haaker@gmail.com"
                 }
             ],
             "description": "This package contains tools to describe and filter user inputs from an HTML form, including sub-forms/sub-fieldsets, fieldset collections, an interface for injecting custom filter systems, and CSRF protection. Note that this package does not include output functionality, although the \"hints\" provided by the Form object can be used with any presentation system to generate an HTML form.",
-            "homepage": "http://auraphp.github.com/Aura.Input",
+            "homepage": "http://auraphp.com/Aura.Input",
             "keywords": [
                 "field",
                 "form",
                 "html",
                 "input"
             ],
-            "time": "2013-09-17 15:09:50"
+            "time": "2013-09-17 00:00:00"
         },
         {
             "name": "aura/installer-default",
@@ -477,16 +486,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "dev-develop",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "7499d5b3486282f8c54cf39cbd0d8b80defed506"
+                "reference": "3cf2c9d275485fb94df576edfef91d686afe2447"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/7499d5b3486282f8c54cf39cbd0d8b80defed506",
-                "reference": "7499d5b3486282f8c54cf39cbd0d8b80defed506",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/3cf2c9d275485fb94df576edfef91d686afe2447",
+                "reference": "3cf2c9d275485fb94df576edfef91d686afe2447",
                 "shasum": ""
             },
             "require": {
@@ -496,8 +505,8 @@
                 "guzzle/guzzle": "3.3.*",
                 "nocarrier/hal": "*",
                 "php": ">=5.4.0",
-                "ray/aop": "dev-develop",
-                "ray/di": "dev-develop"
+                "ray/aop": "1.1.*",
+                "ray/di": "1.1.*"
             },
             "require-dev": {
                 "facebook/xhprof": "dev-master"
@@ -517,7 +526,7 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Developer"
+                    "role": "Lead"
                 }
             ],
             "description": "Hypermedia framework for object as a service",
@@ -531,28 +540,26 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2013-09-22 17:25:14"
+            "time": "2013-09-23 06:52:35"
         },
         {
             "name": "bear/sunday",
-            "version": "dev-develop",
+            "version": "0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "64560f43f92fcab0e1e67761fd23ee86fed427e8"
+                "reference": "462c8cb0f4247988fa46cb2ebf830980a2b3bfc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/64560f43f92fcab0e1e67761fd23ee86fed427e8",
-                "reference": "64560f43f92fcab0e1e67761fd23ee86fed427e8",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/462c8cb0f4247988fa46cb2ebf830980a2b3bfc2",
+                "reference": "462c8cb0f4247988fa46cb2ebf830980a2b3bfc2",
                 "shasum": ""
             },
             "require": {
                 "aura/web": "*",
-                "bear/resource": "dev-develop",
-                "php": ">=5.4.0",
-                "ray/aop": "dev-develop",
-                "ray/di": "dev-develop"
+                "bear/resource": "*",
+                "php": ">=5.4.0"
             },
             "type": "library",
             "autoload": {
@@ -579,7 +586,7 @@
                 "hypermedia",
                 "rest"
             ],
-            "time": "2013-09-18 13:43:51"
+            "time": "2013-09-20 06:25:19"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -627,25 +634,6 @@
                 "preload"
             ],
             "time": "2013-06-24 22:58:34"
-        },
-        {
-            "name": "dg/adminer-custom",
-            "version": "v1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dg/adminer-custom.git",
-                "reference": "c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3",
-                "reference": "c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3",
-                "shasum": ""
-            },
-            "type": "project",
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Customization for the best database management tool written in PHP, Adminer",
-            "time": "2013-07-01 12:56:59"
         },
         {
             "name": "doctrine/annotations",
@@ -1352,7 +1340,7 @@
         },
         {
             "name": "ray/aop",
-            "version": "dev-develop",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
@@ -1399,16 +1387,16 @@
         },
         {
             "name": "ray/di",
-            "version": "dev-develop",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "0c6324ab93dbfc7c888cad34b508d84debe801ea"
+                "reference": "8406adc9af763a4db06c03934ac63156dcf907a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/0c6324ab93dbfc7c888cad34b508d84debe801ea",
-                "reference": "0c6324ab93dbfc7c888cad34b508d84debe801ea",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/8406adc9af763a4db06c03934ac63156dcf907a0",
+                "reference": "8406adc9af763a4db06c03934ac63156dcf907a0",
                 "shasum": ""
             },
             "require": {
@@ -1417,7 +1405,7 @@
                 "doctrine/cache": "1.*",
                 "nikic/php-parser": "*",
                 "php": ">=5.4.0",
-                "ray/aop": "dev-develop"
+                "ray/aop": "1.1.*"
             },
             "type": "library",
             "autoload": {
@@ -1453,7 +1441,7 @@
                 "injection",
                 "jsr"
             ],
-            "time": "2013-09-17 14:49:53"
+            "time": "2013-09-23 06:34:18"
         },
         {
             "name": "smarty/smarty",
@@ -1963,6 +1951,25 @@
     ],
     "packages-dev": [
         {
+            "name": "dg/adminer-custom",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/adminer-custom.git",
+                "reference": "c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3",
+                "reference": "c7ce0e546c5d8ee93fbcdb4528460ac2a741a0b3",
+                "shasum": ""
+            },
+            "type": "project",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Customization for the best database management tool written in PHP, Adminer",
+            "time": "2013-07-01 12:56:59"
+        },
+        {
             "name": "facebook/xhprof",
             "version": "dev-master",
             "source": {
@@ -2000,7 +2007,7 @@
         },
         {
             "name": "firephp/firephp-core",
-            "version": "dev-master",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firephp/firephp-core.git",
@@ -2135,13 +2142,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bear/resource": 20,
-        "ray/di": 20,
-        "ray/aop": 20,
-        "bear/sunday": 20,
-        "aura/input": 20,
-        "facebook/xhprof": 20,
-        "firephp/firephp-core": 20
+        "facebook/xhprof": 20
     },
     "platform": {
         "php": ">=5.4.0",
