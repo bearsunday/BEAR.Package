@@ -19,17 +19,11 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        rmdir(__DIR__ . '/NotWritable');
     }
 
     protected function setUp()
     {
-        static $app;
-        parent::setUp();
-        if (!$app) {
-            require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/clear.php';
-            $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Sandbox/scripts/instance.php';
-        }
+        $app = clone $GLOBALS['_BEAR_APP'];
         $this->appReflector = new ApplicationReflector($app);
     }
 
@@ -55,9 +49,10 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      *
      * @covers BEAR\Package\Dev\Application\ApplicationReflector::getResources
      */
-    public function testGetResources(array $resources)
+    public function estGetResources(array $resources)
     {
         $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Helloworld/scripts/instance.php';
+        $this->assertInstanceOf('BEAR\Sunday\Extension\Application\AppInterface', $app);
         $resources = (new ApplicationReflector($app))->getResources();
         $this->assertSame(3, count($resources));
     }
@@ -131,7 +126,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     {
         $uri = "page://self/hello";
         list($filePath,) = $this->appReflector->getNewResource($uri);
-        $this->assertContains('apps/Sandbox/Resource/Page/Hello.php', $filePath);
+        $this->assertContains('apps/Sandbox/src/Sandbox/Resource/Page/Hello.php', $filePath);
     }
 
     /**
@@ -140,7 +135,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testNewResourceFilePath(array $newResource)
     {
         $filePath = $newResource[1];
-        $this->assertContains('apps/Sandbox/Resource/Page/One/Two/Three/Resource.php', $filePath);
+        $this->assertContains('apps/Sandbox/src/Sandbox/Resource/Page/One/Two/Three/Resource.php', $filePath);
     }
 
 
@@ -159,7 +154,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testNewResourceNameClass(array $newResource)
     {
         $contents = $newResource[0];
-        $this->assertContains('class Resource extends AbstractObject', $contents);
+        $this->assertContains('class Resource extends ResourceObject', $contents);
     }
 
 
@@ -197,7 +192,8 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResourceOptions()
     {
-        $ro = new \Sandbox\Resource\Page\Index;
+        $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+        $ro = new \Sandbox\Resource\Page\Index($packageDir);
         $options = $this->appReflector->getResourceOptions($ro);
         $this->assertSame(['allow', 'params'], array_keys($options));
 
@@ -228,5 +224,4 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $num = $this->appReflector->compileAllResources();
         $this->assertInternalType('integer', $num);
     }
-
 }

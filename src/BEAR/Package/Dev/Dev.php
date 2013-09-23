@@ -38,7 +38,7 @@ class Dev
     /**
      * @var string
      */
-    private $requestUri;
+    private $requestUri = '';
 
     /**
      * @var string
@@ -69,8 +69,6 @@ class Dev
             $this->requestUri = $server['REQUEST_URI'];
         } elseif (isset($argv[2])) {
             $this->requestUri = $argv[2];
-        } else {
-            throw new \BadMethodCallException;
         }
         $this->sapiName = $sapiName ? : php_sapi_name();
     }
@@ -113,9 +111,11 @@ class Dev
         );
     }
 
+    /**
+     * @return $this
+     */
     public function iniSet()
     {
-        ini_set('display_errors', 1);
         ini_set('xhprof.output_dir', sys_get_temp_dir());
         ini_set('xdebug.collect_params', 0);
         ini_set('xdebug.max_nesting_level', 500);
@@ -136,9 +136,10 @@ class Dev
     {
         set_exception_handler(
             function (\Exception $e) use ($logDir) {
-                $handler = new ExceptionHandler(new SymfonyResponse(new ConsoleOutput), (dirname(
-                        __DIR__
-                    )) . '/Module/ExceptionHandle/template/view.php');
+                $handler = new ExceptionHandler(
+                    new SymfonyResponse(new ConsoleOutput),
+                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/view.php'
+                );
                 $handler->setLogDir($logDir);
                 $handler->handle($e);
             }
@@ -272,7 +273,7 @@ class Dev
     {
         require_once __DIR__ . '/function/e.php';
         require_once __DIR__ . '/function/p.php';
-
+        require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor/printo/printo/src.php';
         return $this;
     }
 
@@ -281,10 +282,9 @@ class Dev
      *
      * @return AbstractApp|bool
      */
-    public function getDevApplication($mode)
+    public function getDevApplication($context)
     {
-        global $argv;
-        global $mode;
+        global $context;
 
         // direct file for built in web server
         if ($this->directAccessFile() === false) {
@@ -293,26 +293,38 @@ class Dev
 
         // console args
         /** @noinspection PhpUnusedLocalVariableInspection */
-        $mode = isset($argv[3]) ? $argv[3] : $mode;
-        $app = require 'scripts/instance.php';
+        $context = isset($argv[3]) ? $argv[3] : $context;
+        $app = require 'bootstrap/instance.php';
         /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
-        // Use cli parameter for routing (web.php get /)
-        if (PHP_SAPI === 'cli') {
-            $app->router->setArgv($argv);
-        } else {
-            $app->router->setGlobals($GLOBALS);
-            $argv = [];
-        }
+        $app = $this->route($app);
 
         // development web service (/dev)
         $this->setApp($app)->webService();
 
-        // resource log
-        $app->logger->register($app);
+        return $app;
+    }
+
+    /**
+     * @param AbstractApp $app
+     *
+     * @return AbstractApp
+     */
+    private function route(AbstractApp $app)
+    {
+        global $argv;
+
+        if (PHP_SAPI === 'cli') {
+            // Use cli parameter for routing (web.php get /)
+            $app->router->setArgv($argv);
+            return $app;
+        }
+        $app->router->setGlobals($GLOBALS);
+        $argv = [];
 
         return $app;
     }
+
 
     /**
      * Output
@@ -326,10 +338,9 @@ class Dev
     {
         if ($this->return) {
             return [$code, $html];
-        } else {
-            http_response_code($code);
-            echo $html;
-            exit(0);
         }
+        http_response_code($code);
+        echo $html;
+        exit(0);
     }
 }

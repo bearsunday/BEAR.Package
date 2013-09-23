@@ -1,12 +1,14 @@
 {
     "name":"bear/package",
-    "description":"BEAR.Sunday application package",
+    "description":"BEAR.Sunday framework package",
     "keywords":[
         "BEAR.Sunday",
-        "framework",
         "DI",
         "AOP",
-        "REST"
+        "REST",
+        "framework",
+        "hypermedia",
+        "API"
     ],
     "homepage":"https://github.com/koriym/BEAR.Package",
     "license":"BSD-3-Clause",
@@ -17,7 +19,7 @@
         }
     ],
     "provide":{
-        "bear/framework": "0.7.0"
+        "bear/framework": "0.8.0"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
@@ -25,10 +27,12 @@
     "require":{
         "php":">=5.4.0",
         "ext-curl":"*",
-        "bear/resource":"0.8.*",
-        "bear/sunday":"0.7.*",
+        "bear/resource":"0.9.*",
+        "ray/di":"1.1.*",
+        "ray/aop":"1.1.*",
+        "bear/sunday":"0.9.*",
         "bear/ace":"1.0.*",
-        "aura/input": "dev-develop#21cd3be9fa724862566b52ed6ef1b83b787639e4",
+        "aura/input": "1.1.*",
         "aura/view": "1.1.2",
         "aura/router":"1.0.*",
         "doctrine/annotations":"1.*",
@@ -36,7 +40,7 @@
         "doctrine/dbal":"2.3.*",
         "guzzle/guzzle":"3.3.*",
         "nocarrier/hal":"0.9.*",
-        "pagerfanta/pagerfanta":"1.*@dev",
+        "pagerfanta/pagerfanta":"1.*",
         "smarty/smarty":"3.1.*",
         "symfony/console":"2.0.*",
         "symfony/http-foundation":"2.0.*",
@@ -50,7 +54,8 @@
     "require-dev":{
         "printo/printo":"0.1.*",
         "facebook/xhprof":"dev-master",
-        "firephp/firephp-core":"dev-master",
+        "firephp/firephp-core":"*",
+        "dg/adminer-custom": "1.*",
         "twig/twig":"1.*"
     },
     "autoload":{
@@ -60,7 +65,7 @@
     },
     "scripts"   :{
         "post-install-cmd": ["php bin/setup.php", "php bin/env.php"],
-        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php bin/loader.php"]
+        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php apps/Sandbox/bin/compiler.php"]
     },
     "repositories":[
         {

@@ -2,14 +2,14 @@
 
 namespace {$namespace};
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\ResourceInject;
 use Ray\Di\Di\Inject;
 
 /**
  * Untitled
  */
-class {$class} extends AbstractObject
+class {$class} extends ResourceObject
 {
     use ResourceInject;
 

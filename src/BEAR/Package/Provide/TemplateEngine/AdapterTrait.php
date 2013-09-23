@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine;
 
-use BEAR\Sunday\Exception\TemplateNotFound;
+use BEAR\Package\Provide\TemplateEngine\Exception\TemplateNotFound;
 
 trait AdapterTrait
 {

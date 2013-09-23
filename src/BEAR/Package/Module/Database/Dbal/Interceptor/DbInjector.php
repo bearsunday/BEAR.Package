@@ -93,14 +93,8 @@ final class DbInjector implements MethodInterceptor
         $method = $invocation->getMethod();
         $connectionParams = ($method->name === 'onGet') ? $this->slaveDb : $this->masterDb;
         $pagerAnnotation = $this->reader->getMethodAnnotation($method, 'BEAR\Sunday\Annotation\DbPager');
-        if ($pagerAnnotation) {
-            $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
-            $db = DriverManager::getConnection($connectionParams);
-            /** @var $db \BEAR\Package\Module\Database\Dbal\PagerConnection */
-            $db->setMaxPerPage($pagerAnnotation->limit);
-        } else {
-            $db = DriverManager::getConnection($connectionParams);
-        }
+        $db = $this->getDb($pagerAnnotation, $connectionParams);
+
         /* @var $db \BEAR\Package\Module\Database\Dbal\PagerConnection */
 
         if ($this->sqlLogger instanceof SQLLogger) {
@@ -114,13 +108,33 @@ final class DbInjector implements MethodInterceptor
         } elseif ($this->sqlLogger instanceof SQLLogger) {
             $this->sqlLogger->stopQuery();
         }
-        if ($pagerAnnotation) {
-            $pagerData = $db->getPager();
-            if ($pagerData) {
-                $object->headers['pager'] = $pagerData;
-            }
+        if (! $pagerAnnotation) {
+            return $result;
+        }
+        $pagerData = $db->getPager();
+        if ($pagerData) {
+            $object->headers['pager'] = $pagerData;
+        }
+        return $result;
+    }
+
+    /**
+     * @param       $pagerAnnotation
+     * @param array $connectionParams
+     *
+     * @return \BEAR\Package\Module\Database\Dbal\PagerConnection|\Doctrine\DBAL\Connection
+     */
+    private function getDb($pagerAnnotation, array $connectionParams)
+    {
+        if (! $pagerAnnotation) {
+            return  DriverManager::getConnection($connectionParams);
         }
 
-        return $result;
+        $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
+        $db = DriverManager::getConnection($connectionParams);
+        /** @var $db \BEAR\Package\Module\Database\Dbal\PagerConnection */
+        $db->setMaxPerPage($pagerAnnotation->limit);
+
+        return $db;
     }
 }

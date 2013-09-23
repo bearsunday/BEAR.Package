@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
@@ -40,7 +40,7 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * @param \BEAR\Resource\AbstractObject $ro
+     * @param \BEAR\Resource\ResourceObject $ro
      */
     private function valuateElements(ResourceObject &$ro)
     {
@@ -72,9 +72,9 @@ class HalRenderer implements RenderInterface
             $attr = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ? [Link::TEMPLATED => true] : [];
             if (isset($link[Link::HREF])) {
                 $hal->addLink($rel, $link[Link::HREF], $title, $attr);
-            } else {
-                throw new Exception\HrefNotFound($rel);
+                continue;
             }
+            throw new Exception\HrefNotFound($rel);
         }
 
         return $hal;

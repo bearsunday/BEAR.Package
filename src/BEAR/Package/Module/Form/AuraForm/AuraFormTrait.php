@@ -32,16 +32,7 @@ trait AuraFormTrait
      */
     public function invoke(MethodInvocation $invocation)
     {
-        if (isset($_POST['submit'])) {
-            $args = $_POST;
-            $hasSubmit = true;
-        } elseif (isset($_GET['submit'])) {
-            $args = $_GET;
-            $hasSubmit = true;
-        } else {
-            $args = [];
-            $hasSubmit = false;
-        }
+        list($args, $hasSubmit) = $this->getSubmit();
         $page = $invocation->getThis();
 
         $this->setForm($this->filter);
@@ -62,6 +53,25 @@ trait AuraFormTrait
         return $page->onGet();
     }
 
+    /**
+     * @return array [$submit, $hasSabmit]
+     */
+    private function getSubmit()
+    {
+        if (isset($_POST['submit'])) {
+            return [$_POST, true];
+        } elseif (isset($_GET['submit'])) {
+            return [$_GET, true];
+        }
+        return [[], false];
+
+    }
+
+    /**
+     * @param array $errorMessages
+     *
+     * @return string
+     */
     protected function getErrorMessage(array $errorMessages)
     {
         return implode(',', $errorMessages);

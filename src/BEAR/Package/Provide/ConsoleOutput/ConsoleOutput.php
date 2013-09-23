@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ConsoleOutput;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Request;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use Guzzle\Parser\UriTemplate\UriTemplate;
@@ -61,11 +61,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
             goto COMPLETE;
         }
         $isTraversable = is_array($resource->body) || $resource->body instanceof \Traversable;
-        if ($isTraversable) {
-            $body = $this->getBody($resource);
-        } else {
-            $body = '*'. gettype($resource->body);
-        }
+        $body = $isTraversable ? $this->getBody($resource) : '*'. gettype($resource->body);
         $output .= $body;
         if ($resource->view) {
             $output .= PHP_EOL . self::LABEL . '[VIEW]' . self::CLOSE . PHP_EOL . $resource->view;

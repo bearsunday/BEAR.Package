@@ -32,6 +32,4 @@ class ResourceLogTest extends \PHPUnit_Framework_TestCase
         $table = (new ResourceLog(''))->toTable();
         $this->assertEmpty($table);
     }
-
-
 }

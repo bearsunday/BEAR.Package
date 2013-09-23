@@ -28,12 +28,9 @@ class ApplicationLoggerTest extends \PHPUnit_Framework_TestCase
         $this->object = new ApplicationLogger(new ResourceLogger);
     }
 
-    /**
-     * @covers BEAR\Package\Provide\ApplicationLogger\ApplicationLogger::register
-     */
     public function testRegister()
     {
-        $result = $this->object->register(new App);
+        $result = $this->object->write();
         $this->assertSame(null, $result);
 
     }

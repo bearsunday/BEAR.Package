@@ -18,7 +18,6 @@ class DevTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $argv = [];
         $server = ['REQUEST_URI' => '/dev/'];
         $this->dev = new Dev($server, new Web, 'apache');
     }

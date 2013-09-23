@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package\Module\Resource\Interceptor;
 
-use BEAR\Ace\Exception;
 use BEAR\Resource\Exception\Uri;
 use BEAR\Resource\ResourceInterface;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;

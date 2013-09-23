@@ -129,22 +129,18 @@ EOT;
     private function getCode($code)
     {
         $status = substr($code, 0, 1);
-        if ($status == 2) {
-            $label = 'success';
-        } else {
-            $label = 'error';
-        }
+        $label = ($status == 2) ? 'success' : 'error';
 
         return "<span class=\"label label-{$label}\">{$code}</code>";
     }
 
     /**
      * @param string $path
-     * @param        $time
+     * @param array  $logs
      *
      * @return string
      */
-    private function getTableOpen($path = '', array $logs)
+    private function getTableOpen($path = '', array $logs = [])
     {
         $time = $logs[0]['timestamp'];
         $requestNum = count($logs);
@@ -176,7 +172,7 @@ EOT;
     {
         $meta = [];
 
-        $method = substr($req, 0 , 3);
+        $method = substr($req, 0, 3);
         $onMethod = 'on' . ucwords($method);
         $header = json_decode($header, true);
 

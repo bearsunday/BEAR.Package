@@ -6,10 +6,11 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Ray\Aop\Weave;
+use Ray\Aop\WeavedInterface;
 use ReflectionClass;
 use Ray\Di\Di\Inject;
 
@@ -42,17 +43,15 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
      * {@inheritdoc}
      * @SuppressWarnings("long")
      */
-    public function render(AbstractObject $resourceObject)
+    public function render(ResourceObject $resourceObject)
     {
         if (is_scalar($resourceObject->body)) {
             $resourceObject->view = $resourceObject->body;
             return (string)$resourceObject->body;
         }
-
-        $class = ($resourceObject instanceof Weave) ? get_class($resourceObject->___getObject()) : get_class(
-            $resourceObject
-        );
-        $file = (new ReflectionClass($class))->getFileName();
+        $file =  ($resourceObject instanceof WeavedInterface) ?
+            (new ReflectionClass($resourceObject))->getParentClass()->getFileName() :
+            (new ReflectionClass($resourceObject))->getFileName();
 
         // assign 'resource'
         $this->templateEngineAdapter->assign('resource', $resourceObject);

@@ -40,14 +40,15 @@ class Web
         global $appDir;
 
         if ($app instanceof AppInterface) {
-            $appDir = dirname((new \ReflectionObject($app))->getFileName());
+            $appDir = dirname(dirname(dirname((new \ReflectionObject($app))->getFileName())));
         }
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
         if ($path == '' || substr($path, -1, 1) === '/') {
             $path .= 'index.php';
         }
-        $scriptFile = __DIR__ . '/public/' . $path;
+        $packageRoot = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+        $scriptFile =  $packageRoot . '/var/www/dev/' . $path;
         if (file_exists($scriptFile) && is_file($scriptFile)) {
             /** @noinspection PhpIncludeInspection */
             ob_start();
@@ -77,7 +78,8 @@ class Web
      */
     public function isDevWebService($sapiName, $requestUri)
     {
-        $isDevTool = ($sapiName !== 'cli') && substr($requestUri, 0, 5) === '/dev/';
+        $path = substr($requestUri, 0, 5);
+        $isDevTool = ($sapiName !== 'cli') &&  ($path === '/dev' || $path === '/dev/');
 
         return $isDevTool;
     }

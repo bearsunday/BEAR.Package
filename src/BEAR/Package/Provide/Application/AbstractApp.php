@@ -7,7 +7,7 @@
 namespace BEAR\Package\Provide\Application;
 
 use BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandlerInterface;
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;

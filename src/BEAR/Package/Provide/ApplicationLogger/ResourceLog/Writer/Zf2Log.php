@@ -6,9 +6,9 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
 use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
+use BEAR\Resource\ResourceObject;
 use Ray\Di\ProviderInterface;
 
 /**
@@ -26,10 +26,6 @@ final class Zf2Log implements LogWriterInterface
      */
     private $pageId;
 
-    /**
-     * @var \Zend\Log\LoggerInterface
-     */
-    private $logger;
 
     /**
      * @param \Ray\Di\ProviderInterface $provider
@@ -47,21 +43,36 @@ final class Zf2Log implements LogWriterInterface
      */
     public function write(RequestInterface $request, ResourceObject $result)
     {
-        $this->logger = $this->provider->get();
+        $logger = $this->provider->get();
+        $this->pageId = rtrim(base64_encode(pack('H*', md5($_SERVER['REQUEST_TIME_FLOAT']))), '=');
         $id = "{$this->pageId}";
         /** @var $logger \Zend\Log\LoggerInterface */
         $msg = "id:{$id}\treq:" . $request->toUriWithMethod();
         $msg .= "\tcode:" . $result->code;
         $msg .= "\tbody:" . json_encode($result->body);
         $msg .= "\theader:" . json_encode($result->headers);
-        if (isset($_SERVER['PATH_INFO'])) {
-            $path = $_SERVER['PATH_INFO'];
-            $path .= $_GET ? '?' : '';
-            $path .= http_build_query($_GET);
-        } else {
-            $path = '/';
-        }
+        $path = $this->getPath(isset($_SERVER['PATH_INFO']));
         $msg .= "\tpath:$path";
-        $this->logger->info($msg, ['page' => $this->pageId]);
+        try {
+            $logger->info($msg, ['page' => $this->pageId]);
+        } catch (\Exception $e) {
+        }
+    }
+
+    /**
+     * @param $hasServerInfo
+     *
+     * @return string
+     */
+    private function getPath($hasServerInfo)
+    {
+        if (!$hasServerInfo) {
+            return '/';
+        }
+        $path = $_SERVER['PATH_INFO'];
+        $path .= $_GET ? '?' : '';
+        $path .= http_build_query($_GET);
+
+        return $path;
     }
 }

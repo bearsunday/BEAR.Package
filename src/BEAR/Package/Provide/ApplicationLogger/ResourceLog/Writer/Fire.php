@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
 use FirePHP;
@@ -38,6 +38,9 @@ final class Fire implements LogWriterInterface
      */
     public function write(RequestInterface $request, ResourceObject $result)
     {
+        if (headers_sent()) {
+            return;
+        }
         $requestLabel = $request->toUriWithMethod();
         $this->fire->group($requestLabel);
         $this->fireResourceObjectLog($result);
@@ -84,19 +87,17 @@ final class Fire implements LogWriterInterface
     private function fireBody(ResourceObject $result)
     {
         $body = $this->normalize($result->body);
-        $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys(
-                    $body[1]
-                ));
-        if ($isTable) {
-            $table = [];
-            $table[] = (array_values(array_keys($body[0])));
-            foreach ((array)$body as $val) {
-                $table[] = array_values((array)$val);
-            }
-            $this->fire->table('body', $table);
-        } else {
+        $isTable = is_array($body) && isset($body[0]) && isset($body[1]) && (array_keys($body[0]) === array_keys($body[1]));
+        if (! $isTable) {
             $this->fire->log($body, 'body');
+            return;
         }
+        $table = [];
+        $table[] = (array_values(array_keys($body[0])));
+        foreach ((array)$body as $val) {
+            $table[] = array_values((array)$val);
+        }
+        $this->fire->table('body', $table);
     }
 
     /**

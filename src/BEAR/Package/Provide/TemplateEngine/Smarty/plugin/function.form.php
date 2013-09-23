@@ -22,26 +22,28 @@ function smarty_function_form($params, &$smarty)
 
     if (!$formHelper) {
         $packageDir = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
-        $formHelper = new HelperLocator([
-            'field' => function () use ($packageDir) {
-                return new Field(require $packageDir . '/vendor/aura/view/scripts/field_registry.php');
-            },
-            'input' => function () use ($packageDir) {
-                return new Input(require $packageDir . '/vendor/aura/view/scripts/input_registry.php');
-            },
-            'radios' => function () {
-                return new Radios(new Checked);
-            },
-            'repeat' => function () use ($packageDir) {
-                return new Repeat(require $packageDir . '/vendor/aura/view/scripts/repeat_registry.php');
-            },
-            'select' => function () {
-                return new Select;
-            },
-            'textarea' => function () {
-                return new Textarea;
-            },
-        ]);
+        $formHelper = new HelperLocator(
+            [
+                'field' => function () use ($packageDir) {
+                    return new Field(require $packageDir . '/vendor/aura/view/scripts/field_registry.php');
+                },
+                'input' => function () use ($packageDir) {
+                    return new Input(require $packageDir . '/vendor/aura/view/scripts/input_registry.php');
+                },
+                'radios' => function () {
+                    return new Radios(new Checked);
+                },
+                'repeat' => function () use ($packageDir) {
+                    return new Repeat(require $packageDir . '/vendor/aura/view/scripts/repeat_registry.php');
+                },
+                'select' => function () {
+                    return new Select;
+                },
+                'textarea' => function () {
+                    return new Textarea;
+                },
+            ]
+        );
     }
     $type = isset($params['type']) ? $params['type'] : 'field';
     $func = $formHelper->get($type);

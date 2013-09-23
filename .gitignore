@@ -10,13 +10,15 @@ vendor
 cache.properties
 build
 tmp
+aop
 *.log
 *.tpl.php
 di.log.txt
 composer.phar
-resource.db
 apps/Skeleton/
 apps/Sandbox/tests/Resource/App/First/GreetingTest.php
 scripts/preloader.php
 ID
 VERSION
+*Ray*Aop.php
+resource.db

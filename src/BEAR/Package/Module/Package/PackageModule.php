@@ -9,11 +9,11 @@ use BEAR\Package\Module\Resource\NullCacheModule;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
-use BEAR\Sunday\Module\Cqrs\CacheModule as CqrsModule;
-use BEAR\Sunday\Module\Resource\ApcModule;
+use BEAR\Sunday\Module\Resource\ResourceCacheModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 use Ray\Di\Module\InjectorModule;
+use BEAR\Package\Module\Cache\CacheModule;
 
 /**
  * Package module
@@ -72,10 +72,10 @@ class PackageModule extends AbstractModule
 
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new SundayModule\Resource\ApcModule);
+        $this->install(new SundayModule\Resource\ResourceCacheModule);
 
-        // CQRS Cache Module
-        $this->install(new CqrsModule($this));
+        // Cache Module
+        $this->install(new CacheModule($this));
 
         if ($this->mode === 'dev') {
             $this->install(new DevResourceModule($this));
@@ -84,7 +84,7 @@ class PackageModule extends AbstractModule
 
         // end of configuration in production
         if ($this->mode === 'prod') {
-            $this->install(new ApcModule($this));
+            $this->install(new CacheModule($this));
         }
 
         if ($this->mode === 'test') {

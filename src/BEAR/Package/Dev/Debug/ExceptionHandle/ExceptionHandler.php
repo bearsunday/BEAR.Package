@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Dev\Debug\ExceptionHandle;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Resource\Exception\Parameter;
@@ -114,7 +114,6 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     public function handle(Exception $e)
     {
-        $isAjax = isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] === 'XMLHttpRequest';
         $page = $this->buildErrorPage($e, $this->errorPage);
         $id = $page->headers['X-EXCEPTION-ID'];
         $this->writeExceptionLog($e, $id);
@@ -126,9 +125,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      * Return error page
      *
      * @param                               $e
-     * @param \BEAR\Resource\AbstractObject $response
+     * @param \BEAR\Resource\ResourceObject $response
      *
-     * @return \BEAR\Resource\AbstractObject
+     * @return \BEAR\Resource\ResourceObject
      * @throws
      */
     private function buildErrorPage($e, ResourceObject $response)
@@ -175,8 +174,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         METHOD_NOT_ALLOWED:
         INVALID_URI:
 
-        if (PHP_SAPI === 'cli') {
-        } else {
+        if (PHP_SAPI !== 'cli') {
             $response->view = $this->getView($e);
         }
         $response->headers['X-EXCEPTION-CLASS'] = get_class($e);
@@ -269,6 +267,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         $file = $this->getLogFilePath($exceptionId);
         if (is_writable($this->logDir)) {
             file_put_contents($file, $data);
+
         } else {
             error_log("{$file} is not writable");
         }

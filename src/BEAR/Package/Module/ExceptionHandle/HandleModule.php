@@ -7,6 +7,7 @@
 namespace BEAR\Package\Module\ExceptionHandle;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 /**
  * Exception handle module
@@ -25,11 +26,12 @@ class HandleModule extends AbstractModule
             ->annotatedWith('exceptionTpl')
             ->toInstance(__DIR__ . '/template/view.php');
         $this
-            ->bind('BEAR\Resource\AbstractObject')
+            ->bind('BEAR\Resource\ResourceObject')
             ->annotatedWith('errorPage')
             ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ErrorPage');
         $this
             ->bind('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandlerInterface')
-            ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandler');
+            ->to('BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandler')
+            ->in(Scope::SINGLETON);
     }
 }

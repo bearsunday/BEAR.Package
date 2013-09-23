@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
 
@@ -18,7 +18,7 @@ class JsonRenderer implements RenderInterface
     /**
      * {@inheritdoc}
      */
-    public function render(AbstractObject $ro)
+    public function render(ResourceObject $ro)
     {
         // evaluate all request in body.
         /** @noinspection PhpUndefinedFieldInspection */

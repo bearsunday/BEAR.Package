@@ -26,7 +26,7 @@ foreach ($iterator as $dir) {
         $dataDir = $dir . '';
         echo "chmod:{$dataDir}" . PHP_EOL;
         chmodWritable($dataDir);
-        $clear = $dir . '/scripts/clear.php';
+        $clear = $dir . '/bin/clear.php';
         if (file_exists($clear)) {
             echo "clear:{$clear}" . PHP_EOL;
             passthru("php {$clear}");

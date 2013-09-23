@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
 
@@ -23,7 +23,7 @@ final class Collection implements LogWriterInterface
     private $writers = [];
 
     /**
-     * @param array $writers
+     * @param \BEAR\Resource\LogWriterInterface[] $writers
      *
      * @Inject
      * @Named("log_writers")
@@ -39,8 +39,10 @@ final class Collection implements LogWriterInterface
     public function write(RequestInterface $request, ResourceObject $result)
     {
         foreach ($this->writers as $writer) {
-            /** @var $writer \BEAR\Resource\LogWriterInterface */
-            $writer->write($request, $result);
+            if ($writer instanceof LogWriterInterface) {
+                /** @var $writer \BEAR\Resource\LogWriterInterface */
+                $writer->write($request, $result);
+            }
         }
     }
 }

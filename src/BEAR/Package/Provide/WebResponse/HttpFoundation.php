@@ -7,9 +7,9 @@
 namespace BEAR\Package\Provide\WebResponse;
 
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
-use BEAR\Resource\AbstractObject as Page;
+use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\Logger;
-use BEAR\Resource\ObjectInterface as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
@@ -30,7 +30,7 @@ final class HttpFoundation implements ResponseInterface
     /**
      * Resource object
      *
-     * @var \BEAR\Resource\AbstractObject
+     * @var \BEAR\Resource\ResourceObject
      */
     private $resource;
 
@@ -139,11 +139,7 @@ final class HttpFoundation implements ResponseInterface
      */
     public function render(RenderInterface $renderer = null)
     {
-        if (is_null($renderer)) {
-            $this->view = (string)$this->resource;
-        } else {
-            $this->view = $renderer->render($this->resource);
-        }
+        $this->view = is_null($renderer) ?  (string)$this->resource : $renderer->render($this->resource);
 
         return $this;
     }
@@ -159,15 +155,16 @@ final class HttpFoundation implements ResponseInterface
         // compliant with RFC 2616.
         $this->response;
 
-        if ($this->isCli) {
-            if ($this->resource instanceof Page) {
-                $this->resource->headers = $this->response->headers->all();
-            }
-            $statusText = Response::$statusTexts[$this->resource->code];
-            $this->consoleOutput->send($this->resource, $statusText);
-        } else {
+        if (! $this->isCli) {
             $this->response->send();
+            return $this;
         }
+
+        if ($this->resource instanceof Page) {
+            $this->resource->headers = $this->response->headers->all();
+        }
+        $statusText = Response::$statusTexts[$this->resource->code];
+        $this->consoleOutput->send($this->resource, $statusText);
 
         return $this;
     }
