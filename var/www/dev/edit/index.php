@@ -9,7 +9,7 @@ use BEAR\Ace\Editor;
 use BEAR\Ace\Exception;
 
 // config
-$packageRootPath = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))));
+$packageRootPath = dirname(dirname(dirname(dirname(__DIR__))));
 
 try {
     $editor = (new Editor)->setRootPath($packageRootPath)->handle($_GET, $_POST, $_SERVER);
