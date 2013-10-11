@@ -2,6 +2,7 @@ language: php
 
 php:
   - 5.4
+  - 5.5
 
 env:
  - DB=mysql
@@ -9,7 +10,7 @@ env:
 before_install:
  - composer selfupdate
  - composer install
- - 'wget http://pecl.php.net/get/APC ; tar -xzf APC ; sh -c "cd APC-* && phpize && ./configure  && make && sudo make install && rm -rf ../APC*" ; echo "extension=apc.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`'
+ - 'wget http://pecl.php.net/get/APCu ; tar -xzf APCu ; sh -c "cd apcu-* && phpize && ./configure  && make && sudo make install && rm -rf ../APCu*" ; echo "extension=apcu.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`'
  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS blogbeartest;USE blogbeartest;CREATE TABLE IF NOT EXISTS posts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);" -u root; fi
  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS blogbear;USE blogbear;CREATE TABLE IF NOT EXISTS posts (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);" -u root; fi
  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
