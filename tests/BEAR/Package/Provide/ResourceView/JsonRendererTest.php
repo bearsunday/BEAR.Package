@@ -2,6 +2,7 @@
 
 namespace BEAR\Package\Provide\ResourceView;
 
+use BEAR\Resource\ResourceObject;
 use Ray\Di\Config;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
@@ -20,13 +21,6 @@ use Aura\Signal\HandlerFactory;
 use Aura\Signal\ResultFactory;
 use Aura\Signal\ResultCollection;
 
-class RequestSample
-{
-    public function __toString()
-    {
-        return __CLASS__;
-    }
-}
 
 /**
  * Test class for JsonRenderer.
@@ -54,9 +48,8 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         );
         $request->method = 'get';
         $this->testResource = new Ok;
-        $request->ro = $this->testResource;
+        $request->ro = clone $this->testResource;
         $request->ro->uri = 'test://self/path/to/resource';
-
         $this->testResource['one'] = 1;
         $this->testResource['two'] = $request;
         $this->testResource->setRenderer(new JsonRenderer);
@@ -68,13 +61,13 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         $result = (string)$this->testResource;
         $data = json_decode($result, true);
         $expected = array(
+            'msg' => 'OK',
             'one' => 1,
             'two' => array(
                 'code' => 200,
                 'headers' => array(),
                 'body' => array(
-                    'one' => 1,
-                    'two' => null,
+                    'msg' => 'OK'
                 ),
                 'uri' => 'test://self/path/to/resource',
                 'view' => null,
@@ -85,7 +78,7 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-final class Ok extends AbstractObject
+final class Ok extends ResourceObject
 {
     /**
      * Code
@@ -106,14 +99,9 @@ final class Ok extends AbstractObject
      *
      * @var mixed
      */
-    public $body = '';
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-    }
+    public $body = [
+        'msg' => 'OK'
+    ];
 
     /**
      * Get

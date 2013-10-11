@@ -154,7 +154,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
             return $body;
         }
         $bootstrapCss = strpos($body, '/assets/css/bootstrap.css') ? '' : '<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">';
-        $tabJs = strpos($body, '/assets/js/bootstrap-tab.js') ? '' : '<script src="/assets/js/bootstrap-tab.js"></script>';
+        $tabJs = strpos($body, '/assets/js/bootstrap-tab.js') ? '' : '<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap-tab.js"></script>';
         $toolLoad = <<<EOT
 <!-- BEAR.Sunday dev tool load -->
 <script src="//www.google.com/jsapi"></script>
