@@ -22,3 +22,7 @@ foreach ($response->headers as $header) {
     header($header);
 }
 echo $response->body . PHP_EOL;
+
+
+
+$app = Injector::create([new ApplicationBinding])->getInstance('AppInterface');
