@@ -10,27 +10,25 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource 
 Installation
 ------------
 
-    $ php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-    $ php composer.phar create-project --prefer-source bear/package ./bear.package
-
+    $ composer create-project bear/package {$PROJECT_PATH}
 
 built-in web server for development
 ------------------
 
 for Sandbox web page
 
-    $ cd /path/to/bear.package/apps/Sandbox/var/www/
+    $ cd {$PROJECT_PATH}/apps/Sandbox/var/www/
     $ php -S 0.0.0.0:8088 dev.php
 
 You can then open a browser and go to `http://0.0.0.0:8088` to see the "Hello BEAR.Sunday" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
 
 for systtem admin page
 
-    $ php -S 0.0.0.0:8090 -t /path/to/bear.package/var/www/admin
+    $ php -S 0.0.0.0:8090 -t {$PROJECT_PATH}/var/www/admin
 
 Virtual Host for Production
 ------------
-Set up a virtual host to point to the `/path/to/bear.package/apps/Sandbox/var/www/` directory of the application.
+Set up a virtual host to point to the `{$PROJECT_PATH}/apps/Sandbox/var/www/` directory of the application.
 
 Console
 -------
@@ -38,7 +36,7 @@ Console
 ### web access
 ```bash
 
-$ cd /path/to/bear.package/apps/Sandbox
+$ cd {$PROJECT_PATH}/apps/Sandbox
 $ php bin/web.php get /
     
 200 OK
@@ -85,21 +83,18 @@ $ php bin/api.php get app://self/blog/posts
 
 Make your own application
 ----------------------------------
-
-TBD.
-
 ### install
 
-    $ php bin/new_app.php MyApp
+    $ php bin/new_app.php {NewAppName}
 
 ### test
 
-    $ cd apps/MyApp
+    $ cd apps/{NewAppName}
     $ phpunit
 
 ### run
-    $ cd public
+    $ cd var/www
     // Console
-    $ php web.php get /
+    $ php dev.php get /
     // Web
-    $ php -S localhost:8090 web.php
+    $ php -S 0.0.0.0:8080 dev.php
