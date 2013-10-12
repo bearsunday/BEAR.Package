@@ -61,7 +61,7 @@ class PackageModule extends AbstractModule
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
         $this->install(new ProvideModule\WebResponse\HttpFoundationModule);
         $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule);
-        $this->install(new ProvideModule\Router\MinRouterModule);
+        $this->install(new ProvideModule\Router\AuraRouterModule);
         $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule);
         $this->install(new ProvideModule\ResourceView\HalModule);
 

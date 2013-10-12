@@ -35,7 +35,7 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
     {
         // resource request
         $this->expectOutputString('Hello World !' . PHP_EOL);
-        require dirname(__DIR__) . '/var/www/basic.php';
+        require dirname(__DIR__) . '/var/www/index.php';
     }
 
     public function testMin()

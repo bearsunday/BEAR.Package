@@ -19,7 +19,6 @@
     </logging>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/BEAR/Package/Dev</directory>
             <directory suffix=".php">src/BEAR/Package/Provide</directory>
             <exclude>
                 <directory prefix="Dev">src/BEAR/Package</directory>

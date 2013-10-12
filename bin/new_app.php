@@ -19,7 +19,7 @@
  * php -S localhost:8088 web.php
  */
 
-$skeletonVersion = "0.8.1";
+$skeletonVersion = "0.9";
 $appName = isset($argv[1]) ? ucwords($argv[1]) : 'NewApp';
 
 $composerPath = dirname(__DIR__) . '/composer.phar';
