@@ -71,6 +71,7 @@ class HalRenderer implements RenderInterface
             $title = (isset($link[Link::TITLE])) ? $link[Link::TITLE] : null;
             $attr = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ? [Link::TEMPLATED => true] : [];
             if (isset($link[Link::HREF])) {
+                $title = $title ?: [];
                 $hal->addLink($rel, $link[Link::HREF], $title, $attr);
                 continue;
             }

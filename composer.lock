@@ -486,7 +486,6 @@
         },
         {
             "name": "bear/resource",
-<<<<<<< HEAD
             "version": "0.9.2",
             "source": {
                 "type": "git",
@@ -497,18 +496,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/4da2e47b744ae0d68200fa95de8769bfacb584c5",
                 "reference": "4da2e47b744ae0d68200fa95de8769bfacb584c5",
-=======
-            "version": "0.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "0.8.2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0.8.2",
-                "reference": "0.8.2",
->>>>>>> update composer.json
                 "shasum": ""
             },
             "require": {
@@ -553,11 +540,7 @@
                 "rest",
                 "stateless"
             ],
-<<<<<<< HEAD
             "time": "2013-10-13 17:54:08"
-=======
-            "time": "2013-08-04 02:41:35"
->>>>>>> update composer.json
         },
         {
             "name": "bear/sunday",
