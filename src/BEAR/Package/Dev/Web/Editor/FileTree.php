@@ -74,6 +74,6 @@ class FileTree
      */
     public function getJsCode($initialOpeningFile)
     {
-        return "$(document).ready( function() {{$this->cmd}load(\"$initialOpeningFile\")});";
+        return "$(document).ready( function () {{$this->cmd}load(\"$initialOpeningFile\")});";
     }
 }
