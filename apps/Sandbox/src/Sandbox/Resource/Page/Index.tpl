@@ -8,9 +8,8 @@
     <meta name="author" content="Akihito Koriyama">
 
     <!-- Le styles -->
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/2.6.0/css/bootstrap.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Montserrat+Subrayada' rel='stylesheet' type='text/css'>
-    <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -36,8 +35,6 @@
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="/assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
 
@@ -140,7 +137,6 @@
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="/assets/js/jquery.js"></script>
-<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

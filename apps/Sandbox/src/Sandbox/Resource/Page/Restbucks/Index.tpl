@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
-    <title>RESTbucks</title>
-    <style>
-        body {
-            padding: 60px;
-        }
-    </style>
-</head>
-
-<body>
+{extends file="layout/default.tpl"}
+{block name=title}Posts{/block}
+{block name=page}
 <div class="container">
 {if ! $ordered}
     <h1>Welcome to RESTbucks</h1>
@@ -44,7 +33,5 @@
     <a href="index">One more ?</a> or <a href="/">No, Thanks.</a>
 
 {/if}
-    <script src="//code.jquery.com/jquery-latest.js"></script>
 </div>
-</body>
-</html>
+{/block}
