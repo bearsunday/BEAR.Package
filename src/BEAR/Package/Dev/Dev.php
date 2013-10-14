@@ -274,6 +274,7 @@ class Dev
         require_once __DIR__ . '/function/e.php';
         require_once __DIR__ . '/function/p.php';
         require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor/printo/printo/src.php';
+
         return $this;
     }
 
@@ -317,6 +318,7 @@ class Dev
         if (PHP_SAPI === 'cli') {
             // Use cli parameter for routing (web.php get /)
             $app->router->setArgv($argv);
+
             return $app;
         }
         $app->router->setGlobals($GLOBALS);
@@ -324,7 +326,6 @@ class Dev
 
         return $app;
     }
-
 
     /**
      * Output
