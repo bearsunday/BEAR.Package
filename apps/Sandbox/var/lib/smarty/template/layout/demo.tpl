@@ -3,9 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>{block name=title}{/block} &laquo; Sandbox function demo</title>
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet">
-    <script src="/assets/js/jquery.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 

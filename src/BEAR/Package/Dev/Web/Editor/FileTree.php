@@ -39,6 +39,7 @@ class FileTree
     {
         list($isDir, $path) = $this->getPath($path);
         $this->cmd .= "addTree('{$placeholder}', '{$path}/', {$isDir}, '{$label}');";
+
         return $this;
     }
 
@@ -52,6 +53,7 @@ class FileTree
         if (! is_array($path)) {
             $isDir = 'true';
             $path = $this->root;
+
             return [$isDir, $path];
         }
         $isDir = 'false';
@@ -72,6 +74,6 @@ class FileTree
      */
     public function getJsCode($initialOpeningFile)
     {
-        return "$(document).ready( function() {{$this->cmd}load(\"$initialOpeningFile\")});";
+        return "$(document).ready( function () {{$this->cmd}load(\"$initialOpeningFile\")});";
     }
 }

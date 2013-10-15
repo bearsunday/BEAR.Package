@@ -80,6 +80,10 @@ OK: {
 }
 
 ERROR: {
+    if (PHP_SAPI === 'cli') {
+        $app->exceptionHandler->handle($e);
+        exit;
+    }
     http_response_code($code);
     echo $body;
     exit(1);

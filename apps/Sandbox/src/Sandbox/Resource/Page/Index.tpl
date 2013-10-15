@@ -8,9 +8,8 @@
     <meta name="author" content="Akihito Koriyama">
 
     <!-- Le styles -->
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/2.6.0/css/bootstrap.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Montserrat+Subrayada' rel='stylesheet' type='text/css'>
-    <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -36,8 +35,6 @@
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="/assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
 
@@ -55,13 +52,6 @@
             </a>
             <a class="brand" href="#">BEAR.Sunday</a>
 
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="mailto:koriyama@bear-project.net">Contact</a></li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
         </div>
     </div>
 </div>
@@ -75,7 +65,7 @@
         <h1 class="effect">{$greeting}</h1>
 
         <p class="sub-title">
-        <a href="http://travis-ci.org/koriym/Ray.Di"><img src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a>
+        <a href="http://travis-ci.org/koriym/BEAR.Package"><img src="https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=master"></a>
         A Resource Oriented Framework for PHP5.4 - v0.9
         </p>
 
@@ -96,16 +86,16 @@
             <h2>Frameworks</h2>
             <p><a href="https://github.com/koriym/Ray.Di"><code>Ray.Di</code></a>  - Guice style annotation-driven <strong>dependency injection framework</strong>  enables to build an object graph.<a
                     href="http://travis-ci.org/koriym/Ray.Di"><img
-                    src="https://secure.travis-ci.org/koriym/Ray.Di.png"></a></p>
+                    src="https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master"></a></p>
 
             <p><a href="https://github.com/koriym/Ray.Aop"><code>Ray.Aop</code></a> an<strong>aspect oriented framework</strong>,  Its feature enables you to write code that is
                 executed each time a matching method is invoked. <a
                         href="http://travis-ci.org/koriym/Ray.Aop"><img
-                        src="https://secure.travis-ci.org/koriym/Ray.Aop.png"></a></p>
+                        src="https://secure.travis-ci.org/koriym/Ray.Aop.png?branch=master"></a></p>
 
             <p><a href="https://github.com/koriym/BEAR.Resource"><code>BEAR.Resource</code></a> - a <strong>hypermedia framework</strong> for object as a service that allows resources to behave as objects. <a
                     href="http://travis-ci.org/koriym/BEAR.Resource"><img
-                    src="https://secure.travis-ci.org/koriym/BEAR.Resource.png"></a></p>
+                    src="https://secure.travis-ci.org/koriym/BEAR.Resource.png?branch=master"></a></p>
         </div>
         <div class="span4">
             <h2>Applications</h2>
@@ -140,7 +130,6 @@
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="/assets/js/jquery.js"></script>
-<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

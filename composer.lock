@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ebd054fbe0f1af8b17add64c91d72d61",
+    "hash": "791c1540d88593ae450a7cbcda86b1cf",
     "packages": [
         {
             "name": "any/serializer",
@@ -486,16 +486,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.9.1",
+            "version": "0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "3cf2c9d275485fb94df576edfef91d686afe2447"
+                "reference": "4da2e47b744ae0d68200fa95de8769bfacb584c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/3cf2c9d275485fb94df576edfef91d686afe2447",
-                "reference": "3cf2c9d275485fb94df576edfef91d686afe2447",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/4da2e47b744ae0d68200fa95de8769bfacb584c5",
+                "reference": "4da2e47b744ae0d68200fa95de8769bfacb584c5",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +540,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2013-09-23 06:52:35"
+            "time": "2013-10-13 17:54:08"
         },
         {
             "name": "bear/sunday",
@@ -708,16 +708,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.1",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336"
+                "reference": "d0e4447707a064a5814b18cb0dcc2f24185f6179"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/2c9761ff1d13e188d5f7378066c1ce2882d7a336",
-                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/d0e4447707a064a5814b18cb0dcc2f24185f6179",
+                "reference": "d0e4447707a064a5814b18cb0dcc2f24185f6179",
                 "shasum": ""
             },
             "require": {
@@ -773,7 +773,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2013-08-07 16:04:25"
+            "time": "2013-09-26 19:23:25"
         },
         {
             "name": "doctrine/collections",
@@ -1233,20 +1233,36 @@
         },
         {
             "name": "nocarrier/hal",
-            "version": "0.9.2",
+            "version": "0.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal.git",
-                "reference": "318ea88f4ef0d15e9fd46619c504500af3a4c495"
+                "reference": "a15dfb2f07490e22a3faf075de0d7419fe644dec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blongden/hal/zipball/318ea88f4ef0d15e9fd46619c504500af3a4c495",
-                "reference": "318ea88f4ef0d15e9fd46619c504500af3a4c495",
+                "url": "https://api.github.com/repos/blongden/hal/zipball/a15dfb2f07490e22a3faf075de0d7419fe644dec",
+                "reference": "a15dfb2f07490e22a3faf075de0d7419fe644dec",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mayflower/php-codebrowser": "~1.0@dev",
+                "pdepend/pdepend": "~1.1",
+                "pear/console_commandline": "dev-trunk",
+                "pear/log": "dev-master",
+                "pear/pear_exception": "dev-master",
+                "phpdocumentor/phpdocumentor": "*",
+                "phploc/phploc": "dev-master",
+                "phpmd/phpmd": "~1.4",
+                "phpunit/phpunit": "3.7.*",
+                "sebastian/finder-facade": "dev-master",
+                "sebastian/phpcpd": "~1.4",
+                "squizlabs/php_codesniffer": "~1.4",
+                "theseer/fdomdocument": "dev-master",
+                "zetacomponents/console-tools": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -1274,20 +1290,20 @@
                 "rest",
                 "xml"
             ],
-            "time": "2013-03-25 09:59:05"
+            "time": "2013-10-07 14:21:31"
         },
         {
             "name": "pagerfanta/pagerfanta",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "4d5f15a3700a769bd0af364ccd7ecadb07d91d78"
+                "reference": "9568187b789a39a3933c71e4e28b60fc2c26b70d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/4d5f15a3700a769bd0af364ccd7ecadb07d91d78",
-                "reference": "4d5f15a3700a769bd0af364ccd7ecadb07d91d78",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/9568187b789a39a3933c71e4e28b60fc2c26b70d",
+                "reference": "9568187b789a39a3933c71e4e28b60fc2c26b70d",
                 "shasum": ""
             },
             "require": {
@@ -1336,7 +1352,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-04-24 11:35:36"
+            "time": "2013-09-23 08:06:55"
         },
         {
             "name": "ray/aop",
@@ -1445,11 +1461,11 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.14",
+            "version": "v3.1.15",
             "source": {
                 "type": "svn",
                 "url": "http://smarty-php.googlecode.com/svn",
-                "reference": "/tags/v3.1.14/@4752"
+                "reference": "/tags/v3.1.15/@4782"
             },
             "require": {
                 "php": ">=5.2"
@@ -1485,11 +1501,11 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-07-02 16:38:47"
+            "time": "2013-10-01 21:08:54"
         },
         {
             "name": "symfony/console",
-            "version": "v2.0.24",
+            "version": "v2.0.25",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
@@ -1531,17 +1547,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.4",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "41c9826457c65fa3cf746f214985b7ca9cba42f8"
+                "reference": "7fc72a7a346a1887d3968cc1ce5642a15cd182e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/41c9826457c65fa3cf746f214985b7ca9cba42f8",
-                "reference": "41c9826457c65fa3cf746f214985b7ca9cba42f8",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/7fc72a7a346a1887d3968cc1ce5642a15cd182e9",
+                "reference": "7fc72a7a346a1887d3968cc1ce5642a15cd182e9",
                 "shasum": ""
             },
             "require": {
@@ -1581,21 +1597,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-21 12:12:18"
+            "time": "2013-09-19 09:45:20"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.3.4",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "87acbbef6d35ba649f96f09cc572c45119b360c3"
+                "reference": "2b8995042086c5552c94d33b5553c492e9cfc00e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/87acbbef6d35ba649f96f09cc572c45119b360c3",
-                "reference": "87acbbef6d35ba649f96f09cc572c45119b360c3",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/2b8995042086c5552c94d33b5553c492e9cfc00e",
+                "reference": "2b8995042086c5552c94d33b5553c492e9cfc00e",
                 "shasum": ""
             },
             "require": {
@@ -1628,21 +1644,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-21 12:12:18"
+            "time": "2013-09-19 09:45:20"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.3.4",
+            "version": "v2.3.6",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "4a0fee5b86f5bbd9dfdc11ec124eba2915737ce1"
+                "reference": "a175521f680b178e63c5d0ab87c6b046c0990c3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/4a0fee5b86f5bbd9dfdc11ec124eba2915737ce1",
-                "reference": "4a0fee5b86f5bbd9dfdc11ec124eba2915737ce1",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/a175521f680b178e63c5d0ab87c6b046c0990c3f",
+                "reference": "a175521f680b178e63c5d0ab87c6b046c0990c3f",
                 "shasum": ""
             },
             "require": {
@@ -1675,11 +1691,11 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-13 20:18:00"
+            "time": "2013-09-19 09:45:20"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.0.24",
+            "version": "v2.0.25",
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
@@ -1721,17 +1737,17 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v2.2.6",
+            "version": "v2.2.9",
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "2704242137edc19cc61e71027a7a04eef28f42c6"
+                "reference": "8d9821794f7192d43b76737edb94a817949a5579"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/2704242137edc19cc61e71027a7a04eef28f42c6",
-                "reference": "2704242137edc19cc61e71027a7a04eef28f42c6",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/8d9821794f7192d43b76737edb94a817949a5579",
+                "reference": "8d9821794f7192d43b76737edb94a817949a5579",
                 "shasum": ""
             },
             "require": {
@@ -1775,34 +1791,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-08-23 14:06:02"
-        },
-        {
-            "name": "twitter/bootstrap",
-            "version": "v2.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "b4c4072679943773a7582daa63f545ba818fa627"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/b4c4072679943773a7582daa63f545ba818fa627",
-                "reference": "b4c4072679943773a7582daa63f545ba818fa627",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
-            "homepage": "http://twbs.github.com/bootstrap/",
-            "keywords": [
-                "bootstrap",
-                "css"
-            ],
-            "time": "2013-07-27 06:36:38"
+            "time": "2013-09-26 19:07:06"
         },
         {
             "name": "zendframework/zend-db",
@@ -2089,16 +2078,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.13.2",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "6d6a1009427d1f398c9d40904147bf9f723d5755"
+                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/6d6a1009427d1f398c9d40904147bf9f723d5755",
-                "reference": "6d6a1009427d1f398c9d40904147bf9f723d5755",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/224fc55635d544a2ec8edb3592be18db5a093f59",
+                "reference": "224fc55635d544a2ec8edb3592be18db5a093f59",
                 "shasum": ""
             },
             "require": {
@@ -2107,7 +2096,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -2134,7 +2123,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-08-03 15:35:31"
+            "time": "2013-10-03 06:41:20"
         }
     ],
     "aliases": [

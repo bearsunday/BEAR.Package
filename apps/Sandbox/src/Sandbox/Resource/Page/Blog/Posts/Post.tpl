@@ -7,8 +7,8 @@
     <li class="active">Post</li>
 </ul>
 
-<h2>{$post.title|escape}</h2>
+<h1>{$post.title|escape}</h1>
 <span class="label label-info">{$post.created}</span>
 <div style="padding: 10px"></div>
-<p>{$post.body|escape|nl2br}</p>
+<p style="font-size: 24px; font-family: serif; line-height:1.2em">{$post.body|escape|nl2br}</p>
 {/block}
