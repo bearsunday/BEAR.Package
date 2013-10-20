@@ -10,6 +10,9 @@ use BEAR\Ace\Exception;
 
 // config
 $packageRootPath = dirname(dirname(dirname(dirname(__DIR__))));
+if (strpos(__DIR__, '/vendor/bear/package') !== false) {
+    $packageRootPath = explode('/vendor/bear/package', __DIR__)[0];
+}
 
 try {
     $editor = (new Editor)->setRootPath($packageRootPath)->handle($_GET, $_POST, $_SERVER);
