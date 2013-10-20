@@ -273,7 +273,7 @@ class Dev
     {
         require_once __DIR__ . '/function/e.php';
         require_once __DIR__ . '/function/p.php';
-        require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor/printo/printo/src.php';
+        require_once $this->getVendorDirectory() . '/printo/printo/src.php';
 
         return $this;
     }
@@ -343,5 +343,19 @@ class Dev
         http_response_code($code);
         echo $html;
         exit(0);
+    }
+
+    /*
+     * @return string
+     */
+    private function getVendorDirectory()
+    {
+        $vendorDir = dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor';
+
+        if (strpos(__DIR__, '/vendor/bear/package') !== false) {
+            $baseDir = explode('/vendor/bear/package', __DIR__)[0];
+            $vendorDir = $baseDir . '/vendor';
+        }
+        return $vendorDir;
     }
 }
