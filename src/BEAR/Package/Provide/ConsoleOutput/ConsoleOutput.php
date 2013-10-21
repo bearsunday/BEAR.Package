@@ -100,16 +100,52 @@ final class ConsoleOutput implements ConsoleOutputInterface
      */
     private function getBody(ResourceObject $resource)
     {
+        return $this->getVarDump($resource->body);
+    }
+
+    /**
+     * @param mixed     $target
+     * @param integer   $level
+     * @param string    $header
+     * @param string    $footer
+     *
+     * @return string
+     */
+    private function getVarDump($target, $level = 0, $header = '', $footer = '')
+    {
         $string = '';
-        foreach ($resource->body as $key => &$body) {
-            if ($body instanceof Request) {
-                $body = $this->getRequestString($body);
+
+        if (is_array($target)) {
+            $string .= $header;
+
+            foreach ($target as $key => $body) {
+                $string .=  str_repeat('  ', $level) .
+                    self::LABEL1 . $key . self::CLOSE . ' ' .
+                    $this->getVarDump(
+                        $body,
+                        $level + 1,
+                        '=> array(' . PHP_EOL,
+                        str_repeat('  ', $level) . ')'
+                    ) .
+                    ',' . PHP_EOL;
             }
-            if (is_array($body)) {
-                $body = var_export($body, true);
+
+            $string .= $footer;
+        } else if (is_object($target)) {
+            if ($target instanceof Request) {
+                $string .= $this->getRequestString($target);
+            } else {
+                $string .= $this->getVarDump(
+                    get_object_vars($target),
+                    $level,
+                    '=> ' . get_class($target) . '(' . PHP_EOL,
+                    str_repeat('  ', $level - 1) . ')'
+                );
             }
-            $string .= self::LABEL1 . $key . self::CLOSE . " {$body}" . PHP_EOL;
+        } else {
+            $string .= $target;
         }
+
         return $string;
     }
 
