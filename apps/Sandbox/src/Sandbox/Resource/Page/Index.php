@@ -18,7 +18,7 @@ class Index extends Page
      * @var array
      */
     public $body = [
-        'greeting' => 'Hello BEAR.Sunday',
+        'greeting' => '',
         'version' => [],
         'extensions' => [],
         'is_cli_server' => false,
@@ -49,9 +49,12 @@ class Index extends Page
         $this['is_cli_server'] = (php_sapi_name() === 'cli-server');
     }
 
-    public function onGet()
+    /**
+     * @param string $name
+     */
+    public function onGet($name = 'World')
     {
-        // page speed.
+        $this['greeting'] = 'Hello ' . $name;
         $this['performance'] = $this->resource->get->uri('app://self/performance')->request();
 
         return $this;
