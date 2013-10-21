@@ -131,7 +131,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
             }
 
             $string .= $footer;
-        } else if (is_object($target)) {
+        } elseif (is_object($target)) {
             if ($target instanceof Request) {
                 $string .= $this->getRequestString($target);
             } else {
