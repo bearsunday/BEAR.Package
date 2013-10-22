@@ -126,7 +126,6 @@ return <<<EOT
     <meta charset="utf-8">
     <title>Error</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 20px;
