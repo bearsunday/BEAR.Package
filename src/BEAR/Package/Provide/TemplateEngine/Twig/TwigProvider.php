@@ -10,7 +10,7 @@ use BEAR\Sunday\Inject\AppDirInject;
 use BEAR\Sunday\Inject\TmpDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Twig_Environment;
-use Twig_Loader_String;
+use Twig_Loader_Filesystem;
 
 /**
  * Twig
