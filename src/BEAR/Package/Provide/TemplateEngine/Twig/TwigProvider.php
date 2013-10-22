@@ -29,7 +29,7 @@ class TwigProvider implements Provide
      */
     public function get()
     {
-        $loader = new Twig_Loader_Filesystem($this->appDir . '/var/lib/twig/template');
+        $loader = new Twig_Loader_Filesystem(array('/', $this->appDir . '/var/lib/twig/template'));
         $twig = new Twig_Environment($loader, array(
             'cache' => $this->tmpDir . '/twig/template_c',
         ));
