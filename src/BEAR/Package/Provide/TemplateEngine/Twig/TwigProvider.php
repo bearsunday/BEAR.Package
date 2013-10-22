@@ -15,7 +15,7 @@ use Twig_Loader_String;
 /**
  * Twig
  *
- * @see http://www.smarty.net/docs/ja/
+ * @see http://twig.sensiolabs.org/
  */
 class TwigProvider implements Provide
 {
@@ -29,7 +29,10 @@ class TwigProvider implements Provide
      */
     public function get()
     {
-        $twig = new Twig_Environment(new Twig_Loader_String);
+        $loader = new Twig_Loader_Filesystem($this->appDir . '/var/lib/twig/template');
+        $twig = new Twig_Environment($loader, array(
+            'cache' => $this->tmpDir . '/twig/template_c',
+        ));
         return $twig;
     }
 }
