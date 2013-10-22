@@ -8,6 +8,7 @@
  * $ php bin/setup.php
  */
 $packageDir = dirname(__DIR__);
+require $packageDir . '/src/BEAR/Package/CurrentPhpExecutable.php';
 ob_start();
 
 function chmodWritable($path)
@@ -29,7 +30,9 @@ foreach ($iterator as $dir) {
         $clear = $dir . '/bin/clear.php';
         if (file_exists($clear)) {
             echo "clear:{$clear}" . PHP_EOL;
-            passthru("php {$clear}");
+            $executable = \BEAR\Package\CurrentPhpExecutable::getExecutable();
+            $configFile = \BEAR\Package\CurrentPhpExecutable::getConfigFile();
+            passthru(escapeshellarg($executable) . ($configFile === null ? '' : (' -c ' . escapeshellarg($configFile))) . ' ' . $clear);
         }
     }
 }
