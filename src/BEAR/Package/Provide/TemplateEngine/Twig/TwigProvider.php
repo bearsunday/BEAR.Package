@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Twig;
 
-use BEAR\Sunday\Inject\AppDirInject;
+use BEAR\Sunday\Inject\LibDirInject;
 use BEAR\Sunday\Inject\TmpDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Twig_Environment;
@@ -20,7 +20,7 @@ use Twig_Loader_Filesystem;
 class TwigProvider implements Provide
 {
     use TmpDirInject;
-    use VendorDirInject;
+    use LibDirInject;
 
     /**
      * Return instance
@@ -29,7 +29,7 @@ class TwigProvider implements Provide
      */
     public function get()
     {
-        $loader = new Twig_Loader_Filesystem(array('/', $this->vendorDir . '/twig/template'));
+        $loader = new Twig_Loader_Filesystem(array('/', $this->libDir . '/twig/template'));
         $twig = new Twig_Environment($loader, array(
             'cache' => $this->tmpDir . '/twig/cache',
         ));
