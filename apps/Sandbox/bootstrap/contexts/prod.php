@@ -20,7 +20,7 @@ require dirname(dirname(dirname(dirname(__DIR__)))) . '/var/lib/profile.php';
 //
 // Compiled preloader
 //
-require dirname(dirname(__DIR__)) . '/var/tmp/preloader/preload.php';
+// require dirname(dirname(__DIR__)) . '/var/tmp/preloader/preload.php';
 
 //
 // Here we get the production application instance. No $context variable is needed as it defaults to prod.
