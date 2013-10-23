@@ -20,7 +20,7 @@ use Twig_Loader_Filesystem;
 class TwigProvider implements Provide
 {
     use TmpDirInject;
-    use AppDirInject;
+    use VendorDirInject;
 
     /**
      * Return instance
@@ -29,9 +29,9 @@ class TwigProvider implements Provide
      */
     public function get()
     {
-        $loader = new Twig_Loader_Filesystem(array('/', $this->appDir . '/var/lib/twig/template'));
+        $loader = new Twig_Loader_Filesystem(array('/', $this->vendorDir . '/twig/template'));
         $twig = new Twig_Environment($loader, array(
-            'cache' => $this->tmpDir . '/twig/template_c',
+            'cache' => $this->tmpDir . '/twig/cache',
         ));
         return $twig;
     }

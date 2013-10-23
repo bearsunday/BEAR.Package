@@ -8,7 +8,7 @@ namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
 // @codingStandardsIgnoreFile
 use BEAR\Sunday\Inject\AppDirInject;
-use BEAR\Sunday\Inject\TmpDirInject;
+use BEAR\Sunday\Inject\VendorDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Smarty;
 use Ray\Di\Di\Inject;
@@ -17,34 +17,12 @@ use Ray\Di\Di\Named;
 /**
  * Smarty3
  *
- * @see http://www.smarty.net/docs/ja/
+ * @see http://www.smarty.net/docs/
  */
 class SmartyProvider implements Provide
 {
     use TmpDirInject;
-
-    /**
-     * App vendor path
-     *
-     * @var string
-     */
-    private $vendorDir;
-
-
-    /**
-     * App directory path setter
-     *
-     * @param string $vendorDir
-     *
-     * @return void
-     *
-     * @Inject
-     * @Named("vendor_dir")
-     */
-    public function setVendorDir($vendorDir)
-    {
-        $this->vendorDir = $vendorDir;
-    }
+    use VendorDirInject;
 
     /**
      * Return instance
