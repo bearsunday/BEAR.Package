@@ -78,7 +78,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
             'allow' => [
                 0 => 'get',
             ],
-            'param-get' => '',
+            'param-get' => '(name)',
         ];
         $this->assertSame($expected, $resources['page://self/index']['options']);
     }
