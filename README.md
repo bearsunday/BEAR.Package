@@ -20,7 +20,7 @@ for Sandbox web page
     $ cd {$PROJECT_PATH}/apps/Sandbox/var/www/
     $ php -S 0.0.0.0:8088 dev.php
 
-You can then open a browser and go to `http://0.0.0.0:8088` to see the "Hello BEAR.Sunday" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
+You can then open a browser and go to `http://0.0.0.0:8088` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
 
 for systtem admin page
 
@@ -46,7 +46,7 @@ x-profile-id: ["523ee4ba886de"]
 cache-control: ["no-cache"]
 date: ["Sun, 22 Sep 2013 12:38:18 GMT"]
 [BODY]
-greeting: Hello BEAR.Sunday
+greeting: Hello World
 version: array (
   'php' => '5.4.16',
   'BEAR' => 'dev-develop',
