@@ -30,7 +30,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
         $cli = 'php ' . $this->systemRoot . '/bootstrap/contexts/api.php get page://self/index';
         exec($cli, $return);
         $html = implode('', $return);
-        $pos = strpos($html, 'Hello BEAR.Sunday');
+        $pos = strpos($html, 'Hello World');
         $this->assertTrue(is_int($pos), implode($return, "\n"), $html);
     }
 
@@ -39,7 +39,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
         $cli = 'php ' . $this->systemRoot . '/bootstrap/contexts/api.php get page://self/index view';
         exec($cli, $return);
         $html = implode('', $return);
-        $pos = strpos($html, 'Hello BEAR.Sunday');
+        $pos = strpos($html, 'Hello World');
         $this->assertTrue(is_int($pos));
     }
 
@@ -48,7 +48,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
         $cli = 'php ' . $this->systemRoot . '/bootstrap/contexts/api.php get page://self/index value';
         exec($cli, $return);
         $html = implode('', $return);
-        $pos = strpos($html, 'Hello BEAR.Sunday');
+        $pos = strpos($html, 'Hello World');
         $this->assertTrue(is_int($pos));
     }
 
@@ -57,7 +57,7 @@ class CliTest extends \PHPUnit_Framework_TestCase
         $cli = 'php ' . $this->systemRoot . '/bootstrap/contexts/api.php get page://self/index request';
         exec($cli, $return);
         $html = implode('', $return);
-        $pos = strpos($html, 'Hello BEAR.Sunday');
+        $pos = strpos($html, 'Hello World');
         $this->assertTrue(is_int($pos));
     }
 
