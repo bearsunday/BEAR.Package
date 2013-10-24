@@ -63,8 +63,8 @@
         }
     },
     "scripts"   :{
-        "post-install-cmd": ["php bin/setup.php", "php bin/env.php"],
-        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php apps/Sandbox/bin/compiler.php"]
+        "post-install-cmd": ["BEAR\\Package\\Installer::setUp", "BEAR\\Package\\Installer::checkEnvironment"],
+        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "BEAR\\Package\\Installer::compile"]
     },
     "repositories":[
         {

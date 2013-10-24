@@ -24,4 +24,34 @@ class Installer
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
     }
+
+    /**
+     * @since 0.10.0
+     */
+    public static function setUp()
+    {
+        $executable = CurrentPhpExecutable::getExecutable();
+        $configFile = CurrentPhpExecutable::getConfigFile();
+        passthru(escapeshellarg($executable) . ($configFile === null ? '' : (' -c ' . escapeshellarg($configFile))) . ' ' . escapeshellarg(dirname(dirname(dirname(__DIR__))) . '/bin/setup.php'));
+    }
+
+    /**
+     * @since 0.10.0
+     */
+    public static function checkEnvironment()
+    {
+        $executable = CurrentPhpExecutable::getExecutable();
+        $configFile = CurrentPhpExecutable::getConfigFile();
+        passthru(escapeshellarg($executable) . ($configFile === null ? '' : (' -c ' . escapeshellarg($configFile))) . ' ' . escapeshellarg(dirname(dirname(dirname(__DIR__))) . '/bin/env.php'));
+    }
+
+    /**
+     * @since 0.10.0
+     */
+    public static function compile()
+    {
+        $executable = CurrentPhpExecutable::getExecutable();
+        $configFile = CurrentPhpExecutable::getConfigFile();
+        passthru(escapeshellarg($executable) . ($configFile === null ? '' : (' -c ' . escapeshellarg($configFile))) . ' ' . escapeshellarg(dirname(dirname(dirname(__DIR__))) . '/apps/Sandbox/bin/compiler.php'));
+    }
 }

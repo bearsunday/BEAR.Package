@@ -27,7 +27,10 @@ $preLoader = $packageDir . '/vendor/bin/classpreloader.php';
 $config = dirname(__DIR__) . '/var/lib//preloader/config.php';
 $output = dirname(__DIR__) . '/var/tmp/preloader/preload.php';
 
-$cmd = "php {$preLoader} compile --config={$config} --output={$output}";
+$executable = \BEAR\Package\CurrentPhpExecutable::getExecutable();
+$configFile = \BEAR\Package\CurrentPhpExecutable::getConfigFile();
+$cmd = escapeshellarg($executable) . ($configFile === null ? '' : (' -c ' . escapeshellarg($configFile)));
+$cmd = $cmd . " {$preLoader} compile --config={$config} --output={$output}";
 
 echo $cmd . PHP_EOL;
 passthru($cmd);
