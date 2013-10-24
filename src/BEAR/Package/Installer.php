@@ -23,5 +23,8 @@ class Installer
         $bearRoot = dirname(dirname(dirname(__DIR__)));
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
+
+        include $bearRoot . '/bin/setup.php';
+        include $bearRoot . '/bin/env.php';
     }
 }
