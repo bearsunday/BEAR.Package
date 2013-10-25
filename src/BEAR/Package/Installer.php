@@ -24,7 +24,6 @@ class Installer
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
 
-        include $bearRoot . '/bin/setup.php';
         include $bearRoot . '/bin/env.php';
     }
 }
