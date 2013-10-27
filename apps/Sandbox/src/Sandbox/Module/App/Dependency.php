@@ -20,5 +20,8 @@ class Dependency extends AbstractModule
         // application bindings
         $this->bind()->annotatedWith('greeting_msg')->toInstance('Hola');
         $this->bind('BEAR\Resource\RenderInterface')->annotatedWith('hal')->to('BEAR\Package\Provide\ResourceView\HalRenderer')->in(Scope::SINGLETON);
+
+        $path = dirname(dirname(dirname(dirname(__DIR__)))) . '/var/.htpasswd';
+        $this->bind()->annotatedWith('basic_pass_file')->toInstance($path);
     }
 }
