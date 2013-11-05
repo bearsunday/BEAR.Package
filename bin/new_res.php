@@ -11,7 +11,7 @@ use BEAR\Package\Dev\Application\ApplicationReflector;
 
 $appName = isset($argv[1]) ? $argv[1] : error();
 $uri = isset($argv[2]) ? $argv[2] : error();
-$appFile = "apps/{$appName}/bootstrap/instance.php";
+$appFile = dirname(__DIR__) . "/apps/{$appName}/bootstrap/instance.php";
 if (!file_exists($appFile)) {
     error("Invalid application name: {$appName}");
 }
