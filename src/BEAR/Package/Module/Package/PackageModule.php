@@ -68,9 +68,9 @@ class PackageModule extends AbstractModule
         // Package module
         $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
-        $this->install(new Package\Module\Aop\NamedArgsModule);
 
         // Framework core module
+        $this->install(new SundayModule\Aop\NamedArgsModule);
         $this->install(new SundayModule\Framework\FrameworkModule($this));
         $this->install(new SundayModule\Resource\ResourceCacheModule);
 
