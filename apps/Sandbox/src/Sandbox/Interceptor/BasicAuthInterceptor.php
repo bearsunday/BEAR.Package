@@ -130,6 +130,8 @@ class BasicAuthInterceptor implements MethodInterceptor
             $new .= ($i & 1) ? $bin : $plainpasswd;
             $bin = pack("H32", md5($new));
         }
+
+        $tmp = '';
         for ($i = 0; $i < 5; $i++) {
             $k = $i + 6;
             $j = $i + 12;
