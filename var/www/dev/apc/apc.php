@@ -719,7 +719,7 @@ input {
     }
 //-->
 </style>
-<link href="/assets/css/bootstrap.css" rel="stylesheet" />
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="http://koriym.github.com/print_o/assets/debuglib.css" rel="stylesheet" />
 </head>
 <body>

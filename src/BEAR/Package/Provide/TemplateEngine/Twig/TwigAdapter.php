@@ -74,8 +74,8 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     {
         $this->template = $tplWithoutExtension . self::EXT;
         $this->fileExists($this->template);
-        $fileContents = file_get_contents($this->template);
-        $rendered = $this->twig->render($fileContents, $this->values);
+        $template = $this->twig->loadTemplate($this->template);
+        $rendered = $template->render($this->values);
 
         return $rendered;
     }

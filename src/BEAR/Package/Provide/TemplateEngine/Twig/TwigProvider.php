@@ -6,21 +6,21 @@
  */
 namespace BEAR\Package\Provide\TemplateEngine\Twig;
 
-use BEAR\Sunday\Inject\AppDirInject;
+use BEAR\Sunday\Inject\LibDirInject;
 use BEAR\Sunday\Inject\TmpDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Twig_Environment;
-use Twig_Loader_String;
+use Twig_Loader_Filesystem;
 
 /**
  * Twig
  *
- * @see http://www.smarty.net/docs/ja/
+ * @see http://twig.sensiolabs.org/
  */
 class TwigProvider implements Provide
 {
     use TmpDirInject;
-    use AppDirInject;
+    use LibDirInject;
 
     /**
      * Return instance
@@ -29,7 +29,10 @@ class TwigProvider implements Provide
      */
     public function get()
     {
-        $twig = new Twig_Environment(new Twig_Loader_String);
+        $loader = new Twig_Loader_Filesystem(array('/', $this->libDir . '/twig/template'));
+        $twig = new Twig_Environment($loader, array(
+            'cache' => $this->tmpDir . '/twig/cache',
+        ));
         return $twig;
     }
 }
