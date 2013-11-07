@@ -23,5 +23,6 @@ class Dependency extends AbstractModule
 
         $path = dirname(dirname(dirname(dirname(__DIR__)))) . '/var/.htpasswd';
         $this->bind()->annotatedWith('basic_pass_file')->toInstance($path);
+        $this->bind('Sandbox\Interceptor\BasicAuth\CertificateAuthorityInterface')->to('Sandbox\Interceptor\BasicAuth\FileUserList');
     }
 }
