@@ -7,6 +7,7 @@ use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
 use BEAR\Package\Module\Resource\SignalParamModule;
 use BEAR\Package\Module\Stub\StubModule;
+use BEAR\Package\Module\WebContext\AuraWebModule;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Package\Provide\ResourceView;
 use BEAR\Package\Provide\ResourceView\HalModule;
@@ -69,6 +70,7 @@ class AppModule extends AbstractModule
         $this->install(new SignalParamModule($this, $this->params));
         $this->install(new AuraFormModule);
         $this->install(new ResourceGraphModule($this));
+        $this->install(new AuraWebModule);
 
         // install develop module
         if ($this->context === 'dev') {

@@ -6,7 +6,9 @@ use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Ray\Di\ProviderInterface;
 use BEAR\Resource\ResourceObject;
+use BEAR\Package\Module\WebContext\WebContextProvider;
 
 /**
  * Basic Auth interceptor
@@ -21,10 +23,19 @@ class BasicAuthInterceptor implements MethodInterceptor
     private $basicPassFile;
 
     /**
+     * Web context provider
+     *
+     * @var WebContextProvider
+     */
+    private $webContextProvider;
+
+    /**
      * Constructor
      *
      * @Inject
      * @Named("basic_pass_file")
+     *
+     * @param string $pass password file path
      */
     public function __construct($pass)
     {
@@ -32,15 +43,31 @@ class BasicAuthInterceptor implements MethodInterceptor
     }
 
     /**
+     *
+     * @Inject
+     * @Named("webContext")
+     *
+     * @param ProviderInterface $webContextProvider webcontext provider
+     */
+    public function setWebContextProvider(ProviderInterface $webContextProvider)
+    {
+        $this->webContextProvider = $webContextProvider;
+    }
+
+    /**
      * @param MethodInvocation $invocation Method Invocation
      */
     public function invoke(MethodInvocation $invocation)
     {
-        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+        $webContext = $this->webContextProvider->get();
+
+        $user = $webContext->getServer('PHP_AUTH_USER');
+        $passwd = $webContext->getServer('PHP_AUTH_PW');
+
+        if ($user === null) {
             return $this->unauthorized($invocation);
         }
-        $user = $_SERVER['PHP_AUTH_USER'];
-        $passwd = $_SERVER['PHP_AUTH_PW'];
+
         $auth = $this->checkPassword($user, $passwd);
         if ($auth) {
             return $invocation->proceed();
