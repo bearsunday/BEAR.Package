@@ -33,39 +33,43 @@ class FileUserList implements CertificateAuthorityInterface
     /**
      * {@inheritdoc}
      */
-    public function auth($user, $pass)
+    public function auth($user, $password)
     {
         if (file_exists($this->basicPassFile) === false) {
             return false;
         }
         $userList = file($this->basicPassFile);
         foreach ($userList as $data) {
-            $record = explode(':', trim($data));
-            if (!$record[0] === $user) {
+            list($listedUser, $listedHash) = explode(':', trim($data));
+            if ($listedUser !== $user) {
                 continue;
             }
 
-            if (strpos($record[1], '$apr1$') === 0) {
-                // APR1-MD5
-                $salt = substr($record[1], 6, 8);
-                $md5Pass = $this->cryptApr1Md5($pass, $salt);
-                if ($record[1] === $md5Pass) {
-                    return true;
-                }
-
-                return false;
-            }
-
-            $encryptedPass = crypt($pass);
-            if ($record[1] === $encryptedPass) {
-                return true;
-            }
-
-            return false;
+            return $this->verify($password, $listedHash);
         }
 
         return false;
     }
+
+    /**
+     * verify password
+     *
+     * @param string $password user passoword
+     * @param string $hash     hashed password
+     */
+    private function verify($password, $hash)
+    {
+        if (strpos($hash, '$apr1$') === 0) {
+            // APR1-MD5
+            $salt = substr($hash, 6, 8);
+            $encryptedPass = $this->cryptApr1Md5($password, $salt);
+        } else {
+            $encryptedPass = crypt($password, $hash);
+        }
+
+        return $hash === $encryptedPass;
+    }
+
 
     /**
      * APR1方式のMD5文字列生成
