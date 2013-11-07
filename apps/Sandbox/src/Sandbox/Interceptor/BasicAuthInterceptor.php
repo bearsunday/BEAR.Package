@@ -37,11 +37,7 @@ class BasicAuthInterceptor implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
-            header('WWW-Authenticate: Basic realm="Please Enter Your Password."');
-            header('HTTP/1.0 401 Unauthorized');
-            header('Content-type: text/html; charset=UTF-8');
-
-            die('Authentication Failed.');
+            return $this->unauthorized($invocation);
         }
         $user = $_SERVER['PHP_AUTH_USER'];
         $passwd = $_SERVER['PHP_AUTH_PW'];
@@ -50,7 +46,25 @@ class BasicAuthInterceptor implements MethodInterceptor
             return $invocation->proceed();
         }
 
-        die('Authentication Failed.');
+        return $this->unauthorized($invocation);
+    }
+
+    /**
+     * Procss on unauthorized
+     *
+     * @param MethodInvocation $invocation Method Invocation
+     * @return ResourceObject
+     */
+    private function unauthorized(MethodInvocation $invocation)
+    {
+        $resource = $invocation->getThis();
+
+        $resource->code = 401;
+        $resource->headers['WWW-Authenticate'] = 'Basic realm="Please Enter Your Password."';
+        $resource->headers['Content-type'] = 'text/html; charset=UTF-8';
+        $resource->body = '<!DOCTYPE html><html><head><title>Authentication Failed.</title></head><body>Authentication Failed</body></html>';
+
+        return $resource;
     }
 
     /**
