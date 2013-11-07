@@ -33,28 +33,12 @@ class BasicAuthInterceptor implements MethodInterceptor
     /**
      * Constructor
      *
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * @Inject
+     * @Named("webContextProvider=webContext")
      */
-    public function setCertificateAuthority(CertificateAuthorityInterface $ca)
+    public function __construct(CertificateAuthorityInterface $ca, ProviderInterface $webContextProvider)
     {
         $this->ca = $ca;
-    }
-
-    /**
-     *
-     * @Inject
-     * @Named("webContext")
-     *
-     * @param ProviderInterface $webContextProvider webcontext provider
-     */
-    public function setWebContextProvider(ProviderInterface $webContextProvider)
-    {
         $this->webContextProvider = $webContextProvider;
     }
 
