@@ -12,4 +12,10 @@ use BEAR\Sunday\Annotation\AnnotationInterface;
  */
 final class Auth implements AnnotationInterface
 {
+    /**
+     * Realm for authentication
+     *
+     * @var string
+     */
+    public $realm;
 }

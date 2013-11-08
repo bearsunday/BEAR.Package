@@ -7,6 +7,7 @@ use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
 use BEAR\Resource\ResourceObject;
 use BEAR\Package\Module\WebContext\WebContextProvider;
 use Sandbox\Interceptor\BasicAuth\CertificateAuthorityInterface;
@@ -36,9 +37,13 @@ class BasicAuthInterceptor implements MethodInterceptor
      * @Inject
      * @Named("webContextProvider=webContext")
      */
-    public function __construct(CertificateAuthorityInterface $ca, ProviderInterface $webContextProvider)
-    {
+    public function __construct(
+        CertificateAuthorityInterface $ca,
+        AnnotationReader $annotationReader,
+        ProviderInterface $webContextProvider
+    ) {
         $this->ca = $ca;
+        $this->annotationReader = $annotationReader;
         $this->webContextProvider = $webContextProvider;
     }
 
@@ -72,10 +77,12 @@ class BasicAuthInterceptor implements MethodInterceptor
      */
     private function unauthorized(MethodInvocation $invocation)
     {
+        $method = $invocation->getMethod();
+        $annotation = $this->annotationReader->getMethodAnnotation($method, 'Sandbox\Annotation\Auth');
         $resource = $invocation->getThis();
 
         $resource->code = 401;
-        $resource->headers['WWW-Authenticate'] = 'Basic realm="Please Enter Your Password."';
+        $resource->headers['WWW-Authenticate'] = sprintf('Basic realm="%s"', $annotation->realm);
         $resource->headers['Content-type'] = 'text/html; charset=UTF-8';
         $resource->body = '<!DOCTYPE html><html><head><title>Authentication Failed.</title></head><body>Authentication Failed</body></html>';
 

@@ -10,7 +10,7 @@ use Sandbox\Annotation\Auth;
 class Index extends Page
 {
     /**
-     * @Auth
+     * @Auth(realm="BEAR.Sunday Demo Auth")
      */
     public function onGet()
     {
