@@ -32,6 +32,15 @@ class BasicAuthInterceptor implements MethodInterceptor
     private $webContextProvider;
 
     /**
+     * Unauthorized message.
+     *
+     * This is sent as resource body when authorization failed.
+     *
+     * @var string
+     */
+    private $unauthorizedMessage = '401 Unauthorized';
+
+    /**
      * Constructor
      *
      * @Inject
@@ -45,6 +54,18 @@ class BasicAuthInterceptor implements MethodInterceptor
         $this->ca = $ca;
         $this->annotationReader = $annotationReader;
         $this->webContextProvider = $webContextProvider;
+    }
+
+    /**
+     * Set Unauthorized message
+     *
+     * @param string $message
+     * @Inject(optional = true)
+     * @Named('http_response_405')
+     */
+    public function setUnauthorizedMessage($message)
+    {
+        $this->unauthorizedMessage = $message;
     }
 
     /**
@@ -84,7 +105,7 @@ class BasicAuthInterceptor implements MethodInterceptor
         $resource->code = 401;
         $resource->headers['WWW-Authenticate'] = sprintf('Basic realm="%s"', $annotation->realm);
         $resource->headers['Content-type'] = 'text/html; charset=UTF-8';
-        $resource->body = '<!DOCTYPE html><html><head><title>Authentication Failed.</title></head><body>Authentication Failed</body></html>';
+        $resource->body = (string) $this->unauthorizedMessage;
 
         return $resource;
     }
