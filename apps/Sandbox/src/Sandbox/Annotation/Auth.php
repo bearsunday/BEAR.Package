@@ -1,7 +1,8 @@
 <?php
-namespace BEAR\Sunday\Annotation\AnnotationInterface;
 
 namespace Sandbox\Annotation;
+
+use BEAR\Sunday\Annotation\AnnotationInterface;
 
 /**
  * Auth
@@ -9,6 +10,6 @@ namespace Sandbox\Annotation;
  * @Annotation
  * @Target("METHOD")
  */
-final class Auth implements \BEAR\Sunday\Annotation\AnnotationInterface
+final class Auth implements AnnotationInterface
 {
 }
