@@ -7,7 +7,7 @@
 namespace BEAR\Package\Provide\TemplateEngine\Smarty;
 
 // @codingStandardsIgnoreFile
-use BEAR\Sunday\Inject\AppDirInject;
+use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Sunday\Inject\LibDirInject;
 use Ray\Di\ProviderInterface as Provide;
 use Smarty;

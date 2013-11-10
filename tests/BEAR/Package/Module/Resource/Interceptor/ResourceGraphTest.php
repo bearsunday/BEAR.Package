@@ -35,6 +35,9 @@ class Foo extends AbstractObject
 
 class DummyAdapter implements AdapterInterface
 {
+    public function get($uri)
+    {
+    }
 }
 
 class ResourceGraphTest extends \PHPUnit_Framework_TestCase
