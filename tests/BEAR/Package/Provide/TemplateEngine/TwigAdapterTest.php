@@ -4,7 +4,7 @@ namespace BEAR\Package\Provide\TemplateEngine;
 
 use BEAR\Package\Provide\TemplateEngine\Twig\TwigAdapter;
 use Twig_Environment;
-use Twig_Loader_String;
+use Twig_Loader_Filesystem;
 
 class TwigAdapterTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class TwigAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->TwigAdapter = new TwigAdapter(new Twig_Environment(new Twig_Loader_String));
+        $this->TwigAdapter = new TwigAdapter(new Twig_Environment(new Twig_Loader_Filesystem('/')));
         $this->tpl = __DIR__ . '/test.';
     }
 
