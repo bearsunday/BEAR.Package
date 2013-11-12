@@ -17,7 +17,7 @@ $config
     ->addExclusiveFilter('/Doctrine\/Common\/Annotation/')
     ->addExclusiveFilter('/FirePHP/')
     ->addExclusiveFilter('/PHPParser_*/')
-    ->addExclusiveFilter('/Smarty*/')
+    ->addExclusiveFilter('/Smarty_Internal_TemplateCompilerBase/')
     ->addExclusiveFilter('/TokenParser/')
     ->addExclusiveFilter('/Sandbox\/Resource/')
     ->addExclusiveFilter('/AdapterTrait/');
