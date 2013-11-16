@@ -72,12 +72,12 @@ class FileUserList implements CertificateAuthorityInterface
 
 
     /**
-     * APR1方式のMD5文字列生成
+     * APR1-MD5 encryption method
      *
-     * @param string $plainpasswd 暗号化してないパスワード文字列
+     * @param string $plainpasswd raw password string
      * @param string $salt salt
      *
-     * @return string 暗号化後文字列
+     * @return string encrypted string
      */
     private function cryptApr1Md5($plainpasswd, $salt)
     {
