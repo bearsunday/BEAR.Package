@@ -21,6 +21,7 @@ class Aspect extends AbstractModule
         $this->installTimeMessage();
         $this->installNewBlogPost();
         $this->installAuraContactForm();
+        $this->installAuth();
     }
 
     /**
@@ -59,6 +60,19 @@ class Aspect extends AbstractModule
             $this->matcher->subclassesOf('Sandbox\Resource\Page\Demo\Form\Auraform'),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Form'),
             [$auraContact]
+        );
+    }
+
+    /**
+     * add authentication aspect
+     */
+    private function installAuth()
+    {
+        $basicAuth = $this->requestInjection('Sandbox\Interceptor\BasicAuthInterceptor');
+        $this->bindInterceptor(
+            $this->matcher->subclassesOf('BEAR\Resource\ResourceObject'),
+            $this->matcher->annotatedWith('Sandbox\Annotation\Auth'),
+            [$basicAuth]
         );
     }
 }
