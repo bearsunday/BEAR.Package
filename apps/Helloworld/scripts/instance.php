@@ -3,7 +3,6 @@
  * Return Helloworld application instance
  */
 
-use BEAR\Sunday\Module\Di\InjectorModule;
 use Helloworld\Module\AppModule;
 use Ray\Di\Injector;
 
