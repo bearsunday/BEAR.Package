@@ -30,13 +30,21 @@ echo "{$isAPCVersionOk}APC:" . phpversion("apc") . PHP_EOL;
 // DB
 $id = isset($_SERVER['BEAR_DB_ID']) ? $_SERVER['BEAR_DB_ID'] : 'root';
 $password = isset($_SERVER['BEAR_DB_PASSWORD']) ? $_SERVER['BEAR_DB_PASSWORD'] : '';
-try {
-    $pdo = new \PDO("mysql:host=localhost;", $id, $password);
-    $isDbConnectionOk = $ok;
-} catch (Exception $e) {
-    $isDbConnectionOk = $ng . $e->getMessage();
+$dbResultMessage = '';
+if (class_exists('PDO', false)) {
+    $dbResultMessage = "({$id}/{$password})";
+    try {
+        $pdo = new \PDO("mysql:host=localhost;", $id, $password);
+        $isDbConnectionOk = $ok;
+    } catch (Exception $e) {
+        $isDbConnectionOk = $ng;
+        $dbResultMessage .= ': ' . $e->getMessage();
+    }
+} else {
+    $isDbConnectionOk = $ng;
+    $dbResultMessage = ': PDO is not installed';
 }
-echo "{$isDbConnectionOk}DB connect({$id}/{$password})" . PHP_EOL;
+echo "{$isDbConnectionOk}DB connect{$dbResultMessage}" . PHP_EOL;
 
 echo '== Develop ===' . PHP_EOL;
 
