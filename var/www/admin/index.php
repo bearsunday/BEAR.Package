@@ -19,9 +19,6 @@ logic: {
 
 view: {
     $contentsForLayout =<<<EOT
-    <ul class="breadcrumb">
-    <li class="active">PHP runtime admin</li>
-    </ul>
 
     <div class="well">
         <ul>

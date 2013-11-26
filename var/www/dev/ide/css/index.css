@@ -69,6 +69,6 @@ body  {
     font-size: 14px;
     color: gray;
     font-weight : bold;
-	background: url(label.png) left top no-repeat; 
+	background: url("../image/label.png") left top no-repeat;
 	padding-left:15px;
 }
