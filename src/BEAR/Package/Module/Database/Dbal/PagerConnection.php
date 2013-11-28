@@ -9,11 +9,15 @@ namespace BEAR\Package\Module\Database\Dbal;
 use Doctrine\DBAL\Connection as DbalConnection;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Pagerfanta\Pagerfanta;
-use Pagerfanta\View\TwitterBootstrapView;
+use Pagerfanta\View\TwitterBootstrap3View;
 use Pagerfanta\View\ViewInterface;
 
 /**
  * Pager enabled connection
+ *
+ * This class is used Doctrine 'wrapperClass' option.
+ *
+ * @see http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#wrapper-class
  */
 class PagerConnection extends DbalConnection implements DriverConnection
 {
@@ -202,7 +206,7 @@ class PagerConnection extends DbalConnection implements DriverConnection
      */
     private function getHtml()
     {
-        $view = $this->view ? : new TwitterBootstrapView;
+        $view = $this->view ? : new TwitterBootstrap3View;
         $routeGenerator = $this->routeGenerator ? : function ($page) {
             return "?{$this->pageKey}={$page}";
         };
