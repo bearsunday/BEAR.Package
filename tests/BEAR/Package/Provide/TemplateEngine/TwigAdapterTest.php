@@ -18,7 +18,7 @@ class TwigAdapterTest extends \PHPUnit_Framework_TestCase
      */
     private $tpl;
 
-    public function setUp()
+    protected function setUp()
     {
         $loader = new Twig_Loader_Filesystem(array('/', __DIR__));
         $twig = new Twig_Environment($loader);

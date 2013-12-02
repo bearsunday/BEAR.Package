@@ -16,7 +16,7 @@ class SmartyAdapterTest extends \PHPUnit_Framework_TestCase
      */
     private $tpl;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->smartyAdapter = new SmartyAdapter(new \Smarty);
         $this->tpl = __DIR__ . '/test.';
