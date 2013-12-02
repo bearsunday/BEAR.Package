@@ -48,7 +48,7 @@ class ResourceGraphTest extends \PHPUnit_Framework_TestCase
      */
     private $resourceGraph;
 
-    public function setUp()
+    protected function setUp()
     {
         $resource = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/vendor/bear/resource/scripts/instance.php';
         /** @var $resource \BEAR\Resource\Resource */
