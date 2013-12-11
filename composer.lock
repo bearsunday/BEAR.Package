@@ -246,7 +246,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari KT",
+                    "name": "Hari K T",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
@@ -299,7 +299,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari KT",
+                    "name": "Hari K T",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
@@ -1459,12 +1459,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "7537685ccce68605ab708c27390b51f36234320f"
+                "reference": "7a61f471e35d5146c701c05d4d535f27a1c2191e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/7537685ccce68605ab708c27390b51f36234320f",
-                "reference": "7537685ccce68605ab708c27390b51f36234320f",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/7a61f471e35d5146c701c05d4d535f27a1c2191e",
+                "reference": "7a61f471e35d5146c701c05d4d535f27a1c2191e",
                 "shasum": ""
             },
             "require": {
@@ -1509,7 +1509,7 @@
                 "injection",
                 "jsr"
             ],
-            "time": "2013-12-09 07:00:24"
+            "time": "2013-12-10 02:11:13"
         },
         {
             "name": "symfony/console",

@@ -46,7 +46,7 @@ class CacheUpdater implements MethodInterceptor
         $getMethod = new ReflectionMethod($ro, 'onGet');
         $parameterNum = count($getMethod->getParameters());
         // cut as same size and order as onGet
-        $slicedInvocationArgs = array_slice($invocation->getArguments(), 0, $parameterNum);
+        $slicedInvocationArgs = array_slice((array)$invocation->getArguments(), 0, $parameterNum);
         $id = $this->getEtag($ro, $slicedInvocationArgs);
         $this->cache->delete($id);
 
