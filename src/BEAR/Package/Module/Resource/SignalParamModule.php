@@ -34,13 +34,13 @@ class SignalParamModule extends AbstractModule
 
     protected function configure()
     {
-        $signalParam = $this->requestInjection('BEAR\Resource\SignalParamsInterface');
-        /* @var $signalParam \BEAR\Resource\SignalParamsInterface */
+        $signalParam = $this->requestInjection('BEAR\Resource\SignalParameterInterface');
+        /* @var $signalParam \BEAR\Resource\SignalParameterInterface */
         foreach ($this->config as $varName => $provider) {
             $paramProvider = $this->requestInjection($provider);
             /** @var $paramProvider ParamProviderInterface */
             $signalParam->attachParamProvider($varName, $paramProvider);
         }
-        $this->bind('BEAR\Resource\SignalParamsInterface')->toInstance($signalParam);
+        $this->bind('BEAR\Resource\SignalParameterInterface')->toInstance($signalParam);
     }
 }

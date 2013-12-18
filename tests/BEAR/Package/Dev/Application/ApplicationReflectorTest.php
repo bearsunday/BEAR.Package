@@ -64,7 +64,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetResourcesClassName(array $resources)
     {
-        $this->assertSame('Sandbox\Resource\Page\Index', $resources['page://self/index']['class']);
+        $this->assertSame('Demo\Sandbox\Resource\Page\Index', $resources['page://self/index']['class']);
     }
 
     /**
