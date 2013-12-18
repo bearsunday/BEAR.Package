@@ -28,7 +28,7 @@ for systtem admin page
 
 Virtual Host for Production
 ------------
-Set up a virtual host to point to the `{$PROJECT_PATH}/apps/Sandbox/var/www/` directory of the application.
+Set up a virtual host to point to the `{$PROJECT_PATH}/apps/Demo/Sandbox/var/www/` directory of the application.
 
 Console
 -------
@@ -36,7 +36,7 @@ Console
 ### web access
 ```bash
 
-$ cd {$PROJECT_PATH}/apps/Sandbox
+$ cd {$PROJECT_PATH}/apps/Demo/Sandbox
 $ php bin/web.php get /
     
 200 OK
