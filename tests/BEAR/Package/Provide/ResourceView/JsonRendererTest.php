@@ -9,11 +9,9 @@ use Ray\Di\Definition;
 use BEAR\Resource\Request;
 use BEAR\Resource\Linker;
 use BEAR\Resource\Invoker;
-use BEAR\Resource\AbstractObject;
-use BEAR\Resource\NamedParams;
-use BEAR\Resource\SignalParam;
+use BEAR\Resource\NamedParameter;
+use BEAR\Resource\SignalParameter;
 use BEAR\Resource\Param;
-use BEAR\Package\Provide\ResourceView\JsonRenderer;
 use Doctrine\Common\Annotations\AnnotationReader;
 use BEAR\Resource\Logger;
 use Aura\Signal\Manager;
@@ -34,8 +32,8 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $invoker = new Invoker(
             new Linker(new AnnotationReader),
-            new NamedParams(
-                new SignalParam(
+            new NamedParameter(
+                new SignalParameter(
                     new Manager(new HandlerFactory, new ResultFactory, new ResultCollection),
                     new Param
                 )

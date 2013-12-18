@@ -40,7 +40,7 @@ class Web
         global $appDir;
 
         if ($app instanceof AppInterface) {
-            $appDir = dirname(dirname(dirname((new \ReflectionObject($app))->getFileName())));
+            $appDir = dirname(dirname(dirname(dirname((new \ReflectionObject($app))->getFileName()))));
         }
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
