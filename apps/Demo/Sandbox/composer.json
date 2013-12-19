@@ -1,0 +1,10 @@
+{
+    "name":"demo/sandbox",
+    "require":{
+    },
+    "require-dev":{
+    },
+    "autoload":{
+        "classmap": ["src/"]
+    }
+}
