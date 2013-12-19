@@ -60,6 +60,10 @@
         "twig/twig":"1.*"
     },
     "autoload":{
+        "files": [
+            "src/BEAR/Package/Bootstrap/getApp.php",
+            "src/BEAR/Package/Bootstrap/registerLoader.php"
+        ],
         "psr-0":{
             "BEAR\\Package":"src/"
         }
