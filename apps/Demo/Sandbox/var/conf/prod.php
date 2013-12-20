@@ -2,7 +2,7 @@
 
 namespace Demo\Sandbox;
 
-$appDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+$appDir = dirname(dirname(__DIR__));
 
 $sqlite = [
     'driver' => 'pdo_sqlite',

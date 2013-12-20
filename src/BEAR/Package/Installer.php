@@ -25,7 +25,6 @@ class Installer
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
 
-        $event->getComposer()->getAutoloadGenerator()->dump()
         include $bearRoot . '/bin/env.php';
     }
 }

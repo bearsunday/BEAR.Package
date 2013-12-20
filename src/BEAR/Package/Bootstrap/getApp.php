@@ -25,7 +25,7 @@ use Composer\Autoload\ClassLoader;
  *
  * @return \BEAR\Sunday\Extension\Application\AppInterface
  */
-function getApp($appName, $appDir, $context)
+function getApp($appName, $context)
 {
     $injector = function () use ($appName, $context) {
         $appModule = "{$appName}\Module\AppModule";
