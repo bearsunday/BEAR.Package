@@ -12,4 +12,3 @@ $loader = require $packageDir . '/vendor/autoload.php';
 $loader->set('Demo\Helloworld', dirname(__DIR__) . '/src');
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 AnnotationReader::addGlobalIgnoredName('noinspection');
-unset($packageDir);

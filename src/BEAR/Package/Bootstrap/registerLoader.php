@@ -18,7 +18,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
  *
  * @return mixed
  */
-function registerLoader(ClassLoader $loader, $packageDir, $appName, $appDir)
+function registerLoader(ClassLoader $loader, $appName, $appDir, $packageDir)
 {
     $loader->add($appName, $appDir . '/src');
     if (file_exists($appDir . '/vendor/composer/autoload_classmap.php')) {

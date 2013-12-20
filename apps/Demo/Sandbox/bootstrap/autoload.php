@@ -6,16 +6,23 @@ namespace Demo\Sandbox;
  * Autoloader
  *
  * @return $app \Composer\Autoload\ClassLoader
+ *
+ * @global $appDir
+ * @global $packageDir
  */
-use Doctrine\Common\Annotations\AnnotationRegistry;
 
+$appDir = dirname(__DIR__);
 $packageDir = dirname(dirname(dirname(dirname(__DIR__))));
+
+// Hierarchical profiler @see http://www.php.net/manual/en/book.xhprof.php
+// require dirname(dirname(dirname(dirname(__DIR__)))) . '/var/lib/profile.php';
+
 $loader = require $packageDir . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */
 
 \BEAR\Bootstrap\registerLoader(
     $loader,
-    $packageDir,
     __NAMESPACE__,
-    dirname(__DIR__)
+    $appDir,
+    $packageDir
 );
