@@ -14,14 +14,13 @@
  * But if you want to use APC cache, `include` this file once in web per deploy.
  *
  * @see https://github.com/mtdowling/ClassPreloader
+ * @global $packageDir
  */
 
 ini_set('display_errors', 1);
 ini_set('xhprof.output_dir', sys_get_temp_dir());
 
 require dirname(__DIR__) . '/bootstrap/autoload.php';
-
-$packageDir = dirname(dirname(dirname(__DIR__)));
 
 $preLoader = $packageDir . '/vendor/bin/classpreloader.php';
 $config = dirname(__DIR__) . '/var/lib//preloader/config.php';

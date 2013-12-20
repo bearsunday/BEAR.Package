@@ -20,12 +20,11 @@ chdir(dirname(dirname(__DIR__)));
 require 'bootstrap/autoload.php';
 
 // development configuration
-$logDir = dirname(dirname(__DIR__)) . '/var/log';
 $app = (new Dev)
     ->iniSet()
     ->loadDevFunctions()
     ->registerFatalErrorHandler()
-    ->registerExceptionHandler($logDir)
+    ->registerExceptionHandler("{$appDir}/var/log")
     ->registerSyntaxErrorEdit()
     ->getDevApplication($context);
 
