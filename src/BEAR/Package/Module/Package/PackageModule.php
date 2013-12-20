@@ -9,6 +9,7 @@ use BEAR\Package\Module\Resource\NullCacheModule;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
+use BEAR\Sunday\Module\Constant\NamedModule;
 use BEAR\Sunday\Module\Resource\ResourceCacheModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
@@ -20,6 +21,8 @@ use BEAR\Package\Module\Cache\CacheModule;
  */
 class PackageModule extends AbstractModule
 {
+    private $config;
+
     /**
      * Application class name
      *
@@ -30,33 +33,32 @@ class PackageModule extends AbstractModule
     /**
      * @var string
      */
-    private $mode;
+    private $context;
 
     /**
      * @param AbstractModule $module
      * @param string         $appClass
-     * @param string         $mode
+     * @param string         $context
      */
-    public function __construct(AbstractModule $module, $appClass, $mode)
+    public function __construct(array $config, $appClass, $context)
     {
-        $this->mode = $mode;
+        $this->config = $config;
+        $this->context = $context;
         $this->appClass = $appClass;
-        parent::__construct($module);
+        parent::__construct();
     }
 
     protected function configure()
     {
-        $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
-
         // application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
+        // config
+        $this->config['package_dir'] = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+        $this->install(new NamedModule($this->config));
 
-        $this->bind()->annotatedWith('package_dir')->toInstance($packageDir);
-
-        if ($this->mode === 'test') {
+        if ($this->context === 'test') {
             $this->install(new NullCacheModule($this));
         }
-
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
         $this->install(new ProvideModule\WebResponse\HttpFoundationModule);
@@ -77,17 +79,17 @@ class PackageModule extends AbstractModule
         // Cache Module
         $this->install(new CacheModule($this));
 
-        if ($this->mode === 'dev') {
+        if ($this->context === 'dev') {
             $this->install(new DevResourceModule($this));
         }
         $this->install(new DbalModule($this));
 
         // end of configuration in production
-        if ($this->mode === 'prod') {
+        if ($this->context === 'prod') {
             $this->install(new CacheModule($this));
         }
 
-        if ($this->mode === 'test') {
+        if ($this->context === 'test') {
             $this->install(new NullCacheModule($this));
         }
 

@@ -2,6 +2,7 @@
 
 namespace Demo\Sandbox\Module;
 
+use BEAR\Package\Module\Constant\ConfigModule;
 use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
@@ -15,7 +16,7 @@ use BEAR\Sunday\Module as SundayModule;
 use BEAR\Sunday\Module\Constant\NamedModule as Constant;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
-use Demo\Sandbox\Module\Mode\DevModule;
+use Demo\Sandbox\Module;
 
 /**
  * Application module
@@ -39,6 +40,8 @@ class AppModule extends AbstractModule
      */
     private $context;
 
+    private $appDir;
+
     /**
      * @param string $context
      *
@@ -46,10 +49,10 @@ class AppModule extends AbstractModule
      */
     public function __construct($context = 'prod')
     {
-        $dir = __DIR__;
+        $this->appDir = dirname(dirname(dirname(dirname(__DIR__))));
         $this->context = $context;
-        $this->config = (require "{$dir}/config/{$context}.php") + (require "{$dir}/config/prod.php");
-        $this->params = (require "{$dir}/config/params/{$context}.php") + (require "{$dir}/config/params/prod.php");
+        $this->config = (require "{$this->appDir}/var/conf/{$context}.php") + (require "{$this->appDir}/var/conf/prod.php");
+        $this->params = (require "{$this->appDir}/var/conf/params/{$context}.php") + (require "{$this->appDir}/var/conf/params/prod.php");
         parent::__construct();
     }
 
@@ -59,13 +62,7 @@ class AppModule extends AbstractModule
     protected function configure()
     {
         // install core package
-        $this->install(
-             new PackageModule(
-                new Constant($this->config),
-                'Demo\Sandbox\App',
-                $this->context
-             )
-        );
+        $this->install(new PackageModule($this->config, 'Demo\Sandbox\App', $this->context));
 
         // install view package
         $this->install(new SmartyModule($this));
@@ -78,7 +75,7 @@ class AppModule extends AbstractModule
 
         // install develop module
         if ($this->context === 'dev') {
-            $this->install(new DevModule($this));
+            $this->install(new App\Aspect\DevModule($this));
         }
 
         // install API module
@@ -98,7 +95,5 @@ class AppModule extends AbstractModule
             // install stub data
             $this->install(new StubModule(require __DIR__ . '/config/stub/resource.php'));
         }
-        // install stub data
-        //$this->install(new StubModule(require dirname(__DIR__) . '/config/stub/resource.php'));
     }
 }
