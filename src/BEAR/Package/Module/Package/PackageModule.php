@@ -36,11 +36,11 @@ class PackageModule extends AbstractModule
     private $context;
 
     /**
-     * @param AbstractModule $module
-     * @param string         $appClass
-     * @param string         $context
+     * @param AbstractModule   $appClass
+     * @param \Ray\Aop\Matcher $context
+     * @param array            $config
      */
-    public function __construct(array $config, $appClass, $context)
+    public function __construct($appClass, $context, array $config)
     {
         $this->config = $config;
         $this->context = $context;
