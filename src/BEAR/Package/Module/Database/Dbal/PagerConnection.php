@@ -120,7 +120,7 @@ class PagerConnection extends DbalConnection implements DriverConnection
      *
      * @param ViewInterface $view
      *
-     * @return self
+     * @return $this
      */
     public function setView(ViewInterface $view)
     {

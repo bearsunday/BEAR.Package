@@ -28,7 +28,7 @@ final class ConsoleOutput implements ConsoleOutputInterface
     private $enableOutput = true;
 
     /**
-     * @return self
+     * @return $this
      */
     public function disableOutput()
     {

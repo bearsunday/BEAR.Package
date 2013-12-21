@@ -67,7 +67,7 @@ class SymfonyRouter implements RouterInterface
      *
      * @param mixed $globals array | \ArrayAccess
      *
-     * @return self
+     * @return $this
      */
     public function setGlobals($globals)
     {
@@ -87,7 +87,7 @@ class SymfonyRouter implements RouterInterface
      *
      * @param array $argv
      *
-     * @return self
+     * @return $this
      *
      * @throws BadRequest
      * @throws MethodNotAllowed
