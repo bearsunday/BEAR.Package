@@ -87,7 +87,7 @@ final class HttpFoundation implements ResponseInterface
     /**
      * @param $isCli
      *
-     * @return self
+     * @return $this
      */
     public function setIsCli($isCli)
     {
@@ -114,7 +114,7 @@ final class HttpFoundation implements ResponseInterface
      * @param mixed $resource BEAR\Resource\Object | Ray\Aop\Weaver $resource
      *
      * @throws InvalidResourceType
-     * @return self
+     * @return $this
      */
     public function setResource($resource)
     {

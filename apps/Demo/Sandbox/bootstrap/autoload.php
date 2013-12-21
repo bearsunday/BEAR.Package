@@ -1,24 +1,28 @@
 <?php
+
+namespace Demo\Sandbox;
+
 /**
- * load script
+ * Autoloader
  *
- *  set composer auto loader
- *  set silent auto loader for doctrine annotation
- *  set ignore annotation
+ * @return $app \Composer\Autoload\ClassLoader
  *
- * @global $PackageDir
+ * @global $appDir
+ * @global $packageDir
  */
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-
-umask(0);
-
+$appDir = dirname(__DIR__);
 $packageDir = dirname(dirname(dirname(dirname(__DIR__))));
+
+// Hierarchical profiler @see http://www.php.net/manual/en/book.xhprof.php
+// require dirname(dirname(dirname(dirname(__DIR__)))) . '/var/lib/profile.php';
+
 $loader = require $packageDir . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */
-$loader->set('Demo\Sandbox', dirname(__DIR__) . '/src');
 
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-AnnotationReader::addGlobalIgnoredName('noinspection'); // for phpStorm
-AnnotationReader::addGlobalIgnoredName('returns'); // for Mr.Smarty. :(
+\BEAR\Bootstrap\registerLoader(
+    $loader,
+    __NAMESPACE__,
+    $appDir,
+    $packageDir
+);

@@ -34,14 +34,8 @@ class Web
      *
      * @return int exit code
      */
-    public function service($pagePath, AppInterface $app = null)
+    public function service($pagePath, AppInterface $app = null, $appDir)
     {
-        // application directory path
-        global $appDir;
-
-        if ($app instanceof AppInterface) {
-            $appDir = dirname(dirname(dirname(dirname((new \ReflectionObject($app))->getFileName()))));
-        }
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
         if ($path == '' || substr($path, -1, 1) === '/') {

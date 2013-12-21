@@ -9,24 +9,22 @@
 
 use BEAR\Package\Dev\Dev;
 
-umask(0);
-ini_set('xdebug.max_nesting_level', 200);
-ini_set('display_errors', 0);
-ob_start();
-
 // set application root as current directory
-chdir(dirname(dirname(__DIR__)));
 
-require 'bootstrap/autoload.php';
+$appDir = dirname(dirname(__DIR__));
+require $appDir . '/bootstrap/autoload.php';
 
+$context = 'dev';
+$app = require $appDir . '/bootstrap/instance.php';
+$dev = new Dev;
 // development configuration
-$logDir = dirname(dirname(__DIR__)) . '/var/log';
-$app = (new Dev)
+$dev
     ->iniSet()
     ->loadDevFunctions()
     ->registerFatalErrorHandler()
-    ->registerExceptionHandler($logDir)
+    ->registerExceptionHandler("{$appDir}/var/log")
     ->registerSyntaxErrorEdit()
-    ->getDevApplication($context);
+    ->setApp($app, $appDir)
+    ->serviceDevWeb();
 
-return $app;
+return $dev->isDirectStaticFileAccess() ? false : $app;

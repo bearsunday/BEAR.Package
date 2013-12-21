@@ -1,6 +1,6 @@
 <?php
 
-namespace Demo\Sandbox\Module\Mode;
+namespace Demo\Sandbox\Module\App\Aspect;
 
 use BEAR\Package\Module as PackageModule;
 use BEAR\Sunday\Module as SundayModule;

@@ -3,6 +3,9 @@
  * This file is part of the BEAR.Package package
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
+ *
+ * @global $app \BEAR\Sunday\Extension\Application\AppInterface
+ *
  */
 
 namespace BEAR\Package\Dev;
@@ -14,16 +17,19 @@ use BEAR\Package\Dev\Web\Web;
 use BEAR\Package\Provide\Application\AbstractApp;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Provide\WebResponse\HttpFoundation as SymfonyResponse;
+use BEAR\Sunday\Extension\Application\AppInterface;
 
-/**
- * Dev tools
- */
 class Dev
 {
     /**
      * @var AbstractApp
      */
     private $app;
+
+    /**
+     * @var string
+     */
+    private $appDir;
 
     /**
      * @var bool
@@ -46,13 +52,29 @@ class Dev
     private $sapiName;
 
     /**
-     * Constructor
+     * @var bool
+     */
+    private $isDirectStaticFileAccess = false;
+
+    /**
+     * @param AppInterface $app
+     * @param              $appDir
      *
-     * @param array $server
-     * @param null  $web
-     * @param null  $sapiName
-     *
-     * @throws \BadMethodCallException
+     * @return $this
+     */
+    public function setApp(AppInterface $app, $appDir)
+    {
+        $this->app = $app;
+        $this->appDir = $appDir;
+
+        return $this;
+    }
+
+    /**
+     * @param string $appDir
+     * @param array  $server
+     * @param null   $web
+     * @param null   $sapiName
      */
     public function __construct(
         array $server = null,
@@ -116,6 +138,8 @@ class Dev
      */
     public function iniSet()
     {
+        umask(0);
+        ini_set('display_errors', 0);
         ini_set('xhprof.output_dir', sys_get_temp_dir());
         ini_set('xdebug.collect_params', 0);
         ini_set('xdebug.max_nesting_level', 500);
@@ -130,7 +154,7 @@ class Dev
      *
      * @param $logDir
      *
-     * @return self
+     * @return $this
      */
     public function registerExceptionHandler($logDir)
     {
@@ -151,7 +175,7 @@ class Dev
     /**
      * Register syntax error editor
      *
-     * @return self
+     * @return $this
      */
     public function registerSyntaxErrorEdit()
     {
@@ -162,6 +186,8 @@ class Dev
 
     /**
      * Register fatal error handler
+     *
+     * @return $this
      */
     public function registerFatalErrorHandler()
     {
@@ -194,18 +220,6 @@ class Dev
     }
 
     /**
-     * @param AbstractApp $app
-     *
-     * @return $this
-     */
-    public function setApp(AbstractApp $app)
-    {
-        $this->app = $app;
-
-        return $this;
-    }
-
-    /**
      * @param bool $return
      *
      * @return $this
@@ -220,7 +234,7 @@ class Dev
     /**
      * @return bool false:has file, true:skip
      */
-    public function directAccessFile()
+    private function directAccessFile()
     {
         $isDevWev = $this->web->isDevWebService($this->sapiName, $this->requestUri);
         if (!$isDevWev && php_sapi_name() == "cli-server") {
@@ -247,7 +261,7 @@ class Dev
     {
         if ($this->web->isDevWebService($this->sapiName, $this->requestUri)) {
             $requestUri = $requestUri ? : $_SERVER['REQUEST_URI'];
-            $html = $this->web->service($requestUri, $this->app);
+            $html = $this->web->service($requestUri, $this->app, $this->appDir);
 
             return $this->output(200, $html);
         }
@@ -283,27 +297,26 @@ class Dev
      *
      * @return AbstractApp|bool
      */
-    public function getDevApplication($context)
+    public function serviceDevWeb()
     {
-        global $context;
-
         // direct file for built in web server
         if ($this->directAccessFile() === false) {
-            return false;
+            $this->app = false;
+            return $this;
         }
-
-        // console args
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $context = isset($argv[3]) ? $argv[3] : $context;
-        $app = require 'bootstrap/instance.php';
-        /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
-
-        $app = $this->route($app);
-
+        $this->route($this->app);
         // development web service (/dev)
-        $this->setApp($app)->webService();
+        $this->webService();
 
-        return $app;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDirectStaticFileAccess()
+    {
+        return $this->isDirectStaticFileAccess;
     }
 
     /**

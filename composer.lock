@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "d266be5068509043d3c08463476b3326",
+    "hash": "845d00d2609f3aa56d98f66cfb4b7858",
     "packages": [
         {
             "name": "any/serializer",
@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "3361b8c263ea91379b357b1d45021096407a655a"
+                "reference": "7a639f81befa285f519c3226c62298faedd73a0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/3361b8c263ea91379b357b1d45021096407a655a",
-                "reference": "3361b8c263ea91379b357b1d45021096407a655a",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/7a639f81befa285f519c3226c62298faedd73a0e",
+                "reference": "7a639f81befa285f519c3226c62298faedd73a0e",
                 "shasum": ""
             },
             "require": {
@@ -585,7 +585,7 @@
                 "hypermedia",
                 "rest"
             ],
-            "time": "2013-12-18 19:04:47"
+            "time": "2013-12-18 19:16:46"
         },
         {
             "name": "classpreloader/classpreloader",

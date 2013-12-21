@@ -18,6 +18,7 @@ class Installer
      */
     public static function packageUpdate(Event $event)
     {
+        $composer = $event->getComposer();
         $version = $event->getComposer()->getPackage()->getPrettyVersion();
         $hash = $event->getComposer()->getLocker()->getLockData()['hash'];
         $bearRoot = dirname(dirname(dirname(__DIR__)));

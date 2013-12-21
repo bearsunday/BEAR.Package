@@ -6,10 +6,6 @@
  * - no template engine
  * - page resource only
  */
-
-// profiler
-//require dirname(dirname(dirname(__DIR__))) . '/var/lib/develop/profile.php';
-
 // page request
 $app = require dirname(dirname(__DIR__)) . '/scripts/instance.php';
 
