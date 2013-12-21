@@ -15,15 +15,17 @@ use BEAR\Package\Provide\Application\AbstractApp;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Provide\WebResponse\HttpFoundation as SymfonyResponse;
 
-/**
- * Dev tools
- */
 class Dev
 {
     /**
      * @var AbstractApp
      */
     private $app;
+
+    /**
+     * @var string
+     */
+    private $apDir;
 
     /**
      * @var bool
@@ -46,21 +48,20 @@ class Dev
     private $sapiName;
 
     /**
-     * Constructor
-     *
-     * @param array $server
-     * @param null  $web
-     * @param null  $sapiName
-     *
-     * @throws \BadMethodCallException
+     * @param string $appDir
+     * @param array  $server
+     * @param null   $web
+     * @param null   $sapiName
      */
     public function __construct(
+        $appDir,
         array $server = null,
         $web = null,
         $sapiName = null
     ) {
         global $argv;
 
+        $this->apDir = $appDir;
         $this->web = $web ? : new Web;
         if (is_null($server) && isset($_SERVER)) {
             $server = $_SERVER;
@@ -116,6 +117,8 @@ class Dev
      */
     public function iniSet()
     {
+        umask(0);
+        ini_set('display_errors', 0);
         ini_set('xhprof.output_dir', sys_get_temp_dir());
         ini_set('xdebug.collect_params', 0);
         ini_set('xdebug.max_nesting_level', 500);
@@ -130,7 +133,7 @@ class Dev
      *
      * @param $logDir
      *
-     * @return self
+     * @return $this
      */
     public function registerExceptionHandler($logDir)
     {
@@ -151,7 +154,7 @@ class Dev
     /**
      * Register syntax error editor
      *
-     * @return self
+     * @return $this
      */
     public function registerSyntaxErrorEdit()
     {
@@ -162,6 +165,8 @@ class Dev
 
     /**
      * Register fatal error handler
+     *
+     * @return $this
      */
     public function registerFatalErrorHandler()
     {
@@ -247,7 +252,7 @@ class Dev
     {
         if ($this->web->isDevWebService($this->sapiName, $this->requestUri)) {
             $requestUri = $requestUri ? : $_SERVER['REQUEST_URI'];
-            $html = $this->web->service($requestUri, $this->app);
+            $html = $this->web->service($requestUri, $this->app, $this->appDir);
 
             return $this->output(200, $html);
         }
@@ -295,7 +300,7 @@ class Dev
         // console args
         /** @noinspection PhpUnusedLocalVariableInspection */
         $context = isset($argv[3]) ? $argv[3] : $context;
-        $app = require 'bootstrap/instance.php';
+        $app = require $this->appDir . '/bootstrap/instance.php';
         /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
 
         $app = $this->route($app);
