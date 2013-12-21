@@ -9,18 +9,15 @@
 
 use BEAR\Package\Dev\Dev;
 
-umask(0);
-ini_set('xdebug.max_nesting_level', 200);
-ini_set('display_errors', 0);
 ob_start();
 
 // set application root as current directory
-chdir(dirname(dirname(__DIR__)));
+$appDir = dirname(dirname(__DIR__));
 
-require 'bootstrap/autoload.php';
+require $appDir . '/bootstrap/autoload.php';
 
 // development configuration
-$app = (new Dev)
+$app = (new Dev($appDir))
     ->iniSet()
     ->loadDevFunctions()
     ->registerFatalErrorHandler()
