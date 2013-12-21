@@ -1,4 +1,7 @@
 <?php
+
+use BEAR\Package\Dev\Dev;
+
 /**
  * CLI / Built-in web server script for development
  *
@@ -8,38 +11,43 @@
  *
  * CLI:
  * $ php web.php get /
- * $ php web.php get / prod
- * $ php web.php get / api
  *
  * Built-in web server:
  * $ php -S localhost:8080 web.php
  *
- * @global  $context string
+ * @global $context string
  */
 
 ob_start();
+$appDir = dirname(dirname(__DIR__));
 
-$dir = dirname(dirname(__DIR__));
-
-//
-// Here we get an application instance by setting a $context variable such as (Prod, Dev, Api, Stub, Test)
+// Here we get an application instance by setting a $context variable such as (prod, dev, api)
 // the dev instance provides debugging tools and defaults to help you the development of your application.
-//
-$app = require $dir . '/bootstrap/develop/instance.php';
+$context = 'dev';
+$app = require $appDir . '/bootstrap/instance.php';
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
+$dev = new Dev;
+$dev
+    ->iniSet()
+    ->loadDevFunctions()
+    ->registerFatalErrorHandler()
+    ->registerExceptionHandler("{$appDir}/var/log")
+    ->registerSyntaxErrorEdit()
+    ->setApp($app, $appDir)
+    ->serviceDevWeb();
+
+// When using the built in file-server when directly accessing files the app instance will not be created and
+// and the script will be exited.
+if ($dev->isDirectStaticFileAccess()) {
+    return false;
+}
 
 //
 // The cache is cleared on each request via the following script. We understand that you may want to debug
 // your application with caching turned on. When doing so just comment out the following.
 //
-//require $dir . '/bin/clear.php';
+require $appDir . '/bin/clear.php';
 
-//
-// When using the built in file-server when directly accessing files the app instance will not be created and
-// and the script will be exited.
-if (!$app) {
-    return false;
-}
 
 //
 // Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
