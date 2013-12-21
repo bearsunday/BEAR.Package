@@ -2,21 +2,17 @@
 
 namespace Demo\Sandbox\Module;
 
-use BEAR\Package\Module\Constant\ConfigModule;
 use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
 use BEAR\Package\Module\Resource\SignalParamModule;
 use BEAR\Package\Module\Stub\StubModule;
-use BEAR\Package\Provide as ProvideModule;
 use BEAR\Package\Provide\ResourceView;
 use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
 use BEAR\Sunday\Module as SundayModule;
-use BEAR\Sunday\Module\Constant\NamedModule as Constant;
-use Ray\Di\AbstractModule;
-use Ray\Di\Injector;
 use Demo\Sandbox\Module;
+use Ray\Di\AbstractModule;
 
 /**
  * Application module
@@ -28,7 +24,7 @@ class AppModule extends AbstractModule
      *
      * @var array
      */
-    private $config;
+    private $constants;
 
     /**
      * @var array
@@ -49,10 +45,13 @@ class AppModule extends AbstractModule
      */
     public function __construct($context = 'prod')
     {
-        $this->appDir = dirname(dirname(dirname(dirname(__DIR__))));
+        global $appDir;
+
+        $appDir = dirname(dirname(dirname(dirname(__DIR__))));
         $this->context = $context;
-        $this->config = (require "{$this->appDir}/var/conf/{$context}.php") + (require "{$this->appDir}/var/conf/prod.php");
-        $this->params = (require "{$this->appDir}/var/conf/params/{$context}.php") + (require "{$this->appDir}/var/conf/params/prod.php");
+        $this->appDir = $appDir;
+        $this->constants = (require "{$appDir}/var/conf/constants/{$context}.php") + (require "{$appDir}/var/conf/constants/prod.php");
+        $this->params = (require "{$appDir}/var/conf/params/{$context}.php") + (require "{$appDir}/var/conf/params/prod.php");
         parent::__construct();
     }
 
@@ -62,7 +61,7 @@ class AppModule extends AbstractModule
     protected function configure()
     {
         // install core package
-        $this->install(new PackageModule($this->config, 'Demo\Sandbox\App', $this->context));
+        $this->install(new PackageModule('Demo\Sandbox\App', $this->context, $this->constants));
 
         // install view package
         $this->install(new SmartyModule($this));
@@ -93,7 +92,7 @@ class AppModule extends AbstractModule
 
         if ($this->context === 'stub') {
             // install stub data
-            $this->install(new StubModule(require __DIR__ . '/config/stub/resource.php'));
+            $this->install(new StubModule(require "{$this->appDir}/var/conf/stub/resource.php"));
         }
     }
 }
