@@ -3,6 +3,9 @@
  * This file is part of the BEAR.Package package
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
+ *
+ * @global $app \BEAR\Sunday\Extension\Application\AppInterface
+ *
  */
 
 namespace BEAR\Package\Dev;
@@ -14,6 +17,7 @@ use BEAR\Package\Dev\Web\Web;
 use BEAR\Package\Provide\Application\AbstractApp;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Provide\WebResponse\HttpFoundation as SymfonyResponse;
+use BEAR\Sunday\Extension\Application\AppInterface;
 
 class Dev
 {
@@ -25,7 +29,7 @@ class Dev
     /**
      * @var string
      */
-    private $apDir;
+    private $appDir;
 
     /**
      * @var bool
@@ -48,20 +52,37 @@ class Dev
     private $sapiName;
 
     /**
+     * @var bool
+     */
+    private $isDirectStaticFileAccess = false;
+
+    /**
+     * @param AppInterface $app
+     * @param              $appDir
+     *
+     * @return $this
+     */
+    public function setApp(AppInterface $app, $appDir)
+    {
+        $this->app = $app;
+        $this->appDir = $appDir;
+
+        return $this;
+    }
+
+    /**
      * @param string $appDir
      * @param array  $server
      * @param null   $web
      * @param null   $sapiName
      */
     public function __construct(
-        $appDir,
         array $server = null,
         $web = null,
         $sapiName = null
     ) {
         global $argv;
 
-        $this->apDir = $appDir;
         $this->web = $web ? : new Web;
         if (is_null($server) && isset($_SERVER)) {
             $server = $_SERVER;
@@ -199,18 +220,6 @@ class Dev
     }
 
     /**
-     * @param AbstractApp $app
-     *
-     * @return $this
-     */
-    public function setApp(AbstractApp $app)
-    {
-        $this->app = $app;
-
-        return $this;
-    }
-
-    /**
      * @param bool $return
      *
      * @return $this
@@ -225,7 +234,7 @@ class Dev
     /**
      * @return bool false:has file, true:skip
      */
-    public function directAccessFile()
+    private function directAccessFile()
     {
         $isDevWev = $this->web->isDevWebService($this->sapiName, $this->requestUri);
         if (!$isDevWev && php_sapi_name() == "cli-server") {
@@ -288,27 +297,26 @@ class Dev
      *
      * @return AbstractApp|bool
      */
-    public function getDevApplication($context)
+    public function serviceDevWeb()
     {
-        global $context;
-
         // direct file for built in web server
         if ($this->directAccessFile() === false) {
-            return false;
+            $this->app = false;
+            return $this;
         }
-
-        // console args
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $context = isset($argv[3]) ? $argv[3] : $context;
-        $app = require $this->appDir . '/bootstrap/instance.php';
-        /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
-
-        $app = $this->route($app);
-
+        $this->route($this->app);
         // development web service (/dev)
-        $this->setApp($app)->webService();
+        $this->webService();
 
-        return $app;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDirectStaticFileAccess()
+    {
+        return $this->isDirectStaticFileAccess;
     }
 
     /**

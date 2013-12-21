@@ -9,20 +9,22 @@
 
 use BEAR\Package\Dev\Dev;
 
-ob_start();
-
 // set application root as current directory
-$appDir = dirname(dirname(__DIR__));
 
+$appDir = dirname(dirname(__DIR__));
 require $appDir . '/bootstrap/autoload.php';
 
+$context = 'dev';
+$app = require $appDir . '/bootstrap/instance.php';
+$dev = new Dev;
 // development configuration
-$app = (new Dev($appDir))
+$dev
     ->iniSet()
     ->loadDevFunctions()
     ->registerFatalErrorHandler()
     ->registerExceptionHandler("{$appDir}/var/log")
     ->registerSyntaxErrorEdit()
-    ->getDevApplication($context);
+    ->setApp($app, $appDir)
+    ->serviceDevWeb();
 
-return $app;
+return $dev->isDirectStaticFileAccess() ? false : $app;

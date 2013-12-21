@@ -27,17 +27,11 @@ class DevTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('BEAR\Package\Dev\Dev', $this->dev);
     }
 
-    public function testAddApp()
-    {
-        $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo/Helloworld/scripts/instance.php';
-        $dev = $this->dev->setApp($app);
-        $this->assertInstanceOf('BEAR\Package\Dev\Dev', $dev);
-    }
-
     public function testWebService()
     {
         $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo/Helloworld/scripts/instance.php';
-        list($code, $html) = $this->dev->setReturnMode()->setApp($app)->webService('/dev/');
+        $appDir = $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo/Helloworld';
+        list($code, $html) = $this->dev->setReturnMode()->setApp($app, $appDir)->webService('/dev/');
         $this->assertSame(200, $code);
         $this->assertContains('Helloworld Dev</title>', $html);
     }
