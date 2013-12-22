@@ -50,8 +50,8 @@ class AppModule extends AbstractModule
         $appDir = dirname(dirname(dirname(dirname(__DIR__))));
         $this->context = $context;
         $this->appDir = $appDir;
-        $this->constants = (require "{$appDir}/var/conf/constants/{$context}.php") + (require "{$appDir}/var/conf/constants/prod.php");
-        $this->params = (require "{$appDir}/var/conf/params/{$context}.php") + (require "{$appDir}/var/conf/params/prod.php");
+        $this->constants = (require "{$appDir}/var/conf/{$context}.php") + (require "{$appDir}/var/conf/prod.php");
+        $this->params = (require "{$appDir}/var/lib/params/{$context}.php") + (require "{$appDir}/var/lib/params/prod.php");
         parent::__construct();
     }
 
@@ -92,7 +92,7 @@ class AppModule extends AbstractModule
 
         if ($this->context === 'stub') {
             // install stub data
-            $this->install(new StubModule(require "{$this->appDir}/var/conf/stub/resource.php"));
+            $this->install(new StubModule(require "{$this->appDir}/var/lib/stub/resource.php"));
         }
     }
 }
