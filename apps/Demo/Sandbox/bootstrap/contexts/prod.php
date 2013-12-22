@@ -21,6 +21,7 @@ use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 // Here we get the production application instance. No $context variable is needed as it defaults to prod.
 //
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
+$context = 'prod';
 $app = require dirname(__DIR__) . '/instance.php';
 
 //

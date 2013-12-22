@@ -29,7 +29,7 @@
         </div>
     {/foreach}
     <h2>Here you are !</h2>
-    <img src="/img/coffee.png">
+    <img src="/assets/img/coffee.png">
     <a href="index">One more ?</a> or <a href="/">No, Thanks.</a>
 
 {/if}
