@@ -19,6 +19,11 @@ use BEAR\Package\Dev\Dev;
  */
 
 ob_start();
+
+if (preg_match('/\.(?:png|jpg|jpeg|gif|js)$/', $_SERVER["REQUEST_URI"])) {
+    return false;
+}
+
 $appDir = dirname(dirname(__DIR__));
 
 // Here we get an application instance by setting a $context variable such as (prod, dev, api)
@@ -47,7 +52,6 @@ if ($dev->isDirectStaticFileAccess()) {
 // your application with caching turned on. When doing so just comment out the following.
 //
 require $appDir . '/bin/clear.php';
-
 
 //
 // Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
