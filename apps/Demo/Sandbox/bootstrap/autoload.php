@@ -26,3 +26,5 @@ $loader = require $packageDir . '/vendor/autoload.php';
     $appDir,
     $packageDir
 );
+
+return $loader;
