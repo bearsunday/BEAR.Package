@@ -17,12 +17,16 @@ built-in web server for development
 
 for Sandbox web page
 
-    $ cd {$PROJECT_PATH}/apps/Sandbox/var/www/
-    $ php -S 0.0.0.0:8088 dev.php
+    $ php bin/server.php apps/Demo/Sandbox
+    $ php bin/server.php --context=api --port=8081 apps/Demo/Sandbox
 
-You can then open a browser and go to `http://0.0.0.0:8088` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
+or
 
-for systtem admin page
+    $ php -S 0.0.0.0:8080 -t apps/Demo/Sandbox/var/www/ apps/Demo/Sandbox/bootstrap/contexts/dev.php
+
+You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
+
+for system admin page
 
     $ php -S 0.0.0.0:8090 -t {$PROJECT_PATH}/var/www/admin
 
