@@ -7,7 +7,6 @@ error_reporting(E_ALL);
 
 ini_set('xdebug.max_nesting_level', 300);
 ini_set('display_errors', 1);
-ob_start();
 
 require dirname(__DIR__) . '/apps/Demo/Helloworld/bin/clear.php';
 require dirname(__DIR__) . '/apps/Demo/Sandbox/bin/clear.php';
