@@ -18,7 +18,9 @@ class SmartyAdapterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->smartyAdapter = new SmartyAdapter(new \Smarty);
+        $smarty = new \Smarty();
+        $smarty->setCompileDir($GLOBALS['_BEAR_TMP_DIR']);
+        $this->smartyAdapter = new SmartyAdapter($smarty);
         $this->tpl = __DIR__ . '/test.';
     }
 
