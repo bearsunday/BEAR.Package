@@ -4,7 +4,7 @@
  *
  * Minimum application using pull request.
  */
-$app = require dirname(dirname(__DIR__)) . '/scripts/instance.php';
+$app = require dirname(dirname(__DIR__)) . '/bootstrap/instance.php';
 
 $hello = $app->resource
              ->get

@@ -7,7 +7,7 @@
  * - page resource only
  */
 // page request
-$app = require dirname(dirname(__DIR__)) . '/scripts/instance.php';
+$app = require dirname(dirname(__DIR__)) . '/bootstrap/instance.php';
 
 $response = $app
     ->resource
