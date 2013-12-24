@@ -129,23 +129,28 @@ final class ConsoleOutput implements ConsoleOutputInterface
                     ) .
                     ',' . PHP_EOL;
             }
-
             $string .= $footer;
-        } elseif (is_object($target)) {
-            if ($target instanceof Request) {
-                $string .= $this->getRequestString($target);
-            } else {
-                $string .= $this->getVarDump(
-                    get_object_vars($target),
-                    $level,
-                    '=> ' . get_class($target) . '(' . PHP_EOL,
-                    str_repeat('  ', $level - 1) . ')'
-                );
-            }
-        } else {
-            $string .= $target;
+
+            return $string;
+        }
+        if (is_object($target) && $target instanceof Request) {
+            $string .= $this->getRequestString($target);
+
+            return $string;
         }
 
+        if (is_object($target)) {
+            $string .= $this->getVarDump(
+                get_object_vars($target),
+                $level,
+                '=> ' . get_class($target) . '(' . PHP_EOL,
+                str_repeat('  ', $level - 1) . ')'
+            );
+
+            return $string;
+        }
+
+        $string .= $target;
         return $string;
     }
 
