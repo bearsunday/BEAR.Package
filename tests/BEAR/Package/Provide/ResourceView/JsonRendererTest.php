@@ -19,6 +19,41 @@ use Aura\Signal\HandlerFactory;
 use Aura\Signal\ResultFactory;
 use Aura\Signal\ResultCollection;
 
+final class Ok extends ResourceObject
+{
+    /**
+     * Code
+     *
+     * @var int
+     */
+    public $code = 200;
+
+    /**
+     * Headers
+     *
+     * @var array
+     */
+    public $headers = [];
+
+    /**
+     * Body
+     *
+     * @var mixed
+     */
+    public $body = [
+        'msg' => 'OK'
+    ];
+
+    /**
+     * Get
+     *
+     * @return $this
+     */
+    public function onGet()
+    {
+        return $this;
+    }
+}
 
 /**
  * Test class for JsonRenderer.
@@ -76,38 +111,3 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-final class Ok extends ResourceObject
-{
-    /**
-     * Code
-     *
-     * @var int
-     */
-    public $code = 200;
-
-    /**
-     * Headers
-     *
-     * @var array
-     */
-    public $headers = [];
-
-    /**
-     * Body
-     *
-     * @var mixed
-     */
-    public $body = [
-        'msg' => 'OK'
-    ];
-
-    /**
-     * Get
-     *
-     * @return $this
-     */
-    public function onGet()
-    {
-        return $this;
-    }
-}
