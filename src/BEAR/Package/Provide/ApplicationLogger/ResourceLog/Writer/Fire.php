@@ -14,6 +14,8 @@ use Traversable;
 
 /**
  * Fire logger
+ *
+ * @codeCoverageIgnore
  */
 final class Fire implements LogWriterInterface
 {

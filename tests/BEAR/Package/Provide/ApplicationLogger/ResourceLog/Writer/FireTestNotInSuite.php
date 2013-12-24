@@ -14,18 +14,12 @@ class FireTest extends \PHPUnit_Framework_TestCase
      */
     private $ro;
 
-    public static function setUpBeforeClass()
-    {
-        ob_start(); // <-- very important!
-    }
-
-    public static function tearDownAfterClass()
-    {
-        ob_end_flush();
-    }
-
     protected function setUp()
     {
+        error_reporting(error_reporting() xor E_NOTICE);
+        xhprof_disable();
+        ob_start();
+        header_remove();
         parent::setUp();
         $_SERVER['HTTP_USER_AGENT'] = 'User-Agent:  FirePHP/0.7.1';
         $this->fire = new Fire(\FirePHP::getInstance(true));
@@ -43,7 +37,6 @@ class FireTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        header_remove(); // <-- VERY important.
         unset($_SERVER['HTTP_USER_AGENT']);
     }
 
@@ -54,6 +47,7 @@ class FireTest extends \PHPUnit_Framework_TestCase
     {
         $this->fire->write($this->request, $this->ro);
         $headersList = print_r(xdebug_get_headers(), true);
+        var_dump($headersList);
         $this->assertContains('"Type":"TABLE","Label":"headers","File"', $headersList);
         ob_end_clean();
     }
@@ -72,6 +66,9 @@ class FireTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('[["name"],["bear"],["koriym"]]', $headersList);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testFireLinks()
     {
         $this->ro->links = [
@@ -83,6 +80,9 @@ class FireTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('["rel1","page:\\/\\/self\\/rel1"]', $headersList);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testFireVariousBody()
     {
         $ro1 = clone $this->ro;
@@ -96,6 +96,9 @@ class FireTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('"request":"(Request) nop:\\/\\/mock"', $headersList);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testFireVariousBodyIsString()
     {
         $this->ro->body = 'body_is_string';
