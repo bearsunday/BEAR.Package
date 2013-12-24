@@ -33,11 +33,8 @@ class JsonRenderer implements RenderInterface
                 }
             );
         }
-        $ro->view = @json_encode($ro->body, JSON_PRETTY_PRINT);
-        if ($ro->view === false) {
-            error_log('json_encode error in ' . __METHOD__  . ':' . json_last_error());
-            return '';
-        }
+        $ro->view = json_encode($ro->body, JSON_PRETTY_PRINT);
+
         return $ro->view;
     }
 }
