@@ -8,7 +8,11 @@ passthru(
 
 echo 'application test started...' . PHP_EOL;
 
-require __DIR__ . '/run_apps_tests.php';
-
+$appDir = dirname(dirname(__DIR__)) . '/apps/Demo';
+foreach (['Helloworld', 'Sandbox'] as $appName) {
+    passthru(
+        "phpunit --coverage-text --configuration {$appDir}/{$appName}/phpunit.xml.dist"
+    );
+}
 
 echo 'all test completed.' . PHP_EOL;

@@ -20,7 +20,7 @@ use BEAR\Package\Dev\Dev;
 
 ob_start();
 
-if (preg_match('/\.(?:png|jpg|jpeg|gif|js)$/', $_SERVER["REQUEST_URI"])) {
+if ((PHP_SAPI !== 'cli') && preg_match('/\.(?:png|jpg|jpeg|gif|js)$/', $_SERVER["REQUEST_URI"])) {
     return false;
 }
 
