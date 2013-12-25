@@ -12,7 +12,7 @@ require dirname(__DIR__) . '/apps/Demo/Helloworld/bin/clear.php';
 require dirname(__DIR__) . '/apps/Demo/Sandbox/bin/clear.php';
 
 // loader
-error_reporting(E_ALL xor E_NOTICE);
+error_reporting(E_ALL ^ E_NOTICE);
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 error_reporting(E_ALL);
 /** @var $loader \Composer\Autoload\ClassLoader */

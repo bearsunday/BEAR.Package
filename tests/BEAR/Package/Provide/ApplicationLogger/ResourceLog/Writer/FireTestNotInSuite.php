@@ -16,7 +16,6 @@ class FireTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        error_reporting(error_reporting() xor E_NOTICE);
         xhprof_disable();
         ob_start();
         header_remove();
