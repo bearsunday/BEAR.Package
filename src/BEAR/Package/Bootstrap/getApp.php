@@ -14,13 +14,11 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\CacheInjector;
 use Ray\Di\Injector;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Composer\Autoload\ClassLoader;
 
 /**
+ * Return application instance
+ * 
  * @param $appName
- * @param $appDir
  * @param $context
  *
  * @return \BEAR\Sunday\Extension\Application\AppInterface
@@ -38,7 +36,8 @@ function getApp($appName, $context)
             (new ApplicationReflector($app))->compileAllResources();
         }
     };
-    $injector = new CacheInjector($injector, $initialization, $appName . $context, new ApcCache);
+    $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(sys_get_temp_dir());
+    $injector = new CacheInjector($injector, $initialization, $appName . $context, $cache);
     $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
 
     /* @var $app \BEAR\Sunday\Extension\Application\AppInterface */
