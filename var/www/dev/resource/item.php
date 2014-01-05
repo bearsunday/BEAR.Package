@@ -40,7 +40,6 @@ control: {
     $ro = $app->resource->newInstance($_GET['uri']);
     $options = $appReflector->getResourceOptions($ro);
 
-    var_dump($options);
     exit;
 }
 

@@ -33,7 +33,7 @@ class DoctrineDbalAdapterTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $this->pdo = require __DIR__ . '/scripts/db.php';
 
-        return $this->createDefaultDBConnection($this->pdo, 'mysql');
+        return $this->createDefaultDBConnection($this->pdo, ':memory:');
     }
 
     /**
@@ -41,7 +41,7 @@ class DoctrineDbalAdapterTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-        return $this->createMySQLXMLDataSet(dirname(__DIR__) . '/mock/pager_seed.xml');
+        return $this->createFlatXmlDataSet(dirname(__DIR__) . '/mock/pager_seed.xml');
     }
 
     protected function setUp()
