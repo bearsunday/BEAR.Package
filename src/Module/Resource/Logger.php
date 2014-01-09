@@ -10,9 +10,6 @@ use BEAR\Sunday\Inject\LogInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
-/**
- * Log Interceptor
- */
 class Logger implements MethodInterceptor
 {
     use LogInject;

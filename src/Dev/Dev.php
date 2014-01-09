@@ -58,7 +58,7 @@ class Dev
 
     /**
      * @param AppInterface $app
-     * @param              $appDir
+     * @param string       $appDir
      *
      * @return $this
      */
@@ -270,10 +270,10 @@ class Dev
     }
 
     /**
-     * @param array $argv
-     * @param       $app
+     * @param array        $argv
+     * @param AbstractApp  $app
      */
-    public function setCliArgs(array $argv, $app)
+    public function setCliArgs(array $argv, AbstractApp $app)
     {
         if ($argv && $this->sapiName === 'cli' && isset($argv)) {
             $app->router->setArgv($argv);
@@ -343,8 +343,8 @@ class Dev
     /**
      * Output
      *
-     * @param $code
-     * @param $html
+     * @param int    $code
+     * @param string $html
      *
      * @return array
      */

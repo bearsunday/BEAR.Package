@@ -6,9 +6,6 @@
  */
 namespace BEAR\Package\Dev\Web\Editor;
 
-/**
- * File tree
- */
 class FileTree
 {
     /**
@@ -18,10 +15,13 @@ class FileTree
      */
     public $cmd = '';
 
+    /**
+     * @var string
+     */
     private $root;
 
     /**
-     * @param $root
+     * @param string $root
      */
     public function __construct($root)
     {
@@ -29,9 +29,11 @@ class FileTree
     }
 
     /**
-     * @param $placeholder
-     * @param $path
-     * @param $label
+     * Add tree
+     *
+     * @param string $placeholder
+     * @param string $path
+     * @param string $label
      *
      * @return FileTree
      */
@@ -44,7 +46,7 @@ class FileTree
     }
 
     /**
-     * @param $path
+     * @param string $path
      *
      * @return array
      */
@@ -68,7 +70,7 @@ class FileTree
     }
 
     /**
-     * @param $initialOpeningFile
+     * @param string $initialOpeningFile
      *
      * @return string
      */

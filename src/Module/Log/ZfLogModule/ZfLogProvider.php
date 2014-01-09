@@ -12,9 +12,6 @@ use Ray\Di\ProviderInterface as Provide;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
 
-/**
- * Zend log provider
- */
 class ZfLogProvider implements Provide
 {
     use LogDirInject;

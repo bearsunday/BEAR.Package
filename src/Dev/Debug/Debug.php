@@ -44,7 +44,7 @@ class Debug
     }
 
     /**
-     * @param $level
+     * @param int $level
      *
      * @return array
      */
@@ -63,8 +63,8 @@ class Debug
     }
 
     /**
-     * @param $var
-     * @param $isCli
+     * @param mixed $var
+     * @param bool  $isCli
      *
      * @return string
      */
@@ -126,10 +126,10 @@ class Debug
     }
 
     /**
-     * @param $file
-     * @param $line
-     * @param $varName
-     * @param $method
+     * @param string $file
+     * @param int    $line
+     * @param string $varName
+     * @param string $method
      *
      * @return string
      */

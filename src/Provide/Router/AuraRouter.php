@@ -41,8 +41,6 @@ class AuraRouter implements RouterInterface
     private $map;
 
     /**
-     * Constructor
-     *
      * @param Map $map
      *
      * @Inject(optional=true)

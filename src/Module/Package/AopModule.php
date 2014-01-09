@@ -9,11 +9,11 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 use Ray\Di\Module\InjectorModule;
 
-/**
- * Package module
- */
 class AopModule extends AbstractModule
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         // Package module

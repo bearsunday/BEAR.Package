@@ -9,15 +9,10 @@ namespace BEAR\Package\Module\Log;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 
-/**
- * Zf2 log module
- */
 class ZfLogModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

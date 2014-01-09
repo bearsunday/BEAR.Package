@@ -11,9 +11,6 @@ use Aura\Input\Builder;
 use Aura\Input\Filter;
 use Ray\Di\ProviderInterface;
 
-/**
- * AuraForm provider
- */
 class AuraFormProvider implements ProviderInterface
 {
     /**

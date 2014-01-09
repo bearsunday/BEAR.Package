@@ -13,7 +13,7 @@ use BEAR\Resource\RequestInterface;
 use Nocarrier\Hal;
 
 /**
- * Request renderer
+ * HAL(Hypertext Application Language) renderer
  */
 class HalRenderer implements RenderInterface
 {

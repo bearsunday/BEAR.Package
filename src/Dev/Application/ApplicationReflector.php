@@ -50,6 +50,8 @@ class ApplicationReflector
     }
 
     /**
+     * Return resource list
+     *
      * @return array
      */
     public function getResources()
@@ -115,7 +117,7 @@ class ApplicationReflector
     /**
      * Create new resource
      *
-     * @param $uri
+     * @param string $uri
      *
      * @return int
      */
@@ -128,7 +130,7 @@ class ApplicationReflector
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      *
      * @return array [$filePath, $fileContents]
      * @throws InvalidUri
@@ -161,8 +163,8 @@ class ApplicationReflector
     }
 
     /**
-     * @param $path
-     * @param $contents
+     * @param string $path
+     * @param string $contents
      *
      * @return int size of file
      * @throws NotWritable

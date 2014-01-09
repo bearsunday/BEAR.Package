@@ -9,9 +9,6 @@ namespace BEAR\Package\Dev\Resource;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 
-/**
- * Resource log db
- */
 class ResourceLog
 {
     const TABLE_CLOSE = '</table></div>';
@@ -61,7 +58,7 @@ class ResourceLog
      * Return resource log
      *
      * @param \Zend\Db\Adapter\Adapter $db
-     * @param                          $page
+     * @param string                   $page
      *
      * @return array
      */
@@ -90,11 +87,11 @@ class ResourceLog
     }
 
     /**
-     * @param $logs
+     * @param mixed $logs array | arrayAccess
      *
      * @return string
      */
-    private function getTables($logs)
+    private function getTables(array $logs)
     {
         $tableBody = '';
         foreach ($logs as $log) {
@@ -122,7 +119,7 @@ EOT;
     }
 
     /**
-     * @param $code
+     * @param int $code
      *
      * @return string
      */
@@ -163,8 +160,8 @@ EOT;
     /**
      * Place meta info to header from log
      *
-     * @param $req
-     * @param $header
+     * @param string $req
+     * @param string $header
      *
      * @return array
      */

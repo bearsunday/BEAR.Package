@@ -10,14 +10,12 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
 /**
- * Hal render module
+ * Hal(Hypertext Application Language) render module
  */
 class HalModule extends AbstractModule
 {
     /**
-     * Configure
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

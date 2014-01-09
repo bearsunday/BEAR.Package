@@ -9,9 +9,6 @@ namespace BEAR\Package\Module\Database\Dbal\Interceptor;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
-/**
- * Log Interceptor
- */
 class TimeStamper implements MethodInterceptor
 {
     /**

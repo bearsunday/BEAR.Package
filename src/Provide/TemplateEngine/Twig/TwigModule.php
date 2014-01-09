@@ -9,15 +9,10 @@ namespace BEAR\Package\Provide\TemplateEngine\Twig;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
-/**
- * Smarty module
- */
 class TwigModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

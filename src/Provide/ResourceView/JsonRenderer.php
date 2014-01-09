@@ -10,9 +10,6 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
 
-/**
- * Request renderer
- */
 class JsonRenderer implements RenderInterface
 {
     /**

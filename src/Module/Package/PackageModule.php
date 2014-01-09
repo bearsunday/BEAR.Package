@@ -16,9 +16,6 @@ use Ray\Di\Di\Scope;
 use Ray\Di\Module\InjectorModule;
 use BEAR\Package\Module\Cache\CacheModule;
 
-/**
- * Package module
- */
 class PackageModule extends AbstractModule
 {
     private $config;
@@ -48,6 +45,9 @@ class PackageModule extends AbstractModule
         parent::__construct();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         // application

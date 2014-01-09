@@ -8,15 +8,10 @@ namespace BEAR\Package\Provide\ConsoleOutput;
 
 use Ray\Di\AbstractModule;
 
-/**
- * Output console module
- */
 class ConsoleOutputModule extends AbstractModule
 {
     /**
-     * Configure
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

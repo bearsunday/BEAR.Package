@@ -8,9 +8,6 @@ namespace BEAR\Package\Module\Database\Dbal\Interceptor;
 
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 
-/**
- * Interface for Db setter
- */
 interface DbSetterInterface
 {
     /**

@@ -14,9 +14,6 @@ use Ray\Aop\WeavedInterface;
 use ReflectionClass;
 use Ray\Di\Di\Inject;
 
-/**
- * Request renderer
- */
 class TemplateEngineRenderer implements TemplateEngineRendererInterface
 {
     /**

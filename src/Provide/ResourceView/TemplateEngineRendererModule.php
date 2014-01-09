@@ -8,15 +8,10 @@ namespace BEAR\Package\Provide\ResourceView;
 
 use Ray\Di\AbstractModule;
 
-/**
- * Resource renderer module - PROD
- */
 class TemplateEngineRendererModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

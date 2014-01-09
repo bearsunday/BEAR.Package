@@ -13,9 +13,6 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
 
-/**
- * Smarty adapter
- */
 class SmartyAdapter implements TemplateEngineAdapterInterface
 {
     use AdapterTrait;
@@ -35,8 +32,6 @@ class SmartyAdapter implements TemplateEngineAdapterInterface
     private $smarty;
 
     /**
-     * Constructor
-     *
      * Smarty $smarty
      *
      * @Inject

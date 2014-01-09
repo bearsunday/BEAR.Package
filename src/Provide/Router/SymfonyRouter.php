@@ -19,9 +19,6 @@ use Symfony\Component\Routing\RouteCollection;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-/**
- * Symfony Router
- */
 class SymfonyRouter implements RouterInterface
 {
 

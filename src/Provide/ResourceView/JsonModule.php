@@ -15,9 +15,7 @@ use Ray\Di\Scope;
 class JsonModule extends AbstractModule
 {
     /**
-     * Configure
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

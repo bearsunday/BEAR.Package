@@ -8,9 +8,6 @@ namespace BEAR\Package\Dev\Web;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 
-/**
- * Dev web tools
- */
 class Web
 {
     /**
@@ -65,8 +62,8 @@ class Web
     /**
      * Return isDevWebService
      *
-     * @param $sapiName
-     * @param $requestUri
+     * @param string $sapiName
+     * @param string $requestUri
      *
      * @return bool
      */

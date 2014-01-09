@@ -13,9 +13,6 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
 
-/**
- * Smarty adapter
- */
 class TwigAdapter implements TemplateEngineAdapterInterface
 {
     use AdapterTrait;
@@ -40,8 +37,6 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     private $values;
 
     /**
-     * Constructor
-     *
      * @param Twig_Environment $twig
      *
      * @Inject

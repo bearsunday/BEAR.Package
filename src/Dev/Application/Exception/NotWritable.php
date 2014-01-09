@@ -8,9 +8,6 @@ namespace BEAR\Package\Dev\Application\Exception;
 
 use RuntimeException;
 
-/**
- * Not writable
- */
 class NotWritable extends RuntimeException implements ExceptionInterface
 {
 }

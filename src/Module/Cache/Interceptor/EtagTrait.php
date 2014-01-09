@@ -6,9 +6,6 @@
  */
 namespace BEAR\Package\Module\Cache\Interceptor;
 
-/**
- * EtagTrait
- */
 trait EtagTrait
 {
     /**

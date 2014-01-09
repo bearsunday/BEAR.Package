@@ -9,9 +9,6 @@ namespace BEAR\Package\Provide\Application;
 use Ray\Aop\Bind;
 use Ray\Di\LoggerInterface;
 
-/**
- * Di logger
- */
 class DiLogger implements LoggerInterface
 {
     /**

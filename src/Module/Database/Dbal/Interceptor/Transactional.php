@@ -12,7 +12,7 @@ use Ray\Aop\MethodInvocation;
 use ReflectionProperty;
 
 /**
- * Transaction interceptor
+ * Db transaction interceptor
  */
 class Transactional implements MethodInterceptor
 {

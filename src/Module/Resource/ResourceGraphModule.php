@@ -11,13 +11,6 @@ use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
-/**
- * ResourceGraph Module
- *
- * + SQL Log
- * + Resource log
- * + Resource dev rendering
- */
 class ResourceGraphModule extends AbstractModule
 {
     /**

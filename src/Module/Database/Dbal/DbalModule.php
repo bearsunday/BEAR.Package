@@ -10,15 +10,10 @@ use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
 use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
 use Ray\Di\AbstractModule;
 
-/**
- * DBAL module
- */
 class DbalModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

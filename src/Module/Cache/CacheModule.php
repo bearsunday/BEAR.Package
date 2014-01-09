@@ -8,9 +8,6 @@ namespace BEAR\Package\Module\Cache;
 
 use Ray\Di\AbstractModule;
 
-/**
- * Cache module
- */
 class CacheModule extends AbstractModule
 {
     /**

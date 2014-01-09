@@ -15,14 +15,9 @@ use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-/**
- * Resource graph interceptor
- */
 final class ResourceGraph implements MethodInterceptor
 {
     /**
-     * Constructor
-     *
      * @param ResourceInterface $resource
      *
      * @Inject

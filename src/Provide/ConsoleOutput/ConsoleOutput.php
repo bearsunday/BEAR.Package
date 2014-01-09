@@ -11,9 +11,6 @@ use BEAR\Resource\Request;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use Guzzle\Parser\UriTemplate\UriTemplate;
 
-/**
- * Cli Output
- */
 final class ConsoleOutput implements ConsoleOutputInterface
 {
 

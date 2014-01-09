@@ -17,9 +17,9 @@ use Ray\Di\Injector;
 
 /**
  * Return application instance
- * 
- * @param $appName
- * @param $context
+ *
+ * @param string $appName
+ * @param string $context
  *
  * @return \BEAR\Sunday\Extension\Application\AppInterface
  */
