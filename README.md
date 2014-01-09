@@ -17,12 +17,12 @@ built-in web server for development
 
 for Sandbox web page
 
-    $ php bin/server.php apps/Demo/Sandbox
-    $ php bin/server.php --context=api --port=8081 apps/Demo/Sandbox
+    $ php bin/server.php apps/Demo.Sandbox
+    $ php bin/server.php --context=api --port=8081 apps/Demo.Sandbox
 
 or
 
-    $ php -S 0.0.0.0:8080 -t apps/Demo/Sandbox/var/www/ apps/Demo/Sandbox/bootstrap/contexts/dev.php
+    $ php -S 0.0.0.0:8080 -t apps/Demo.Sandbox/var/www/ apps/Demo.Sandbox/bootstrap/contexts/dev.php
 
 You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
 
@@ -32,7 +32,7 @@ for system admin page
 
 Virtual Host for Production
 ------------
-Set up a virtual host to point to the `{$PROJECT_PATH}/apps/Demo/Sandbox/var/www/` directory of the application.
+Set up a virtual host to point to the `{$PROJECT_PATH}/apps/Demo.Sandbox/var/www/` directory of the application.
 
 Console
 -------
@@ -40,7 +40,7 @@ Console
 ### web access
 ```bash
 
-$ cd {$PROJECT_PATH}/apps/Demo/Sandbox
+$ cd {$PROJECT_PATH}/apps/Demo.Sandbox
 $ php bin/web.php get /
     
 200 OK

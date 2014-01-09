@@ -44,13 +44,14 @@
         "nocarrier/hal":"0.9.*",
         "pagerfanta/pagerfanta":"1.*",
         "playmedia/smarty":"3.1.*",
-        "symfony/console":"2.0.*",
+        "symfony/console":"*",
         "symfony/http-foundation":"2.0.*",
         "symfony/routing": "2.2.*",
         "zendframework/zend-log":"2.1.*",
         "zendframework/zend-db": "2.1.*",
         "zendframework/zend-stdlib": "2.1.*",
-        "classpreloader/classpreloader": "1.*"
+        "classpreloader/classpreloader": "1.*",
+        "composer/composer": "1.0.0-alpha8"
     },
     "require-dev":{
         "printo/printo":"0.1.*",
@@ -61,11 +62,11 @@
     },
     "autoload":{
         "files": [
-            "src/BEAR/Package/Bootstrap/getApp.php",
-            "src/BEAR/Package/Bootstrap/registerLoader.php"
+            "src/Bootstrap/getApp.php",
+            "src/Bootstrap/registerLoader.php"
         ],
-        "psr-0":{
-            "BEAR\\Package":"src/"
+        "psr-4":{
+            "BEAR\\Package\\": "src/"
         }
     },
     "scripts"   :{
