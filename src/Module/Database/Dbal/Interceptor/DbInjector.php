@@ -15,9 +15,6 @@ use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-/**
- * Cache interceptor
- */
 final class DbInjector implements MethodInterceptor
 {
     /**
@@ -45,8 +42,6 @@ final class DbInjector implements MethodInterceptor
     private $slaveDb;
 
     /**
-     * Constructor
-     *
      * @param  array $masterDb
      * @@param array $slaveDb
      *

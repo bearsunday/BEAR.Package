@@ -21,7 +21,7 @@ use Ray\Aop\Weave;
 use Ray\Di\Di\Inject;
 
 /**
- * Output with using Symfony HttpFoundation
+ * Web response using Symfony HttpFoundation
  */
 final class HttpFoundation implements ResponseInterface
 {
@@ -72,8 +72,6 @@ final class HttpFoundation implements ResponseInterface
     private $isCli;
 
     /**
-     * Constructor
-     *
      * @param ConsoleOutputInterface $consoleOutput
      *
      * @Inject

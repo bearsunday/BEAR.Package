@@ -15,7 +15,7 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
- * Smarty3
+ * Smarty3 instance provider
  *
  * @see http://www.smarty.net/docs/
  */

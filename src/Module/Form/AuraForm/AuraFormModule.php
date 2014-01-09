@@ -8,11 +8,11 @@ namespace BEAR\Package\Module\Form\AuraForm;
 
 use Ray\Di\AbstractModule;
 
-/**
- * AuraForm module
- */
 class AuraFormModule extends AbstractModule
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this->bind('Aura\Input\Form')->toProvider(__NAMESPACE__ . '\AuraFormProvider');

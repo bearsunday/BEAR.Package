@@ -8,9 +8,6 @@ namespace BEAR\Package\Dev\Application\Exception;
 
 use RuntimeException;
 
-/**
- * New URI file already exists
- */
 class FileAlreadyExists extends RuntimeException implements ExceptionInterface
 {
 }

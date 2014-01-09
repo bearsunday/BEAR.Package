@@ -6,11 +6,6 @@
  */
 namespace BEAR\Package\Dev\Debug\Exception;
 
-/**
- * Debug exception
- *
- * @subpackge Dev
- */
 class Debug extends \RuntimeException
 {
 }

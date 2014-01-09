@@ -9,15 +9,10 @@ namespace BEAR\Package\Provide\ApplicationLogger;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 
-/**
- * Application logger module
- */
 class ApplicationLoggerModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

@@ -12,9 +12,6 @@ use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-/**
- * Cache load interceptor
- */
 class CacheLoader implements MethodInterceptor
 {
     use EtagTrait;
@@ -60,7 +57,7 @@ class CacheLoader implements MethodInterceptor
     /**
      * Set pager query key
      *
-     * @param $pagerKey
+     * @param string $pagerKey
      *
      * @return $this
      * @Inject(optional=true)

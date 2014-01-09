@@ -17,7 +17,7 @@ use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Inject;
 
 /**
- * Application
+ * Abstract Application
  */
 abstract class AbstractApp implements AppInterface
 {
@@ -71,8 +71,6 @@ abstract class AbstractApp implements AppInterface
     public $page;
 
     /**
-     * Constructor
-     *
      * @param InjectorInterface          $injector         Dependency Injector
      * @param ResourceInterface          $resource         Resource client
      * @param ExceptionHandlerInterface  $exceptionHandler Exception handler

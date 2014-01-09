@@ -11,9 +11,6 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrapView;
 use Pagerfanta\View\ViewInterface;
 
-/**
- * Paging query
- */
 class Pager
 {
     /**
@@ -54,8 +51,6 @@ class Pager
     private $routeGenerator;
 
     /**
-     * Constructor
-     *
      * @param DriverConnection $db
      * @param Pagerfanta       $pagerfanta
      */

@@ -4,8 +4,11 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Provide\Application\Exception;
+namespace BEAR\Package\Dev\Debug\Exception;
 
-class InvalidMode extends \LogicException implements ExceptionInterface
+/**
+ * Generic exception interface
+ */
+interface ExceptionInterface
 {
 }

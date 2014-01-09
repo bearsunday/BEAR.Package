@@ -10,14 +10,12 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 
 /**
- * Resource renderer module - DEV
+ * Resource renderer module for development
  */
 class DevRendererModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

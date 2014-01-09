@@ -10,9 +10,6 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Ray\Di\ProviderInterface as Provide;
 
-/**
- * PDO provider
- */
 class DbalProvider implements Provide
 {
     /**

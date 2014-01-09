@@ -9,15 +9,10 @@ namespace BEAR\Package\Module\WebContext;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
-/**
- * Aura.Web Context module
- */
 class AuraWebModule extends AbstractModule
 {
     /**
-     * Configure dependency binding
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

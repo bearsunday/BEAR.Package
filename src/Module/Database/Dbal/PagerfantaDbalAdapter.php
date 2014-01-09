@@ -10,13 +10,11 @@ use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Pagerfanta\Adapter\AdapterInterface;
 
 /**
- * DoctrineDbal adapter.
+ * Doctrine Dbal adapter for Pagerfanta
  */
 class PagerfantaDbalAdapter implements AdapterInterface
 {
     /**
-     * Constructor
-     *
      * @param DriverConnection $db
      * @param string           $query
      */

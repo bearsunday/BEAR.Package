@@ -8,9 +8,6 @@ namespace BEAR\Package\Module\Stub;
 
 use Ray\Di\AbstractModule;
 
-/**
- * StubModule
- */
 class StubModule extends AbstractModule
 {
     /**

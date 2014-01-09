@@ -11,7 +11,7 @@ use BEAR\Resource\LogWriterInterface;
 use BEAR\Resource\RequestInterface;
 
 /**
- * Writer collection
+ * Log writer collection
  */
 final class Collection implements LogWriterInterface
 {

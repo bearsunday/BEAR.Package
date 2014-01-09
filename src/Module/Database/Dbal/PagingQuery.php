@@ -44,8 +44,6 @@ class PagingQuery implements Countable, IteratorAggregate
     private $length;
 
     /**
-     * Constructor
-     *
      * @param DriverConnection $db
      * @param string           $query
      * @param array            $params

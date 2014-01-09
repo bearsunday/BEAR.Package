@@ -13,10 +13,14 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 /**
- * @param $packageDir
- * @param $appDir
+ * Register auto-loader
  *
- * @return mixed
+ * @param ClassLoader $loader
+ * @param string      $appName
+ * @param string      $appDir
+ * @param string      $packageDir
+ *
+ * @return ClassLoader
  */
 function registerLoader(ClassLoader $loader, $appName, $appDir, $packageDir)
 {
@@ -38,5 +42,6 @@ function registerLoader(ClassLoader $loader, $appName, $appDir, $packageDir)
     );
     AnnotationReader::addGlobalIgnoredName('noinspection');
     AnnotationReader::addGlobalIgnoredName('returns');
+
     return $loader;
 }

@@ -10,9 +10,6 @@ use BEAR\Sunday\Inject\LogInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
-/**
- * Cache interceptor interface
- */
 class Stub implements MethodInterceptor
 {
     use LogInject;
@@ -25,8 +22,6 @@ class Stub implements MethodInterceptor
     private $stub;
 
     /**
-     * Constructor
-     *
      * @param mixed $stub
      */
     public function __construct(array $stub)

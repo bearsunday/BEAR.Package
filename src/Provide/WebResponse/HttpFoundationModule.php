@@ -8,15 +8,10 @@ namespace BEAR\Package\Provide\WebResponse;
 
 use Ray\Di\AbstractModule;
 
-/**
- * Web response module
- */
 class HttpFoundationModule extends AbstractModule
 {
     /**
-     * Configure
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {

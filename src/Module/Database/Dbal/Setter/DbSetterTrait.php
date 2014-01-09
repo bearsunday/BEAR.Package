@@ -9,7 +9,7 @@ namespace BEAR\Package\Module\Database\Dbal\Setter;
 use Doctrine\DBAL\Driver\Connection;
 
 /**
- * Set Db
+ * Db setter trait
  */
 trait DbSetterTrait
 {

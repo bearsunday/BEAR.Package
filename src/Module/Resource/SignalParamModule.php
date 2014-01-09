@@ -12,9 +12,6 @@ use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
-/**
- * Signal parameter module
- */
 class SignalParamModule extends AbstractModule
 {
     /**
@@ -32,6 +29,9 @@ class SignalParamModule extends AbstractModule
         parent::__construct($module);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $signalParam = $this->requestInjection('BEAR\Resource\SignalParameterInterface');

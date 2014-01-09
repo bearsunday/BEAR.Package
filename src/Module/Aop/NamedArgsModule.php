@@ -9,15 +9,10 @@ namespace BEAR\Package\Module\Aop;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 
-/**
- * Exception handle module
- */
 class NamedArgsModule extends AbstractModule
 {
     /**
-     * Configure
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function configure()
     {
