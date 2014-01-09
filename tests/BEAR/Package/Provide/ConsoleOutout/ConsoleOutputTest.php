@@ -61,4 +61,13 @@ class ConsoleOutputTest extends \PHPUnit_Framework_TestCase
         $output = $this->consoleOutput->send($mock, 'Ok');
         $this->assertContains(ConsoleOutput::LABEL . '[BODY]' . ConsoleOutput::CLOSE . PHP_EOL . '*object', $output);
     }
+    public function testOutputBodyIsObjectInArray()
+    {
+        ob_start();
+        $mock = new MockResource;
+        $mock->body = ['key' => new \stdClass];
+        $output = $this->consoleOutput->send($mock, 'Ok');
+        $ob = ob_get_clean();
+        $this->assertContains(ConsoleOutput::LABEL . '[BODY]' . ConsoleOutput::CLOSE . PHP_EOL . ConsoleOutput::LABEL1 . 'key' . ConsoleOutput::CLOSE . ' => stdClass(', $output);
+    }
 }

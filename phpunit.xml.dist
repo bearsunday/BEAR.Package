@@ -7,7 +7,7 @@
          stopOnFailure="false"
          verbose="true">
     <testsuites>
-        <testsuite name="BEAR.Package.Apps">
+        <testsuite name="BEAR.Package">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
@@ -19,13 +19,12 @@
     </logging>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/BEAR/Package/Provide</directory>
+            <directory suffix=".php">src/Provide</directory>
             <exclude>
-                <directory prefix="Dev">src/BEAR/Package</directory>
-                <directory prefix="function.">src/BEAR/Package</directory>
-                <directory suffix="Module.php">src/BEAR/Package</directory>
-                <directory suffix="Provider.php">src/BEAR/Package</directory>
-                <file>/path/to/file</file>
+                <directory prefix="Dev">src</directory>
+                <directory prefix="function.">src</directory>
+                <directory suffix="Module.php">src</directory>
+                <directory suffix="Provider.php">src</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -27,28 +27,31 @@
     "require":{
         "php":">=5.4.0",
         "ext-curl":"*",
-        "bear/resource":"0.9.*",
-        "ray/di":"1.1.*",
-        "ray/aop":"1.1.*",
-        "bear/sunday":"0.9.*",
+        "bear/resource":"dev-develop",
+        "ray/aop":"dev-develop",
+        "ray/di":"dev-develop",
+        "bear/sunday":"dev-develop",
         "bear/ace":"1.0.*",
+        "ray/aop":"dev-develop",
         "aura/input": "1.1.*",
         "aura/view": "1.1.2",
         "aura/router":"1.0.*",
+        "aura/web":"1.*",
         "doctrine/annotations":"1.*",
         "doctrine/cache":"1.*",
         "doctrine/dbal":"2.3.*",
         "guzzle/guzzle":"3.3.*",
         "nocarrier/hal":"0.9.*",
         "pagerfanta/pagerfanta":"1.*",
-        "smarty/smarty":"3.1.*",
-        "symfony/console":"2.0.*",
+        "playmedia/smarty":"3.1.*",
+        "symfony/console":"*",
         "symfony/http-foundation":"2.0.*",
         "symfony/routing": "2.2.*",
         "zendframework/zend-log":"2.1.*",
         "zendframework/zend-db": "2.1.*",
         "zendframework/zend-stdlib": "2.1.*",
-        "classpreloader/classpreloader": "1.*"
+        "classpreloader/classpreloader": "1.*",
+        "composer/composer": "1.0.0-alpha8"
     },
     "require-dev":{
         "printo/printo":"0.1.*",
@@ -58,13 +61,16 @@
         "twig/twig":"1.*"
     },
     "autoload":{
-        "psr-0":{
-            "BEAR\\Package":"src/"
+        "files": [
+            "src/Bootstrap/getApp.php",
+            "src/Bootstrap/registerLoader.php"
+        ],
+        "psr-4":{
+            "BEAR\\Package\\": "src/"
         }
     },
     "scripts"   :{
-        "post-install-cmd": ["php bin/setup.php", "php bin/env.php"],
-        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate", "php apps/Sandbox/bin/compiler.php"]
+        "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate"]
     },
     "repositories":[
         {

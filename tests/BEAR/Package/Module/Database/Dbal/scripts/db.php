@@ -4,9 +4,8 @@
  *
  * @var PDO
  *
- * @global $_ENV['BEAR_DB_ID']
- * @global $_ENV['BEAR_DB_PASSWORD']
  */
-$id = isset($_ENV['BEAR_DB_ID']) ? $_ENV['BEAR_DB_ID'] : 'root';
-$password = isset($_ENV['BEAR_DB_PASSWORD']) ? $_ENV['BEAR_DB_PASSWORD'] : '';
-return new \PDO("mysql:host=localhost; dbname=blogbeartest", $id, $password);
+$db = new \PDO('sqlite::memory:');
+$db->query('CREATE TABLE "posts" (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,title VARCHAR(50),body TEXT,created DATETIME DEFAULT NULL,modified DATETIME DEFAULT NULL);');
+
+return $db;

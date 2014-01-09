@@ -9,9 +9,9 @@ return <<<EOT
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>BEAR IDE</title>
     <base href="{$view['base']}" target="">
-    <link href="index.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="css/index.css" rel="stylesheet" type="text/css" media="screen"/>
     <link href="jqueryFileTree/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen"/>
-    <link href="edit.css" rel="stylesheet" type="text/css"  media="screen"/>
+    <link href="css/edit.css" rel="stylesheet" type="text/css"  media="screen"/>
 </head>
 
 <body class="twoColHybLt" style="background-color:#DFE4EA">
@@ -29,13 +29,13 @@ return <<<EOT
         <div id="file_info"></div>
         <div id="label" class="editor_label"><span class="editor_file_save" id="save_now"> n/a </span></div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-        <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-        <script src="codeEdit.js" type="text/javascript" charset="utf-8"></script>
-        <script src="jquery.easing.js" type="text/javascript"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+        <script src="js/codeEdit.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.easing.js" type="text/javascript"></script>
+        <script src="js/init.js.php?root={$root}" type="text/javascript"></script>
         <script src="jqueryFileTree/jqueryFileTree.js" type="text/javascript"></script>
-        <script src="init.js.php?root={$root}" type="text/javascript"></script>
-        <script src="index.js?root={$root}" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script>
 </body>
 </html>
 EOT;

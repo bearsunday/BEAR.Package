@@ -6,7 +6,7 @@ use BEAR\Package\Provide\ApplicationLogger\ResourceLogOutput;
 use BEAR\Resource\Logger as ResourceLogger;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\Injector;
-use Sandbox\Module\AppModule;
+use Demo\Sandbox\Module\AppModule;
 use BEAR\Resource\LogWriterInterface;
 use Ray\Di\Di\Inject;
 
