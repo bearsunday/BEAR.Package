@@ -124,7 +124,6 @@ class AuraRouter implements RouterInterface
         return [$method, $pageUri, $query];
     }
 
-
     /**
      * Return request method
      *
