@@ -79,7 +79,7 @@ class Posts extends ResourceObject
             'body' => $body,
             'created' => $this->time
         ];
-        $r = $this->db->insert($this->table, $values);
+        $this->db->insert($this->table, $values);
         //
         $lastId = $this->db->lastInsertId('id');
         $this->code = Code::CREATED;

@@ -90,7 +90,7 @@ class AppPostsTest extends \PHPUnit_Extensions_Database_TestCase
     {
         // inc 1
         $before = $this->getConnection()->getRowCount('posts');
-        $res = $this->resource
+        $this->resource
             ->post
             ->uri('app://self/blog/posts')
             ->withQuery(['title' => 'test_title', 'body' => 'test_body'])
