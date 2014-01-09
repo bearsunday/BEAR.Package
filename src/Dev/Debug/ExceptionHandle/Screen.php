@@ -100,7 +100,6 @@ class Screen
         $row['statement'] = "...";
     }
 
-
     /**
      * Return files
      *

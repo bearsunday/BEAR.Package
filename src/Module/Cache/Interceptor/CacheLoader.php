@@ -33,7 +33,6 @@ class CacheLoader implements MethodInterceptor
      */
     const HEADER_CACHE = 'x-cache';
 
-
     /**
      * @var array
      */
