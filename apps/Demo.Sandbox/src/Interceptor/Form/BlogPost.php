@@ -34,7 +34,7 @@ class BlogPost implements MethodInterceptor
 
         // strip tags
         foreach ($args as &$arg) {
-            $param = strip_tags($arg);
+            strip_tags($arg);
         }
 
         // required title
