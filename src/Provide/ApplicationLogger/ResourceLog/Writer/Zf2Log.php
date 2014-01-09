@@ -26,7 +26,6 @@ final class Zf2Log implements LogWriterInterface
      */
     private $pageId;
 
-
     /**
      * @param \Ray\Di\ProviderInterface $provider
      *
