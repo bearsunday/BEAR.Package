@@ -1,0 +1,5 @@
+<dataset>
+<posts id="1" title="title1" body="body1" created="2012-05-15 07:33:51" modified="true" />
+<posts id="2" title="title2" body="body2" created="2012-05-15 07:33:52" modified="true" />
+<posts id="3" title="title3" body="body3" created="2012-05-15 07:33:53" modified="true" />
+</dataset>

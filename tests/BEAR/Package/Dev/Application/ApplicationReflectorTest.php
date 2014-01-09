@@ -51,7 +51,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function estGetResources(array $resources)
     {
-        $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo/Helloworld/bootstrap/instance.php';
+        $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo.Helloworld/bootstrap/instance.php';
         $this->assertInstanceOf('BEAR\Sunday\Extension\Application\AppInterface', $app);
         $resources = (new ApplicationReflector($app))->getResources();
         $this->assertSame(3, count($resources));
@@ -126,7 +126,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     {
         $uri = "page://self/hello";
         list($filePath,) = $this->appReflector->getNewResource($uri);
-        $this->assertContains('apps/Demo/Sandbox/src/Demo/Sandbox/Resource/Page/Hello.php', $filePath);
+        $this->assertContains('apps/Demo.Sandbox/src/Resource/Page/Hello.php', $filePath);
     }
 
     /**
@@ -135,7 +135,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
     public function testNewResourceFilePath(array $newResource)
     {
         $filePath = $newResource[1];
-        $this->assertContains('apps/Demo/Sandbox/src/Demo/Sandbox/Resource/Page/One/Two/Three/Resource.php', $filePath);
+        $this->assertContains('apps/Demo.Sandbox/src/Resource/Page/One/Two/Three/Resource.php', $filePath);
     }
 
 
