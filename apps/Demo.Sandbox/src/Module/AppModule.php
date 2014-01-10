@@ -45,8 +45,6 @@ class AppModule extends AbstractModule
      */
     public function __construct($context = 'prod')
     {
-        global $appDir;
-
         $appDir = dirname(dirname(__DIR__));
         $this->context = $context;
         $this->appDir = $appDir;
