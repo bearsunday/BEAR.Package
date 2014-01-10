@@ -7,6 +7,13 @@ $port = isset($opt['port']) ? $opt['port'] : '8080';
 $context = isset($opt['context']) ? $opt['context'] : 'dev';
 $php = isset($opt['php']) ? $opt['php'] : 'php';
 $router = dirname(__DIR__) . "/{$appDir}/bootstrap/contexts/{$context}.php";
+if (! file_exists($router)) {
+    $router = dirname(__DIR__) . "/{$appDir}/var/www/index.php";
+}
+
+if (! file_exists("{$appDir}/var/www")) {
+    error();
+}
 
 if (! file_exists($router)) {
     error("invalid context:{$context}");
@@ -24,7 +31,7 @@ proc_close($process);
 /**
  * @param string $msg
  */
-function error($msg = 'Usage: php bin/server.php <--port=port> <--context=context> <--php=php_bin_path> app-dir')
+function error($msg = 'Usage: php bin/server.php [--port=<port>] [--context=<context>] [--php=<php_bin_path>] <app-dir></app-dir>')
 {
     error_log($msg);
     exit(1);
