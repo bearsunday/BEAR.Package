@@ -34,7 +34,7 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Lead"
+                    "role": "Developer"
                 }
             ],
             "description": "Serialize any value for logging",
@@ -473,7 +473,7 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Developer"
+                    "role": "Lead"
                 }
             ],
             "description": "Ace online editor utility",
@@ -547,12 +547,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "b81e2a148828f85cff83ff0614aaf6953a6094a0"
+                "reference": "bb25f9981569c879a5eaa7989f988c9a338be714"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/b81e2a148828f85cff83ff0614aaf6953a6094a0",
-                "reference": "b81e2a148828f85cff83ff0614aaf6953a6094a0",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/bb25f9981569c879a5eaa7989f988c9a338be714",
+                "reference": "bb25f9981569c879a5eaa7989f988c9a338be714",
                 "shasum": ""
             },
             "require": {
@@ -584,7 +584,7 @@
                 "hypermedia",
                 "rest"
             ],
-            "time": "2014-01-04 01:46:17"
+            "time": "2013-11-09 13:43:20"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -673,8 +673,7 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -815,8 +814,7 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -888,8 +886,7 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -959,8 +956,7 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -1017,8 +1013,7 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -1036,7 +1031,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1910,7 +1905,7 @@
                 "zf2"
             ],
             "support": {
-                "source": "https://github.com/zendframework/Component_ZendLog/tree/release-2.1.5"
+                "source": "https://github.com/zendframework/Component_ZendLog/tree/release-2.1.4"
             },
             "time": "2013-03-12 17:41:19"
         },
