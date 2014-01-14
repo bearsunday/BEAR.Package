@@ -32,7 +32,7 @@ function compile($appDir) {
 
     $packageDir = dirname((__DIR__));
     $preLoader = $packageDir . '/vendor/bin/classpreloader.php';
-    $config = $appDir . '/var/lib//preloader/config.php';
+    $config = $appDir . '/var/lib/preloader/config.php';
     $output = $appDir . '/var/tmp/preloader/preload.php';
 
     $cmd = "php {$preLoader} compile --config={$config} --output={$output}";
