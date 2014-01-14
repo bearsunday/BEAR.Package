@@ -22,6 +22,10 @@ ob_start();
 // start
 xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
+if (! ini_get('xhprof.output_dir')) {
+    ini_set('xhprof.output_dir', '/tmp');
+}
+
 // stop
 register_shutdown_function(
     function () {
