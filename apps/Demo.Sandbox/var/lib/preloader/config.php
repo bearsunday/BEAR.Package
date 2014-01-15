@@ -14,11 +14,13 @@ $config = ClassLoader::getIncludes(
 
 // Add a regex filter that requires that a class does not match the filter
 $config
-    ->addExclusiveFilter('/Demo/Resource')
-    ->addExclusiveFilter('/Doctrine/Common\/Annotation/')
+    ->addExclusiveFilter('/src\/Dev/')
+    ->addExclusiveFilter('/Doctrine\/Common\/Annotation/')
     ->addExclusiveFilter('/FirePHP/')
     ->addExclusiveFilter('/PHPParser_*/')
+    ->addExclusiveFilter('/Smarty/')
     ->addExclusiveFilter('/Smarty_Internal_TemplateCompilerBase/')
-    ->addExclusiveFilter('/TokenParser/');
+    ->addExclusiveFilter('/TokenParser/')
+    ->addExclusiveFilter('/src\/Resource/');
 
 return $config;
