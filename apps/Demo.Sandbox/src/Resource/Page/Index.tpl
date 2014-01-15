@@ -10,8 +10,6 @@
     <title>BEAR.Sunday</title>
     <!-- Bootstrap core CSS -->
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/united/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="jumbotron.css" rel="stylesheet">
 </head>
 
 <body>
