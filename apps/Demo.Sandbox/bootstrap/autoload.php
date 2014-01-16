@@ -23,8 +23,7 @@ $loader = require $packageDir . '/vendor/autoload.php';
 \BEAR\Bootstrap\registerLoader(
     $loader,
     __NAMESPACE__,
-    $appDir,
-    $packageDir
+    $appDir
 );
 
 return $loader;

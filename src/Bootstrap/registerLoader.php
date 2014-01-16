@@ -18,28 +18,13 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
  * @param ClassLoader $loader
  * @param string      $appName
  * @param string      $appDir
- * @param string      $packageDir
  *
  * @return ClassLoader
  */
-function registerLoader(ClassLoader $loader, $appName, $appDir, $packageDir)
+function registerLoader(ClassLoader $loader, $appName, $appDir)
 {
     $loader->addPsr4($appName . '\\' , $appDir . '/src');
-    if (file_exists($appDir . '/vendor/composer/autoload_classmap.php')) {
-        $loader->addClassMap(require $appDir . '/vendor/composer/autoload_classmap.php');
-        $nameSpaces = require $appDir . '/vendor/composer/autoload_namespaces.php';
-        foreach ($nameSpaces as $prefix => $path) {
-            $loader->add($prefix, $path);
-        }
-    }
-    AnnotationRegistry::registerAutoloadNamespaces(
-        [
-            "Ray\Di\Di\\" => $packageDir . '/vendor/ray/di/src',
-            'BEAR\Sunday\Annotation' => $packageDir . '/vendor/bear/sunday/src',
-            'BEAR\Package\Annotation' => $packageDir . '/vendor/bear/sunday/src',
-            $appName => $appDir . '/src'
-        ]
-    );
+    AnnotationRegistry::registerLoader([$loader, 'loadClass']);
     AnnotationReader::addGlobalIgnoredName('noinspection');
     AnnotationReader::addGlobalIgnoredName('returns');
 
