@@ -41,6 +41,7 @@
             <arg value="pear.phpqatools.org/phpqatools" />
             <arg value="pear.netpirates.net/phpDox-alpha" />
             <arg value="pear.apigen.org/apigen" />
+            <arg value="pear.phpunit.de/DbUnit" />
         </exec>
     </target>
 
