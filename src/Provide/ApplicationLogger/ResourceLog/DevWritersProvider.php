@@ -17,20 +17,20 @@ use Zend\Log\Logger;
 /**
  * Writer provider
  */
-class WritersProvider implements ProviderInterface
+class DevWritersProvider implements ProviderInterface
 {
 
     use LogDirInject;
 
     /**
-     * @return Writer\Collection|object
+     * @return Collection
      */
     public function get()
     {
         $writers = new Collection(
             [
-            new Fire,
-            new Zf2Log(new Zf2LogProvider($this->logDir))
+                new Fire,
+                new Zf2Log(new Zf2LogProvider($this->logDir))
             ]
         );
 
