@@ -62,11 +62,6 @@ final class HttpFoundation implements ResponseInterface
     private $consoleOutput;
 
     /**
-     * @var AppLogger
-     */
-    private $appLogger;
-
-    /**
      * @var bool
      */
     private $isCli;
@@ -92,18 +87,6 @@ final class HttpFoundation implements ResponseInterface
         $this->isCli = $isCli;
 
         return $this;
-    }
-
-    /**
-     * Set application logger
-     *
-     * @param AppLogger $appLogger
-     *
-     * @Inject
-     */
-    public function setAppLogger(AppLogger $appLogger)
-    {
-        $this->appLogger = $appLogger;
     }
 
     /**

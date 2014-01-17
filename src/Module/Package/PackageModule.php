@@ -81,6 +81,7 @@ class PackageModule extends AbstractModule
 
         if ($this->context === 'dev') {
             $this->install(new DevResourceModule($this));
+            $this->install(new ProvideModule\ApplicationLogger\DevApplicationLoggerModule($this));
         }
         $this->install(new DbalModule($this));
 
