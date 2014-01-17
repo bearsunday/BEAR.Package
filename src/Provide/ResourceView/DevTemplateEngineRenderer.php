@@ -245,7 +245,7 @@ EOT;
         $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode($resourceObject->headers[CacheLoader::HEADER_CACHE], true) : false;
         if ($cache === false) {
             $labelColor = self::NO_CACHE;
-        } elseif ($cache['context'] === 'W') {
+        } elseif (isset($cache['context']) && $cache['context'] === 'W') {
             $labelColor = self::WRITE_CACHE;
         } else {
             $labelColor = self::READ_CACHE;
@@ -480,7 +480,7 @@ EOT;
         $iconTime = self::ICON_TIME;
 
         $life = $cache['life'] ? "{$cache['life']} sec" : 'Unlimited';
-        if ($cache['context'] === 'W') {
+        if (isset($cache['context']) && $cache['context'] === 'W') {
             $result .= "Write {$iconLife} {$life}";
         } else {
             if ($cache['life'] === false) {
