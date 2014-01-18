@@ -62,16 +62,6 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('this is body', $ob);
     }
 
-    public function testSend()
-    {
-
-    }
-    public function testSetAppLogger()
-    {
-        $null = $this->response->setAppLogger(new ApplicationLogger(new Logger));
-        $this->assertSame(null, $null);
-    }
-
     public function testRender()
     {
         $this->response->setIsCli(false);
