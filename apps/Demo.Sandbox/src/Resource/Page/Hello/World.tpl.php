@@ -11,9 +11,7 @@
 </head>
 
 <body>
-<div class="container">
-    <h1>{$greeting}</h1>
-</div>
-<p>powered by Smarty</p>
+    <h1><?= $this->greeting;?></h1>
+<p>powered by Aura.View</p>
 </body>
 </html>
