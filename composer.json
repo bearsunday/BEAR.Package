@@ -40,7 +40,7 @@
         "doctrine/annotations":"1.*",
         "doctrine/cache":"1.*",
         "doctrine/dbal":"2.3.*",
-        "guzzle/guzzle":"3.3.*",
+        "guzzle/guzzle":">=3.1.0,<3.9.0",
         "nocarrier/hal":"0.9.*",
         "pagerfanta/pagerfanta":"1.*",
         "playmedia/smarty":"3.1.*",
