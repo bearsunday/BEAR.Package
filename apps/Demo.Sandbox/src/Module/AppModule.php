@@ -10,6 +10,7 @@ use BEAR\Package\Module\Stub\StubModule;
 use BEAR\Package\Provide\ResourceView;
 use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
+use BEAR\Package\Provide\TemplateEngine\AuraView\AuraViewModule;
 use BEAR\Sunday\Module as SundayModule;
 use Demo\Sandbox\Module;
 use Ray\Di\AbstractModule;
@@ -63,7 +64,8 @@ class AppModule extends AbstractModule
 
         // install view package
         $this->install(new SmartyModule($this));
-        //$this->install(new TwigModule($this));
+//        $this->install(new TwigModule($this));
+//        $this->install(new AuraViewModule($this));
 
         // install optional package
         $this->install(new SignalParamModule($this, $this->params));
