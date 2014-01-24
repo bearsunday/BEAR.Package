@@ -5,7 +5,8 @@ php:
   - 5.5
 
 env:
- - DB=mysql
+ - GUZZLE_VERSION="3.1.*" DB=mysql
+ - GUZZLE_VERSION="~3.1" DB=mysql
 
 before_install:
  - composer selfupdate
@@ -16,6 +17,9 @@ before_install:
  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
  - pear config-set auto_discover 1
  - pear install pear.phpunit.de/DbUnit
+
+install:
+ - composer require guzzle/guzzle:${GUZZLE_VERSION}
 
 script:
  - phpunit --coverage-text
