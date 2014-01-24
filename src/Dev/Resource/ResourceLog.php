@@ -6,8 +6,7 @@
  */
 namespace BEAR\Package\Dev\Resource;
 
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\ResultSet\ResultSet;
+use Aura\Sql\ExtendedPdo;
 
 class ResourceLog
 {
@@ -31,23 +30,16 @@ class ResourceLog
      */
     public function toTable()
     {
-        $dbConfig = [
-            'driver' => 'Pdo_Sqlite',
-            'dsn' => 'sqlite:' . $this->file
-        ];
-        $db = new Adapter($dbConfig);
+        $pdo = new ExtendedPdo("sqlite:{$this->file}");
         try {
-            $pages = $db->query(
-                'SELECT DISTINCT extra_page FROM log ORDER BY timestamp DESC',
-                Adapter::QUERY_MODE_EXECUTE
-            )->toArray();
+            $pages = $pdo->fetchAll('SELECT DISTINCT extra_page FROM log ORDER BY timestamp DESC');
         } catch (\PDOException $e) {
             return '';
         }
         $html = '';
         foreach ($pages as $page) {
             $page = each($page)['value'];
-            $logs = $this->getPageLog($db, $page);
+            $logs = $this->getPageLog($pdo, $page);
             $html .= $this->getTables($logs);
         }
 
@@ -57,17 +49,16 @@ class ResourceLog
     /**
      * Return resource log
      *
-     * @param \Zend\Db\Adapter\Adapter $db
-     * @param string                   $page
+     * @param ExtendedPdo $db
+     * @param string      $page
      *
      * @return array
      */
-    private function getPageLog(Adapter $db, $page)
+    private function getPageLog(ExtendedPdo $db, $page)
     {
-        $result = $db->query(
-            'SELECT * FROM `log` WHERE `extra_page` = ' . "'{$page}' ORDER BY id ASC",
-            Adapter::QUERY_MODE_EXECUTE
-        )->toArray();
+        $result = $db->fetchAll(
+            'SELECT * FROM `log` WHERE `extra_page` = ' . "'{$page}' ORDER BY id ASC"
+        );
         $logs = [];
         $log = '';
         foreach ($result as $row) {
@@ -82,7 +73,6 @@ class ResourceLog
             unset($row['message']);
             $logs[] = $log;
         }
-
         return $logs;
     }
 
