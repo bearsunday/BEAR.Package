@@ -19,47 +19,41 @@
         }
     ],
     "provide":{
-        "bear/framework": "0.8.0"
+        "bear/framework": "0.9.0"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
     },
     "require":{
         "php":">=5.4.0",
-        "ext-curl":"*",
-        "bear/resource":"dev-develop",
         "ray/aop":"dev-develop",
         "ray/di":"dev-develop",
+        "bear/resource":"dev-develop",
         "bear/sunday":"dev-develop",
-        "bear/ace":"1.0.*",
-        "ray/aop":"dev-develop",
-        "aura/input": "1.1.*",
-        "aura/view": "1.1.2",
-        "aura/router":"1.0.*",
+
+        "aura/input": "1.*",
+        "aura/view": "1.*",
+        "aura/router":"1.*",
         "aura/web":"1.*",
-        "doctrine/annotations":"1.*",
-        "doctrine/cache":"1.*",
-        "doctrine/dbal":"2.3.*",
-        "guzzle/guzzle":"3.3.*",
-        "nocarrier/hal":"0.9.*",
+        "aura/sql":"2.*@dev",
+        "doctrine/dbal":"2.*",
         "pagerfanta/pagerfanta":"1.*",
-        "playmedia/smarty":"3.1.*",
-        "symfony/console":"*",
-        "symfony/http-foundation":"2.0.*",
-        "symfony/routing": "2.2.*",
-        "zendframework/zend-log":"2.1.*",
-        "zendframework/zend-db": "2.1.*",
-        "zendframework/zend-stdlib": "2.1.*",
-        "classpreloader/classpreloader": "1.*"
+        "playmedia/smarty":"3.*",
+        "symfony/routing": "2.*",
+        "twig/twig":"1.*"
     },
     "require-dev":{
-        "printo/printo":"0.1.*",
+        "bear/ace":"1.*",
+        "classpreloader/classpreloader": "1.*",
+        "dg/adminer-custom": "1.*",
         "facebook/xhprof":"dev-master",
         "firephp/firephp-core":"*",
-        "dg/adminer-custom": "1.*",
-        "twig/twig":"1.*",
         "phpunit/phpunit": "3.7.*",
-        "phpunit/dbunit": "1.3.*"
+        "phpunit/dbunit": "1.3.*",
+        "printo/printo":"0.*",
+        "zendframework/zend-log":"2.*",
+        "zendframework/zend-db": "2.*",
+        "zendframework/zend-stdlib": "2.*"
     },
     "autoload":{
         "files": [
