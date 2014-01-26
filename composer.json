@@ -40,7 +40,8 @@
         "pagerfanta/pagerfanta":"1.*",
         "playmedia/smarty":"3.*",
         "symfony/routing": "2.*",
-        "twig/twig":"1.*"
+        "twig/twig":"1.*",
+        "koriym/fusion-cache":"*"
     },
     "require-dev":{
         "bear/ace":"1.*",

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "49ddbd55944f5fb3a9da268486e18d5a",
+    "hash": "62810a3716de06b06a46e5eb84dcef7e",
     "packages": [
         {
             "name": "any/serializer",
@@ -1178,6 +1178,49 @@
             "time": "2013-12-05 23:39:20"
         },
         {
+            "name": "koriym/fusion-cache",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koriym/Koriym.FusionCache.git",
+                "reference": "916584d20e4c544eb3ac0f88b2a6fc1aecba1038"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koriym/Koriym.FusionCache/zipball/916584d20e4c544eb3ac0f88b2a6fc1aecba1038",
+                "reference": "916584d20e4c544eb3ac0f88b2a6fc1aecba1038",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/cache": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Koriym\\FusionCache": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Memory+File hybrid cache",
+            "homepage": "https://github.com/koriym/Koriym.FusionCache",
+            "keywords": [
+                "cache",
+                "doctrine"
+            ],
+            "time": "2014-01-26 02:46:50"
+        },
+        {
             "name": "nikic/php-parser",
             "version": "v0.9.4",
             "source": {
@@ -1588,56 +1631,6 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
             "time": "2013-12-28 08:12:03"
-        },
-        {
-            "name": "symfony/http-foundation",
-            "version": "v2.4.1",
-            "target-dir": "Symfony/Component/HttpFoundation",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
-                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\HttpFoundation\\": ""
-                },
-                "classmap": [
-                    "Symfony/Component/HttpFoundation/Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony HttpFoundation Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-01-05 02:10:50"
         },
         {
             "name": "symfony/routing",
@@ -2557,6 +2550,56 @@
             "time": "2014-01-01 08:14:50"
         },
         {
+            "name": "symfony/http-foundation",
+            "version": "v2.4.1",
+            "target-dir": "Symfony/Component/HttpFoundation",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/HttpFoundation.git",
+                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
+                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\HttpFoundation\\": ""
+                },
+                "classmap": [
+                    "Symfony/Component/HttpFoundation/Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony HttpFoundation Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-01-05 02:10:50"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v2.4.1",
             "target-dir": "Symfony/Component/Yaml",
@@ -2801,10 +2844,10 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bear/resource": 20,
-        "bear/sunday": 20,
         "ray/aop": 20,
         "ray/di": 20,
+        "bear/resource": 20,
+        "bear/sunday": 20,
         "aura/sql": 20,
         "facebook/xhprof": 20
     },

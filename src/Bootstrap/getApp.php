@@ -12,34 +12,60 @@ use BEAR\Package\Dev\Application\ApplicationReflector;
 use BEAR\Package\Provide\Application\AbstractApp;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\FilesystemCache;
+use PHPParser_PrettyPrinter_Default;
+use Ray\Aop\Bind;
+use Ray\Aop\Compiler;
+use Ray\Di\Annotation;
 use Ray\Di\CacheInjector;
+use Ray\Di\Config;
+use Ray\Di\Container;
+use Ray\Di\Definition;
+use Ray\Di\Forge;
 use Ray\Di\Injector;
+use Ray\Di\Logger as DiLogger;
+use Koriym\FusionCache\DoctrineCache as FusionCache;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * Return application instance
  *
- * @param string $appName
- * @param string $context
+ * @param $appName
+ * @param $context
+ * @param null $tmpDir
  *
- * @return \BEAR\Sunday\Extension\Application\AppInterface
+ * @return \BEAR\Sunday\Extension\Application\AppInterface|object
  */
-function getApp($appName, $context)
+function getApp($appName, $context, $tmpDir = null)
 {
-    $injector = function () use ($appName, $context) {
+    $tmpDir ?: sys_get_temp_dir();
+    $injector = function () use ($appName, $context, $tmpDir) {
         $appModule = "{$appName}\Module\AppModule";
-        return Injector::create([new $appModule($context)]);
+        return new Injector(
+            new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))),
+            new $appModule,
+            new Bind,
+            new Compiler(
+                $tmpDir,
+                new PHPParser_PrettyPrinter_Default
+            ),
+            new DiLogger
+        );
     };
-
     $initialization = function (AbstractApp $app) use ($context) {
-        //$diLog = (string)$app->injector . PHP_EOL . (string)$app->injector->getLogger();
+        $diLog = (string)$app->injector . PHP_EOL . (string)$app->injector->getLogger();
+        $logger = $app->injector->getInstance('Guzzle\Log\LogAdapterInterface');
+        /** @var $logger \Guzzle\Log\LogAdapterInterface */
+        $logger->log($diLog);
         if ($context === 'prod') {
             (new ApplicationReflector($app))->compileAllResources();
         }
     };
-    $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache(sys_get_temp_dir());
+
+    $cache = function_exists('apc_fetch') ?
+        new FusionCache(new ApcCache, function () use ($tmpDir) {return new FilesystemCache($tmpDir);})
+        : new FilesystemCache($tmpDir);
     $injector = new CacheInjector($injector, $initialization, $appName . $context, $cache);
     $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
-
     /* @var $app \BEAR\Sunday\Extension\Application\AppInterface */
     return $app;
 }
