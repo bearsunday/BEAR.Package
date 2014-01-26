@@ -65,8 +65,8 @@ class AppModule extends AbstractModule
         $this->install(new PackageModule('Demo\Sandbox\App', $this->context, $this->constants));
 
         // install view package
-//        $this->install(new SmartyModule($this));
-        $this->install(new TwigModule($this));
+        $this->install(new SmartyModule($this));
+//        $this->install(new TwigModule($this));
 //        $this->install(new AuraViewModule($this));
 
         // install optional package
