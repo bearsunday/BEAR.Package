@@ -59,7 +59,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
      */
     public function assignAll(array $values)
     {
-        $this->values = $values;
+        $this->values = $values + $this->values;
     }
 
     /**

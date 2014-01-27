@@ -32,7 +32,23 @@ class TwigProvider implements Provide
         $loader = new Twig_Loader_Filesystem(array('/', $this->libDir . '/twig/template'));
         $twig = new Twig_Environment($loader, array(
             'cache' => $this->tmpDir . '/twig/cache',
+            'debug' => true,
+            'autoescape' => false,
         ));
+        $twig->addExtension(new \Twig_Extension_Debug());
+        $function = new \Twig_SimpleFunction(
+            'href',
+            [$this, 'href'],
+            ['needs_context' => true]
+        );
+        $twig->addFunction($function);
         return $twig;
     }
+
+    public function href($context, $varName, $varValue)
+    {
+        /** @todo not yet implemented */
+        return 'href:' . $varValue;
+    }
 }
+
