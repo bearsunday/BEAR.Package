@@ -42,7 +42,7 @@ function getApp($appName, $context, $tmpDir = null)
         $appModule = "{$appName}\Module\AppModule";
         return new Injector(
             new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))),
-            new $appModule,
+            new $appModule($context),
             new Bind,
             new Compiler(
                 $tmpDir,
