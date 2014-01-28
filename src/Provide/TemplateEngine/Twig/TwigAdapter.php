@@ -34,7 +34,7 @@ class TwigAdapter implements TemplateEngineAdapterInterface
     /**
      * @var array
      */
-    private $values;
+    private $values = [];
 
     /**
      * @param Twig_Environment $twig
