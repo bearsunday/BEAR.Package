@@ -31,7 +31,7 @@ proc_close($process);
 /**
  * @param string $msg
  */
-function error($msg = 'Usage: php bin/server.php [--port=<port>] [--context=<context>] [--php=<php_bin_path>] <app-dir></app-dir>')
+function error($msg = 'Usage: php bin/server.php [--port=<port>] [--context=<context>] [--php=<php_bin_path>] <app-dir>)
 {
     error_log($msg);
     exit(1);
