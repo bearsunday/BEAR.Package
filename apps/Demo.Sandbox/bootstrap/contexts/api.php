@@ -20,6 +20,17 @@
 use BEAR\Resource\Exception\Parameter as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFound as NotFound;
 
+ini_set('html_errors', false);
+ini_set('display_errors', false);
+
+// System startup error handler
+set_exception_handler(function (\Exception $e) {
+    http_response_code(503);
+    echo 'Service Unavailable' . PHP_EOL;
+    error_log($e);
+    exit(1);
+});
+
 //
 // The cache is cleared on each request via the following script. We understand that you may want to debug
 // your application with caching turned on. When doing so just comment out the following.
@@ -41,11 +52,19 @@ $app = require dirname(dirname(__DIR__)) . '/bootstrap/instance.php';
 if (PHP_SAPI === 'cli') {
     $app->router->setArgv($argv);
     $uri = $argv[2];
-    parse_str((isset(parse_url($uri)['query']) ? parse_url($uri)['query'] : ''), $get);
+    parse_str((isset(parse_url($uri)['query']) ? parse_url($uri)['query'] : ''), $query);
+    list($method,) = $app->router->match();
 } else {
-    $pathInfo = $_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : '/index';
-    $uri = 'app://self' . $pathInfo;
-    $get = $_GET;
+    list($method, $pagePath, $query) = $app->router->match();
+
+    // URI rewrite (external URI to internal URI)
+    // http://{host}/app/index -> app://self/index
+    $firstSlashPos = strpos($pagePath, '/');
+    $uri = sprintf(
+        "%s://%s",
+        substr($pagePath, 0, $firstSlashPos),
+        substr($pagePath, $firstSlashPos)
+    );
 }
 
 //
@@ -53,8 +72,7 @@ if (PHP_SAPI === 'cli') {
 // On failure trigger the error handler.
 //
 try {
-    list($method,) = $app->router->match();
-    $app->page = $app->resource->$method->uri($uri)->withQuery($get)->eager->request();
+    $app->page = $app->resource->$method->uri($uri)->withQuery($query)->eager->request();
 } catch (NotFound $e) {
     $code = 404;
     $body = 'Not Found';
@@ -82,9 +100,13 @@ OK: {
 ERROR: {
     if (PHP_SAPI === 'cli') {
         $app->exceptionHandler->handle($e);
-        exit;
+        exit(1);
     }
     http_response_code($code);
-    echo $body;
+    echo json_encode([
+            'error' => $code,
+            'message' => $body
+        ], JSON_PRETTY_PRINT) . PHP_EOL;
+    error_log($e);
     exit(1);
 }
