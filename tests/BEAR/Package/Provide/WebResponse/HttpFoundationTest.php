@@ -2,16 +2,15 @@
 
 namespace BEAR\Package\Provide\WebResponse;
 
-use BEAR\Package\Provide\ApplicationLogger\ApplicationLogger;
 use BEAR\Resource\BodyArrayAccessTrait;
 use BEAR\Resource\ResourceObject;
 use Ray\Aop\Weaver;
 use Ray\Aop\Bind;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Provide\ResourceView\HalRenderer;
-use BEAR\Resource\AbstractObject;
-use BEAR\Package\Provide\WebResponse\HttpFoundation;
-use BEAR\Resource\Logger;
+use BEAR\Package\Provide\ResourceView\HalFactory;
+use BEAR\Resource\Uri;
+use BEAR\Package\Provide\ResourceView\SchemeFirstPathUriConverter;
 use BEAR\Resource\RenderTrait;
 
 class Ok extends ResourceObject
@@ -67,11 +66,11 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $this->response->setIsCli(false);
         $response = new Ok;
         $response->uri = 'dummy://self/index';
-        $render = new HalRenderer;
+        $render = new HalRenderer(new HalFactory(new SchemeFirstPathUriConverter));
         ob_start();
         $this->response->setResource($response)->render($render)->send();
         $ob = ob_get_clean();
-        $this->assertContains('"href": "dummy://self/index"', $ob);
+        $this->assertContains('http://localhost/dummy/index/', $ob);
     }
 
     public function testWithWeavedResource()
@@ -80,11 +79,11 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $response = new Ok;
         $response->uri = 'dummy://self/index';
         $weavedResource = new Weaver($response, new Bind);
-        $render = new HalRenderer;
+        $render = new HalRenderer(new HalFactory(new SchemeFirstPathUriConverter));
         ob_start();
         $this->response->setResource($weavedResource)->render($render)->send();
         $ob = ob_get_clean();
-        $this->assertContains('"href": "dummy://self/index"', $ob);
+        $this->assertContains('http://localhost/dummy/index', $ob);
     }
 
     /**
