@@ -7,16 +7,36 @@
 namespace BEAR\Package\Provide\ResourceView;
 
 use BEAR\Resource\ResourceObject;
-use BEAR\Resource\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
-use Nocarrier\Hal;
+use BEAR\Resource\Uri;
+use Ray\Di\Di\Inject;
 
 /**
  * HAL(Hypertext Application Language) renderer
  */
 class HalRenderer implements RenderInterface
 {
+    /**
+     * @var HalFactoryInterface
+     */
+    protected $halFactory;
+
+    /**
+     * @var Uri
+     */
+    protected $uri;
+
+    /**
+     * @param HalFactoryInterface $halFactory
+     *
+     * @Inject
+     */
+    public function __construct(HalFactoryInterface $halFactory)
+    {
+        $this->halFactory = $halFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -32,8 +52,8 @@ class HalRenderer implements RenderInterface
         if (is_scalar($data)) {
             $data = ['value' => $data];
         }
-        $hal = $this->getHal($ro, $data);
-        $ro->view = $hal->asJson(true);
+        $hal = $this->halFactory->get($ro, $data);
+        $ro->view = $hal->asJson(true) . PHP_EOL;
         $ro->headers['content-type'] = 'application/hal+json; charset=UTF-8';
 
         return $ro->view;
@@ -53,31 +73,5 @@ class HalRenderer implements RenderInterface
                 }
             }
         );
-    }
-
-    /**
-     * Return hal
-     *
-     * @param ResourceObject $ro
-     * @param mixed          $data
-     *
-     * @return Hal
-     * @throws \BEAR\Package\Provide\ResourceView\Exception\HrefNotFound
-     */
-    private function getHal(ResourceObject $ro, $data)
-    {
-        $hal = new Hal($ro->uri, $data);
-        foreach ($ro->links as $rel => $link) {
-            $title = (isset($link[Link::TITLE])) ? $link[Link::TITLE] : null;
-            $attr = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ? [Link::TEMPLATED => true] : [];
-            if (isset($link[Link::HREF])) {
-                $title = $title ?: [];
-                $hal->addLink($rel, $link[Link::HREF], $title, $attr);
-                continue;
-            }
-            throw new Exception\HrefNotFound($rel);
-        }
-
-        return $hal;
     }
 }

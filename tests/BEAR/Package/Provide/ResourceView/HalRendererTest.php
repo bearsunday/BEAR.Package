@@ -4,11 +4,11 @@ namespace BEAR\Package\Provide\ResourceView;
 
 
 use BEAR\Package\MockResource;
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
+use BEAR\Resource\Uri;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var HalRenderer
      */
@@ -21,7 +21,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->halRenderer = new HalRenderer;
+        $this->halRenderer = new HalRenderer(new HalFactory(new SchemeFirstPathUriConverter));
         $this->resource = new MockResource;
         $this->resource->uri = 'dummy://self/index';
 
@@ -64,10 +64,10 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         $this->halRenderer->render($this->resource);
         $links = '"_links": {
         "self": {
-            "href": "dummy://self/index"
+            "href": "http://localhost/dummy/index/"
         },
         "rel1": {
-            "href": "page://self/rel1"
+            "href": "http://localhost/page/rel1/"
         }
     }';
         $this->assertContains($links, $this->resource->view);

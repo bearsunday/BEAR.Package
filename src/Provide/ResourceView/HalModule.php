@@ -8,6 +8,9 @@ namespace BEAR\Package\Provide\ResourceView;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+use BEAR\Resource\Uri;
+use Ray\Di\Di;
+use Ray\Di\Named;
 
 /**
  * Hal(Hypertext Application Language) render module
@@ -20,5 +23,7 @@ class HalModule extends AbstractModule
     protected function configure()
     {
         $this->bind('BEAR\Resource\RenderInterface')->to(__NAMESPACE__ . '\HalRenderer')->in(Scope::SINGLETON);
+        $this->bind('BEAR\Package\Provide\ResourceView\HalFactoryInterface')->to(__NAMESPACE__ . '\HalFactory');
+        $this->bind('BEAR\Package\Provide\ResourceView\UriConverterInterface')->to(__NAMESPACE__ . '\SchemeFirstPathUriConverter');
     }
 }
