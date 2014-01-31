@@ -37,7 +37,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
  */
 function getApp($appName, $context, $tmpDir = null)
 {
-    $tmpDir = $tmpDir ?: sys_get_temp_dir();
+    $tmpDir ?: sys_get_temp_dir();
     $injector = function () use ($appName, $context, $tmpDir) {
         $appModule = "{$appName}\Module\AppModule";
         return new Injector(
