@@ -8,13 +8,20 @@
 
 namespace BEAR\Package\Provide\ResourceView;
 
-interface UriConverterInterface
+interface UriMapperInterface
 {
+    /**
+     * @param $externalUri
+     *
+     * @return string
+     */
+    public function map($externalUri);
+
     /**
      * @param string $externalBaseUri
      * @param string $internalUri
      *
      * @return string
      */
-    public function convert($externalBaseUri, $internalUri);
+    public function reverseMap($externalBaseUri, $internalUri);
 }

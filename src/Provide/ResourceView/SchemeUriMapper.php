@@ -7,12 +7,30 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
-class SchemeFirstPathUriConverter implements UriConverterInterface
+class SchemeUriMapper implements UriMapperInterface
 {
+    /**
+     * @param $externalUri
+     *
+     * @return string
+     */
+    public function map($externalUri)
+    {
+
+        $firstSlashPos = strpos($pagePath, '/');
+        $uri = sprintf(
+            "%s://%s",
+            substr($pagePath, 0, $firstSlashPos),
+            substr($pagePath, $firstSlashPos)
+        );
+
+        return $uri;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function convert($externalBaseUri, $internalUri)
+    public function reverseMap($externalBaseUri, $internalUri)
     {
         $parsedUrl = parse_url($internalUri);
         $uri  = $externalBaseUri . "/{$parsedUrl['scheme']}{$parsedUrl['path']}/";

@@ -21,16 +21,16 @@ class HalFactory implements HalFactoryInterface
     protected $uri;
 
     /**
-     * @var SchemeFirstPathUriConverter
+     * @var SchemeUriMapper
      */
     protected $converter;
 
     /**
-     * @param UriConverterInterface $converter
+     * @param UriMapperInterface $converter
      *
      * @Inject
      */
-    public function __construct(UriConverterInterface $converter)
+    public function __construct(UriMapperInterface $converter)
     {
         $this->converter = $converter;
     }
@@ -48,14 +48,14 @@ class HalFactory implements HalFactoryInterface
             isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http',
             $_SERVER['HTTP_HOST']
         ) : 'http://localhost';
-        $selfUri = $this->converter->convert($baseUri, $ro->uri);
+        $selfUri = $this->converter->reverseMap($baseUri, $ro->uri);
         $hal = new Hal($selfUri, $data);
         foreach ($ro->links as $rel => $link) {
             $title = (isset($link[Link::TITLE])) ? $link[Link::TITLE] : null;
             $attr = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ? [Link::TEMPLATED => true] : [];
 
             if (isset($link[Link::HREF])) {
-                $uri = $this->converter->convert($baseUri, $link[Link::HREF]);
+                $uri = $this->converter->reverseMap($baseUri, $link[Link::HREF]);
                 $hal->addLink($rel, $uri, $attr);
 
                 continue;
