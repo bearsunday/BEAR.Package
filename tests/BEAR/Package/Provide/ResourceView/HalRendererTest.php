@@ -21,7 +21,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->halRenderer = new HalRenderer(new HalFactory(new SchemeFirstPathUriConverter));
+        $this->halRenderer = new HalRenderer(new HalFactory(new SchemeUriMapper));
         $this->resource = new MockResource;
         $this->resource->uri = 'dummy://self/index';
 

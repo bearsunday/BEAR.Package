@@ -10,7 +10,7 @@ use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Provide\ResourceView\HalRenderer;
 use BEAR\Package\Provide\ResourceView\HalFactory;
 use BEAR\Resource\Uri;
-use BEAR\Package\Provide\ResourceView\SchemeFirstPathUriConverter;
+use BEAR\Package\Provide\ResourceView\SchemeUriMapper;
 use BEAR\Resource\RenderTrait;
 
 class Ok extends ResourceObject
@@ -66,7 +66,7 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $this->response->setIsCli(false);
         $response = new Ok;
         $response->uri = 'dummy://self/index';
-        $render = new HalRenderer(new HalFactory(new SchemeFirstPathUriConverter));
+        $render = new HalRenderer(new HalFactory(new SchemeUriMapper));
         ob_start();
         $this->response->setResource($response)->render($render)->send();
         $ob = ob_get_clean();
@@ -79,7 +79,7 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $response = new Ok;
         $response->uri = 'dummy://self/index';
         $weavedResource = new Weaver($response, new Bind);
-        $render = new HalRenderer(new HalFactory(new SchemeFirstPathUriConverter));
+        $render = new HalRenderer(new HalFactory(new SchemeUriMapper));
         ob_start();
         $this->response->setResource($weavedResource)->render($render)->send();
         $ob = ob_get_clean();
