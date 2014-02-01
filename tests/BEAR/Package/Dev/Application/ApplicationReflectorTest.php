@@ -23,7 +23,11 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $app = clone $GLOBALS['_BEAR_APP'];
+        static $app;
+
+        if (! $app) {
+            $app = require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/apps/Demo.Sandbox/bootstrap/instance.php';
+        }
         $this->appReflector = new ApplicationReflector($app);
     }
 

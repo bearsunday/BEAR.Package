@@ -26,5 +26,3 @@ $loader->add('Demo\Sandbox', dirname(__DIR__) . '/apps/');
 $GLOBALS['_BEAR_TEST_DIR'] = __DIR__;
 $GLOBALS['_BEAR_TMP_DIR'] = __DIR__ . '/tmp';
 $GLOBALS['_BEAR_PACKAGE_DIR'] = dirname(__DIR__);
-
-$GLOBALS['_BEAR_APP'] = require dirname(__DIR__) . '/apps/Demo.Sandbox/bootstrap/instance.php';
