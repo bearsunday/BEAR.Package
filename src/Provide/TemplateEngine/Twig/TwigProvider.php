@@ -51,4 +51,3 @@ class TwigProvider implements Provide
         return 'href:' . $varValue;
     }
 }
-
