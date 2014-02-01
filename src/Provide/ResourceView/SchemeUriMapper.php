@@ -9,19 +9,13 @@ namespace BEAR\Package\Provide\ResourceView;
 
 class SchemeUriMapper implements UriMapperInterface
 {
-    /**
-     * @param $externalUri
-     *
-     * @return string
-     */
-    public function map($externalUri)
+    public function map($requestUri)
     {
-
-        $firstSlashPos = strpos($pagePath, '/');
+        $firstSlashPos = strpos($requestUri, '/');
         $uri = sprintf(
-            "%s://%s",
-            substr($pagePath, 0, $firstSlashPos),
-            substr($pagePath, $firstSlashPos)
+            "%s://self%s",
+            substr($requestUri, 0, $firstSlashPos),
+            substr($requestUri, $firstSlashPos)
         );
 
         return $uri;
@@ -30,10 +24,10 @@ class SchemeUriMapper implements UriMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function reverseMap($externalBaseUri, $internalUri)
+    public function reverseMap($httpHost, $internalUri)
     {
         $parsedUrl = parse_url($internalUri);
-        $uri  = $externalBaseUri . "/{$parsedUrl['scheme']}{$parsedUrl['path']}/";
+        $uri  = $httpHost . "/{$parsedUrl['scheme']}{$parsedUrl['path']}/";
         if (isset($parsedUrl['query'])) {
             $uri .= '?' . $parsedUrl['query'];
         }

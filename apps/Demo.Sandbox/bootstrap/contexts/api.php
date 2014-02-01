@@ -56,15 +56,7 @@ if (PHP_SAPI === 'cli') {
     list($method,) = $app->router->match();
 } else {
     list($method, $pagePath, $query) = $app->router->match();
-
-    // URI rewrite (external URI to internal URI)
-    // http://{host}/app/index -> app://self/index
-    $firstSlashPos = strpos($pagePath, '/');
-    $uri = sprintf(
-        "%s://%s",
-        substr($pagePath, 0, $firstSlashPos),
-        substr($pagePath, $firstSlashPos)
-    );
+    $uri = $app->uriMapper->map($pagePath);
 }
 
 //

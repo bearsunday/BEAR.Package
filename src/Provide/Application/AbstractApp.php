@@ -7,6 +7,7 @@
 namespace BEAR\Package\Provide\Application;
 
 use BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandlerInterface;
+use BEAR\Package\Provide\ResourceView\UriMapperInterface;
 use BEAR\Resource\ResourceObject as Page;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -71,6 +72,13 @@ abstract class AbstractApp implements AppInterface
     public $page;
 
     /**
+     * Uri Mapper
+     *
+     * @var UriMapperInterface
+     */
+    public $uriMapper;
+
+    /**
      * @param InjectorInterface          $injector         Dependency Injector
      * @param ResourceInterface          $resource         Resource client
      * @param ExceptionHandlerInterface  $exceptionHandler Exception handler
@@ -94,5 +102,15 @@ abstract class AbstractApp implements AppInterface
         $this->exceptionHandler = $exceptionHandler;
         $this->logger = $logger;
         $this->router = $router;
+    }
+
+    /**
+     * @param UriMapperInterface $uriMapper
+     *
+     * @Inject(optional  = true)
+     */
+    public function setUriMapper(UriMapperInterface $uriMapper)
+    {
+        $this->uriMapper = $uriMapper;
     }
 }
