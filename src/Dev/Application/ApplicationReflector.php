@@ -85,7 +85,7 @@ class ApplicationReflector
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($resourceDir), RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $item) {
             /** @var $item \SplFileInfo */
-            if ($item->isFile() && substr($item->getFilename(), -3) === 'php') {
+            if ($item->isFile() && $item->getExtension() === 'php' && strpos($item->getBasename('.php'), '.') === false) {
                 $uri = $this->getUri($item, $resourceDir);
                 if ($uri) {
                     $resources[] = $uri;
