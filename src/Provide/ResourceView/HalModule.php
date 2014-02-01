@@ -24,6 +24,6 @@ class HalModule extends AbstractModule
     {
         $this->bind('BEAR\Resource\RenderInterface')->to(__NAMESPACE__ . '\HalRenderer')->in(Scope::SINGLETON);
         $this->bind('BEAR\Package\Provide\ResourceView\HalFactoryInterface')->to(__NAMESPACE__ . '\HalFactory');
-        $this->bind('BEAR\Package\Provide\ResourceView\UriMapperInterface')->to(__NAMESPACE__ . '\SchemeUriConverter');
+        $this->bind('BEAR\Package\Provide\ResourceView\UriMapperInterface')->to(__NAMESPACE__ . '\SchemeUriMapper');
     }
 }

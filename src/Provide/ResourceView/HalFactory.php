@@ -42,12 +42,7 @@ class HalFactory implements HalFactoryInterface
      */
     public function get(ResourceObject $ro, $data)
     {
-        $baseUri = isset($_SERVER['HTTP_HOST']) ?
-        sprintf(
-            "%s://%s",
-            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http',
-            $_SERVER['HTTP_HOST']
-        ) : 'http://localhost';
+        $baseUri = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'http://localhost';
         $selfUri = $this->converter->reverseMap($baseUri, $ro->uri);
         $hal = new Hal($selfUri, $data);
         foreach ($ro->links as $rel => $link) {

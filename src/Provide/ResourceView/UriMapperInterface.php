@@ -11,17 +11,17 @@ namespace BEAR\Package\Provide\ResourceView;
 interface UriMapperInterface
 {
     /**
-     * @param $externalUri
+     * @param $externalUri "/blog/posts"
      *
      * @return string
      */
-    public function map($externalUri);
+    public function map($requestUri);
 
     /**
-     * @param string $externalBaseUri
+     * @param string $httpHost
      * @param string $internalUri
      *
      * @return string
      */
-    public function reverseMap($externalBaseUri, $internalUri);
+    public function reverseMap($httpHost, $internalUri);
 }
