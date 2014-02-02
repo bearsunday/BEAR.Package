@@ -42,6 +42,24 @@ final class DbInjector implements MethodInterceptor
     private $slaveDb;
 
     /**
+     * Pager DB connection class
+     * 
+     * @var string
+     */
+    private $pagerClass = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
+
+    /**
+     * @param $pagerClass
+     *
+     * @Inject(optional = true)
+     * @Named("pager_class")
+     */
+    public function setPagerClass($pagerClass)
+    {
+        $this->pagerClass = $pagerClass;
+    }
+
+    /**
      * @param  array $masterDb
      * @@param array $slaveDb
      *
@@ -125,7 +143,7 @@ final class DbInjector implements MethodInterceptor
             return  DriverManager::getConnection($connectionParams);
         }
 
-        $connectionParams['wrapperClass'] = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
+        $connectionParams['wrapperClass'] = $this->pagerClass;
         $db = DriverManager::getConnection($connectionParams);
         /** @var $db \BEAR\Package\Module\Database\Dbal\PagerConnection */
         $db->setMaxPerPage($pagerAnnotation->limit);
