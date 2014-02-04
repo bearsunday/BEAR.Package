@@ -35,7 +35,7 @@ function compile($appDir) {
     $config = $appDir . '/var/lib/preloader/config.php';
     $output = $appDir . '/var/tmp/preloader/preload.php';
 
-    $cmd = "php {$preLoader} compile --config={$config} --output={$output}";
+    $cmd = "php {$preLoader} compile --strip_comments=0 --config={$config} --output={$output}";
 
     echo $cmd . PHP_EOL;
     passthru($cmd);

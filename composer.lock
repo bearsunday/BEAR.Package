@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "62810a3716de06b06a46e5eb84dcef7e",
+    "hash": "796e553069ebbdb392aed164331f64d3",
     "packages": [
         {
             "name": "any/serializer",
@@ -149,6 +149,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 },
                 {
@@ -175,13 +176,13 @@
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/auraphp/installer-default",
-                "reference": "1.0.0"
+                "url": "https://github.com/auraphp/installer-default.git",
+                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/installer-default/archive/1.0.0.zip",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/auraphp/installer-default/zipball/52f8de3670cc1ef45a916f40f732937436d028c8",
+                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8",
                 "shasum": ""
             },
             "type": "composer-installer",
@@ -318,6 +319,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -338,12 +340,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Sql.git",
-                "reference": "603daa4fed4bb559ca262d0436b33ca8f092cb8c"
+                "reference": "9c6509b350c10129979a2e0b8407ebbde68749cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Sql/zipball/603daa4fed4bb559ca262d0436b33ca8f092cb8c",
-                "reference": "603daa4fed4bb559ca262d0436b33ca8f092cb8c",
+                "url": "https://api.github.com/repos/auraphp/Aura.Sql/zipball/9c6509b350c10129979a2e0b8407ebbde68749cc",
+                "reference": "9c6509b350c10129979a2e0b8407ebbde68749cc",
                 "shasum": ""
             },
             "require": {
@@ -359,9 +361,9 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "autoload.php"
-                ]
+                "psr-4": {
+                    "Aura\\Sql\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -386,7 +388,7 @@
                 "sqlserver",
                 "sqlsrv"
             ],
-            "time": "2014-01-03 15:50:42"
+            "time": "2014-01-31 20:45:05"
         },
         {
             "name": "aura/view",
@@ -496,7 +498,7 @@
                     "homepage": "https://github.com/auraphp/Aura.Web/contributors"
                 },
                 {
-                    "name": "Pascal Borrelli",
+                    "name": "Pascal Borreli",
                     "email": "pascal@borreli.com"
                 }
             ],
@@ -515,12 +517,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "8035492f9998b88aa2cbd79e1bee4cbdd463ebc6"
+                "reference": "0f54ef8bc04edcb54702330bf8ceb245872ed275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/8035492f9998b88aa2cbd79e1bee4cbdd463ebc6",
-                "reference": "8035492f9998b88aa2cbd79e1bee4cbdd463ebc6",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/0f54ef8bc04edcb54702330bf8ceb245872ed275",
+                "reference": "0f54ef8bc04edcb54702330bf8ceb245872ed275",
                 "shasum": ""
             },
             "require": {
@@ -550,6 +552,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -564,7 +567,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-01-24 09:23:33"
+            "time": "2014-02-02 16:08:02"
         },
         {
             "name": "bear/sunday",
@@ -746,7 +749,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -762,16 +765,16 @@
         },
         {
             "name": "doctrine/collections",
-            "version": "v1.1",
+            "version": "v1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "560f29c39cfcfbcd210e5d549d993a39d898b04b"
+                "reference": "b99c5c46c87126201899afe88ec490a25eedd6a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/560f29c39cfcfbcd210e5d549d993a39d898b04b",
-                "reference": "560f29c39cfcfbcd210e5d549d993a39d898b04b",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/b99c5c46c87126201899afe88ec490a25eedd6a2",
+                "reference": "b99c5c46c87126201899afe88ec490a25eedd6a2",
                 "shasum": ""
             },
             "require": {
@@ -780,7 +783,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -813,7 +816,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -826,7 +829,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2013-03-07 12:15:54"
+            "time": "2014-02-03 23:07:43"
         },
         {
             "name": "doctrine/common",
@@ -1017,7 +1020,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1071,7 +1074,7 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1087,16 +1090,16 @@
         },
         {
             "name": "guzzle/guzzle",
-            "version": "v3.8.0",
+            "version": "v3.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69"
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
-                "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
                 "shasum": ""
             },
             "require": {
@@ -1134,8 +1137,8 @@
                 "phpunit/phpunit": "3.7.*",
                 "psr/log": "1.0.*",
                 "symfony/class-loader": "*",
-                "zendframework/zend-cache": "2.0.*",
-                "zendframework/zend-log": "2.0.*"
+                "zendframework/zend-cache": "<2.3",
+                "zendframework/zend-log": "<2.3"
             },
             "type": "library",
             "extra": {
@@ -1145,8 +1148,8 @@
             },
             "autoload": {
                 "psr-0": {
-                    "Guzzle\\Tests": "tests/",
-                    "Guzzle": "src/"
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1175,7 +1178,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-12-05 23:39:20"
+            "time": "2014-01-28 22:29:15"
         },
         {
             "name": "koriym/fusion-cache",
@@ -1479,12 +1482,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "b8b5347d913e9af2c57916b54e5146ff078a244f"
+                "reference": "20ba76380f01dfec12ccee7867b6d97247de5e27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/b8b5347d913e9af2c57916b54e5146ff078a244f",
-                "reference": "b8b5347d913e9af2c57916b54e5146ff078a244f",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/20ba76380f01dfec12ccee7867b6d97247de5e27",
+                "reference": "20ba76380f01dfec12ccee7867b6d97247de5e27",
                 "shasum": ""
             },
             "require": {
@@ -1518,7 +1521,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-01-18 11:02:51"
+            "time": "2014-01-29 19:50:29"
         },
         {
             "name": "ray/di",
@@ -1526,12 +1529,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "13f00a2a277133752b161e5c13c6d71de462e60b"
+                "reference": "4333cba477880d6aa3907bac7defa9d009b51506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/13f00a2a277133752b161e5c13c6d71de462e60b",
-                "reference": "13f00a2a277133752b161e5c13c6d71de462e60b",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/4333cba477880d6aa3907bac7defa9d009b51506",
+                "reference": "4333cba477880d6aa3907bac7defa9d009b51506",
                 "shasum": ""
             },
             "require": {
@@ -1576,7 +1579,7 @@
                 "injection",
                 "jsr"
             ],
-            "time": "2014-01-21 16:26:38"
+            "time": "2014-02-03 11:22:58"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1631,6 +1634,56 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
             "time": "2013-12-28 08:12:03"
+        },
+        {
+            "name": "symfony/http-foundation",
+            "version": "v2.4.1",
+            "target-dir": "Symfony/Component/HttpFoundation",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/HttpFoundation.git",
+                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
+                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\HttpFoundation\\": ""
+                },
+                "classmap": [
+                    "Symfony/Component/HttpFoundation/Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony HttpFoundation Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-01-05 02:10:50"
         },
         {
             "name": "symfony/routing",
@@ -1736,7 +1789,7 @@
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "name": "Armin Ronacher",
+                    "name": "Armin Ronacher2",
                     "email": "armin.ronacher@active-4.com"
                 }
             ],
@@ -1781,7 +1834,7 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Developer"
+                    "role": "Lead"
                 }
             ],
             "description": "Ace online editor utility",
@@ -1794,21 +1847,20 @@
         },
         {
             "name": "classpreloader/classpreloader",
-            "version": "1.0.1",
+            "version": "dev-wrap-namespace",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mtdowling/ClassPreloader.git",
-                "reference": "1a50f7945b725ff2c60f234e51407d1d6e7c77c5"
+                "url": "https://github.com/koriym/ClassPreloader.git",
+                "reference": "wrap-namespace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtdowling/ClassPreloader/zipball/1a50f7945b725ff2c60f234e51407d1d6e7c77c5",
-                "reference": "1a50f7945b725ff2c60f234e51407d1d6e7c77c5",
-                "shasum": ""
+                "url": "https://github.com/koriym/classpreloader/zipball/wrap-namespace",
+                "reference": null,
+                "shasum": null
             },
             "require": {
                 "nikic/php-parser": "*",
-                "php": ">=5.3.3",
                 "symfony/console": ">2.0",
                 "symfony/filesystem": ">2.0",
                 "symfony/finder": ">2.0"
@@ -1817,46 +1869,31 @@
                 "classpreloader.php"
             ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.0-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "ClassPreloader": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Helps class loading performance by generating a single PHP file containing all of the autoloaded files for a specific use case",
-            "keywords": [
-                "autoload",
-                "class",
-                "preload"
-            ],
-            "time": "2013-06-24 22:58:34"
+            "time": "2014-02-04 01:52:42"
         },
         {
             "name": "dg/adminer-custom",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/adminer-custom.git",
-                "reference": "d0d0f67e4aa03c3f7c1fc3898d1e179a0d22c8dc"
+                "reference": "aeed2dbc97bdaf134efded1e8e2869f079d70b4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/d0d0f67e4aa03c3f7c1fc3898d1e179a0d22c8dc",
-                "reference": "d0d0f67e4aa03c3f7c1fc3898d1e179a0d22c8dc",
+                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/aeed2dbc97bdaf134efded1e8e2869f079d70b4b",
+                "reference": "aeed2dbc97bdaf134efded1e8e2869f079d70b4b",
                 "shasum": ""
             },
             "type": "project",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Customization for the best database management tool written in PHP, Adminer",
-            "time": "2014-01-11 20:15:20"
+            "time": "2014-02-01 21:30:36"
         },
         {
             "name": "facebook/xhprof",
@@ -1991,22 +2028,22 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.13",
+            "version": "1.2.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "466e7cd2554b4e264c9e3f31216d25ac0e5f3d94"
+                "reference": "6ba4ed2895d538a039d5d5866edc4ec0424c7852"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/466e7cd2554b4e264c9e3f31216d25ac0e5f3d94",
-                "reference": "466e7cd2554b4e264c9e3f31216d25ac0e5f3d94",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ba4ed2895d538a039d5d5866edc4ec0424c7852",
+                "reference": "6ba4ed2895d538a039d5d5866edc4ec0424c7852",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "phpunit/php-file-iterator": ">=1.3.0@stable",
-                "phpunit/php-text-template": ">=1.1.1@stable",
+                "phpunit/php-text-template": ">=1.2.0@stable",
                 "phpunit/php-token-stream": ">=1.1.3@stable"
             },
             "require-dev": {
@@ -2048,7 +2085,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-09-10 08:14:32"
+            "time": "2014-02-03 07:44:47"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2097,16 +2134,16 @@
         },
         {
             "name": "phpunit/php-text-template",
-            "version": "1.1.4",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-text-template.git",
-                "reference": "5180896f51c5b3648ac946b05f9ec02be78a0b23"
+                "reference": "206dfefc0ffe9cebf65c413e3d0e809c82fbf00a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/5180896f51c5b3648ac946b05f9ec02be78a0b23",
-                "reference": "5180896f51c5b3648ac946b05f9ec02be78a0b23",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/206dfefc0ffe9cebf65c413e3d0e809c82fbf00a",
+                "reference": "206dfefc0ffe9cebf65c413e3d0e809c82fbf00a",
                 "shasum": ""
             },
             "require": {
@@ -2137,7 +2174,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2012-10-31 18:15:28"
+            "time": "2014-01-30 17:20:04"
         },
         {
             "name": "phpunit/php-timer",
@@ -2235,16 +2272,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.29",
+            "version": "3.7.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac"
+                "reference": "2f33258fa5a0c330515b7deba2bc040fa5c3953b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
-                "reference": "faeb2d9f15dc83830d2db5e4c67acf1d68c9b5ac",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2f33258fa5a0c330515b7deba2bc040fa5c3953b",
+                "reference": "2f33258fa5a0c330515b7deba2bc040fa5c3953b",
                 "shasum": ""
             },
             "require": {
@@ -2305,7 +2342,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-01-15 06:46:38"
+            "time": "2014-01-31 08:54:33"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2548,56 +2585,6 @@
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
             "time": "2014-01-01 08:14:50"
-        },
-        {
-            "name": "symfony/http-foundation",
-            "version": "v2.4.1",
-            "target-dir": "Symfony/Component/HttpFoundation",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
-                "reference": "6c6b8a7bcd7e2cc920cd6acace563fdbf121d844",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\HttpFoundation\\": ""
-                },
-                "classmap": [
-                    "Symfony/Component/HttpFoundation/Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony HttpFoundation Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-01-05 02:10:50"
         },
         {
             "name": "symfony/yaml",
@@ -2849,6 +2836,7 @@
         "bear/resource": 20,
         "bear/sunday": 20,
         "aura/sql": 20,
+        "classpreloader/classpreloader": 20,
         "facebook/xhprof": 20
     },
     "platform": {
