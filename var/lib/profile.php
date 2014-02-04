@@ -25,7 +25,6 @@ xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY)
 if (! ini_get('xhprof.output_dir')) {
     ini_set('xhprof.output_dir', '/tmp');
 }
-
 // stop
 register_shutdown_function(
     function () {
@@ -36,9 +35,8 @@ register_shutdown_function(
         }
         $id = (new XHProfRuns_Default)->save_run($xhprof, 'sunday');
         if ($id) {
-            $ob = ob_get_clean();
-            $replace = "<a style=\"position:absolute;right:20px; bottom:10px;\" class=\"btn btn btn-mini\" href=\"/xhprof_html/index.php?run={$id}&source=sunday\" target=\"_blank\">PROFILE</a></html>";
-            echo str_replace('</html>', $replace, $ob);
+            $link = "<a style=\"position:absolute;right:20px; top:10px;\" class=\"btn btn btn-mini\" href=\"/xhprof_html/index.php?run={$id}&source=sunday\" target=\"_blank\">PROFILE</a></html>";
+            echo $link;
         }
     }
 );
