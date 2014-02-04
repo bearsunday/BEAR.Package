@@ -1,6 +1,7 @@
 <?php
 
 use ClassPreloader\ClassLoader;
+use BEAR\Package\Dev\Application\ApplicationReflector;
 
 $appDir = dirname(dirname(dirname(__DIR__)));
 
@@ -8,7 +9,7 @@ $config = ClassLoader::getIncludes(
     function (ClassLoader $loader) use ($appDir) {
         $loader->register();
         $app = require $appDir . '/bootstrap/instance.php';
-        (new \BEAR\Package\Dev\Application\ApplicationReflector($app))->compileAllResources();
+        (new ApplicationReflector($app))->compileAllResources();
     }
 );
 
@@ -18,9 +19,8 @@ $config
     ->addExclusiveFilter('/Doctrine\/Common\/Annotation/')
     ->addExclusiveFilter('/FirePHP/')
     ->addExclusiveFilter('/PHPParser_*/')
-    ->addExclusiveFilter('/Smarty/')
-    ->addExclusiveFilter('/Smarty_Internal_TemplateCompilerBase/')
     ->addExclusiveFilter('/TokenParser/')
+    ->addExclusiveFilter('/RayAop/')
     ->addExclusiveFilter('/src\/Resource/');
 
 return $config;

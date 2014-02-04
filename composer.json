@@ -30,6 +30,7 @@
         "ray/di":"dev-develop",
         "bear/resource":"dev-develop",
         "bear/sunday":"dev-develop",
+        "koriym/fusion-cache":"*",
 
         "aura/input": "1.*",
         "aura/view": "1.*",
@@ -40,12 +41,12 @@
         "pagerfanta/pagerfanta":"1.*",
         "playmedia/smarty":"3.*",
         "symfony/routing": "2.*",
-        "twig/twig":"1.*",
-        "koriym/fusion-cache":"*"
+        "symfony/http-foundation": "2.*",
+        "twig/twig":"1.*"
     },
     "require-dev":{
         "bear/ace":"1.*",
-        "classpreloader/classpreloader": "1.*",
+        "classpreloader/classpreloader": "dev-wrap-namespace",
         "dg/adminer-custom": "1.*",
         "facebook/xhprof":"dev-master",
         "firephp/firephp-core":"*",
@@ -72,6 +73,28 @@
         {
             "type":"composer",
             "url":"http://packages.zendframework.com/"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "classpreloader/classpreloader",
+                "version": "dev-wrap-namespace",
+                "dist": {
+                    "url": "https://github.com/koriym/classpreloader/zipball/wrap-namespace",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/koriym/ClassPreloader.git",
+                    "type": "git",
+                    "reference": "wrap-namespace"
+                },
+                "require":{
+                    "symfony/console": ">2.0",
+                    "symfony/console": ">2.0",
+                    "symfony/filesystem": ">2.0",
+                    "symfony/finder": ">2.0",
+                    "nikic/php-parser": "*"                }
+            }
         }
     ]
 }
