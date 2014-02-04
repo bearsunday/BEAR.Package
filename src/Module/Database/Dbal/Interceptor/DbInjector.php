@@ -43,7 +43,7 @@ final class DbInjector implements MethodInterceptor
 
     /**
      * Pager DB connection class
-     * 
+     *
      * @var string
      */
     private $pagerClass = 'BEAR\Package\Module\Database\Dbal\PagerConnection';
@@ -60,7 +60,7 @@ final class DbInjector implements MethodInterceptor
     }
 
     /**
-     * @param  array $masterDb
+     * @param array $masterDb
      * @@param array $slaveDb
      *
      * @Inject
@@ -121,13 +121,14 @@ final class DbInjector implements MethodInterceptor
         } elseif ($this->sqlLogger instanceof SQLLogger) {
             $this->sqlLogger->stopQuery();
         }
-        if (! $pagerAnnotation) {
+        if (!$pagerAnnotation) {
             return $result;
         }
         $pagerData = $db->getPager();
         if ($pagerData) {
             $object->headers['pager'] = $pagerData;
         }
+
         return $result;
     }
 
@@ -139,8 +140,8 @@ final class DbInjector implements MethodInterceptor
      */
     private function getDb($pagerAnnotation, array $connectionParams)
     {
-        if (! $pagerAnnotation) {
-            return  DriverManager::getConnection($connectionParams);
+        if (!$pagerAnnotation) {
+            return DriverManager::getConnection($connectionParams);
         }
 
         $connectionParams['wrapperClass'] = $this->pagerClass;
