@@ -82,7 +82,6 @@ abstract class AbstractApp implements AppInterface
      * @param InjectorInterface          $injector         Dependency Injector
      * @param ResourceInterface          $resource         Resource client
      * @param ExceptionHandlerInterface  $exceptionHandler Exception handler
-     * @param ApplicationLoggerInterface $logger           Application logger
      * @param ResponseInterface          $response         Web / Console response
      * @param RouterInterface            $router           URI Router
      *
@@ -92,7 +91,6 @@ abstract class AbstractApp implements AppInterface
         InjectorInterface $injector,
         ResourceInterface $resource,
         ExceptionHandlerInterface $exceptionHandler,
-        ApplicationLoggerInterface $logger,
         ResponseInterface $response,
         RouterInterface $router
     ) {
@@ -100,7 +98,6 @@ abstract class AbstractApp implements AppInterface
         $this->resource = $resource;
         $this->response = $response;
         $this->exceptionHandler = $exceptionHandler;
-        $this->logger = $logger;
         $this->router = $router;
     }
 
@@ -113,4 +110,15 @@ abstract class AbstractApp implements AppInterface
     {
         $this->uriMapper = $uriMapper;
     }
+
+    /**
+     * @param ApplicationLoggerInterface $logger
+     *
+     * @Inject(optional  = true)
+     */
+    public function setApplicationLogger(ApplicationLoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
 }
