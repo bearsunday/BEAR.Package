@@ -13,7 +13,7 @@ $response = $app
     ->resource
     ->get
     ->uri('page://self/hello')
-    ->withQuery(['name' => 'World !'])
+    ->withQuery($_GET)
     ->eager
     ->request();
 

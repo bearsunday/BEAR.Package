@@ -2,12 +2,16 @@
 
 namespace Demo\Helloworld;
 
-use BEAR\Package\Provide\Application\AbstractApp;
 use BEAR\Resource\ResourceInterface;
 use Ray\Di\Di\Inject;
 
-final class App extends AbstractApp
+final class App
 {
+    /**
+     * @var \BEAR\Resource\ResourceInterface
+     */
+    public $resource;
+
     /**
      * @param \BEAR\Resource\ResourceInterface $resource
      *

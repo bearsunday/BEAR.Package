@@ -6,8 +6,6 @@
 use Demo\Helloworld\Module\AppModule;
 use Ray\Di\Injector;
 
-ini_set('xdebug.max_nesting_level', 200);
-
 require_once __DIR__ . '/autoload.php';
 
 $hasApc = function_exists('apc_fetch');
