@@ -3,9 +3,10 @@
 namespace Demo\Helloworld;
 
 use BEAR\Resource\ResourceInterface;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\Di\Inject;
 
-final class App
+final class App implements AppInterface
 {
     /**
      * @var \BEAR\Resource\ResourceInterface
