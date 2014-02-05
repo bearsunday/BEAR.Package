@@ -25,8 +25,10 @@ register_shutdown_function(function() use ($time) {
             count(get_included_files())
         );
         file_put_contents(__DIR__ . '/include_files.txt', print_r(get_included_files(), true));
+        file_put_contents(__DIR__ . '/classes.txt', print_r(get_declared_classes(), true));
 
     });
+//require dirname(__DIR__) . '/bootstrap/instance.php';
 
 require dirname(__DIR__) . '/bootstrap/contexts/prod.php';
 
