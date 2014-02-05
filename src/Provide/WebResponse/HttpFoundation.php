@@ -6,13 +6,10 @@
  */
 namespace BEAR\Package\Provide\WebResponse;
 
-use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Resource\ResourceObject as Page;
-use BEAR\Resource\Logger;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Exception\InvalidResourceType;
-use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface as AppLogger;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogInject;
@@ -25,8 +22,6 @@ use Ray\Di\Di\Inject;
  */
 final class HttpFoundation implements ResponseInterface
 {
-    use LogInject;
-
     /**
      * Resource object
      *
