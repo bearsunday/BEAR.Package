@@ -60,7 +60,6 @@ class PackageModule extends AbstractModule
             $this->install(new NullCacheModule($this));
         }
         // Provide module (BEAR.Sunday extension interfaces)
-        $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
         $this->install(new ProvideModule\WebResponse\HttpFoundationModule);
         $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule);
         $this->install(new ProvideModule\Router\AuraRouterModule);
@@ -80,6 +79,7 @@ class PackageModule extends AbstractModule
         $this->install(new CacheModule($this));
 
         if ($this->context === 'dev') {
+            $this->install(new ProvideModule\ApplicationLogger\ApplicationLoggerModule);
             $this->install(new DevResourceModule($this));
             $this->install(new ProvideModule\ApplicationLogger\DevApplicationLoggerModule($this));
         }
