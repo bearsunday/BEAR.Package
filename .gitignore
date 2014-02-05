@@ -21,5 +21,6 @@ VERSION
 *Ray*Aop.php
 resource.db
 apps/Skeleton
-
 apps/Demo.Sandbox/bin/include_files.txt
+apps/Demo.Sandbox/bin/classes.txt
+apps/Demo.Sandbox/bin/mem.php
