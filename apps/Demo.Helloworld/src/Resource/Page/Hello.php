@@ -11,7 +11,7 @@ class Hello extends ResourceObject
      */
     public function onGet($name = 'World')
     {
-        $this->body = 'Hello ' . $name;
+        $this->body = 'Hello ' . htmlspecialchars($name, ENT_QUOTES|ENT_SUBSTITUTE);
         return $this;
     }
 }

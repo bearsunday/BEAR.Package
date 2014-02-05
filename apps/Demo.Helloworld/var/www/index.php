@@ -7,15 +7,23 @@
  * - page resource only
  */
 
+use BEAR\Resource\Exception\ResourceNotFound;
+
 $app = require dirname(dirname(__DIR__)) . '/bootstrap/instance.php';
 
-$response = $app
-    ->resource
-    ->get
-    ->uri('page://self/hello')
-    ->withQuery($_GET)
-    ->eager
-    ->request();
+try {
+    $response = $app
+        ->resource
+        ->{strtolower($_SERVER['REQUEST_METHOD'])}
+        ->uri('page://self' . $_SERVER['REQUEST_URI'])
+        ->withQuery($_GET)
+        ->eager
+        ->request();
+} catch (ResourceNotFound $e) {
+    http_response_code(404);
+    echo '404';
+    exit(1);
+}
 
 // output
 foreach ($response->headers as $header) {
