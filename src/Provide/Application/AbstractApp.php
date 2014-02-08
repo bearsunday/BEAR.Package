@@ -90,14 +90,12 @@ abstract class AbstractApp implements AppInterface
     public function __construct(
         InjectorInterface $injector,
         ResourceInterface $resource,
-        ExceptionHandlerInterface $exceptionHandler,
         ResponseInterface $response,
         RouterInterface $router
     ) {
         $this->injector = $injector;
         $this->resource = $resource;
         $this->response = $response;
-        $this->exceptionHandler = $exceptionHandler;
         $this->router = $router;
     }
 
@@ -116,9 +114,18 @@ abstract class AbstractApp implements AppInterface
      *
      * @Inject(optional  = true)
      */
-    public function setApplicationLogger(ApplicationLoggerInterface $logger)
+    public function setApplicationLogger(ApplicationLoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
 
+    /**
+     * @param ExceptionHandlerInterface $exceptionHandler
+     *
+     * @Inject(optional  = true)
+     */
+    public function setExceptionHandler(ExceptionHandlerInterface $exceptionHandler)
+    {
+        $this->exceptionHandler = $exceptionHandler;
+    }
 }
