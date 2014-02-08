@@ -14,6 +14,8 @@ require dirname(__DIR__) . '/apps/Demo.Sandbox/bin/clear.php';
 // loader
 error_reporting(E_ALL ^ E_NOTICE);
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
+/** @var $loader \Composer\Autoload\ClassLoader */
+$loader->addPsr4('Demo\Sandbox\\', dirname(__DIR__) . '/apps/Demo.Sandbox/src');
 error_reporting(E_ALL);
 /** @var $loader \Composer\Autoload\ClassLoader */
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
