@@ -103,14 +103,6 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
                     new Request($invoker)
                 )
             ),
-            new ExceptionHandler(
-                new WebResponse(new ConsoleOutput),
-                'BEAR/Package/Module/ExceptionHandle/template/view.php',
-                new ErrorPage
-            ),
-            new ApplicationLogger(
-                new Logger(new Serializer)
-            ),
             new WebResponse(
                 new ConsoleOutput
             ),

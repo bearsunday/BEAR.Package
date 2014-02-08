@@ -39,9 +39,9 @@ class PackageModule extends AbstractModule
      */
     public function __construct($appClass, $context, array $config)
     {
-        $this->config = $config;
-        $this->context = $context;
         $this->appClass = $appClass;
+        $this->context = $context;
+        $this->config = $config;
         parent::__construct();
     }
 
