@@ -10,7 +10,7 @@ use Aura\Router\RouteFactory;
 /**
  * Test class for Pager.
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class AuraRouterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AuraRouter
