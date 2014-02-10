@@ -58,7 +58,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_GET' => []
+            '_GET' => ['name' => 'foo']
         ];
         $this->map->add('my_path', '/this/is/my/path', [
             'values' => [
@@ -72,7 +72,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         list($method, $pageUri, $query) = $match;
         $this->assertSame($method, 'get');
         $this->assertSame($pageUri, 'this/is/my/path');
-        $this->assertSame($query, []);
+        $this->assertSame($query, ['name' => 'foo']);
     }
 
     public function testCorrectMethodNeeded()
@@ -106,7 +106,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/archive/2004-10'
             ],
-            '_GET' => []
+            '_GET' => ['name' => 'foo', 'month' => '2002-11']
         ];
         $this->map->add('archive', '/archive/{:month}', [
                 'parameter' =>[
@@ -123,7 +123,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         list($method, $pageUri, $query) = $match;
         $this->assertSame($method, 'get');
         $this->assertSame($pageUri, 'archive');
-        $this->assertSame($query, ['month' => '2004-10']);
+        $this->assertEquals($query, ['month' => '2004-10', 'name' => 'foo']);
     }
 
     public function testMethodOverrideGet()
