@@ -10,7 +10,7 @@ use Aura\Router\RouteFactory;
 /**
  * Test class for Pager.
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class AuraRouterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AuraRouter
@@ -58,21 +58,21 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_GET' => []
+            '_GET' => ['name' => 'foo']
         ];
         $this->map->add('my_path', '/this/is/my/path', [
             'values' => [
-                'method'=> 'get',
                 'path'  => 'this/is/my/path'
             ],
         ]);
+
         $router = new AuraRouter($this->map);
         $router->setGlobals($globals);
         $match = $router->match();
         list($method, $pageUri, $query) = $match;
         $this->assertSame($method, 'get');
         $this->assertSame($pageUri, 'this/is/my/path');
-        $this->assertSame($query, []);
+        $this->assertSame($query, ['name' => 'foo']);
     }
 
     public function testCorrectMethodNeeded()
@@ -106,7 +106,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/archive/2004-10'
             ],
-            '_GET' => []
+            '_GET' => ['name' => 'foo', 'month' => '2002-11']
         ];
         $this->map->add('archive', '/archive/{:month}', [
                 'parameter' =>[
@@ -123,7 +123,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         list($method, $pageUri, $query) = $match;
         $this->assertSame($method, 'get');
         $this->assertSame($pageUri, 'archive');
-        $this->assertSame($query, ['month' => '2004-10']);
+        $this->assertEquals($query, ['month' => '2004-10', 'name' => 'foo']);
     }
 
     public function testMethodOverrideGet()
@@ -154,6 +154,22 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $match = $this->router->match();
         list($method) = $match;
         $this->assertSame('get', $method);
+    }
+
+    public function testMethodOverridePostByHeader()
+    {
+        $globals = [
+            '_SERVER' => [
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/this/is/my/path',
+                'HTTP_X_HTTP_METHOD_OVERRIDE' => 'DELETE',
+            ],
+            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'put']
+        ];
+        $this->router->setGlobals($globals);
+        $match = $this->router->match();
+        list($method) = $match;
+        $this->assertSame('delete', $method);
     }
 
     public function testSettingArguments()

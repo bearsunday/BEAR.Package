@@ -26,6 +26,8 @@ class AuraRouter implements RouterInterface
 
     const METHOD_OVERRIDE_GET = '_method';
 
+    const METHOD_OVERRIDE_HEADER = 'HTTP_X_HTTP_METHOD_OVERRIDE';
+
     /**
      * $GLOBALS
      *
@@ -110,9 +112,11 @@ class AuraRouter implements RouterInterface
      */
     private function hasRoute(AuraRoute $route)
     {
-        $method = $route->values['method'];
+        list($method, $query) = $this->getMethodQuery();
+
+        $method = isset($route->values['method']) ? $route->values['method'] : $method;
+
         $pageUri = $route->values['path'];
-        $query = [];
         $keys = array_keys($route->params);
         foreach ($keys as $key) {
             $query[$key] = $route->values[$key];
@@ -133,17 +137,27 @@ class AuraRouter implements RouterInterface
 
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'GET' && isset($globals['_GET'][self::METHOD_OVERRIDE_GET])) {
             return [
-                $globals['_GET'][self::METHOD_OVERRIDE_GET],
+                strtolower($globals['_GET'][self::METHOD_OVERRIDE_GET]),
                 $globals['_GET']
             ];
-        } elseif ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
+        } 
+        
+        if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER])) {
             return [
-                $globals['_POST'][self::METHOD_OVERRIDE],
+                strtolower($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER]),
                 $globals['_POST']
             ];
         }
+
+        if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
+            return [
+                strtolower($globals['_POST'][self::METHOD_OVERRIDE]),
+                $globals['_POST']
+            ];
+        }
+
         return [
-            $globals['_SERVER']['REQUEST_METHOD'],
+            strtolower($globals['_SERVER']['REQUEST_METHOD']),
             $globals['_GET']
         ];
     }
