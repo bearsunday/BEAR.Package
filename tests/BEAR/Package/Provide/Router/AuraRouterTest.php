@@ -156,6 +156,22 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('get', $method);
     }
 
+    public function testMethodOverridePostByHeader()
+    {
+        $globals = [
+            '_SERVER' => [
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/this/is/my/path',
+                'HTTP_X_HTTP_METHOD_OVERRIDE' => 'DELETE',
+            ],
+            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'put']
+        ];
+        $this->router->setGlobals($globals);
+        $match = $this->router->match();
+        list($method) = $match;
+        $this->assertSame('delete', $method);
+    }
+
     public function testSettingArguments()
     {
         $argv = ['api.php','post', 'app://self/posts?title=hello&body="this is first post"'];
