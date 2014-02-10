@@ -26,6 +26,8 @@ class AuraRouter implements RouterInterface
 
     const METHOD_OVERRIDE_GET = '_method';
 
+    const METHOD_OVERRIDE_HEADER = 'HTTP_X_HTTP_METHOD_OVERRIDE';
+
     /**
      * $GLOBALS
      *
@@ -138,12 +140,22 @@ class AuraRouter implements RouterInterface
                 strtolower($globals['_GET'][self::METHOD_OVERRIDE_GET]),
                 $globals['_GET']
             ];
-        } elseif ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
+        } 
+        
+        if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER])) {
+            return [
+                strtolower($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER]),
+                $globals['_POST']
+            ];
+        }
+
+        if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
             return [
                 strtolower($globals['_POST'][self::METHOD_OVERRIDE]),
                 $globals['_POST']
             ];
         }
+
         return [
             strtolower($globals['_SERVER']['REQUEST_METHOD']),
             $globals['_GET']
