@@ -62,10 +62,10 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         ];
         $this->map->add('my_path', '/this/is/my/path', [
             'values' => [
-                'method'=> 'get',
                 'path'  => 'this/is/my/path'
             ],
         ]);
+
         $router = new AuraRouter($this->map);
         $router->setGlobals($globals);
         $match = $router->match();
