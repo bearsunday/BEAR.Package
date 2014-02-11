@@ -41,7 +41,8 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_GET' => []
+            '_GET' => [],
+            '_POST' => [],
         ];
         $this->router->setGlobals($globals);
         $match = $this->router->match();
@@ -58,7 +59,8 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_GET' => ['name' => 'foo']
+            '_GET' => ['name' => 'foo'],
+            '_POST' => [],
         ];
         $this->map->add('my_path', '/this/is/my/path', [
             'values' => [
@@ -82,7 +84,8 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/bar'
             ],
-            '_GET' => []
+            '_GET' => [],
+            '_POST' => [],
         ];
         $this->map->add('bar', '/bar', [
                 'values' => [
@@ -106,7 +109,8 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/archive/2004-10'
             ],
-            '_GET' => ['name' => 'foo', 'month' => '2002-11']
+            '_GET' => ['name' => 'foo', 'month' => '2002-11'],
+            '_POST' => [],
         ];
         $this->map->add('archive', '/archive/{:month}', [
                 'parameter' =>[
@@ -124,6 +128,33 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($method, 'get');
         $this->assertSame($pageUri, 'archive');
         $this->assertEquals($query, ['month' => '2004-10', 'name' => 'foo']);
+    }
+
+    public function testPostEntityBodyHandling()
+    {
+        $globals = [
+            '_SERVER' => [
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => '/archive/2004-10'
+            ],
+            '_GET' => ['q' => 'bar'],
+            '_POST' => ['name' => 'foo', 'month' => '2002-11'],
+        ];
+        $this->map->add('archive', '/archive/{:month}', [
+                'parameter' =>[
+                    'month' => '([0-9]{4}-[0-9]{2})'
+                ],
+                'values' => [
+                    'path'  => 'archive'
+                ],
+            ]);
+        $router = new AuraRouter($this->map);
+        $router->setGlobals($globals);
+        $match = $router->match();
+        list($method, $pageUri, $query) = $match;
+        $this->assertSame($method, 'post');
+        $this->assertSame($pageUri, 'archive');
+        $this->assertEquals($query, ['month' => '2004-10', 'name' => 'foo', 'q' => 'bar']);
     }
 
     public function testMethodOverrideGet()
@@ -148,12 +179,14 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'POST',
                 'REQUEST_URI' => '/this/is/my/path'
             ],
-            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'get']
+            '_GET' => ['q' => 'bar'],
+            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'get', 'name' => 'foo']
         ];
         $this->router->setGlobals($global);
         $match = $this->router->match();
-        list($method) = $match;
+        list($method, ,$query) = $match;
         $this->assertSame('get', $method);
+        $this->assertEquals(['name' => 'foo', 'q' => 'bar'], $query);
     }
 
     public function testMethodOverridePostByHeader()
@@ -164,12 +197,14 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_URI' => '/this/is/my/path',
                 'HTTP_X_HTTP_METHOD_OVERRIDE' => 'DELETE',
             ],
-            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'put']
+            '_GET' => ['q' => 'bar'],
+            '_POST' => [AuraRouter::METHOD_OVERRIDE => 'put', 'name' => 'foo']
         ];
         $this->router->setGlobals($globals);
         $match = $this->router->match();
-        list($method) = $match;
+        list($method, ,$query) = $match;
         $this->assertSame('delete', $method);
+        $this->assertEquals(['name' => 'foo', 'q' => 'bar'], $query);
     }
 
     public function testSettingArguments()

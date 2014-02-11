@@ -72,10 +72,12 @@ class AuraRouter implements RouterInterface
         if (count($argv) < 3) {
             throw new BadRequest('Usage: [get|post|put|delete] [uri]');
         }
-        $globals['_SERVER']['REQUEST_METHOD'] = $argv[1];
+        $globals['_SERVER']['REQUEST_METHOD'] = 'POST';
+        $globals['_SERVER'][self::METHOD_OVERRIDE_HEADER] = $argv[1];
         $globals['_SERVER']['REQUEST_URI'] = parse_url($argv[2], PHP_URL_PATH);
-        parse_str(parse_url($argv[2], PHP_URL_QUERY), $get);
-        $globals['_GET'] = $get;
+        parse_str(parse_url($argv[2], PHP_URL_QUERY), $query);
+        $globals['_GET'] = [];
+        $globals['_POST'] = $query;
         $this->globals = $globals;
 
         return $this;
@@ -145,20 +147,20 @@ class AuraRouter implements RouterInterface
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER])) {
             return [
                 strtolower($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER]),
-                $globals['_POST']
+                $globals['_GET'] + $globals['_POST']
             ];
         }
 
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
             return [
                 strtolower($globals['_POST'][self::METHOD_OVERRIDE]),
-                $globals['_POST']
+                $globals['_GET'] + $globals['_POST']
             ];
         }
 
         return [
             strtolower($globals['_SERVER']['REQUEST_METHOD']),
-            $globals['_GET']
+            $globals['_GET'] + $globals['_POST'],
         ];
     }
 
