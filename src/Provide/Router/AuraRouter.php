@@ -147,14 +147,14 @@ class AuraRouter implements RouterInterface
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER])) {
             return [
                 strtolower($globals['_SERVER'][self::METHOD_OVERRIDE_HEADER]),
-                $globals['_POST']
+                $globals['_GET'] + $globals['_POST']
             ];
         }
 
         if ($globals['_SERVER']['REQUEST_METHOD'] === 'POST' && isset($globals['_POST'][self::METHOD_OVERRIDE])) {
             return [
                 strtolower($globals['_POST'][self::METHOD_OVERRIDE]),
-                $globals['_POST']
+                $globals['_GET'] + $globals['_POST']
             ];
         }
 
