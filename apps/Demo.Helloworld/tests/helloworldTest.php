@@ -34,7 +34,9 @@ class HelloworldTest extends \PHPUnit_Framework_TestCase
     public function testBasic()
     {
         // resource request
-        $this->expectOutputString('Hello World !' . PHP_EOL);
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/Hello';
+        $this->expectOutputString('Hello World' . PHP_EOL);
         require dirname(__DIR__) . '/var/www/index.php';
     }
 
