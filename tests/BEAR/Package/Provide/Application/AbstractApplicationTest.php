@@ -10,11 +10,9 @@ use Aura\Signal\HandlerFactory;
 use Aura\Signal\Manager;
 use Aura\Signal\ResultCollection;
 use Aura\Signal\ResultFactory;
-use BEAR\Package\Dev\Debug\ExceptionHandle\ErrorPage;
-use BEAR\Package\Dev\Debug\ExceptionHandle\ExceptionHandler;
-use BEAR\Package\Provide\ApplicationLogger\ApplicationLogger;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
-use BEAR\Package\Provide\Router\AuraRouter;
+use BEAR\Package\Provide\Router\Adapter\WebRouter;
+use BEAR\Package\Provide\Router\Router;
 use BEAR\Package\Provide\WebResponse\HttpFoundation as WebResponse;
 use BEAR\Resource\Anchor;
 use BEAR\Resource\Factory;
@@ -106,9 +104,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
             new WebResponse(
                 new ConsoleOutput
             ),
-            new AuraRouter(
-                new Map(new DefinitionFactory, new RouteFactory)
-            )
+            new Router(new WebRouter)
         );
     }
 
