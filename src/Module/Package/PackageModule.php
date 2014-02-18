@@ -62,7 +62,7 @@ class PackageModule extends AbstractModule
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new ProvideModule\WebResponse\HttpFoundationModule);
         $this->install(new ProvideModule\ConsoleOutput\ConsoleOutputModule);
-        $this->install(new ProvideModule\Router\AuraRouterModule);
+        $this->install(new ProvideModule\Router\WebRouterModule);
         $this->install(new ProvideModule\ResourceView\TemplateEngineRendererModule);
         $this->install(new ProvideModule\ResourceView\HalModule);
 
