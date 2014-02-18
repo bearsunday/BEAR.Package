@@ -2,7 +2,6 @@
 namespace BEAR\Package\Dev\Application;
 
 use Aura\Di\Exception;
-use BEAR\Package\Dev\Application\ApplicationReflector;
 
 class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +25,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         static $app;
 
         if (! $app) {
-            $app = require dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/apps/Demo.Sandbox/bootstrap/instance.php';
+            $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo.Sandbox/bootstrap/instance.php';
         }
         $this->appReflector = new ApplicationReflector($app);
     }

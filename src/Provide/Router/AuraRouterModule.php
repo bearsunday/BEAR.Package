@@ -15,6 +15,7 @@ class AuraRouterModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('BEAR\Sunday\Extension\Router\RouterInterface')->to(__NAMESPACE__ . '\AuraRouter');
+        $this->bind('BEAR\Sunday\Extension\Router\RouterInterface')->to('BEAR\Package\Provide\Router\Router');
+        $this->bind('BEAR\Package\Provide\Router\RouterAdapterInterface')->to('BEAR\Package\Provide\Router\Adapter\AuraRouter');
     }
 }

@@ -34,8 +34,8 @@
 
         "aura/input": "1.*",
         "aura/view": "1.*",
-        "aura/router":"1.*",
-        "aura/web":"1.*",
+        "aura/router":"2.*@dev",
+        "aura/web":"dev-develop-2",
         "aura/sql":"2.*@dev",
         "doctrine/dbal":"2.*",
         "pagerfanta/pagerfanta":"1.*",

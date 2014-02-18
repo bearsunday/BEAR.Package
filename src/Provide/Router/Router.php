@@ -31,6 +31,8 @@ final class Router implements RouterInterface
 
     /**
      * @param RouterAdapterInterface $router
+     *
+     * @Inject
      */
     public function __construct(RouterAdapterInterface $router)
     {

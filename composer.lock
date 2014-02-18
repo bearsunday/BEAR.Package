@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "796e553069ebbdb392aed164331f64d3",
+    "hash": "6160ccabd2493674a1e948bd48140c44",
     "packages": [
         {
             "name": "any/serializer",
@@ -149,7 +149,6 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 },
                 {
@@ -176,13 +175,13 @@
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/auraphp/installer-default.git",
-                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8"
+                "url": "https://github.com/auraphp/installer-default",
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/installer-default/zipball/52f8de3670cc1ef45a916f40f732937436d028c8",
-                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8",
+                "url": "https://github.com/auraphp/installer-default/archive/1.0.0.zip",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "type": "composer-installer",
@@ -214,26 +213,33 @@
         },
         {
             "name": "aura/router",
-            "version": "1.1.1",
+            "version": "dev-develop-2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Router.git",
-                "reference": "624adb4546dadbf60dd303d78a94ff865fdd1e70"
+                "reference": "004dea14e42c42db406e5d3e8ad19d8861e31f3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Router/zipball/624adb4546dadbf60dd303d78a94ff865fdd1e70",
-                "reference": "624adb4546dadbf60dd303d78a94ff865fdd1e70",
+                "url": "https://api.github.com/repos/auraphp/Aura.Router/zipball/004dea14e42c42db406e5d3e8ad19d8861e31f3c",
+                "reference": "004dea14e42c42db406e5d3e8ad19d8861e31f3c",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
-                "php": ">=5.4.0"
+                "php": ">=5.3.0"
             },
-            "type": "aura-package",
+            "type": "library",
+            "extra": {
+                "aura": {
+                    "type": "library"
+                },
+                "branch-alias": {
+                    "dev-develop-2": "2.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Aura\\Router": "src/"
+                "psr-4": {
+                    "Aura\\Router\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -242,36 +248,18 @@
             ],
             "authors": [
                 {
-                    "name": "Paul M. Jones",
-                    "email": "pmjones88@gmail.com",
-                    "homepage": "http://paul-m-jones.com"
-                },
-                {
-                    "name": "Hari KT",
-                    "email": "kthari85@gmail.com",
-                    "homepage": "http://harikt.com"
-                },
-                {
                     "name": "Aura.Router Contributors",
                     "homepage": "https://github.com/auraphp/Aura.Router/contributors"
-                },
-                {
-                    "name": "George Papadopoulos",
-                    "email": "g.papadopg@gmail.com"
-                },
-                {
-                    "name": "Jon Elofson",
-                    "email": "jon.elofson@gmail.com"
                 }
             ],
-            "description": "The Aura Router package implements web routing; given a URI path and a copy of $_SERVER, it will extract controller, action, and parameter values for a specific route.",
-            "homepage": "http://auraphp.com/Aura.Router",
+            "description": "A web router implementation; given a URI path and a copy of $_SERVER, it will extract path-info parameter values for a specific route.",
+            "homepage": "https://github.com/auraphp/Aura.Router/releases",
             "keywords": [
                 "route",
                 "router",
                 "routing"
             ],
-            "time": "2013-09-10 00:00:00"
+            "time": "2014-02-09 19:13:05"
         },
         {
             "name": "aura/signal",
@@ -319,7 +307,6 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -456,26 +443,33 @@
         },
         {
             "name": "aura/web",
-            "version": "1.0.2",
+            "version": "dev-develop-2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "494f5082989e4a479ea3e7e5304c26ffa520cf3e"
+                "reference": "f8e6c5ef367809b8a0d0534fd66badb0e9e422fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/494f5082989e4a479ea3e7e5304c26ffa520cf3e",
-                "reference": "494f5082989e4a479ea3e7e5304c26ffa520cf3e",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/f8e6c5ef367809b8a0d0534fd66badb0e9e422fb",
+                "reference": "f8e6c5ef367809b8a0d0534fd66badb0e9e422fb",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
-                "php": ">=5.4.0"
+                "php": ">=5.3.0"
             },
-            "type": "aura-package",
+            "type": "library",
+            "extra": {
+                "aura": {
+                    "type": "library"
+                },
+                "branch-alias": {
+                    "dev-develop-2": "2.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Aura\\Web": "src/"
+                "psr-4": {
+                    "Aura\\Web\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -484,32 +478,17 @@
             ],
             "authors": [
                 {
-                    "name": "Paul M. Jones",
-                    "email": "pmjones88@gmail.com",
-                    "homepage": "http://paul-m-jones.com"
-                },
-                {
-                    "name": "Hari KT",
-                    "email": "kthari85@gmail.com",
-                    "homepage": "http://harikt.com"
-                },
-                {
                     "name": "Aura.Web Contributors",
                     "homepage": "https://github.com/auraphp/Aura.Web/contributors"
-                },
-                {
-                    "name": "Pascal Borreli",
-                    "email": "pascal@borreli.com"
                 }
             ],
-            "description": "The Aura Web package provides tools to build web page controllers, including an AbstractPage for action methods, a Context class for disovering the request environment, and a Response transfer object that describes the eventual HTTP response.",
-            "homepage": "http://auraphp.com/Aura.Web",
+            "description": "Provides web Request and Response objects for use by web controllers. These are representations of the PHP web environment, not HTTP request and response objects proper.",
+            "homepage": "https://github.com/auraphp/Aura.Web/releases",
             "keywords": [
-                "controller",
-                "page controller",
-                "web controller"
+                "request",
+                "response"
             ],
-            "time": "2013-09-10 00:00:00"
+            "time": "2014-01-31 16:07:38"
         },
         {
             "name": "bear/resource",
@@ -749,7 +728,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1020,7 +999,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1074,7 +1053,7 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1789,7 +1768,7 @@
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "name": "Armin Ronacher2",
+                    "name": "Armin Ronacher",
                     "email": "armin.ronacher@active-4.com"
                 }
             ],
@@ -1834,7 +1813,7 @@
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
                     "homepage": "https://github.com/koriym",
-                    "role": "Lead"
+                    "role": "Developer"
                 }
             ],
             "description": "Ace online editor utility",
@@ -1874,7 +1853,7 @@
                     "ClassPreloader": "src/"
                 }
             },
-            "time": "2014-02-04 01:52:42"
+            "time": "2014-02-05 15:09:35"
         },
         {
             "name": "dg/adminer-custom",
@@ -2835,6 +2814,8 @@
         "ray/di": 20,
         "bear/resource": 20,
         "bear/sunday": 20,
+        "aura/router": 20,
+        "aura/web": 20,
         "aura/sql": 20,
         "classpreloader/classpreloader": 20,
         "facebook/xhprof": 20
