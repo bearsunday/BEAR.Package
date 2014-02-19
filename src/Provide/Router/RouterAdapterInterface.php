@@ -8,7 +8,6 @@
 
 namespace BEAR\Package\Provide\Router;
 
-
 interface RouterAdapterInterface
 {
     /**
