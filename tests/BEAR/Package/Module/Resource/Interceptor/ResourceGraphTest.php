@@ -2,7 +2,7 @@
 namespace BEAR\Package\Module\Resource\Interceptor;
 
 use BEAR\Package\Module\Resource\Interceptor\ResourceGraph;
-use BEAR\Resource\AbstractObject;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Adapter\Http;
 use BEAR\Resource\SchemeCollection;
 use Ray\Aop\ReflectiveMethodInvocation;
@@ -18,7 +18,7 @@ use BEAR\Resource\Adapter\AdapterInterface;
 use BEAR\Resource\Request;
 use BEAR\Resource\Adapter\App;
 
-class Foo extends AbstractObject
+class Foo extends ResourceObject
 {
     public $body = [
         'bar'=> 'http://www.w3.org/standards/webdesign/accessibility'

@@ -5,7 +5,7 @@ namespace BEAR\Package\Provide\ResourceView;
 
 use BEAR\Package\MockResource;
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyAdapter;
-use BEAR\Resource\AbstractObject as ResourceObject;
+use BEAR\Resource\ResourceObject;
 use Smarty;
 
 class TemplateEngineRendererTest extends \PHPUnit_Framework_TestCase
