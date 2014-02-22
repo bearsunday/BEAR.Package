@@ -6,17 +6,15 @@
  */
 namespace BEAR\Package\Provide\Router\Adapter;
 
-use BEAR\Package\Provide\Router\RouterAdapterInterface;
-
-final class RouterCollection implements RouterAdapterInterface
+final class RouterCollection implements AdapterInterface
 {
     /**
-     * @var RouterAdapterInterface[]
+     * @var AdapterInterface[]
      */
     private $routers;
 
     /**
-     * @param RouterAdapterInterface[] $routers
+     * @param AdapterInterface[] $routers
      */
     public function __construct(array $routers)
     {

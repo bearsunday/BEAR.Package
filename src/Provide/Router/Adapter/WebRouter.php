@@ -6,9 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router\Adapter;
 
-use BEAR\Package\Provide\Router\RouterAdapterInterface;
-
-class WebRouter implements RouterAdapterInterface
+class WebRouter implements AdapterInterface
 {
     const METHOD_FILED = '_method';
 

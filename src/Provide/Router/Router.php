@@ -9,6 +9,7 @@ namespace BEAR\Package\Provide\Router;
 use BEAR\Resource\Exception\BadRequest;
 use BEAR\Resource\Exception\MethodNotAllowed;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use BEAR\Package\Provide\Router\Adapter\AdapterInterface;
 use Ray\Di\Di\Inject;
 
 final class Router implements RouterInterface
@@ -25,16 +26,16 @@ final class Router implements RouterInterface
     private $globals;
 
     /**
-     * @var RouterAdapterInterface
+     * @var AdapterInterface
      */
     protected $router;
 
     /**
-     * @param RouterAdapterInterface $router
+     * @param AdapterInterface $router
      *
      * @Inject
      */
-    public function __construct(RouterAdapterInterface $router)
+    public function __construct(AdapterInterface $router)
     {
         $this->router = $router;
     }

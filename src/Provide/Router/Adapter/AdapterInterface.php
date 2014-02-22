@@ -6,9 +6,9 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 
-namespace BEAR\Package\Provide\Router;
+namespace BEAR\Package\Provide\Router\Adapter;
 
-interface RouterAdapterInterface
+interface AdapterInterface
 {
     /**
      * @param string $path
