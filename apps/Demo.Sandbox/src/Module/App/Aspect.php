@@ -5,7 +5,6 @@ namespace Demo\Sandbox\Module\App;
 use BEAR\Package;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
-use Demo\Sandbox\Interceptor\TimeMessage;
 
 /**
  * Application Aspect
@@ -32,7 +31,7 @@ class Aspect extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Demo\Sandbox\Resource\App\First\Greeting\Aop'),
             $this->matcher->any(),
-            [new TimeMessage]
+            [$this->requestInjection('Demo\Sandbox\Interceptor\TimeMessage')]
         );
     }
 
@@ -41,11 +40,10 @@ class Aspect extends AbstractModule
      */
     private function installNewBlogPost()
     {
-        $blogPost = $this->requestInjection('Demo\Sandbox\Interceptor\Form\BlogPost');
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Demo\Sandbox\Resource\Page\Blog\Posts\Newpost'),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Form'),
-            [$blogPost]
+            [$this->requestInjection('Demo\Sandbox\Interceptor\Form\BlogPost')]
         );
     }
 
@@ -54,11 +52,10 @@ class Aspect extends AbstractModule
      */
     private function installAuraContactForm()
     {
-        $auraContact = $this->requestInjection('Demo\Sandbox\Interceptor\Form\AuraContact');
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Demo\Sandbox\Resource\Page\Demo\Form\Auraform'),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Form'),
-            [$auraContact]
+            [$auraContact = $this->requestInjection('Demo\Sandbox\Interceptor\Form\AuraContact')]
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Demo\Sandbox\Module;
 
+use BEAR\Package\Module\Di\DiModule;
 use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
@@ -12,10 +13,13 @@ use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
 use Demo\Sandbox\Module;
 use Ray\Di\AbstractModule;
+use BEAR\Resource\Module\ResourceModule;
 
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
 use BEAR\Package\Provide\TemplateEngine\Twig\TwigModule;
 use BEAR\Package\Provide\TemplateEngine\AuraView\AuraViewModule;
+use Ray\Di\Di\Scope;
+
 
 /**
  * Application module
@@ -61,6 +65,12 @@ class AppModule extends AbstractModule
      */
     protected function configure()
     {
+
+        $this->bind('Ray\Di\AbstractModule')->to(__CLASS__);
+        $this->bind('Doctrine\Common\Annotations\Reader')->to('Doctrine\Common\Annotations\AnnotationReader');
+        $this->bind('Aura\Signal\Manager')->toProvider('BEAR\Resource\Module\SignalProvider')->in(Scope::SINGLETON);
+
+        $this->install(new DiModule($this));
         // install core package
         $this->install(new PackageModule('Demo\Sandbox\App', $this->context, $this->constants));
 
@@ -70,9 +80,9 @@ class AppModule extends AbstractModule
 //        $this->install(new AuraViewModule($this));
 
         // install optional package
-        $this->install(new SignalParamModule($this, $this->params));
+//        $this->install(new SignalParamModule($this, $this->params));
         $this->install(new AuraFormModule);
-        $this->install(new ResourceGraphModule($this));
+//        $this->install(new ResourceGraphModule($this));
 
         // install develop module
         if ($this->context === 'dev') {

@@ -50,6 +50,8 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
+
         // application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
         // config
@@ -93,8 +95,5 @@ class PackageModule extends AbstractModule
         if ($this->context === 'test') {
             $this->install(new NullCacheModule($this));
         }
-
-        // install injector
-        $this->bind('Ray\Di\InjectorInterface')->toInstance($this->dependencyInjector);
     }
 }

@@ -59,6 +59,7 @@
     "autoload":{
         "files": [
             "src/Bootstrap/getApp.php",
+            "src/Bootstrap/getCachedApp.php",
             "src/Bootstrap/registerLoader.php"
         ],
         "psr-4":{

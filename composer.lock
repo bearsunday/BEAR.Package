@@ -447,12 +447,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "f8e6c5ef367809b8a0d0534fd66badb0e9e422fb"
+                "reference": "db076197e43f14f81a41b00bb5f71430830d7504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/f8e6c5ef367809b8a0d0534fd66badb0e9e422fb",
-                "reference": "f8e6c5ef367809b8a0d0534fd66badb0e9e422fb",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/db076197e43f14f81a41b00bb5f71430830d7504",
+                "reference": "db076197e43f14f81a41b00bb5f71430830d7504",
                 "shasum": ""
             },
             "require": {
@@ -488,7 +488,7 @@
                 "request",
                 "response"
             ],
-            "time": "2014-01-31 16:07:38"
+            "time": "2014-03-03 22:36:00"
         },
         {
             "name": "bear/resource",
@@ -496,12 +496,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "1e8cb19e82a1bf2c8475d22fd1fc832490d33dc5"
+                "reference": "e146ef286c76b34d9ccf2c0462f8b623951daf75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/1e8cb19e82a1bf2c8475d22fd1fc832490d33dc5",
-                "reference": "1e8cb19e82a1bf2c8475d22fd1fc832490d33dc5",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/e146ef286c76b34d9ccf2c0462f8b623951daf75",
+                "reference": "e146ef286c76b34d9ccf2c0462f8b623951daf75",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-02-22 05:50:07"
+            "time": "2014-03-07 09:19:32"
         },
         {
             "name": "bear/sunday",
@@ -1461,12 +1461,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "cb6791ae652df539a6cedc8481968d1d1ece2ff9"
+                "reference": "958e3c8c50e00387a095317c2e937f792d892ca0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/cb6791ae652df539a6cedc8481968d1d1ece2ff9",
-                "reference": "cb6791ae652df539a6cedc8481968d1d1ece2ff9",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/958e3c8c50e00387a095317c2e937f792d892ca0",
+                "reference": "958e3c8c50e00387a095317c2e937f792d892ca0",
                 "shasum": ""
             },
             "require": {
@@ -1500,7 +1500,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-02-21 07:41:51"
+            "time": "2014-02-26 22:42:41"
         },
         {
             "name": "ray/di",
@@ -1508,12 +1508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "4ad5ca9df76e8f068dde1a673bf38ea04105ee2b"
+                "reference": "1e0f069172978c7a4bee77796bc45724e93c55b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/4ad5ca9df76e8f068dde1a673bf38ea04105ee2b",
-                "reference": "4ad5ca9df76e8f068dde1a673bf38ea04105ee2b",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1e0f069172978c7a4bee77796bc45724e93c55b6",
+                "reference": "1e0f069172978c7a4bee77796bc45724e93c55b6",
                 "shasum": ""
             },
             "require": {
@@ -1558,7 +1558,7 @@
                 "injection",
                 "jsr"
             ],
-            "time": "2014-02-22 05:03:17"
+            "time": "2014-03-07 02:57:54"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1953,16 +1953,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.15",
+            "version": "1.2.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "6ba4ed2895d538a039d5d5866edc4ec0424c7852"
+                "reference": "69e55e68481cf708a6db43aff0b504e31402fe27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ba4ed2895d538a039d5d5866edc4ec0424c7852",
-                "reference": "6ba4ed2895d538a039d5d5866edc4ec0424c7852",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/69e55e68481cf708a6db43aff0b504e31402fe27",
+                "reference": "69e55e68481cf708a6db43aff0b504e31402fe27",
                 "shasum": ""
             },
             "require": {
@@ -2010,7 +2010,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-02-03 07:44:47"
+            "time": "2014-02-25 03:34:05"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2147,16 +2147,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "5220af2a7929aa35cf663d97c89ad3d50cf5fa3e"
+                "reference": "ad4e1e23ae01b483c16f600ff1bebec184588e32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/5220af2a7929aa35cf663d97c89ad3d50cf5fa3e",
-                "reference": "5220af2a7929aa35cf663d97c89ad3d50cf5fa3e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/ad4e1e23ae01b483c16f600ff1bebec184588e32",
+                "reference": "ad4e1e23ae01b483c16f600ff1bebec184588e32",
                 "shasum": ""
             },
             "require": {
@@ -2193,20 +2193,20 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2013-09-13 04:58:23"
+            "time": "2014-03-03 05:10:30"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.31",
+            "version": "3.7.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "d24e9877331039582497052cc3c4d9f465b88210"
+                "reference": "2752cbb9ea5bd84c2811b34b6953f76965ec7a2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d24e9877331039582497052cc3c4d9f465b88210",
-                "reference": "d24e9877331039582497052cc3c4d9f465b88210",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2752cbb9ea5bd84c2811b34b6953f76965ec7a2f",
+                "reference": "2752cbb9ea5bd84c2811b34b6953f76965ec7a2f",
                 "shasum": ""
             },
             "require": {
@@ -2223,7 +2223,7 @@
                 "symfony/yaml": "~2.0"
             },
             "require-dev": {
-                "pear-pear/pear": "1.9.4"
+                "pear-pear.php.net/pear": "1.9.4"
             },
             "suggest": {
                 "ext-json": "*",
@@ -2267,7 +2267,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-02-03 07:46:27"
+            "time": "2014-02-25 03:47:29"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2568,24 +2568,24 @@
         },
         {
             "name": "zendframework/zend-db",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/Db",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendDb.git",
-                "reference": "f17c80f27c0a071442b64716a46db5e2a047ceee"
+                "reference": "2b4ca5895e3291912039f6357b8e82882aebd2d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.zendframework.com/composer/zendframework-zend-db-f17c80f27c0a071442b64716a46db5e2a047ceee-zip-8e9ed0.zip",
-                "reference": "2.2.5",
-                "shasum": "8c3fe2d48aac1dc7a5ddbf9a8aba3a13e4fe6a3e"
+                "url": "https://packages.zendframework.com/composer/zendframework-zend-db-2b4ca5895e3291912039f6357b8e82882aebd2d9-zip-6304c5.zip",
+                "reference": "2.2.6",
+                "shasum": "e4b89249b38d2cd109aadbaa17948a68eb646421"
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "suggest": {
-                "zendframework/zend-stdlib": "2.2.5"
+                "zendframework/zend-stdlib": "2.2.6"
             },
             "type": "library",
             "extra": {
@@ -2608,24 +2608,24 @@
                 "zf2"
             ],
             "support": {
-                "source": "https://github.com/zendframework/Component_ZendDb/tree/release-2.2.5"
+                "source": "https://github.com/zendframework/Component_ZendDb/tree/master"
             },
-            "time": "2013-10-20 06:00:13"
+            "time": "2014-03-04 17:00:12"
         },
         {
             "name": "zendframework/zend-log",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/Log",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendLog.git",
-                "reference": "e3282aa685e6d51fb14a9d8a0d3cdd71059c6d8e"
+                "reference": "e419a2d9b9c89a6dd2009b1cfe86de4da65cc7b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.zendframework.com/composer/zendframework-zend-log-e3282aa685e6d51fb14a9d8a0d3cdd71059c6d8e-zip-6e0bc8.zip",
-                "reference": "2.2.5",
-                "shasum": "85ab08968c3c0acca85369aa5e72dafd78d64f61"
+                "url": "https://packages.zendframework.com/composer/zendframework-zend-log-e419a2d9b9c89a6dd2009b1cfe86de4da65cc7b0-zip-d6e905.zip",
+                "reference": "2.2.6",
+                "shasum": "56d64b8e615a6d46bd488f663d20f12e0690d97c"
             },
             "require": {
                 "php": ">=5.3.3",
@@ -2661,24 +2661,24 @@
                 "zf2"
             ],
             "support": {
-                "source": "https://github.com/zendframework/Component_ZendLog/tree/release-2.2.5"
+                "source": "https://github.com/zendframework/Component_ZendLog/tree/master"
             },
-            "time": "2013-10-31 15:00:05"
+            "time": "2014-03-04 15:00:10"
         },
         {
             "name": "zendframework/zend-servicemanager",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/ServiceManager",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendServiceManager.git",
-                "reference": "064bb1d0441529aded2f213a10002cc4523f328c"
+                "reference": "de182a20dfdcf978c49570514103c7477ef16e4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.zendframework.com/composer/zendframework-zend-servicemanager-064bb1d0441529aded2f213a10002cc4523f328c-zip-a8d45f.zip",
-                "reference": "2.2.5",
-                "shasum": "7bd0fb0d2117c3b74d39b3d1d546928d52a2aabd"
+                "url": "https://packages.zendframework.com/composer/zendframework-zend-servicemanager-de182a20dfdcf978c49570514103c7477ef16e4f-zip-a1da4e.zip",
+                "reference": "2.2.6",
+                "shasum": "bf39c0100559c739b3e2bbab488046ad563e2eae"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2707,24 +2707,24 @@
                 "zf2"
             ],
             "support": {
-                "source": "https://github.com/zendframework/Component_ZendServiceManager/tree/release-2.2.5"
+                "source": "https://github.com/zendframework/Component_ZendServiceManager/tree/master"
             },
-            "time": "2013-10-23 20:00:05"
+            "time": "2014-03-03 21:00:04"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "f440ecfc828d61d620662a03987c8287e1e4801e"
+                "reference": "e646729f2274f4552b6a92e38d8e458efe08ebc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.zendframework.com/composer/zendframework-zend-stdlib-f440ecfc828d61d620662a03987c8287e1e4801e-zip-7e3c9b.zip",
-                "reference": "2.2.5",
-                "shasum": "d142b30e831141bcf5ed77e0d3ebd9356afcf9ce"
+                "url": "https://packages.zendframework.com/composer/zendframework-zend-stdlib-e646729f2274f4552b6a92e38d8e458efe08ebc5-zip-58baed.zip",
+                "reference": "2.2.6",
+                "shasum": "822f5bafb2d9d7df376d8a9b4c12c300a634d7df"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2754,9 +2754,9 @@
                 "zf2"
             ],
             "support": {
-                "source": "https://github.com/zendframework/Component_ZendStdlib/tree/release-2.2.5"
+                "source": "https://github.com/zendframework/Component_ZendStdlib/tree/master"
             },
-            "time": "2013-10-20 06:00:20"
+            "time": "2014-01-04 13:00:28"
         }
     ],
     "aliases": [

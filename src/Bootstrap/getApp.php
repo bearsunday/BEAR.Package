@@ -25,6 +25,8 @@ use Ray\Di\Injector;
 use Ray\Di\Logger as DiLogger;
 use Koriym\FusionCache\DoctrineCache as FusionCache;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ray\Di\DiCompiler;
+use Ray\Di\Logger;
 
 /**
  * Return application instance
@@ -50,21 +52,11 @@ function getApp($appName, $context, $tmpDir)
             new DiLogger
         );
     };
-    $initialization = function (AbstractApp $app) use ($context) {
-        $diLog = (string)$app->injector . PHP_EOL . (string)$app->injector->getLogger();
-        $logger = $app->injector->getInstance('Guzzle\Log\LogAdapterInterface');
-        /** @var $logger \Guzzle\Log\LogAdapterInterface */
-        $logger->log($diLog);
-        if ($context === 'prod') {
-            (new ApplicationReflector($app))->compileAllResources();
-        }
-    };
 
     $cache = function_exists('apc_fetch') ?
         new FusionCache(new ApcCache, function () use ($tmpDir) {return new FilesystemCache($tmpDir);})
         : new FilesystemCache($tmpDir);
-    $injector = new CacheInjector($injector, $initialization, $appName . $context, $cache);
-    $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
+    $app = DiCompiler::create($injector, $cache, $appName . $context)->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
     /* @var $app \BEAR\Sunday\Extension\Application\AppInterface */
     return $app;
 }
