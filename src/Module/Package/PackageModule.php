@@ -33,9 +33,9 @@ class PackageModule extends AbstractModule
     private $context;
 
     /**
-     * @param AbstractModule   $appClass
-     * @param \Ray\Aop\Matcher $context
-     * @param array            $config
+     * @param string  $appClass
+     * @param string  $context
+     * @param array   $config
      */
     public function __construct($appClass, $context, array $config)
     {

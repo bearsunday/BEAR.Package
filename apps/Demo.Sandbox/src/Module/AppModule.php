@@ -80,7 +80,7 @@ class AppModule extends AbstractModule
 //        $this->install(new AuraViewModule($this));
 
         // install optional package
-//        $this->install(new SignalParamModule($this, $this->params));
+        $this->install(new SignalParamModule($this, $this->params));
         $this->install(new AuraFormModule);
 //        $this->install(new ResourceGraphModule($this));
 

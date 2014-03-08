@@ -7,7 +7,6 @@
 namespace BEAR\Package\Module\Resource;
 
 use BEAR\Package\Provide as ProvideModule;
-use BEAR\Resource\ParamProviderInterface;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
@@ -34,13 +33,12 @@ class SignalParamModule extends AbstractModule
      */
     protected function configure()
     {
-        $signalParam = $this->requestInjection('BEAR\Resource\SignalParameterInterface');
-        /* @var $signalParam \BEAR\Resource\SignalParameterInterface */
+        $paramProviders = [];
         foreach ($this->config as $varName => $provider) {
-            $paramProvider = $this->requestInjection($provider);
-            /** @var $paramProvider ParamProviderInterface */
-            $signalParam->attachParamProvider($varName, $paramProvider);
+            $paramProviders[$varName] = $this->requestInjection($provider);
         }
-        $this->bind('BEAR\Resource\SignalParameterInterface')->toInstance($signalParam);
+
+        $this->bind()->annotatedWith('param_providers')->toInstance(serialize($paramProviders));
+        $this->bind('BEAR\Resource\SignalParameterInterface')->toProvider(__NAMESPACE__ . '\SignalParamProvider');
     }
 }
