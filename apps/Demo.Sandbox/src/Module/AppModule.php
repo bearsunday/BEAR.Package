@@ -14,16 +14,13 @@ use BEAR\Sunday\Module as SundayModule;
 use Demo\Sandbox\Module;
 use Ray\Di\AbstractModule;
 use BEAR\Resource\Module\ResourceModule;
-
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
 use BEAR\Package\Provide\TemplateEngine\Twig\TwigModule;
-use BEAR\Package\Provide\TemplateEngine\AuraView\AuraViewModule;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 use Ray\Di\Di\Scope;
+use BEAR\Package\Module\Di\DiCompilerModule;
 
-
-/**
- * Application module
- */
 class AppModule extends AbstractModule
 {
     /**
@@ -49,6 +46,9 @@ class AppModule extends AbstractModule
      * @param string $context
      *
      * @throws \LogicException
+     *
+     * @Inject
+     * @Named("app_context")
      */
     public function __construct($context = 'prod')
     {
@@ -65,13 +65,14 @@ class AppModule extends AbstractModule
      */
     protected function configure()
     {
-
+        $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
         $this->bind('Ray\Di\AbstractModule')->to(__CLASS__);
         $this->bind('Doctrine\Common\Annotations\Reader')->to('Doctrine\Common\Annotations\AnnotationReader');
         $this->bind('Aura\Signal\Manager')->toProvider('BEAR\Resource\Module\SignalProvider')->in(Scope::SINGLETON);
 
-        $this->install(new DiModule($this));
         // install core package
+        $this->install(new DiCompilerModule($this));
+        $this->install(new DiModule($this));
         $this->install(new PackageModule('Demo\Sandbox\App', $this->context, $this->constants));
 
         // install view package
@@ -91,7 +92,6 @@ class AppModule extends AbstractModule
 
         // install API module
         if ($this->context === 'api') {
-            // install api output view package
             $this->install(new HalModule($this));
             //$this->install(new JsonModule($this));
         }
