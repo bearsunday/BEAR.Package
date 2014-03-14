@@ -13,6 +13,6 @@ class DiModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Ray\Di\InjectorInterface')->toProvider(__NAMESPACE__ . '\DiProvider');
+        $this->bind('Ray\Di\InjectorInterface')->toProvider(__NAMESPACE__ . '\DiProvider')->in(Scope::SINGLETON);
     }
 }
