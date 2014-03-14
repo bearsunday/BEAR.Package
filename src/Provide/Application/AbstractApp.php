@@ -88,12 +88,10 @@ abstract class AbstractApp implements AppInterface
      * @Inject
      */
     public function __construct(
-        InjectorInterface $injector,
         ResourceInterface $resource,
         ResponseInterface $response,
         RouterInterface $router
     ) {
-        $this->injector = $injector;
         $this->resource = $resource;
         $this->response = $response;
         $this->router = $router;
