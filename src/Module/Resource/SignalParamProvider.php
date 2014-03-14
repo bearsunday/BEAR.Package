@@ -20,6 +20,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use BEAR\Resource\SignalParameterInterface;
 use Ray\Di\InjectorInterface;
+use Ray\Di\InstanceInterface;
 use Ray\Di\ProviderInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -43,7 +44,7 @@ class SignalParamProvider implements ProviderInterface
      * @Inject
      * @Named("paramProviders=param_providers")
      */
-    public function __construct(InjectorInterface $injector, $paramProviders)
+    public function __construct(InstanceInterface $injector, $paramProviders)
     {
         $this->signalParam = new SignalParameter(new Manager(new HandlerFactory, new ResultFactory, new ResultCollection), new Param);
         $this->paramProviders = unserialize($paramProviders);

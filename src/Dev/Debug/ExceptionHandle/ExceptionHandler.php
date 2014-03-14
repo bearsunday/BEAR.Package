@@ -22,6 +22,7 @@ use Ray\Di\Exception\NotBound;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Ray\Di\InstanceInterface;
 
 /**
  * Exception handler for development
@@ -104,7 +105,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      *
      * @Inject(optional = true);
      */
-    public function setModule(InjectorInterface $injector)
+    public function setModule(InstanceInterface $injector)
     {
         $this->injector = $injector;
     }
