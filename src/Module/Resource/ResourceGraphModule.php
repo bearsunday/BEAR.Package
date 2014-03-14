@@ -18,11 +18,10 @@ class ResourceGraphModule extends AbstractModule
      */
     protected function configure()
     {
-        $resourceGraph = $this->requestInjection(__NAMESPACE__ . '\Interceptor\ResourceGraph');
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\ResourceGraph'),
-            [$resourceGraph]
+            [$this->requestInjection(__NAMESPACE__ . '\Interceptor\ResourceGraph')]
         );
     }
 }
