@@ -19,10 +19,9 @@ use Exception;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Binding;
 use Ray\Di\Exception\NotBound;
-use Ray\Di\InjectorInterface;
+use Ray\Di\InstanceInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-use Ray\Di\InstanceInterface;
 
 /**
  * Exception handler for development
@@ -44,7 +43,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     private $errorPage;
 
     /**
-     * @var InjectorInterface
+     * @var InstanceInterface
      */
     private $injector;
 
@@ -101,11 +100,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Set Injector for logging
      *
-     * @param \Ray\Di\InjectorInterface $injector
+     * @param \Ray\Di\InstanceInterface $injector
      *
      * @Inject(optional = true);
      */
-    public function setModule(InstanceInterface $injector)
+    public function setInjector(InstanceInterface $injector)
     {
         $this->injector = $injector;
     }
