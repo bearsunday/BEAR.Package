@@ -77,20 +77,6 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
             new Logger
         );
         $this->app = new MyApp(
-            new Injector(
-                new Container(
-                    new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))
-                ),
-                new EmptyModule,
-                new Bind,
-                new Compiler(
-                    sys_get_temp_dir(),
-                    new PHPParser_PrettyPrinter_Default,
-                    new PHPParser_Parser(new PHPParser_Lexer),
-                    new PHPParser_BuilderFactory
-                ),
-                new DiLogger
-            ),
             new Resource(
                 new Factory(new SchemeCollection),
                 $invoker,
