@@ -6,8 +6,6 @@
  */
 namespace BEAR\Package\Module\Database\Dbal;
 
-use BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper;
-use BEAR\Package\Module\Database\Dbal\Interceptor\Transactional;
 use Ray\Di\AbstractModule;
 
 class DbalModule extends AbstractModule
@@ -46,7 +44,7 @@ class DbalModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Transactional'),
-            [new Transactional]
+            [$this->requestInjection('BEAR\Package\Module\Database\Dbal\Interceptor\Transactional')]
         );
     }
 
@@ -58,7 +56,7 @@ class DbalModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Time'),
-            [new TimeStamper]
+            [$this->requestInjection('BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper')]
         );
     }
 }
