@@ -75,7 +75,7 @@ class PackageModule extends AbstractModule
 
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new SundayModule\Resource\ResourceCacheModule);
+        //$this->install(new SundayModule\Resource\ResourceCacheModule);
 
         // Cache Module
         $this->install(new CacheModule($this));
