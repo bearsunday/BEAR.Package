@@ -9,10 +9,10 @@ namespace BEAR\Package\Module\Di;
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Scope;
 
-class DiModule extends AbstractModule
+class DiCompilerModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Ray\Di\InjectorInterface')->toProvider(__NAMESPACE__ . '\DiProvider')->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\InstanceInterface')->toProvider(__NAMESPACE__ . '\DiCompilerProvider')->in(Scope::SINGLETON);
     }
 }

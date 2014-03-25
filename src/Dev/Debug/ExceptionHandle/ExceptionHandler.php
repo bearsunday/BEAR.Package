@@ -19,7 +19,7 @@ use Exception;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Binding;
 use Ray\Di\Exception\NotBound;
-use Ray\Di\InjectorInterface;
+use Ray\Di\InstanceInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -43,7 +43,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     private $errorPage;
 
     /**
-     * @var InjectorInterface
+     * @var InstanceInterface
      */
     private $injector;
 
@@ -100,11 +100,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Set Injector for logging
      *
-     * @param \Ray\Di\InjectorInterface $injector
+     * @param \Ray\Di\InstanceInterface $injector
      *
      * @Inject(optional = true);
      */
-    public function setModule(InjectorInterface $injector)
+    public function setInjector(InstanceInterface $injector)
     {
         $this->injector = $injector;
     }
@@ -205,13 +205,10 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         // exception screen in develop
         if (isset($this->injector)) {
             $view['dependency_bindings'] = (string)$this->injector;
-            $view['modules'] = $this->injector->getModule()->modules;
         } elseif ($e instanceof NotBound) {
             $view['dependency_bindings'] = (string)$e->module;
-            $view['modules'] = $e->module;
         } else {
             $view['dependency_bindings'] = 'n/a';
-            $view['modules'] = 'n/a';
         }
         $html = $this->getViewTemplate($e, $view);
 
@@ -229,8 +226,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         \Exception $e,
         /** @noinspection PhpUnusedParameterInspection */
         array $view = [
-        'dependency_bindings' => '',
-        'modules' => ''
+            'dependency_bindings' => ''
         ]
     ) {
         /** @noinspection PhpIncludeInspection */

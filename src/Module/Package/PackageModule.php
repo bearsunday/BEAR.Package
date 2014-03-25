@@ -33,9 +33,9 @@ class PackageModule extends AbstractModule
     private $context;
 
     /**
-     * @param AbstractModule   $appClass
-     * @param \Ray\Aop\Matcher $context
-     * @param array            $config
+     * @param string  $appClass
+     * @param string  $context
+     * @param array   $config
      */
     public function __construct($appClass, $context, array $config)
     {
@@ -75,7 +75,7 @@ class PackageModule extends AbstractModule
 
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new SundayModule\Resource\ResourceCacheModule);
+        //$this->install(new SundayModule\Resource\ResourceCacheModule);
 
         // Cache Module
         $this->install(new CacheModule($this));

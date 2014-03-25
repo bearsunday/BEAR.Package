@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Module\Cache\Interceptor;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Guzzle\Cache\CacheAdapterInterface;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
@@ -36,6 +37,11 @@ class CacheLoader implements MethodInterceptor
     private $get = [];
 
     /**
+     * @var AnnotationReader
+     */
+    private $annotationReader;
+
+    /**
      * @param array $get
      */
     public function setGet(array $get)
@@ -47,11 +53,13 @@ class CacheLoader implements MethodInterceptor
      * @param CacheAdapterInterface $cache
      *
      * @Inject
-     * @Named("resource_cache")
      */
-    public function __construct(CacheAdapterInterface $cache)
-    {
+    public function __construct(
+        CacheAdapterInterface $cache,
+        AnnotationReader $annotationReader
+    ){
         $this->cache = $cache;
+        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -174,7 +182,8 @@ class CacheLoader implements MethodInterceptor
      */
     protected function getSaveTime(MethodInvocation $invocation)
     {
-        $time = $invocation->getAnnotation()->time;
+        $annotation = $this->annotationReader->getMethodAnnotation($invocation->getMethod(), 'BEAR\Sunday\Annotation\Cache');
+        $time = $annotation ? $annotation->time : null;
 
         return $time;
     }
