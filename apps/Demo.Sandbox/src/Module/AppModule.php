@@ -13,7 +13,6 @@ use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
 use Demo\Sandbox\Module;
 use Ray\Di\AbstractModule;
-use BEAR\Resource\Module\ResourceModule;
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
 use BEAR\Package\Provide\TemplateEngine\Twig\TwigModule;
 use Ray\Di\Di\Inject;
@@ -83,7 +82,6 @@ class AppModule extends AbstractModule
         // install optional package
         $this->install(new SignalParamModule($this, $this->params));
         $this->install(new AuraFormModule);
-//        $this->install(new ResourceGraphModule($this));
 
         // install develop module
         if ($this->context === 'dev') {
