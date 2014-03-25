@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Module\Di;
 
+use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\DiCompiler;
 use Ray\Di\ProviderInterface;
@@ -60,7 +61,7 @@ class DiCompilerProvider implements ProviderInterface
             return new $appModule($this->context);
         };
         $cacheKey = $this->appName . $this->context;
-        $cache = new FilesystemCache($this->tmpDir);
+        $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir);
         $compiler = DiCompiler::create($moduleProvider, $cache, $cacheKey, $this->tmpDir);
 
         return $compiler;
