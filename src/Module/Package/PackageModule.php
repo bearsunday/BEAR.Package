@@ -12,9 +12,9 @@ use BEAR\Sunday\Module as SundayModule;
 use BEAR\Sunday\Module\Constant\NamedModule;
 use BEAR\Sunday\Module\Resource\ResourceCacheModule;
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
-use Ray\Di\Module\InjectorModule;
 use BEAR\Package\Module\Cache\CacheModule;
+use BEAR\Package\Module\Di\DiCompilerModule;
+use BEAR\Package\Module\Di\DiModule;
 
 class PackageModule extends AbstractModule
 {
@@ -50,6 +50,10 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
+        $this->install(new DiCompilerModule($this));
+        $this->install(new DiModule($this));
+
         $this->install(new SundayModule\Framework\FrameworkModule($this));
 
         // application

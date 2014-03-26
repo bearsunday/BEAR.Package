@@ -64,14 +64,6 @@ class AppModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
-        $this->bind('Ray\Di\AbstractModule')->to(__CLASS__);
-        $this->bind('Doctrine\Common\Annotations\Reader')->to('Doctrine\Common\Annotations\AnnotationReader');
-        $this->bind('Aura\Signal\Manager')->toProvider('BEAR\Resource\Module\SignalProvider')->in(Scope::SINGLETON);
-
-        // install core package
-        $this->install(new DiCompilerModule($this));
-        $this->install(new DiModule($this));
         $this->install(new PackageModule('Demo\Sandbox\App', $this->context, $this->constants));
 
         // install view package
