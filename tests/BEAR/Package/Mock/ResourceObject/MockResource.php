@@ -3,12 +3,15 @@ namespace BEAR\Package\Mock\ResourceObject;
 
 use BEAR\Resource\ResourceObject;
 
+use BEAR\Sunday\Annotation\Cache;
+use BEAR\Sunday\Annotation\CacheUpdate;
+
 class MockResource extends ResourceObject
 {
     /**
      * Get
      *
-     * @Cache
+     * @Cache(10)
      *
      * @return array
      */

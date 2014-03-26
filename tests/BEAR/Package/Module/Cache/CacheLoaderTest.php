@@ -6,7 +6,7 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Annotation\Cache as CacheAnnotation;
 use BEAR\Package\Module\Cache\Interceptor\CacheLoader;
 use BEAR\Package\Mock\ResourceObject\MockResource;
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\PhpFileCache;
 use Guzzle\Cache\DoctrineCacheAdapter as CacheAdapter;
@@ -35,10 +35,8 @@ class CacheLoaderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->cacheLoader = (new CacheLoader(new CacheAdapter(new ArrayCache)));
-        $cacheAnnotation = new CacheAnnotation;
-        $cacheAnnotation->time = self::TIME;
-        $this->invocation = new ReflectiveMethodInvocation([new MockResource, 'onGet'], [], [$this->cacheLoader], $cacheAnnotation);
+        $this->cacheLoader = (new CacheLoader(new CacheAdapter(new ArrayCache), new AnnotationReader));
+        $this->invocation = new ReflectiveMethodInvocation([new MockResource, 'onGet'], [], [$this->cacheLoader]);
     }
 
     public function testNew()
@@ -91,7 +89,6 @@ class CacheLoaderTest extends \PHPUnit_Framework_TestCase
     }
     public function testInvokeWritePagerData()
     {
-        $this->cacheLoader = (new CacheLoader(new CacheAdapter(new ArrayCache)));
         $_GET['_start'] = 1;
         $result = $this->cacheLoader->invoke($this->invocation);
         unset($_GET['_start']);
@@ -101,7 +98,6 @@ class CacheLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokeSetPagerKey()
     {
-        $this->cacheLoader = (new CacheLoader(new CacheAdapter(new ArrayCache)))->setPagerQueryKey('page');
         $result = $this->cacheLoader->invoke($this->invocation);
         $this->assertTrue(isset($result->headers['x-cache']));
     }
