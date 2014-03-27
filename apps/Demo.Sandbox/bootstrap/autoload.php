@@ -19,4 +19,3 @@ Bootstrap::registerLoader(
     __NAMESPACE__,
     dirname(__DIR__)
 );
-
