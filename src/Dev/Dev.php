@@ -315,7 +315,7 @@ class Dev
      */
     public function isDirectStaticFileAccess()
     {
-        return $this->isDirectStaticFileAccess;
+        return $this->directAccessFile();
     }
 
     /**
@@ -333,8 +333,6 @@ class Dev
 
             return $app;
         }
-        $app->router->setGlobals($GLOBALS);
-        $argv = [];
 
         return $app;
     }
