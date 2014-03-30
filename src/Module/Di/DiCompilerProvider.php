@@ -56,7 +56,7 @@ class DiCompilerProvider implements ProviderInterface
         if ($compiler) {
             return $compiler;
         }
-        $moduleProvider = function() {
+        $moduleProvider = function () {
             $appModule = "{$this->appName}\Module\AppModule";
             return new $appModule($this->context);
         };
