@@ -52,11 +52,6 @@ class Dev
     private $sapiName;
 
     /**
-     * @var bool
-     */
-    private $isDirectStaticFileAccess = false;
-
-    /**
      * @param AppInterface $app
      * @param string       $appDir
      *
@@ -231,41 +226,24 @@ class Dev
     }
 
     /**
-     * @return bool false:has file, true:skip
-     */
-    private function directAccessFile()
-    {
-        $isDevWev = $this->web->isDevWebService($this->sapiName, $this->requestUri);
-        if (!$isDevWev && php_sapi_name() == "cli-server") {
-            $path = parse_url($this->requestUri)['path'];
-            if (preg_match('/\.(?:png|jpg|jpeg|gif|js|css|ico|php|html)$/', $path)) {
-                return false;
-            }
-            if (is_file(__DIR__ . preg_replace('#(\?.*)$#', '', $this->requestUri))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Web service
+     * Dev web service html
      *
-     * @param null $requestUri
+     * @param string $requestUri
      *
-     * @return array|bool
+     * @return string
      */
-    public function webService($requestUri = null)
+    public function getDevHtml($requestUri = null)
     {
-        if ($this->web->isDevWebService($this->sapiName, $this->requestUri)) {
-            $requestUri = $requestUri ? : $_SERVER['REQUEST_URI'];
-            $html = $this->web->service($requestUri, $this->app, $this->appDir);
-
-            return $this->output(200, $html);
+        if (isset($this->app->router)) {
+            $this->route($this->app);
         }
+        if (! $this->web->isDevWebService($this->sapiName, $this->requestUri)) {
+            return '';
+        }
+        $requestUri = $requestUri ? : $_SERVER['REQUEST_URI'];
+        $html = $this->web->service($requestUri, $this->app, $this->appDir);
 
-        return false;
+        return $html;
     }
 
     /**
@@ -292,33 +270,6 @@ class Dev
     }
 
     /**
-     * @param $mode
-     *
-     * @return AbstractApp|bool
-     */
-    public function serviceDevWeb()
-    {
-        // direct file for built in web server
-        if ($this->directAccessFile() === false) {
-            $this->app = false;
-            return $this;
-        }
-        $this->route($this->app);
-        // development web service (/dev)
-        $this->webService();
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDirectStaticFileAccess()
-    {
-        return $this->directAccessFile();
-    }
-
-    /**
      * @param AbstractApp $app
      *
      * @return AbstractApp
@@ -335,24 +286,6 @@ class Dev
         }
 
         return $app;
-    }
-
-    /**
-     * Output
-     *
-     * @param int    $code
-     * @param string $html
-     *
-     * @return array
-     */
-    private function output($code, $html)
-    {
-        if ($this->return) {
-            return [$code, $html];
-        }
-        http_response_code($code);
-        echo $html;
-        exit(0);
     }
 
     /*

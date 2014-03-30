@@ -20,9 +20,11 @@ use BEAR\Package\Dev\Dev;
 
 ob_start();
 
-if ((PHP_SAPI !== 'cli') && preg_match('/\.(?:png|jpg|jpeg|gif|js)$/', $_SERVER["REQUEST_URI"])) {
+// Serve file as is in built in wev-server.
+if (php_sapi_name() === 'cli-server' && preg_match('/\.(?:png|jpg|jpeg|gif|js|txt)$/', $_SERVER["REQUEST_URI"])) {
     return false;
 }
+
 $appDir = dirname(dirname(__DIR__));
 
 //
@@ -35,23 +37,22 @@ $appDir = dirname(dirname(__DIR__));
 // the dev instance provides debugging tools and defaults to help you the development of your application.
 $context = 'dev';
 $app = require $appDir . '/bootstrap/instance.php';
-
 /* @var $app \BEAR\Package\Provide\Application\AbstractApp */
-$dev = new Dev;
-$dev
+
+$devHtml = (new Dev)
     ->iniSet()
     ->loadDevFunctions()
     ->registerFatalErrorHandler()
     ->registerExceptionHandler("{$appDir}/var/log")
     ->registerSyntaxErrorEdit()
     ->setApp($app, $appDir)
-    ->serviceDevWeb();
-
-// When using the built in file-server when directly accessing files the app instance will not be created and
-// and the script will be exited.
-if ($dev->isDirectStaticFileAccess()) {
-    return false;
+    ->getDevHtml();
+if ($devHtml) {
+    http_response_code(200);
+    echo $devHtml;
+    exit(0);
 }
+
 
 //
 // Calling the match of a BEAR.Sunday compatible router will give us the $method, $pagePath, $query to be used
