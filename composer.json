@@ -53,6 +53,11 @@
             "BEAR\\Package\\": "src/"
         }
     },
+    "bin": [
+        "bin/bear.compile",
+        "bin/bear.create-resource",
+        "bin/bear.server"
+    ],
     "scripts": {
         "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate"]
     }
