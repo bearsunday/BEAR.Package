@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -9,11 +10,13 @@
  */
 use BEAR\Package\Dev\Application\ApplicationReflector;
 
-$appName = isset($argv[1]) ? $argv[1] : error();
+$appDir = isset($argv[1]) ? $argv[1] : error();
+
 $uri = isset($argv[2]) ? $argv[2] : error();
-$appFile = dirname(__DIR__) . "/apps/{$appName}/bootstrap/instance.php";
+$appFile = "{$appDir}/bootstrap/instance.php";
+
 if (!file_exists($appFile)) {
-    error("Invalid application name: {$appName}");
+    error("Invalid application Dir: {$appDir}");
 }
 $app = require $appFile;
 $appReflector = new ApplicationReflector($app);
@@ -27,7 +30,7 @@ echo "new resource [$uri] was successfully made at [{$filePath}]" . PHP_EOL;
 /**
  * @param string $msg
  */
-function error($msg = 'Usage: php bin/new_res.php <app-name> <new-uri>')
+function error($msg = 'Usage: bear.create-resource <app-dir> <new-uri>')
 {
     echo $msg . PHP_EOL;
     exit(1);
