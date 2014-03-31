@@ -1,6 +1,6 @@
 <h1>New Post</h1>
 <form action="/blog/posts/newpost" method="POST">
-    <input name="X-HTTP-Method-Override" type="hidden" value="POST"/>
+    <input name="_method" type="hidden" value="POST"/>
 
     <div class="control-group {if $errors.title}error{/if}">
         <label class="control-label" for="title">Title</label>

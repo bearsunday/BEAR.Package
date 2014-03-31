@@ -7,7 +7,7 @@
 
     <form action="/restbucks/index" method="POST">
         <legend>Order here</legend>
-        <input name="X-HTTP-Method-Override" type="hidden" value="POST"/>
+        <input name="_method" type="hidden" value="POST"/>
         <label>Which drink do you want ?</label>
         <label>
             <input type="text" name="drink" value="latte">

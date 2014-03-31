@@ -7,7 +7,7 @@
         <li class="active">Edit Post</li>
     </ul>
     <form action="/blog/posts/edit" method="POST">
-        <input name="X-HTTP-Method-Override" type="hidden" value="PUT"/>
+        <input name="_method" type="hidden" value="PUT"/>
         <input name="id" type="hidden" value="{$id}"/>
 
         <div class="control-group {if $errors.title}error{/if}">
