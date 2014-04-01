@@ -36,23 +36,4 @@ class Posts extends Page
 
         return $this;
     }
-
-    /**
-     * @param int $id
-     */
-    public function onDelete($id)
-    {
-        // delete
-        $this->resource
-            ->delete
-            ->uri('app://self/blog/posts')
-            ->withQuery(['id' => $id])
-            ->eager
-            ->request();
-
-        // redirect
-        $this->headers['location'] = '/blog/posts';
-
-        return $this;
-    }
 }
