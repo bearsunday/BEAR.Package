@@ -29,7 +29,7 @@ use Ray\Aop\WeavedInterface;
 class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
 {
     const NO_CACHE = 'label-default';
-    const WRITE_CACHE = 'label-important';
+    const WRITE_CACHE = 'label-danger';
     const READ_CACHE = 'label-success';
     const BADGE_ARGS = '<span class="badge badge-info">Arguments</span>';
     const BADGE_CACHE = '<span class="badge badge-info">Cache</span>';
@@ -200,7 +200,7 @@ EOT;
         $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode($resourceObject->headers[CacheLoader::HEADER_CACHE], true) : false;
         if ($cache === false) {
             $labelColor = self::NO_CACHE;
-        } elseif (isset($cache['context']) && $cache['context'] === 'W') {
+        } elseif (isset($cache['mode']) && $cache['mode'] === 'W') {
             $labelColor = self::WRITE_CACHE;
         } else {
             $labelColor = self::READ_CACHE;
