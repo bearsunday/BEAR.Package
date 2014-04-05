@@ -162,52 +162,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
 <script src="//www.google.com/jsapi"></script>
 <script>if (typeof jQuery == "undefined") {google.load("jquery", "1.7.1");}</script>
 {$bootstrapCss}{$tabJs}
-<style>
 
-.bearsunday .frame {
-    position: relative;
-}
-
-.bearsunday .frame::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    width: 100%;
-    height: 100%;
-    -webkit-box-shadow: rgba(113, 135, 164, .2) 0px 0px 0px 5px inset;
-    box-shadow: rgba(113, 135, 164, .2) 0px 0px 0px 5px inset;
-    z-index:9999;
-    pointer-events: none;
-}
-
-.bearsunday .toolbar {
-    position: absolute;
-    z-index: 10000;
-    background: rgba(255, 255, 255, .5);
-    border-radius: 3px;
-    padding: 0 5px;
-}
-
-.bearsunday .label {
-    font-weight: normal;
-}
-
-.bearsunday .edit {
-    margin-left: 5px;
-}
-
-.bearsunday .toolbar a {
-    color: gray!important;
-}
-
-.bearsunday .tab-wrap {
-    position: relative;
-    padding: 25px;
-    background: #fff;
-}
-
-</style>
 <!-- /BEAR.Sunday dev tool load -->
 EOT;
         $toolLoad = str_replace(["\n", "  "], '', $toolLoad);
