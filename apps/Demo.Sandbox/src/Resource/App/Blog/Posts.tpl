@@ -15,8 +15,8 @@
         <td>{$post.body|truncate:60|escape}</td>
         <td>{$post.created}</td>
         <td>
-            <a title="Edit post" class="btn" href="/blog/posts/edit?id={$post.id}"><span class="icon-edit"></span></a>
-            <a title="Delete post" class="btn remove confirm" href="#{$post.id}"><span class="icon-trash"></span></a>
+            <a title="Edit post" class="btn" href="/blog/posts/edit?id={$post.id}"><span class="glyphicon glyphicon-edit"></span></a>
+            <a title="Delete post" class="btn remove confirm" href="#"><span class="glyphicon glyphicon-trash" data-post-id="{$post.id}"></span></a>
         </td>
     </tr>
 {/foreach}

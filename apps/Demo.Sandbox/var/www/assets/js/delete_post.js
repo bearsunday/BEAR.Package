@@ -4,15 +4,14 @@ $(document).ready(function () {
     });
     $('.remove').click(function (event) {
         event.preventDefault();
-        url = event.target.href;
-        var id = url.substring(url.indexOf('#') + 1);
+        var postId = $(event.target).data('postId');
         $.ajax({
             url: '/blog/posts/post',
             type: "POST",
             headers: {
                 'X-HTTP-Method-Override': 'DELETE'
             },
-            data: 'id=' + id,
+            data: 'id=' + postId,
             success: function () {
                 window.location = "/blog/posts";
             }
