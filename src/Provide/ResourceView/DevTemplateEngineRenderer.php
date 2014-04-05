@@ -153,12 +153,15 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         if (strpos($body, '</body>') === false) {
             return $body;
         }
-        $bootstrapCss = '<link href="//koriym.github.io/BEAR.Package/assets/css/bootstrap.bear.css" rel="stylesheet"><link href="//koriym.github.io/BEAR.Package/assets/css/bear.dev.css" rel="stylesheet"';
+        $bootstrapCss = '<link href="//koriym.github.io/BEAR.Package/assets/css/bootstrap.bear.css" rel="stylesheet"><link href="//koriym.github.io/BEAR.Package/assets/css/bear.dev.css" rel="stylesheet">';
         $bootstrapCss .= strpos($body, 'glyphicons.css') ? '' : '<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">';
+        $tabJs = strpos($body, '/assets/js/bootstrap-tab.js') ? '' : '<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap-tab.js"></script>';
         $bootstrapJs = '<link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/united/bootstrap.min.css" rel="stylesheet">';
         $toolLoad = <<<EOT
 <!-- BEAR.Sunday dev tool load -->
-{$bootstrapCss}{$bootstrapJs}
+<script src="//www.google.com/jsapi"></script>
+<script>if (typeof jQuery == "undefined") {google.load("jquery", "1.7.1");}</script>
+{$bootstrapCss}{$tabJs}
 <style>
 
 .bearsunday .frame {
