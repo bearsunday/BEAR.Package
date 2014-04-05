@@ -110,7 +110,7 @@ class Dev
         xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
         // stop
-        register_shutdown_function (
+        register_shutdown_function(
             function () {
                 $xhprof = xhprof_disable();
                 if (!$xhprof) {
@@ -185,7 +185,7 @@ class Dev
      */
     public function registerFatalErrorHandler()
     {
-        register_shutdown_function (
+        register_shutdown_function(
             function () {
                 if (PHP_SAPI === 'cli') {
                     return;

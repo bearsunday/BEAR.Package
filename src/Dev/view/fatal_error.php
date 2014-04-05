@@ -15,22 +15,21 @@ VIEW_FUNCTIONS: {
      * @return string
      */
     $getFile = function ($file, $line, $num = 6) {
+    if (!file_exists($file) || $line === 0) {
+        return '<pre>n/a</pre>';
+    }
+    $result = '<div class="file-summary">';
+    $files = file($file);
+    $fileArray = array_map('htmlspecialchars', $files);
+    $hitLineOriginal = isset($fileArray[$line - 1]) ? $fileArray[$line - 1] : '';
+    $fileArray[$line - 1] = "<span class=\"hit-line\">{$hitLineOriginal}</span>";
+    $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
+    $shortListArray[$num - 1] = '<strong>' . $fileArray[$line - 1] . '</strong>';
+    $shortList = implode('', $shortListArray);
+    $shortList = '<pre class="short-list" style="background-color: #F0F0F9;">' . $shortList . '</pre>';
+    $result .= $shortList . '</div>';
 
-        if (!file_exists($file) || $line === 0) {
-            return '<pre>n/a</pre>';
-        }
-        $result = '<div class="file-summary">';
-        $files = file($file);
-        $fileArray = array_map('htmlspecialchars', $files);
-        $hitLineOriginal = isset($fileArray[$line - 1]) ? $fileArray[$line - 1] : '';
-        $fileArray[$line - 1] = "<span class=\"hit-line\">{$hitLineOriginal}</span>";
-        $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
-        $shortListArray[$num - 1] = '<strong>' . $fileArray[$line - 1] . '</strong>';
-        $shortList = implode('', $shortListArray);
-        $shortList = '<pre class="short-list" style="background-color: #F0F0F9;">' . $shortList . '</pre>';
-        $result .= $shortList . '</div>';
-
-        return $result;
+    return $result;
     };
 
     /**

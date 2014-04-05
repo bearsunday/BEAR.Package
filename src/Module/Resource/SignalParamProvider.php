@@ -55,7 +55,7 @@ class SignalParamProvider implements ProviderInterface
      */
     public function get()
     {
-        foreach($this->paramProviders as $varName => $paramProvider) {
+        foreach ($this->paramProviders as $varName => $paramProvider) {
             /** @var $paramProvider ParamProviderInterface */
             $this->signalParam->attachParamProvider($varName, $paramProvider);
         }

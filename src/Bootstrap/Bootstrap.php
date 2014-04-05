@@ -22,7 +22,7 @@ class Bootstrap
     public static function registerLoader(ClassLoader $loader, $appName, $appDir)
     {
         /** @var $loader \Composer\Autoload\ClassLoader */
-        $loader->addPsr4($appName . '\\' , $appDir . '/src');
+        $loader->addPsr4($appName . '\\', $appDir . '/src');
 
         AnnotationRegistry::registerLoader([$loader, 'loadClass']);
         AnnotationReader::addGlobalIgnoredName('noinspection');

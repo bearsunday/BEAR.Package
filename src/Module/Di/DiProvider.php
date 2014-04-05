@@ -41,7 +41,11 @@ class DiProvider implements ProviderInterface
                     new Config(
                         new Annotation(
                             new Definition,
-                            new AnnotationReader)))),
+                            new AnnotationReader
+                        )
+                    )
+                )
+            ),
             $this->module,
             new Bind,
             new Compiler(

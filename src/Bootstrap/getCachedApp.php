@@ -61,7 +61,12 @@ function getCachedApp($appName, $context, $tmpDir)
     };
 
     $cache = function_exists('apc_fetch') ?
-        new FusionCache(new ApcCache, function () use ($tmpDir) {return new FilesystemCache($tmpDir);})
+        new FusionCache(
+            new ApcCache,
+            function () use ($tmpDir) {
+                return new FilesystemCache($tmpDir);
+            }
+        )
         : new FilesystemCache($tmpDir);
     $injector = new CacheInjector($injector, $initialization, $appName . $context, $cache);
     $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');
