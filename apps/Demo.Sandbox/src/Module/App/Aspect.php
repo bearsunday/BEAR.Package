@@ -41,7 +41,10 @@ class Aspect extends AbstractModule
     private function installNewBlogPost()
     {
         $this->bindInterceptor(
-            $this->matcher->subclassesOf('Demo\Sandbox\Resource\Page\Blog\Posts\Newpost'),
+            $this->matcher->logicalOr(
+                $this->matcher->subclassesOf('Demo\Sandbox\Resource\Page\Blog\Posts\Newpost'),
+                $this->matcher->subclassesOf('Demo\Sandbox\Resource\Page\Blog\Posts\Edit')
+            ),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Form'),
             [$this->requestInjection('Demo\Sandbox\Interceptor\Form\BlogPost')]
         );
