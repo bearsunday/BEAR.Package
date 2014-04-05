@@ -8,7 +8,7 @@
     <meta name="author" content="Akihito Koriyama">
 
     <!-- Le styles -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
