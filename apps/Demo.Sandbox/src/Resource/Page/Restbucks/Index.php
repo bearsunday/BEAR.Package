@@ -63,7 +63,6 @@ class Index extends Page
         if ($orderResponse->code !== 201) {
             throw new RuntimeException('Sorry, Not available. Try "latte"');
         }
-
         // Story 2: As a customer. I want to be able to change my drink to suite my taste
         // （お客）エクストラショットを追加し注文を変更
         $orderId = $orderResponse['id'];
@@ -78,6 +77,8 @@ class Index extends Page
                 ]
             )->eager
             ->request();
+
+        $logs = $this->getLogs();
 
         // Story 3: As a customer. I want to be able to pay my bill to receive my drink
         // （お客）支払いをする
@@ -103,14 +104,15 @@ class Index extends Page
 
         // get one order
         $ordersResponse = $this->resource->get->uri('app://self/restbucks/orders')->eager->request();
+
         $order = $ordersResponse->body['order'][0];
         // change status
-        $editUri = $order['_links']['edit']['href'];
+        $editUri = $order->links['edit']['href'];
         $this->resource->put->uri($editUri)->addQuery(['status' => 'preparing'])->eager->request();
 
         // Story 5: As a barista, I want to check that a customer has paid for their drink so that I can serve it
         // (店) ドリンクを渡すために支払いを確認
-        $paymentUri = $order['_links']['payment']['href'];
+        $paymentUri = $order->links['payment']['href'];
 
         $paymentResponse = $this->resource->get->uri($paymentUri)->eager->request();
         if ($paymentResponse->code !== 200) {
@@ -119,13 +121,14 @@ class Index extends Page
 
         // Story 6: As a barista, I want to remove drinks I have made from the pending list so that I don't make duplicates
         // （店）ダブってつくらないように注文を削除
-        $orderUri = $order['_links']['self']['href'];
+        $orderUri = $order->links['self']['href'];
         $this->resource->delete->uri($orderUri)->eager->request();
 
         $this['ordered'] = true;
 
         // log
-        $this['logs'] = $this->getLogs();
+        $logs  += $this->getLogs();
+        $this['logs'] = $logs;
         return $this;
     }
 
