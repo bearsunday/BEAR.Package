@@ -33,7 +33,6 @@
         <ul>
             <li><a href="/demo/aspect/cache/">@Cache</a></li>
             <li><a href="/demo/aspect/time/">@Time</a></li>
-            <li><a href="/demo/aspect/resourcegraph/">@ResourceGraph</a></li>
             <li>@Db</li>
             <li>@Pager</li>
             <li>@Transaction</li>

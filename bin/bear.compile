@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -44,7 +45,7 @@ function compile($appDir) {
 /**
  * @param string $msg
  */
-function error($msg = 'Usage: php bin/compiler.php <app-dir>')
+function error($msg = 'Usage: bear.compiler <app-dir>')
 {
     error_log($msg);
     exit(1);

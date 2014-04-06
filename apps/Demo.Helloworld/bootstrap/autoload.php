@@ -15,4 +15,3 @@ autoload: {
     $loader->addPsr4('Demo\Helloworld\\', dirname(__DIR__) . '/src');
     AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 }
-

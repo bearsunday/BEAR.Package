@@ -11,14 +11,15 @@ Installation
 ------------
 
     $ composer create-project bear/package {$PROJECT_PATH}
+    $ composer create-project bear/package {$PROJECT_PATH} dev-develop
 
 built-in web server for development
 ------------------
 
 for Sandbox web page
 
-    $ php bin/server.php apps/Demo.Sandbox
-    $ php bin/server.php --context=api --port=8081 apps/Demo.Sandbox
+    $ bin/bear.server apps/Demo.Sandbox
+    $ bin/bear.server.php --context=api --port=8081 apps/Demo.Sandbox
 
 or
 
@@ -40,8 +41,8 @@ Console
 ### web access
 ```bash
 
-$ cd {$PROJECT_PATH}/apps/Demo.Sandbox
-$ php bin/web.php get /
+$ cd {$PROJECT_PATH}/apps/Demo.Sandbox/bootstrap/contexts
+$ php web.php get /
     
 200 OK
 x-interceptors: ["{\"onGet\":[\"Sandbox\\\\Interceptor\\\\Checker\"]}"]
@@ -71,8 +72,8 @@ performance: app://self/performance
 ### api access
 
 ```bash
-$ php bin/api.php get page://self/index
-$ php bin/api.php get 'app://self/first/greeting?name=World'
+$ php bootstrap/contexts/api.php get page://self/index
+$ php bootstrap/contexts/api.php get 'app://self/first/greeting?name=World'
 
 200 OK
 content-type: ["application\/hal+json; charset=UTF-8"]
@@ -82,23 +83,31 @@ date: ["Sun, 22 Sep 2013 12:42:48 GMT"]
 Hello, World
 
 
-$ php bin/api.php get app://self/blog/posts
+$ php api.php get app://self/blog/posts
 ```
 
 Make your own application
-----------------------------------
+-------------------------
+    $ cd apps
+
 ### install
 
-    $ php bin/new_app.php {NewAppName}
+    $ composer create-project bear/skeleton {Vendor.AppName}
+    $ composer create-project bear/skeleton {Vendor.AppName} dev-develop
+
+### first run
+    $ cd {Vendor.AppName}
+
+    // Console
+    $ php bootstrap/contexts/dev.php get /
+
+    // Web
+    $ bin/bear.server apps/{Vendor.AppName}
 
 ### test
 
-    $ cd apps/{NewAppName}
     $ phpunit
 
-### run
-    $ cd var/www
-    // Console
-    $ php dev.php get /
-    // Web
-    $ php -S 0.0.0.0:8080 dev.php
+### application first
+
+    $ composer install

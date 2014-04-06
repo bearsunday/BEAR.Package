@@ -7,11 +7,12 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\TmpDirInject;
 use BEAR\Resource\RenderInterface;
 use Ray\Di\Di\Named;
+use BEAR\Sunday\Inject\ResourceInject;
+use \Demo\Sandbox\Resource\App\Restbucks\Orders;
 
 class Order extends ResourceObject
 {
-    use TmpDirInject;
-
+    use ResourceInject;
     /**
      * Menu
      *
@@ -28,8 +29,9 @@ class Order extends ResourceObject
     public function onGet($id)
     {
         // load
-        $resourceFile = "{$this->tmpDir}/order{$id}";
-        $this->body = json_decode(file_get_contents($resourceFile), true);
+        $this->body = Orders::$orders[$id]->body;
+
+        return $this;
     }
 
     /**
@@ -55,8 +57,7 @@ class Order extends ResourceObject
         // 201 created
         $this->code = 201;
         // save
-        $resourceFile = "{$this->tmpDir}/order{$id}";
-        file_put_contents($resourceFile, (string)$this);
+        Orders::$orders[$id] = $this;
 
         return $this;
     }
@@ -71,8 +72,7 @@ class Order extends ResourceObject
     public function onPut($id, $addition = null, $status = null)
     {
         // load
-        $resourceFile = "{$this->tmpDir}/order{$id}";
-        $this->body = json_decode(file_get_contents($resourceFile), true);
+        $this->body = Orders::$orders[$id]->body;
         // update
         if ($addition) {
             $this['addition'] = $addition;
@@ -84,8 +84,7 @@ class Order extends ResourceObject
         $this->links['payment'] = [Link::HREF => 'app://self/restbucks/payment?id=' . $id];
         // 100 continue
         $this->code = 100;
-        // save
-        file_put_contents($resourceFile, (string)$this);
+        // make HAL
         return $this;
     }
 
@@ -98,9 +97,9 @@ class Order extends ResourceObject
      */
     public function onDelete($id)
     {
-        $resourceFile = "{$this->tmpDir}/order{$id}";
-        @unlink($resourceFile);
+        unset(Orders::$orders[$id]);
         $this->code = 200;
+
         return $this;
     }
 
@@ -116,4 +115,5 @@ class Order extends ResourceObject
     {
         $this->renderer = $renderer;
     }
+
 }

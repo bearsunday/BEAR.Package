@@ -2,7 +2,7 @@
 
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-class Mock extends \BEAR\Resource\AbstractObject
+class Mock extends \BEAR\Resource\ResourceObject
 {
     public function onGet($a, $b)
     {

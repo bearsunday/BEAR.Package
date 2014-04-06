@@ -25,6 +25,9 @@ use Ray\Di\Injector;
 use Ray\Di\Logger as DiLogger;
 use Koriym\FusionCache\DoctrineCache as FusionCache;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ray\Di\DiCompiler;
+use Ray\Di\CompileLogger;
+use Ray\Di\Logger;
 
 /**
  * Return application instance
@@ -35,7 +38,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
  *
  * @return \BEAR\Sunday\Extension\Application\AppInterface|object
  */
-function getApp($appName, $context, $tmpDir)
+function getCachedApp($appName, $context, $tmpDir)
 {
     $injector = function () use ($appName, $context, $tmpDir) {
         $appModule = "{$appName}\Module\AppModule";
@@ -51,17 +54,19 @@ function getApp($appName, $context, $tmpDir)
         );
     };
     $initialization = function (AbstractApp $app) use ($context) {
-        $diLog = (string)$app->injector . PHP_EOL . (string)$app->injector->getLogger();
-        $logger = $app->injector->getInstance('Guzzle\Log\LogAdapterInterface');
         /** @var $logger \Guzzle\Log\LogAdapterInterface */
-        $logger->log($diLog);
         if ($context === 'prod') {
             (new ApplicationReflector($app))->compileAllResources();
         }
     };
 
     $cache = function_exists('apc_fetch') ?
-        new FusionCache(new ApcCache, function () use ($tmpDir) {return new FilesystemCache($tmpDir);})
+        new FusionCache(
+            new ApcCache,
+            function () use ($tmpDir) {
+                return new FilesystemCache($tmpDir);
+            }
+        )
         : new FilesystemCache($tmpDir);
     $injector = new CacheInjector($injector, $initialization, $appName . $context, $cache);
     $app = $injector->getInstance('\BEAR\Sunday\Extension\Application\AppInterface');

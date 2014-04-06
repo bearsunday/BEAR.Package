@@ -12,9 +12,9 @@ use BEAR\Sunday\Module as SundayModule;
 use BEAR\Sunday\Module\Constant\NamedModule;
 use BEAR\Sunday\Module\Resource\ResourceCacheModule;
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
-use Ray\Di\Module\InjectorModule;
 use BEAR\Package\Module\Cache\CacheModule;
+use BEAR\Package\Module\Di\DiCompilerModule;
+use BEAR\Package\Module\Di\DiModule;
 
 class PackageModule extends AbstractModule
 {
@@ -33,9 +33,9 @@ class PackageModule extends AbstractModule
     private $context;
 
     /**
-     * @param AbstractModule   $appClass
-     * @param \Ray\Aop\Matcher $context
-     * @param array            $config
+     * @param string  $appClass
+     * @param string  $context
+     * @param array   $config
      */
     public function __construct($appClass, $context, array $config)
     {
@@ -50,6 +50,12 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
+        $this->install(new DiCompilerModule($this));
+        $this->install(new DiModule($this));
+
+        $this->install(new SundayModule\Framework\FrameworkModule($this));
+
         // application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
         // config
@@ -73,7 +79,7 @@ class PackageModule extends AbstractModule
 
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
-        $this->install(new SundayModule\Resource\ResourceCacheModule);
+        //$this->install(new SundayModule\Resource\ResourceCacheModule);
 
         // Cache Module
         $this->install(new CacheModule($this));
@@ -93,8 +99,5 @@ class PackageModule extends AbstractModule
         if ($this->context === 'test') {
             $this->install(new NullCacheModule($this));
         }
-
-        // install injector
-        $this->bind('Ray\Di\InjectorInterface')->toInstance($this->dependencyInjector);
     }
 }

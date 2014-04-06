@@ -42,4 +42,25 @@ class Post extends Page
             ->body;
         return $this;
     }
+
+    /**
+     * Delete entry
+     *
+     * @param int $id entry id
+     */
+    public function onDelete($id)
+    {
+        // delete
+        $this->resource
+            ->delete
+            ->uri('app://self/blog/posts')
+            ->withQuery(['id' => $id])
+            ->eager
+            ->request();
+
+        // no content
+        $this->code = 204;
+        return $this;
+    }
+
 }

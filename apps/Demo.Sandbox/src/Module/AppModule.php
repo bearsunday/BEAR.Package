@@ -2,6 +2,7 @@
 
 namespace Demo\Sandbox\Module;
 
+use BEAR\Package\Module\Di\DiModule;
 use BEAR\Package\Module\Form\AuraForm\AuraFormModule;
 use BEAR\Package\Module\Package\PackageModule;
 use BEAR\Package\Module\Resource\ResourceGraphModule;
@@ -12,14 +13,13 @@ use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
 use Demo\Sandbox\Module;
 use Ray\Di\AbstractModule;
-
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyModule;
 use BEAR\Package\Provide\TemplateEngine\Twig\TwigModule;
-use BEAR\Package\Provide\TemplateEngine\AuraView\AuraViewModule;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+use Ray\Di\Di\Scope;
+use BEAR\Package\Module\Di\DiCompilerModule;
 
-/**
- * Application module
- */
 class AppModule extends AbstractModule
 {
     /**
@@ -45,6 +45,9 @@ class AppModule extends AbstractModule
      * @param string $context
      *
      * @throws \LogicException
+     *
+     * @Inject
+     * @Named("app_context")
      */
     public function __construct($context = 'prod')
     {
@@ -61,7 +64,6 @@ class AppModule extends AbstractModule
      */
     protected function configure()
     {
-        // install core package
         $this->install(new PackageModule('Demo\Sandbox\App', $this->context, $this->constants));
 
         // install view package
@@ -72,7 +74,6 @@ class AppModule extends AbstractModule
         // install optional package
         $this->install(new SignalParamModule($this, $this->params));
         $this->install(new AuraFormModule);
-        $this->install(new ResourceGraphModule($this));
 
         // install develop module
         if ($this->context === 'dev') {
@@ -81,7 +82,6 @@ class AppModule extends AbstractModule
 
         // install API module
         if ($this->context === 'api') {
-            // install api output view package
             $this->install(new HalModule($this));
             //$this->install(new JsonModule($this));
         }

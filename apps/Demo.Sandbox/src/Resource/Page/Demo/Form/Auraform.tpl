@@ -9,7 +9,7 @@
         Message:{$message}<br>
     {else}
         <form action="/demo/form/auraform" method="POST" enctype="multipart/form-data">
-            <input name="X-HTTP-Method-Override" type="hidden" value="POST"/>
+            <input name="_method" type="hidden" value="POST"/>
 
                 <div class="control-group {if $form.name.error}error{/if}">
                     <label class="control-label" for="title">Name</label>

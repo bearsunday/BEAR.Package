@@ -4,10 +4,12 @@
  */
 namespace Demo\Sandbox;
 
-require_once dirname(dirname(dirname(__DIR__))) . '/src/Bootstrap/clearApp.php';
+use BEAR\Package\Bootstrap\Bootstrap;
+
+require dirname(__DIR__) . '/bootstrap/autoload.php';
 
 $clearDirs = [
     dirname(__DIR__) . '/var/tmp'
 ];
 
-\BEAR\Bootstrap\clearApp($clearDirs);
+Bootstrap::clearApp($clearDirs);

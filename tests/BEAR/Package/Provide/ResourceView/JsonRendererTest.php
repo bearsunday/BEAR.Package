@@ -93,20 +93,13 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         // json render
         $result = (string)$this->testResource;
         $data = json_decode($result, true);
-        $expected = array(
+        $expected =[
             'msg' => 'OK',
             'one' => 1,
-            'two' => array(
-                'code' => 200,
-                'headers' => array(),
-                'body' => array(
-                    'msg' => 'OK'
-                ),
-                'uri' => 'test://self/path/to/resource',
-                'view' => null,
-                'links' => []
-            ),
-        );
+            'two' => [
+                'msg' => 'OK'
+            ]
+        ];
         $this->assertSame($expected, $data);
     }
 }

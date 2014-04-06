@@ -35,7 +35,7 @@ list($method, $pagePath, $query) = $app->router->match();
 // Upon failure the appropriate error code is assigned and forwarded to ERROR.
 //
 try {
-    $app->page = $app->resource->$method->uri('page://self/' . $pagePath)->withQuery($query)->eager->request();
+    $app->page = $app->resource->$method->uri('page://self' . $pagePath)->withQuery($query)->eager->request();
 } catch (NotFound $e) {
     $code = 404;
     goto ERROR;

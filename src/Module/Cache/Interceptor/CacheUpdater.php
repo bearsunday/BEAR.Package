@@ -21,7 +21,6 @@ class CacheUpdater implements MethodInterceptor
      * @param CacheAdapterInterface $cache
      *
      * @Inject
-     * @Named("resource_cache")
      */
     public function __construct(CacheAdapterInterface $cache)
     {

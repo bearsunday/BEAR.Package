@@ -2,7 +2,7 @@
 
 namespace BEAR\Package;
 
-class MockResource extends \BEAR\Resource\AbstractObject
+class MockResource extends \BEAR\Resource\ResourceObject
 {
     public $headers = ['head1' => 1];
     public $body = [

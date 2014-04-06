@@ -7,7 +7,6 @@
 namespace BEAR\Package\Provide\Router\Adapter;
 
 use Aura\Web\Request\Method;
-use BEAR\Package\Provide\Router\RouterAdapterInterface;
 use Aura\Router\Router;
 
 /**
@@ -15,7 +14,7 @@ use Aura\Router\Router;
  *
  * @see https://github.com/auraphp/Aura.Router
  */
-final class AuraRouter implements RouterAdapterInterface
+final class AuraRouter implements AdapterInterface
 {
     const METHOD_FILED = '_method';
 

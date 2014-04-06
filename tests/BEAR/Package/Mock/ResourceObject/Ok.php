@@ -10,7 +10,7 @@ use BEAR\Resource\ResourceObject;
  * @package    BEAR.Sunday
  * @subpackage Page
  */
-final class Ok extends AbstractObject
+final class Ok extends ResourceObject
 {
     /**
      * Code

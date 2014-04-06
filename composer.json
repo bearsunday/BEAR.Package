@@ -1,7 +1,7 @@
 {
-    "name":"bear/package",
-    "description":"BEAR.Sunday framework package",
-    "keywords":[
+    "name": "bear/package",
+    "description": "BEAR.Sunday framework package",
+    "keywords": [
         "BEAR.Sunday",
         "DI",
         "AOP",
@@ -10,91 +10,52 @@
         "hypermedia",
         "API"
     ],
-    "homepage":"https://github.com/koriym/BEAR.Package",
-    "license":"BSD-3-Clause",
-    "authors":[
+    "homepage": "https://github.com/koriym/BEAR.Package",
+    "license": "BSD-3-Clause",
+    "authors": [
         {
             "name": "BEAR.Package Contributors",
             "homepage": "https://github.com/koriym/BEAR.Package/graphs/contributors"
         }
     ],
-    "provide":{
+    "provide": {
         "bear/framework": "0.9.0"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "bear/sunday": "0.*",
+        "koriym/fusion-cache": "*",
+
+        "aura/input": "1.*",
+        "aura/view": "1.*",
+        "aura/router": "2.*@dev",
+        "aura/web": "dev-develop-2",
+        "aura/sql": "2.*@dev",
+        "doctrine/dbal": "2.*",
+        "pagerfanta/pagerfanta": "1.*",
+        "playmedia/smarty": "3.*",
+        "symfony/http-foundation": "2.*",
+        "twig/twig": "1.*"
+    },
+    "require-dev": {
+        "bear/dev-package": "*"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
     },
-    "require":{
-        "php":">=5.4.0",
-        "ray/aop":"dev-develop",
-        "ray/di":"dev-develop",
-        "bear/resource":"dev-develop",
-        "bear/sunday":"dev-develop",
-        "koriym/fusion-cache":"*",
-
-        "aura/input": "1.*",
-        "aura/view": "1.*",
-        "aura/router":"2.*@dev",
-        "aura/web":"dev-develop-2",
-        "aura/sql":"2.*@dev",
-        "doctrine/dbal":"2.*",
-        "pagerfanta/pagerfanta":"1.*",
-        "playmedia/smarty":"3.*",
-        "symfony/routing": "2.*",
-        "symfony/http-foundation": "2.*",
-        "twig/twig":"1.*"
-    },
-    "require-dev":{
-        "bear/ace":"1.*",
-        "classpreloader/classpreloader": "dev-wrap-namespace",
-        "dg/adminer-custom": "1.*",
-        "facebook/xhprof":"dev-master",
-        "firephp/firephp-core":"*",
-        "phpunit/phpunit": "3.7.*",
-        "phpunit/dbunit": "1.3.*",
-        "printo/printo":"0.*",
-        "zendframework/zend-log":"2.*",
-        "zendframework/zend-db": "2.*",
-        "zendframework/zend-stdlib": "2.*"
-    },
-    "autoload":{
-        "files": [
-            "src/Bootstrap/getApp.php",
-            "src/Bootstrap/registerLoader.php"
-        ],
-        "psr-4":{
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
             "BEAR\\Package\\": "src/"
         }
     },
-    "scripts"   :{
+    "bin": [
+        "bin/bear.compile",
+        "bin/bear.create-resource",
+        "bin/bear.server"
+    ],
+    "scripts": {
         "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate"]
-    },
-    "repositories":[
-        {
-            "type":"composer",
-            "url":"http://packages.zendframework.com/"
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "classpreloader/classpreloader",
-                "version": "dev-wrap-namespace",
-                "dist": {
-                    "url": "https://github.com/koriym/classpreloader/zipball/wrap-namespace",
-                    "type": "zip"
-                },
-                "source": {
-                    "url": "https://github.com/koriym/ClassPreloader.git",
-                    "type": "git",
-                    "reference": "wrap-namespace"
-                },
-                "require":{
-                    "symfony/console": ">2.0",
-                    "symfony/console": ">2.0",
-                    "symfony/filesystem": ">2.0",
-                    "symfony/finder": ">2.0",
-                    "nikic/php-parser": "*"                }
-            }
-        }
-    ]
+    }
 }

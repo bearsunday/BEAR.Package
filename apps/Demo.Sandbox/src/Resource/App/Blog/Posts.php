@@ -33,7 +33,7 @@ class Posts extends ResourceObject
         'page_post' => [Link::HREF => 'page://self/blog/posts/post'],
         'page_item' => [Link::HREF => 'page://self/blog/posts/post{?id}', Link::TEMPLATED => true],
         'page_edit' => [Link::HREF => 'page://self/blog/posts/edit{?id}', Link::TEMPLATED => true],
-        'page_delete' => [Link::HREF => 'page://self/blog/posts?_method=delete{&id}', Link::TEMPLATED => true]
+        'page_delete' => [Link::HREF => 'page://self/blog/posts/post']
     ];
 
     /**

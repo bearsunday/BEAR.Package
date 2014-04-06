@@ -61,10 +61,11 @@ class WebRouterTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_URI' => '/this/is/my/path',
                 'HTTP_X_HTTP_METHOD_OVERRIDE' => 'DELETE'
             ],
-            '_POST' => []
+            '_POST' => ['id => 1']
         ];
-        list($method, , ) = $this->router->match('/this/is/my/path', $globals);
+        list($method, $pagePath, $query) =  $this->router->match('/this/is/my/path', $globals);
         $this->assertSame($method, 'delete');
+        $this->assertSame($pagePath, '/this/is/my/path');
+        $this->assertSame($query, ['id => 1']);
     }
-
 }
