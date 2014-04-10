@@ -24,13 +24,13 @@
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "0.*",
-        "koriym/fusion-cache": "*",
+        "koriym/fusion-cache": "0.*",
 
         "aura/input": "1.*",
         "aura/view": "1.*",
-        "aura/router": "2.*@dev",
+        "aura/router": "2.*",
         "aura/web": "dev-develop-2",
-        "aura/sql": "2.*@dev",
+        "aura/sql": "2.*",
         "doctrine/dbal": "2.*",
         "pagerfanta/pagerfanta": "1.*",
         "playmedia/smarty": "3.*",
