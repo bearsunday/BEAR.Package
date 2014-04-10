@@ -31,6 +31,16 @@ class DiCompilerProvider implements ProviderInterface
     private $tmpDir;
 
     /**
+     * @var \Ray\Di\DiCompiler
+     */
+    private static $compiler;
+
+    /**
+     * @var \Ray\Di\AbstractModule[]
+     */
+    private static $module;
+
+    /**
      * @param string $appName
      * @param string $context
      * @param string $tmpDir
@@ -51,18 +61,24 @@ class DiCompilerProvider implements ProviderInterface
      */
     public function get()
     {
-        static $compiler;
-
-        if ($compiler) {
-            return $compiler;
+        $saveKey = $this->appName . $this->context;
+        if (isset(self::$compiler[$saveKey])) {
+            return self::$compiler[$saveKey];
         }
-        $moduleProvider = function () {
+
+        $moduleProvider = function () use ($saveKey) {
+            // avoid infinity loop
+            if (isset(self::$module[$saveKey])) {
+                return self::$module[$saveKey];
+            }
             $appModule = "{$this->appName}\Module\AppModule";
-            return new $appModule($this->context);
+            self::$module[$saveKey] = new $appModule($this->context);
+
+            return self::$module[$saveKey];
         };
         $cacheKey = $this->appName . $this->context;
         $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir);
-        $compiler = DiCompiler::create($moduleProvider, $cache, $cacheKey, $this->tmpDir);
+        self::$compiler[$saveKey] = $compiler = DiCompiler::create($moduleProvider, $cache, $cacheKey, $this->tmpDir);
 
         return $compiler;
     }
