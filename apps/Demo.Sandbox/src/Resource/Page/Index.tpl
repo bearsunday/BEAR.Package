@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="BEAR.Sunday Demo\Sandbox application">
     <meta name="author" content="Akihito Koriyama">
-    <link rel="shortcut icon" href=/assets/ico/favicon.png">
+    <link rel="shortcut icon" href="/assets/ico/favicon.png">
 
     <title>BEAR.Sunday</title>
     <!-- Bootstrap core CSS -->

@@ -160,7 +160,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         $toolLoad = <<<EOT
 <!-- BEAR.Sunday dev tool load -->
 <script src="//www.google.com/jsapi"></script>
-<script>if (typeof jQuery == "undefined") {google.load("jquery", "1.7.1") {;}</script>$bootstrapCss}{$tabJs}
+<script>if (typeof jQuery == "undefined") {google.load("jquery", "1.7.1") {;}</script>{$bootstrapCss}{$tabJs}
 
 <!-- /BEAR.Sunday dev tool load -->
 EOT;
