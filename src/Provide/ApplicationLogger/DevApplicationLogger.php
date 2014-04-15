@@ -34,9 +34,8 @@ final class DevApplicationLogger implements ApplicationLoggerInterface
 
     /**
      * {@inheritdoc}
-     * @PreDestroy
      */
-    public function write()
+    public function __destruct()
     {
         if ($this->logger instanceof ResourceLoggerInterface) {
             $this->logger->write();
