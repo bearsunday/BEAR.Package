@@ -6,7 +6,8 @@ return <<<EOT
     <meta charset="utf-8">
     <title>{$view['app_name']} Dev</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             padding-top: 60px;
@@ -20,7 +21,7 @@ return <<<EOT
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="#">{$view['app_name']}</a>
+            <a class="navbar-brand" href="#">{$view['app_name']}</a>
         </div>
     </div>
 </div>

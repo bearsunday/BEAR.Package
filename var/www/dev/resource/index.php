@@ -22,7 +22,7 @@ view: {
     <thead>
     <tr>
         <th>URI</th>
-        <th style="width:200px">OPTIONS</th>
+        <th style="width:300px">METHODS</th>
         <th>LINKS</th>
     </tr>
 </thead>
@@ -32,12 +32,12 @@ EOT;
 //        $uri = "<a href=\"item.php?uri={$uri}\">$uri</a>";
         $ref = new \ReflectionClass($resource['class']);
         $file = ($ref->implementsInterface('Ray\Aop\WeavedInterface')) ? $ref->getParentClass()->getFileName() : $ref->getFileName();
-        $uri = "$uri <a href=\"../edit/?file={$file}\"><span class=\"icon-edit\"></span></span></a> <a href=\"graph.php?uri={$uri}\"><span class=\" icon-eye-open\"></span>";
+        $uri = "$uri <a href=\"../edit/?file={$file}\"><span class=\"glyphicon glyphicon-edit\"></span></span></a> <a href=\"graph.php?uri={$uri}\"><span class=\" glyphicon glyphicon-eye-open\"></span>";
         $buttonColor = [
-            'get' => 'success',
-            'post' => 'danger',
-            'put' => 'warning',
-            'delete' => 'inverse',
+            'get' => 'success btn-sm',
+            'post' => 'danger btn-sm',
+            'put' => 'warning btn-sm',
+            'delete' => 'warning btn-sm',
         ];
         foreach ($resource['options']['allow'] as &$method) {
             $method = "<span class=\"btn btn-mini btn-{$buttonColor[$method]}\">{$method}</span>";
@@ -45,7 +45,11 @@ EOT;
         $options = implode(' ', ($resource['options']['allow']));
         $params = '';
         unset($resource['options']['allow']);
-        $links = implode(', ', array_keys($resource['links']));
+        $linkKeys = array_keys($resource['links']);
+        $links = '';
+        foreach ($linkKeys as $link) {
+            $links .= '<span class="label label-default">' . $link . '</span> ';
+        }
         foreach ($resource['options'] as $method => $param) {
             $param = "<span class=\"strong\">{$param}</span>";
             $params .= "<tr><td></td><td>{$method}: {$param}</td><td></td></tr>";
@@ -61,14 +65,14 @@ output: {
     // output
     $contentsForLayout = <<<EOT
     <ul class="breadcrumb">
-    <li><a href="../">Home</a> <span class="divider">/</span></li>
+    <li><a href="../">Home</a></li>
     <li class="active">Resource</li>
     </ul>
 
-    <h1>Resources</h1>
     {$view['resource']}
-    <a href="new" class="btn btn-primary btn-large">New Resource</a>
-
+    <a href="new" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus"></span> New Resource
+    </a>
 EOT;
     // two step view
     /** @noinspection PhpIncludeInspection */
