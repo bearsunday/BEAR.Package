@@ -25,6 +25,13 @@ class Installer
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
 
+        $helloApp = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Helloworld';
+        $sandboxApp = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
+        if (file_exists($helloApp)) {
+            rename($helloApp, dirname(__DIR__) . '/apps/Demo.Helloworld');
+            rename($sandboxApp, dirname(__DIR__) . '/apps/Demo.Sandbox');
+        }
+
         include $bearRoot . '/bin/env.php';
     }
 }

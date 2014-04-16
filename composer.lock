@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "76c34045b221eb07c5e5cbb4064390b9",
+    "hash": "16d0d6b11d119219c3282207966a1006",
     "packages": [
         {
             "name": "any/serializer",
@@ -444,12 +444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "a3870d1a16ecd3ab6c4807165ac5196384da62cd"
+                "reference": "5b3a50a77f720e1d6f0134031cbdbcc0ccceb145"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/a3870d1a16ecd3ab6c4807165ac5196384da62cd",
-                "reference": "a3870d1a16ecd3ab6c4807165ac5196384da62cd",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/5b3a50a77f720e1d6f0134031cbdbcc0ccceb145",
+                "reference": "5b3a50a77f720e1d6f0134031cbdbcc0ccceb145",
                 "shasum": ""
             },
             "require": {
@@ -489,7 +489,7 @@
                 "request",
                 "response"
             ],
-            "time": "2014-04-01 20:12:34"
+            "time": "2014-04-14 19:03:59"
         },
         {
             "name": "bear/resource",
@@ -1772,6 +1772,38 @@
             "time": "2013-06-21 04:38:46"
         },
         {
+            "name": "bear/demo-apps",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koriym/BEAR.DemoApps.git",
+                "reference": "06f73b0cd50f94cea59b7a5a2c861751e019a25c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/06f73b0cd50f94cea59b7a5a2c861751e019a25c",
+                "reference": "06f73b0cd50f94cea59b7a5a2c861751e019a25c",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Akihito Koriyama",
+                    "email": "akihito.koriyama@gmail.com",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Demo.* applications for BEAR.Package",
+            "keywords": [
+                "BEAR.Sunday"
+            ],
+            "time": "2014-04-16 14:02:52"
+        },
+        {
             "name": "bear/dev-package",
             "version": "0.0.1",
             "source": {
@@ -1862,12 +1894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/xhprof.git",
-                "reference": "ec8b884ffdae5dfa5e1e271ab6762115123989c5"
+                "reference": "e83d1792569ecbc5ef14c50a00eb37094d4e6ad9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/xhprof/zipball/ec8b884ffdae5dfa5e1e271ab6762115123989c5",
-                "reference": "ec8b884ffdae5dfa5e1e271ab6762115123989c5",
+                "url": "https://api.github.com/repos/facebook/xhprof/zipball/e83d1792569ecbc5ef14c50a00eb37094d4e6ad9",
+                "reference": "e83d1792569ecbc5ef14c50a00eb37094d4e6ad9",
                 "shasum": ""
             },
             "require": {
@@ -1890,7 +1922,7 @@
                 "performance",
                 "profiling"
             ],
-            "time": "2013-08-09 16:22:45"
+            "time": "2014-04-14 20:23:48"
         },
         {
             "name": "firephp/firephp-core",
@@ -2604,17 +2636,17 @@
         },
         {
             "name": "zendframework/zend-db",
-            "version": "2.3.0",
+            "version": "2.3.1",
             "target-dir": "Zend/Db",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendDb.git",
-                "reference": "37d573ea83b9573e2247c36fac7b370283ca673e"
+                "reference": "29bb7f1ceacb32fa3e1c122bc3d14da6490aba2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendDb/zipball/37d573ea83b9573e2247c36fac7b370283ca673e",
-                "reference": "37d573ea83b9573e2247c36fac7b370283ca673e",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendDb/zipball/29bb7f1ceacb32fa3e1c122bc3d14da6490aba2c",
+                "reference": "29bb7f1ceacb32fa3e1c122bc3d14da6490aba2c",
                 "shasum": ""
             },
             "require": {
@@ -2633,8 +2665,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev",
-                    "dev-develop": "2.3-dev"
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2650,21 +2682,21 @@
                 "db",
                 "zf2"
             ],
-            "time": "2014-03-12 17:04:30"
+            "time": "2014-04-15 15:29:07"
         },
         {
             "name": "zendframework/zend-log",
-            "version": "2.3.0",
+            "version": "2.3.1",
             "target-dir": "Zend/Log",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendLog.git",
-                "reference": "a7fe7d3a171d9d60397452eb80a93a1f450e409a"
+                "reference": "606ef20717a935afec1400f54bd1b03faf859c47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendLog/zipball/a7fe7d3a171d9d60397452eb80a93a1f450e409a",
-                "reference": "a7fe7d3a171d9d60397452eb80a93a1f450e409a",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendLog/zipball/606ef20717a935afec1400f54bd1b03faf859c47",
+                "reference": "606ef20717a935afec1400f54bd1b03faf859c47",
                 "shasum": ""
             },
             "require": {
@@ -2690,8 +2722,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev",
-                    "dev-develop": "2.3-dev"
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2709,21 +2741,21 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2014-03-14 16:21:36"
+            "time": "2014-04-15 15:28:45"
         },
         {
             "name": "zendframework/zend-servicemanager",
-            "version": "2.3.0",
+            "version": "2.3.1",
             "target-dir": "Zend/ServiceManager",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendServiceManager.git",
-                "reference": "310187f89fe830ed4484499f78338631f29d25c7"
+                "reference": "652ab6e142b7afd1eede8f0f33b47d2599786c84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendServiceManager/zipball/310187f89fe830ed4484499f78338631f29d25c7",
-                "reference": "310187f89fe830ed4484499f78338631f29d25c7",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendServiceManager/zipball/652ab6e142b7afd1eede8f0f33b47d2599786c84",
+                "reference": "652ab6e142b7afd1eede8f0f33b47d2599786c84",
                 "shasum": ""
             },
             "require": {
@@ -2738,8 +2770,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev",
-                    "dev-develop": "2.3-dev"
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2755,21 +2787,21 @@
                 "servicemanager",
                 "zf2"
             ],
-            "time": "2014-03-14 16:22:14"
+            "time": "2014-04-15 15:28:43"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.3.0",
+            "version": "2.3.1",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa"
+                "reference": "c1f4830018b5d4f034d32fa01a9e17ea176f56f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/d1c481b8a43f2f079b16d3567960ba539e9dacaa",
-                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/c1f4830018b5d4f034d32fa01a9e17ea176f56f6",
+                "reference": "c1f4830018b5d4f034d32fa01a9e17ea176f56f6",
                 "shasum": ""
             },
             "require": {
@@ -2788,8 +2820,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev",
-                    "dev-develop": "2.3-dev"
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2805,7 +2837,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2014-03-14 16:22:22"
+            "time": "2014-04-15 15:28:48"
         }
     ],
     "aliases": [
@@ -2813,7 +2845,8 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "aura/web": 20
+        "aura/web": 20,
+        "bear/demo-apps": 20
     },
     "platform": {
         "php": ">=5.4.0"
