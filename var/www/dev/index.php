@@ -40,7 +40,7 @@ $contentsForLayout =<<<EOT
         <hr>
         <span class="label label-warning">DELETE</span>
         <ul>
-            <li><a href="/dev/refresh/"><span class="glyphicon glyphicon-trash"></span></i> Clear Cache</a></li>
+            <li><a href="/dev/clear/"><span class="glyphicon glyphicon-trash"></span></i> Clear Cache</a></li>
         </ul>
     </div>
 EOT;
