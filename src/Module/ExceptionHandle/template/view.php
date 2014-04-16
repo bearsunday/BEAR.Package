@@ -19,7 +19,7 @@ VIEW_LOGIC: {
     }
     $includeFilesNum = count($files);
     $file = htmlspecialchars(trim(file_get_contents($e->getFile())));
-    $headers = $screen->getHeader($e, 'error');
+    $headers = $screen->getHeader($e, 'danger');
     $previousE = $e->getPrevious();
     if ($previousE) {
         $headers .= $screen->getHeader($previousE, 'warning');

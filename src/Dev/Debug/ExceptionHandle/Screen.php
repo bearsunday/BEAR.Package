@@ -235,7 +235,7 @@ class Screen
      *
      * @return string
      */
-    public function getHeader(\Exception $e, $type = "error")
+    public function getHeader(\Exception $e, $type = "danger")
     {
         $title = get_class($e);
         $subTitle = $e->getMessage();
