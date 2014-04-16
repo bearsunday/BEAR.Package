@@ -65,7 +65,7 @@ output: {
     // output
     $contentsForLayout = <<<EOT
     <ul class="breadcrumb">
-    <li><a href="../">Home</a></li>
+    <li><a href="/dev">Home</a></li>
     <li class="active">Resource</li>
     </ul>
 
