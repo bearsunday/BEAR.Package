@@ -23,7 +23,7 @@ $injections = preg_replace('/#singleton/', '<span style="color: gray; ">$0</span
 $injections = preg_replace('/#prototype/', '<span style="color: red; ">$0</span>', $injections);
 $contentsForLayout =<<<EOT
     <ul class="breadcrumb">
-    <li><a href="/dev">Home</a> <span class="divider">/</span></li>
+    <li><a href="/dev">Home</a> </li>
     <li class="active">Di log</li>
     </ul>
     <h2>Di log</h2>

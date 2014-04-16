@@ -27,7 +27,7 @@ view: {
 output: {
     $contentsForLayout = \DbugL::$css . <<<EOT
     <ul class="breadcrumb">
-    <li><a href="/dev">Home</a> <span class="divider">/</span></li>
+    <li><a href="/dev">Home</a> </li>
     <li class="active">Log</li>
     </ul>
     <p><a href="index"><span class="btn">Reload</span></a> <a href="index?clear"><span class="btn">Clear</span></a></p>
