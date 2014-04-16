@@ -14,7 +14,7 @@ return <<<EOT
         }
     </style>
 
-    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="shortcut icon" href="/dev/favicon.png">
 </head>
 
 <body>
@@ -28,6 +28,7 @@ return <<<EOT
 <div class="container">
 {$contentsForLayout}
 </div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 </body>

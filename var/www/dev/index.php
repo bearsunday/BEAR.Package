@@ -3,30 +3,45 @@
 /**
  * @global $appDir
  */
-// clear APC cache
-
 
 $view['app_name'] = $appDir;
 $contentsForLayout =<<<EOT
+    <style>
+        .glyphicon {
+            font-size: 20px;
+            color: black;
+        }
+        ul {
+            list-style: none;
+            line-height: 50px;
+        }
+    </style>
     <ul class="breadcrumb">
     <li class="active">Home</li>
     </ul>
-
-    <div class="well">
-        <ul>
-            <li><a href="log/"><i class="icon-th-list"></i> Log</a></li>
-            <li><a href="resource/"><i class="icon-th-list"></i> Resource</a>
-            <a href="resource/new" class="btn-mini btn-primary btn-large">+new</a></li>
-            <li><a href="refresh/"><i class="icon-refresh"></i> Refresh</a></li>
-            <li><a href="di/"><i class="icon-info-sign"></i> Di Log</a></li>
+    <div class="">
+        <span class="label label-success">GET</span>
+        <ul class="">
+            <li><a href="/dev/log/"><span class="glyphicon glyphicon-list"></span> Resource Log</a></li>
+            <li><a href="/dev/resource/"><span class="glyphicon glyphicon-list"></span> </i> Resource List</a>
+            </li>
+            <li><a href="/dev/di/"><span class="glyphicon glyphicon-list"></span> Di Log</a></li>
         </ul>
         <hr>
+        <span class="label label-danger">POST</span>
         <ul>
-            <li><a href="app/"><i class="icon-zoom-in"></i> Application graph</a></li>
-            <li><a href="ide/"><i class="icon-th-list"></i> IDE</a></li>
+            <li><a href="/dev/resource/new""><span class="glyphicon glyphicon-plus"></span> Add Resource</a></li>
         </ul>
         <hr>
-        <a href="/"><i class="icon-arrow-left small"></i> Back</a>
+        <span class="label label-warning">PUT</span>
+        <ul>
+            <li><a href="/dev/ide/"><span class="glyphicon glyphicon-edit"></span> Edit Application</a></li>
+        </ul>
+        <hr>
+        <span class="label label-warning">DELETE</span>
+        <ul>
+            <li><a href="/dev/refresh/"><span class="glyphicon glyphicon-trash"></span></i> Clear Cache</a></li>
+        </ul>
     </div>
 EOT;
 echo include __DIR__ . '/view/layout.php';
