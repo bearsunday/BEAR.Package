@@ -36,7 +36,7 @@
                                 src="https://poser.pugx.org/bear/package/v/stable.png"></a></li>
                 <li>PHP <code>{$version.php}</code></li>
             </ul>
-            <h3>Packages</h3>
+            <h2>Packages</h2>
 
             <p>
                 <a href="https://github.com/koriym/Ray.Di"><code>Ray.Di</code></a>
@@ -83,19 +83,7 @@
                 {/if}
             </ul>
             <h2>Development</h2>
-                <a href="/dev/"><button class="btn btn-danger">/dev</button></a>
-        </div>
-        <div class="col-lg-4">
-
-
-            <h2>Links</h2>
-            <ul>
-                <li><i class="icon-book"></i><a href="http://bearsunday.github.io">BEAR.Sunday
-                        Manual</a></li>
-                <li><i class="icon-book"></i><a href="http://code.google.com/p/rayphp/wiki/Motivation?tm=6">Ray.Di /
-                        Ray.AOP Manual</a></li>
-                <li><i class="icon-fire"></i><a href="https://github.com/koriym/BEAR.Package/issues">Issues</a></li>
-            </ul>
+                <a href="/dev"><button class="btn btn-danger">/dev</button></a>
         </div>
     </div>
 
