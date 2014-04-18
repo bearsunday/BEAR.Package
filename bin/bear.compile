@@ -24,22 +24,27 @@ $configFile = $appDir . '/var/lib//preloader/config.php';
 if (! file_exists($configFile)) {
     error("invalid app-dir:{$appDir}");
 }
-compile($appDir);
+compileSourceFile($appDir);
 
-function compile($appDir) {
+function compileSourceFile($appDir) {
 
     ini_set('display_errors', 1);
     ini_set('xhprof.output_dir', sys_get_temp_dir());
 
-    $packageDir = dirname((__DIR__));
-    $preLoader = $packageDir . '/vendor/bin/classpreloader.php';
-    $config = $appDir . '/var/lib/preloader/config.php';
-    $output = $appDir . '/var/tmp/preloader/preload.php';
-
-    $cmd = "php {$preLoader} compile --strip_comments=0 --config={$config} --output={$output}";
-
-    echo $cmd . PHP_EOL;
-    passthru($cmd);
+    pre_loader: {
+        $packageDir = dirname((__DIR__));
+        $preLoader = $packageDir . '/vendor/bin/classpreloader.php';
+        $config = $appDir . '/var/lib/preloader/config.php';
+        $output = $appDir . '/var/tmp/preloader/preload.php';
+        $minOutput = $appDir . '/var/tmp/preloader/preload.min.php';
+        $preLoaderCmd = "php {$preLoader} compile --quiet --strip_comments=0 --config={$config} --output={$output}";
+        // execution
+        echo "COMPILING SOURCE FILE... {$preLoaderCmd}" . PHP_EOL;
+        passthru($preLoaderCmd);
+        file_put_contents($minOutput, php_strip_whitespace($output), LOCK_EX);
+        echo "COMPILED :{$output}" . PHP_EOL;
+        echo "COMPILED(min) :{$minOutput}" . PHP_EOL;
+    }
 }
 
 /**

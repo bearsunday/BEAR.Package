@@ -38,8 +38,8 @@
         "twig/twig": "1.*"
     },
     "require-dev": {
-        "bear/dev-package": "*",
-        "bear/demo-apps": "dev-master"
+        "bear/dev-package": "0.*",
+        "bear/demo-apps": "0.*"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"

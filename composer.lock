@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "16d0d6b11d119219c3282207966a1006",
+    "hash": "ff84fd176ee0474f1aecedd77ca55865",
     "packages": [
         {
             "name": "any/serializer",
@@ -444,12 +444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "5b3a50a77f720e1d6f0134031cbdbcc0ccceb145"
+                "reference": "e7a323bdf6975d9cdf9cdfb014edcda4d4cb7322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/5b3a50a77f720e1d6f0134031cbdbcc0ccceb145",
-                "reference": "5b3a50a77f720e1d6f0134031cbdbcc0ccceb145",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/e7a323bdf6975d9cdf9cdfb014edcda4d4cb7322",
+                "reference": "e7a323bdf6975d9cdf9cdfb014edcda4d4cb7322",
                 "shasum": ""
             },
             "require": {
@@ -489,7 +489,7 @@
                 "request",
                 "response"
             ],
-            "time": "2014-04-14 19:03:59"
+            "time": "2014-04-17 03:16:07"
         },
         {
             "name": "bear/resource",
@@ -1773,16 +1773,16 @@
         },
         {
             "name": "bear/demo-apps",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "06f73b0cd50f94cea59b7a5a2c861751e019a25c"
+                "reference": "adf002c97e563ef7574f5094db9a3ba7d1c462f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/06f73b0cd50f94cea59b7a5a2c861751e019a25c",
-                "reference": "06f73b0cd50f94cea59b7a5a2c861751e019a25c",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/adf002c97e563ef7574f5094db9a3ba7d1c462f2",
+                "reference": "adf002c97e563ef7574f5094db9a3ba7d1c462f2",
                 "shasum": ""
             },
             "type": "library",
@@ -1801,28 +1801,28 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-04-16 14:02:52"
+            "time": "2014-04-18 05:19:41"
         },
         {
             "name": "bear/dev-package",
-            "version": "0.0.1",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DevPackage.git",
-                "reference": "cc7cc575aba55b55b491017c7fb1c0c2f6e69bba"
+                "reference": "600b5f4eb4fde84fb1d47a73584e186dcb581249"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DevPackage/zipball/cc7cc575aba55b55b491017c7fb1c0c2f6e69bba",
-                "reference": "cc7cc575aba55b55b491017c7fb1c0c2f6e69bba",
+                "url": "https://api.github.com/repos/koriym/BEAR.DevPackage/zipball/600b5f4eb4fde84fb1d47a73584e186dcb581249",
+                "reference": "600b5f4eb4fde84fb1d47a73584e186dcb581249",
                 "shasum": ""
             },
             "require": {
                 "bear/ace": "1.*",
-                "classpreloader/classpreloader": "dev-wrap-namespace",
+                "classpreloader/classpreloader": "1.*",
                 "dg/adminer-custom": "1.*",
                 "facebook/xhprof": "dev-master",
-                "firephp/firephp-core": "*",
+                "firephp/firephp-core": "0.*",
                 "phpunit/dbunit": "1.3.*",
                 "phpunit/phpunit": "3.7.*",
                 "printo/printo": "0.*",
@@ -1830,7 +1830,7 @@
                 "zendframework/zend-log": "2.*",
                 "zendframework/zend-stdlib": "2.*"
             },
-            "type": "library",
+            "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -1839,35 +1839,58 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
             "description": "dev-require packages for BEAR.Package",
-            "time": "2014-03-25 17:05:51"
+            "time": "2014-04-18 04:43:02"
         },
         {
             "name": "classpreloader/classpreloader",
-            "version": "dev-wrap-namespace",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/koriym/ClassPreloader.git",
-                "reference": "wrap-namespace"
+                "url": "https://github.com/mtdowling/ClassPreloader.git",
+                "reference": "2c9f3bcbab329570c57339895bd11b5dd3b00877"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/classpreloader/zipball/wrap-namespace",
-                "reference": null,
-                "shasum": null
+                "url": "https://api.github.com/repos/mtdowling/ClassPreloader/zipball/2c9f3bcbab329570c57339895bd11b5dd3b00877",
+                "reference": "2c9f3bcbab329570c57339895bd11b5dd3b00877",
+                "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "*",
-                "symfony/console": ">2.0",
-                "symfony/filesystem": ">2.0",
-                "symfony/finder": ">2.0"
+                "nikic/php-parser": "~0.9",
+                "php": ">=5.3.3",
+                "symfony/console": "~2.1",
+                "symfony/filesystem": "~2.1",
+                "symfony/finder": "~2.1"
             },
+            "bin": [
+                "classpreloader.php"
+            ],
             "type": "library",
-            "time": "2014-02-05 15:09:35"
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "ClassPreloader": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Helps class loading performance by generating a single PHP file containing all of the autoloaded files for a specific use case",
+            "keywords": [
+                "autoload",
+                "class",
+                "preload"
+            ],
+            "time": "2014-03-12 00:05:31"
         },
         {
             "name": "dg/adminer-custom",
@@ -2845,8 +2868,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "aura/web": 20,
-        "bear/demo-apps": 20
+        "aura/web": 20
     },
     "platform": {
         "php": ">=5.4.0"
