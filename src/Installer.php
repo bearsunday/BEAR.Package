@@ -30,7 +30,7 @@ class Installer
         $targetSandbox = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
         $helloApp = dirname(__DIR__) . '/apps/Demo.Helloworld';
         $sandboxApp = dirname(__DIR__) . '/apps/Demo.Sandbox';
-        if (! file_exists($targetHello)) {
+        if (! file_exists($helloApp)) {
             link($targetHello, $helloApp);
             link($targetSandbox, $sandboxApp);
         }
