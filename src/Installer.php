@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Sunday\Exception\LogicException;
 use Composer\Script\Event;
 
 /**
@@ -25,11 +26,13 @@ class Installer
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
 
-        $helloApp = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Helloworld';
-        $sandboxApp = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
-        if (file_exists($helloApp)) {
-            rename($helloApp, dirname(__DIR__) . '/apps/Demo.Helloworld');
-            rename($sandboxApp, dirname(__DIR__) . '/apps/Demo.Sandbox');
+        $targetHello = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Helloworld';
+        $targetSandbox = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
+        $helloApp = dirname(__DIR__) . '/apps/Demo.Helloworld';
+        $sandboxApp = dirname(__DIR__) . '/apps/Demo.Sandbox';
+        if (! file_exists($targetHello)) {
+            link($targetHello, $helloApp);
+            link($targetSandbox, $sandboxApp);
         }
 
         include $bearRoot . '/bin/env.php';
