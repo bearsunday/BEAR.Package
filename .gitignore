@@ -6,9 +6,13 @@ nbproject
 .idea
 .project
 .settings
+*.properties
 vendor
+build
 apps
 tests/tmp
+var/tmp
 composer.phar
 ID
 VERSION
+
