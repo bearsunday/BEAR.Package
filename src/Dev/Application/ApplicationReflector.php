@@ -66,9 +66,7 @@ class ApplicationReflector
                     'options' => $response->headers,
                     'links' => $response->links
                 ];
-            } catch (ResourceNotFound $e) {
-            } catch (NotInstantiable $e) {
-            } catch (Uri $e) {
+            } catch (\Exception $e) {
             }
         }
 
