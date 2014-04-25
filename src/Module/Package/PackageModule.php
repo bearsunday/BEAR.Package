@@ -51,16 +51,16 @@ class PackageModule extends AbstractModule
     protected function configure()
     {
         $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
+        // config
+        $this->config['package_dir'] = dirname(dirname(dirname(__DIR__)));
+        $this->install(new NamedModule($this->config));
+
         $this->install(new DiCompilerModule($this));
         $this->install(new DiModule($this));
-
         $this->install(new SundayModule\Framework\FrameworkModule($this));
 
         // application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
-        // config
-        $this->config['package_dir'] = dirname(dirname(dirname(__DIR__)));
-        $this->install(new NamedModule($this->config));
 
         if ($this->context === 'test') {
             $this->install(new NullCacheModule($this));

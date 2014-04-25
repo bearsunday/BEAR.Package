@@ -19,11 +19,12 @@
         }
     ],
     "provide": {
-        "bear/framework": "0.9.0"
+        "bear/framework": "0.11.0"
     },
     "require": {
         "php": ">=5.4.0",
-        "bear/sunday": "0.*",
+        "bear/sunday": "dev-feature/0.11.0",
+        "bear/resource": "dev-develop",
         "koriym/fusion-cache": "0.*",
 
         "aura/input": "1.*",

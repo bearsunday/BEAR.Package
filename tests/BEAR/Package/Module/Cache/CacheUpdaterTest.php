@@ -6,8 +6,7 @@ use BEAR\Package\Module\Cache\Interceptor\CacheUpdater;
 use Ray\Di\Config;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
-use Guzzle\Cache\DoctrineCacheAdapter as CacheAdapter;
-use Doctrine\Common\Cache\ArrayCache as CacheStorage;
+use Doctrine\Common\Cache\ArrayCache;
 use Ray\Aop\ReflectiveMethodInvocation;
 use BEAR\Sunday\Annotation\CacheUpdate;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
@@ -28,7 +27,7 @@ class CacheUpdaterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->cache = new CacheAdapter(new CacheStorage);
+        $this->cache = new ArrayCache;
         $config = new Config(new Annotation(new Definition, new Reader));
         $this->cacheUpdater = (new CacheUpdater($this->cache, $config));
     }
