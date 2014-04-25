@@ -6,23 +6,23 @@
  */
 namespace BEAR\Package\Module\Cache\Interceptor;
 
-use Guzzle\Cache\CacheAdapterInterface;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use ReflectionMethod;
+use Doctrine\Common\Cache\Cache;
 
 class CacheUpdater implements MethodInterceptor
 {
     use EtagTrait;
 
     /**
-     * @param CacheAdapterInterface $cache
+     * @param Cache $cache
      *
      * @Inject
      */
-    public function __construct(CacheAdapterInterface $cache)
+    public function __construct(Cache $cache)
     {
         $this->cache = $cache;
     }

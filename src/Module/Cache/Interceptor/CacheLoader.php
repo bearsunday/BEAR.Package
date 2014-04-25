@@ -7,7 +7,7 @@
 namespace BEAR\Package\Module\Cache\Interceptor;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Guzzle\Cache\CacheAdapterInterface;
+use Doctrine\Common\Cache\Cache;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
@@ -50,12 +50,13 @@ class CacheLoader implements MethodInterceptor
     }
 
     /**
-     * @param CacheAdapterInterface $cache
+     * @param Cache            $cache
+     * @param AnnotationReader $annotationReader
      *
      * @Inject
      */
     public function __construct(
-        CacheAdapterInterface $cache,
+        Cache $cache,
         AnnotationReader $annotationReader
     ) {
         $this->cache = $cache;

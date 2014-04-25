@@ -35,7 +35,7 @@ class CacheLoaderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->cacheLoader = (new CacheLoader(new CacheAdapter(new ArrayCache), new AnnotationReader));
+        $this->cacheLoader = (new CacheLoader(new ArrayCache, new AnnotationReader));
         $this->invocation = new ReflectiveMethodInvocation([new MockResource, 'onGet'], [], [$this->cacheLoader]);
     }
 
