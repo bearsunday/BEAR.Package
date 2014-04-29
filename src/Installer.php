@@ -25,24 +25,13 @@ class Installer
         file_put_contents($bearRoot . '/VERSION', $version);
         file_put_contents($bearRoot . '/ID', $hash);
 
-        $unlink = function ($dirPath) {
-            if (! file_exists($dirPath)) {
-                return;
-            }
-            foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dirPath, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
-                $path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
-            }
-            rmdir($dirPath);
-        };
         $targetHello = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Helloworld';
         $targetSandbox = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
         $helloApp = dirname(__DIR__) . '/apps/Demo.Helloworld';
         $sandboxApp = dirname(__DIR__) . '/apps/Demo.Sandbox';
 
-        @$unlink($helloApp);
-        @$unlink($sandboxApp);
-        link($targetHello, $helloApp);
-        link($targetSandbox, $sandboxApp);
+        symlink($targetHello, $helloApp);
+        symlink($targetSandbox, $sandboxApp);
 
         include $bearRoot . '/bin/env.php';
     }
