@@ -14,3 +14,4 @@ composer.phar
 ID
 VERSION
 apps/
+*.db
