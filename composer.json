@@ -23,7 +23,9 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "bear/sunday": "0.*",
+        "bear/sunday": "dev-develop",
+        "bear/resource": "dev-develop",
+        "ray/di": "dev-develop",
         "koriym/fusion-cache": "0.*",
 
         "aura/input": "1.*",
