@@ -33,6 +33,8 @@ class Web
      */
     public function service($pagePath, AppInterface $app = null, $appDir)
     {
+        global $appDir; // for template
+
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
         if ($path == '' || substr($path, -1, 1) === '/') {

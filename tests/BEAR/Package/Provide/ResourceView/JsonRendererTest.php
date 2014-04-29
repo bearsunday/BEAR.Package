@@ -103,4 +103,3 @@ class JsonRendererTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $data);
     }
 }
-

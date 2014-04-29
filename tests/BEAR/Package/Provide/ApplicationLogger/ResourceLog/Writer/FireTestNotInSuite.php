@@ -2,7 +2,7 @@
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
 
-class FireTest extends \PHPUnit_Framework_TestCase
+class FireTestNotInSuite extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Fire

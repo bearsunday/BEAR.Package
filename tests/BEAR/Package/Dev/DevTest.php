@@ -32,6 +32,6 @@ class DevTest extends \PHPUnit_Framework_TestCase
         $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo.Helloworld/bootstrap/instance.php';
         $appDir = $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo.Helloworld';
         $html = $this->dev->setReturnMode()->setApp($app, $appDir)->getDevHtml('/dev/');
-        $this->assertContains('Helloworld Dev</title>', $html);
+        $this->assertContains(' Dev</title>', $html);
     }
 }
