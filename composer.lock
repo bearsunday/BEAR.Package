@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f6d5ddce8732a317fc6d84841002af15",
+    "hash": "9da085c2db49e46d487d7039d45ee709",
     "packages": [
         {
             "name": "any/serializer",
@@ -497,12 +497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "002daead10c8b32e38e42c198360236228d31dcb"
+                "reference": "75df0c7e8676638f504ca8b9216538c6686ca54e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/002daead10c8b32e38e42c198360236228d31dcb",
-                "reference": "002daead10c8b32e38e42c198360236228d31dcb",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/75df0c7e8676638f504ca8b9216538c6686ca54e",
+                "reference": "75df0c7e8676638f504ca8b9216538c6686ca54e",
                 "shasum": ""
             },
             "require": {
@@ -512,8 +512,7 @@
                 "guzzlehttp/guzzle": "~4.0",
                 "nocarrier/hal": "*",
                 "php": ">=5.4.0",
-                "ray/aop": "1.*",
-                "ray/di": "1.*"
+                "ray/di": "dev-develop"
             },
             "require-dev": {
                 "facebook/xhprof": "dev-master"
@@ -547,7 +546,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-04-24 04:42:42"
+            "time": "2014-04-29 12:23:16"
         },
         {
             "name": "bear/sunday",
@@ -1524,16 +1523,16 @@
         },
         {
             "name": "ray/di",
-            "version": "1.3.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "2224d647087fe1bd0555418fc5869d9539fb4f4a"
+                "reference": "50a949b0e0c17a087f61058274d4d1eb6298459c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/2224d647087fe1bd0555418fc5869d9539fb4f4a",
-                "reference": "2224d647087fe1bd0555418fc5869d9539fb4f4a",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/50a949b0e0c17a087f61058274d4d1eb6298459c",
+                "reference": "50a949b0e0c17a087f61058274d4d1eb6298459c",
                 "shasum": ""
             },
             "require": {
@@ -1578,21 +1577,21 @@
                 "injection",
                 "jsr"
             ],
-            "time": "2014-03-31 00:06:54"
+            "time": "2014-04-29 05:33:18"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "11ad7352c7bfa12145a0df8e1c4c303c585ce169"
+                "reference": "22c4dee84271ad0cd08d19f26d89f2878e11159b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/11ad7352c7bfa12145a0df8e1c4c303c585ce169",
-                "reference": "11ad7352c7bfa12145a0df8e1c4c303c585ce169",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/22c4dee84271ad0cd08d19f26d89f2878e11159b",
+                "reference": "22c4dee84271ad0cd08d19f26d89f2878e11159b",
                 "shasum": ""
             },
             "require": {
@@ -1633,7 +1632,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2014-03-26 11:35:33"
+            "time": "2014-04-18 21:02:05"
         },
         {
             "name": "twig/twig",
@@ -1738,16 +1737,16 @@
         },
         {
             "name": "bear/demo-apps",
-            "version": "dev-master",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "fc10592c598ab6e40f8830823f6a19521d7789d1"
+                "reference": "adf002c97e563ef7574f5094db9a3ba7d1c462f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/fc10592c598ab6e40f8830823f6a19521d7789d1",
-                "reference": "fc10592c598ab6e40f8830823f6a19521d7789d1",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/adf002c97e563ef7574f5094db9a3ba7d1c462f2",
+                "reference": "adf002c97e563ef7574f5094db9a3ba7d1c462f2",
                 "shasum": ""
             },
             "type": "library",
@@ -1767,7 +1766,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-04-18 05:21:06"
+            "time": "2014-04-18 05:19:41"
         },
         {
             "name": "bear/dev-package",
@@ -2254,20 +2253,22 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.35",
+            "version": "3.7.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "83f9537e46346f75ed6925441ac259453213c7cc"
+                "reference": "1735d588c9f35bd8686cae0208d8adde77b45365"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/83f9537e46346f75ed6925441ac259453213c7cc",
-                "reference": "83f9537e46346f75ed6925441ac259453213c7cc",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1735d588c9f35bd8686cae0208d8adde77b45365",
+                "reference": "1735d588c9f35bd8686cae0208d8adde77b45365",
                 "shasum": ""
             },
             "require": {
+                "ext-ctype": "*",
                 "ext-dom": "*",
+                "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-reflection": "*",
                 "ext-spl": "*",
@@ -2283,9 +2284,6 @@
                 "pear-pear.php.net/pear": "1.9.4"
             },
             "suggest": {
-                "ext-json": "*",
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
                 "phpunit/php-invoker": "~1.1"
             },
             "bin": [
@@ -2324,7 +2322,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-04-21 06:25:54"
+            "time": "2014-04-29 07:24:10"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2423,17 +2421,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb"
+                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/ef20f1f58d7f693ee888353962bd2db336e3bbcb",
-                "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/2e452005b1e1d003d23702d227e23614679eb5ca",
+                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca",
                 "shasum": ""
             },
             "require": {
@@ -2474,21 +2472,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-03-01 17:35:04"
+            "time": "2014-04-27 13:34:57"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "b717952487176a993e9b12a08b87beae25ae419c"
+                "reference": "a3af8294bcce4a7c1b2892363b0c9d8109affad4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/b717952487176a993e9b12a08b87beae25ae419c",
-                "reference": "b717952487176a993e9b12a08b87beae25ae419c",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/a3af8294bcce4a7c1b2892363b0c9d8109affad4",
+                "reference": "a3af8294bcce4a7c1b2892363b0c9d8109affad4",
                 "shasum": ""
             },
             "require": {
@@ -2523,21 +2521,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-03-26 11:55:03"
+            "time": "2014-04-16 10:34:31"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "ab301c7d21f536c34ab6c2c79dba8d465104c518"
+                "reference": "25e1e7d5e7376f8a92ae3b1d714d956edf33a730"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/ab301c7d21f536c34ab6c2c79dba8d465104c518",
-                "reference": "ab301c7d21f536c34ab6c2c79dba8d465104c518",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/25e1e7d5e7376f8a92ae3b1d714d956edf33a730",
+                "reference": "25e1e7d5e7376f8a92ae3b1d714d956edf33a730",
                 "shasum": ""
             },
             "require": {
@@ -2572,21 +2570,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2014-03-01 17:35:04"
+            "time": "2014-04-27 13:34:57"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "77a41c2835ab7cfe8bf6d15e25d3af8f3eb3bacd"
+                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/77a41c2835ab7cfe8bf6d15e25d3af8f3eb3bacd",
-                "reference": "77a41c2835ab7cfe8bf6d15e25d3af8f3eb3bacd",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
+                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
                 "shasum": ""
             },
             "require": {
@@ -2621,7 +2619,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-03-12 18:29:58"
+            "time": "2014-04-18 20:37:09"
         },
         {
             "name": "zendframework/zend-db",
@@ -2836,6 +2834,7 @@
     "stability-flags": {
         "bear/sunday": 20,
         "bear/resource": 20,
+        "ray/di": 20,
         "aura/web": 20,
         "bear/demo-apps": 20
     },

@@ -25,6 +25,7 @@
         "php": ">=5.4.0",
         "bear/sunday": "dev-feature/0.11.0",
         "bear/resource": "dev-develop",
+        "ray/di": "dev-develop",
         "koriym/fusion-cache": "0.*",
 
         "aura/input": "1.*",
@@ -40,7 +41,7 @@
     },
     "require-dev": {
         "bear/dev-package": "*",
-        "bear/demo-apps": "dev-master"
+        "bear/demo-apps": "dev-develop"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
