@@ -4,6 +4,7 @@
  * @global $line
  * @global $num
  */
+// @codingStandardsIgnoreStart
 VIEW_FUNCTIONS: {
     /**
      * Return source
@@ -116,6 +117,7 @@ VIEW_LOGIC: {
     $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
     $memory = number_format(memory_get_peak_usage(true));
 }
+// @codingStandardsIgnoreEnd
 
 // output
 return <<<EOT
