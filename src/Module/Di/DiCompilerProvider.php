@@ -59,7 +59,7 @@ class DiCompilerProvider implements ProviderInterface
      * {@inheritdoc}
      * @return \Ray\Di\DiCompiler
      */
-    public function get()
+    public function get($extraCacheKey = '')
     {
         $saveKey = $this->appName . $this->context;
         if (isset(self::$compiler[$saveKey])) {
@@ -76,7 +76,8 @@ class DiCompilerProvider implements ProviderInterface
 
             return self::$module[$saveKey];
         };
-        $cacheKey = $this->appName . $this->context;
+        $cacheKey = $this->appName . $this->context . $extraCacheKey;
+
         $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir);
         self::$compiler[$saveKey] = $compiler = DiCompiler::create($moduleProvider, $cache, $cacheKey, $this->tmpDir);
 
