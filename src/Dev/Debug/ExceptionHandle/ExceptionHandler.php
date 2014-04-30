@@ -16,7 +16,6 @@ use BEAR\Resource\Exception\Uri;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogDirInject;
 use Exception;
-use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Binding;
 use Ray\Di\Exception\NotBound;
 use Ray\Di\InstanceInterface;

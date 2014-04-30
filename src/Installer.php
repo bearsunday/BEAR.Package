@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package;
 
-use BEAR\Sunday\Exception\LogicException;
 use Composer\Script\Event;
 
 /**

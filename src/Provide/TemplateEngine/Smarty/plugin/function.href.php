@@ -5,7 +5,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 use BEAR\Resource\Link;
-use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
  * Smarty plugin

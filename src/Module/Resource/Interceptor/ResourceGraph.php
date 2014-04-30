@@ -8,8 +8,6 @@ namespace BEAR\Package\Module\Resource\Interceptor;
 
 use BEAR\Resource\Exception\Uri;
 use BEAR\Resource\ResourceInterface;
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
-use Doctrine\DBAL\DriverManager;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;

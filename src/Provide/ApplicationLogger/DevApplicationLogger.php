@@ -6,9 +6,7 @@
  */
 namespace BEAR\Package\Provide\ApplicationLogger;
 
-use BEAR\Resource\Logger as ResourceLogger;
 use BEAR\Resource\LoggerInterface as ResourceLoggerInterface;
-use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\ApplicationLogger\ApplicationLoggerInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\PreDestroy;

@@ -12,7 +12,6 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
-use BEAR\Sunday\Inject\LogInject;
 use Symfony\Component\HttpFoundation\Response;
 use Ray\Aop\Weave;
 use Ray\Di\Di\Inject;
