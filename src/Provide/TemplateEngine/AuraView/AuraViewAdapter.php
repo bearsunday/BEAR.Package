@@ -27,14 +27,9 @@ class AuraViewAdapter implements TemplateEngineAdapterInterface
     /**
      * Template
      *
-     * @var Template
+     * @var AbstractTemplate
      */
     private $view;
-
-    /**
-     * @var array
-     */
-    private $values;
 
     /**
      * @param AbstractTemplate $template
