@@ -31,8 +31,9 @@ class Web
      *
      * @return int exit code
      */
-    public function service($pagePath, AppInterface $app = null, $appDir)
+    public function service($pagePath, AppInterface $app, $appDir)
     {
+        global $app;    // for template
         global $appDir; // for template
 
         $path = parse_url(substr($pagePath, 4))['path'];
