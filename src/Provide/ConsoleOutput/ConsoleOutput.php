@@ -101,10 +101,10 @@ final class ConsoleOutput implements ConsoleOutputInterface
     }
 
     /**
-     * @param mixed     $target
-     * @param integer   $level
-     * @param string    $header
-     * @param string    $footer
+     * @param mixed   $target
+     * @param integer $level
+     * @param string  $header
+     * @param string  $footer
      *
      * @return string
      */

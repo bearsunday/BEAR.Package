@@ -132,7 +132,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     private function buildErrorPage($e, ResourceObject $response)
     {
-        $exceptionId = 'e' . $response->code . '-' . substr(md5((string)$e), 0, 5);
+        $exceptionId = 'e' . $response->code . '-' . substr(md5((string) $e), 0, 5);
         try {
             throw $e;
         } catch (ResourceNotFound $e) {
@@ -204,9 +204,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     {
         // exception screen in develop
         if (isset($this->injector)) {
-            $view['dependency_bindings'] = (string)$this->injector;
+            $view['dependency_bindings'] = (string) $this->injector;
         } elseif ($e instanceof NotBound) {
-            $view['dependency_bindings'] = (string)$e->module;
+            $view['dependency_bindings'] = (string) $e->module;
         } else {
             $view['dependency_bindings'] = 'n/a';
         }
@@ -253,13 +253,13 @@ final class ExceptionHandler implements ExceptionHandlerInterface
      */
     public function writeExceptionLog(Exception $e, $exceptionId)
     {
-        $data = (string)$e;
+        $data = (string) $e;
         $previousE = $e->getPrevious();
         if ($previousE) {
             $data .= PHP_EOL . PHP_EOL . '-- Previous Exception --' . PHP_EOL . PHP_EOL;
             $data .= $previousE->getTraceAsString();
         }
-        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL . (string)$this->injector;
+        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL . (string) $this->injector;
         $file = $this->getLogFilePath($exceptionId);
         if (is_writable($this->logDir)) {
             file_put_contents($file, $data);

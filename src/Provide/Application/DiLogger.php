@@ -34,7 +34,7 @@ class DiLogger implements LoggerInterface
                 } elseif (is_callable($param)) {
                     $param = "(callable) {$param}";
                 } elseif (is_scalar($param)) {
-                    $param = '(' . gettype($param) . ') ' . (string)$param;
+                    $param = '(' . gettype($param) . ') ' . (string) $param;
                 } elseif (is_array($param)) {
                     $param = $str = str_replace(["\n", " "], '', print_r($param, true));
                 }

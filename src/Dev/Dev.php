@@ -247,8 +247,8 @@ class Dev
     }
 
     /**
-     * @param array        $argv
-     * @param AbstractApp  $app
+     * @param array       $argv
+     * @param AbstractApp $app
      */
     public function setCliArgs(array $argv, AbstractApp $app)
     {

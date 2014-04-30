@@ -96,8 +96,8 @@ final class Fire implements LogWriterInterface
         }
         $table = [];
         $table[] = (array_values(array_keys($body[0])));
-        foreach ((array)$body as $val) {
-            $table[] = array_values((array)$val);
+        foreach ((array) $body as $val) {
+            $table[] = array_values((array) $val);
         }
         $this->fire->table('body', $table);
     }
@@ -105,7 +105,7 @@ final class Fire implements LogWriterInterface
     /**
      * Format log data
      *
-     * @param  mixed $body
+     * @param mixed $body
      *
      * @return mixed
      * @todo scan all prop like print_o, then eliminate all resource/PDO/etc.. unrealisable objects...not like this.

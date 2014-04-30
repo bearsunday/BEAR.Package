@@ -55,7 +55,7 @@ function smarty_function_href($params, $template)
     $resource = $template->smarty->tpl_vars['resource']->value;
     $link = $resource->links[$rel];
     $uri = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ?
-        \GuzzleHttp\uri_template($link[Link::HREF], (array)$data) :
+        \GuzzleHttp\uri_template($link[Link::HREF], (array) $data) :
         $link[Link::HREF];
 
     // remove "page://self/"

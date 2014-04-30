@@ -102,7 +102,7 @@ class ApplicationReflector
      */
     private function getUri(\SplFileInfo $file, $resourceDir)
     {
-        $relativePath = strtolower(str_replace($resourceDir . '/', '', (string)$file));
+        $relativePath = strtolower(str_replace($resourceDir . '/', '', (string) $file));
         $path = explode('/', $relativePath);
         $scheme = array_shift($path);
         $appName = 'self';
@@ -130,7 +130,7 @@ class ApplicationReflector
     /**
      * @param string $uri
      *
-     * @return array [$filePath, $fileContents]
+     * @return array      [$filePath, $fileContents]
      * @throws InvalidUri
      */
     public function getNewResource($uri)
@@ -164,7 +164,7 @@ class ApplicationReflector
      * @param string $path
      * @param string $contents
      *
-     * @return int size of file
+     * @return int               size of file
      * @throws NotWritable
      * @throws FileAlreadyExists
      */

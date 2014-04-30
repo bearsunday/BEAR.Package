@@ -115,7 +115,7 @@ final class HttpFoundation implements ResponseInterface
      */
     public function render(RenderInterface $renderer = null)
     {
-        $this->view = is_null($renderer) ?  (string)$this->resource : $renderer->render($this->resource);
+        $this->view = is_null($renderer) ?  (string) $this->resource : $renderer->render($this->resource);
 
         return $this;
     }
@@ -127,7 +127,7 @@ final class HttpFoundation implements ResponseInterface
      */
     public function send()
     {
-        $this->response = new Response($this->view, $this->resource->code, (array)$this->resource->headers);
+        $this->response = new Response($this->view, $this->resource->code, (array) $this->resource->headers);
         // compliant with RFC 2616.
         $this->response;
 
