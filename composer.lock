@@ -497,12 +497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "75df0c7e8676638f504ca8b9216538c6686ca54e"
+                "reference": "613df69bc3064fe736bf93e9be9a3f3adadf97fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/75df0c7e8676638f504ca8b9216538c6686ca54e",
-                "reference": "75df0c7e8676638f504ca8b9216538c6686ca54e",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/613df69bc3064fe736bf93e9be9a3f3adadf97fe",
+                "reference": "613df69bc3064fe736bf93e9be9a3f3adadf97fe",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-04-29 12:23:16"
+            "time": "2014-04-30 12:39:40"
         },
         {
             "name": "bear/sunday",
@@ -1741,12 +1741,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "adf002c97e563ef7574f5094db9a3ba7d1c462f2"
+                "reference": "802cae3c4131a5fb3bd964541fe08bad2194f2c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/adf002c97e563ef7574f5094db9a3ba7d1c462f2",
-                "reference": "adf002c97e563ef7574f5094db9a3ba7d1c462f2",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/802cae3c4131a5fb3bd964541fe08bad2194f2c2",
+                "reference": "802cae3c4131a5fb3bd964541fe08bad2194f2c2",
                 "shasum": ""
             },
             "type": "library",
@@ -1766,7 +1766,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-04-18 05:19:41"
+            "time": "2014-04-30 09:27:32"
         },
         {
             "name": "bear/dev-package",

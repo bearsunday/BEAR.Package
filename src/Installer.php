@@ -29,6 +29,12 @@ class Installer
         $helloApp = dirname(__DIR__) . '/apps/Demo.Helloworld';
         $sandboxApp = dirname(__DIR__) . '/apps/Demo.Sandbox';
 
+        if (file_exists($helloApp)) {
+            unlink($helloApp);
+        }
+        if (file_exists($sandboxApp)) {
+            unlink($sandboxApp);
+        }
         symlink($targetHello, $helloApp);
         symlink($targetSandbox, $sandboxApp);
 
