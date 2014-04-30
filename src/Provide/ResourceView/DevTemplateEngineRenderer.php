@@ -325,6 +325,7 @@ EOT;
                     $value = $value->body;
                 }
                 if (is_object($value)) {
+                    /** @var $value object */
                     $value = '(object) ' . get_class($value);
                 }
             }
