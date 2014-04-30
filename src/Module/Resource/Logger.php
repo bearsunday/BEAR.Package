@@ -7,12 +7,13 @@
 namespace BEAR\Package\Module\Resource;
 
 use BEAR\Sunday\Inject\LogInject;
+use BEAR\Sunday\Inject\PsrLoggerInject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
 class Logger implements MethodInterceptor
 {
-    use LogInject;
+    use PsrLoggerInject;
 
     /**
      * {@inheritdoc}
@@ -27,7 +28,7 @@ class Logger implements MethodInterceptor
         $input = substr(json_encode($args), 0, 80);
         $output = substr(json_encode($result), 0, 80);
         $log = "target = [{$class}], input = [{$input}], result = [{$output}]";
-        $this->log->log($log);
+        $this->logger->info($log);
 
         return $result;
     }

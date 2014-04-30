@@ -71,7 +71,6 @@ class PackageModule extends AbstractModule
         $this->install(new ProvideModule\ResourceView\HalModule);
 
         // Package module
-        $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
         $this->install(new Package\Module\Aop\NamedArgsModule);
 
