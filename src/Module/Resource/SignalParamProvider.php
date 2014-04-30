@@ -38,8 +38,8 @@ class SignalParamProvider implements ProviderInterface
     private $signalParam;
 
     /**
-     * @param AbstractModule $module
-     * @param array          $config
+     * @param InstanceInterface $injector
+     * @param string            $paramProviders
      *
      * @Inject
      * @Named("paramProviders=param_providers")

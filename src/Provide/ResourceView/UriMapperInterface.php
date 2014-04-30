@@ -11,7 +11,7 @@ namespace BEAR\Package\Provide\ResourceView;
 interface UriMapperInterface
 {
     /**
-     * @param $externalUri "/blog/posts"
+     * @param $requestUri "/blog/posts"
      *
      * @return string
      */

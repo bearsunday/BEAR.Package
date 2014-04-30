@@ -24,12 +24,11 @@ class Web
     }
 
     /**
-     * Service dev web tool
-     *
      * @param string       $pagePath
      * @param AppInterface $app
+     * @param string       $appDir
      *
-     * @return int exit code
+     * @return int|string
      */
     public function service($pagePath, AppInterface $app, $appDir)
     {

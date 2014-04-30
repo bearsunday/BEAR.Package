@@ -14,10 +14,9 @@ use BEAR\Package\Module\Di\DiCompilerProvider;
 class Bootstrap
 {
     /**
-     * @param string $appName
-     * @param string $appDir
-     *
-     * @return void
+     * @param ClassLoader $loader
+     * @param string      $appName
+     * @param string      $appDir
      */
     public static function registerLoader(ClassLoader $loader, $appName, $appDir)
     {
