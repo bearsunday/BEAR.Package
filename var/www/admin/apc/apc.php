@@ -1,5 +1,10 @@
 <?php
-ini_set('display_errors', false);
+
+$autoload = dirname(dirname(__DIR__)) . '/bootstrap/autoload.php';
+if (file_exists($autoload)) {
+    include $autoload;
+}
+
 /*
   +----------------------------------------------------------------------+
   | APC                                                                  |
@@ -23,7 +28,7 @@ ini_set('display_errors', false);
 
  */
 
-$VERSION='$Id: apc.php 325483 2012-05-01 00:34:04Z rasmus $';
+$VERSION='$Id$';
 
 ////////// READ OPTIONAL CONFIGURATION FILE ////////////
 if (file_exists("apc.conf.php")) include("apc.conf.php");
@@ -34,7 +39,7 @@ if (file_exists("apc.conf.php")) include("apc.conf.php");
 defaults('USE_AUTHENTICATION',0);			// Use (internal) authentication - best choice if
 											// no other authentication is available
 											// If set to 0:
-											//  There will be no further authentication. You 
+											//  There will be no further authentication. You
 											//  will have to handle this by yourself!
 											// If set to 1:
 											//  You need to change ADMIN_PASSWORD to make
@@ -42,7 +47,7 @@ defaults('USE_AUTHENTICATION',0);			// Use (internal) authentication - best choi
 defaults('ADMIN_USERNAME','apc'); 			// Admin Username
 defaults('ADMIN_PASSWORD','password');  	// Admin Password - CHANGE THIS TO ENABLE!!!
 
-// (beckerr) I'm using a clear text password here, because I've no good idea how to let 
+// (beckerr) I'm using a clear text password here, because I've no good idea how to let
 //           users generate a md5 or crypt password in a easy way to fill it in above
 
 //defaults('DATE_FORMAT', "d.m.Y H:i:s");	// German
@@ -72,10 +77,8 @@ if (isset($_SERVER['SERVER_ADDR'])) {
 
 // operation constants
 define('OB_HOST_STATS',1);
-define('OB_SYS_CACHE',2);
-define('OB_USER_CACHE',3);
-define('OB_SYS_CACHE_DIR',4);
-define('OB_VERSION_CHECK',9);
+define('OB_USER_CACHE',2);
+define('OB_VERSION_CHECK',3);
 
 // check validity of input variables
 $vardom=array(
@@ -94,9 +97,6 @@ $vardom=array(
 	'AGGR'	=> '/^\d+$/',			// aggregation by dir level
 	'SEARCH'	=> '~^[a-zA-Z0-9/_.-]*$~'			// aggregation by dir level
 );
-
-// default cache mode
-$cache_mode='opcode';
 
 // cache scope
 $scope_list=array(
@@ -170,34 +170,30 @@ if (!USE_AUTHENTICATION) {
 				</body></html>
 EOB;
 			exit;
-			
+
 		} else {
 			$AUTHENTICATED=1;
 		}
 	}
 }
-	
-// select cache mode
-if ($AUTHENTICATED && $MYREQUEST['OB'] == OB_USER_CACHE) {
-	$cache_mode='user';
-}
+
 // clear cache
 if ($AUTHENTICATED && isset($MYREQUEST['CC']) && $MYREQUEST['CC']) {
-	apc_clear_cache($cache_mode);
+	apcu_clear_cache();
 }
 
 if ($AUTHENTICATED && !empty($MYREQUEST['DU'])) {
-	apc_delete($MYREQUEST['DU']);
+	apcu_delete($MYREQUEST['DU']);
 }
 
-if(!function_exists('apc_cache_info') || !($cache=@apc_cache_info($cache_mode))) {
+if(!function_exists('apcu_cache_info')) {
 	echo "No cache info available.  APC does not appear to be running.";
   exit;
 }
 
-$cache_user = apc_cache_info('user', 1);  
-$mem=apc_sma_info();
-if(!$cache['num_hits']) { $cache['num_hits']=1; $time++; }  // Avoid division by 0 errors on a cache clear
+$cache = apcu_cache_info();
+
+$mem=apcu_sma_info();
 
 // don't cache this page
 //
@@ -242,7 +238,7 @@ if (isset($MYREQUEST['IMG']))
 		$r=$diameter/2;
 		$w=deg2rad((360+$start+($end-$start)/2)%360);
 
-		
+
 		if (function_exists("imagefilledarc")) {
 			// exists only if GD 2.0.1 is avaliable
 			imagefilledarc($im, $centerX+1, $centerY+1, $diameter, $diameter, $start, $end, $color1, IMG_ARC_PIE);
@@ -259,13 +255,13 @@ if (isset($MYREQUEST['IMG']))
 		if ($text) {
 			if ($placeindex>0) {
 				imageline($im,$centerX + $r*cos($w)/2, $centerY + $r*sin($w)/2,$diameter, $placeindex*12,$color1);
-				imagestring($im,4,$diameter, $placeindex*12,$text,$color1);	
-				
+				imagestring($im,4,$diameter, $placeindex*12,$text,$color1);
+
 			} else {
 				imagestring($im,4,$centerX + $r*cos($w)/2, $centerY + $r*sin($w)/2,$text,$color1);
 			}
 		}
-	} 
+	}
 
 	function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1,$text,$placeindex=0) {
 		$r=$diameter/2;
@@ -273,13 +269,13 @@ if (isset($MYREQUEST['IMG']))
 
 		if ($placeindex>0) {
 			imageline($im,$centerX + $r*cos($w)/2, $centerY + $r*sin($w)/2,$diameter, $placeindex*12,$color1);
-			imagestring($im,4,$diameter, $placeindex*12,$text,$color1);	
-				
+			imagestring($im,4,$diameter, $placeindex*12,$text,$color1);
+
 		} else {
 			imagestring($im,4,$centerX + $r*cos($w)/2, $centerY + $r*sin($w)/2,$text,$color1);
 		}
-	} 
-	
+	}
+
 	function fill_box($im, $x, $y, $w, $h, $color1, $color2,$text='',$placeindex='') {
 		global $col_black;
 		$x1=$x+$w-1;
@@ -291,15 +287,15 @@ if (isset($MYREQUEST['IMG']))
 		imagerectangle($im, $x, $y1, $x1, $y, $color1);
 		if ($text) {
 			if ($placeindex>0) {
-			
+
 				if ($placeindex<16)
 				{
 					$px=5;
 					$py=$placeindex*12+6;
 					imagefilledrectangle($im, $px+90, $py+3, $px+90-4, $py-3, $color2);
 					imageline($im,$x,$y+$h/2,$px+90,$py,$color2);
-					imagestring($im,2,$px,$py-6,$text,$color1);	
-					
+					imagestring($im,2,$px,$py-6,$text,$color1);
+
 				} else {
 					if ($placeindex<31) {
 						$px=$x+40*2;
@@ -310,7 +306,7 @@ if (isset($MYREQUEST['IMG']))
 					}
 					imagefilledrectangle($im, $px, $py+3, $px-4, $py-3, $color2);
 					imageline($im,$x+$w,$y+$h/2,$px,$py,$color2);
-					imagestring($im,2,$px+2,$py-6,$text,$color1);	
+					imagestring($im,2,$px+2,$py-6,$text,$color1);
 				}
 			} else {
 				imagestring($im,4,$x+5,$y1-16,$text,$color1);
@@ -332,7 +328,7 @@ if (isset($MYREQUEST['IMG']))
 	imagecolortransparent($image,$col_white);
 
 	switch ($MYREQUEST['IMG']) {
-	
+
 	case 1:
 		$s=$mem['num_seg']*$mem['seg_size'];
 		$a=$mem['avail_mem'];
@@ -343,7 +339,7 @@ if (isset($MYREQUEST['IMG']))
 		// would expect because we try to visualize any memory fragmentation as well.
 		$angle_from = 0;
 		$string_placement=array();
-		for($i=0; $i<$mem['num_seg']; $i++) {	
+		for($i=0; $i<$mem['num_seg']; $i++) {
 			$ptr = 0;
 			$free = $mem['block_lists'][$i];
 			uasort($free, 'block_sort');
@@ -370,7 +366,7 @@ if (isset($MYREQUEST['IMG']))
 				$angle_from = $angle_to;
 				$ptr = $block['offset']+$block['size'];
 			}
-			if ($ptr < $mem['seg_size']) { // memory at the end 
+			if ($ptr < $mem['seg_size']) { // memory at the end
 				$angle_to = $angle_from + ($mem['seg_size'] - $ptr)/$s;
 				if(($angle_to+$fuzz)>1) $angle_to = 1;
 				fill_arc($image,$x,$y,$size,$angle_from*360,$angle_to*360,$col_black,$col_red);
@@ -383,15 +379,15 @@ if (isset($MYREQUEST['IMG']))
 			text_arc($image,$x,$y,$size,$angle[0]*360,$angle[1]*360,$col_black,bsize($s*($angle[1]-$angle[0])));
 		}
 		break;
-		
-	case 2: 
-		$s=$cache['num_hits']+$cache['num_misses'];
-		$a=$cache['num_hits'];
-		
-		fill_box($image, 30,$size,50,-$a*($size-21)/$s,$col_black,$col_green,sprintf("%.1f%%",$cache['num_hits']*100/$s));
-		fill_box($image,130,$size,50,-max(4,($s-$a)*($size-21)/$s),$col_black,$col_red,sprintf("%.1f%%",$cache['num_misses']*100/$s));
+
+	case 2:
+		$s=$cache['nhits']+$cache['nmisses'];
+		$a=$cache['nhits'];
+
+		fill_box($image, 30,$size,50,$s ? (-$a*($size-21)/$s) : 0,$col_black,$col_green,sprintf("%.1f%%",$s ? $cache['nhits']*100/$s : 0));
+		fill_box($image,130,$size,50,$s ? -max(4,($s-$a)*($size-21)/$s) : 0,$col_black,$col_red,sprintf("%.1f%%",$s ? $cache['nmisses']*100/$s : 0));
 		break;
-		
+
 	case 3:
 		$s=$mem['num_seg']*$mem['seg_size'];
 		$a=$mem['avail_mem'];
@@ -401,7 +397,7 @@ if (isset($MYREQUEST['IMG']))
 
 		// This block of code creates the bar chart.  It is a lot more complex than you
 		// would expect because we try to visualize any memory fragmentation as well.
-		for($i=0; $i<$mem['num_seg']; $i++) {	
+		for($i=0; $i<$mem['num_seg']; $i++) {
 			$ptr = 0;
 			$free = $mem['block_lists'][$i];
 			uasort($free, 'block_sort');
@@ -424,7 +420,7 @@ if (isset($MYREQUEST['IMG']))
 				$y+=$h;
 				$ptr = $block['offset']+$block['size'];
 			}
-			if ($ptr < $mem['seg_size']) { // memory at the end 
+			if ($ptr < $mem['seg_size']) { // memory at the end
 				$h = (GRAPH_SIZE-5) * ($mem['seg_size'] - $ptr) / $s;
 				if ($h > 0) {
 					fill_box($image,$x,$y,50,$h,$col_black,$col_red,bsize($mem['seg_size']-$ptr),$j++);
@@ -432,15 +428,16 @@ if (isset($MYREQUEST['IMG']))
 			}
 		}
 		break;
-	case 4: 
-		$s=$cache['num_hits']+$cache['num_misses'];
-		$a=$cache['num_hits'];
-	        	
-		fill_box($image, 30,$size,50,-$a*($size-21)/$s,$col_black,$col_green,sprintf("%.1f%%",$cache['num_hits']*100/$s));
-		fill_box($image,130,$size,50,-max(4,($s-$a)*($size-21)/$s),$col_black,$col_red,sprintf("%.1f%%",$cache['num_misses']*100/$s));
+
+		case 4:
+			$s=$cache['nhits']+$cache['nmisses'];
+			$a=$cache['nhits'];
+
+			fill_box($image, 30,$size,50,$s ? -$a*($size-21)/$s : 0,$col_black,$col_green,sprintf("%.1f%%", $s ? $cache['nhits']*100/$s : 0));
+			fill_box($image,130,$size,50,$s ? -max(4,($s-$a)*($size-21)/$s) : 0,$col_black,$col_red,sprintf("%.1f%%", $s ? $cache['nmisses']*100/$s : 0));
 		break;
-	
 	}
+
 	header("Content-type: image/png");
 	imagepng($image);
 	exit;
@@ -459,7 +456,7 @@ function bsize($s) {
 // sortable table header in "scripts for this host" view
 function sortheader($key,$name,$extra='') {
 	global $MYREQUEST, $MY_SELF_WO_SORT;
-	
+
 	if ($MYREQUEST['SORT1']==$key) {
 		$MYREQUEST['SORT2'] = $MYREQUEST['SORT2']=='A' ? 'D' : 'A';
 	}
@@ -467,7 +464,7 @@ function sortheader($key,$name,$extra='') {
 
 }
 
-// create menu entry 
+// create menu entry
 function menu_entry($ob,$title) {
 	global $MYREQUEST,$MY_SELF;
 	if ($MYREQUEST['OB']!=$ob) {
@@ -475,7 +472,7 @@ function menu_entry($ob,$title) {
 	} else if (empty($MYREQUEST['SH'])) {
 		return "<li><span class=active>$title</span></li>";
 	} else {
-		return "<li><a class=\"child_active\" href=\"$MY_SELF&OB=$ob\">$title</a></li>";	
+		return "<li><a class=\"child_active\" href=\"$MY_SELF&OB=$ob\">$title</a></li>";
 	}
 }
 
@@ -515,7 +512,7 @@ function block_sort($array1, $array2)
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head><title>APC INFO <?php echo $host ?></title>
+<head><title>APCu INFO <?php echo $host ?></title>
 <style><!--
 body { background:white; font-size:100.01%; margin:0; padding:0; }
 body,p,td,th,input,submit { font-size:0.8em;font-family:arial,helvetica,sans-serif; }
@@ -627,8 +624,8 @@ ol.menu a:hover {
 	background:rgb(193,193,244);
 	text-decoration:none;
 	}
-	
-	
+
+
 div.info {
 	background:rgb(204,204,204);
 	border:solid rgb(204,204,204) 1px;
@@ -701,7 +698,7 @@ div.authneeded {
 	padding:2em;
 	text-align:center;
 	}
-	
+
 input {
 	background:rgb(153,153,204);
 	border:solid rgb(102,102,153) 2px;
@@ -716,35 +713,29 @@ input {
 <body>
 <div class="head">
 	<h1 class="apc">
-		<div class="logo"><span class="logo"><a href="http://pecl.php.net/package/APC">APC</a></span></div>
-		<div class="nameinfo">Opcode Cache</div>
+		<div class="logo"><span class="logo"><a href="http://pecl.php.net/package/APCu">APCu</a></span></div>
+		<div class="nameinfo">User Cache</div>
 	</h1>
 	<div class="login">
 	<?php put_login_link(); ?>
 	</div>
 	<hr class="apc">
 </div>
+
 <?php
-
-
 // Display main Menu
 echo <<<EOB
 	<ol class=menu>
 	<li><a href="$MY_SELF&OB={$MYREQUEST['OB']}&SH={$MYREQUEST['SH']}">Refresh Data</a></li>
 EOB;
 echo
-	menu_entry(1,'View Host Stats'),
-	menu_entry(2,'System Cache Entries');
-if ($AUTHENTICATED) {
-	echo menu_entry(4,'Per-Directory Entries');
-}
-echo
-	menu_entry(3,'User Cache Entries'),
-	menu_entry(9,'Version Check');
-	
+	menu_entry(OB_HOST_STATS,'View Host Stats'),
+	menu_entry(OB_USER_CACHE,'User Cache Entries'),
+	menu_entry(OB_VERSION_CHECK,'Version Check');
+
 if ($AUTHENTICATED) {
 	echo <<<EOB
-		<li><a class="aright" href="$MY_SELF&CC=1&OB={$MYREQUEST['OB']}" onClick="javascript:return confirm('Are you sure?');">Clear $cache_mode Cache</a></li>
+		<li><a class="aright" href="$MY_SELF&CC=1&OB={$MYREQUEST['OB']}" onClick="javascript:return confirm('Are you sure?');">Clear Cache</a></li>
 EOB;
 }
 echo <<<EOB
@@ -757,14 +748,9 @@ echo <<<EOB
 	<div class=content>
 EOB;
 
-// MAIN SWITCH STATEMENT 
+// MAIN SWITCH STATEMENT
 
 switch ($MYREQUEST['OB']) {
-
-
-
-
-
 // -----------------------------------------------
 // Host Stats
 // -----------------------------------------------
@@ -773,77 +759,59 @@ case OB_HOST_STATS:
 	$mem_avail= $mem['avail_mem'];
 	$mem_used = $mem_size-$mem_avail;
 	$seg_size = bsize($mem['seg_size']);
-	$req_rate = sprintf("%.2f",($cache['num_hits']+$cache['num_misses'])/($time-$cache['start_time']));
-	$hit_rate = sprintf("%.2f",($cache['num_hits'])/($time-$cache['start_time']));
-	$miss_rate = sprintf("%.2f",($cache['num_misses'])/($time-$cache['start_time']));
-	$insert_rate = sprintf("%.2f",($cache['num_inserts'])/($time-$cache['start_time']));
-	$req_rate_user = sprintf("%.2f",($cache_user['num_hits']+$cache_user['num_misses'])/($time-$cache_user['start_time']));
-	$hit_rate_user = sprintf("%.2f",($cache_user['num_hits'])/($time-$cache_user['start_time']));
-	$miss_rate_user = sprintf("%.2f",($cache_user['num_misses'])/($time-$cache_user['start_time']));
-	$insert_rate_user = sprintf("%.2f",($cache_user['num_inserts'])/($time-$cache_user['start_time']));
-	$apcversion = phpversion('apc');
+	$req_rate_user = sprintf("%.2f", $cache['nhits'] ? (($cache['nhits']+$cache['nmisses'])/($time-$cache['stime'])) : 0);
+	$hit_rate_user = sprintf("%.2f", $cache['nhits'] ? (($cache['nhits'])/($time-$cache['stime'])) : 0);
+	$miss_rate_user = sprintf("%.2f", $cache['nmisses'] ? (($cache['nmisses'])/($time-$cache['stime'])) : 0);
+	$insert_rate_user = sprintf("%.2f", $cache['ninserts'] ? (($cache['ninserts'])/($time-$cache['stime'])) : 0);
+	$apcversion = phpversion('apcu');
 	$phpversion = phpversion();
-	$number_files = $cache['num_entries']; 
-    $size_files = bsize($cache['mem_size']);
-	$number_vars = $cache_user['num_entries'];
-    $size_vars = bsize($cache_user['mem_size']);
+	$number_vars = $cache['nentries'];
+    $size_vars = bsize($cache['mem_size']);
 	$i=0;
 	echo <<< EOB
 		<div class="info div1"><h2>General Cache Information</h2>
 		<table cellspacing=0><tbody>
-		<tr class=tr-0><td class=td-0>APC Version</td><td>$apcversion</td></tr>
+		<tr class=tr-0><td class=td-0>APCu Version</td><td>$apcversion</td></tr>
 		<tr class=tr-1><td class=td-0>PHP Version</td><td>$phpversion</td></tr>
 EOB;
 
 	if(!empty($_SERVER['SERVER_NAME']))
-		echo "<tr class=tr-0><td class=td-0>APC Host</td><td>{$_SERVER['SERVER_NAME']} $host</td></tr>\n";
+		echo "<tr class=tr-0><td class=td-0>APCu Host</td><td>{$_SERVER['SERVER_NAME']} $host</td></tr>\n";
 	if(!empty($_SERVER['SERVER_SOFTWARE']))
 		echo "<tr class=tr-1><td class=td-0>Server Software</td><td>{$_SERVER['SERVER_SOFTWARE']}</td></tr>\n";
 
 	echo <<<EOB
-		<tr class=tr-0><td class=td-0>Shared Memory</td><td>{$mem['num_seg']} Segment(s) with $seg_size 
-    <br/> ({$cache['memory_type']} memory, {$cache['locking_type']} locking)
+		<tr class=tr-0><td class=td-0>Shared Memory</td><td>{$mem['num_seg']} Segment(s) with $seg_size
+    <br/> ({$cache['memory_type']} memory)
     </td></tr>
 EOB;
-	echo   '<tr class=tr-1><td class=td-0>Start Time</td><td>',date(DATE_FORMAT,$cache['start_time']),'</td></tr>';
-	echo   '<tr class=tr-0><td class=td-0>Uptime</td><td>',duration($cache['start_time']),'</td></tr>';
+	echo   '<tr class=tr-1><td class=td-0>Start Time</td><td>',date(DATE_FORMAT,$cache['stime']),'</td></tr>';
+	echo   '<tr class=tr-0><td class=td-0>Uptime</td><td>',duration($cache['stime']),'</td></tr>';
 	echo   '<tr class=tr-1><td class=td-0>File Upload Support</td><td>',$cache['file_upload_progress'],'</td></tr>';
 	echo <<<EOB
 		</tbody></table>
 		</div>
 
-		<div class="info div1"><h2>File Cache Information</h2>
-		<table cellspacing=0><tbody>
-		<tr class=tr-0><td class=td-0>Cached Files</td><td>$number_files ($size_files)</td></tr>
-		<tr class=tr-1><td class=td-0>Hits</td><td>{$cache['num_hits']}</td></tr>
-		<tr class=tr-0><td class=td-0>Misses</td><td>{$cache['num_misses']}</td></tr>
-		<tr class=tr-1><td class=td-0>Request Rate (hits, misses)</td><td>$req_rate cache requests/second</td></tr>
-		<tr class=tr-0><td class=td-0>Hit Rate</td><td>$hit_rate cache requests/second</td></tr>
-		<tr class=tr-1><td class=td-0>Miss Rate</td><td>$miss_rate cache requests/second</td></tr>
-		<tr class=tr-0><td class=td-0>Insert Rate</td><td>$insert_rate cache requests/second</td></tr>
-		<tr class=tr-1><td class=td-0>Cache full count</td><td>{$cache['expunges']}</td></tr>
-		</tbody></table>
-		</div>
-
-		<div class="info div1"><h2>User Cache Information</h2>
-		<table cellspacing=0><tbody>
-    <tr class=tr-0><td class=td-0>Cached Variables</td><td>$number_vars ($size_vars)</td></tr>
-		<tr class=tr-1><td class=td-0>Hits</td><td>{$cache_user['num_hits']}</td></tr>
-		<tr class=tr-0><td class=td-0>Misses</td><td>{$cache_user['num_misses']}</td></tr>
-		<tr class=tr-1><td class=td-0>Request Rate (hits, misses)</td><td>$req_rate_user cache requests/second</td></tr>
-		<tr class=tr-0><td class=td-0>Hit Rate</td><td>$hit_rate_user cache requests/second</td></tr>
-		<tr class=tr-1><td class=td-0>Miss Rate</td><td>$miss_rate_user cache requests/second</td></tr>
-		<tr class=tr-0><td class=td-0>Insert Rate</td><td>$insert_rate_user cache requests/second</td></tr>
-		<tr class=tr-1><td class=td-0>Cache full count</td><td>{$cache_user['expunges']}</td></tr>
-
-		</tbody></table>
+		<div class="info div1"><h2>Cache Information</h2>
+		<table cellspacing=0>
+		<tbody>
+    		<tr class=tr-0><td class=td-0>Cached Variables</td><td>$number_vars ($size_vars)</td></tr>
+			<tr class=tr-1><td class=td-0>Hits</td><td>{$cache['nhits']}</td></tr>
+			<tr class=tr-0><td class=td-0>Misses</td><td>{$cache['nmisses']}</td></tr>
+			<tr class=tr-1><td class=td-0>Request Rate (hits, misses)</td><td>$req_rate_user cache requests/second</td></tr>
+			<tr class=tr-0><td class=td-0>Hit Rate</td><td>$hit_rate_user cache requests/second</td></tr>
+			<tr class=tr-1><td class=td-0>Miss Rate</td><td>$miss_rate_user cache requests/second</td></tr>
+			<tr class=tr-0><td class=td-0>Insert Rate</td><td>$insert_rate_user cache requests/second</td></tr>
+			<tr class=tr-1><td class=td-0>Cache full count</td><td>{$cache['nexpunges']}</td></tr>
+		</tbody>
+		</table>
 		</div>
 
 		<div class="info div2"><h2>Runtime Settings</h2><table cellspacing=0><tbody>
 EOB;
 
 	$j = 0;
-	foreach (ini_get_all('apc') as $k => $v) {
+	foreach (ini_get_all('apcu') as $k => $v) {
 		echo "<tr class=tr-$j><td class=td-0>",$k,"</td><td>",str_replace(',',',<br />',$v['local_value']),"</td></tr>\n";
 		$j = 1 - $j;
 	}
@@ -861,7 +829,7 @@ EOB;
 		<table cellspacing=0><tbody>
 EOB;
 	$size='width='.(GRAPH_SIZE+50).' height='.(GRAPH_SIZE+10);
-	echo <<<EOB
+echo <<<EOB
 		<tr>
 		<td class=td-0>$mem_note</td>
 		<td class=td-1>Hits &amp; Misses</td>
@@ -869,18 +837,18 @@ EOB;
 EOB;
 
 	echo
-		graphics_avail() ? 
+		graphics_avail() ?
 			  '<tr>'.
 			  "<td class=td-0><img alt=\"\" $size src=\"$PHP_SELF?IMG=1&$time\"></td>".
 			  "<td class=td-1><img alt=\"\" $size src=\"$PHP_SELF?IMG=2&$time\"></td></tr>\n"
 			: "",
 		'<tr>',
 		'<td class=td-0><span class="green box">&nbsp;</span>Free: ',bsize($mem_avail).sprintf(" (%.1f%%)",$mem_avail*100/$mem_size),"</td>\n",
-		'<td class=td-1><span class="green box">&nbsp;</span>Hits: ',$cache['num_hits'].sprintf(" (%.1f%%)",$cache['num_hits']*100/($cache['num_hits']+$cache['num_misses'])),"</td>\n",
+		'<td class=td-1><span class="green box">&nbsp;</span>Hits: ',$cache['nhits'].@sprintf(" (%.1f%%)",$cache['nhits']*100/($cache['nhits']+$cache['nmisses'])),"</td>\n",
 		'</tr>',
 		'<tr>',
 		'<td class=td-0><span class="red box">&nbsp;</span>Used: ',bsize($mem_used ).sprintf(" (%.1f%%)",$mem_used *100/$mem_size),"</td>\n",
-		'<td class=td-1><span class="red box">&nbsp;</span>Misses: ',$cache['num_misses'].sprintf(" (%.1f%%)",$cache['num_misses']*100/($cache['num_hits']+$cache['num_misses'])),"</td>\n";
+		'<td class=td-1><span class="red box">&nbsp;</span>Misses: ',$cache['nmisses'].@sprintf(" (%.1f%%)",$cache['nmisses']*100/($cache['nhits']+$cache['nmisses'])),"</td>\n";
 	echo <<< EOB
 		</tr>
 		</tbody></table>
@@ -907,7 +875,7 @@ EOB;
 		}
 		$freeseg += count($mem['block_lists'][$i]);
 	}
-	
+
 	if ($freeseg > 1) {
 		$frag = sprintf("%.2f%% (%s out of %s in %d fragments)", ($fragsize/$freetotal)*100,bsize($fragsize),bsize($freetotal),$freeseg);
 	} else {
@@ -937,7 +905,7 @@ EOB;
 		</tbody></table>
 		</div>
 EOB;
-		
+
 	break;
 
 
@@ -951,67 +919,9 @@ case OB_USER_CACHE:
 		echo '</div>';
 		break;
 	}
-	$fieldname='info';
+	$fieldname='key';
 	$fieldheading='User Entry Label';
-	$fieldkey='info';
-
-// -----------------------------------------------
-// System Cache Entries		
-// -----------------------------------------------
-case OB_SYS_CACHE:	
-	if (!isset($fieldname))
-	{
-		$fieldname='filename';
-		$fieldheading='Script Filename';
-		if(ini_get("apc.stat")) $fieldkey='inode';
-		else $fieldkey='filename'; 
-	}
-	if (!empty($MYREQUEST['SH']))
-	{
-		echo <<< EOB
-			<div class="info"><table cellspacing=0><tbody>
-			<tr><th>Attribute</th><th>Value</th></tr>
-EOB;
-
-		$m=0;
-		foreach($scope_list as $j => $list) {
-			foreach($cache[$list] as $i => $entry) {
-				if (md5($entry[$fieldkey])!=$MYREQUEST['SH']) continue;
-				foreach($entry as $k => $value) {
-					if (!$AUTHENTICATED) {
-						// hide all path entries if not logged in
-						$value=preg_replace('/^.*(\\/|\\\\)/','<i>&lt;hidden&gt;</i>/',$value);
-					}
-
-					if ($k == "num_hits") {
-						$value=sprintf("%s (%.2f%%)",$value,$value*100/$cache['num_hits']);
-					}
-					if ($k == 'deletion_time') {
-						if(!$entry['deletion_time']) $value = "None";
-					}
-					echo
-						"<tr class=tr-$m>",
-						"<td class=td-0>",ucwords(preg_replace("/_/"," ",$k)),"</td>",
-						"<td class=td-last>",(preg_match("/time/",$k) && $value!='None') ? date(DATE_FORMAT,$value) : htmlspecialchars($value, ENT_QUOTES, 'UTF-8'),"</td>",
-						"</tr>";
-					$m=1-$m;
-				}
-				if($fieldkey=='info') {
-					echo "<tr class=tr-$m><td class=td-0>Stored Value</td><td class=td-last><pre>";
-					$output = var_export(apc_fetch($entry[$fieldkey]),true);
-					echo htmlspecialchars($output, ENT_QUOTES, 'UTF-8');
-					echo "</pre></td></tr>\n";
-				}
-				break;
-			}
-		}
-
-		echo <<<EOB
-			</tbody></table>
-			</div>
-EOB;
-		break;
-	}
+	$fieldkey='key';
 
 	$cols=6;
 	echo <<<EOB
@@ -1019,7 +929,7 @@ EOB;
 		<input type=hidden name=OB value={$MYREQUEST['OB']}>
 		<select name=SCOPE>
 EOB;
-	echo 
+	echo
 		"<option value=A",$MYREQUEST['SCOPE']=='A' ? " selected":"",">Active</option>",
 		"<option value=D",$MYREQUEST['SCOPE']=='D' ? " selected":"",">Deleted</option>",
 		"</select>",
@@ -1033,7 +943,7 @@ EOB;
 		"<option value=D",$MYREQUEST['SORT1']=='D' ? " selected":"",">Deleted at</option>";
 	if($fieldname=='info') echo
 		"<option value=D",$MYREQUEST['SORT1']=='T' ? " selected":"",">Timeout</option>";
-	echo 
+	echo
 		'</select>',
 		'<select name=SORT2>',
 		'<option value=D',$MYREQUEST['SORT2']=='D' ? ' selected':'','>DESC</option>',
@@ -1082,16 +992,17 @@ EOB;
 	// builds list with alpha numeric sortable keys
 	//
 	$list = array();
+
 	foreach($cache[$scope_list[$MYREQUEST['SCOPE']]] as $i => $entry) {
 		switch($MYREQUEST['SORT1']) {
-			case 'A': $k=sprintf('%015d-',$entry['access_time']); 	break;
-			case 'H': $k=sprintf('%015d-',$entry['num_hits']); 		break;
+			case 'A': $k=sprintf('%015d-',$entry['atime']);  	    break;
+			case 'H': $k=sprintf('%015d-',$entry['nhits']); 		break;
 			case 'Z': $k=sprintf('%015d-',$entry['mem_size']); 		break;
 			case 'M': $k=sprintf('%015d-',$entry['mtime']);			break;
-			case 'C': $k=sprintf('%015d-',$entry['creation_time']);	break;
+			case 'C': $k=sprintf('%015d-',$entry['ctime']);	        break;
 			case 'T': $k=sprintf('%015d-',$entry['ttl']);			break;
-			case 'D': $k=sprintf('%015d-',$entry['deletion_time']);	break;
-			case 'S': $k='';										break;
+			case 'D': $k=sprintf('%015d-',$entry['dtime']);      	break;
+			case 'S': $k=$entry["key"];								break;
 		}
 		if (!$AUTHENTICATED) {
 			// hide all path entries if not logged in
@@ -1102,27 +1013,27 @@ EOB;
 	}
 
 	if ($list) {
-		
 		// sort list
 		//
 		switch ($MYREQUEST['SORT2']) {
 			case "A":	krsort($list);	break;
 			case "D":	ksort($list);	break;
 		}
-		
+
 		// output list
 		$i=0;
 		foreach($list as $k => $entry) {
-      if(!$MYREQUEST['SEARCH'] || preg_match($MYREQUEST['SEARCH'], $entry[$fieldname]) != 0) {  
+      if(!$MYREQUEST['SEARCH'] || preg_match($MYREQUEST['SEARCH'], $entry[$fieldname]) != 0) {
+		$sh=md5($entry["key"]);
         $field_value = htmlentities(strip_tags($entry[$fieldname],''), ENT_QUOTES, 'UTF-8');
         echo
           '<tr class=tr-',$i%2,'>',
-          "<td class=td-0><a href=\"$MY_SELF&OB=",$MYREQUEST['OB'],"&SH=",md5($entry[$fieldkey]),"\">",$field_value,'</a></td>',
-          '<td class="td-n center">',$entry['num_hits'],'</td>',
+          "<td class=td-0><a href=\"$MY_SELF&OB=",$MYREQUEST['OB'],"&SH=",$sh,"\">",$field_value,'</a></td>',
+          '<td class="td-n center">',$entry['nhits'],'</td>',
           '<td class="td-n right">',$entry['mem_size'],'</td>',
-          '<td class="td-n center">',date(DATE_FORMAT,$entry['access_time']),'</td>',
+          '<td class="td-n center">',date(DATE_FORMAT,$entry['atime']),'</td>',
           '<td class="td-n center">',date(DATE_FORMAT,$entry['mtime']),'</td>',
-          '<td class="td-n center">',date(DATE_FORMAT,$entry['creation_time']),'</td>';
+          '<td class="td-n center">',date(DATE_FORMAT,$entry['ctime']),'</td>';
 
         if($fieldname=='info') {
           if($entry['ttl'])
@@ -1130,9 +1041,9 @@ EOB;
           else
             echo '<td class="td-n center">None</td>';
         }
-        if ($entry['deletion_time']) {
+        if ($entry['dtime']) {
 
-          echo '<td class="td-last center">', date(DATE_FORMAT,$entry['deletion_time']), '</td>';
+          echo '<td class="td-last center">', date(DATE_FORMAT,$entry['dtime']), '</td>';
         } else if ($MYREQUEST['OB'] == OB_USER_CACHE) {
 
           echo '<td class="td-last center">';
@@ -1142,141 +1053,19 @@ EOB;
           echo '<td class="td-last center"> &nbsp; </td>';
         }
         echo '</tr>';
+		if ($sh == $MYREQUEST["SH"]) {
+			echo '<tr>';
+			echo '<td colspan="7"><pre>'.htmlentities(print_r(apcu_fetch($entry['key']), 1)).'</pre></td>';
+			echo '</tr>';
+		}
         $i++;
         if ($i == $MYREQUEST['COUNT'])
           break;
       }
 		}
-		
+
 	} else {
 		echo '<tr class=tr-0><td class="center" colspan=',$cols,'><i>No data</i></td></tr>';
-	}
-	echo <<< EOB
-		</tbody></table>
-EOB;
-
-	if ($list && $i < count($list)) {
-		echo "<a href=\"$MY_SELF&OB=",$MYREQUEST['OB'],"&COUNT=0\"><i>",count($list)-$i,' more available...</i></a>';
-	}
-
-	echo <<< EOB
-		</div>
-EOB;
-	break;
-
-
-// -----------------------------------------------
-// Per-Directory System Cache Entries
-// -----------------------------------------------
-case OB_SYS_CACHE_DIR:	
-	if (!$AUTHENTICATED) {
-		break;
-	}
-
-	echo <<<EOB
-		<div class=sorting><form>Scope:
-		<input type=hidden name=OB value={$MYREQUEST['OB']}>
-		<select name=SCOPE>
-EOB;
-	echo 
-		"<option value=A",$MYREQUEST['SCOPE']=='A' ? " selected":"",">Active</option>",
-		"<option value=D",$MYREQUEST['SCOPE']=='D' ? " selected":"",">Deleted</option>",
-		"</select>",
-		", Sorting:<select name=SORT1>",
-		"<option value=H",$MYREQUEST['SORT1']=='H' ? " selected":"",">Total Hits</option>",
-		"<option value=Z",$MYREQUEST['SORT1']=='Z' ? " selected":"",">Total Size</option>",
-		"<option value=T",$MYREQUEST['SORT1']=='T' ? " selected":"",">Number of Files</option>",
-		"<option value=S",$MYREQUEST['SORT1']=='S' ? " selected":"",">Directory Name</option>",
-		"<option value=A",$MYREQUEST['SORT1']=='A' ? " selected":"",">Avg. Size</option>",
-		"<option value=C",$MYREQUEST['SORT1']=='C' ? " selected":"",">Avg. Hits</option>",
-		'</select>',
-		'<select name=SORT2>',
-		'<option value=D',$MYREQUEST['SORT2']=='D' ? ' selected':'','>DESC</option>',
-		'<option value=A',$MYREQUEST['SORT2']=='A' ? ' selected':'','>ASC</option>',
-		'</select>',
-		'<select name=COUNT onChange="form.submit()">',
-		'<option value=10 ',$MYREQUEST['COUNT']=='10' ? ' selected':'','>Top 10</option>',
-		'<option value=20 ',$MYREQUEST['COUNT']=='20' ? ' selected':'','>Top 20</option>',
-		'<option value=50 ',$MYREQUEST['COUNT']=='50' ? ' selected':'','>Top 50</option>',
-		'<option value=100',$MYREQUEST['COUNT']=='100'? ' selected':'','>Top 100</option>',
-		'<option value=150',$MYREQUEST['COUNT']=='150'? ' selected':'','>Top 150</option>',
-		'<option value=200',$MYREQUEST['COUNT']=='200'? ' selected':'','>Top 200</option>',
-		'<option value=500',$MYREQUEST['COUNT']=='500'? ' selected':'','>Top 500</option>',
-		'<option value=0  ',$MYREQUEST['COUNT']=='0'  ? ' selected':'','>All</option>',
-		'</select>',
-		", Group By Dir Level:<select name=AGGR>",
-		"<option value='' selected>None</option>";
-		for ($i = 1; $i < 10; $i++)
-			echo "<option value=$i",$MYREQUEST['AGGR']==$i ? " selected":"",">$i</option>";
-		echo '</select>',
-		'&nbsp;<input type=submit value="GO!">',
-		'</form></div>',
-
-		'<div class="info"><table cellspacing=0><tbody>',
-		'<tr>',
-		'<th>',sortheader('S','Directory Name',	"&OB=".$MYREQUEST['OB']),'</th>',
-		'<th>',sortheader('T','Number of Files',"&OB=".$MYREQUEST['OB']),'</th>',
-		'<th>',sortheader('H','Total Hits',	"&OB=".$MYREQUEST['OB']),'</th>',
-		'<th>',sortheader('Z','Total Size',	"&OB=".$MYREQUEST['OB']),'</th>',
-		'<th>',sortheader('C','Avg. Hits',	"&OB=".$MYREQUEST['OB']),'</th>',
-		'<th>',sortheader('A','Avg. Size',	"&OB=".$MYREQUEST['OB']),'</th>',
-		'</tr>';
-
-	// builds list with alpha numeric sortable keys
-	//
-	$tmp = $list = array();
-	foreach($cache[$scope_list[$MYREQUEST['SCOPE']]] as $entry) {
-		$n = dirname($entry['filename']);
-		if ($MYREQUEST['AGGR'] > 0) {
-			$n = preg_replace("!^(/?(?:[^/\\\\]+[/\\\\]){".($MYREQUEST['AGGR']-1)."}[^/\\\\]*).*!", "$1", $n);
-		}
-		if (!isset($tmp[$n])) {
-			$tmp[$n] = array('hits'=>0,'size'=>0,'ents'=>0);
-		}
-		$tmp[$n]['hits'] += $entry['num_hits'];
-		$tmp[$n]['size'] += $entry['mem_size'];
-		++$tmp[$n]['ents'];
-	}
-
-	foreach ($tmp as $k => $v) {
-		switch($MYREQUEST['SORT1']) {
-			case 'A': $kn=sprintf('%015d-',$v['size'] / $v['ents']);break;
-			case 'T': $kn=sprintf('%015d-',$v['ents']);		break;
-			case 'H': $kn=sprintf('%015d-',$v['hits']);		break;
-			case 'Z': $kn=sprintf('%015d-',$v['size']);		break;
-			case 'C': $kn=sprintf('%015d-',$v['hits'] / $v['ents']);break;
-			case 'S': $kn = $k;					break;
-		}
-		$list[$kn.$k] = array($k, $v['ents'], $v['hits'], $v['size']);
-	}
-
-	if ($list) {
-		
-		// sort list
-		//
-		switch ($MYREQUEST['SORT2']) {
-			case "A":	krsort($list);	break;
-			case "D":	ksort($list);	break;
-		}
-		
-		// output list
-		$i = 0;
-		foreach($list as $entry) {
-			echo
-				'<tr class=tr-',$i%2,'>',
-				"<td class=td-0>",$entry[0],'</a></td>',
-				'<td class="td-n center">',$entry[1],'</td>',
-				'<td class="td-n center">',$entry[2],'</td>',
-				'<td class="td-n center">',$entry[3],'</td>',
-				'<td class="td-n center">',round($entry[2] / $entry[1]),'</td>',
-				'<td class="td-n center">',round($entry[3] / $entry[1]),'</td>',
-				'</tr>';
-
-			if (++$i == $MYREQUEST['COUNT']) break;
-		}
-		
-	} else {
-		echo '<tr class=tr-0><td class="center" colspan=6><i>No data</i></td></tr>';
 	}
 	echo <<< EOB
 		</tbody></table>
@@ -1296,7 +1085,7 @@ EOB;
 // -----------------------------------------------
 case OB_VERSION_CHECK:
 	echo <<<EOB
-		<div class="info"><h2>APC Version Information</h2>
+		<div class="info"><h2>APCu Version Information</h2>
 		<table cellspacing=0><tbody>
 		<tr>
 		<th></th>
@@ -1304,24 +1093,24 @@ case OB_VERSION_CHECK:
 EOB;
   if (defined('PROXY')) {
     $ctxt = stream_context_create( array( 'http' => array( 'proxy' => PROXY, 'request_fulluri' => True ) ) );
-    $rss = @file_get_contents("http://pecl.php.net/feeds/pkg_apc.rss", False, $ctxt);
+    $rss = @file_get_contents("http://pecl.php.net/feeds/pkg_apcu.rss", False, $ctxt);
   } else {
-    $rss = @file_get_contents("http://pecl.php.net/feeds/pkg_apc.rss");
+    $rss = @file_get_contents("http://pecl.php.net/feeds/pkg_apcu.rss");
   }
 	if (!$rss) {
 		echo '<tr class="td-last center"><td>Unable to fetch version information.</td></tr>';
 	} else {
 		$apcversion = phpversion('apc');
 
-		preg_match('!<title>APC ([0-9.]+)</title>!', $rss, $match);
+		preg_match('!<title>APCu ([0-9.]+)</title>!', $rss, $match);
 		echo '<tr class="tr-0 center"><td>';
 		if (version_compare($apcversion, $match[1], '>=')) {
-			echo '<div class="ok">You are running the latest version of APC ('.$apcversion.')</div>';
+			echo '<div class="ok">You are running the latest version of APCu ('.$apcversion.')</div>';
 			$i = 3;
 		} else {
-			echo '<div class="failed">You are running an older version of APC ('.$apcversion.'), 
-				newer version '.$match[1].' is available at <a href="http://pecl.php.net/package/APC/'.$match[1].'">
-				http://pecl.php.net/package/APC/'.$match[1].'</a>
+			echo '<div class="failed">You are running an older version of APCu ('.$apcversion.'),
+				newer version '.$match[1].' is available at <a href="http://pecl.php.net/package/APCu/'.$match[1].'">
+				http://pecl.php.net/package/APCu/'.$match[1].'</a>
 				</div>';
 			$i = -1;
 		}
@@ -1338,7 +1127,7 @@ EOB;
 			} else if (!$i--) {
 				break;
 			}
-			echo "<b><a href=\"http://pecl.php.net/package/APC/$ver\">".htmlspecialchars($v, ENT_QUOTES, 'UTF-8')."</a></b><br><blockquote>";
+			echo "<b><a href=\"http://pecl.php.net/package/APCu/$ver\">".htmlspecialchars($v, ENT_QUOTES, 'UTF-8')."</a></b><br><blockquote>";
 			echo nl2br(htmlspecialchars(current($match[2]), ENT_QUOTES, 'UTF-8'))."</blockquote>";
 			next($match[2]);
 		}
