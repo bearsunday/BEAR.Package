@@ -170,8 +170,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetResourceOptions()
     {
-        $packageDir = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
-        $ro = new Index($packageDir);
+        $ro = new Index($_ENV['PACKAGE_DIR']);
         $options = $this->appReflector->getResourceOptions($ro);
         $this->assertSame(['allow', 'params'], array_keys($options));
 

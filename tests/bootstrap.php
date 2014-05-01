@@ -1,8 +1,5 @@
 <?php
 
-//use Doctrine\Common\Annotations\AnnotationRegistry;
-//use Doctrine\Common\Annotations\AnnotationReader;
-
 ini_set('xdebug.max_nesting_level', 300);
 ini_set('display_errors', 1);
 
@@ -13,13 +10,8 @@ require dirname(__DIR__) . '/apps/Demo.Sandbox/bin/clear.php';
 error_reporting(E_ALL ^ E_NOTICE);
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */
-$loader->addPsr4('BEAR\Package\\', __DIR__ . '/BEAR/Package');
+$loader->addPsr4('BEAR\Package\\', __DIR__);
 error_reporting(E_ALL);
-
-///** @var $loader \Composer\Autoload\ClassLoader */
-//AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-//AnnotationReader::addGlobalIgnoredName('noinspection');
-//AnnotationReader::addGlobalIgnoredName('returns');
 
 // load for p($var); e();
 (new \BEAR\Package\Dev\Dev)->loadDevFunctions();
