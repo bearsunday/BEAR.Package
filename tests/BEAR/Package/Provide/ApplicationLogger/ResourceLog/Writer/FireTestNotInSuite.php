@@ -22,7 +22,7 @@ class FireTestNotInSuite extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $_SERVER['HTTP_USER_AGENT'] = 'User-Agent:  FirePHP/0.7.1';
         $this->fire = new Fire(\FirePHP::getInstance(true));
-        $this->request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
+        $this->request = require $_ENV['TEST_DIR'] . '/scripts/instance/request.php';
         $this->request->set(new Mock, 'nop://mock', 'get', []);
         $this->ro = new Mock;
         $this->request->set(new Mock, 'nop://mock', 'get', []);

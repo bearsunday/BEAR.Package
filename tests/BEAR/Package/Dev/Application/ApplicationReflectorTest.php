@@ -25,7 +25,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         static $app;
 
         if (! $app) {
-            $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo.Sandbox/bootstrap/instance.php';
+            $app = require $_ENV['PACKAGE_DIR'] . '/apps/Demo.Sandbox/bootstrap/instance.php';
         }
         $this->appReflector = new ApplicationReflector($app);
     }
@@ -54,7 +54,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
      */
     public function estGetResources(array $resources)
     {
-        $app = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/apps/Demo.Helloworld/bootstrap/instance.php';
+        $app = require $_ENV['PACKAGE_DIR'] . '/apps/Demo.Helloworld/bootstrap/instance.php';
         $this->assertInstanceOf('BEAR\Sunday\Extension\Application\AppInterface', $app);
         $resources = (new ApplicationReflector($app))->getResources();
         $this->assertSame(3, count($resources));
