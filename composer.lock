@@ -497,12 +497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "613df69bc3064fe736bf93e9be9a3f3adadf97fe"
+                "reference": "25e8c0f5fe413fa47fedfdb3616f9d5e0683f017"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/613df69bc3064fe736bf93e9be9a3f3adadf97fe",
-                "reference": "613df69bc3064fe736bf93e9be9a3f3adadf97fe",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/25e8c0f5fe413fa47fedfdb3616f9d5e0683f017",
+                "reference": "25e8c0f5fe413fa47fedfdb3616f9d5e0683f017",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-04-30 12:39:40"
+            "time": "2014-04-30 16:34:26"
         },
         {
             "name": "bear/sunday",
@@ -1741,15 +1741,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "802cae3c4131a5fb3bd964541fe08bad2194f2c2"
+                "reference": "7132a047ed97f823767802289c98c7e050c33a17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/802cae3c4131a5fb3bd964541fe08bad2194f2c2",
-                "reference": "802cae3c4131a5fb3bd964541fe08bad2194f2c2",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/7132a047ed97f823767802289c98c7e050c33a17",
+                "reference": "7132a047ed97f823767802289c98c7e050c33a17",
                 "shasum": ""
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Demo\\Helloworld\\": "Demo.Helloworld/src",
+                    "Demo\\Sandbox\\": "Demo.Sandbox/src"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -1766,7 +1772,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-04-30 09:27:32"
+            "time": "2014-05-01 04:36:45"
         },
         {
             "name": "bear/dev-package",
@@ -2253,16 +2259,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.36",
+            "version": "3.7.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1735d588c9f35bd8686cae0208d8adde77b45365"
+                "reference": "ae6cefd7cc84586a5ef27e04bae11ee940ec63dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1735d588c9f35bd8686cae0208d8adde77b45365",
-                "reference": "1735d588c9f35bd8686cae0208d8adde77b45365",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ae6cefd7cc84586a5ef27e04bae11ee940ec63dc",
+                "reference": "ae6cefd7cc84586a5ef27e04bae11ee940ec63dc",
                 "shasum": ""
             },
             "require": {
@@ -2322,7 +2328,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-04-29 07:24:10"
+            "time": "2014-04-30 12:24:19"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
