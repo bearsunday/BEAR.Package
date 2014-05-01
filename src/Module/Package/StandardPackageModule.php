@@ -23,11 +23,22 @@ final class StandardPackageModule extends AbstractModule
      */
     private $context;
 
-    public function __construct($appDir, $context, AbstractModule $module = null)
+    /**
+     * @var string
+     */
+    private $nameSpace;
+
+    /**
+     * @param string $namespace
+     * @param string $context
+     * @param string $appDir
+     */
+    public function __construct($namespace, $context, $appDir)
     {
-        $this->appDir = $appDir;
+        $this->nameSpace = $namespace;
         $this->context = $context;
-        parent::__construct($module);
+        $this->appDir = $appDir;
+        parent::__construct();
     }
 
     /**
@@ -35,8 +46,11 @@ final class StandardPackageModule extends AbstractModule
      */
     protected function configure()
     {
+        global $appDir;
+
+        $appDir = $this->appDir;
         $constantsCollection = require $this->appDir . '/var/conf/constants.php';
-        $constants = $constantsCollection[$this->context] + $constantsCollection['prod'];
+        $constants = $constantsCollection[$this->context] + $constantsCollection['prod'] + ($this->getDefaultConstants($appDir));
         $paramsCollection = require $this->appDir . '/var/conf/params.php';
         $params = $paramsCollection[$this->context] + $paramsCollection['prod'];
         $appClass = $constants['app_class'];
@@ -50,6 +64,22 @@ final class StandardPackageModule extends AbstractModule
             $this->install(new HalModule($this));
             //$this->install(new JsonModule($this));
         }
+    }
 
+    /**
+     * @param $appDir
+     *
+     * @return array
+     */
+    protected function getDefaultConstants($appDir)
+    {
+        return [
+            'app_name'=> $this->nameSpace,
+            'app_class' => $this->nameSpace . '\App',
+            'tmp_dir' => "{$appDir}/var/tmp",
+            'log_dir' => "{$appDir}/var/log",
+            'lib_dir' => "{$appDir}/var/lib",
+            'resource_dir' => "{$appDir}/src/Resource",
+        ];
     }
 }
