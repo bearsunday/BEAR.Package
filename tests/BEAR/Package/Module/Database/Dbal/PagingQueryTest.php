@@ -59,7 +59,7 @@ class PagingQueryTest extends \PHPUnit_Extensions_Database_TestCase
     public function testCount()
     {
         $count = count($this->pager);
-        $this->assertSame(5, (integer)$count);
+        $this->assertSame(5, (integer) $count);
     }
 
     public function testGetPagerSql()
@@ -75,8 +75,8 @@ class PagingQueryTest extends \PHPUnit_Extensions_Database_TestCase
         $length = 2;
         $this->pager->setOffsetLength($offset, $length);
         $result = $this->pager->getIterator();
-        $this->assertSame(2, (integer)$result[0]['id']);
-        $this->assertSame(3, (integer)$result[1]['id']);
+        $this->assertSame(2, (integer) $result[0]['id']);
+        $this->assertSame(3, (integer) $result[1]['id']);
         $this->assertSame(2, count($result));
     }
 }

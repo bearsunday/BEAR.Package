@@ -8,7 +8,6 @@
 
 namespace BEAR\Package\Provide\Router\Adapter;
 
-
 class WebRouterTest extends \PHPUnit_Framework_TestCase
 {
     /**

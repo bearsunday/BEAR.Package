@@ -1,7 +1,6 @@
 <?php
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer;
 
-
 class FireTestNotInSuite extends \PHPUnit_Framework_TestCase
 {
     /**

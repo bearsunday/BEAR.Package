@@ -69,8 +69,8 @@ class DoctrineDbalAdapterTest extends \PHPUnit_Extensions_Database_TestCase
         $offset = 1;
         $length = 2;
         $result = $this->adapter->getSlice($offset, $length);
-        $this->assertSame(2, (integer)$result[0]['id']);
-        $this->assertSame(3, (integer)$result[1]['id']);
+        $this->assertSame(2, (integer) $result[0]['id']);
+        $this->assertSame(3, (integer) $result[1]['id']);
         $this->assertSame(2, count($result));
     }
 }

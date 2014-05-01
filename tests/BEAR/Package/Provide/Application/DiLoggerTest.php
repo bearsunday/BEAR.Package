@@ -54,7 +54,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $expected = '[DI] Class construct[(string) a, (integer) 1] setter[setA, setB]';
-        $this->assertSame($expected, (string)$this->diLogger);
+        $this->assertSame($expected, (string) $this->diLogger);
     }
 
     public function testLogCallableParam()
@@ -64,7 +64,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $expected = '[DI] Class construct[(double) 1, (callable) BEAR\Package\Provide\Application\someFunction] setter[setA, setB]';
-        $this->assertSame($expected, (string)$this->diLogger);
+        $this->assertSame($expected, (string) $this->diLogger);
     }
 
     public function testLogArrayParam()
@@ -74,7 +74,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $expected = '[DI] Class construct[(integer) 1, Array([0]=>a1[1]=>a2)] setter[setA, setB]';
-        $this->assertSame($expected, (string)$this->diLogger);
+        $this->assertSame($expected, (string) $this->diLogger);
     }
 
     public function testLogObjectParam()
@@ -86,6 +86,6 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $diLogger = $this->diLogger;
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $diLogger->log('Class', $params, $setter, $object, new Bind);
-        $this->assertSame((string)$diLogger, (string)$this->diLogger);
+        $this->assertSame((string) $diLogger, (string) $this->diLogger);
     }
 }

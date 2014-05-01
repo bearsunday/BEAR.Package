@@ -1,6 +1,5 @@
 <?php
 
-
 echo 'BEAR.Package test started...' . PHP_EOL;
 $phpunit = dirname(dirname(__DIR__)) . '/vendor/bin/phpunit';
 passthru(

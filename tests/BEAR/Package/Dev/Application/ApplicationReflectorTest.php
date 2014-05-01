@@ -110,7 +110,6 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $resources['page://self/index']['links']);
     }
 
-
     /**
      * @covers BEAR\Package\Dev\Application\ApplicationReflector::newResource
      */
@@ -141,7 +140,6 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('apps/Demo.Sandbox/src/Resource/Page/One/Two/Three/Resource.php', $filePath);
     }
 
-
     /**
      * @depends testNewResource
      */
@@ -159,7 +157,6 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         $contents = $newResource[0];
         $this->assertContains('class Resource extends ResourceObject', $contents);
     }
-
 
     public function testNewResourceTwice()
     {

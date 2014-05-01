@@ -2,7 +2,6 @@
 
 namespace BEAR\Package\Provide\ResourceView;
 
-
 use BEAR\Package\MockResource;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;

@@ -2,7 +2,6 @@
 
 namespace BEAR\Package\Mock\App;
 
-
 use BEAR\Sunday\Extension\Application\AppInterface;
 
 final class App implements AppInterface
