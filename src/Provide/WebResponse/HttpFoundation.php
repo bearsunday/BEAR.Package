@@ -12,7 +12,6 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Exception\InvalidResourceType;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
-use BEAR\Sunday\Inject\LogInject;
 use Symfony\Component\HttpFoundation\Response;
 use Ray\Aop\Weave;
 use Ray\Di\Di\Inject;
@@ -115,7 +114,7 @@ final class HttpFoundation implements ResponseInterface
      */
     public function render(RenderInterface $renderer = null)
     {
-        $this->view = is_null($renderer) ?  (string)$this->resource : $renderer->render($this->resource);
+        $this->view = is_null($renderer) ?  (string) $this->resource : $renderer->render($this->resource);
 
         return $this;
     }
@@ -127,7 +126,7 @@ final class HttpFoundation implements ResponseInterface
      */
     public function send()
     {
-        $this->response = new Response($this->view, $this->resource->code, (array)$this->resource->headers);
+        $this->response = new Response($this->view, $this->resource->code, (array) $this->resource->headers);
         // compliant with RFC 2616.
         $this->response;
 

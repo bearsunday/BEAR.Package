@@ -11,15 +11,10 @@ use Aura\Signal\Manager;
 use Aura\Signal\ResultCollection;
 use Aura\Signal\ResultFactory;
 use BEAR\Package\Provide as ProvideModule;
-use BEAR\Resource\NamedParameter;
 use BEAR\Resource\Param;
 use BEAR\Resource\SignalParameter;
 use BEAR\Resource\ParamProviderInterface;
 use BEAR\Sunday\Module as SundayModule;
-use Ray\Di\AbstractModule;
-use Ray\Di\Injector;
-use BEAR\Resource\SignalParameterInterface;
-use Ray\Di\InjectorInterface;
 use Ray\Di\InstanceInterface;
 use Ray\Di\ProviderInterface;
 use Ray\Di\Di\Inject;
@@ -38,8 +33,8 @@ class SignalParamProvider implements ProviderInterface
     private $signalParam;
 
     /**
-     * @param AbstractModule $module
-     * @param array          $config
+     * @param InstanceInterface $injector
+     * @param string            $paramProviders
      *
      * @Inject
      * @Named("paramProviders=param_providers")

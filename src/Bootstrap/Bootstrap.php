@@ -14,10 +14,9 @@ use BEAR\Package\Module\Di\DiCompilerProvider;
 class Bootstrap
 {
     /**
-     * @param string $appName
-     * @param string $appDir
-     *
-     * @return void
+     * @param ClassLoader $loader
+     * @param string      $appName
+     * @param string      $appDir
      */
     public static function registerLoader(ClassLoader $loader, $appName, $appDir)
     {
@@ -38,7 +37,8 @@ class Bootstrap
      */
     public static function getApp($appName, $context, $tmpDir)
     {
-        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir))->get();
+        $extraCacheKey = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_METHOD'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '';
+        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir))->get($extraCacheKey);
         $app = $diCompiler->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
 

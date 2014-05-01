@@ -25,9 +25,7 @@ use Ray\Di\Injector;
 use Ray\Di\Logger as DiLogger;
 use Koriym\FusionCache\DoctrineCache as FusionCache;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Ray\Di\DiCompiler;
 use Ray\Di\CompileLogger;
-use Ray\Di\Logger;
 
 /**
  * Return application instance
@@ -54,7 +52,6 @@ function getCachedApp($appName, $context, $tmpDir)
         );
     };
     $initialization = function (AbstractApp $app) use ($context) {
-        /** @var $logger \Guzzle\Log\LogAdapterInterface */
         if ($context === 'prod') {
             (new ApplicationReflector($app))->compileAllResources();
         }

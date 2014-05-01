@@ -19,7 +19,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->null = new Null;
         $this->null1 = new Null;
         $this->logger = new Collection([$this->null, $this->null]);
-        $this->request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
+        $this->request = require $_ENV['TEST_DIR'] . '/scripts/instance/request.php';
     }
 
     /**

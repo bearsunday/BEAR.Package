@@ -66,10 +66,9 @@ class Dev
     }
 
     /**
-     * @param string $appDir
-     * @param array  $server
-     * @param null   $web
-     * @param null   $sapiName
+     * @param array $server
+     * @param null  $web
+     * @param null  $sapiName
      */
     public function __construct(
         array $server = null,
@@ -247,8 +246,8 @@ class Dev
     }
 
     /**
-     * @param array        $argv
-     * @param AbstractApp  $app
+     * @param array       $argv
+     * @param AbstractApp $app
      */
     public function setCliArgs(array $argv, AbstractApp $app)
     {

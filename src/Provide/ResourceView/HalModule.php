@@ -8,9 +8,7 @@ namespace BEAR\Package\Provide\ResourceView;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-use BEAR\Resource\Uri;
 use Ray\Di\Di;
-use Ray\Di\Named;
 
 /**
  * Hal(Hypertext Application Language) render module

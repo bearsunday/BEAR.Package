@@ -7,10 +7,8 @@ use BEAR\Package\Module\Database\Dbal\DbalModule;
 use BEAR\Package\Module\Resource\DevResourceModule;
 use BEAR\Package\Module\Resource\NullCacheModule;
 use BEAR\Package\Provide as ProvideModule;
-use BEAR\Package\Provide\ResourceView\HalModule;
 use BEAR\Sunday\Module as SundayModule;
 use BEAR\Sunday\Module\Constant\NamedModule;
-use BEAR\Sunday\Module\Resource\ResourceCacheModule;
 use Ray\Di\AbstractModule;
 use BEAR\Package\Module\Cache\CacheModule;
 use BEAR\Package\Module\Di\DiCompilerModule;
@@ -33,9 +31,9 @@ class PackageModule extends AbstractModule
     private $context;
 
     /**
-     * @param string  $appClass
-     * @param string  $context
-     * @param array   $config
+     * @param string $appClass
+     * @param string $context
+     * @param array  $config
      */
     public function __construct($appClass, $context, array $config)
     {
@@ -51,16 +49,16 @@ class PackageModule extends AbstractModule
     protected function configure()
     {
         $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
+        // config
+        $this->config['package_dir'] = dirname(dirname(dirname(__DIR__)));
+        $this->install(new NamedModule($this->config));
+
         $this->install(new DiCompilerModule($this));
         $this->install(new DiModule($this));
-
         $this->install(new SundayModule\Framework\FrameworkModule($this));
 
         // application
         $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
-        // config
-        $this->config['package_dir'] = dirname(dirname(dirname(__DIR__)));
-        $this->install(new NamedModule($this->config));
 
         if ($this->context === 'test') {
             $this->install(new NullCacheModule($this));
@@ -73,7 +71,6 @@ class PackageModule extends AbstractModule
         $this->install(new ProvideModule\ResourceView\HalModule);
 
         // Package module
-        $this->install(new Package\Module\Log\ZfLogModule);
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
         $this->install(new Package\Module\Aop\NamedArgsModule);
 

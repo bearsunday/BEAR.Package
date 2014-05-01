@@ -133,14 +133,14 @@ class PagingQuery implements Countable, IteratorAggregate
             $result = $this->pdo->fetchAll($query);
             $count = count($result);
 
-            return (integer)$count;
+            return (integer) $count;
         }
         if ($params) {
             $count = $this->pdo->prepare($countQuery)->execute($params)->fetchColumn();
-            return (integer)$count;
+            return (integer) $count;
         }
         $count = $this->pdo->query($countQuery)->fetchColumn();
-        return (integer)$count;
+        return (integer) $count;
     }
 
     /**

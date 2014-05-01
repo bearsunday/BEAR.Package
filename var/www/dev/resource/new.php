@@ -8,7 +8,7 @@
 use BEAR\Package\Dev\Application\ApplicationReflector;
 
 dependency: {
-    $devDir = isset($_GLOBAL['_BEAR_DEV_DIR']) ? $_GLOBAL['_BEAR_DEV_DIR'] : dirname(__DIR__);
+    $devDir = dirname(__DIR__);
 }
 
 control: {

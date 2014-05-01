@@ -6,6 +6,7 @@ use BEAR\Package\Dev\Debug\ExceptionHandle\Screen;
  * @var \Exception $e
  * @var array      $view
  */
+// @codingStandardsIgnoreStart
 VIEW_LOGIC: {
     $screen = new Screen;
     $traceAsString = $screen->getTraceAsJsString($e->getTrace());
@@ -25,6 +26,7 @@ VIEW_LOGIC: {
         $headers .= $screen->getHeader($previousE, 'warning');
     }
 }
+// @@codingStandardsIgnoreEnd
 $html = <<<EOT
 <!DOCTYPE html>
 <html lang="en">

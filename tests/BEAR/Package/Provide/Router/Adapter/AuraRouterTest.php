@@ -12,7 +12,7 @@ use BEAR\Package\Provide\Router\Adapter\AuraRouter;
 use Aura\Router\RouterFactory;
 use Aura\Router\Router;
 
-class WebRouterTest extends \PHPUnit_Framework_TestCase
+class AuraRouterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Router

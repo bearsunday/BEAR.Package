@@ -24,15 +24,17 @@ class Web
     }
 
     /**
-     * Service dev web tool
-     *
      * @param string       $pagePath
      * @param AppInterface $app
+     * @param string       $appDir
      *
-     * @return int exit code
+     * @return int|string
      */
-    public function service($pagePath, AppInterface $app = null, $appDir)
+    public function service($pagePath, AppInterface $app, $appDir)
     {
+        global $app;    // for template
+        global $appDir; // for template
+
         $path = parse_url(substr($pagePath, 4))['path'];
         // + index.php
         if ($path == '' || substr($path, -1, 1) === '/') {

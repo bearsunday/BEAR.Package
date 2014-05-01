@@ -30,7 +30,7 @@ class ConsoleOutputTest extends \PHPUnit_Framework_TestCase
     public function testOutputBodyContainsRequest()
     {
         $mock = new MockResource;
-        $request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
+        $request = require $_ENV['TEST_DIR'] . '/scripts/instance/request.php';
         /** @var $request \BEAR\Resource\Request */
         $request->set(new MockResource, 'nop://mock', 'get', []);
         $mock->body['req1'] = $request;

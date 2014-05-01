@@ -54,7 +54,7 @@ trait AuraFormTrait
     }
 
     /**
-     * @return array [$submit, $hasSabmit]
+     * @return array [$submit, $hasSubmit]
      */
     private function getSubmit()
     {

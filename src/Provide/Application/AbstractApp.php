@@ -57,9 +57,9 @@ abstract class AbstractApp implements AppInterface
     public $uriMapper;
 
     /**
-     * @param ResourceInterface          $resource         Resource client
-     * @param ResponseInterface          $response         Web / Console response
-     * @param RouterInterface            $router           URI Router
+     * @param ResourceInterface $resource Resource client
+     * @param ResponseInterface $response Web / Console response
+     * @param RouterInterface   $router   URI Router
      *
      * @Inject
      */

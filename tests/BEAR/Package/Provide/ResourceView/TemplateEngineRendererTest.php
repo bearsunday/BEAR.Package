@@ -24,7 +24,7 @@ class TemplateEngineRendererTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $smarty = new Smarty;
-        $smarty->setCompileDir($GLOBALS['_BEAR_TMP_DIR']);
+        $smarty->setCompileDir($_ENV['TMP_DIR']);
         $this->templateEngineRenderer = new TemplateEngineRenderer(new SmartyAdapter($smarty));
         $this->resource = new MockResource;
     }

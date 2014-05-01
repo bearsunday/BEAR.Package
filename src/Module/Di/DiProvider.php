@@ -16,7 +16,6 @@ use Ray\Di\Annotation;
 use Ray\Di\Config;
 use Ray\Di\Container;
 use Ray\Di\Definition;
-use Ray\Di\EmptyModule;
 use Ray\Di\Forge;
 use Ray\Di\Injector;
 use Ray\Di\ProviderInterface;

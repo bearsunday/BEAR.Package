@@ -9,7 +9,6 @@ namespace BEAR\Package\Provide\ConsoleOutput;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Request;
 use BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface;
-use Guzzle\Parser\UriTemplate\UriTemplate;
 
 final class ConsoleOutput implements ConsoleOutputInterface
 {
@@ -101,10 +100,10 @@ final class ConsoleOutput implements ConsoleOutputInterface
     }
 
     /**
-     * @param mixed     $target
-     * @param integer   $level
-     * @param string    $header
-     * @param string    $footer
+     * @param mixed   $target
+     * @param integer $level
+     * @param string  $header
+     * @param string  $footer
      *
      * @return string
      */

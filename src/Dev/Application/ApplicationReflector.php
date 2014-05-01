@@ -11,12 +11,9 @@ use BEAR\Package\Dev\Application\Exception\FileAlreadyExists;
 use BEAR\Package\Dev\Application\Exception\InvalidUri;
 use BEAR\Package\Dev\Application\Exception\NotWritable;
 use BEAR\Resource\ResourceObject;
-use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Ray\Di\Exception\NotInstantiable;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use BEAR\Resource\Exception\Uri;
 
 /**
  * Application reflector
@@ -66,9 +63,7 @@ class ApplicationReflector
                     'options' => $response->headers,
                     'links' => $response->links
                 ];
-            } catch (ResourceNotFound $e) {
-            } catch (NotInstantiable $e) {
-            } catch (Uri $e) {
+            } catch (\Exception $e) {
             }
         }
 
@@ -104,7 +99,7 @@ class ApplicationReflector
      */
     private function getUri(\SplFileInfo $file, $resourceDir)
     {
-        $relativePath = strtolower(str_replace($resourceDir . '/', '', (string)$file));
+        $relativePath = strtolower(str_replace($resourceDir . '/', '', (string) $file));
         $path = explode('/', $relativePath);
         $scheme = array_shift($path);
         $appName = 'self';
@@ -132,7 +127,7 @@ class ApplicationReflector
     /**
      * @param string $uri
      *
-     * @return array [$filePath, $fileContents]
+     * @return array      [$filePath, $fileContents]
      * @throws InvalidUri
      */
     public function getNewResource($uri)
@@ -166,7 +161,7 @@ class ApplicationReflector
      * @param string $path
      * @param string $contents
      *
-     * @return int size of file
+     * @return int               size of file
      * @throws NotWritable
      * @throws FileAlreadyExists
      */

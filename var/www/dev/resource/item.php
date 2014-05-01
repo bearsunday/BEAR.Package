@@ -28,7 +28,6 @@ class Controller
 
 dependency: {
     $appDir = isset($_GLOBAL['_BEAR_APP_DIR']) ? $_GLOBAL['_BEAR_APP_DIR'] : dirname(dirname(dirname(__DIR__)));
-    $devDir = isset($_GLOBAL['_BEAR_DEV_DIR']) ? $_GLOBAL['_BEAR_DEV_DIR'] : dirname(__DIR__);
 }
 
 control: {

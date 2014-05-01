@@ -28,7 +28,6 @@ use BEAR\Resource\SchemeCollection;
 use BEAR\Resource\SignalParameter;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
-use Guzzle\Parser\UriTemplate\UriTemplate;
 use PHPParser_BuilderFactory;
 use PHPParser_Lexer;
 use PHPParser_Parser;
@@ -61,8 +60,7 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
         $invoker = new Invoker(
             new Linker(
                 new AnnotationReader,
-                new ArrayCache,
-                new UriTemplate
+                new ArrayCache
             ),
             new NamedParameter(
                 new SignalParameter(
@@ -82,7 +80,6 @@ class AbstractApplicationTest extends \PHPUnit_Framework_TestCase
                 $invoker,
                 new Request($invoker),
                 new Anchor(
-                    new UriTemplate,
                     new AnnotationReader,
                     new Request($invoker)
                 )

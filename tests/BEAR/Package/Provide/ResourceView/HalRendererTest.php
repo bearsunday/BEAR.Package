@@ -86,7 +86,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testBodyHasRequest()
     {
-        $request = require $GLOBALS['_BEAR_TEST_DIR'] . '/scripts/instance/request.php';
+        $request = require $_ENV['TEST_DIR'] . '/scripts/instance/request.php';
         $request->set(new MockResource, 'nop://mock', 'get', ['a'=>1, 'b'=>2]);
         $this->resource->body['req'] = $request;
         $this->resource->setRenderer($this->halRenderer);

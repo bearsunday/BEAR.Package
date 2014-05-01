@@ -40,4 +40,3 @@ class SchemeUriMapperTest extends \PHPUnit_Framework_TestCase
 
     }
 }
- 

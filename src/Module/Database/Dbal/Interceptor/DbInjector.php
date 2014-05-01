@@ -61,7 +61,7 @@ final class DbInjector implements MethodInterceptor
 
     /**
      * @param array $masterDb
-     * @@param array $slaveDb
+     * @param array $slaveDb
      *
      * @Inject
      * @Named("masterDb=master_db,slaveDb=slave_db")

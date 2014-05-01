@@ -50,7 +50,7 @@ class ResourceGraphTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $resource = require $GLOBALS['_BEAR_PACKAGE_DIR'] . '/vendor/bear/resource/scripts/instance.php';
+        $resource = require $_ENV['PACKAGE_DIR'] . '/vendor/bear/resource/scripts/instance.php';
         /** @var $resource \BEAR\Resource\Resource */
         $scheme = new SchemeCollection;
         $scheme->scheme('http')->host('*')->toAdapter(

@@ -7,7 +7,6 @@
 namespace BEAR\Package\Provide\ApplicationLogger\ResourceLog;
 
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Collection;
-use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Db;
 use BEAR\Package\Provide\ApplicationLogger\ResourceLog\Writer\Fire;
 use BEAR\Sunday\Inject\LogDirInject;
 use Ray\Di\ProviderInterface;

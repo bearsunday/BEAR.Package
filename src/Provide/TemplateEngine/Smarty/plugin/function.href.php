@@ -5,7 +5,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 use BEAR\Resource\Link;
-use Guzzle\Parser\UriTemplate\UriTemplate;
 
 /**
  * Smarty plugin
@@ -55,7 +54,7 @@ function smarty_function_href($params, $template)
     $resource = $template->smarty->tpl_vars['resource']->value;
     $link = $resource->links[$rel];
     $uri = (isset($link[Link::TEMPLATED]) && $link[Link::TEMPLATED] === true) ?
-        (new UriTemplate)->expand($link[Link::HREF], (array)$data) :
+        \GuzzleHttp\uri_template($link[Link::HREF], (array) $data) :
         $link[Link::HREF];
 
     // remove "page://self/"
