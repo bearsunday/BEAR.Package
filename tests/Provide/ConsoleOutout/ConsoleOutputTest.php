@@ -2,7 +2,7 @@
 
 namespace BEAR\Package\Provide\ConsoleOutput;
 
-use BEAR\Package\MockResource;
+use BEAR\Package\Mock\ResourceObject\MockResource;
 
 class ConsoleOutputTest extends \PHPUnit_Framework_TestCase
 {

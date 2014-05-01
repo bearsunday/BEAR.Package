@@ -2,7 +2,7 @@
 
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Package\MockResource;
+use BEAR\Package\Mock\ResourceObject\MockResource;
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyAdapter;
 use BEAR\Resource\ResourceObject;
 use Smarty;

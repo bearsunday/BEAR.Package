@@ -8,6 +8,10 @@ use BEAR\Sunday\Annotation\CacheUpdate;
 
 class MockResource extends ResourceObject
 {
+    public $body = [
+        'greeting' => 'hello'
+    ];
+
     /**
      * Get
      *

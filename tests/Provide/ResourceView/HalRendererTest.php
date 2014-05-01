@@ -2,9 +2,8 @@
 
 namespace BEAR\Package\Provide\ResourceView;
 
-use BEAR\Package\MockResource;
 use BEAR\Resource\ResourceObject;
-use BEAR\Resource\Uri;
+use BEAR\Package\Mock\ResourceObject\MockResource;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
 {
