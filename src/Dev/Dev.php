@@ -142,9 +142,17 @@ class Dev
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function registerErrorHandler()
     {
         set_error_handler( function ($errNo, $errStr, $errFile, $errLine) {
+            if (error_reporting() === 0) {
+
+                // return in error-control operator(@)
+                return;
+            }
             throw new \ErrorException($errStr, 0, $errNo, $errFile, $errLine);
         });
 
@@ -275,7 +283,7 @@ class Dev
     }
 
     /**
-     * Load debug function
+     * @return $this
      */
     public function loadDevFunctions()
     {
