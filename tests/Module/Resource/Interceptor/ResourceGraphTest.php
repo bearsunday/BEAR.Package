@@ -1,6 +1,7 @@
 <?php
 namespace BEAR\Package\Module\Resource\Interceptor;
 
+use BEAR\Package\Mock\ResourceObject\Ok;
 use BEAR\Package\Module\Resource\Interceptor\ResourceGraph;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Adapter\Http;
@@ -37,6 +38,7 @@ class DummyAdapter implements AdapterInterface
 {
     public function get($uri)
     {
+        return new Ok;
     }
 }
 
@@ -54,7 +56,7 @@ class ResourceGraphTest extends \PHPUnit_Framework_TestCase
         /** @var $resource \BEAR\Resource\Resource */
         $scheme = new SchemeCollection;
         $scheme->scheme('http')->host('*')->toAdapter(
-            new Http
+            new DummyAdapter
         );
         $resource->setSchemeCollection($scheme);
         $this->resourceGraph = new ResourceGraph($resource);
