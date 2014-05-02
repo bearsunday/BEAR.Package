@@ -23,7 +23,7 @@ class ResourceLogTest extends \PHPUnit_Framework_TestCase
     public function testToTable()
     {
         $table = $this->log->toTable();
-        $this->assertContains('get page://self/hello/world', $table);
+        $this->assertContains('<th>Status</th>', $table);
         return $table;
     }
 
@@ -33,3 +33,4 @@ class ResourceLogTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($table);
     }
 }
+
