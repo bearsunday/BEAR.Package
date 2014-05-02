@@ -142,6 +142,15 @@ class Dev
         return $this;
     }
 
+    public function registerErrorHandler()
+    {
+        set_error_handler( function ($errNo, $errStr, $errFile, $errLine) {
+            throw new \ErrorException($errStr, 0, $errNo, $errFile, $errLine);
+        });
+
+        return $this;
+    }
+
     /**
      * Register exception handler
      *
@@ -161,6 +170,15 @@ class Dev
                 $handler->handle($e);
             }
         );
+
+        return $this;
+    }
+
+    public function registerWhoopsErrorHandler()
+    {
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
 
         return $this;
     }

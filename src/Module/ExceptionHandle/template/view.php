@@ -35,7 +35,9 @@ $html = <<<EOT
     <title>Exception</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Le styles -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 20px;
@@ -56,7 +58,6 @@ $html = <<<EOT
             color: gray;
         }
     </style>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <link rel="shortcut icon" href="/assets/ico/favicon.ico">
     <link href="/assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
   </head>
@@ -64,23 +65,15 @@ $html = <<<EOT
   <body>
     <div class="container">
       {$headers}
-    <p></p>
+      <iframe width="100%" height="400" src="/dev/edit/index.php?file=/Users/akihito/git/BEAR.Package/vendor/bear/demo-apps/Demo.Sandbox/src/Resource/Page/Hello/World.php&line=20"></iframe>
+
     <ul id="tab" class="nav nav-tabs">
       <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
-      <li><a href="#file" data-toggle="tab">File</a></li>
       <li><a href="#files" data-toggle="tab">Include Files</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade in active" id="summary">
-    <p><span class="icon-fire"></span>{$fileLink}</P>
       <p>{$traceAsString}</p>
-    </div>
-
-    <div class="tab-pane" id="file">
-      <p><span class="icon-fire"></span>{$fileLink}</P>
-      <pre class="prettyprint linenums">
-        {$file}
-      </pre>
     </div>
 
     <div class="tab-pane" id="files">
