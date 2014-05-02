@@ -35,7 +35,9 @@ $html = <<<EOT
     <title>Exception</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Le styles -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 20px;
@@ -72,12 +74,10 @@ $html = <<<EOT
     </ul>
     <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade in active" id="summary">
-    <p><span class="icon-fire"></span>{$fileLink}</P>
       <p>{$traceAsString}</p>
     </div>
 
     <div class="tab-pane" id="file">
-      <p><span class="icon-fire"></span>{$fileLink}</P>
       <pre class="prettyprint linenums">
         {$file}
       </pre>

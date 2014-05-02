@@ -37,14 +37,14 @@ class Screen
             }
             if (isset($row['file']) && is_file($row['file'])) {
                 $html .= "<li>";
-                $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#source{$cnt}\"><i class=\"icon-zoom-in\"></i>";
+                $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#source{$cnt}\">";
                 $html .= "<code>{$row['statement']}</code>";
                 $html .= "</a>";
                 $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#args{$cnt}\">";
-                $html .= "<span class=\"params\">[params]</span>";
+                $html .= "<span class=\"params\"><span class=\"glyphicon glyphicon-search\"></span></span>";
                 $html .= "</a>";
                 $html .= "{$row['file']} : {$row['line']}  ";
-                $html .= "<a target=\"code_edit\" href=\"/dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
+                $html .= "<a target=\"code_edit\" href=\"/dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
                 $args = isset($row['args']) ? $this->getArgsAsString($row['args']) : '';
                 $html .= "</li>";
                 $html .= "<div id=\"source{$cnt}\" class=\"collapse out\">{$row['source']}</div>";
@@ -247,9 +247,11 @@ class Screen
         <a class="close" data-dismiss="alert" href="#">&times;</a>
         <h2 class="alert-heading">{$title}</h2>
         <h3>{$subTitle}</h3>
-        <p>in {$file} on line {$line}</p>
-        <a class="btn" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
+        <div>in {$file} on line {$line}</div>
+        <p style="height:10px;"></p>
+        <a class="btn btn-default btn-sm" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a>
       </div>
+
 EOT;
     }
 
