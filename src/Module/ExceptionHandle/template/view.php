@@ -11,6 +11,8 @@ VIEW_LOGIC: {
     $screen = new Screen;
     $traceAsString = $screen->getTraceAsJsString($e->getTrace());
     $fileLink = $screen->getEditorLink($e->getFile(), $e->getLine());
+    $file = $e->getFile();
+    $line  = $e->getLine();
     $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
     $memory = number_format(memory_get_peak_usage(true));
     $files = get_included_files();
@@ -19,7 +21,6 @@ VIEW_LOGIC: {
         $includeFiles .= "<li><a target=\"code_edit\" href=\"/dev/edit/index.php?file={$includeFile}\">$includeFile</a></li>";
     }
     $includeFilesNum = count($files);
-    $file = htmlspecialchars(trim(file_get_contents($e->getFile())));
     $headers = $screen->getHeader($e, 'danger');
     $previousE = $e->getPrevious();
     if ($previousE) {
@@ -65,7 +66,7 @@ $html = <<<EOT
   <body>
     <div class="container">
       {$headers}
-      <iframe width="100%" height="400" src="/dev/edit/index.php?file=/Users/akihito/git/BEAR.Package/vendor/bear/demo-apps/Demo.Sandbox/src/Resource/Page/Hello/World.php&line=20"></iframe>
+      <iframe width="100%" height="400" src="/dev/edit/index.php?file={$file}&line={$line}"></iframe>
 
     <ul id="tab" class="nav nav-tabs">
       <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>

@@ -1267,16 +1267,16 @@
         },
         {
             "name": "nocarrier/hal",
-            "version": "0.9.4",
+            "version": "0.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/blongden/hal.git",
-                "reference": "aca65a12a718a36dcb2675eaf0cdc4d64a80f9e9"
+                "reference": "76bab2ae042f5efc66c946892daac1d9abe3bd02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blongden/hal/zipball/aca65a12a718a36dcb2675eaf0cdc4d64a80f9e9",
-                "reference": "aca65a12a718a36dcb2675eaf0cdc4d64a80f9e9",
+                "url": "https://api.github.com/repos/blongden/hal/zipball/76bab2ae042f5efc66c946892daac1d9abe3bd02",
+                "reference": "76bab2ae042f5efc66c946892daac1d9abe3bd02",
                 "shasum": ""
             },
             "require": {
@@ -1324,7 +1324,7 @@
                 "rest",
                 "xml"
             ],
-            "time": "2013-11-19 11:57:26"
+            "time": "2014-05-01 10:23:24"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -1741,12 +1741,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "7132a047ed97f823767802289c98c7e050c33a17"
+                "reference": "c05c1402059af463bc9a1b13a66281f61b9e61e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/7132a047ed97f823767802289c98c7e050c33a17",
-                "reference": "7132a047ed97f823767802289c98c7e050c33a17",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/c05c1402059af463bc9a1b13a66281f61b9e61e0",
+                "reference": "c05c1402059af463bc9a1b13a66281f61b9e61e0",
                 "shasum": ""
             },
             "type": "library",
@@ -1772,7 +1772,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-05-01 04:36:45"
+            "time": "2014-05-02 06:46:40"
         },
         {
             "name": "bear/dev-package",
