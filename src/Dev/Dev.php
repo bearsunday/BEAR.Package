@@ -174,6 +174,15 @@ class Dev
         return $this;
     }
 
+    public function registerWhoopsErrorHandler()
+    {
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
+
+        return $this;
+    }
+
     /**
      * Register syntax error editor
      *
