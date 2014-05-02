@@ -248,8 +248,6 @@ class Screen
         <h2 class="alert-heading">{$title}</h2>
         <h3>{$subTitle}</h3>
         <div>in {$file} on line {$line}</div>
-        <p style="height:10px;"></p>
-        <a class="btn btn-default btn-sm" rel="tooltip" title="" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a>
       </div>
 
 EOT;
