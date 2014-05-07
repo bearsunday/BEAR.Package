@@ -1,132 +1,42 @@
 <?php
+
+use BEAR\Package\Dev\Debug\ExceptionHandle\Screen;
+
 /**
  * @global $file
  * @global $line
- * @global $num
  */
-// @codingStandardsIgnoreStart
-VIEW_FUNCTIONS: {
-    /**
-     * Return source
-     *
-     * @param     $file
-     * @param     $line
-     * @param int $num
-     *
-     * @return string
-     */
-    $getFile = function ($file, $line, $num = 6) {
-    if (!file_exists($file) || $line === 0) {
-        return '<pre>n/a</pre>';
-    }
-    $result = '<div class="file-summary">';
-    $files = file($file);
-    $fileArray = array_map('htmlspecialchars', $files);
-    $hitLineOriginal = isset($fileArray[$line - 1]) ? $fileArray[$line - 1] : '';
-    $fileArray[$line - 1] = "<span class=\"hit-line\">{$hitLineOriginal}</span>";
-    $shortListArray = array_slice($fileArray, $line - $num, $num * 2);
-    $shortListArray[$num - 1] = '<strong>' . $fileArray[$line - 1] . '</strong>';
-    $shortList = implode('', $shortListArray);
-    $shortList = '<pre class="short-list" style="background-color: #F0F0F9;">' . $shortList . '</pre>';
-    $result .= $shortList . '</div>';
-
-    return $result;
-    };
-
-    /**
-     * Return linked trace list
-     *
-     * @param $stack
-     *
-     * @return string
-     */
-    $getTraceList = function ($stack) {
-        $cnt = 0;
-        $html = '';
-        foreach ($stack as $row) {
-            $cnt++;
-            foreach ($row as &$value) {
-                if (is_object($value)) {
-                    $value = get_class($value);
-                }
-            }
-            if (isset($row['file']) && is_file($row['file'])) {
-                $html .= "<li>";
-                $html .= "<a href=\"#\" class=\"\" data-toggle=\"collapse\" data-target=\"#args{$cnt}\"><i class=\"icon-zoom-in\"></i>";
-                $html .= "<code>{$row['statement']}</code>";
-                $html .= "</a>";
-                $html .= "{$row['file']} : {$row['line']}  ";
-                $html .= "<a target=\"code_edit\" href=\"/dev/edit/index.php?file={$row['file']}&line={$row['line']}\"><i class=\"icon-share-alt\"></i></a>";
-                $html .= "</li>";
-                $html .= "<div id=\"args{$cnt}\" class=\"collapse out\">{$row['source']}</div>";
-            }
-        }
-
-        return $html;
-    };
-
-    $getStack = function ($xstack) use ($getFile) {
-        $stack = [];
-        $trace = array_slice(array_reverse($xstack), 1, -1);
-        foreach ($trace as $row) {
-            if (isset($row['class'])) {
-                $row['type'] = isset($row['type']) && $row['type'] === 'dynamic' ? '->' : '::';
-            }
-            if (isset($row['params'])) {
-                $row['args'] = $row['params'];
-            }
-            if (isset($row['class'])) {
-                $row['statement'] = "{$row['class']}{$row['type']}{$row['function']}()";
-            } elseif (isset($row['function'])) {
-                $row['statement'] = "{$row['function']}()";
-            } elseif (isset($row['include_filename'])) {
-                $row['statement'] = "include_filename {$row['include_filename']}";
-            } else {
-                $row['statement'] = "...";
-            }
-            $row['source'] = isset($row['file']) ? $getFile($row['file'], $row['line']) : 'n/a';
-            $stack[] = $row;
-        }
-        $ref = new \ReflectionProperty('Exception', 'trace');
-        $ref->setAccessible(true);
-        $exception = new \Exception;
-        $ref->setValue($exception, $stack);
-
-        return $stack;
-    };
-}
 
 VIEW_LOGIC: {
-    $xstack = (function_exists('xdebug_get_function_stack')) ? xdebug_get_function_stack() : debug_backtrace();
-    $fileContents = htmlspecialchars(file_get_contents($file));
+    $screen = new Screen;
+    $xStack = (function_exists('xdebug_get_function_stack')) ? xdebug_get_function_stack() : debug_backtrace();
+
+    $traceAsString = $screen->getTraceAsJsString($xStack);
+    $fileLink = $screen->getEditorLink($file, $line + 1);
+    $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
+    $memory = number_format(memory_get_peak_usage(true));
     $files = get_included_files();
-    $includeFiles = $server = '';
-    foreach (get_included_files() as $includeFile) {
+    $includeFiles = '';
+    foreach ($files as $includeFile) {
         $includeFiles .= "<li><a target=\"code_edit\" href=\"/dev/edit/index.php?file={$includeFile}\">$includeFile</a></li>";
     }
     $includeFilesNum = count($files);
+    $server = '';
     foreach ($_SERVER as $key => $val) {
         $server .= "<b>$key</b>: $val<br>";
     }
-    $lang = (function_exists('locale_accept_from_http')) ? locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']) : 'en';
-    $errorNameFile = file_exists(__DIR__ . "/{$lang}/errors.php") ? __DIR__ . "/{$lang}/errors.php" : __DIR__ . "/en/errors.php";
-    $errorNames = include $errorNameFile;
-    $hitFile = $getFile($file, $line);
-    $trace = $getTraceList($getStack($xstack));
-    // misc
-    $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
-    $memory = number_format(memory_get_peak_usage(true));
 }
-// @codingStandardsIgnoreEnd
-
-// output
-return <<<EOT
+// @@codingStandardsIgnoreEnd
+$html = <<<EOT
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
-    <title>Error</title>
+    <title>Exception</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Le styles -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 20px;
@@ -137,80 +47,66 @@ return <<<EOT
             color: black;
             text-decoration: none;
         }
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            line-height: 24px;
+        .params {
+            background-color: #eeeeee;
+        }
+        .params-table {
+            font-size: 12px;
         }
         .weak {
             color: gray;
         }
     </style>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
     <link href="/assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js' type='text/javascript'></script>
-    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <script src="//code.jquery.com/jquery-latest.js"></script>
-    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
-</head>
+  </head>
 
-<body>
-
-<div class="container">
-    <div class="alert alert-block alert-error fade in">
+  <body>
+    <div class="container">
+      <div class="alert alert-block alert-danger fade in">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
-    <div>
-        <span class="title" class="alert-heading">{$errorNames[$type][0]}
-            {$message}
-        </span>
-        <a class="brand" data-original-title="What's this ?" href="#" rel="popover" data-placement="bottom" data-content="{$errorNames[$type][1]}">
-        [?]
-        </a><br>
-        in {$file} on line {$line}
-        </div>
-        <a class="btn" rel="tooltip" title="" target="_blank" href="/dev/edit/index.php?file={$file}&line={$line}">Edit</a></p>
-    </div>
+        <h2 class="alert-heading">Fatal Error</h2>
+        <h3>{$message}</h3>
+        <div>in {$file} on line {$line}</div>
+      </div>
+      <iframe width="100%" height="400" src="/dev/edit/index.php?file={$file}&line={$line}"></iframe>
+
     <ul id="tab" class="nav nav-tabs">
-        <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
-        <li><a href="#file" data-toggle="tab">File</a></li>
-        <li><a href="#files" data-toggle="tab">Include Files</a></li>
-        <li><a href="#server" data-toggle="tab">\$_SERVER</a></li>
+      <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
+      <li><a href="#files" data-toggle="tab">Include Files</a></li>
+      <li><a href="#server" data-toggle="tab">\$_SERVER</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade in active" id="summary">
-            <a href="#" class="" data-toggle="collapse" data-target="#args"><span class="icon-fire"></span></a>{$file} : {$line}
-            <div id="args" class="collapse out">{$hitFile}</div>
-            {$trace}
-        </div>
+    <div class="tab-pane fade in active" id="summary">
+      <p>{$traceAsString}</p>
+    </div>
 
-        <div class="tab-pane" id="file">
-            <p><span class="icon-fire"></span><a target="code_edit" href="/dev/edit/index.php?file={$file}">{$file} : {$line}</a></P>
-      <pre class="prettyprint linenums">
-        {$fileContents}
-      </pre>
-        </div>
-        <p></p>
+    <div class="tab-pane" id="files">
+        <p><span class="icon-file"></span>Files ({$includeFilesNum})</P>
+        {$includeFiles}
+    </div>
 
-        <div class="tab-pane" id="files">
-            <p><span class="icon-file"></span>Files ({$includeFilesNum})</P>
-            {$includeFiles}
-        </div>
+    <div class="tab-pane" id="server">
+      <p>{$server}</p>
+    </div>
 
-        <div class="tab-pane" id="server">
-        <pre>{$server}</pre>
-        </div>
-        <footer>
-            <hr>
-            <span class="icon-time"></span> {$sec} sec
-            <span class="icon-signal"></span> {$memory} bytes
-        </footer>
+
+    <p></p>
+      <footer>
+        <hr>
+        <span class="icon-time"></span> {$sec} sec
+        <span class="icon-signal"></span> {$memory} bytes
+      </footer>
 
     </div> <!-- /container -->
 
-    <script>
-        $(function () { prettyPrint() })
-        $('a[rel=popover]').popover();
-    </script>
-    </body>
-    </html>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-latest.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</script>
+  </body>
+</html>
 EOT;
+return $html;
