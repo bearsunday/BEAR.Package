@@ -37,7 +37,6 @@ $html = <<<EOT
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Le styles -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <style type="text/css">
         body {
@@ -100,8 +99,7 @@ $html = <<<EOT
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="//code.jquery.com/jquery-latest.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="/assets/js/google-code-prettify/prettify.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script>$(function () { prettyPrint() })</script>
 </script>
   </body>
