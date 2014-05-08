@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @global $app
+ */
 use Printo\Printo;
 
 if (isset($_GET['text'])) {
@@ -7,9 +10,5 @@ if (isset($_GET['text'])) {
 } elseif (isset($_GET['print_r'])) {
     echo print_r($app);
 } else {
-    $progress = (!isset($_GET['all']));
-    Printo::init(
-        ['showProgressive' => $progress]
-    );
     echo (new Printo($app));
 }
