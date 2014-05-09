@@ -5,5 +5,7 @@
  * @global $app \BEAR\Package\Provide\Application\AbstractApp
  */
 
+use Koriym\Printo\Printo;
+
 $resourceObject = $app->resource->newInstance($_GET['uri']);
-print_o($resourceObject);
+echo (new Printo($resourceObject));
