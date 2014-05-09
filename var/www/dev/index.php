@@ -23,9 +23,9 @@ $contentsForLayout =<<<EOT
         <span class="label label-success">GET</span>
         <ul class="">
             <li><a href="/dev/log/"><span class="glyphicon glyphicon-list"></span> Resource Log</a></li>
-            <li><a href="/dev/resource/"><span class="glyphicon glyphicon-list"></span> </i> Resource List</a>
-            </li>
+            <li><a href="/dev/resource/"><span class="glyphicon glyphicon-list"></span> </i> Resource List</a></li>
             <li><a href="/dev/di/"><span class="glyphicon glyphicon-list"></span> Di Log</a></li>
+            <li><a href="/dev/app/"><span class="glyphicon glyphicon-list"></span> Application Object Graph</a></li>
         </ul>
         <hr>
         <span class="label label-danger">POST</span>
@@ -43,5 +43,6 @@ $contentsForLayout =<<<EOT
             <li><a href="/dev/clear/"><span class="glyphicon glyphicon-trash"></span></i> Clear Cache</a></li>
         </ul>
     </div>
+    ****
 EOT;
 echo include __DIR__ . '/view/layout.php';

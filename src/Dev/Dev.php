@@ -290,7 +290,7 @@ class Dev
     {
         require_once __DIR__ . '/function/e.php';
         require_once __DIR__ . '/function/p.php';
-        require_once $this->getVendorDirectory() . '/printo/printo/src.php';
+        require_once __DIR__ . '/function/debuglib.php';
 
         return $this;
     }
