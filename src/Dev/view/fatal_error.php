@@ -25,6 +25,7 @@ VIEW_LOGIC: {
     foreach ($_SERVER as $key => $val) {
         $server .= "<b>$key</b>: $val<br>";
     }
+    $escapedOutputBuffer = nl2br(htmlspecialchars($outputBuffer));
 }
 // @@codingStandardsIgnoreEnd
 $html = <<<EOT
@@ -32,9 +33,8 @@ $html = <<<EOT
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Exception</title>
+    <title>Fatal Error</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Le styles -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <style type="text/css">
@@ -69,43 +69,34 @@ $html = <<<EOT
         <h3>{$message}</h3>
         <div>in {$file} on line {$line}</div>
       </div>
-      <iframe width="100%" height="400" src="/dev/edit/index.php?file={$file}&line={$line}"></iframe>
-
+      <iframe width="100%" height="350" src="/dev/edit/index.php?file={$file}&line={$line}"></iframe>
+      <p>
+        {$traceAsString}
+      </p>
     <ul id="tab" class="nav nav-tabs">
-      <li class="active"><a href="#summary" data-toggle="tab">Trace</a></li>
+      <li class="active"><a href="#summary" data-toggle="tab">Output</a></li>
       <li><a href="#files" data-toggle="tab">Include Files</a></li>
       <li><a href="#server" data-toggle="tab">\$_SERVER</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade in active" id="summary">
-      <p>{$traceAsString}</p>
+      <p>{$escapedOutputBuffer}</p>
     </div>
-
     <div class="tab-pane" id="files">
         <p><span class="icon-file"></span>Files ({$includeFilesNum})</P>
         {$includeFiles}
     </div>
-
     <div class="tab-pane" id="server">
       <p>{$server}</p>
     </div>
-
-
-    <p></p>
       <footer>
-        <hr>
+            <hr>
         <span class="icon-time"></span> {$sec} sec
         <span class="icon-signal"></span> {$memory} bytes
       </footer>
-
-    </div> <!-- /container -->
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    </div>
     <script src="//code.jquery.com/jquery-latest.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-</script>
   </body>
 </html>
 EOT;

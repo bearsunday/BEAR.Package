@@ -172,7 +172,7 @@ class Dev
             function (\Exception $e) use ($logDir) {
                 $handler = new ExceptionHandler(
                     new SymfonyResponse(new ConsoleOutput),
-                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/view.php'
+                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/exception.php'
                 );
                 $handler->setLogDir($logDir);
                 $handler->handle($e);
@@ -227,7 +227,8 @@ class Dev
                 }
 
                 // output error
-                error_log(ob_get_clean());
+                $outputBuffer = ob_get_clean();
+                error_log($outputBuffer);
                 http_response_code(500);
                 $html = require __DIR__ . '/view/fatal_error.php';
                 echo $html;
