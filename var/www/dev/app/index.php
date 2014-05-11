@@ -9,7 +9,7 @@ $a1 = $a2 = $a3 = '';
 $disabled = ' class="disabled"';
 
 if (isset($_GET['property'])) {
-    $graph = (new Printo($app->resource))->setRange(Printo::RANGE_PROPERTY)->setLinkDistance(130)->setCharge(-500);
+    $graph = (new Printo($app))->setRange(Printo::RANGE_PROPERTY)->setLinkDistance(130)->setCharge(-500);
     $a1 =$disabled;
 } elseif (isset($_GET['full'])) {
     $graph = (new Printo($app))->setRange(Printo::RANGE_ALL);
