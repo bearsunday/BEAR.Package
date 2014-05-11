@@ -288,9 +288,7 @@ class Dev
      */
     public function loadDevFunctions()
     {
-        require_once __DIR__ . '/function/e.php';
-        require_once __DIR__ . '/function/p.php';
-        require_once __DIR__ . '/function/debuglib.php';
+        error_log(__METHOD__  . ' is no longer necessary.');
 
         return $this;
     }
