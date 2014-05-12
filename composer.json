@@ -23,7 +23,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "bear/sunday": "dev-feature/0.11.0",
+        "bear/sunday": "dev-develop",
         "bear/resource": "dev-develop",
         "ray/di": "dev-develop",
         "koriym/fusion-cache": "0.*",

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e5888b2329554e2b88b7fc581cbed44f",
+    "hash": "852788c30c4a4bc6284eeec72fcfa93c",
     "packages": [
         {
             "name": "any/serializer",
@@ -549,16 +549,16 @@
         },
         {
             "name": "bear/sunday",
-            "version": "dev-feature/0.11.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "4a2ebb59b4bf088432e6fcab83bb359eec5e7684"
+                "reference": "bb176db2e367c84838fdbc840709b239debe9039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/4a2ebb59b4bf088432e6fcab83bb359eec5e7684",
-                "reference": "4a2ebb59b4bf088432e6fcab83bb359eec5e7684",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/bb176db2e367c84838fdbc840709b239debe9039",
+                "reference": "bb176db2e367c84838fdbc840709b239debe9039",
                 "shasum": ""
             },
             "require": {
@@ -591,7 +591,7 @@
                 "hypermedia",
                 "rest"
             ],
-            "time": "2014-04-25 01:47:07"
+            "time": "2014-05-11 14:32:48"
         },
         {
             "name": "doctrine/annotations",
@@ -1728,12 +1728,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "5d1af680473a6ed638c11a2d31747043c4a6c2d3"
+                "reference": "e955eff8b14d28222901ee9fd18f47954f4d0179"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/5d1af680473a6ed638c11a2d31747043c4a6c2d3",
-                "reference": "5d1af680473a6ed638c11a2d31747043c4a6c2d3",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/e955eff8b14d28222901ee9fd18f47954f4d0179",
+                "reference": "e955eff8b14d28222901ee9fd18f47954f4d0179",
                 "shasum": ""
             },
             "type": "library",
@@ -1751,7 +1751,6 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -1759,7 +1758,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-05-11 18:06:54"
+            "time": "2014-05-12 08:09:07"
         },
         {
             "name": "bear/dev-package",
