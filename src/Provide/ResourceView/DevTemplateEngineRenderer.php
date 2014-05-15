@@ -104,6 +104,44 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
      */
     public function render(ResourceObject $resourceObject)
     {
+        try {
+            return $this->templateRender($resourceObject);
+        } catch (\Exception $e) {
+            return $this->outputErrorToString($e);
+        }
+    }
+
+    /**
+     * @param \Exception $e
+     *
+     * @return int
+     */
+    private function outputErrorToString(\Exception $e)
+    {
+        error_log($e);
+
+        $previous = $e->getPrevious();
+        $previousMsg = $previous ? sprintf("<strong>%s</strong> in file %s on %s",
+            $previous->getMessage(),
+            $previous->getFile(),
+            $previous->getLine()
+        ) : '';
+        return printf('<h2>%s</h2> in file %s on line %s<h3>%s</h3><pre class="error_in_to_string">%s</pre>',
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine(),
+            $previousMsg,
+            $e->getTraceAsString()
+        );
+    }
+
+    /**
+     * @param ResourceObject $resourceObject
+     *
+     * @return $this|bool|float|int|string
+     */
+    private function templateRender(ResourceObject $resourceObject)
+    {
         if (is_scalar($resourceObject->body)) {
             $resourceObject->view = $resourceObject->body;
             return $resourceObject->body;
