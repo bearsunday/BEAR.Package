@@ -13,7 +13,6 @@ VIEW_LOGIC: {
     $fileLink = $screen->getEditorLink($e->getFile(), $e->getLine());
     $file = $e->getFile();
     $line  = $e->getLine();
-    $sec = number_format((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']), 2);
     $memory = number_format(memory_get_peak_usage(true));
     $files = get_included_files();
     $includeFiles = '';
@@ -89,7 +88,6 @@ $html = <<<EOT
     <p></p>
       <footer>
         <hr>
-        <span class="icon-time"></span> {$sec} sec
         <span class="icon-signal"></span> {$memory} bytes
       </footer>
 
