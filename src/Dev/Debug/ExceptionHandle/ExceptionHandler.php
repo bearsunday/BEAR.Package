@@ -13,6 +13,7 @@ use BEAR\Resource\Exception\Parameter;
 use BEAR\Resource\Exception\ResourceNotFound;
 use BEAR\Resource\Exception\Scheme;
 use BEAR\Resource\Exception\Uri;
+use BEAR\Sunday\Exception\LogicException;
 use BEAR\Sunday\Extension\WebResponse\ResponseInterface;
 use BEAR\Sunday\Inject\LogDirInject;
 use Exception;
@@ -229,7 +230,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
         ]
     ) {
         /** @noinspection PhpIncludeInspection */
-        return include $this->viewTemplate;
+        try {
+            return include $this->viewTemplate;
+        } catch (\ErrorException $e) {
+            echo $e;
+        }
     }
 
     /**
