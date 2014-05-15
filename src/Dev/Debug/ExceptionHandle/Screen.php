@@ -153,7 +153,6 @@ class Screen
             }
             if (is_array($arg)) {
                 $this->makeArgsElementsScalar($arg);
-                $arg = var_export($arg, true);
             }
             $html .= "<tr><td>{$index}</td><td>{$type}</td></td><td>{$arg}</td></tr>";
         }
@@ -214,17 +213,15 @@ class Screen
      */
     private function makeArgsElementsScalar(array &$args)
     {
-        $params = [];
         foreach ($args as &$arg) {
             if (is_object($arg)) {
                 $arg = $this->getObjectName($arg);
             }
             if (is_array($arg)) {
-                $this->makeArgsElementsScalar($arg);
+                $arg = sprintf('*array(%d)', count($arg));
             }
-            $params[] = $arg;
         }
-        $args = $params;
+        $args = print_r($args, true);
     }
 
     /**
