@@ -79,7 +79,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari KT",
+                    "name": "Hari K T",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
@@ -444,12 +444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "45d3121f4d881e267557a3ab669a565c0849f952"
+                "reference": "499c8a565527645a911ec9630e2b1d0964c59673"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/45d3121f4d881e267557a3ab669a565c0849f952",
-                "reference": "45d3121f4d881e267557a3ab669a565c0849f952",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/499c8a565527645a911ec9630e2b1d0964c59673",
+                "reference": "499c8a565527645a911ec9630e2b1d0964c59673",
                 "shasum": ""
             },
             "require": {
@@ -489,7 +489,7 @@
                 "request",
                 "response"
             ],
-            "time": "2014-04-18 21:02:40"
+            "time": "2014-05-15 19:19:17"
         },
         {
             "name": "bear/resource",
@@ -497,12 +497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "25e8c0f5fe413fa47fedfdb3616f9d5e0683f017"
+                "reference": "93b1168dda0deb3fa9b5311cda0a61815cb9f5ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/25e8c0f5fe413fa47fedfdb3616f9d5e0683f017",
-                "reference": "25e8c0f5fe413fa47fedfdb3616f9d5e0683f017",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/93b1168dda0deb3fa9b5311cda0a61815cb9f5ea",
+                "reference": "93b1168dda0deb3fa9b5311cda0a61815cb9f5ea",
                 "shasum": ""
             },
             "require": {
@@ -531,6 +531,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -545,7 +546,7 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-04-30 16:34:26"
+            "time": "2014-05-16 03:01:15"
         },
         {
             "name": "bear/sunday",
@@ -650,7 +651,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -706,7 +707,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -1514,23 +1515,28 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "04a2b841d088ecb149e2deb5d84282c8115cab5b"
+                "reference": "cb01e44b806cc2ab19d6d3d2a55d3538bc599d50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/04a2b841d088ecb149e2deb5d84282c8115cab5b",
-                "reference": "04a2b841d088ecb149e2deb5d84282c8115cab5b",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/cb01e44b806cc2ab19d6d3d2a55d3538bc599d50",
+                "reference": "cb01e44b806cc2ab19d6d3d2a55d3538bc599d50",
                 "shasum": ""
             },
             "require": {
-                "aura/di": "1.1.*",
+                "aura/di": "1.*",
                 "doctrine/annotations": "1.*",
                 "doctrine/cache": "1.*",
-                "nikic/php-parser": "*",
+                "nikic/php-parser": "0.*",
                 "php": ">=5.4.0",
                 "ray/aop": "1.*"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Ray\\Di\\": "src/"
@@ -1544,7 +1550,6 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 },
                 {
@@ -1556,15 +1561,13 @@
             "description": "Guice style annotation-driven dependency injection framework",
             "homepage": "https://github.com/koriym/Ray.Di",
             "keywords": [
-                "annotation",
+                "annotations",
                 "aop",
-                "dependency",
                 "di",
                 "guice",
-                "injection",
                 "jsr"
             ],
-            "time": "2014-05-11 11:45:00"
+            "time": "2014-05-12 15:43:58"
         },
         {
             "name": "symfony/http-foundation",
@@ -1728,12 +1731,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "e955eff8b14d28222901ee9fd18f47954f4d0179"
+                "reference": "defbdbaaac52e16698f6d81d03e583a86897416b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/e955eff8b14d28222901ee9fd18f47954f4d0179",
-                "reference": "e955eff8b14d28222901ee9fd18f47954f4d0179",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/defbdbaaac52e16698f6d81d03e583a86897416b",
+                "reference": "defbdbaaac52e16698f6d81d03e583a86897416b",
                 "shasum": ""
             },
             "type": "library",
@@ -1751,6 +1754,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -1758,7 +1762,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-05-12 08:09:07"
+            "time": "2014-05-16 03:04:36"
         },
         {
             "name": "bear/dev-package",
@@ -1916,16 +1920,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "1.1",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "a5865f8f02947590e36206b08368e5b08289a946"
+                "reference": "ae05259236204ccf904a94e5b0d96df8d4351da5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/a5865f8f02947590e36206b08368e5b08289a946",
-                "reference": "a5865f8f02947590e36206b08368e5b08289a946",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/ae05259236204ccf904a94e5b0d96df8d4351da5",
+                "reference": "ae05259236204ccf904a94e5b0d96df8d4351da5",
                 "shasum": ""
             },
             "require": {
@@ -1937,7 +1941,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -1970,7 +1974,7 @@
                 "whoops",
                 "zf2"
             ],
-            "time": "2014-04-28 04:54:31"
+            "time": "2014-05-13 05:05:11"
         },
         {
             "name": "firephp/firephp-core",
