@@ -92,7 +92,7 @@ class UserAgentTwigAdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provider
      */
-    public function testMobileAssign($ua)
+    public function testMobileTemplate($ua)
     {
         $server['HTTP_USER_AGENT'] = $ua;
         $client = new Client($server, [], [], []);
@@ -100,6 +100,19 @@ class UserAgentTwigAdapterTest extends \PHPUnit_Framework_TestCase
         $adapter->assign('greeting', 'adios');
         $result = $adapter->fetch($this->tpl);
         $this->assertSame('mobile greeting is adios', $result);
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testNoMobileTemplate($ua)
+    {
+        $server['HTTP_USER_AGENT'] = $ua;
+        $client = new Client($server, [], [], []);
+        $adapter = new UserAgentTwigAdapter($this->twig, $client);
+        $adapter->assign('greeting', 'adios');
+        $result = $adapter->fetch(__DIR__ . '/default.');
+        $this->assertSame('default is adios', $result);
     }
 
 }

@@ -9,6 +9,7 @@ namespace BEAR\Package\Provide\TemplateEngine\Twig;
 use Aura\Web\Request\Client;
 use Aura\Web\WebFactory;
 use BEAR\Package\Provide\TemplateEngine\AdapterTrait;
+use BEAR\Package\Provide\TemplateEngine\Exception\TemplateNotFound;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
 use Twig_Environment;
 use Ray\Di\Di\Inject;
@@ -91,7 +92,11 @@ class UserAgentTwigAdapter implements TemplateEngineAdapterInterface
     private function getMobileTemplate($tplWithoutExtension)
     {
         $template = $tplWithoutExtension . 'mobile.' . self::EXT;
-        $this->fileExists($template);
+        try {
+            $this->fileExists($template);
+        } catch (TemplateNotFound $e) {
+            return $tplWithoutExtension . self::EXT;
+        }
 
         return $template;
     }
