@@ -8,6 +8,8 @@ namespace BEAR\Package\Provide\TemplateEngine\UserAgent;
 
 use Aura\Web\Request\Client;
 use Ray\Di\ProviderInterface;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 class ClientProvider implements ProviderInterface
 {
@@ -22,7 +24,7 @@ class ClientProvider implements ProviderInterface
      * @Inject(optional=true)
      * @Named("mobile_agents")
      */
-    public function __construct($mobileAgents)
+    public function setAgents(array $mobileAgents)
     {
         $this->mobileAgents = $mobileAgents;
     }
