@@ -8,6 +8,7 @@ namespace BEAR\Package\Provide\TemplateEngine\Twig;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+use Aura\Web\Request\Client;
 
 class UserAgentTwigModule extends AbstractModule
 {
@@ -24,5 +25,10 @@ class UserAgentTwigModule extends AbstractModule
             ->bind('Twig_Environment')
             ->toProvider(__NAMESPACE__ . '\TwigProvider')
             ->in(Scope::SINGLETON);
+        $this
+            ->bind('Aura\Web\Request\Client')
+            ->toProvider('BEAR\Package\Provide\TemplateEngine\UserAgent\ClientProvider')
+            ->in(Scope::SINGLETON);
+
     }
 }
