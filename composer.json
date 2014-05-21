@@ -24,7 +24,7 @@
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "dev-develop",
-        "bear/resource": "dev-develop",
+        "bear/resource": "dev-develop#d140b79e9ac6e53308bd3154d699d351b627db44",
         "ray/di": "dev-develop",
         "koriym/fusion-cache": "0.*",
 
@@ -58,8 +58,6 @@
             "BEAR\\Package\\": "src-dev/"
         },
         "files": [
-            "src-dev/debuglib.php",
-            "src-dev/p.php"
         ]
     },
     "bin": [
