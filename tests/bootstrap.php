@@ -13,9 +13,6 @@ $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 $loader->addPsr4('BEAR\Package\\', __DIR__);
 error_reporting(E_ALL);
 
-// load for p($var); e();
-(new \BEAR\Package\Dev\Dev)->loadDevFunctions();
-
 $_ENV['TEST_DIR'] = __DIR__;
 $_ENV['TMP_DIR'] = __DIR__ . '/tmp';
 $_ENV['PACKAGE_DIR'] = dirname(__DIR__);
