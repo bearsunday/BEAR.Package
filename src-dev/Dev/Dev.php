@@ -138,6 +138,9 @@ class Dev
         ini_set('xdebug.collect_params', 0);
         ini_set('xdebug.max_nesting_level', 500);
         ini_set('xdebug.file_link_format', '/dev/edit/?file=%f&line=$l');
+        if (! ini_get('date.timezone')) {
+            date_default_timezone_set('Asia/Tokyo');
+        }
 
         return $this;
     }
