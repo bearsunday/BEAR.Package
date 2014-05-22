@@ -72,7 +72,6 @@ class PackageModule extends AbstractModule
 
         // Package module
         $this->install(new Package\Module\ExceptionHandle\HandleModule);
-        $this->install(new Package\Module\Aop\NamedArgsModule);
 
         // Framework core module
         $this->install(new SundayModule\Framework\FrameworkModule($this));
