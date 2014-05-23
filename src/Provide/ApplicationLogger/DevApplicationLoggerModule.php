@@ -26,5 +26,10 @@ class DevApplicationLoggerModule extends AbstractModule
             ->bind('BEAR\Resource\LogWriterInterface')
             ->toProvider(__NAMESPACE__ . '\ResourceLog\DevWritersProvider')
             ->in(Scope::SINGLETON);
+
+        $this
+            ->bind('BEAR\Resource\LoggerInterface')
+            ->to('BEAR\Resource\Logger')
+            ->in(Scope::SINGLETON);
     }
 }

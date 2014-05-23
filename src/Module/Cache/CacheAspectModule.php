@@ -8,25 +8,23 @@ namespace BEAR\Package\Module\Cache;
 
 use Ray\Di\AbstractModule;
 
-class CacheModule extends AbstractModule
+class CacheAspectModule extends AbstractModule
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $cacheLoader = $this->requestInjection(__NAMESPACE__ . '\Interceptor\CacheLoader');
         // bind @Cache annotated method in any class
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Cache'),
-            [$cacheLoader]
+            [$this->requestInjection(__NAMESPACE__ . '\Interceptor\CacheLoader')]
         );
-        $cacheUpdater = $this->requestInjection(__NAMESPACE__ . '\Interceptor\CacheUpdater');
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\CacheUpdate'),
-            [$cacheUpdater]
+            [$this->requestInjection(__NAMESPACE__ . '\Interceptor\CacheUpdater')]
         );
     }
 }
