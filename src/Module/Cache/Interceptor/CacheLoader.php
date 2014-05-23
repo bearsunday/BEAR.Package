@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Module\Cache\Interceptor;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
@@ -37,7 +37,7 @@ class CacheLoader implements MethodInterceptor
     private $get = [];
 
     /**
-     * @var AnnotationReader
+     * @var Reader
      */
     private $annotationReader;
 
@@ -50,14 +50,14 @@ class CacheLoader implements MethodInterceptor
     }
 
     /**
-     * @param Cache            $cache
-     * @param AnnotationReader $annotationReader
+     * @param Cache  $cache
+     * @param Reader $annotationReader
      *
      * @Inject
      */
     public function __construct(
         Cache $cache,
-        AnnotationReader $annotationReader
+        Reader $annotationReader
     ) {
         $this->cache = $cache;
         $this->annotationReader = $annotationReader;
