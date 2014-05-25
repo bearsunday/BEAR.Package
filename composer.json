@@ -35,13 +35,13 @@
         "aura/sql": "2.*",
         "doctrine/dbal": "2.*",
         "pagerfanta/pagerfanta": "1.*",
-        "playmedia/smarty": "3.*",
         "symfony/http-foundation": "2.*",
         "twig/twig": "1.*"
     },
     "require-dev": {
         "bear/dev-package": "dev-develop",
-        "bear/demo-apps": "dev-develop"
+        "bear/demo-apps": "dev-develop",
+        "noiselabs/smarty": "3.*"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
