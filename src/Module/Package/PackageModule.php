@@ -4,10 +4,9 @@ namespace BEAR\Package\Module\Package;
 use BEAR\Package\Module as Package;
 use BEAR\Package\Provide as Provide;
 use BEAR\Sunday\Module as Sunday;
+use BEAR\Resource\Module as Resource;
 
 use Ray\Di\AbstractModule;
-use BEAR\Resource\Module\ResourceModule;
-use BEAR\Resource\Module\EmbedResourceModule;
 
 class PackageModule extends AbstractModule
 {
@@ -44,26 +43,25 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('')->annotatedWith('app_context')->toInstance($this->context);
-        $this->config['package_dir'] = dirname(dirname(dirname(__DIR__)));
-
+        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
         // Sunday Module
-        $this->install(new Sunday\Constant\NamedModule($this->config));
+        $constants = [
+            'package_dir' => dirname(dirname(dirname(__DIR__))),
+            'app_context' => $this->context
+        ];
+        $this->install(new Sunday\Constant\NamedModule($constants + $this->config));
         $this->install(new Sunday\Cache\CacheModule);
         $this->install(new Sunday\Code\CachedAnnotationModule($this));
 
         // Package Module
+        $this->install(new Package\Cache\CacheAspectModule($this));
         $this->install(new Package\Di\DiCompilerModule($this));
         $this->install(new Package\Di\DiModule($this));
-        $this->install(new Package\Cache\CacheAspectModule($this));
         $this->install(new Package\ExceptionHandle\HandleModule);
 
         // Resource Module
-        $this->install(new ResourceModule($this->config['app_name'], $this->config['resource_dir']));
-//        $this->install(new EmbedResourceModule($this));
-
-        // application
-        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
+        $this->install(new Resource\ResourceModule($this->config['app_name'], $this->config['resource_dir']));
+//        $this->install(new Resource\EmbedResourceModule($this));
 
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new Provide\WebResponse\HttpFoundationModule);
