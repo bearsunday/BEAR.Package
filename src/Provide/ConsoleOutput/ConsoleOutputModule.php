@@ -7,6 +7,7 @@
 namespace BEAR\Package\Provide\ConsoleOutput;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 class ConsoleOutputModule extends AbstractModule
 {
@@ -15,6 +16,9 @@ class ConsoleOutputModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface')->to(__NAMESPACE__ . '\ConsoleOutput');
+        $this
+            ->bind('BEAR\Sunday\Extension\ConsoleOutput\ConsoleOutputInterface')
+            ->to(__NAMESPACE__ . '\ConsoleOutput')
+            ->in(Scope::SINGLETON);
     }
 }
