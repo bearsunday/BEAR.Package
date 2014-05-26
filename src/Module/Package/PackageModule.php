@@ -58,10 +58,10 @@ class PackageModule extends AbstractModule
         $this->install(new Package\Di\DiCompilerModule($this));
         $this->install(new Package\Di\DiModule($this));
         $this->install(new Package\ExceptionHandle\HandleModule);
+        $this->install(new Package\Resource\ResourceModule($this->config['app_name'], $this->config['resource_dir']));
 
         // Resource Module
-        $this->install(new Resource\ResourceModule($this->config['app_name'], $this->config['resource_dir']));
-//        $this->install(new Resource\EmbedResourceModule($this));
+        $this->install(new Resource\EmbedResourceModule($this));
 
         // Provide module (BEAR.Sunday extension interfaces)
         $this->install(new Provide\WebResponse\HttpFoundationModule);
