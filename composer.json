@@ -23,31 +23,29 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "bear/sunday": "dev-develop",
-        "bear/resource": "dev-develop#d140b79e9ac6e53308bd3154d699d351b627db44",
-        "ray/di": "dev-develop",
-        "koriym/fusion-cache": "0.*",
+        "bear/sunday": "~0.10",
+        "koriym/fusion-cache": "~0.1",
 
-        "aura/input": "1.*",
-        "aura/view": "1.*",
-        "aura/router": "2.*",
+        "aura/input": "~1.0",
+        "aura/view": "~1.0",
+        "aura/router": "~2.0@dev",
         "aura/web": "dev-develop-2",
-        "aura/sql": "2.*",
-        "doctrine/dbal": "2.*",
-        "pagerfanta/pagerfanta": "1.*",
-        "symfony/http-foundation": "2.*",
-        "twig/twig": "1.*"
+        "aura/sql": "~2.0",
+        "doctrine/dbal": "~2.0",
+        "pagerfanta/pagerfanta": "~1.0",
+        "symfony/http-foundation": "~2.0",
+        "twig/twig": "~1.0"
     },
     "require-dev": {
-        "bear/dev-package": "dev-develop",
-        "bear/demo-apps": "dev-develop",
-        "noiselabs/smarty": "3.*"
+        "bear/dev-package": "~0.2",
+        "bear/demo-apps": "~0.1",
+        "koriym/printo": "~1.0@dev",
+        "noiselabs/smarty": "~3.1",
+        "facebook/xhprof": "dev-master"
     },
     "suggest": {
         "bear/phptal-module": "PHPTAL template-engine module"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "BEAR\\Package\\": "src/"
@@ -55,9 +53,12 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BEAR\\Package\\": "src-dev/"
+            "BEAR\\Package\\": "src-dev/",
+            "Demo\\Helloworld\\": "apps/Demo.Helloworld/"
         },
         "files": [
+            "src-dev/debuglib.php",
+            "src-dev/p.php"
         ]
     },
     "bin": [
