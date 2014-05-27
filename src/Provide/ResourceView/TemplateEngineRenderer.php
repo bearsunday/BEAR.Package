@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\ResourceView;
 
+use BEAR\Resource\Code;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\ResourceView\TemplateEngineRendererInterface;
 use BEAR\Sunday\Extension\TemplateEngine\TemplateEngineAdapterInterface;
@@ -41,6 +42,12 @@ class TemplateEngineRenderer implements TemplateEngineRendererInterface
      */
     public function render(ResourceObject $resourceObject)
     {
+        $noContent = $resourceObject->code === Code::NO_CONTENT || ($resourceObject->code >= 300 && $resourceObject->code < 400);
+        if ($noContent === true) {
+            $resourceObject->view = '';
+
+            return '';
+        }
         if (is_scalar($resourceObject->body)) {
             $resourceObject->view = $resourceObject->body;
 

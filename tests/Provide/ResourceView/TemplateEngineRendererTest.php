@@ -6,10 +6,10 @@ use BEAR\Package\Mock\ResourceObject\MockResource;
 use BEAR\Package\Provide\TemplateEngine\Smarty\SmartyAdapter;
 use BEAR\Resource\ResourceObject;
 use Smarty;
+use BEAR\Resource\Code;
 
 class TemplateEngineRendererTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var TemplateEngineRenderer
      */
@@ -44,5 +44,12 @@ class TemplateEngineRendererTest extends \PHPUnit_Framework_TestCase
         $this->resource->body = 'hello BEAR.Sunday';
         $this->templateEngineRenderer->render($this->resource);
         $this->assertContains('hello BEAR.Sunday', $this->resource->view);
+    }
+
+    public function testNoContentCode()
+    {
+        $this->resource->code = Code::NO_CONTENT;
+        $this->templateEngineRenderer->render($this->resource);
+        $this->assertSame('', $this->resource->view);
     }
 }

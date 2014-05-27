@@ -62,6 +62,11 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
     private $sundayDir;
 
     /**
+     * @var TemplateEngineRenderer
+     */
+    private $templateEngineRenderer;
+
+    /**
      * ViewRenderer Setter
      *
      * @param TemplateEngineAdapterInterface $templateEngineAdapter
@@ -71,6 +76,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
     public function __construct(TemplateEngineAdapterInterface $templateEngineAdapter)
     {
         $this->templateEngineAdapter = $templateEngineAdapter;
+        $this->templateEngineRenderer = (new TemplateEngineRenderer($templateEngineAdapter));
     }
 
     /**
@@ -163,20 +169,17 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         if (is_array($resourceObject->body) || $resourceObject->body instanceof Traversable) {
             $this->templateEngineAdapter->assignAll($resourceObject->body);
         }
-        $templateFileBase = $dir . DIRECTORY_SEPARATOR . substr(
-            basename($pageFile),
-            0,
-            strlen(basename($pageFile)) - 3
-        );
+        // rendering with original render
+        $view =  $this->templateEngineRenderer->render($resourceObject);
 
         // add tool bar
-        $resourceObject->view = $body = $this->templateEngineAdapter->fetch($templateFileBase);
-        $body = $this->addJsDevToolLadingHtml($body);
+        $resourceObject->view = $view;
+        $view = $this->addJsDevToolLadingHtml($view);
         $templateFile = $this->templateEngineAdapter->getTemplateFile();
         $templateFile = $this->makeRelativePath($templateFile);
-        $label = $this->getLabel($body, $resourceObject, $templateFile);
+        $view = $this->addLabel($view, $resourceObject, $templateFile);
 
-        return $label;
+        return $view;
     }
 
     /**
@@ -232,7 +235,7 @@ EOT;
      *
      * @return string
      */
-    private function getLabel($body, ResourceObject $resourceObject, $templateFile)
+    private function addLabel($body, ResourceObject $resourceObject, $templateFile)
     {
         $cache = isset($resourceObject->headers[CacheLoader::HEADER_CACHE]) ? json_decode($resourceObject->headers[CacheLoader::HEADER_CACHE], true) : false;
         if ($cache === false) {
