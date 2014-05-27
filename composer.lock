@@ -1791,12 +1791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "23371aef09d478bc00c2ea5679c4f136617eb95e"
+                "reference": "db611324b18a973dab00c9166e1fc10216ebb275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/23371aef09d478bc00c2ea5679c4f136617eb95e",
-                "reference": "23371aef09d478bc00c2ea5679c4f136617eb95e",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/db611324b18a973dab00c9166e1fc10216ebb275",
+                "reference": "db611324b18a973dab00c9166e1fc10216ebb275",
                 "shasum": ""
             },
             "type": "library",
@@ -1827,7 +1827,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-05-27 09:10:31"
+            "time": "2014-05-27 11:43:26"
         },
         {
             "name": "bear/dev-package",
