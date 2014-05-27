@@ -37,8 +37,8 @@
         "twig/twig": "~1.0"
     },
     "require-dev": {
-        "bear/dev-package": "~0.2",
-        "bear/demo-apps": "~0.1",
+        "bear/dev-package": "~0.2   ",
+        "bear/demo-apps": "~0.1@dev",
         "koriym/printo": "~1.0@dev",
         "noiselabs/smarty": "~3.1",
         "facebook/xhprof": "dev-master"

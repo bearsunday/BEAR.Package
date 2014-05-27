@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d909670699da8c6e0b25b3a5704e3b74",
+    "hash": "8564158010caf1f10175a2059b637170",
     "packages": [
         {
             "name": "any/serializer",
@@ -449,12 +449,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "13154d751bad6a770b6d4c1df489beb1982b0710"
+                "reference": "b6054a7b649102e2e3d326c0404f13bb52417357"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/13154d751bad6a770b6d4c1df489beb1982b0710",
-                "reference": "13154d751bad6a770b6d4c1df489beb1982b0710",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/b6054a7b649102e2e3d326c0404f13bb52417357",
+                "reference": "b6054a7b649102e2e3d326c0404f13bb52417357",
                 "shasum": ""
             },
             "require": {
@@ -494,7 +494,7 @@
                 "request",
                 "response"
             ],
-            "time": "2014-05-26 01:00:19"
+            "time": "2014-05-26 14:44:52"
         },
         {
             "name": "bear/resource",
@@ -1517,16 +1517,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.2.4",
+            "version": "1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "8a6fcdb80725288b8ac6829ee138031a67d698e1"
+                "reference": "159edfaa1c7121a7a36b6a10da19485c261e87b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/8a6fcdb80725288b8ac6829ee138031a67d698e1",
-                "reference": "8a6fcdb80725288b8ac6829ee138031a67d698e1",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/159edfaa1c7121a7a36b6a10da19485c261e87b6",
+                "reference": "159edfaa1c7121a7a36b6a10da19485c261e87b6",
                 "shasum": ""
             },
             "require": {
@@ -1565,20 +1565,20 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-05-19 10:06:55"
+            "time": "2014-05-27 10:29:01"
         },
         {
             "name": "ray/di",
-            "version": "1.3.2",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "1248f8f747019424117514c2d1c0657ac44341b6"
+                "reference": "059162acca245aa2056747f9e578a095ac8ba35c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/1248f8f747019424117514c2d1c0657ac44341b6",
-                "reference": "1248f8f747019424117514c2d1c0657ac44341b6",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/059162acca245aa2056747f9e578a095ac8ba35c",
+                "reference": "059162acca245aa2056747f9e578a095ac8ba35c",
                 "shasum": ""
             },
             "require": {
@@ -1626,7 +1626,7 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2014-05-26 06:40:29"
+            "time": "2014-05-27 10:52:05"
         },
         {
             "name": "symfony/http-foundation",
@@ -1787,16 +1787,16 @@
         },
         {
             "name": "bear/demo-apps",
-            "version": "0.1.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "9fdee96ce38f6ee564ada4cff9b3ef065fc81aed"
+                "reference": "23371aef09d478bc00c2ea5679c4f136617eb95e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/9fdee96ce38f6ee564ada4cff9b3ef065fc81aed",
-                "reference": "9fdee96ce38f6ee564ada4cff9b3ef065fc81aed",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/23371aef09d478bc00c2ea5679c4f136617eb95e",
+                "reference": "23371aef09d478bc00c2ea5679c4f136617eb95e",
                 "shasum": ""
             },
             "type": "library",
@@ -1827,7 +1827,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-05-26 12:09:36"
+            "time": "2014-05-27 09:10:31"
         },
         {
             "name": "bear/dev-package",
@@ -3175,6 +3175,7 @@
     "stability-flags": {
         "aura/router": 20,
         "aura/web": 20,
+        "bear/demo-apps": 20,
         "koriym/printo": 20,
         "facebook/xhprof": 20
     },
