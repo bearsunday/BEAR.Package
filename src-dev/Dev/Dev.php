@@ -156,6 +156,17 @@ class Dev
                 // return in error-control operator(@)
                 return;
             }
+            // notice
+            if ($errNo === E_NOTICE) {
+                error_log(sprintf(
+                    'E_NOTICE: %s in %s on line %s',
+                    $errStr,
+                    $errFile,
+                    $errLine)
+                );
+
+                return;
+            }
             throw new \ErrorException($errStr, 0, $errNo, $errFile, $errLine);
         });
 
