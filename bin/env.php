@@ -19,6 +19,8 @@ echo '# Optional' . PHP_EOL;
 $apcVersion = phpversion("apc");
 $isAPCVersionOk = version_compare(phpversion("apc"), '3.1.8', '>=') ? $ok : $ng;
 echo "{$isAPCVersionOk}APC: " . phpversion("apc") . PHP_EOL;
+$hasUriTemplate = phpversion("uri_template") ? $ok : $ng;
+echo "{$hasUriTemplate}uri_template: " . phpversion("uri_template") . PHP_EOL;
 
 echo '# Develop' . PHP_EOL;
 $hasXhprof = phpversion("xhprof") ? $ok : $ng;
