@@ -53,8 +53,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BEAR\\Package\\": "src-dev/",
-            "Demo\\Helloworld\\": "apps/Demo.Helloworld/"
+            "BEAR\\Package\\": "src-dev/"
         },
         "files": [
             "src-dev/debuglib.php",
@@ -68,5 +67,10 @@
     ],
     "scripts": {
         "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.11.x-dev"
+        }
     }
 }
