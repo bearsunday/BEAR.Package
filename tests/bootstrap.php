@@ -2,6 +2,7 @@
 
 ini_set('xdebug.max_nesting_level', 300);
 ini_set('display_errors', 1);
+ini_set('error_log', __DIR__ . '/test.log');
 
 require dirname(__DIR__) . '/apps/Demo.Helloworld/bin/clear.php';
 require dirname(__DIR__) . '/apps/Demo.Sandbox/bin/clear.php';
