@@ -58,7 +58,6 @@ $html = <<<EOT
         }
     </style>
     <link rel="shortcut icon" href="/assets/ico/favicon.ico">
-    <link href="/assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
   </head>
 
   <body>
