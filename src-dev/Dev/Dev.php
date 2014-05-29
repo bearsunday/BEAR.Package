@@ -211,7 +211,7 @@ class Dev
             function (\Exception $e) use ($logDir) {
                 $handler = new ExceptionHandler(
                     new SymfonyResponse(new ConsoleOutput),
-                    (dirname(__DIR__)) . '/Module/ExceptionHandle/template/exception.php'
+                    (dirname(__DIR__)) . '/Dev/Module/ExceptionHandle/template/exception.php'
                 );
                 $handler->setLogDir($logDir);
                 $handler->handle($e);
