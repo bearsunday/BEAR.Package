@@ -24,6 +24,7 @@
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "~0.10",
+        "ray/di": "~1.3@dev",
         "koriym/fusion-cache": "~0.1",
 
         "aura/input": "~1.0",

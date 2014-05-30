@@ -8,6 +8,7 @@ use BEAR\Resource\Module as Resource;
 use BEAR\Package\Dev\Module as DevPackage;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Scope;
 
 class PackageModule extends AbstractModule
 {
@@ -44,7 +45,7 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass);
+        $this->bind('BEAR\Sunday\Extension\Application\AppInterface')->to($this->appClass)->in(Scope::SINGLETON);
         // Sunday Module
         $constants = [
             'package_dir' => dirname(dirname(dirname(__DIR__))),
