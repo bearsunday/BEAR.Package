@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b8d6b68cca3c65d2abcec55637f45b2d",
+    "hash": "94825d23648d6af6cf0a12f2622d0322",
     "packages": [
         {
             "name": "any/serializer",
@@ -497,16 +497,16 @@
         },
         {
             "name": "bear/resource",
-            "version": "0.13.0",
+            "version": "0.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Resource.git",
-                "reference": "dd0c50fc4dbf30d4ed7beff33b689a65c3e63da1"
+                "reference": "6c412e1ca543ee88271b9d2c195913462a8992a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/dd0c50fc4dbf30d4ed7beff33b689a65c3e63da1",
-                "reference": "dd0c50fc4dbf30d4ed7beff33b689a65c3e63da1",
+                "url": "https://api.github.com/repos/koriym/BEAR.Resource/zipball/6c412e1ca543ee88271b9d2c195913462a8992a5",
+                "reference": "6c412e1ca543ee88271b9d2c195913462a8992a5",
                 "shasum": ""
             },
             "require": {
@@ -556,20 +556,20 @@
                 "rest",
                 "stateless"
             ],
-            "time": "2014-05-26 10:56:02"
+            "time": "2014-05-29 07:19:25"
         },
         {
             "name": "bear/sunday",
-            "version": "0.10.4",
+            "version": "0.10.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.Sunday.git",
-                "reference": "4536c0cbb8dd7b2e62f43a62c561302a7ed7c226"
+                "reference": "07e8363e166dc3c0e8c128a4b34dc765655bfb7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/4536c0cbb8dd7b2e62f43a62c561302a7ed7c226",
-                "reference": "4536c0cbb8dd7b2e62f43a62c561302a7ed7c226",
+                "url": "https://api.github.com/repos/koriym/BEAR.Sunday/zipball/07e8363e166dc3c0e8c128a4b34dc765655bfb7c",
+                "reference": "07e8363e166dc3c0e8c128a4b34dc765655bfb7c",
                 "shasum": ""
             },
             "require": {
@@ -607,7 +607,7 @@
                 "hypermedia",
                 "rest"
             ],
-            "time": "2014-05-26 11:01:23"
+            "time": "2014-05-30 11:44:38"
         },
         {
             "name": "doctrine/annotations",
@@ -1126,19 +1126,20 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "4.0.2",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "40db53833aaea528347994acd4578d7b9b2211ee"
+                "reference": "85a0ba7de064493c928a8bcdc5eef01e0bde9953"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/40db53833aaea528347994acd4578d7b9b2211ee",
-                "reference": "40db53833aaea528347994acd4578d7b9b2211ee",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/85a0ba7de064493c928a8bcdc5eef01e0bde9953",
+                "reference": "85a0ba7de064493c928a8bcdc5eef01e0bde9953",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "guzzlehttp/streams": "~1.0",
                 "php": ">=5.4.0"
             },
@@ -1146,6 +1147,9 @@
                 "ext-curl": "*",
                 "phpunit/phpunit": "~4.0",
                 "psr/log": "~1.0"
+            },
+            "suggest": {
+                "ext-curl": "Guzzle will use specific adapters if cURL is present"
             },
             "type": "library",
             "extra": {
@@ -1183,7 +1187,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-04-16 17:33:22"
+            "time": "2014-05-28 05:13:19"
         },
         {
             "name": "guzzlehttp/guzzle-services",
@@ -1568,16 +1572,16 @@
         },
         {
             "name": "ray/di",
-            "version": "1.3.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "059162acca245aa2056747f9e578a095ac8ba35c"
+                "reference": "c1d392da19aafeb572f29c912f04a9c693939565"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/059162acca245aa2056747f9e578a095ac8ba35c",
-                "reference": "059162acca245aa2056747f9e578a095ac8ba35c",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/c1d392da19aafeb572f29c912f04a9c693939565",
+                "reference": "c1d392da19aafeb572f29c912f04a9c693939565",
                 "shasum": ""
             },
             "require": {
@@ -1625,7 +1629,7 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2014-05-27 10:52:05"
+            "time": "2014-05-30 10:29:03"
         },
         {
             "name": "symfony/http-foundation",
@@ -1790,12 +1794,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DemoApps.git",
-                "reference": "db611324b18a973dab00c9166e1fc10216ebb275"
+                "reference": "01d33f853507b0450ff1109d220df7e38019b0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/db611324b18a973dab00c9166e1fc10216ebb275",
-                "reference": "db611324b18a973dab00c9166e1fc10216ebb275",
+                "url": "https://api.github.com/repos/koriym/BEAR.DemoApps/zipball/01d33f853507b0450ff1109d220df7e38019b0f5",
+                "reference": "01d33f853507b0450ff1109d220df7e38019b0f5",
                 "shasum": ""
             },
             "type": "library",
@@ -1826,7 +1830,7 @@
             "keywords": [
                 "BEAR.Sunday"
             ],
-            "time": "2014-05-27 11:43:26"
+            "time": "2014-05-30 11:55:14"
         },
         {
             "name": "bear/dev-package",
@@ -3170,6 +3174,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "ray/di": 20,
         "aura/router": 20,
         "aura/web": 20,
         "bear/demo-apps": 20,
