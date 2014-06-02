@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "94825d23648d6af6cf0a12f2622d0322",
+    "hash": "491e4bcc8abfab72d2e94285dfb887b9",
     "packages": [
         {
             "name": "any/serializer",
@@ -46,20 +46,20 @@
         },
         {
             "name": "aura/di",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Di.git",
-                "reference": "d2e9fabef6089cf82160fd97d05a69d1b012ba72"
+                "reference": "e3466bf03c21d6dff4aca8ef57705d26a5939256"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Di/zipball/d2e9fabef6089cf82160fd97d05a69d1b012ba72",
-                "reference": "d2e9fabef6089cf82160fd97d05a69d1b012ba72",
+                "url": "https://api.github.com/repos/auraphp/Aura.Di/zipball/e3466bf03c21d6dff4aca8ef57705d26a5939256",
+                "reference": "e3466bf03c21d6dff4aca8ef57705d26a5939256",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
+                "aura/installer-default": "1.0.*",
                 "php": ">=5.4.0"
             },
             "type": "aura-package",
@@ -79,7 +79,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari K T",
+                    "name": "Hari KT",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
@@ -105,24 +105,24 @@
                 "di",
                 "di container"
             ],
-            "time": "2013-09-09 00:00:00"
+            "time": "2014-05-31 00:00:00"
         },
         {
             "name": "aura/input",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Input.git",
-                "reference": "1b0fc65315f4bb01b4432f045262c0ce49a062ea"
+                "reference": "5b6f0843492094c8e4d65fae354a96d62fccea12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/1b0fc65315f4bb01b4432f045262c0ce49a062ea",
-                "reference": "1b0fc65315f4bb01b4432f045262c0ce49a062ea",
+                "url": "https://api.github.com/repos/auraphp/Aura.Input/zipball/5b6f0843492094c8e4d65fae354a96d62fccea12",
+                "reference": "5b6f0843492094c8e4d65fae354a96d62fccea12",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
+                "aura/installer-default": "1.*",
                 "php": ">=5.4.0"
             },
             "type": "aura-package",
@@ -149,6 +149,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 },
                 {
@@ -168,7 +169,7 @@
                 "html",
                 "input"
             ],
-            "time": "2013-09-17 00:00:00"
+            "time": "2014-05-31 00:00:00"
         },
         {
             "name": "aura/installer-default",
@@ -217,12 +218,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Router.git",
-                "reference": "a2a8aa651c3fa9e9ed524bb9da27f2b628ed7afb"
+                "reference": "7edb4f7edd0f9b3a66bba7753d0aec6e4a95b0b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Router/zipball/a2a8aa651c3fa9e9ed524bb9da27f2b628ed7afb",
-                "reference": "a2a8aa651c3fa9e9ed524bb9da27f2b628ed7afb",
+                "url": "https://api.github.com/repos/auraphp/Aura.Router/zipball/7edb4f7edd0f9b3a66bba7753d0aec6e4a95b0b5",
+                "reference": "7edb4f7edd0f9b3a66bba7753d0aec6e4a95b0b5",
                 "shasum": ""
             },
             "require": {
@@ -263,24 +264,24 @@
                 "router",
                 "routing"
             ],
-            "time": "2014-05-14 22:40:54"
+            "time": "2014-05-30 17:12:38"
         },
         {
             "name": "aura/signal",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Signal.git",
-                "reference": "bc9c3a5ee7feb994195f55dbe6921edbabbedcc3"
+                "reference": "01280bb119df3933f2669a607636c143d838afea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Signal/zipball/bc9c3a5ee7feb994195f55dbe6921edbabbedcc3",
-                "reference": "bc9c3a5ee7feb994195f55dbe6921edbabbedcc3",
+                "url": "https://api.github.com/repos/auraphp/Aura.Signal/zipball/01280bb119df3933f2669a607636c143d838afea",
+                "reference": "01280bb119df3933f2669a607636c143d838afea",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
+                "aura/installer-default": "1.0.*",
                 "php": ">=5.4.0"
             },
             "type": "aura-package",
@@ -300,7 +301,7 @@
                     "homepage": "http://paul-m-jones.com"
                 },
                 {
-                    "name": "Hari KT",
+                    "name": "Hari K T",
                     "email": "kthari85@gmail.com",
                     "homepage": "http://harikt.com"
                 },
@@ -311,6 +312,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
+                    "homepage": "http://www.kumasystem.com",
                     "role": "Lead"
                 }
             ],
@@ -323,7 +325,7 @@
                 "signal",
                 "signal slots"
             ],
-            "time": "2013-09-10 00:00:00"
+            "time": "2014-05-31 00:00:00"
         },
         {
             "name": "aura/sql",
@@ -380,20 +382,20 @@
         },
         {
             "name": "aura/view",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.View.git",
-                "reference": "2e3965ad656deb6f2b2fcd078fbc47b32337e60a"
+                "reference": "51413fff0064788950f5934dac4ff84e3c9d4ac6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.View/zipball/2e3965ad656deb6f2b2fcd078fbc47b32337e60a",
-                "reference": "2e3965ad656deb6f2b2fcd078fbc47b32337e60a",
+                "url": "https://api.github.com/repos/auraphp/Aura.View/zipball/51413fff0064788950f5934dac4ff84e3c9d4ac6",
+                "reference": "51413fff0064788950f5934dac4ff84e3c9d4ac6",
                 "shasum": ""
             },
             "require": {
-                "aura/installer-default": ">=1.0.0",
+                "aura/installer-default": "1.0.*",
                 "php": ">=5.4.0"
             },
             "type": "aura-package",
@@ -440,7 +442,7 @@
                 "twostep view",
                 "view"
             ],
-            "time": "2013-09-16 00:00:00"
+            "time": "2014-05-31 00:00:00"
         },
         {
             "name": "aura/web",
@@ -448,12 +450,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Web.git",
-                "reference": "b6054a7b649102e2e3d326c0404f13bb52417357"
+                "reference": "b4b8a94b824488187100967d7d73d312e56b9afd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/b6054a7b649102e2e3d326c0404f13bb52417357",
-                "reference": "b6054a7b649102e2e3d326c0404f13bb52417357",
+                "url": "https://api.github.com/repos/auraphp/Aura.Web/zipball/b4b8a94b824488187100967d7d73d312e56b9afd",
+                "reference": "b4b8a94b824488187100967d7d73d312e56b9afd",
                 "shasum": ""
             },
             "require": {
@@ -493,7 +495,7 @@
                 "request",
                 "response"
             ],
-            "time": "2014-05-26 14:44:52"
+            "time": "2014-05-30 17:18:31"
         },
         {
             "name": "bear/resource",
@@ -1191,16 +1193,16 @@
         },
         {
             "name": "guzzlehttp/guzzle-services",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle-services.git",
-                "reference": "e079a728689a28e9f4427264bcfc77d0dd6fa98d"
+                "reference": "689dfa73b65e2c0a74184a5fb8c5a6ef0b160911"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle-services/zipball/e079a728689a28e9f4427264bcfc77d0dd6fa98d",
-                "reference": "e079a728689a28e9f4427264bcfc77d0dd6fa98d",
+                "url": "https://api.github.com/repos/guzzle/guzzle-services/zipball/689dfa73b65e2c0a74184a5fb8c5a6ef0b160911",
+                "reference": "689dfa73b65e2c0a74184a5fb8c5a6ef0b160911",
                 "shasum": ""
             },
             "require": {
@@ -1228,7 +1230,7 @@
                 }
             ],
             "description": "Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.",
-            "time": "2014-03-30 23:24:04"
+            "time": "2014-06-01 20:00:25"
         },
         {
             "name": "guzzlehttp/streams",
@@ -1420,31 +1422,36 @@
         },
         {
             "name": "pagerfanta/pagerfanta",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/Pagerfanta.git",
-                "reference": "9568187b789a39a3933c71e4e28b60fc2c26b70d"
+                "reference": "ac1edfdf81c91a0f1471769071011ebf9b055421"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/9568187b789a39a3933c71e4e28b60fc2c26b70d",
-                "reference": "9568187b789a39a3933c71e4e28b60fc2c26b70d",
+                "url": "https://api.github.com/repos/whiteoctober/Pagerfanta/zipball/ac1edfdf81c91a0f1471769071011ebf9b055421",
+                "reference": "ac1edfdf81c91a0f1471769071011ebf9b055421",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "doctrine/mongodb-odm": "*",
-                "doctrine/orm": "2.*",
-                "mandango/mandango": "*",
+                "doctrine/mongodb-odm": "1.0.*@dev",
+                "doctrine/orm": "2.3.*",
+                "doctrine/phpcr-odm": "1.*",
+                "jackalope/jackalope-doctrine-dbal": "1.*",
+                "jmikola/geojson": "1.0.*",
+                "mandango/mandango": "1.0.*@dev",
+                "phpunit/phpunit": "3.7.*",
                 "propel/propel1": "~1.6",
-                "solarium/solarium": "dev-develop"
+                "solarium/solarium": "3.1.*"
             },
             "suggest": {
                 "doctrine/mongodb-odm": "To use the DoctrineODMMongoDBAdapter.",
                 "doctrine/orm": "To use the DoctrineORMAdapter.",
+                "doctrine/phpcr-odm": "To use the DoctrineODMPhpcrAdapter. >= 1.1.0",
                 "mandango/mandango": "To use the MandangoAdapter.",
                 "propel/propel1": "To use the PropelAdapter",
                 "solarium/solarium": "To use the SolariumAdapter."
@@ -1478,7 +1485,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2013-09-23 08:06:55"
+            "time": "2014-06-02 09:21:14"
         },
         {
             "name": "psr/log",
@@ -1576,12 +1583,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "c1d392da19aafeb572f29c912f04a9c693939565"
+                "reference": "247450fb697e7da3a93d3b4fea57dfbe2930b3da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/c1d392da19aafeb572f29c912f04a9c693939565",
-                "reference": "c1d392da19aafeb572f29c912f04a9c693939565",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/247450fb697e7da3a93d3b4fea57dfbe2930b3da",
+                "reference": "247450fb697e7da3a93d3b4fea57dfbe2930b3da",
                 "shasum": ""
             },
             "require": {
@@ -1611,7 +1618,7 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
+                    "homepage": "http://www.kumasystem.com",
                     "role": "Lead"
                 },
                 {
@@ -1629,21 +1636,21 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2014-05-30 10:29:03"
+            "time": "2014-06-01 19:06:56"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "138498f3d64981cfafcb5eec3b2b96fce44a178e"
+                "reference": "044085422005aa3258fb3f710a7bf0202011f259"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/138498f3d64981cfafcb5eec3b2b96fce44a178e",
-                "reference": "138498f3d64981cfafcb5eec3b2b96fce44a178e",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/044085422005aa3258fb3f710a7bf0202011f259",
+                "reference": "044085422005aa3258fb3f710a7bf0202011f259",
                 "shasum": ""
             },
             "require": {
@@ -1655,7 +1662,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1684,7 +1691,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-22 16:21:00"
+            "time": "2014-05-26 19:02:40"
         },
         {
             "name": "twig/twig",
@@ -1834,16 +1841,16 @@
         },
         {
             "name": "bear/dev-package",
-            "version": "0.2.1",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/BEAR.DevPackage.git",
-                "reference": "5096b3fc7e09dbb270f889404f16845ba4424002"
+                "reference": "021062a1ee8067dc4d63bb0bd66873c3ed4e8e7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/BEAR.DevPackage/zipball/5096b3fc7e09dbb270f889404f16845ba4424002",
-                "reference": "5096b3fc7e09dbb270f889404f16845ba4424002",
+                "url": "https://api.github.com/repos/koriym/BEAR.DevPackage/zipball/021062a1ee8067dc4d63bb0bd66873c3ed4e8e7f",
+                "reference": "021062a1ee8067dc4d63bb0bd66873c3ed4e8e7f",
                 "shasum": ""
             },
             "require": {
@@ -1867,6 +1874,12 @@
                     "dev-master": "0.2.x-dev"
                 }
             },
+            "autoload": {
+                "files": [
+                    "src/debuglib.php",
+                    "src/p.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -1880,7 +1893,7 @@
                 }
             ],
             "description": "dev-require packages for BEAR.Package",
-            "time": "2014-05-26 09:02:54"
+            "time": "2014-06-02 18:02:51"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -2663,17 +2676,17 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/ClassLoader",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "5101f3094903a95db3552a834a9c6585afc10d3b"
+                "reference": "09e38e4d228c1f7f997f3dc7068d9d2fba9a10b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/5101f3094903a95db3552a834a9c6585afc10d3b",
-                "reference": "5101f3094903a95db3552a834a9c6585afc10d3b",
+                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/09e38e4d228c1f7f997f3dc7068d9d2fba9a10b0",
+                "reference": "09e38e4d228c1f7f997f3dc7068d9d2fba9a10b0",
                 "shasum": ""
             },
             "require": {
@@ -2685,7 +2698,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2711,21 +2724,21 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:34:31"
+            "time": "2014-04-16 10:36:34"
         },
         {
             "name": "symfony/config",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "2effc67af6f21a0d267210b72d0b0b691d113528"
+                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/2effc67af6f21a0d267210b72d0b0b691d113528",
-                "reference": "2effc67af6f21a0d267210b72d0b0b691d113528",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
+                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
                 "shasum": ""
             },
             "require": {
@@ -2735,7 +2748,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2761,36 +2774,38 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-22 08:11:06"
+            "time": "2014-04-22 08:11:23"
         },
         {
             "name": "symfony/console",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d"
+                "reference": "ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/24f723436e62598c9dddee2a8573d6992504dc5d",
-                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c",
+                "reference": "ef4ca73b0b3a10cbac653d3ca482d0cdd4502b2c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
+                "psr/log": "~1.0",
                 "symfony/event-dispatcher": "~2.1"
             },
             "suggest": {
+                "psr/log": "For using the console logger",
                 "symfony/event-dispatcher": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2816,21 +2831,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-14 21:48:29"
+            "time": "2014-05-22 08:54:24"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "a3af8294bcce4a7c1b2892363b0c9d8109affad4"
+                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/a3af8294bcce4a7c1b2892363b0c9d8109affad4",
-                "reference": "a3af8294bcce4a7c1b2892363b0c9d8109affad4",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/98e831eac836a0a5911626ce82684155f21d0e4d",
+                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d",
                 "shasum": ""
             },
             "require": {
@@ -2839,7 +2854,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2865,21 +2880,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:34:31"
+            "time": "2014-04-16 10:36:21"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "46295af1b1e24304b35d5f20f1bf1ec0c2c4934a"
+                "reference": "307aad2c541bbdf43183043645e186ef2cd6b973"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/46295af1b1e24304b35d5f20f1bf1ec0c2c4934a",
-                "reference": "46295af1b1e24304b35d5f20f1bf1ec0c2c4934a",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/307aad2c541bbdf43183043645e186ef2cd6b973",
+                "reference": "307aad2c541bbdf43183043645e186ef2cd6b973",
                 "shasum": ""
             },
             "require": {
@@ -2888,7 +2903,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2914,21 +2929,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-22 13:46:01"
+            "time": "2014-05-22 13:47:45"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.5",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265"
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/fd22bb88c3a6f73c898b39bec185a9e211b06265",
-                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b4b09c68ec2f2727574544ef0173684281a5033c",
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c",
                 "shasum": ""
             },
             "require": {
@@ -2937,7 +2952,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2963,7 +2978,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-12 09:27:48"
+            "time": "2014-05-16 14:25:18"
         },
         {
             "name": "zendframework/zend-db",
