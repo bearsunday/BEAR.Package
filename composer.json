@@ -24,8 +24,6 @@
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "~0.10",
-        "ray/di": "~1.3@dev",
-        "koriym/fusion-cache": "~0.1",
 
         "aura/input": "~1.0",
         "aura/view": "~1.0",
@@ -38,9 +36,8 @@
         "twig/twig": "~1.0"
     },
     "require-dev": {
-        "bear/dev-package": "~0.2   ",
+        "bear/dev-package": "~0.2",
         "bear/demo-apps": "~0.1@dev",
-        "koriym/printo": "~1.0@dev",
         "noiselabs/smarty": "~3.1",
         "facebook/xhprof": "dev-master"
     },
@@ -51,15 +48,6 @@
         "psr-4": {
             "BEAR\\Package\\": "src/"
         }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "BEAR\\Package\\": "src-dev/"
-        },
-        "files": [
-            "src-dev/debuglib.php",
-            "src-dev/p.php"
-        ]
     },
     "bin": [
         "bin/bear.compile",
