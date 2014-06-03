@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "491e4bcc8abfab72d2e94285dfb887b9",
+    "hash": "d91ba4481331d9b589bfb0476283ce23",
     "packages": [
         {
             "name": "any/serializer",
@@ -649,7 +650,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -1286,49 +1287,6 @@
             "time": "2014-04-03 04:48:24"
         },
         {
-            "name": "koriym/fusion-cache",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/Koriym.FusionCache.git",
-                "reference": "916584d20e4c544eb3ac0f88b2a6fc1aecba1038"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Koriym.FusionCache/zipball/916584d20e4c544eb3ac0f88b2a6fc1aecba1038",
-                "reference": "916584d20e4c544eb3ac0f88b2a6fc1aecba1038",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/cache": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Koriym\\FusionCache": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
-                    "role": "Lead"
-                }
-            ],
-            "description": "Memory+File hybrid cache",
-            "homepage": "https://github.com/koriym/Koriym.FusionCache",
-            "keywords": [
-                "cache",
-                "doctrine"
-            ],
-            "time": "2014-01-26 02:46:50"
-        },
-        {
             "name": "nikic/php-parser",
             "version": "v0.9.4",
             "source": {
@@ -1579,7 +1537,7 @@
         },
         {
             "name": "ray/di",
-            "version": "dev-master",
+            "version": "1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
@@ -1783,7 +1741,6 @@
                 {
                     "name": "Akihito Koriyama",
                     "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym",
                     "role": "Lead"
                 }
             ],
@@ -2093,16 +2050,16 @@
         },
         {
             "name": "koriym/printo",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/print_o.git",
-                "reference": "73d9269a2b0a489d1156195fc5ff1046af49868b"
+                "reference": "c511caaaf11d633c5972b8086743d2ecb58202d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/print_o/zipball/73d9269a2b0a489d1156195fc5ff1046af49868b",
-                "reference": "73d9269a2b0a489d1156195fc5ff1046af49868b",
+                "url": "https://api.github.com/repos/koriym/print_o/zipball/c511caaaf11d633c5972b8086743d2ecb58202d0",
+                "reference": "c511caaaf11d633c5972b8086743d2ecb58202d0",
                 "shasum": ""
             },
             "require": {
@@ -2140,7 +2097,7 @@
                 "debug",
                 "var_dump"
             ],
-            "time": "2014-05-10 08:46:04"
+            "time": "2014-06-02 18:13:32"
         },
         {
             "name": "noiselabs/smarty",
@@ -3189,11 +3146,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ray/di": 20,
         "aura/router": 20,
         "aura/web": 20,
         "bear/demo-apps": 20,
-        "koriym/printo": 20,
         "facebook/xhprof": 20
     },
     "platform": {
