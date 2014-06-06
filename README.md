@@ -25,7 +25,7 @@ or
 
     $ php -S 0.0.0.0:8080 -t apps/Demo.Sandbox/var/www/ apps/Demo.Sandbox/bootstrap/contexts/dev.php
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
+You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8080/dev/`
 
 for system admin page
 
