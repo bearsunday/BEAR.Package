@@ -130,7 +130,7 @@ class PagingQuery implements Countable, IteratorAggregate
         $countQuery = $this->getCountQuery($query);
         if (! $countQuery) {
             // GROUP BY => fetch the whole result set and count the rows returned
-            $result = $this->pdo->fetchAll($query);
+            $result = $this->pdo->query($query)->fetchAll();
             $count = count($result);
 
             return (integer) $count;
