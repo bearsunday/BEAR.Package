@@ -152,8 +152,8 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
             $resourceObject->view = $resourceObject->body;
             return $resourceObject->body;
         }
-        $disableHalo = ! ($_GET['halo']) && $_GET['halo'] === '0' || isset($_COOKIE['_bear_sunday_disable_halo']);
-        if ($_GET['halo'] && $_GET['halo'] === '1') {
+        $disableHalo = ! (empty($_GET['halo'])) || isset($_COOKIE['_bear_sunday_disable_halo']);
+        if (!empty($_GET['halo']) && $_GET['halo'] === '1') {
             $disableHalo = false;
             setcookie("_bear_sunday_disable_halo", '', time() - 3600);
         }
