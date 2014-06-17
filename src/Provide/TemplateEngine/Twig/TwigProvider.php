@@ -33,7 +33,7 @@ class TwigProvider implements Provide
         $twig = new Twig_Environment($loader, array(
             'cache' => $this->tmpDir . '/twig/cache',
             'debug' => true,
-            'autoescape' => false,
+            'autoescape' => true,
         ));
         $twig->addExtension(new \Twig_Extension_Debug());
         $function = new \Twig_SimpleFunction(
