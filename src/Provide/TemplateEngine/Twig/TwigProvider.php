@@ -30,11 +30,11 @@ class TwigProvider implements Provide
     public function get()
     {
         $loader = new Twig_Loader_Filesystem(array('/', $this->libDir . '/twig/template'));
-        $twig = new Twig_Environment($loader, array(
+        $twig = new Twig_Environment($loader, [
             'cache' => $this->tmpDir . '/twig/cache',
             'debug' => true,
             'autoescape' => false,
-        ));
+        ]);
         $twig->addExtension(new \Twig_Extension_Debug());
         $function = new \Twig_SimpleFunction(
             'href',
