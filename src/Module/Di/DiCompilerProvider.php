@@ -42,7 +42,7 @@ class DiCompilerProvider implements ProviderInterface
 
     /**
      * @param string $appName
-     * @param mixed $context
+     * @param string|string[] $context
      * @param string $tmpDir
      *
      * @Inject
