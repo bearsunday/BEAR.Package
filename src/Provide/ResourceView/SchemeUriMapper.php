@@ -11,6 +11,7 @@ class SchemeUriMapper implements UriMapperInterface
 {
     public function map($requestUri)
     {
+        $requestUri = ltrim($requestUri, '/');
         $firstSlashPos = strpos($requestUri, '/');
         $uri = sprintf(
             "%s://self%s",
