@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+if ($argc === 1) {
+    error();
+}
 // options
 $appDir = isset($argv[$argc - 1]) ? $argv[$argc - 1] : error();
 $appDir = adjustAppDir($appDir);
@@ -14,14 +17,14 @@ if (! file_exists($router)) {
 }
 
 if (! file_exists("{$appDir}/var/www")) {
-    error();
+    error("invalid dir:{$appDir}/var/www");
 }
 
 if (! file_exists($router)) {
     error("invalid context:{$context}");
 }
 
-$root =  "{$appDir}/var/www/";
+$root =  realpath("{$appDir}/var/www/");
 $cmd = "{$php} -S 0.0.0.0:{$port} -t {$root} {$router}";
 $spec = [0 => STDIN, 1 => STDOUT, 2 => STDERR];
 
@@ -35,6 +38,7 @@ proc_close($process);
  */
 function error($msg = 'Usage: bear.server [--port=<port>] [--context=<context>] [--php=<php_bin_path>] <app-dir>')
 {
+    echo $msg, PHP_EOL;
     error_log($msg);
     exit(1);
 }
@@ -49,6 +53,9 @@ function adjustAppDir($appDir) {
     // 絶対パスを指定
     if (strpos($appDir, '/') === 0 || preg_match('/^[C-Z]:\w+$/',$appDir) === 1) {
         return $appDir;
+    // 「.」の場合
+    } elseif ($appDir === '.') {
+        return $appDir;
     // appsから指定
     } elseif (strpos($appDir, 'apps' . DIRECTORY_SEPARATOR) === 0) {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . $appDir;
@@ -56,6 +63,6 @@ function adjustAppDir($appDir) {
     } elseif (strpos($appDir, DIRECTORY_SEPARATOR) === false) {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . "apps" .DIRECTORY_SEPARATOR . $appDir;
     } else {
-        error();
+        error("invalid app-dir:{$appDir}");
     }
 }
