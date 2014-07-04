@@ -52,7 +52,8 @@
     "bin": [
         "bin/bear.compile",
         "bin/bear.create-resource",
-        "bin/bear.server"
+        "bin/bear.server",
+        "bin/bear.env"
     ],
     "scripts": {
         "post-autoload-dump": ["BEAR\\Package\\Installer::packageUpdate"]
