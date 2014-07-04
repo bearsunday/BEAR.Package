@@ -20,9 +20,9 @@ class Installer
     {
         $version = $event->getComposer()->getPackage()->getPrettyVersion();
         $hash = $event->getComposer()->getLocker()->getLockData()['hash'];
-        $bearRoot = dirname(__DIR__);
-        file_put_contents($bearRoot . '/VERSION', $version);
-        file_put_contents($bearRoot . '/ID', $hash);
+        $packageDir = dirname(__DIR__);
+        file_put_contents($packageDir . '/VERSION', $version);
+        file_put_contents($packageDir . '/ID', $hash);
 
         $targetHello = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Helloworld';
         $targetSandbox = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
@@ -38,6 +38,6 @@ class Installer
         symlink($targetHello, $helloApp);
         symlink($targetSandbox, $sandboxApp);
 
-        include $bearRoot . '/bin/env.php';
+        include $packageDir . '/bin/bear.env.php';
     }
 }
