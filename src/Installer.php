@@ -38,6 +38,6 @@ class Installer
         symlink($targetHello, $helloApp);
         symlink($targetSandbox, $sandboxApp);
 
-        include $packageDir . '/bin/bear.env.php';
+        include $packageDir . '/bin/bear.env';
     }
 }
