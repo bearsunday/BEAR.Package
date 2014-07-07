@@ -28,15 +28,15 @@ class SchemeUriMapperTest extends \PHPUnit_Framework_TestCase
     public function testMapWithServer()
     {
         $_SERVER['HTTP_HOST'] = 'http://example.com';
-        $uri = $this->uriMapper->map('app/blog/posts');
+        $uri = $this->uriMapper->map('/app/blog/posts');
         $this->assertSame('app://self/blog/posts', $uri);
         unset($_SERVER['HTTP_HOST']);
     }
 
     public function testReverseMap()
     {
-        $href = $this->uriMapper->reverseMap('https://localhost:8080', 'app://blog/posts');
-        $this->assertSame('https://localhost:8080/app/posts/', $href);
+        $href = $this->uriMapper->reverseMap('https://localhost:8080', 'app://self/blog/posts');
+        $this->assertSame('https://localhost:8080/app/blog/posts/', $href);
 
     }
 }

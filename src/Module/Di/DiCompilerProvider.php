@@ -42,7 +42,7 @@ class DiCompilerProvider implements ProviderInterface
 
     /**
      * @param string $appName
-     * @param string $context
+     * @param string|string[] $context
      * @param string $tmpDir
      *
      * @Inject
@@ -61,7 +61,8 @@ class DiCompilerProvider implements ProviderInterface
      */
     public function get($extraCacheKey = '')
     {
-        $saveKey = $this->appName . $this->context;
+        $contextKey = is_array($this->context)? implode('_', $this->context) : $this->context;
+        $saveKey = $this->appName . $contextKey;
         if (isset(self::$compiler[$saveKey])) {
             return self::$compiler[$saveKey];
         }
@@ -76,7 +77,7 @@ class DiCompilerProvider implements ProviderInterface
 
             return self::$module[$saveKey];
         };
-        $cacheKey = $this->appName . $this->context . $extraCacheKey;
+        $cacheKey = $this->appName . $contextKey . $extraCacheKey;
 
         $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir);
         self::$compiler[$saveKey] = $compiler = DiCompiler::create($moduleProvider, $cache, $cacheKey, $this->tmpDir);

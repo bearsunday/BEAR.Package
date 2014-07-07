@@ -3,15 +3,16 @@ BEAR.Package
 
 [![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package) [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=master)] (http://travis-ci.org/koriym/BEAR.Package)
 
-
 Introduction
 ------------
+
 BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource oriented framework implementation package.
+
 Installation
 ------------
 
-    $ composer create-project bear/package {$PROJECT_PATH}
-    $ composer create-project bear/package {$PROJECT_PATH} dev-develop
+    $ composer create-project bear/package {$PACKAGE_PATH}
+    $ composer create-project bear/package {$PACKAGE_PATH} dev-develop
 
 built-in web server for development
 ------------------
@@ -19,31 +20,32 @@ built-in web server for development
 for Sandbox web page
 
     $ bin/bear.server apps/Demo.Sandbox
-    $ bin/bear.server.php --context=api --port=8081 apps/Demo.Sandbox
+    $ bin/bear.server --context=api --port=8081 apps/Demo.Sandbox
 
 or
 
     $ php -S 0.0.0.0:8080 -t apps/Demo.Sandbox/var/www/ apps/Demo.Sandbox/bootstrap/contexts/dev.php
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8088/dev/`
+You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8080/dev/`
 
 for system admin page
 
-    $ php -S 0.0.0.0:8090 -t {$PROJECT_PATH}/var/www/admin
+    $ php -S 0.0.0.0:8090 -t {$PACKAGE_PATH}/var/www/admin
 
 Virtual Host for Production
 ------------
-Set up a virtual host to point to the `{$PROJECT_PATH}/apps/Demo.Sandbox/var/www/` directory of the application.
+
+Set up a virtual host to point to the `{$PACKAGE_PATH}/apps/Demo.Sandbox/var/www/` directory of the application.
 
 Console
 -------
 
 ### web access
-```bash
 
-$ cd {$PROJECT_PATH}/apps/Demo.Sandbox/bootstrap/contexts
-$ php web.php get /
-    
+```bash
+$ cd {$PACKAGE_PATH}/apps/Demo.Sandbox/bootstrap/contexts
+$ php dev.php get /
+
 200 OK
 x-interceptors: ["{\"onGet\":[\"Sandbox\\\\Interceptor\\\\Checker\"]}"]
 x-execution-time: [0.068794012069702]
@@ -68,12 +70,11 @@ performance: app://self/performance
 ...
 ```
 
-
 ### api access
 
 ```bash
-$ php bootstrap/contexts/api.php get page://self/index
-$ php bootstrap/contexts/api.php get 'app://self/first/greeting?name=World'
+$ php api.php get page://self/index
+$ php api.php get 'app://self/first/greeting?name=World'
 
 200 OK
 content-type: ["application\/hal+json; charset=UTF-8"]
@@ -88,7 +89,8 @@ $ php api.php get app://self/blog/posts
 
 Make your own application
 -------------------------
-    $ cd apps
+
+    $ cd {$PACKAGE_PATH}/apps
 
 ### install
 
@@ -96,10 +98,11 @@ Make your own application
     $ composer create-project bear/skeleton {Vendor.AppName} dev-develop
 
 ### first run
-    $ cd {Vendor.AppName}
+
+    $ cd {$PACKAGE_PATH}
 
     // Console
-    $ php bootstrap/contexts/dev.php get /
+    $ php apps/{Vendor.AppName}/bootstrap/contexts/dev.php get /
 
     // Web
     $ bin/bear.server apps/{Vendor.AppName}
