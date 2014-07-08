@@ -23,21 +23,23 @@ namespace BEAR\Package\Dev\Compiler{
         if (! file_exists($configFile)) {
             error("invalid app-dir:{$appDir}");
         }
+        error_log('bear.compile started app:' . $appDir);
     }
 
     main: {
         require $appDir . '/bootstrap/autoload.php';
-        echo 'compile loader ...' . PHP_EOL;
-        compileLoader($appDir);
-        echo 'compile resources ...' . PHP_EOL;
-        compileObjectGraph($appDir);
-        echo 'compile annotations ...' . PHP_EOL;
-        compileAnnotation($appDir);
-        $output = dirname(__DIR__) . '/' . $appDir . '/var/tmp/apc.dump';
+//        error_log('compile loader ...');
+ //       compileLoader($appDir);
+        error_log('compile resources ...');
+        $classes = compileObjectGraph($appDir);
+        error_log('compile annotations ...');
+        compileAnnotation($classes, $appDir);
+        $output = $appDir . '/var/tmp/apc.dump';
         if (ini_get('apc.enable_cli') && ini_get('apc.stat') == 0 ) {
             apc_bin_dumpfile([], null, $output);
-            echo "apc dumped -> {$output}" . PHP_EOL;
+            error_log("apc dumped -> {$output}");
         }
+        error_log('bear.compile completed.');
     }
 
     function compileLoader($appDir) {
@@ -52,15 +54,15 @@ namespace BEAR\Package\Dev\Compiler{
         $minOutput = $appDir . '/var/tmp/preloader/preload.min.php';
         $compilePreloader = "php {$preLoader} compile --strip_comments=0 --config={$config} --output={$output}";
 
-        echo $compilePreloader . PHP_EOL;
+        error_log($compilePreloader);
         passthru($compilePreloader);
         $lint = "php -l {$output}";
-        echo $lint . PHP_EOL;
+        error_log($lint);
         passthru($lint);
 
         /** @todo "min" loader */
 //        file_put_contents($minOutput, php_strip_whitespace(file_get_contents($output)));
-//        echo "preload.min.php -> {$minOutput}" . PHP_EOL;
+//        error_log("bear.compile preload.min.php -> {$minOutput}");
     }
 
     function compileObjectGraph($appDir)
@@ -68,35 +70,38 @@ namespace BEAR\Package\Dev\Compiler{
         $app = require $appDir . '/bootstrap/instance.php';
         /** @var $app \BEAR\Package\Provide\Application\AbstractApp */
         $res = 0;
+        $classes = [];
         foreach ($app->resource as $meta) {
             $ro = $app->resource->newInstance($meta->uri);
-            printf("%s -> %s" . PHP_EOL, $meta->uri, get_class($ro));
+            $classes[] = $class = get_class($ro);
+            printf("%s -> %s" . PHP_EOL, $meta->uri, $class);
             $res++;
         }
-        echo $meta->uri . "{$res} resources created." . PHP_EOL;
+        error_log($meta->uri . "{$res} resources created.");
+
+        return $classes;
     }
 
-    function compileAnnotation($appDir)
+    function compileAnnotation(array $classes, $appDir)
     {
-        $app = require $appDir . '/bootstrap/instance.php';
         $reader = \Ray\Di\Injector::create([
                 new \BEAR\Sunday\Module\Constant\NamedModule(['tmp_dir' => $appDir . '/tmp/cache']),
                 new \BEAR\Sunday\Module\Cache\CacheModule,
                 new \BEAR\Sunday\Module\Code\CachedAnnotationModule
             ])->getInstance('Doctrine\Common\Annotations\Reader');
         /** @var $reader \Doctrine\Common\Annotations\Reader' */
-        foreach ($app->resource as $meta) {
-
-            // class
-            /** @var $meta \BEAR\Resource\Meta */
-            $refClass = new \ReflectionClass($meta->class);
+        foreach ($classes as $class) {
+            if ((new \ReflectionClass($class))->implementsInterface('Ray\Aop\WeavedInterface')) {
+                $class = get_parent_class($class);
+            }
+            $refClass = new \ReflectionClass($class);
             $annotations = $reader->getClassAnnotations($refClass);
             if ($annotations) {
                 $annotationArr = [];
                 foreach ($annotations as $annotation) {
                     $annotationArr[] = get_class($annotation);
                 }
-                printf("%s @%s" . PHP_EOL, $meta->class, implode(', ', $annotationArr));
+                printf("%s @%s" . PHP_EOL, $class, implode(', ', $annotationArr));
             }
 
             // method
