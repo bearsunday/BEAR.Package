@@ -31,6 +31,7 @@
         "aura/router": "~2.0@dev",
         "aura/web": "dev-develop-2",
         "aura/sql": "~2.0",
+        "aura/session": "1.0.*",
         "doctrine/dbal": "~2.0",
         "pagerfanta/pagerfanta": "~1.0",
         "symfony/http-foundation": "~2.0",
