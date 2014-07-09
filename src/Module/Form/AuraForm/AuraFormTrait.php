@@ -42,12 +42,12 @@ trait AuraFormTrait
             return $invocation->proceed();
         }
 
-        // set error message
+        // set hint and error message
         foreach ($this->form->getIterator() as $name => $value) {
-            $page[$name] = $this->form->get($name);
             $errors = $this->form->getMessages($name);
             $error = ($hasSubmit && $errors)  ? $this->getErrorMessage($this->form->getMessages($name)) : '';
             $page->body['form'][$name]['error'] = $error;
+            $page->body['form'][$name]['hint'] = $this->form->get($name);
         }
 
         return $page->onGet();
