@@ -26,6 +26,7 @@
         "bear/sunday": "~0.10",
 
         "aura/input": "~1.0",
+        "aura/html": "2.0.0-beta1",
         "aura/view": "~1.0",
         "aura/router": "~2.0@dev",
         "aura/web": "dev-develop-2",
