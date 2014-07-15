@@ -36,7 +36,7 @@ trait AuraFormTrait
         $page = $invocation->getThis();
 
         $this->setForm($this->filter);
-        $this->form->fill($args);
+        $hasSubmit && $this->form->fill($args);
         if ($this->form->filter()) {
             // action
             return $invocation->proceed();
