@@ -24,6 +24,7 @@
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "~0.10",
+        "ray/di": "~1.0@dev",
 
         "aura/input": "~1.0",
         "aura/html": "2.0.0-beta1",
