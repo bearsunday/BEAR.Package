@@ -9,7 +9,14 @@ namespace BEAR\Package\Bootstrap;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\FilesystemCache;
 use BEAR\Package\Module\Di\DiCompilerProvider;
+use Ray\Aop\Matcher;
+use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
+use Ray\Di\CacheableModule;
+use Doctrine\Common\Cache\Cache;
 
 class Bootstrap
 {
@@ -35,7 +42,7 @@ class Bootstrap
      *
      * @return \BEAR\Sunday\Extension\Application\AppInterface
      */
-    public static function getApp($appName, $context, $tmpDir)
+    public static function getCompiledApp($appName, $context, $tmpDir)
     {
         $extraCacheKey = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_METHOD'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '';
         $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir))->get($extraCacheKey);
@@ -45,6 +52,38 @@ class Bootstrap
         return $app;
     }
 
+    /**
+     * @param string $appName
+     * @param string $context
+     * @param string $tmpDir
+     * @param Cache $cache
+     *
+     * @return \BEAR\Sunday\Extension\Application\AppInterface
+     */
+    public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
+    {
+        $appModule = $appName . '\Module\AppModule';
+        $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
+        $cacheKey = 'module-' . $appName . $context;
+        $module = $cache->fetch($cacheKey);
+        if (! $module) {
+            $module = new $appModule($context);
+            $cache->save($cacheKey, $module);
+        }
+
+        $moduleProvider = function() use ($appModule, $context) {return new $appModule($context);};
+        $module = new CacheableModule($moduleProvider, $cacheKey);
+        AbstractModule::enableInvokeCache();
+        $injector = Injector::create([$module], $cache, $tmpDir);
+        $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+
+        /** $app \BEAR\Sunday\Extension\Application\AppInterface */
+        return $app;
+    }
+
+    /**
+     * @param array $dirs
+     */
     public static function clearApp(array $dirs)
     {
         // APC Cache
