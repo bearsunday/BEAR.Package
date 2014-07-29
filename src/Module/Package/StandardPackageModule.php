@@ -38,7 +38,6 @@ final class StandardPackageModule extends AbstractModule
         $this->nameSpace = $namespace;
         $this->context = $context;
         $this->appDir = $appDir;
-        parent::__construct();
     }
 
     /**
