@@ -11,20 +11,32 @@ use Ray\Aop\MethodInvocation;
 use Aura\Input\Form;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Aura\Session\Manager as Session;
+use BEAR\Package\Module\Session\AuraSession\AntiCsrf;
 
 trait AuraFormTrait
 {
     use NamedArgsInject;
 
     /**
-     * @param Form $form
+     * @var \Aura\Session\Manager
+     */
+    private $session;
+
+    /**
+     * @param \Aura\Input\Form $form
+     * @param \Aura\Session\Manager $session
      *
      * @Inject
      */
-    public function __construct(Form $form)
+    public function __construct(Form $form, Session $session)
     {
         $this->form = $form;
         $this->filter = $this->form->getFilter();
+
+        $this->session = $session;
+        $anti_csrf = new AntiCsrf($this->session->getCsrfToken());
+        $this->form->setAntiCsrf($anti_csrf);
     }
 
     /**
@@ -45,7 +57,7 @@ trait AuraFormTrait
         // set hint and error message
         foreach ($this->form->getIterator() as $name => $value) {
             $errors = $this->form->getMessages($name);
-            $error = ($hasSubmit && $errors)  ? $this->getErrorMessage($this->form->getMessages($name)) : '';
+            $error = ($hasSubmit && $errors) ? $this->getErrorMessage($this->form->getMessages($name)) : '';
             $page->body['form'][$name]['error'] = $error;
             $page->body['form'][$name]['hint'] = $this->form->get($name);
         }
