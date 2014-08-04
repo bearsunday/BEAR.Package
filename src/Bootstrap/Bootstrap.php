@@ -71,7 +71,7 @@ class Bootstrap
             $cache->save($cacheKey, $module);
         }
 
-        $moduleProvider = function() use ($appModule, $context) {return new $appModule($context);};
+        $moduleProvider = function () use ($appModule, $context) {return new $appModule($context);};
         $module = new CacheableModule($moduleProvider, $cacheKey);
         AbstractModule::enableInvokeCache();
         $injector = Injector::create([$module], $cache, $tmpDir);
