@@ -20,7 +20,11 @@ class AuraForm_Twig_Extension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('form', [$this, 'createForm']),
+            new \Twig_SimpleFunction(
+                'form',
+                [$this, 'createForm'],
+                ['is_safe' => ['html']]
+            ),
         ];
     }
 
