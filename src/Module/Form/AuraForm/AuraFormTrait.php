@@ -48,8 +48,10 @@ trait AuraFormTrait
         $page = $invocation->getThis();
 
         $this->setForm($this->filter);
+
+        // validate
         $hasSubmit && $this->form->fill($args);
-        if ($this->form->filter()) {
+        if ($hasSubmit && $this->form->filter()) {
             // action
             return $invocation->proceed();
         }
@@ -57,7 +59,7 @@ trait AuraFormTrait
         // set hint and error message
         foreach ($this->form->getIterator() as $name => $value) {
             $errors = $this->form->getMessages($name);
-            $error = ($hasSubmit && $errors) ? $this->getErrorMessage($this->form->getMessages($name)) : '';
+            $error = ($hasSubmit && $errors) ? $this->getErrorMessage($errors) : '';
             $page->body['form'][$name]['error'] = $error;
             $page->body['form'][$name]['hint'] = $this->form->get($name);
         }
