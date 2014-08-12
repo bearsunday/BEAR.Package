@@ -152,7 +152,8 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
             $resourceObject->view = $resourceObject->body;
             return $resourceObject->body;
         }
-        $disableHalo = ! (empty($_GET['halo'])) || isset($_COOKIE['_bear_sunday_disable_halo']);
+
+        $disableHalo = (isset($_GET['halo']) && $_GET['halo'] === '0') || isset($_COOKIE['_bear_sunday_disable_halo']);
         if (!empty($_GET['halo']) && $_GET['halo'] === '1') {
             $disableHalo = false;
             setcookie("_bear_sunday_disable_halo", '', time() - 3600);
@@ -161,6 +162,7 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
             setcookie("_bear_sunday_disable_halo", '0');
             return $this->templateEngineRenderer->render($resourceObject);
         }
+
         if (PHP_SAPI === 'cli') {
             // delegate original method to avoid render dev html.
             return (new TemplateEngineRenderer($this->templateEngineAdapter))->render($resourceObject);
