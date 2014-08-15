@@ -70,13 +70,12 @@ trait AuraFormTrait
      */
     private function getSubmit()
     {
-        if (isset($_POST['submit'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return [$_POST, true];
-        } elseif (isset($_GET['submit'])) {
+        } elseif (isset($_GET['_submit'])) {
             return [$_GET, true];
         }
         return [[], false];
-
     }
 
     /**
