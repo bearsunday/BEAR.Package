@@ -35,8 +35,8 @@ trait AuraFormTrait
         $this->filter = $this->form->getFilter();
 
         $this->session = $session;
-        $anti_csrf = new AntiCsrf($this->session->getCsrfToken());
-        $this->form->setAntiCsrf($anti_csrf);
+        $antiCsrf = new AntiCsrf($this->session->getCsrfToken());
+        $this->form->setAntiCsrf($antiCsrf);
     }
 
     /**
