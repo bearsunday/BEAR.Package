@@ -17,6 +17,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use Ray\Di\CacheableModule;
 use Doctrine\Common\Cache\Cache;
+use Ray\Di\CacheInjector;
 
 class Bootstrap
 {
@@ -36,16 +37,19 @@ class Bootstrap
     }
 
     /**
+     * Return compiled application instance
+     *
+     * (experimental)
+     * 
      * @param $appName
      * @param $context
      * @param $tmpDir
      *
      * @return \BEAR\Sunday\Extension\Application\AppInterface
      */
-    public static function getCompiledApp($appName, $context, $tmpDir)
+    public static function getCompiledApp($appName, $context, $tmpDir, Cache $cache = null)
     {
-        $extraCacheKey = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_METHOD'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '';
-        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir))->get($extraCacheKey);
+        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir, $cache))->get();
         $app = $diCompiler->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
 
@@ -73,8 +77,38 @@ class Bootstrap
 
         $moduleProvider = function () use ($appModule, $context) {return new $appModule($context);};
         $module = new CacheableModule($moduleProvider, $cacheKey);
-        AbstractModule::enableInvokeCache();
-        $injector = Injector::create([$module], $cache, $tmpDir);
+//        $injector = Injector::create([new $appModule($context)], $cache, $tmpDir)->enableBindCache();
+        $injector = Injector::create([$module], $cache, $tmpDir)->enableBindCache();
+        $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+
+        /** $app \BEAR\Sunday\Extension\Application\AppInterface */
+        return $app;
+    }
+
+    /**
+     * Return cached application instance
+     *
+     * (experimental)
+     *
+     * @param string $appName
+     * @param string $context
+     * @param string $tmpDir
+     * @param Cache $cache
+     *
+     * @return \BEAR\Sunday\Extension\Application\AppInterface
+     */
+    public static function getCachedApp($appName, $context, $tmpDir, Cache $cache = null)
+    {
+        $appModule = $appName . '\Module\AppModule';
+        $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
+        $cacheKey = $appName . $context;
+        $initialization = function() {
+            // initialize per system startup (not per each request)
+        };
+        $injector = function() use ($appModule, $cache) {
+            return Injector::create([new $appModule], $cache,  __DIR__ . '/tmp');
+        };
+        $injector = new CacheInjector($injector, $initialization, $cacheKey, $cache);
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
 
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */

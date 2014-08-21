@@ -57,7 +57,6 @@ class PackageModule extends AbstractModule
 
         // Package Module
         $this->install(new Package\Cache\CacheAspectModule($this));
-//        $this->install(new Package\Di\yDiCompilerModule($this));
         $this->install(new Package\Di\DiModule($this));
         $this->install(new DevPackage\ExceptionHandle\ExceptionHandleModule);
         $this->install(new Package\Resource\ResourceModule($this->config['app_name'], $this->config['resource_dir']));
