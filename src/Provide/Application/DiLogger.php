@@ -8,6 +8,7 @@ namespace BEAR\Package\Provide\Application;
 
 use Ray\Aop\Bind;
 use Ray\Di\LoggerInterface;
+use Ray\Di\BoundDefinition;
 
 class DiLogger implements LoggerInterface
 {
@@ -25,7 +26,7 @@ class DiLogger implements LoggerInterface
      * @param object        $object
      * @param \Ray\Aop\Bind $bind
      */
-    public function log($class, array $params, array $setter, $object, Bind $bind)
+    public function log(BoundDefinition $definition, array $params, array $setter, $object, Bind $bind)
     {
         $toStr = function ($params) {
             foreach ($params as &$param) {
@@ -44,7 +45,7 @@ class DiLogger implements LoggerInterface
         $constructor = $toStr($params);
         $constructor = $constructor ? $constructor : '';
         $setter = $setter ? "setter[" . implode(', ', array_keys($setter)) . ']' : '';
-        $logMessage = "[DI] {$class} construct[$constructor] {$setter}";
+        $logMessage = "[DI] {$definition->class} construct[$constructor] {$setter}";
         $this->logMessages[] = $logMessage;
     }
 

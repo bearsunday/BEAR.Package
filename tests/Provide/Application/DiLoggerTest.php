@@ -3,6 +3,7 @@
 namespace BEAR\Package\Provide\Application;
 
 use Ray\Aop\Bind;
+use Ray\Di\BoundDefinition;
 
 class TestObject
 {
@@ -33,9 +34,13 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
 
     private $diLogger;
 
+    private $definition;
+
     protected function setUp()
     {
         $this->diLogger = new DiLogger;
+        $this->definition = new BoundDefinition;
+        $this->definition->class = "Class";
     }
 
     protected function tearDown()
@@ -52,7 +57,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $params = ["a", 1];
         $setter = ['setA' => null, 'setB' => null];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
-        $this->diLogger->log('Class', $params, $setter, $object, new Bind);
+        $this->diLogger->log($this->definition, $params, $setter, $object, new Bind);
         $expected = '[DI] Class construct[(string) a, (integer) 1] setter[setA, setB]';
         $this->assertSame($expected, (string) $this->diLogger);
     }
@@ -62,7 +67,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $params = [1.0, __NAMESPACE__ . '\someFunction'];
         $setter = ['setA' => null, 'setB' => null];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
-        $this->diLogger->log('Class', $params, $setter, $object, new Bind);
+        $this->diLogger->log($this->definition, $params, $setter, $object, new Bind);
         $expected = '[DI] Class construct[(double) 1, (callable) BEAR\Package\Provide\Application\someFunction] setter[setA, setB]';
         $this->assertSame($expected, (string) $this->diLogger);
     }
@@ -72,7 +77,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $params = [1, ['a1', 'a2']];
         $setter = ['setA' => null, 'setB' => null];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
-        $this->diLogger->log('Class', $params, $setter, $object, new Bind);
+        $this->diLogger->log($this->definition, $params, $setter, $object, new Bind);
         $expected = '[DI] Class construct[(integer) 1, Array([0]=>a1[1]=>a2)] setter[setA, setB]';
         $this->assertSame($expected, (string) $this->diLogger);
     }
@@ -84,8 +89,8 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $setter = ['setA' => null, 'setB' => null];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $diLogger = $this->diLogger;
-        $this->diLogger->log('Class', $params, $setter, $object, new Bind);
-        $diLogger->log('Class', $params, $setter, $object, new Bind);
+        $this->diLogger->log($this->definition, $params, $setter, $object, new Bind);
+        $diLogger->log($this->definition, $params, $setter, $object, new Bind);
         $this->assertSame((string) $diLogger, (string) $this->diLogger);
     }
 }
