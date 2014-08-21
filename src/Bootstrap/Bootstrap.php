@@ -40,7 +40,7 @@ class Bootstrap
      * Return compiled application instance
      *
      * (experimental)
-     * 
+     *
      * @param $appName
      * @param $context
      * @param $tmpDir
@@ -102,10 +102,10 @@ class Bootstrap
         $appModule = $appName . '\Module\AppModule';
         $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
         $cacheKey = $appName . $context;
-        $initialization = function() {
+        $initialization = function () {
             // initialize per system startup (not per each request)
         };
-        $injector = function() use ($appModule, $cache) {
+        $injector = function () use ($appModule, $cache) {
             return Injector::create([new $appModule], $cache,  __DIR__ . '/tmp');
         };
         $injector = new CacheInjector($injector, $initialization, $cacheKey, $cache);
