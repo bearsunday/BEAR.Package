@@ -24,7 +24,7 @@
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "~0.10",
-        "ray/di": "~1.3.7",
+        "ray/di": "~1.3.9",
         "ray/aop": "~1.3.0",
 
         "aura/input": "~1.0",

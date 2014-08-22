@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d0bf6668651f079017d9057a73f33ce8",
+    "hash": "c378dc0c12fd891f96f4a5a24cf582a8",
     "packages": [
         {
             "name": "any/serializer",
@@ -1662,16 +1662,16 @@
         },
         {
             "name": "ray/di",
-            "version": "1.3.7",
+            "version": "1.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "82db2a4191b0a8f312af901c8ed96039797ab911"
+                "reference": "fef5ba2af601c70270370eaa2eee4237293da767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/82db2a4191b0a8f312af901c8ed96039797ab911",
-                "reference": "82db2a4191b0a8f312af901c8ed96039797ab911",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/fef5ba2af601c70270370eaa2eee4237293da767",
+                "reference": "fef5ba2af601c70270370eaa2eee4237293da767",
                 "shasum": ""
             },
             "require": {
@@ -1713,7 +1713,7 @@
                 "guice",
                 "jsr"
             ],
-            "time": "2014-08-21 05:34:58"
+            "time": "2014-08-22 01:06:52"
         },
         {
             "name": "symfony/http-foundation",
