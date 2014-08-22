@@ -9,7 +9,16 @@ namespace BEAR\Package\Bootstrap;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\FilesystemCache;
 use BEAR\Package\Module\Di\DiCompilerProvider;
+use Ray\Aop\Matcher;
+use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
+use Ray\Di\CacheableModule;
+use Doctrine\Common\Cache\Cache;
+use Ray\Di\CacheInjector;
+use Ray\Di\ModuleCacheInjector;
 
 class Bootstrap
 {
@@ -29,22 +38,79 @@ class Bootstrap
     }
 
     /**
+     * Return compiled application instance
+     *
+     * (experimental)
+     *
      * @param $appName
      * @param $context
      * @param $tmpDir
      *
      * @return \BEAR\Sunday\Extension\Application\AppInterface
      */
-    public static function getApp($appName, $context, $tmpDir)
+    public static function getCompiledApp($appName, $context, $tmpDir, Cache $cache = null)
     {
-        $extraCacheKey = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_METHOD'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '';
-        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir))->get($extraCacheKey);
+        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir, $cache))->get();
         $app = $diCompiler->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
 
         return $app;
     }
 
+    /**
+     * @param string $appName
+     * @param string $context
+     * @param string $tmpDir
+     * @param Cache $cache
+     *
+     * @return \BEAR\Sunday\Extension\Application\AppInterface
+     */
+    public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
+    {
+        $appModule = $appName . '\Module\AppModule';
+        $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
+        $cacheKey = 'module-' . $appName . $context;
+        $moduleProvider = function () use ($appModule, $context) {return new $appModule($context);};
+        $injector = ModuleCacheInjector::create($moduleProvider, $cache, $cacheKey, $tmpDir);
+        $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+
+        /** $app \BEAR\Sunday\Extension\Application\AppInterface */
+        return $app;
+    }
+
+    /**
+     * Return cached application instance
+     *
+     * (experimental)
+     *
+     * @param string $appName
+     * @param string $context
+     * @param string $tmpDir
+     * @param Cache $cache
+     *
+     * @return \BEAR\Sunday\Extension\Application\AppInterface
+     */
+    public static function getCachedApp($appName, $context, $tmpDir, Cache $cache = null)
+    {
+        $appModule = $appName . '\Module\AppModule';
+        $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
+        $cacheKey = $appName . $context;
+        $initialization = function () {
+            // initialize per system startup (not per each request)
+        };
+        $injector = function () use ($appModule, $cache) {
+            return Injector::create([new $appModule], $cache,  __DIR__ . '/tmp');
+        };
+        $injector = new CacheInjector($injector, $initialization, $cacheKey, $cache);
+        $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+
+        /** $app \BEAR\Sunday\Extension\Application\AppInterface */
+        return $app;
+    }
+
+    /**
+     * @param array $dirs
+     */
     public static function clearApp(array $dirs)
     {
         // APC Cache

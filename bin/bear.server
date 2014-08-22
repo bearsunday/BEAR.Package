@@ -55,7 +55,7 @@ function adjustAppDir($appDir) {
         return $appDir;
     // 「.」の場合
     } elseif ($appDir === '.') {
-        return $appDir;
+        return realpath($appDir);
     // appsから指定
     } elseif (strpos($appDir, 'apps' . DIRECTORY_SEPARATOR) === 0) {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . $appDir;

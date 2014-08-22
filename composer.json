@@ -19,17 +19,19 @@
         }
     ],
     "provide": {
-        "bear/framework": "0.11.0"
+        "bear/framework": "0.12.0"
     },
     "require": {
         "php": ">=5.4.0",
         "bear/sunday": "~0.10",
 
         "aura/input": "~1.0",
+        "aura/html": "2.0.0-beta1",
         "aura/view": "~1.0",
         "aura/router": "~2.0@dev",
         "aura/web": "dev-develop-2",
         "aura/sql": "~2.0",
+        "aura/session": "~1.0",
         "doctrine/dbal": "~2.0",
         "pagerfanta/pagerfanta": "~1.0",
         "symfony/http-foundation": "~2.0",
@@ -60,7 +62,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.11.x-dev"
+            "dev-master": "0.12.x-dev"
         }
     }
 }

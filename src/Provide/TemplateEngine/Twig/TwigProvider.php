@@ -35,13 +35,17 @@ class TwigProvider implements Provide
             'debug' => true,
             'autoescape' => false,
         ]);
+
         $twig->addExtension(new \Twig_Extension_Debug());
+        $twig->addExtension(new Extension\AuraForm_Twig_Extension());
+
         $function = new \Twig_SimpleFunction(
             'href',
             [$this, 'href'],
             ['needs_context' => true]
         );
         $twig->addFunction($function);
+
         return $twig;
     }
 

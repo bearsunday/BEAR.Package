@@ -11,20 +11,32 @@ use Ray\Aop\MethodInvocation;
 use Aura\Input\Form;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Aura\Session\Manager as Session;
+use BEAR\Package\Module\Session\AuraSession\AntiCsrf;
 
 trait AuraFormTrait
 {
     use NamedArgsInject;
 
     /**
-     * @param Form $form
+     * @var \Aura\Session\Manager
+     */
+    private $session;
+
+    /**
+     * @param \Aura\Input\Form $form
+     * @param \Aura\Session\Manager $session
      *
      * @Inject
      */
-    public function __construct(Form $form)
+    public function __construct(Form $form, Session $session)
     {
         $this->form = $form;
         $this->filter = $this->form->getFilter();
+
+        $this->session = $session;
+        $antiCsrf = new AntiCsrf($this->session->getCsrfToken());
+        $this->form->setAntiCsrf($antiCsrf);
     }
 
     /**
@@ -36,18 +48,18 @@ trait AuraFormTrait
         $page = $invocation->getThis();
 
         $this->setForm($this->filter);
-        $this->form->fill($args);
+        $hasSubmit && $this->form->fill($args);
         if ($this->form->filter()) {
             // action
             return $invocation->proceed();
         }
 
-        // set error message
+        // set hint and error message
         foreach ($this->form->getIterator() as $name => $value) {
-            $page[$name] = $this->form->get($name);
             $errors = $this->form->getMessages($name);
-            $error = ($hasSubmit && $errors)  ? $this->getErrorMessage($this->form->getMessages($name)) : '';
+            $error = ($hasSubmit && $errors) ? $this->getErrorMessage($this->form->getMessages($name)) : '';
             $page->body['form'][$name]['error'] = $error;
+            $page->body['form'][$name]['hint'] = $this->form->get($name);
         }
 
         return $page->onGet();
@@ -58,13 +70,12 @@ trait AuraFormTrait
      */
     private function getSubmit()
     {
-        if (isset($_POST['submit'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return [$_POST, true];
-        } elseif (isset($_GET['submit'])) {
+        } elseif (isset($_GET['_submit'])) {
             return [$_GET, true];
         }
         return [[], false];
-
     }
 
     /**
