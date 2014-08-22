@@ -18,6 +18,7 @@ use Ray\Di\Injector;
 use Ray\Di\CacheableModule;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\CacheInjector;
+use Ray\Di\ModuleCacheInjector;
 
 class Bootstrap
 {
@@ -69,16 +70,8 @@ class Bootstrap
         $appModule = $appName . '\Module\AppModule';
         $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
         $cacheKey = 'module-' . $appName . $context;
-        $module = $cache->fetch($cacheKey);
-        if (! $module) {
-            $module = new $appModule($context);
-            $cache->save($cacheKey, $module);
-        }
-
         $moduleProvider = function () use ($appModule, $context) {return new $appModule($context);};
-        $module = new CacheableModule($moduleProvider, $cacheKey);
-//        $injector = Injector::create([new $appModule($context)], $cache, $tmpDir)->enableBindCache();
-        $injector = Injector::create([$module], $cache, $tmpDir)->enableBindCache();
+        $injector = ModuleCacheInjector::create($moduleProvider, $cache, $cacheKey, $tmpDir);
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
 
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
