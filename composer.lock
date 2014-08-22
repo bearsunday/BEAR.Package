@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "784e0e0b50d890129e362fd65bbde953",
+    "hash": "cb78afc76d8ab58f956f41c69554ae4b",
     "packages": [
         {
             "name": "any/serializer",
