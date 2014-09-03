@@ -68,7 +68,7 @@ class Bootstrap
     public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
     {
         $appModule = $appName . '\Module\AppModule';
-        $cache = $cache ?: function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir);
+        $cache = $cache ?: (function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($tmpDir));
         $cacheKey = 'module-' . $appName . $context;
         $moduleProvider = function () use ($appModule, $context) {return new $appModule($context);};
         $injector = ModuleCacheInjector::create($moduleProvider, $cache, $cacheKey, $tmpDir);
