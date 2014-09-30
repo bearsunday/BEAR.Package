@@ -56,4 +56,18 @@ class DiLogger implements LoggerInterface
     {
         return implode(PHP_EOL, $this->logMessages);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSingletonInstance($key, $instance)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSingletonKey(BoundDefinition $definition)
+    {
+    }
 }
