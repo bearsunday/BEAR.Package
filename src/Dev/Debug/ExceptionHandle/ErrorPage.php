@@ -11,7 +11,7 @@ use BEAR\Resource\ResourceObject as AbstractPage;
 /**
  * Error page
  */
-final class ErrorPage extends AbstractPage
+class ErrorPage extends AbstractPage
 {
     /**
      * Code
