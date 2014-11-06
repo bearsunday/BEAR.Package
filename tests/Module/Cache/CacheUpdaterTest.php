@@ -3,6 +3,7 @@
 namespace BEAR\Package\Module\Cache;
 
 use BEAR\Package\Module\Cache\Interceptor\CacheUpdater;
+use Ray\Aop\Arguments;
 use Ray\Di\Config;
 use Ray\Di\Annotation;
 use Ray\Di\Definition;
@@ -28,8 +29,7 @@ class CacheUpdaterTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->cache = new ArrayCache;
-        $config = new Config(new Annotation(new Definition, new Reader));
-        $this->cacheUpdater = (new CacheUpdater($this->cache, $config));
+        $this->cacheUpdater = new CacheUpdater($this->cache);
     }
 
     public function testNew()
@@ -43,7 +43,7 @@ class CacheUpdaterTest extends \PHPUnit_Framework_TestCase
         $args = [];
         $interceptors = [$this->cacheUpdater];
         $annotation = new CacheUpdate;
-        $invocation = new ReflectiveMethodInvocation([$ro, 'onPost'], $args, $interceptors, $annotation);
+        $invocation = new ReflectiveMethodInvocation($ro, new \ReflectionMethod($ro, 'onPost'), new Arguments($args), $interceptors, $annotation);
 
         $id = $this->cacheUpdater->getEtag($ro, $args);
         $cacheData = "cache_data";

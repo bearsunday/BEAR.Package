@@ -7,7 +7,7 @@
 namespace BEAR\Package\Provide\ConsoleOutput;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 class ConsoleOutputModule extends AbstractModule
 {

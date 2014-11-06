@@ -15,7 +15,7 @@ use BEAR\Resource\Param;
 use BEAR\Resource\SignalParameter;
 use BEAR\Resource\ParamProviderInterface;
 use BEAR\Sunday\Module as SundayModule;
-use Ray\Di\InstanceInterface;
+use Ray\Di\InjectorInterface;
 use Ray\Di\ProviderInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -33,13 +33,13 @@ class SignalParamProvider implements ProviderInterface
     private $signalParam;
 
     /**
-     * @param InstanceInterface $injector
+     * @param InjectorInterface $injector
      * @param string            $paramProviders
      *
      * @Inject
      * @Named("paramProviders=param_providers")
      */
-    public function __construct(InstanceInterface $injector, $paramProviders)
+    public function __construct(InjectorInterface $injector, $paramProviders)
     {
         $this->signalParam = new SignalParameter(new Manager(new HandlerFactory, new ResultFactory, new ResultCollection), new Param);
         $this->paramProviders = unserialize($paramProviders);

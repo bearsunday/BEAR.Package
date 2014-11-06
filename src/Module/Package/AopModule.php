@@ -6,7 +6,7 @@ use BEAR\Package\Module;
 use BEAR\Package\Provide as ProvideModule;
 use BEAR\Sunday\Module as SundayModule;
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 class AopModule extends AbstractModule
 {

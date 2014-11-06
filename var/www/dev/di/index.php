@@ -10,7 +10,7 @@ $view['app_name'] = get_class($app);
 $time = date('r', time());
 
 $moduleName = str_replace('\App', '\Module\AppModule', get_class($app));
-$injector = Injector::create([new $moduleName]);
+$injector = (new Injector(new $moduleName]);
 //$module = new $moduleName;
 //$module->activate();
 //$bindings = nl2br((string)$module);

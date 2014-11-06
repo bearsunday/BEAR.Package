@@ -19,12 +19,12 @@ class CacheAspectModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Cache'),
-            [$this->requestInjection(__NAMESPACE__ . '\Interceptor\CacheLoader')]
+            [__NAMESPACE__ . '\Interceptor\CacheLoader']
         );
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\CacheUpdate'),
-            [$this->requestInjection(__NAMESPACE__ . '\Interceptor\CacheUpdater')]
+            [__NAMESPACE__ . '\Interceptor\CacheUpdater']
         );
     }
 }

@@ -73,19 +73,6 @@ class HttpFoundationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('http://localhost/dummy/index/', $ob);
     }
 
-    public function testWithWeavedResource()
-    {
-        $this->response->setIsCli(false);
-        $response = new Ok;
-        $response->uri = 'dummy://self/index';
-        $weavedResource = new Weaver($response, new Bind);
-        $render = new HalRenderer(new HalFactory(new SchemeUriMapper));
-        ob_start();
-        $this->response->setResource($weavedResource)->render($render)->send();
-        $ob = ob_get_clean();
-        $this->assertContains('http://localhost/dummy/index', $ob);
-    }
-
     /**
      * @expectedException \BEAR\Sunday\Exception\InvalidResourceType
      */

@@ -23,13 +23,16 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "bear/sunday": "~0.10",
+        "bear/sunday": "~1.0@dev",
+        "bear/resource": "~1.0@dev",
+        "ray/di": "~2.0@dev",
+        "ray/aop": "~2.0@dev",
 
         "aura/input": "~1.0",
         "aura/html": "2.0",
         "aura/view": "~1.0",
         "aura/router": "~2.0",
-        "aura/web": "~2.0.0-beta1",
+        "aura/web": "~1.0",
         "aura/sql": "~2.0",
         "aura/session": "~1.0",
         "doctrine/dbal": "~2.0",

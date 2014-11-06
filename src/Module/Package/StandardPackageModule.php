@@ -54,6 +54,7 @@ final class StandardPackageModule extends AbstractModule
         $params = $paramsCollection[$this->context] + $paramsCollection['prod'];
         $appClass = $constants['app_class'];
 
+        $this->install(new SundayModule\Code\AnnotationModule());
         $this->install(new PackageModule($appClass, $this->context, $constants));
         $this->install(new SignalParamModule($this, $params));
         $this->install(new TwigModule($this));

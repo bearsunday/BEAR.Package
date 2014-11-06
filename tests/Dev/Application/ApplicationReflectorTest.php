@@ -29,7 +29,7 @@ class ApplicationReflectorTest extends \PHPUnit_Framework_TestCase
         static $app;
 
         if (! $app) {
-            $app = Injector::create([new AppModule])->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+            $app = (new Injector(new AppModule))->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         }
         $this->appReflector = new ApplicationReflector($app);
     }

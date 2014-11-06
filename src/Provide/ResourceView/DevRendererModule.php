@@ -7,7 +7,7 @@
 namespace BEAR\Package\Provide\ResourceView;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 /**
  * Resource renderer module for development

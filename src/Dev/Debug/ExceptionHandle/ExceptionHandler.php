@@ -19,9 +19,9 @@ use BEAR\Sunday\Inject\LogDirInject;
 use Exception;
 use Ray\Di\Exception\Binding;
 use Ray\Di\Exception\NotBound;
-use Ray\Di\InstanceInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Ray\Di\InjectorInterface;
 
 /**
  * Exception handler for development
@@ -100,11 +100,11 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Set Injector for logging
      *
-     * @param \Ray\Di\InstanceInterface $injector
+     * @param \Ray\Di\InjectorInterface $injector
      *
      * @Inject(optional = true);
      */
-    public function setInjector(InstanceInterface $injector)
+    public function setInjector(InjectorInterface $injector)
     {
         $this->injector = $injector;
     }

@@ -7,7 +7,7 @@
 namespace BEAR\Package\Provide\ApplicationLogger;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 class DevApplicationLoggerModule extends AbstractModule
 {

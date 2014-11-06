@@ -7,7 +7,7 @@
 namespace BEAR\Package\Provide\ApplicationLogger;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 class ApplicationLoggerModule extends AbstractModule
 {
@@ -26,11 +26,6 @@ class ApplicationLoggerModule extends AbstractModule
         $this
             ->bind('BEAR\Resource\LogWriterInterface')
             ->toProvider(__NAMESPACE__ . '\ResourceLog\DevWritersProvider')
-            ->in(Scope::SINGLETON);
-
-        $this
-            ->bind('Ray\Di\LoggerInterface')
-            ->to('BEAR\Package\Provide\Application\DiLogger')
             ->in(Scope::SINGLETON);
     }
 }

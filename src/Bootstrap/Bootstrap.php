@@ -13,6 +13,7 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use BEAR\Package\Module\Di\DiCompilerProvider;
 use Doctrine\Common\Cache\Cache;
+use Ray\Di\Injector;
 
 final class Bootstrap
 {
@@ -41,8 +42,9 @@ final class Bootstrap
      */
     public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
     {
-        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir, $cache))->get();
-        $app = $diCompiler->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
+        $appModule = "{$appName}\Module\AppModule";
+        $injector = new Injector(new $appModule($context));
+        $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
 
         return $app;

@@ -35,7 +35,8 @@ class SignalParamModule extends AbstractModule
     {
         $paramProviders = [];
         foreach ($this->config as $varName => $provider) {
-            $paramProviders[$varName] = $this->requestInjection($provider);
+//            $paramProviders[$varName] = $this->requestInjection($provider);
+            /** @todo requestInjection */
         }
 
         $this->bind()->annotatedWith('param_providers')->toInstance(serialize($paramProviders));

@@ -28,11 +28,10 @@ class DbalModule extends AbstractModule
      */
     private function installDbInjector()
     {
-        $dbInjector = $this->requestInjection(__NAMESPACE__ . '\Interceptor\DbInjector');
         $this->bindInterceptor(
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Db'),
-            $this->matcher->startWith('on'),
-            [$dbInjector]
+            $this->matcher->startsWith('on'),
+            [__NAMESPACE__ . '\Interceptor\DbInjector']
         );
     }
 
@@ -44,7 +43,7 @@ class DbalModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Transactional'),
-            [$this->requestInjection('BEAR\Package\Module\Database\Dbal\Interceptor\Transactional')]
+            ['BEAR\Package\Module\Database\Dbal\Interceptor\Transactional']
         );
     }
 
@@ -56,7 +55,7 @@ class DbalModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('BEAR\Sunday\Annotation\Time'),
-            [$this->requestInjection('BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper')]
+            ['BEAR\Package\Module\Database\Dbal\Interceptor\TimeStamper']
         );
     }
 }

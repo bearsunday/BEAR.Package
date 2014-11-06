@@ -8,7 +8,7 @@ use BEAR\Resource\Module as Resource;
 use BEAR\Package\Dev\Module as DevPackage;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 class PackageModule extends AbstractModule
 {
@@ -57,7 +57,6 @@ class PackageModule extends AbstractModule
 
         // Package Module
         $this->install(new Package\Cache\CacheAspectModule($this));
-        $this->install(new Package\Di\DiModule($this));
         $this->install(new DevPackage\ExceptionHandle\ExceptionHandleModule);
         $this->install(new Package\Resource\ResourceModule($this->config['app_name'], $this->config['resource_dir']));
 

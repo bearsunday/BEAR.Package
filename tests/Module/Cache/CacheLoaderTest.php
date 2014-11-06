@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\PhpFileCache;
 use Guzzle\Cache\DoctrineCacheAdapter as CacheAdapter;
+use Ray\Aop\Arguments;
 use Ray\Aop\ReflectiveMethodInvocation;
 use Ray\Di\Definition;
 
@@ -36,7 +37,8 @@ class CacheLoaderTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->cacheLoader = (new CacheLoader(new ArrayCache, new AnnotationReader));
-        $this->invocation = new ReflectiveMethodInvocation([new MockResource, 'onGet'], [], [$this->cacheLoader]);
+        $object = new MockResource;
+        $this->invocation = new ReflectiveMethodInvocation($object , new \ReflectionMethod('BEAR\Package\Mock\ResourceObject\MockResource', 'onGet'), new Arguments([]), [$this->cacheLoader]);
     }
 
     public function testNew()

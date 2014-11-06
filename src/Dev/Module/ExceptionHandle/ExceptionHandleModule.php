@@ -7,7 +7,7 @@
 namespace BEAR\Package\Dev\Module\ExceptionHandle;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\Scope;
+use Ray\Di\Scope;
 
 class ExceptionHandleModule extends AbstractModule
 {

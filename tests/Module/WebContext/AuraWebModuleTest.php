@@ -10,8 +10,7 @@ class AuraWebModuleTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->testClass = Injector::create([new AuraWebModule])
-            ->getInstance(__NAMESPACE__ . '\AuraWebModuleTestClass');
+        $this->testClass = (new Injector(new AuraWebModule))->getInstance(__NAMESPACE__ . '\AuraWebModuleTestClass');
     }
 
     public function testGetWebContextProviderInstance()
