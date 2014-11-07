@@ -204,9 +204,9 @@ final class ExceptionHandler implements ExceptionHandlerInterface
     {
         // exception screen in develop
         if (isset($this->injector)) {
-            $view['dependency_bindings'] = (string) $this->injector;
+            $view['dependency_bindings'] = '';
         } elseif ($e instanceof NotBound) {
-            $view['dependency_bindings'] = (string) $e->module;
+            $view['dependency_bindings'] = '';
         } else {
             $view['dependency_bindings'] = 'n/a';
         }
@@ -263,7 +263,7 @@ final class ExceptionHandler implements ExceptionHandlerInterface
             $data .= PHP_EOL . PHP_EOL . '-- Previous Exception --' . PHP_EOL . PHP_EOL;
             $data .= $previousE->getTraceAsString();
         }
-        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL . (string) $this->injector;
+        $data .= PHP_EOL . PHP_EOL . '-- Bindings --' . PHP_EOL .'';
         $file = $this->getLogFilePath($exceptionId);
         if (is_writable($this->logDir)) {
             file_put_contents($file, $data);
