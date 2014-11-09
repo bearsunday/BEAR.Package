@@ -42,8 +42,13 @@ final class Bootstrap
      */
     public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
     {
-        $appModule = "{$appName}\Module\AppModule";
-        $injector = new Injector(new $appModule($context));
+        $cache = new ApcCache();
+        $injector = $cache->fetch($context);
+        if (! $injector) {
+            $appModule = "{$appName}\Module\AppModule";
+            $injector = new Injector(new $appModule($context));
+            $cache->save($context, $injector);
+        }
         $app = $injector->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
 
