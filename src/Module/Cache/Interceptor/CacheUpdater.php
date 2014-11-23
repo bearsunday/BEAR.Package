@@ -12,6 +12,7 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use ReflectionMethod;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
 
 class CacheUpdater implements MethodInterceptor
 {
@@ -21,10 +22,14 @@ class CacheUpdater implements MethodInterceptor
      * @param Cache $cache
      *
      * @Inject
+     * @Named("cacheNamespace=cache_namespace")
      */
-    public function __construct(Cache $cache)
+    public function __construct(Cache $cache, $cacheNamespace)
     {
         $this->cache = $cache;
+        if ($this->cache instanceof CacheProvider) {
+            $this->cache->setNamespace($cacheNamespace);
+        }
     }
 
     /**
