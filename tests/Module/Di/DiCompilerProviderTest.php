@@ -12,7 +12,7 @@ class DiCompilerProviderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->diCompilerProvider = new DiCompilerProvider('Demo\Sandbox', 'test', '/tmp', 'test-namespace');
+        $this->diCompilerProvider = new DiCompilerProvider('Demo\Sandbox', 'test', '/tmp');
     }
 
     public function testNew()

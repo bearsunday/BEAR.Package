@@ -24,7 +24,7 @@ class CacheUpdater implements MethodInterceptor
      * @Inject
      * @Named("cacheNamespace=cache_namespace")
      */
-    public function __construct(Cache $cache, $cacheNamespace)
+    public function __construct(Cache $cache, $cacheNamespace = null)
     {
         $this->cache = $cache;
         if ($this->cache instanceof CacheProvider) {

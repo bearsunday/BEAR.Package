@@ -60,7 +60,7 @@ class CacheLoader implements MethodInterceptor
     public function __construct(
         Cache $cache,
         Reader $annotationReader,
-        $cacheNamespace
+        $cacheNamespace = null
     ) {
         $this->cache = $cache;
         $this->annotationReader = $annotationReader;
