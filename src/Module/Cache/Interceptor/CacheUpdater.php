@@ -19,12 +19,13 @@ class CacheUpdater implements MethodInterceptor
     use EtagTrait;
 
     /**
-     * @param Cache $cache
+     * @param Cache  $cache
+     * @param string $cacheNamespace
      *
      * @Inject
      * @Named("cacheNamespace=cache_namespace")
      */
-    public function __construct(Cache $cache, $cacheNamespace = null)
+    public function __construct(Cache $cache, $cacheNamespace = '')
     {
         $this->cache = $cache;
         if ($this->cache instanceof CacheProvider) {

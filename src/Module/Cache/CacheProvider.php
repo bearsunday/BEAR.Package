@@ -29,12 +29,12 @@ class CacheProvider implements ProviderInterface
     private $cacheNamespace;
 
     /**
-     * @param $cacheNamespace
+     * @param string $cacheNamespace
      *
      * @Inject
      * @Named("cacheNamespace=cache_namespace")
      */
-    public function __construct($cacheNamespace = null)
+    public function __construct($cacheNamespace = '')
     {
         $this->cacheNamespace = $cacheNamespace;
     }

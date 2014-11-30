@@ -53,7 +53,7 @@ class DiCompilerProvider implements ProviderInterface
      * @Inject
      * @Named("appName=app_name,context=app_context,tmpDir=tmp_dir,cacheNamespace=cache_namespace")
      */
-    public function __construct($appName, $context, $tmpDir, $cacheNamespace = null, $cache = null)
+    public function __construct($appName, $context, $tmpDir, $cacheNamespace = '', $cache = null)
     {
         $this->appName = $appName;
         $this->context = $context;

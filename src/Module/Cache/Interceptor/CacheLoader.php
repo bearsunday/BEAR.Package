@@ -53,6 +53,7 @@ class CacheLoader implements MethodInterceptor
     /**
      * @param Cache  $cache
      * @param Reader $annotationReader
+     * @param string $cacheNamespace
      *
      * @Inject
      * @Named("cacheNamespace=cache_namespace")
@@ -60,7 +61,7 @@ class CacheLoader implements MethodInterceptor
     public function __construct(
         Cache $cache,
         Reader $annotationReader,
-        $cacheNamespace = null
+        $cacheNamespace = ''
     ) {
         $this->cache = $cache;
         $this->annotationReader = $annotationReader;
