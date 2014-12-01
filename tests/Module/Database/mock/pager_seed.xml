@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<dataset>
-    <posts id="1" title="title1" body="body1" created="2012-05-15 07:33:51" modified="true" />
-    <posts id="2" title="title2" body="body2" created="2012-05-15 07:33:52" modified="true" />
-    <posts id="3" title="title3" body="body3" created="2012-05-15 07:33:53" modified="true" />
-    <posts id="4" title="title4" body="body4" created="2012-05-15 07:33:54" modified="true" />
-    <posts id="5" title="title5" body="body5" created="2012-05-15 07:33:55" modified="true" />
-</dataset>
