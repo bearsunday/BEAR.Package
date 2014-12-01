@@ -1,1 +1,0 @@
-../../../vendor/dg/adminer-custom/index.php
