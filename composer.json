@@ -23,7 +23,9 @@
     },
     "require": {
         "php": ">=5.5.0",
-        "bear/sunday": "~1.0@dev"
+        "bear/sunday": "~1.0@dev",
+        "bear/resource": "~1.0@dev",
+        "ray/di": "~2.0@dev"
     },
     "require-dev": {
     },
