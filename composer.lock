@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "50d06e796cd45edaf777e61842a4cd92",
+    "hash": "27e5fca35f3a2711ac753952b2581c49",
     "packages": [
         {
             "name": "bear/resource",
@@ -424,6 +424,41 @@
             "time": "2014-08-17 21:15:53"
         },
         {
+            "name": "koriym/psr4list",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koriym/Koriym.Psr4List.git",
+                "reference": "601ec2933b4f2a74ec127b4ccadcdd56ae585c17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koriym/Koriym.Psr4List/zipball/601ec2933b4f2a74ec127b4ccadcdd56ae585c17",
+                "reference": "601ec2933b4f2a74ec127b4ccadcdd56ae585c17",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Koriym\\Psr4List\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Returns the name of the classes in PSR4 path",
+            "keywords": [
+                "psr4"
+            ],
+            "time": "2014-12-07 13:13:05"
+        },
+        {
             "name": "nikic/php-parser",
             "version": "v1.0.2",
             "source": {
@@ -614,12 +649,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Di.git",
-                "reference": "22c33a6c90c35010b3e9cead67ccd403501d8857"
+                "reference": "4227a6a05029453b9d76d5e9eb7b36156fd83140"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/22c33a6c90c35010b3e9cead67ccd403501d8857",
-                "reference": "22c33a6c90c35010b3e9cead67ccd403501d8857",
+                "url": "https://api.github.com/repos/koriym/Ray.Di/zipball/4227a6a05029453b9d76d5e9eb7b36156fd83140",
+                "reference": "4227a6a05029453b9d76d5e9eb7b36156fd83140",
                 "shasum": ""
             },
             "require": {
@@ -655,16 +690,53 @@
                 "di",
                 "guice"
             ],
-            "time": "2014-11-21 10:56:18"
+            "time": "2014-12-06 17:51:46"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "facebook/xhprof",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lox/xhprof.git",
+                "reference": "6bf00728827fc1e2a639dff6f94f1618396bffc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lox/xhprof/zipball/6bf00728827fc1e2a639dff6f94f1618396bffc5",
+                "reference": "6bf00728827fc1e2a639dff6f94f1618396bffc5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "xhprof_lib/utils/xhprof_lib.php",
+                    "xhprof_lib/utils/xhprof_runs.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "XHProf: A Hierarchical Profiler for PHP",
+            "homepage": "http://pecl.php.net/package/xhprof",
+            "keywords": [
+                "performance",
+                "profiling"
+            ],
+            "time": "2014-08-29 01:48:15"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
         "bear/sunday": 20,
-        "bear/resource": 20,
-        "ray/di": 20
+        "koriym/psr4list": 20,
+        "facebook/xhprof": 20
     },
     "prefer-stable": true,
     "platform": {
