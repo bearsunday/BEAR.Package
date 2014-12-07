@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Bootstrap;
+namespace BEAR\Package;
 
 use Ray\Di\Injector;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -13,24 +13,24 @@ use Doctrine\Common\Cache\Cache;
 final class Bootstrap
 {
     /**
-     * @param string $appName
-     * @param string $contexts
-     * @param Cache  $cache
+     * @param AbstractAppMeta $appMeta
+     * @param string          $contexts
+     * @param Cache           $cache
      *
      * @return AppInterface
      */
-    public function newApp($appName, $contexts = 'app', Cache $cache)
+    public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache)
     {
         $app = $cache->fetch($contexts);
         if ($app) {
             return $app;
         }
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = array_reduce($contextsArray, function($carry, $item) use ($appName) {
-            $class = $appName . '\Module\\' . ucwords($item) . 'Module';
+        $module = array_reduce($contextsArray, function ($carry, $item) use ($appMeta) {
+            $class = $appMeta->name . '\Module\\' . ucwords($item) . 'Module';
             return new $class($carry);
         });
-        $app = (new Injector($module))->getInstance(AppInterface::class);
+        $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);
         $cache->save($contexts, $app);
 
         return $app;
