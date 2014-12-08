@@ -11,8 +11,5 @@ vendor/
 build/
 tmp/
 composer.phar
-ID
-VERSION
-apps/
 *.db
 *.log

@@ -1,35 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         stopOnError="false"
-         stopOnFailure="false"
-         verbose="true">
+<phpunit bootstrap="tests/bootstrap.php">
     <testsuites>
-        <testsuite name="BEAR.Package">
+        <testsuite>
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
+
     <logging>
-        <log type="coverage-html" target="build/coverage" title="BEAR.Package" charset="UTF-8" yui="true"
-             highlight="true" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-html" target="build/coverage"/>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
         <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
     </logging>
+
     <filter>
         <whitelist>
-            <directory suffix=".php">src/Provide</directory>
-            <exclude>
-                <directory prefix="Dev">src</directory>
-                <directory prefix="function.">src</directory>
-                <directory suffix="Module.php">src</directory>
-                <directory suffix="Provider.php">src</directory>
-            </exclude>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
     <php>
-        <ini name="xdebug.max_nesting_level" value="5000"/>
+        <ini name="xhprof.output_dir" value="./tests/tmp"/>
+        <ini name="error_log" value="./tests/tmp/error.log"/>
+        <ini name="xdebug.max_nesting_level" value="500"/>
     </php>
-
 </phpunit>
