@@ -1,6 +1,6 @@
 <?php
 
-namespace FakeVendor\HelloWorld\Module;
+namespace MyVendor\MyApp\Module;
 
 use BEAR\Package\CliModule as PackageCliModule;
 
