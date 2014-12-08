@@ -11,7 +11,7 @@ final class AppMeta extends AbstractAppMeta
     public function __construct($name)
     {
         $this->name = $name;
-        $this->appDir = dirname(dirname((new \ReflectionClass($name . '\Module\App'))->getFileName()));
+        $this->appDir = dirname(dirname(dirname((new \ReflectionClass($name . '\Module\App'))->getFileName())));
         $this->tmpDir = $this->appDir . '/var/tmp';
         $this->logDir = $this->appDir . '/var/log';
     }

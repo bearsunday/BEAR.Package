@@ -1,0 +1,9 @@
+<?php
+
+namespace FakeVendor\HelloWorld\Resource\App\Sub;
+
+use BEAR\Resource\ResourceObject;
+
+class Three extends ResourceObject
+{
+}

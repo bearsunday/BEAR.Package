@@ -29,7 +29,7 @@ class AppReflector
     public function resourceList()
     {
         $list = new Psr4List;
-        $resourceListGenerator =  $list($this->appMeta->name . '\Resource', $this->appMeta->appDir . '/Resource');
+        $resourceListGenerator =  $list($this->appMeta->name . '\Resource', $this->appMeta->appDir . '/src/Resource');
 
         return $resourceListGenerator;
     }
