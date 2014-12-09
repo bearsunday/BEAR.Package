@@ -8,16 +8,32 @@ namespace BEAR\Package;
 
 use BEAR\Resource\Exception\UriException;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use BEAR\Sunday\Extension\Router\RouterMatch;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 class CliRouter implements RouterInterface
 {
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param RouterInterface $router
+     *
+     * @Inject
+     * @Named("original")
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function match(array $globals = [])
     {
-        $request = new RouterMatch;
         list(, $method, $uri) = $globals['argv'];
         if (! filter_var($uri, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
             throw new UriException($uri);
@@ -27,12 +43,16 @@ class CliRouter implements RouterInterface
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $query);
         }
-        list($request->method, $request->path, $request->query) = [
-            $method,
-            'page://self' . $parsedUrl['path'],
-            $query
+
+        $globals = [
+            '_SERVER' => [
+                'REQUEST_METHOD' => $method,
+                'REQUEST_URI' => $parsedUrl['path']
+            ],
+            '_GET' => $query,
+            '_POST' => $query
         ];
 
-        return $request;
+        return $this->router->match($globals);
     }
 }

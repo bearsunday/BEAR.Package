@@ -3,6 +3,7 @@
 namespace BEAR\Package;
 
 use BEAR\Resource\Exception\UriException;
+use BEAR\Sunday\Provide\Router\WebRouter;
 
 class CliRouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +14,7 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->router = new CliRouter;
+        $this->router = new CliRouter(new WebRouter);
     }
 
     public function testMatch()
