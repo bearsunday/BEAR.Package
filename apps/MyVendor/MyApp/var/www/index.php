@@ -1,4 +1,4 @@
 <?php
 
 $context = 'app';
-require dirname(dirname(__DIR__)) . '/script/bootstrap.php';
+require dirname(dirname(__DIR__)) . '/bootstrap/bootstrap.php';
