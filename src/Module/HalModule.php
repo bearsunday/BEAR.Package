@@ -4,13 +4,13 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package;
+namespace BEAR\Package\Module;
 
+use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Transfer\HalResponder;
-use Ray\Di\AbstractModule;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\TransferInterface;
-use BEAR\Package\Provide\Representation\HalRenderer;
+use Ray\Di\AbstractModule;
 
 class HalModule extends AbstractModule
 {

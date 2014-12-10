@@ -12,6 +12,8 @@ use Doctrine\Common\Cache\Cache;
 
 final class Bootstrap
 {
+    const PACKAGE_MODULE_PATH = 'BEAR\Package\Module\\';
+
     /**
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
@@ -28,6 +30,9 @@ final class Bootstrap
         $contextsArray = array_reverse(explode('-', $contexts));
         $module = array_reduce($contextsArray, function ($carry, $item) use ($appMeta) {
             $class = $appMeta->name . '\Module\\' . ucwords($item) . 'Module';
+            if (! class_exists($class)) {
+                $class = self::PACKAGE_MODULE_PATH . ucwords($item) . 'Module';
+            }
             return new $class($carry);
         });
         $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);

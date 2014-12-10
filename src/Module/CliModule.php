@@ -4,13 +4,13 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package;
+namespace BEAR\Package\Module;
 
 use BEAR\Package\Provide\Router\CliRouter;
+use BEAR\Package\Provide\Transfer\CliResponder;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Ray\Di\AbstractModule;
-use BEAR\Package\Provide\Transfer\CliResponder;
 
 class CliModule extends AbstractModule
 {

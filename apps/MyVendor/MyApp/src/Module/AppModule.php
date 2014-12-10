@@ -3,9 +3,9 @@
 namespace MyVendor\MyApp\Module;
 
 use BEAR\Package\AppMeta;
+use BEAR\Package\Module\HalModule;
 use BEAR\Package\PackageModule;
 use Ray\Di\AbstractModule;
-use BEAR\Package\HalModule;
 
 class AppModule extends AbstractModule
 {
