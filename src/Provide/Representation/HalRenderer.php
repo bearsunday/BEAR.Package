@@ -52,8 +52,7 @@ class HalRenderer implements RenderInterface
         if (is_scalar($body)) {
             $body = ['value' => $body];
         }
-        $class = ($ro instanceof WeavedInterface) ? (new \ReflectionClass($ro))->getParentClass()->name : $ro;
-        $links = $this->reader->getMethodAnnotations(new \ReflectionMethod($class, 'onGet'), Link::class);
+        $links = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, 'onGet'), Link::class);
         /** @var $links Link[] */
         $hal = $this->getHal($ro->uri, $body, $links);
         $ro->view = $hal->asJson(true) . PHP_EOL;
