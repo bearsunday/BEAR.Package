@@ -13,3 +13,4 @@ tmp/
 composer.phar
 *.db
 *.log
+preload.php

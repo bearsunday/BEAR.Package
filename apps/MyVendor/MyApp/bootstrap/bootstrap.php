@@ -8,6 +8,7 @@ use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 loader: {
+    // require dirname(dirname(dirname(dirname(__DIR__)))) . '/preload.php';
     $loader = require dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor/autoload.php';
     /** @var $loader \Composer\Autoload\ClassLoader */
     $loader->addPsr4(__NAMESPACE__ . '\\', dirname(__DIR__) . '/src');

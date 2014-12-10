@@ -24,7 +24,8 @@
     "require": {
         "php": ">=5.5.0",
         "bear/sunday": "~1.0@dev",
-        "koriym/psr4list": "~1.0@dev"
+        "koriym/psr4list": "~1.0@dev",
+        "classpreloader/classpreloader": "~1.1@dev"
     },
     "require-dev": {
         "facebook/xhprof": "dev-master"
@@ -34,6 +35,12 @@
             "BEAR\\Package\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "BEAR\\Package\\": "tests/",
+            "FakeVendor\\HelloWorld\\": "tests/Fake/FakeVendor/HelloWorld/src"
+        }
+    },
     "bin": [
         "bin/bear.compile",
         "bin/bear.create-resource",
@@ -41,7 +48,6 @@
         "bin/bear.env"
     ],
     "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
