@@ -35,9 +35,6 @@ class CliRouter implements RouterInterface
     public function match(array $globals = [])
     {
         list(, $method, $uri) = $globals['argv'];
-        if (! filter_var($uri, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
-            throw new UriException($uri);
-        }
         $parsedUrl = parse_url($uri);
         $query = [];
         if (isset($parsedUrl['query'])) {

@@ -32,17 +32,4 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('page://self/', $request->path);
         $this->assertSame(['name' => 'bear'], $request->query);
     }
-
-    public function testInvalidUri()
-    {
-        $this->setExpectedException(UriException::class);
-        $globals = [
-            'argv' => [
-                'php',
-                'get',
-                'invalid-uri'
-            ]
-        ];
-        $this->router->match($globals);
-    }
 }
