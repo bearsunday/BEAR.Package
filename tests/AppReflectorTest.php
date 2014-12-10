@@ -13,6 +13,7 @@ class AppReflectorTest extends \PHPUnit_Framework_TestCase
             $files[] = $file;
         }
         $expect = [
+            'FakeVendor\HelloWorld\Resource\App\FakeUser',
             'FakeVendor\HelloWorld\Resource\App\One',
             'FakeVendor\HelloWorld\Resource\App\Two',
             'FakeVendor\HelloWorld\Resource\Page\Index',
@@ -20,6 +21,7 @@ class AppReflectorTest extends \PHPUnit_Framework_TestCase
             'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four'        ];
         $this->assertSame($expect, $classes);
         $expect = [
+            $appMeta->appDir . '/src/Resource/App/FakeUser.php',
             $appMeta->appDir . '/src/Resource/App/One.php',
             $appMeta->appDir . '/src/Resource/App/Two.php',
             $appMeta->appDir . '/src/Resource/Page/Index.php',
