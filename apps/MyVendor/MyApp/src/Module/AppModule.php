@@ -15,6 +15,5 @@ class AppModule extends AbstractModule
     protected function configure()
     {
         $this->install(new PackageModule(new AppMeta('MyVendor\MyApp')));
-        $this->override(new HalModule);
     }
 }
