@@ -6,9 +6,11 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Package\Provide\Router\CliRouter;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use Ray\Di\AbstractModule;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
+use Ray\Di\AbstractModule;
+use BEAR\Package\Provide\Transfer\CliResponder;
 
 class CliModule extends AbstractModule
 {
