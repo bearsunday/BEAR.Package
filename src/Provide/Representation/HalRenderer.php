@@ -92,7 +92,7 @@ class HalRenderer implements RenderInterface
             if (! $link instanceof Link) {
                 continue;
             }
-            $uri = \GuzzleHttp\uri_template($link->href, $body);
+            $uri = uri_template($link->href, $body);
             $parsed = parse_url($uri);
             $uri = $parsed['path'] . (isset($parsed['query']) ? '?' . $parsed['query'] : '');
             $hal->addLink($link->rel, $uri);
