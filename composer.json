@@ -41,11 +41,10 @@
             "FakeVendor\\HelloWorld\\": "tests/Fake/FakeVendor/HelloWorld/src"
         }
     },
+    "prefer-stable": true,
     "bin": [
-        "bin/bear.compile",
-        "bin/bear.create-resource",
-        "bin/bear.server",
-        "bin/bear.env"
+        "bin/bear.env",
+        "bin/bear.preload"
     ],
     "minimum-stability": "dev",
     "extra": {
