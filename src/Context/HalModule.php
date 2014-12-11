@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module;
+namespace BEAR\Package\Context;
 
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Transfer\HalResponder;

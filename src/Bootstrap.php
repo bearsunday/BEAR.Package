@@ -12,7 +12,7 @@ use Doctrine\Common\Cache\Cache;
 
 final class Bootstrap
 {
-    const PACKAGE_MODULE_PATH = 'BEAR\Package\Module\\';
+    const PACKAGE_MODULE_PATH = 'BEAR\Package\Context\\';
 
     /**
      * @param AbstractAppMeta $appMeta

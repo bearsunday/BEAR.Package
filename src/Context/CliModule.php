@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module;
+namespace BEAR\Package\Context;
 
 use BEAR\Package\Provide\Router\CliRouter;
 use BEAR\Package\Provide\Transfer\CliResponder;
