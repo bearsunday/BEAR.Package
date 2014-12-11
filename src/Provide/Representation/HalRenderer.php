@@ -77,8 +77,9 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * @param array  $body
-     * @param Link[] $links
+     * @param Uri   $uri
+     * @param array $body
+     * @param array $links
      *
      * @return Hal
      */
@@ -98,6 +99,5 @@ class HalRenderer implements RenderInterface
         }
 
         return $hal;
-
     }
 }

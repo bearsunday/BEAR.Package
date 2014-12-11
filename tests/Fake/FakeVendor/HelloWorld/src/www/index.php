@@ -23,7 +23,6 @@ try {
 
     // representation transfer
     $page()->transfer($app->responder);
-
 } catch (\Exception $e) {
     $code = $e->getCode() ?: 500;
     http_response_code($code);
