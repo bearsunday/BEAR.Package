@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 class User extends ResourceObject
 {
     /**
-     * @Link(rel="friend", href="/friend?{id}")
+     * @Link(rel="friend", href="/friend?id={friend_id}")
      */
     public function onGet($id)
     {
