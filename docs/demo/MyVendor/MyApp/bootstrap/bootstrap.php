@@ -20,6 +20,7 @@ route: {
     $context = isset($context) ? $context : 'app';
     $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__), $context, new ApcCache);
     /** @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
+    $_SERVER; // touch for $GLOBALS['_SERVER']
     $request = $app->router->match($GLOBALS);
 }
 
