@@ -13,7 +13,6 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
-use Ray\Aop\WeavedInterface;
 
 /**
  * HAL(Hypertext Application Language) renderer

@@ -6,9 +6,6 @@
  */
 namespace BEAR\Package\Context;
 
-use BEAR\Package\Provide\Representation\HalRenderer;
-use BEAR\Resource\RenderInterface;
-use BEAR\Resource\TransferInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcCache;

@@ -8,8 +8,6 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 class ApiRouter implements RouterInterface
 {

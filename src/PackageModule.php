@@ -9,7 +9,6 @@ namespace BEAR\Package;
 use BEAR\Sunday\Module\SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-use MyVendor\MyApp\Resource\Page\Index;
 
 class PackageModule extends AbstractModule
 {

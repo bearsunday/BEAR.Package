@@ -8,7 +8,6 @@ namespace BEAR\Package\Context;
 
 use BEAR\Package\Provide\Router\ApiRouter;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Ray\Di\AbstractModule;
 
 class ApiModule extends AbstractModule
