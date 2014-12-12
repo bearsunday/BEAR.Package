@@ -1,116 +1,168 @@
-BEAR.Package
-=============================
+# BEAR.Package
 
-[![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package) [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=master)] (http://travis-ci.org/koriym/BEAR.Package)
+[![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package) [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=develop-2)] (https://travis-ci.org/koriym/BEAR.Package.svg?branch=develop-2)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Package/?branch=develop-2)
 
-Introduction
-------------
+
+## Introduction
 
 BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource oriented framework implementation package.
 
-Installation
-------------
+# Installation
 
-    $ composer create-project bear/package {$PACKAGE_PATH}
-    $ composer create-project bear/package {$PACKAGE_PATH} dev-develop
+    $ composer create-project bear/package {$PACKAGE_PATH} ~1.0@dev
 
-built-in web server for development
-------------------
+## built-in web server
 
-for Sandbox web page
+for demo app web page
 
-    $ bin/bear.server apps/Demo.Sandbox
-    $ bin/bear.server --context=api --port=8081 apps/Demo.Sandbox
+    $ cd docs/demo/MyVendor/MyApp/var/www
+    $ php -S 0.0.0.0:8080
 
-or
+You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output.
 
-    $ php -S 0.0.0.0:8080 -t apps/Demo.Sandbox/var/www/ apps/Demo.Sandbox/bootstrap/contexts/dev.php
+## Virtual Host for Production
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8080/dev/`
+Set up a virtual host to point to the `{$PACKAGE_PATH}docs/demo/MyVendor/MyApp/var/www` directory of the application.
 
-for system admin page
+# Console
 
-    $ php -S 0.0.0.0:8090 -t {$PACKAGE_PATH}/var/www/admin
+### web access (page resource)
 
-Virtual Host for Production
-------------
+    $ cd docs/demo/MyVendor/MyApp/var/bootstrap
+    $ php web.php get '/user?id=1'
+    
+    code: 200
+    header:
+    body:
+    {
+        "user1": {
+            "id": "1",
+            "friend_id": "f1"
+        },
+        "_links": {
+            "self": {
+                "href": "/user?id=1"
+            }
+        }
+    }
+    
+### api access (api resource)
 
-Set up a virtual host to point to the `{$PACKAGE_PATH}/apps/Demo.Sandbox/var/www/` directory of the application.
+    $ cd docs/demo/MyVendor/MyApp/var/bootstrap
+    $ php api.php get '/user?id=1'
 
-Console
--------
+    code: 200
+    header:
+    body:
+    {
+        "id": "1",
+        "friend_id": "f1",
+        "_links": {
+            "self": {
+                "href": "/user?id=1"
+            },
+            "friend": {
+                "href": "/friend?id=f1"
+            }
+        }
+    }
+    
+## Application Context
 
-### web access
+### built-in module
 
-```bash
-$ cd {$PACKAGE_PATH}/apps/Demo.Sandbox/bootstrap/contexts
-$ php dev.php get /
+ * `api` for API application
+ * `cli` for console application
+ * `hal` for Hypertext Application Language application
+ * `prod` for production
 
-200 OK
-x-interceptors: ["{\"onGet\":[\"Sandbox\\\\Interceptor\\\\Checker\"]}"]
-x-execution-time: [0.068794012069702]
-x-profile-id: ["523ee4ba886de"]
-cache-control: ["no-cache"]
-date: ["Sun, 22 Sep 2013 12:38:18 GMT"]
-[BODY]
-greeting: Hello World
-version: array (
-  'php' => '5.4.16',
-  'BEAR' => 'dev-develop',
-  'extensions' => 
-  array (
-    'apc' => '3.1.13',
-  ),
-)
-performance: app://self/performance
+To run application, Include application invoke script with contexts value as `$context'.
 
-[VIEW]
-<!DOCTYPE html>
-<html lang="en">
-...
+```php
+$context = 'prod-api-hal-app'
+require 'pat/to/bootstrap.php';   
 ```
 
-### api access
+contexts example
 
-```bash
-$ php api.php get page://self/index
-$ php api.php get 'app://self/first/greeting?name=World'
+ * `app` - "bare" JSON application 
+ * `cli-app` - console application
+ * `prod-hal-api-app` - HAL API application for production
+ * `dev-html-app` - HTML application for development *1
 
-200 OK
-content-type: ["application\/hal+json; charset=UTF-8"]
-cache-control: ["no-cache"]
-date: ["Sun, 22 Sep 2013 12:42:48 GMT"]
-[BODY]
-Hello, World
+*1) `dev` and `html` is not provided in this package.
 
+### application module
 
-$ php api.php get app://self/blog/posts
+Application (context) module is placed `src/Module` directory.
+The most basic application module is `AppModule`.
+
+```php
+class AppModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->install(new PackageModule(new AppMeta('MyVendor\MyApp')));
+    }
+}
 ```
 
-Make your own application
--------------------------
+Let's make database application.
+Bind PDO class to `PdoProvider` provider in `AppModule` first.
 
-    $ cd {$PACKAGE_PATH}/apps
+```php
+$this->install(new PackageModule(new AppMeta('MyVendor\MyApp')));
+$this->bind(\PDO::class)->toProvider(PdoProvider::class)->in(Scope::SINGLETON);
+```
 
-### install
+Provide `PdoProvider.php`
 
-    $ composer create-project bear/skeleton {Vendor.AppName}
-    $ composer create-project bear/skeleton {Vendor.AppName} dev-develop
+```php
+class PdoProvider implements  ProviderInterface
+{
+    public function get()
+    {
+        return new \PDO('sqlite::memory:');
+    }
+}
+```
 
-### first run
+Now you can use `PDO` object as a dependency anwhere in the application.
 
-    $ cd {$PACKAGE_PATH}
+```php
+public function __construct(\PDO $pdo)
+{
+    var_dump($pdo); // class PDO#7 (0) {}
+}
+```
 
-    // Console
-    $ php apps/{Vendor.AppName}/bootstrap/contexts/dev.php get /
+You don't need further configuration for every new class. You are configuring dependency, Not dependent.
 
-    // Web
-    $ bin/bear.server apps/{Vendor.AppName}
+### extend built-in context module
 
-### test
+Your application may need different configuration for `prod` context.
+Install built-in module to use existing `prod` binding, then you bind yours for production.
 
-    $ phpunit
+```php
+use BEAR\Package\Context\ProdModule as Production;
+    
+class ProdModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->install(new Production);
+        $this->bind(\PDO::class)->toProvider(ProductionPdoProvider::class)->in(Scope::SINGLETON);
+    }
+}
+```
 
-### application first
+## Build status
 
-    $ composer install
+ * [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop)
+[![Build Status](https://travis-ci.org/koriym/BEAR.Sunday.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Sunday) **BEAR.Sunday** - [Resource Oriented Applications Framework](https://github.com/koriym/BEAR.Sunday)
+ * [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/quality-score.png?s=bb5414751b994336b6310caf61029ac09b907779)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/coverage.png?s=5604fdfae48a5a31242d3e46018515e2f30083d7)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Aop.png?branch=master)](http://travis-ci.org/koriym/Ray.Aop) **Ray.AOP** - [Aspect Oriented Framework](https://github.com/koriym/Ray.Aop)
+ * [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/?branch=develop-2) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)  **Ray.Di** - [Dependency Injection Framework](https://github.com/koriym/Ray.Di)
+ * [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Build Status](https://travis-ci.org/koriym/BEAR.Resource.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Resource)  **BEAR.Resource** - [Hypermedia Framework for Object as a Service](https://github.com/koriym/BEAR.Resource)
+ 
