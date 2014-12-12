@@ -1,8 +1,7 @@
 # BEAR.Package
 
-[![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package) [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=develop-2)] (https://travis-ci.org/koriym/BEAR.Package.svg?branch=develop-2)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Package/?branch=develop-2)
-
+[![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Package/?branch=develop-2)
+ [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=develop-2)] (https://travis-ci.org/koriym/BEAR.Package.svg?branch=develop-2)
 
 ## Introduction
 
@@ -10,7 +9,7 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource 
 
 # Installation
 
-    $ composer create-project bear/package {$PACKAGE_PATH} ~1.0@dev
+    $ composer create-project bear/package:~1.0@dev {PACKAGE_PATH} 
 
 ## built-in web server
 
@@ -159,12 +158,17 @@ class ProdModule extends AbstractModule
 
 ## Build status
 
- * [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop)
-[![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop)
-[![Build Status](https://travis-ci.org/koriym/BEAR.Sunday.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Sunday) **BEAR.Sunday** - [Resource Oriented Applications Framework](https://github.com/koriym/BEAR.Sunday)
- * [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/quality-score.png?s=bb5414751b994336b6310caf61029ac09b907779)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/coverage.png?s=5604fdfae48a5a31242d3e46018515e2f30083d7)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Aop.png?branch=master)](http://travis-ci.org/koriym/Ray.Aop) **Ray.AOP** - [Aspect Oriented Framework](https://github.com/koriym/Ray.Aop)
- * [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/?branch=develop-2) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)  **Ray.Di** - [Dependency Injection Framework](https://github.com/koriym/Ray.Di)
- * [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Build Status](https://travis-ci.org/koriym/BEAR.Resource.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Resource)  **BEAR.Resource** - [Hypermedia Framework for Object as a Service](https://github.com/koriym/BEAR.Resource)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop-2)
+[![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop-2)
+[![Build Status](https://travis-ci.org/koriym/BEAR.Sunday.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Sunday?branch=develop-2)
+**BEAR.Sunday** - [Resource Oriented Applications Framework](https://github.com/koriym/BEAR.Sunday)
+
+ [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Aop.png?b=develop-2)](http://travis-ci.org/koriym/Ray.Aop) **Ray.Aop** - [Aspect Oriented Framework](https://github.com/koriym/Ray.Aop)
+
+ [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?b=develop-2)](http://travis-ci.org/koriym/Ray.Di) **Ray.Di** - [Dependency Injection Framework](https://github.com/koriym/Ray.Di)
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Build Status](https://travis-ci.org/koriym/BEAR.Resource.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Resource)
+**BEAR.Resource** - [Hypermedia Framework for Object as a Service](https://github.com/koriym/BEAR.Resource)
 
 ## Requirements
 
