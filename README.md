@@ -15,14 +15,13 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource 
 
 for demo app web page
 
-    $ cd docs/demo/MyVendor/MyApp/var/www
-    $ php -S 0.0.0.0:8080
+    $ php -S 0.0.0.0:8080 -t docs/demo-app/var/www/
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output.
+You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello BEAR.Sunday" json output.
 
 ## Virtual Host for Production
 
-Set up a virtual host to point to the `{$PACKAGE_PATH}docs/demo/MyVendor/MyApp/var/www` directory of the application.
+Set up a virtual host to point to the `{$PACKAGE_PATH}docs/demo-app/var/www` directory of the application.
 
 # Console
 
