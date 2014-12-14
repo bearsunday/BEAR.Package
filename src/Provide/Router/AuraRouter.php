@@ -10,6 +10,8 @@ use Aura\Router\Router;
 use Aura\Web\Request\Method;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 class AuraRouter implements RouterInterface
 {
@@ -24,6 +26,9 @@ class AuraRouter implements RouterInterface
 
     /**
      * @param Router $router
+     *
+     * @Inject
+     * @Named("original")
      */
     public function __construct(Router $router)
     {
