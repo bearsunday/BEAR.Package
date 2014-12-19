@@ -28,13 +28,14 @@ final class Bootstrap
             return $app;
         }
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = array_reduce($contextsArray, function ($carry, $item) use ($appMeta) {
-            $class = $appMeta->name . '\Module\\' . ucwords($item) . 'Module';
+        $module = null;
+        foreach ($contextsArray as $context) {
+            $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (! class_exists($class)) {
-                $class = self::PACKAGE_MODULE_PATH . ucwords($item) . 'Module';
+                $class = self::PACKAGE_MODULE_PATH . ucwords($context) . 'Module';
             }
-            return new $class($carry);
-        });
+            $module =  new $class($module);
+        }
         $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);
         $cache->save($contexts, $app);
 
