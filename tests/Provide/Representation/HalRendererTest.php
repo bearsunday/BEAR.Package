@@ -3,16 +3,13 @@
 namespace BEAR\Package;
 
 use BEAR\Package\Provide\Representation\HalRenderer;
-use BEAR\Resource\Factory;
 use BEAR\Resource\ResourceClientFactory;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
-use FakeVendor\HelloWorld\Resource\App\FakeUser;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var ResourceInterface
      */

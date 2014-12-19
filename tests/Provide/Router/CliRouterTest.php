@@ -2,7 +2,6 @@
 
 namespace BEAR\Package;
 
-use BEAR\Resource\Exception\UriException;
 use BEAR\Sunday\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Router\CliRouter;
 

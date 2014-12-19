@@ -32,6 +32,5 @@ class User extends ResourceObject
         $this['friend_id'] = 'f' . $id;
 
         return $this;
-
     }
 }

@@ -2,8 +2,6 @@
 
 namespace FakeVendor\HelloWorld\Module;
 
-use BEAR\Package\AppMeta;
-use BEAR\Package\PackageModule;
 use Ray\Di\AbstractModule;
 
 class ProdModule extends AbstractModule
