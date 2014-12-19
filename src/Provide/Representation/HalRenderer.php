@@ -51,7 +51,8 @@ class HalRenderer implements RenderInterface
         if (is_scalar($body)) {
             $body = ['value' => $body];
         }
-        $links = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, 'onGet'), Link::class);
+        $method = 'on' . ucfirst($ro->uri->method);
+        $links = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method), Link::class);
         /** @var $links Link[] */
         $hal = $this->getHal($ro->uri, $body, $links);
         $ro->view = $hal->asJson(true) . PHP_EOL;
