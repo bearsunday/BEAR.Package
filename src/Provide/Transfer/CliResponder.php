@@ -19,7 +19,7 @@ class CliResponder implements TransferInterface
         // header
         $ob .= 'header:' . PHP_EOL;
         foreach ($resourceObject->headers as $label => $value) {
-            $ob .= "{$label}: {$value}";
+            $ob .= "{$label}: {$value}" . PHP_EOL;
         }
 
         // body
