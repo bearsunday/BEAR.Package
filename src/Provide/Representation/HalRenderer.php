@@ -52,7 +52,13 @@ class HalRenderer implements RenderInterface
             $body = ['value' => $body];
         }
         $method = 'on' . ucfirst($ro->uri->method);
-        $links = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method), Link::class);
+        $hasMethod = method_exists($ro, $method);
+        if (! $hasMethod) {
+            $ro->view = ''; // options has no view
+
+            return '';
+        }
+        $links = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method), Link::class) : [];
         /** @var $links Link[] */
         $hal = $this->getHal($ro->uri, $body, $links);
         $ro->view = $hal->asJson(true) . PHP_EOL;
