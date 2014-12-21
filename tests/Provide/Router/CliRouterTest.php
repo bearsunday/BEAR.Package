@@ -24,7 +24,8 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
                 'php',
                 'get',
                 'page://self/?name=bear'
-            ]
+            ],
+            'argc' => 3
         ];
         $request = $this->router->match($globals);
         $this->assertSame('get', $request->method);

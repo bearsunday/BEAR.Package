@@ -7,7 +7,7 @@ use BEAR\Package\AppMeta;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-loader: {
+load: {
     $dir = dirname(dirname(dirname(__DIR__)));
     $loader = require $dir . '/vendor/autoload.php';
     /** @var $loader \Composer\Autoload\ClassLoader */
@@ -34,10 +34,10 @@ try {
 
     // representation transfer
     $page()->transfer($app->responder);
-
+    exit(0);
 } catch (\Exception $e) {
-    $code = $e->getCode() ?: 500;
-    http_response_code($code);
-    echo $code;
-    error_log($e);
+    $errorPage = $app->error->handle($e, $request);
+    $errorPage->transfer($app->responder);
+    exit(1);
 }
+
