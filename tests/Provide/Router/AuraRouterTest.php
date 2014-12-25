@@ -33,7 +33,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         $router = new AuraRouter($this->routerAdapter);
         $request = $router->match($globals);
         $this->assertSame('post', $request->method);
-        $this->assertSame('/blog', $request->path);
+        $this->assertSame('page://self/blog', $request->path);
         $this->assertSame(['id' => 'PC6001', 'title' => 'hello'], $request->query);
     }
 

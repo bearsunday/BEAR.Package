@@ -19,5 +19,6 @@ class ApiModule extends AbstractModule
     {
         $this->bind(RouterInterface::class)->to(ApiRouter::class);
         $this->bind(RouterInterface::class)->annotatedWith('original')->to(ApiRouter::class);
+        $this->bind()->annotatedWith('default_route_host')->toInstance('app://self');
     }
 }
