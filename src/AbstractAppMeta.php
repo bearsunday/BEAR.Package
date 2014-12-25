@@ -29,4 +29,9 @@ abstract class AbstractAppMeta
      * @var string
      */
     public $logDir;
+
+    /**
+     * @var string
+     */
+    public $confDir;
 }
