@@ -6,15 +6,17 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use Aura\Router\Generator;
+use Aura\Router\RouteCollection;
+use Aura\Router\RouteFactory;
+use Aura\Router\Router;
 use BEAR\Package\AbstractAppMeta;
-use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\ProviderInterface;
-use Aura\Router\RouterFactory;
 
 class AuraRouterProvider implements ProviderInterface
 {
     /**
-     * @var RouterInterface
+     * @var Router
      */
     private $router;
 
@@ -23,11 +25,17 @@ class AuraRouterProvider implements ProviderInterface
      */
     public function __construct(AbstractAppMeta $appMeta)
     {
-        $this->router = $router = (new RouterFactory)->newInstance();
+        $routerCollection = new RouteCollection(new RouteFactory());
+        $routerCollection->setResourceCallable([$this, 'resourceRoute']);
+        $router = new Router(
+            $routerCollection,
+            new Generator
+        );
         $routeFile = $appMeta->appDir . '/var/conf/aura.router.php';
         if (file_exists($routeFile)) {
             include $routeFile;
         }
+        $this->router = $router;
     }
 
     /**
@@ -36,5 +44,20 @@ class AuraRouterProvider implements ProviderInterface
     public function get()
     {
         return new AuraRouter($this->router);
+    }
+
+    /**
+     * @param RouteCollection $router
+     */
+    public function resourceRoute(RouteCollection $router)
+    {
+        $router->setTokens(array(
+            'id' => '([a-f0-9]+)'
+        ));
+        $router->addPost('post', '/{id}');
+        $router->addGet('get', '/{id}');
+        $router->addPut('put', '/{id}');
+        $router->addPatch('patch', '/{id}');
+        $router->addDelete('delete', '/{id}');
     }
 }
