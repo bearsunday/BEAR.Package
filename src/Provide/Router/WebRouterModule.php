@@ -4,17 +4,15 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Context;
+namespace BEAR\Package\Provide\Router;
 
+use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\AbstractModule;
 
-class ApiModule extends AbstractModule
+class WebRouterModule extends AbstractModule
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
-        $this->bind()->annotatedWith('default_route_host')->toInstance('app://self');
+        $this->bind(RouterInterface::class)->to(WebRouter::class);
     }
 }

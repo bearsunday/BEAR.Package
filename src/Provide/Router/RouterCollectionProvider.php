@@ -9,7 +9,6 @@ namespace BEAR\Package\Provide\Router;
 use BEAR\Package\AbstractAppMeta;
 use BEAR\Package\AppMeta;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use BEAR\Sunday\Provide\Router\WebRouter;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
