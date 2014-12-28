@@ -8,6 +8,11 @@ use FakeVendor\HelloWorld\Module\AppModule;
 
 class BootstrapTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        AppModule::$modules = [];
+    }
+    
     public function testNewApp()
     {
         $app = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-app', new ArrayCache);

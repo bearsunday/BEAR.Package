@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Module;
+namespace BEAR\Package;
 
 use Aura\Router\Router;
 use Aura\Web\WebFactory;

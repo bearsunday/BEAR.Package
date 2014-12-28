@@ -1,6 +1,6 @@
 <?php
 
-namespace BEAR\Package\Module;
+namespace BEAR\Package;
 
 use BEAR\Package\Provide\Router\AuraRouter;
 use BEAR\Package\Provide\Router\RouterCollection;
