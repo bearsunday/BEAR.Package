@@ -12,19 +12,25 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use ReflectionMethod;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
 
 class CacheUpdater implements MethodInterceptor
 {
     use EtagTrait;
 
     /**
-     * @param Cache $cache
+     * @param Cache  $cache
+     * @param string $cacheNamespace
      *
      * @Inject
+     * @Named("cacheNamespace=cache_namespace")
      */
-    public function __construct(Cache $cache)
+    public function __construct(Cache $cache, $cacheNamespace = '')
     {
         $this->cache = $cache;
+        if ($this->cache instanceof CacheProvider) {
+            $this->cache->setNamespace($cacheNamespace);
+        }
     }
 
     /**

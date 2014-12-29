@@ -35,13 +35,14 @@ final class Bootstrap
      * @param string $appName
      * @param string $context
      * @param string $tmpDir
-     * @param Cache $cache
+     * @param string $cacheNameSpace
+     * @param Cache  $cache
      *
      * @return \BEAR\Sunday\Extension\Application\AppInterface
      */
-    public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
+    public static function getApp($appName, $context, $tmpDir, $cacheNamespace, Cache $cache = null)
     {
-        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir, $cache))->get();
+        $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir, $cacheNamespace, $cache))->get();
         $app = $diCompiler->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */
 

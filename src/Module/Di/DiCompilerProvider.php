@@ -47,17 +47,19 @@ class DiCompilerProvider implements ProviderInterface
      * @param string $appName
      * @param string|string[] $context
      * @param string $tmpDir
+     * @param string $cacheNamespace
      * @param Cache  $cache
      *
      * @Inject
-     * @Named("appName=app_name,context=app_context,tmpDir=tmp_dir")
+     * @Named("appName=app_name,context=app_context,tmpDir=tmp_dir,cacheNamespace=cache_namespace")
      */
-    public function __construct($appName, $context, $tmpDir, $cache = null)
+    public function __construct($appName, $context, $tmpDir, $cacheNamespace = '', $cache = null)
     {
         $this->appName = $appName;
         $this->context = $context;
         $this->tmpDir = $tmpDir;
         $this->cache = $cache ?: (function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir));
+        $this->cache->setNamespace($cacheNamespace);
     }
 
     /**

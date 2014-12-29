@@ -8,6 +8,7 @@ namespace BEAR\Package\Module\Cache\Interceptor;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
@@ -52,15 +53,21 @@ class CacheLoader implements MethodInterceptor
     /**
      * @param Cache  $cache
      * @param Reader $annotationReader
+     * @param string $cacheNamespace
      *
      * @Inject
+     * @Named("cacheNamespace=cache_namespace")
      */
     public function __construct(
         Cache $cache,
-        Reader $annotationReader
+        Reader $annotationReader,
+        $cacheNamespace = ''
     ) {
         $this->cache = $cache;
         $this->annotationReader = $annotationReader;
+        if ($this->cache instanceof CacheProvider) {
+            $this->cache->setNamespace($cacheNamespace);
+        }
     }
 
     /**

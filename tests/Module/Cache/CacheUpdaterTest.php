@@ -29,7 +29,7 @@ class CacheUpdaterTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $this->cache = new ArrayCache;
         $config = new Config(new Annotation(new Definition, new Reader));
-        $this->cacheUpdater = (new CacheUpdater($this->cache, $config));
+        $this->cacheUpdater = (new CacheUpdater($this->cache,'test-namespace', $config));
     }
 
     public function testNew()

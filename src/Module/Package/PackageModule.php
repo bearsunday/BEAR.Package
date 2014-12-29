@@ -52,7 +52,7 @@ class PackageModule extends AbstractModule
             'app_context' => $this->context
         ];
         $this->install(new Sunday\Constant\NamedModule($constants + $this->config));
-        $this->install(new Sunday\Cache\CacheModule);
+        $this->install(new Package\Cache\CacheModule);
         $this->install(new Sunday\Code\CachedAnnotationModule($this));
 
         // Package Module
