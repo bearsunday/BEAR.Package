@@ -11,7 +11,7 @@ class Contact extends ResourceObject
 
     public function onGet($id)
     {
-        $this['contact'] = $user1 = $this->resource->get->uri('app://self/user/friend')->withQuery(['id' => $id])->eager->request();
+        $this['contact'] = $this->resource->get->uri('app://self/user/friend')->withQuery(['id' => $id])->eager->request();
 
         return $this;
     }
