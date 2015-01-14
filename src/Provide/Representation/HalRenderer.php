@@ -71,15 +71,13 @@ class HalRenderer implements RenderInterface
      */
     private function valuateElements(ResourceObject &$ro)
     {
-        array_walk_recursive(
-            $ro->body,
-            function (&$element) {
-                if ($element instanceof RequestInterface) {
-                    /** @var $element callable */
-                    $element = $element();
-                }
+        foreach ($ro->body as $key => &$element) {
+            if ($element instanceof RequestInterface) {
+                unset($ro->body[$key]);
+                $view = $this->render($element());
+                $ro->body['_embedded'][$key] = json_decode($view);
             }
-        );
+        }
     }
 
     /**
