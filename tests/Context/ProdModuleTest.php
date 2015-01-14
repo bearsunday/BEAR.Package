@@ -3,8 +3,8 @@
 namespace BEAR\Package\Context;
 
 use Doctrine\Common\Annotations\CachedReader;
-use Ray\Di\Injector;
 use Doctrine\Common\Annotations\Reader;
+use Ray\Di\Injector;
 
 class ProdModuleTest extends \PHPUnit_Framework_TestCase
 {

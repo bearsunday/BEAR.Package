@@ -2,8 +2,8 @@
 
 namespace BEAR\Package;
 
-use Doctrine\Common\Cache\ArrayCache;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Doctrine\Common\Cache\ArrayCache;
 use FakeVendor\HelloWorld\Module\AppModule;
 
 class BootstrapTest extends \PHPUnit_Framework_TestCase

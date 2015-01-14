@@ -8,10 +8,10 @@ namespace BEAR\Package\Context;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\AbstractModule;
-use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Scope;
 
 class ProdModule extends AbstractModule

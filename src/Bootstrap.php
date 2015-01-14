@@ -6,9 +6,9 @@
  */
 namespace BEAR\Package;
 
-use Ray\Di\Injector;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
+use Ray\Di\Injector;
 
 final class Bootstrap
 {

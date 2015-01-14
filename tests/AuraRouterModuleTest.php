@@ -2,11 +2,11 @@
 
 namespace BEAR\Package;
 
+use Aura\Router\Router;
 use BEAR\Package\Provide\Router\AuraRouter;
 use BEAR\Package\Provide\Router\RouterCollection;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use FakeVendor\HelloWorld\Module\AppModule;
-use Aura\Router\Router;
 use Ray\Di\Injector;
 
 class AuraRouterModuleTest extends \PHPUnit_Framework_TestCase
