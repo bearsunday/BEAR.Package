@@ -7,7 +7,6 @@
 namespace BEAR\Package\Provide\Router;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use BEAR\Sunday\Extension\Router\RouterMatch;
 use Ray\Di\Exception\NotFound;
 
 class RouterCollection implements RouterInterface
@@ -26,11 +25,9 @@ class RouterCollection implements RouterInterface
     }
 
     /**
-     * @param array  $globals
-     *
-     * @return RouterMatch
+     * {@inheritdoc}
      */
-    public function match(array $globals)
+    public function match(array $globals, array $server)
     {
         foreach ($this->routers as $route) {
             $match = $route->match($globals);

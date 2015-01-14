@@ -8,8 +8,8 @@ namespace BEAR\Package\Provide\Router;
 
 use Aura\Router\Router;
 use Aura\Web\Request\Method;
-use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use BEAR\Sunday\Extension\Router\RouterMatch;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -61,10 +61,10 @@ class AuraRouter implements RouterInterface
     /**
      * {@inheritdoc}
      */
-    public function match(array $globals = [])
+    public function match(array $globals, array $server)
     {
-        $urlPath = parse_url($globals['_SERVER']['REQUEST_URI'], PHP_URL_PATH);
-        $route = $this->router->match($urlPath, $globals['_SERVER']);
+        $urlPath = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
+        $route = $this->router->match($urlPath, $server);
         if ($route === false) {
             return false;
         }
@@ -75,11 +75,11 @@ class AuraRouter implements RouterInterface
         $request->path = $path;
         // query
         unset($params['path']);
-        $params += ($globals['_SERVER']['REQUEST_METHOD'] === 'GET') ? $globals['_GET'] : $globals['_POST'];
+        $params += ($server['REQUEST_METHOD'] === 'GET') ? $globals['_GET'] : $globals['_POST'];
         unset($params[self::METHOD_FILED]);
         $request->query = $params;
         // method
-        $request->method = strtolower((new Method($globals['_SERVER'], $globals['_POST'], self::METHOD_FILED))->get());
+        $request->method = strtolower((new Method($server, $globals['_POST'], self::METHOD_FILED))->get());
 
         return $request;
     }

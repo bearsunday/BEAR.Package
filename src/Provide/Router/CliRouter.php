@@ -6,14 +6,13 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use Aura\Cli\CliFactory;
 use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
 use BEAR\Package\AbstractAppMeta;
-use BEAR\Package\AppMeta;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-use Aura\Cli\CliFactory;
 
 class CliRouter implements RouterInterface
 {
@@ -52,7 +51,7 @@ class CliRouter implements RouterInterface
     /**
      * {@inheritdoc}
      */
-    public function match(array $globals = [])
+    public function match(array $globals, array $server)
     {
         if ($globals['argc'] !== 3) {
             $this->error(Status::USAGE, basename($globals['argv'][0]));
@@ -63,17 +62,16 @@ class CliRouter implements RouterInterface
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $query);
         }
-
         $globals = [
-            '_SERVER' => [
-                'REQUEST_METHOD' => $method,
-                'REQUEST_URI' => $parsedUrl['path']
-            ],
             '_GET' => $query,
             '_POST' => $query
         ];
+        $server = [
+            'REQUEST_METHOD' => $method,
+            'REQUEST_URI' => $parsedUrl['path']
+        ];
 
-        return $this->router->match($globals);
+        return $this->router->match($globals, $server);
     }
 
     /**

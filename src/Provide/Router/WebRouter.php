@@ -30,7 +30,7 @@ class WebRouter implements RouterInterface
     /**
      * {@inheritdoc}
      */
-    public function match(array $globals = [])
+    public function match(array $globals, array $server)
     {
         $request = new RouterMatch;
         $method = strtolower($globals['_SERVER']['REQUEST_METHOD']);
