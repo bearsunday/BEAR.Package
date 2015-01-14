@@ -19,8 +19,7 @@ route: {
     $context = isset($context) ? $context : 'app';
     $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__), $context, new ApcCache);
     /** @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
-    $_SERVER; // touch for $GLOBALS['_SERVER']
-    $request = $app->router->match($GLOBALS);
+    $request = $app->router->match($GLOBALS, $_SERVER);
 }
 
 try {
@@ -37,7 +36,7 @@ try {
     exit(0);
 } catch (\Exception $e) {
     $errorPage = $app->error->handle($e, $request);
-    $errorPage->transfer($app->responder);
+    $errorPage->transfer($app->responder, $_SERVER);
     exit(1);
 }
 

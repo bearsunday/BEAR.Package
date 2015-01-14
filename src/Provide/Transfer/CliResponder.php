@@ -11,7 +11,10 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 
 class CliResponder implements TransferInterface
 {
-    public function __invoke(ResourceObject $resourceObject)
+    /**
+     * {@inheritdoc}
+     */
+    public function __invoke(ResourceObject $resourceObject, array $server)
     {
         // code
         $ob = 'code: ' . $resourceObject->code . PHP_EOL;

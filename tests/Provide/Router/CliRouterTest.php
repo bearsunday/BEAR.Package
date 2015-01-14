@@ -2,8 +2,8 @@
 
 namespace BEAR\Package;
 
-use BEAR\Sunday\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Router\CliRouter;
+use BEAR\Sunday\Provide\Router\WebRouter;
 
 class CliRouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +27,7 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
             ],
             'argc' => 3
         ];
-        $request = $this->router->match($globals);
+        $request = $this->router->match($globals, []);
         $this->assertSame('get', $request->method);
         $this->assertSame('page://self/', $request->path);
         $this->assertSame(['name' => 'bear'], $request->query);
