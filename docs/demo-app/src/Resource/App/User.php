@@ -2,18 +2,21 @@
 
 namespace MyVendor\MyApp\Resource\App;
 
+use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 
 class User extends ResourceObject
 {
     /**
-     * @Link(rel="friend", href="/friend?id={friend_id}")
+     * @Link(rel="profile", href="/profile{?id}")
+     * @Embed(rel="website", src="app://self/website{?id}")
+     * @Embed(rel="contact", src="app://self/contact{?id}")
      */
     public function onGet($id)
     {
         $this['id'] = $id;
-        $this['friend_id'] = 'f' . $id;
+        $this['name'] = 'Akihito Koriyama';
 
         return $this;
     }

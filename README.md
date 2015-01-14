@@ -17,51 +17,102 @@ for demo app web page
 
     $ php -S 0.0.0.0:8080 -t docs/demo-app/var/www/
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello BEAR.Sunday" json output.
+You can then open a browser and go to `http://0.0.0.0:8080` to see the `{"greeting":"Hello BEAR.Sunday"}` json output.
 
 ## Virtual Host for Production
 
 Set up a virtual host to point to the `{$PACKAGE_PATH}docs/demo-app/var/www` directory of the application.
 
-# Console
+## Demo - Hypermedia Application Language (HAL)
+
+### ResourceObject
+[src/Resource/App/User.php](https://github.com/koriym/BEAR.Package/blob/develop-2/docs/demo-app/src/Resource/App/User.php)
+
+```php
+namespace MyVendor\MyApp\Resource\App;
+
+use BEAR\Resource\Annotation\Embed;
+use BEAR\Resource\Annotation\Link;
+use BEAR\Resource\ResourceObject;
+
+class User extends ResourceObject
+{
+    /**
+     * @Link(rel="profile", href="/profile{?id}")
+     * @Embed(rel="website", src="app://self/website{?id}")
+     * @Embed(rel="contact", src="app://self/contact{?id}")
+     */
+    public function onGet($id)
+    {
+        $this['id'] = $id;
+        $this['name'] = 'Akihito Koriyama';
+
+        return $this;
+    }
+}
+```
+## Console
 
 ### web access (page resource)
 
     $ cd docs/demo/MyVendor/MyApp/var/bootstrap
-    $ php web.php get '/user?id=1'
+    $ php web.php options /user
     
     code: 200
     header:
+    allow: get
     body:
-    {
-        "user1": {
-            "id": "1",
-            "friend_id": "f1"
-        },
-        "_links": {
-            "self": {
-                "href": "/user?id=1"
-            }
-        }
-    }
+
     
 ### api access (api resource)
 
     $ cd docs/demo/MyVendor/MyApp/var/bootstrap
-    $ php api.php get '/user?id=1'
+    $ php api.php get '/user?id=koriym'
 
     code: 200
     header:
     body:
     {
-        "id": "1",
-        "friend_id": "f1",
+        "id": "koriym",
+        "name": "Akihito Koriyama",
+        "_embedded": {
+            "website": {
+                "url": "http:://example.org/koriym",
+                "id": "koriym",
+                "_links": {
+                    "self": {
+                        "href": "/website?id=koriym"
+                    }
+                }
+            },
+            "contact": {
+                "contact": [
+                    {
+                        "id": "1",
+                        "name": "Athos"
+                    },
+                    {
+                        "id": "2",
+                        "name": "Porthos"
+                    },
+                    {
+                        "id": "3",
+                        "name": "Aramis"
+                    }
+                ],
+                "_links": {
+                    "self": {
+                        "href": "/contact?id=koriym"
+                    }
+                }
+            }
+        },
         "_links": {
             "self": {
-                "href": "/user?id=1"
+                "href": "/user?id=koriym"
             },
-            "friend": {
-                "href": "/friend?id=f1"
+            "contact": {
+                "href": "/contact?id=koriym"
             }
         }
     }
@@ -155,19 +206,23 @@ class ProdModule extends AbstractModule
 }
 ```
 
+## Extra modules
+
+ * [Ray.Di Modules](https://github.com/Ray-Di)
+
 ## Build status
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop-2)
 [![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Sunday/?branch=develop-2)
 [![Build Status](https://travis-ci.org/koriym/BEAR.Sunday.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Sunday?branch=develop-2)
-**BEAR.Sunday** - [Resource Oriented Applications Framework](https://github.com/koriym/BEAR.Sunday)
+**BEAR.Sunday** - [Resource Oriented Framework](https://github.com/koriym/BEAR.Sunday)
 
  [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Aop/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Aop/) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Aop.png?b=develop-2)](http://travis-ci.org/koriym/Ray.Aop) **Ray.Aop** - [Aspect Oriented Framework](https://github.com/koriym/Ray.Aop)
 
  [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/) [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?b=develop-2)](http://travis-ci.org/koriym/Ray.Di) **Ray.Di** - [Dependency Injection Framework](https://github.com/koriym/Ray.Di)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Code Coverage](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Resource/?branch=develop-2) [![Build Status](https://travis-ci.org/koriym/BEAR.Resource.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Resource)
-**BEAR.Resource** - [Hypermedia Framework for Object as a Service](https://github.com/koriym/BEAR.Resource)
+**BEAR.Resource** - [Hypermedia Framework](https://github.com/koriym/BEAR.Resource)
 
 ## Requirements
 
