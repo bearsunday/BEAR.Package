@@ -5,7 +5,11 @@ namespace MyVendor\MyApp\Resource\App;
 use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
+use BEAR\RepositoryModule\Annotation\QueryRepository;
 
+/**
+ * @QueryRepository
+ */
 class User extends ResourceObject
 {
     /**
