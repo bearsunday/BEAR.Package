@@ -9,7 +9,7 @@ namespace BEAR\Package\Context;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Transfer\HalResponder;
 use BEAR\Resource\RenderInterface;
-use BEAR\Resource\TransferInterface;
+use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Ray\Di\AbstractModule;
 
 class HalModule extends AbstractModule
