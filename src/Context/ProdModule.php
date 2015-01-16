@@ -27,5 +27,6 @@ class ProdModule extends AbstractModule
             'reader=annotation_reader'
         );
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->annotatedWith('resource_repository')->to(ApcCache::class);
     }
 }
