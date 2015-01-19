@@ -9,7 +9,7 @@ namespace BEAR\Package;
 abstract class AbstractAppMeta
 {
     /**
-     * Application name "{vendor}/{app}"
+     * Application name "{Vendor}\{Package}"
      *
      * @var string
      */
@@ -29,9 +29,4 @@ abstract class AbstractAppMeta
      * @var string
      */
     public $logDir;
-
-    /**
-     * @var string
-     */
-    public $confDir;
 }
