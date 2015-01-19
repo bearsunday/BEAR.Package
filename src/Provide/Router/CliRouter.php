@@ -67,7 +67,7 @@ class CliRouter implements RouterInterface
             '_POST' => $query
         ];
         $server = [
-            'REQUEST_METHOD' => $method,
+            'REQUEST_METHOD' => strtoupper($method),
             'REQUEST_URI' => $parsedUrl['path']
         ];
 
