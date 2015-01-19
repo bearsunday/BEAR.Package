@@ -11,20 +11,20 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-class WebRouter implements RouterInterface
+class WebRouter implements RouterInterface, WebRouterInterface
 {
     /**
      * @var string
      */
-    private $defaultRouteHost  = 'page://self';
+    private $defaultRouteUri;
 
     /**
-     * @Named("default_route_host")
-     * @Inject(optional=true)
+     * @Inject
+     * @Named("default_route_uri")
      */
-    public function setRouteHost($default_route_host)
+    public function __construct($default_route_uri = 'page://self')
     {
-        $this->defaultRouteHost = $default_route_host;
+        $this->defaultRouteUri = $default_route_uri;
     }
 
     /**
@@ -36,7 +36,7 @@ class WebRouter implements RouterInterface
         $method = strtolower($server['REQUEST_METHOD']);
         list($request->method, $request->path, $request->query) = [
             $method,
-            $this->defaultRouteHost . parse_url($server['REQUEST_URI'], PHP_URL_PATH),
+            $this->defaultRouteUri . parse_url($server['REQUEST_URI'], PHP_URL_PATH),
             ($method === 'get') ? $globals['_GET'] : $globals['_POST']
         ];
 

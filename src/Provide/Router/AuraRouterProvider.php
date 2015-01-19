@@ -11,6 +11,8 @@ use Aura\Router\RouteCollection;
 use Aura\Router\RouteFactory;
 use Aura\Router\Router;
 use BEAR\Package\AbstractAppMeta;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
 class AuraRouterProvider implements ProviderInterface
@@ -20,21 +22,17 @@ class AuraRouterProvider implements ProviderInterface
      */
     private $router;
 
+    private $defaultRouteUri;
     /**
-     * @param AbstractAppMeta $appMeta
+     * @Inject
+     * @Named("defaultRouteUri=default_route_uri")
      */
-    public function __construct(AbstractAppMeta $appMeta)
+    public function __construct(AbstractAppMeta $appMeta, $defaultRouteUri = 'page://self')
     {
-        $routerCollection = new RouteCollection(new RouteFactory());
-        $routerCollection->setResourceCallable([$this, 'resourceRoute']);
-        $router = new Router(
-            $routerCollection,
-            new Generator
-        );
-        $routeFile = $appMeta->appDir . '/var/conf/aura.router.php';
-        if (file_exists($routeFile)) {
-            include $routeFile;
-        }
+        $this->defaultRouteUri = $defaultRouteUri;
+        $router = new Router(new RouteCollection(new RouteFactory), new Generator);
+        $routeFile = $appMeta->appDir . '/var/conf/aura.route.php';
+        include $routeFile;
         $this->router = $router;
     }
 
@@ -43,21 +41,6 @@ class AuraRouterProvider implements ProviderInterface
      */
     public function get()
     {
-        return new AuraRouter($this->router);
-    }
-
-    /**
-     * @param RouteCollection $router
-     */
-    public function resourceRoute(RouteCollection $router)
-    {
-        $router->setTokens(array(
-            'id' => '([a-f0-9]+)'
-        ));
-        $router->addPost('post', '/{id}');
-        $router->addGet('get', '/{id}');
-        $router->addPut('put', '/{id}');
-        $router->addPatch('patch', '/{id}');
-        $router->addDelete('delete', '/{id}');
+        return new AuraRouter($this->router, $this->defaultRouteUri);
     }
 }

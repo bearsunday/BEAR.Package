@@ -8,6 +8,7 @@ namespace BEAR\Package;
 
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Module\SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
@@ -30,6 +31,7 @@ class PackageModule extends AbstractModule
     protected function configure()
     {
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
+        $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
         $this->bind('')->annotatedWith('app_name')->toInstance($this->appMeta->name);
         $this->install(new SundayModule);
         $this->override(new WebRouterModule);

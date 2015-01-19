@@ -27,35 +27,12 @@ class AuraRouter implements RouterInterface
     /**
      * @var string
      */
-    private $defaultScheme = 'page://self';
+    private $defaultRouteUri;
 
-    /**
-     * @param Router $router
-     *
-     * @Inject
-     * @Named("original")
-     */
-    public function __construct(Router $router)
+    public function __construct(Router $router, $defaultRouteUri)
     {
         $this->router = $router;
-    }
-
-    /**
-     * Default route host
-     *
-     * @var string
-     */
-    private $defaultRouteHost = 'page://self';
-
-    /**
-     * @param $defaultScheme
-     *
-     * @Inject(optional=true)
-     * @Named("default_route_host")
-     */
-    public function setDefaultScheme($defaultRoutHost)
-    {
-        $this->defaultRouteHost = $defaultRoutHost;
+        $this->defaultRouteUri = $defaultRouteUri;
     }
 
     /**
@@ -71,7 +48,7 @@ class AuraRouter implements RouterInterface
         $request = new RouterMatch;
         $params = $route->params;
         // path
-        $path = substr($params['path'], 0, 1) === '/' ? $this->defaultRouteHost . $params['path'] : $params['path'];
+        $path = substr($params['path'], 0, 1) === '/' ? $this->defaultRouteUri . $params['path'] : $params['path'];
         $request->path = $path;
         // query
         unset($params['path']);

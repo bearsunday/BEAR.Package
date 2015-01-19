@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-use BEAR\Package\AbstractAppMeta;
 use BEAR\Package\AppMeta;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
@@ -21,19 +20,22 @@ class RouterCollectionProvider implements ProviderInterface
     private $primaryRouter;
 
     /**
+     * @var WebRouter
+     */
+    private $webRouter;
+
+    /**
      * @param RouterInterface $router
      * @param AppMeta         $appMeta
      *
      * @Inject
      * @Named("router=primary_router")
      */
-    public function __construct(RouterInterface $router, AbstractAppMeta $appMeta)
+    public function __construct(RouterInterface $router, WebRouterInterface $webRouter)
     {
         $this->primaryRouter = $router;
-        $routeFile = $appMeta->appDir . '/var/conf/route.php';
-        if (file_exists($routeFile)) {
-            include $routeFile;
-        }
+
+        $this->webRouter = $webRouter;
     }
 
     /**
@@ -41,6 +43,6 @@ class RouterCollectionProvider implements ProviderInterface
      */
     public function get()
     {
-        return new RouterCollection([$this->primaryRouter, new WebRouter]);
+        return new RouterCollection([$this->primaryRouter, $this->webRouter]);
     }
 }

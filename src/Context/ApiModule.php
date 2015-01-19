@@ -15,6 +15,6 @@ class ApiModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind()->annotatedWith('default_route_host')->toInstance('app://self');
+        $this->bind()->annotatedWith('default_route_uri')->toInstance('app://self');
     }
 }
