@@ -1,7 +1,11 @@
 <?php
-/** @var $router \Aura\Router\RouteCollection */
-$nameRegex = '[-a-zA-Z]+';
+/**
+ * Aura.Router route file
+ *
+ * @see https://github.com/auraphp/Aura.Router
+ */
 
-$router->add('hello', '/hello/{name}')
-    ->addValues(['path' => '/index'])
-    ->addTokens(['name' => $nameRegex]);
+/** @var $router \Aura\Router\RouteCollection */
+
+$router->addGet('user', '/user/{id}')
+    ->addValues(['path' => '/user']);
