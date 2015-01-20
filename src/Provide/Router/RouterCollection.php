@@ -38,4 +38,18 @@ class RouterCollection implements RouterInterface
 
         throw new NotFound($globals['_SERVER']['REQUEST_URI']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $data)
+    {
+        foreach ($this->routers as $route) {
+            $uri = $route->generate($name, $data);
+            if ($uri) {
+                return $uri;
+            }
+        }
+        return false;
+    }
 }

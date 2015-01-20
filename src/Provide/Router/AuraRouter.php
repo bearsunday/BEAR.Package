@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use Aura\Router\Exception\RouteNotFound;
 use Aura\Router\Router;
 use Aura\Web\Request\Method;
 use BEAR\Sunday\Extension\Router\RouterInterface;
@@ -63,5 +64,17 @@ class AuraRouter implements RouterInterface
         $request->method = strtolower((new Method($server, $globals['_POST'], self::METHOD_FILED))->get());
 
         return $request;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $data)
+    {
+        try {
+            return $this->router->generate($name, $data);
+        } catch (RouteNotFound $e) {
+            return false;
+        }
     }
 }

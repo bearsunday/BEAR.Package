@@ -75,6 +75,14 @@ class CliRouter implements RouterInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $data)
+    {
+        return $this->router->generate($name, $data);
+    }
+
+    /**
      * @param string $status
      * @param string $message
      */
