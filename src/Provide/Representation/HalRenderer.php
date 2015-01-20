@@ -11,6 +11,7 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
+use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
 
@@ -22,19 +23,25 @@ class HalRenderer implements RenderInterface
     /**
      * @var Reader
      */
-    protected $reader;
+    private $reader;
 
     /**
      * @var Uri
      */
-    protected $uri;
+    private $uri;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @param Reader $reader
      */
-    public function __construct(Reader $reader)
+    public function __construct(Reader $reader, RouterInterface $router)
     {
         $this->reader = $reader;
+        $this->router = $router;
     }
 
     /**
@@ -42,15 +49,8 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
-        // evaluate all request in body.
-        if (is_array($ro->body)) {
-            $this->valuateElements($ro);
-        }
-        // HAL
-        $body = $ro->body ? : [];
-        if (is_scalar($body)) {
-            $body = ['value' => $body];
-        }
+        list($ro, $body) = $this->valuate($ro);
+
         $method = 'on' . ucfirst($ro->uri->method);
         $hasMethod = method_exists($ro, $method);
         if (! $hasMethod) {
@@ -91,17 +91,67 @@ class HalRenderer implements RenderInterface
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
-        $hal = new Hal($path, $body);
+        $selfLink = $this->getReverseMatchedLink($path);
+        $hal = new Hal($selfLink, $body);
+        $this->getHalLink($uri, $body, $links, $hal);
+
+        return $hal;
+    }
+
+    /**
+     * @param string $uri
+     *
+     * @return mixed
+     */
+    private function getReverseMatchedLink($uri)
+    {
+        $urlParts = parse_url($uri);
+        $routeName = $urlParts['path'];
+        parse_str($urlParts['query'], $value);
+        $reverseUri = $this->router->generate($routeName, $value);
+        if (is_string($reverseUri)) {
+            return $reverseUri;
+        }
+        return $uri;
+    }
+
+    /**
+     * @param ResourceObject $ro
+     *
+     * @return array
+     */
+    private function valuate(ResourceObject $ro)
+    {
+        // evaluate all request in body.
+        if (is_array($ro->body)) {
+            $this->valuateElements($ro);
+        }
+        // HAL
+        $body = $ro->body ?: [];
+        if (is_scalar($body)) {
+            $body = ['value' => $body];
+
+            return array($ro, $body);
+        }
+
+        return array($ro, $body);
+    }
+
+    /**
+     * @param Uri   $uri
+     * @param array $body
+     * @param array $links
+     * @param Hal   $hal
+     */
+    private function getHalLink(Uri $uri, array $body, array $links, Hal $hal)
+    {
         foreach ($links as $link) {
-            if (! $link instanceof Link) {
+            if (!$link instanceof Link) {
                 continue;
             }
             $uri = uri_template($link->href, $body);
-            $parsed = parse_url($uri);
-            $uri = $parsed['path'] . (isset($parsed['query']) ? '?' . $parsed['query'] : '');
-            $hal->addLink($link->rel, $uri);
+            $reverseUri = $this->getReverseMatchedLink($uri);
+            $hal->addLink($link->rel, $reverseUri);
         }
-
-        return $hal;
     }
 }

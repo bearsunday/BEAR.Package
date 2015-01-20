@@ -14,8 +14,8 @@ class User extends ResourceObject
 {
     /**
      * @Link(rel="profile", href="/profile{?id}")
-     * @Embed(rel="website", src="app://self/website{?id}")
-     * @Embed(rel="contact", src="app://self/contact{?id}")
+     * @Embed(rel="website", src="/website{?id}")
+     * @Embed(rel="contact", src="/contact{?id}")
      */
     public function onGet($id)
     {

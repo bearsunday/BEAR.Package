@@ -7,5 +7,6 @@
 
 /** @var $router \Aura\Router\RouteCollection */
 
-$router->addGet('user', '/user/{id}')
-    ->addValues(['path' => '/user']);
+$router->add('/user', '/user/{id}')->addValues(['path' => '/user']);
+$router->add('/profile', '/profile/{id}')->addValues(['path' => '/profile']);
+
