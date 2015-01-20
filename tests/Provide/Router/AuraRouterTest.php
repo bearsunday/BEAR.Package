@@ -74,7 +74,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['id' => 'PC6001'], $request->query);
     }
 
-    public function testNotMuch()
+    public function testNotMatch()
     {
         $this->routerAdapter
             ->addGet(null, '/blog/{id}')
