@@ -29,7 +29,11 @@ class AuraRouter implements RouterInterface
      */
     private $defaultRouteUri;
 
-    public function __construct(Router $router, $defaultRouteUri)
+    /**
+     * @param Router $router          Aura Router
+     * @param string $defaultRouteUri default scheme+host
+     */
+    public function __construct(Router $router, $defaultRouteUri = 'page://self')
     {
         $this->router = $router;
         $this->defaultRouteUri = $defaultRouteUri;
