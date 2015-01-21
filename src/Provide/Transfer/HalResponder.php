@@ -25,7 +25,7 @@ class HalResponder implements TransferInterface
         //
         // @see https://github.com/mikekelly/hal_specification/blob/master/hal_specification.md
         // @see http://tools.ietf.org/html/draft-kelly-json-hal-06
-        header('Content-type: application/hal+json');
+        header('Content-Type: application/hal+json');
 
         // body
         echo (string) $resourceObject;
