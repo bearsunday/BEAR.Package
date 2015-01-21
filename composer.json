@@ -42,8 +42,10 @@
     "autoload-dev": {
         "psr-4": {
             "BEAR\\Package\\": "tests/",
+             "BEAR\\Package\\": "tests/Fake",
             "FakeVendor\\HelloWorld\\": "tests/Fake/FakeVendor/HelloWorld/src"
-        }
+        },
+        "files": ["tests/Fake/functions.php"]
     },
     "prefer-stable": true,
     "bin": [

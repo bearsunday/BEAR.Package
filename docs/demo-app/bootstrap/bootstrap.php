@@ -35,8 +35,6 @@ try {
     $page()->transfer($app->responder, $_SERVER);
     exit(0);
 } catch (\Exception $e) {
-    $errorPage = $app->error->handle($e, $request);
-    $errorPage->transfer($app->responder, $_SERVER);
+    $app->error->handle($e, $request)->transfer();
     exit(1);
 }
-

@@ -6,10 +6,13 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Package\Provide\Error\VndError;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Module\SundayModule;
+use BEAR\Sunday\Provide\Error\VndErrorTest;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
@@ -37,6 +40,7 @@ class PackageModule extends AbstractModule
         $this->override(new WebRouterModule);
         $this->bindResources();
         $this->install(new QueryRepositoryModule($this->appMeta->name));
+        $this->bind(ErrorInterface::class)->to(VndError::class);
     }
 
     /**
