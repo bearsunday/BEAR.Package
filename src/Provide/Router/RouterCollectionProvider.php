@@ -25,8 +25,8 @@ class RouterCollectionProvider implements ProviderInterface
     private $webRouter;
 
     /**
-     * @param RouterInterface $router
-     * @param AppMeta         $appMeta
+     * @param RouterInterface    $router
+     * @param WebRouterInterface $webRouter
      *
      * @Inject
      * @Named("router=primary_router")

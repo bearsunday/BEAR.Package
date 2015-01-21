@@ -84,7 +84,7 @@ class CliRouter implements RouterInterface
 
     /**
      * @param string $status
-     * @param string $message
+     * @param string $command
      */
     private function error($status, $command)
     {
