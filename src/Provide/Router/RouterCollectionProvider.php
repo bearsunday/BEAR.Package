@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-use BEAR\Package\AppMeta;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;

@@ -13,7 +13,6 @@ use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
 use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
-use BEAR\Sunday\Provide\Error\ErrorPage;
 
 /**
  * vnd.error for BEAR.Package
