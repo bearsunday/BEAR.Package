@@ -8,6 +8,9 @@ use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
+require_once dirname(dirname(__DIR__)) . '/Fake/Provide/Error/header.php';
+require_once dirname(dirname(__DIR__)) . '/Fake/Provide/Error/http_response_code.php';
+
 class VndErrorTest extends \PHPUnit_Framework_TestCase
 {
     /**
