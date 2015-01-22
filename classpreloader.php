@@ -9,9 +9,9 @@ use BEAR\Package\Bootstrap;
 use BEAR\Package\AppMeta;
 use BEAR\Package\Provide\Representation\HalRenderer;
 
-require __DIR__ . '/vendor/bear/resource/src/Annotation/Link.php';
 require __DIR__ . '/vendor/bear/sunday/src/Annotation/Cache.php';
 
+$loader = require __DIR__ . '/vendor/autoload.php';
 $config = ClassLoader::getIncludes(function(ClassLoader $loader) {
     $loader->register();
     class_exists(AppMeta::class);
@@ -19,7 +19,7 @@ $config = ClassLoader::getIncludes(function(ClassLoader $loader) {
     class_exists(HalRenderer::class);
     $app = (new Injector(new AppModule()))->getInstance(AppInterface::class);
     /** @var $app AbstractApp */
-    $page = $app->resource->get->get->uri('page://self/')->eager->request();
+    $page = $app->resource->get->uri('page://self/')->eager->request();
     (string) $page;
 });
 

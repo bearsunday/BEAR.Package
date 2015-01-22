@@ -26,10 +26,10 @@
         "bear/sunday": "~1.0@dev",
         "bear/query-repository": "~1.0@dev",
         "koriym/psr4list": "~1.0@dev",
-        "classpreloader/classpreloader": "~1.1@dev",
         "aura/router": "~2.0",
         "aura/web": "~2.0",
-        "aura/cli": "~2.0"
+        "aura/cli": "~2.0",
+        "classpreloader/classpreloader": "1.1.x-dev"
     },
     "require-dev": {
         "facebook/xhprof": "dev-master"
@@ -43,7 +43,7 @@
         "psr-4": {
             "BEAR\\Package\\": "tests/",
             "BEAR\\Package\\": "tests/Fake",
-            "FakeVendor\\HelloWorld\\": "tests/Fake/FakeVendor/HelloWorld/src"
+            "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src"
         }
     },
     "prefer-stable": true,
@@ -52,6 +52,9 @@
         "bin/bear.preload"
     ],
     "minimum-stability": "dev",
+    "scripts": {
+      "post-autoload-dump": "php vendor/bin/classpreloader.php compile --quiet --config=./classpreloader.php --output=./preload.php"
+    },
     "extra": {
         "branch-alias": {
             "dev-develop-2": "1.0.x-dev"

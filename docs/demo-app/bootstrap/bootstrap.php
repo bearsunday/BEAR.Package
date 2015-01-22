@@ -9,6 +9,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 load: {
     $dir = dirname(dirname(dirname(__DIR__)));
+    // include $dir . '/preload.php';
     $loader = require $dir . '/vendor/autoload.php';
     /** @var $loader \Composer\Autoload\ClassLoader */
     $loader->addPsr4(__NAMESPACE__ . '\\', dirname(__DIR__) . '/src');
