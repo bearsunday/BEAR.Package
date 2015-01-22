@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the *** package
+ * This file is part of the BEAR.Package package
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
@@ -18,18 +18,40 @@ class EtagResponseInterceptor implements MethodInterceptor
     {
         $server = $invocation->getArguments()[1];
         $headers = $invocation->getThis()->headers;
-        if (isset($headers['Etag']) && isset($server['HTTP_IF_NONE_MATCH']) && stripslashes($server['HTTP_IF_NONE_MATCH']) === $headers['Etag']) {
-            goto NOT_MODIFIED_304;
-        }
-        if (isset($headers['Last-Modified']) && isset($server['HTTP_IF_MODIFIED_SINCE']) && $server['HTTP_IF_MODIFIED_SINCE'] === $headers['Last-Modified']) {
-            goto NOT_MODIFIED_304;
-        }
-
-        return $invocation->proceed();
-
-        NOT_MODIFIED_304: {
+        if ($this->isSameEtag($headers, $server) || $this->isNotModifiedSince($headers, $server)) {
             http_response_code(304);
             header('Cache-Control: public');
+
+            return;
         }
+        return $invocation->proceed();
+    }
+
+    /**
+     * @param $headers
+     * @param $server
+     */
+    private function isNotModifiedSince($headers, $server)
+    {
+        if (isset($headers['Last-Modified']) && isset($server['HTTP_IF_MODIFIED_SINCE']) && $server['HTTP_IF_MODIFIED_SINCE'] === $headers['Last-Modified']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $headers
+     * @param array $server
+     *
+     * @return array
+     */
+    private function isSameEtag($headers, $server)
+    {
+        if (isset($headers['Etag']) && isset($server['HTTP_IF_NONE_MATCH']) && stripslashes($server['HTTP_IF_NONE_MATCH']) === $headers['Etag']) {
+             return true;
+        }
+
+        return false;
     }
 }
