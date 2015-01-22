@@ -6,13 +6,10 @@
  */
 namespace BEAR\Package;
 
-use Aura\Router\Router;
-use Aura\Web\WebFactory;
 use BEAR\Package\Provide\Router\AuraRouterProvider;
 use BEAR\Package\Provide\Router\RouterCollectionProvider;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Router\WebRouterInterface;
-use BEAR\Sunday\Exception\LogicException;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;

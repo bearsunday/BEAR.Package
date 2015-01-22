@@ -11,8 +11,6 @@ use Aura\Router\Router;
 use Aura\Web\Request\Method;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 class AuraRouter implements RouterInterface
 {

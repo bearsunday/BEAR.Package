@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package\Provide\Transfer;
 
-use Doctrine\Common\Annotations\Reader;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
