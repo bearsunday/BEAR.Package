@@ -29,7 +29,7 @@
         "aura/router": "~2.0",
         "aura/web": "~2.0",
         "aura/cli": "~2.0",
-        "classpreloader/classpreloader": "1.1.x-dev"
+        "classpreloader/classpreloader": "dev-master"
     },
     "require-dev": {
         "facebook/xhprof": "dev-master"
