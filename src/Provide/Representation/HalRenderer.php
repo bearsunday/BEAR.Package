@@ -93,7 +93,7 @@ class HalRenderer implements RenderInterface
         $path = $uri->path . $query;
         $selfLink = $this->getReverseMatchedLink($path);
         $hal = new Hal($selfLink, $body);
-        $this->getHalLink($uri, $body, $links, $hal);
+        $this->getHalLink($body, $links, $hal);
 
         return $hal;
     }
@@ -138,12 +138,13 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * @param Uri   $uri
      * @param array $body
      * @param array $links
      * @param Hal   $hal
+     *
+     * @internal param Uri $uri
      */
-    private function getHalLink(Uri $uri, array $body, array $links, Hal $hal)
+    private function getHalLink(array $body, array $links, Hal $hal)
     {
         foreach ($links as $link) {
             if (!$link instanceof Link) {
