@@ -9,8 +9,11 @@ namespace BEAR\Package\Provide\Router;
 use Aura\Router\Exception\RouteNotFound;
 use Aura\Router\Router;
 use Aura\Web\Request\Method;
+use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use BEAR\Sunday\Extension\Router\SchemeHost;
+use Ray\Di\Di\Inject;
 
 class AuraRouter implements RouterInterface
 {
@@ -26,16 +29,16 @@ class AuraRouter implements RouterInterface
     /**
      * @var string
      */
-    private $defaultRouteUri;
+    private $schemeHost = 'page://self';
 
     /**
-     * @param Router $router          Aura Router
-     * @param string $defaultRouteUri default scheme+host
+     * @param Router $router
+     * @param string $schemeHost
      */
-    public function __construct(Router $router, $defaultRouteUri = 'page://self')
+    public function __construct(Router $router, $schemeHost)
     {
         $this->router = $router;
-        $this->defaultRouteUri = $defaultRouteUri;
+        $this->schemeHost = $schemeHost;
     }
 
     /**
@@ -50,7 +53,7 @@ class AuraRouter implements RouterInterface
         $request = new RouterMatch;
         $params = $route->params;
         // path
-        $path = substr($params['path'], 0, 1) === '/' ? $this->defaultRouteUri . $params['path'] : $params['path'];
+        $path = substr($params['path'], 0, 1) === '/' ? $this->schemeHost . $params['path'] : $params['path'];
         $request->path = $path;
         // query
         unset($params['path']);
