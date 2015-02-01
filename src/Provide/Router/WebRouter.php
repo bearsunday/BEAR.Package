@@ -1,30 +1,32 @@
 <?php
 /**
- * This file is part of the BEAR.Package package
+ * This file is part of the BEAR.Sunday package
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use BEAR\Sunday\Extension\Router\SchemeHost;
 use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 class WebRouter implements RouterInterface, WebRouterInterface
 {
     /**
      * @var string
      */
-    private $defaultRouteUri;
+    private $schemeHost;
 
     /**
-     * @Inject
-     * @Named("default_route_uri")
+     * @DefaultSchemeHost
+     *
+     * @param string $schemeHost
      */
-    public function __construct($default_route_uri = 'page://self')
+    public function __construct($schemeHost)
     {
-        $this->defaultRouteUri = $default_route_uri;
+        $this->schemeHost = $schemeHost;
     }
 
     /**
@@ -33,12 +35,8 @@ class WebRouter implements RouterInterface, WebRouterInterface
     public function match(array $globals, array $server)
     {
         $request = new RouterMatch;
-        $method = strtolower($server['REQUEST_METHOD']);
-        list($request->method, $request->path, $request->query) = [
-            $method,
-            $this->defaultRouteUri . parse_url($server['REQUEST_URI'], PHP_URL_PATH),
-            ($method === 'get') ? $globals['_GET'] : $globals['_POST']
-        ];
+        list($request->method, $request->query) = (new OverrideMethod)->get($server, $globals['_GET'], $globals['_POST']);
+        $request->path = $this->schemeHost . parse_url($server['REQUEST_URI'], PHP_URL_PATH);
 
         return $request;
     }

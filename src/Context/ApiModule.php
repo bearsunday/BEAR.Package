@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Context;
 
+use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use Ray\Di\AbstractModule;
 
 class ApiModule extends AbstractModule
@@ -15,6 +16,6 @@ class ApiModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind()->annotatedWith('default_route_uri')->toInstance('app://self');
+        $this->bind()->annotatedWith(DefaultSchemeHost::class)->toInstance('app://self');
     }
 }
