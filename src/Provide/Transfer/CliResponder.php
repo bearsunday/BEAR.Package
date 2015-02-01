@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Transfer;
 
+use BEAR\Resource\Code;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 
@@ -16,18 +17,19 @@ class CliResponder implements TransferInterface
      */
     public function __invoke(ResourceObject $resourceObject, array $server)
     {
+        $body = (string) $resourceObject;
         // code
-        $ob = 'code: ' . $resourceObject->code . PHP_EOL;
-
+        $statusText = (new Code)->statusText[$resourceObject->code];
+        $ob = $resourceObject->code . ' ' . $statusText . PHP_EOL;
         // header
-        $ob .= 'header:' . PHP_EOL;
         foreach ($resourceObject->headers as $label => $value) {
             $ob .= "{$label}: {$value}" . PHP_EOL;
         }
+        // empty line
+        $ob .=  PHP_EOL;
 
         // body
-        $ob .= 'body:' . PHP_EOL;
-        $ob .= (string) $resourceObject;
+        $ob .= $body;
 
         echo $ob . PHP_EOL;
     }

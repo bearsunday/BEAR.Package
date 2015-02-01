@@ -70,9 +70,10 @@ class VndError implements ErrorInterface
      */
     public function transfer()
     {
+
         http_response_code($this->code);
         header($this->header);
-        echo json_encode($this->body, JSON_PRETTY_PRINT);
+        echo json_encode($this->body, JSON_PRETTY_PRINT) . PHP_EOL;
     }
 
     /**
