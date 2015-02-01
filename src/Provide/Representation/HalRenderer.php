@@ -62,7 +62,7 @@ class HalRenderer implements RenderInterface
         /** @var $links Link[] */
         $hal = $this->getHal($ro->uri, $body, $links);
         $ro->view = $hal->asJson(true) . PHP_EOL;
-
+        $ro->headers['Content-Type'] = 'application/hal+json';
         return $ro->view;
     }
 
@@ -134,7 +134,7 @@ class HalRenderer implements RenderInterface
             return array($ro, $body);
         }
 
-        return array($ro, $body);
+        return[$ro, $body];
     }
 
     /**
