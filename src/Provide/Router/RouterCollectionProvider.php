@@ -19,7 +19,7 @@ class RouterCollectionProvider implements ProviderInterface
     private $primaryRouter;
 
     /**
-     * @var WebRouter
+     * @var WebRouterInterface
      */
     private $webRouter;
 
@@ -33,7 +33,6 @@ class RouterCollectionProvider implements ProviderInterface
     public function __construct(RouterInterface $router, WebRouterInterface $webRouter)
     {
         $this->primaryRouter = $router;
-
         $this->webRouter = $webRouter;
     }
 
