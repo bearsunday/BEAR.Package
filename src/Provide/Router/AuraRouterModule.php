@@ -4,12 +4,8 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package;
+namespace BEAR\Package\Provide\Router;
 
-use BEAR\Package\Provide\Router\AuraRouterProvider;
-use BEAR\Package\Provide\Router\RouterCollectionProvider;
-use BEAR\Package\Provide\Router\WebRouter;
-use BEAR\Package\Provide\Router\WebRouterInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
@@ -20,6 +16,5 @@ class AuraRouterModule extends AbstractModule
     {
         $this->bind(RouterInterface::class)->annotatedWith('primary_router')->toProvider(AuraRouterProvider::class);
         $this->bind(RouterInterface::class)->toProvider(RouterCollectionProvider::class)->in(Scope::SINGLETON);
-        $this->bind(WebRouterInterface::class)->to(WebRouter::class)->in(Scope::SINGLETON);
     }
 }

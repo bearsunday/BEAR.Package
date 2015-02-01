@@ -7,6 +7,7 @@
 namespace BEAR\Package;
 
 use BEAR\Package\Provide\Error\VndError;
+use BEAR\Package\Provide\Router\AuraRouterModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\Package\Provide\Transfer\EtagResponseModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
@@ -36,12 +37,13 @@ class PackageModule extends AbstractModule
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
         $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
         $this->bind('')->annotatedWith('app_name')->toInstance($this->appMeta->name);
+        $this->bind(ErrorInterface::class)->to(VndError::class);
         $this->install(new SundayModule);
-        $this->override(new WebRouterModule);
         $this->bindResources();
         $this->install(new QueryRepositoryModule($this->appMeta->name));
-        $this->bind(ErrorInterface::class)->to(VndError::class);
         $this->install(new EtagResponseModule);
+        $this->install(new AuraRouterModule());
+        $this->install(new WebRouterModule);
     }
 
     /**

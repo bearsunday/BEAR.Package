@@ -28,8 +28,7 @@
         "koriym/psr4list": "~1.0@dev",
         "aura/router": "~2.0",
         "aura/web": "~2.0",
-        "aura/cli": "~2.0",
-        "classpreloader/classpreloader": "dev-master"
+        "aura/cli": "~2.0"
     },
     "require-dev": {
         "facebook/xhprof": "dev-master"
@@ -52,9 +51,6 @@
         "bin/bear.preload"
     ],
     "minimum-stability": "dev",
-    "scripts": {
-      "post-autoload-dump": "php vendor/bin/classpreloader.php compile --quiet --config=./classpreloader.php --output=./preload.php"
-    },
     "extra": {
         "branch-alias": {
             "dev-develop-2": "1.0.x-dev"

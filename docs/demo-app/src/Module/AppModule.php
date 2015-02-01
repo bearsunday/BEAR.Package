@@ -3,8 +3,8 @@
 namespace MyVendor\MyApp\Module;
 
 use BEAR\Package\AppMeta;
-use BEAR\Package\AuraRouterModule;
 use BEAR\Package\PackageModule;
+use BEAR\Package\Provide\Router\AuraRouterModule;
 use Ray\Di\AbstractModule;
 
 class AppModule extends AbstractModule

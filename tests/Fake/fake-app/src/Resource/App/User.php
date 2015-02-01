@@ -4,14 +4,12 @@ namespace FakeVendor\HelloWorld\Resource\App;
 
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
-use BEAR\Sunday\Annotation\Cache;
 
 class User extends ResourceObject
 {
     /**
      * @Link(rel="friend", href="/friend?id={friend_id}")
      * @Link(rel="org", href="/org?id={org_id}")
-     * @Cache(30)
      */
     public function onGet($id)
     {
@@ -24,7 +22,6 @@ class User extends ResourceObject
 
     /**
      * @Link(rel="friend", href="/friend?id={friend_id}")
-     * @Cache(30)
      */
     public function onPost($id)
     {

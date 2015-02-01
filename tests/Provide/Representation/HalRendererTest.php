@@ -24,7 +24,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $router = (new AuraRouterProvider(new AppMeta('FakeVendor\HelloWorld')))->get();
+        $router = (new AuraRouterProvider(new AppMeta('FakeVendor\HelloWorld'), 'page://self'))->get();
         $this->hal = new HalRenderer(new AnnotationReader, $router);
         $this->resource = (new ResourceClientFactory)->newClient($_ENV['TMP_DIR'], 'FakeVendor\HelloWorld');
     }

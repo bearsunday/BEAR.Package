@@ -11,8 +11,7 @@ use Aura\Router\RouteCollection;
 use Aura\Router\RouteFactory;
 use Aura\Router\Router;
 use BEAR\Package\AbstractAppMeta;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
+use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use Ray\Di\ProviderInterface;
 
 class AuraRouterProvider implements ProviderInterface
@@ -22,14 +21,19 @@ class AuraRouterProvider implements ProviderInterface
      */
     private $router;
 
-    private $defaultRouteUri;
     /**
-     * @Inject
-     * @Named("defaultRouteUri=default_route_uri")
+     * @var
      */
-    public function __construct(AbstractAppMeta $appMeta, $defaultRouteUri = 'page://self')
+    private $schemeHost;
+
+    /**
+     * @DefaultSchemeHost("schemeHost")
+     *
+     * @param string $schemeHost
+     */
+    public function __construct(AbstractAppMeta $appMeta, $schemeHost)
     {
-        $this->defaultRouteUri = $defaultRouteUri;
+        $this->schemeHost = $schemeHost;
         $router = new Router(new RouteCollection(new RouteFactory), new Generator);
         $routeFile = $appMeta->appDir . '/var/conf/aura.route.php';
         include $routeFile;
@@ -41,6 +45,6 @@ class AuraRouterProvider implements ProviderInterface
      */
     public function get()
     {
-        return new AuraRouter($this->router, $this->defaultRouteUri);
+        return new AuraRouter($this->router, $this->schemeHost);
     }
 }

@@ -14,7 +14,7 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->router = new CliRouter(new WebRouter);
+        $this->router = new CliRouter(new WebRouter('page://self'));
     }
 
     public function testMatch()
