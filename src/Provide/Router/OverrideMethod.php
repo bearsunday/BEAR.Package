@@ -99,8 +99,7 @@ final class OverrideMethod
             return $this->phpInput();
         }
 
-        // post
-        return $post + $get;
+        return $post;
     }
 
     /**
