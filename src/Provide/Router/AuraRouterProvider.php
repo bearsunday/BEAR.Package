@@ -45,6 +45,6 @@ class AuraRouterProvider implements ProviderInterface
      */
     public function get()
     {
-        return new AuraRouter($this->router, $this->schemeHost);
+        return new AuraRouter($this->router, $this->schemeHost, new HttpMethodParams);
     }
 }
