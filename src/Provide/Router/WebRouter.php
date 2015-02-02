@@ -20,13 +20,19 @@ class WebRouter implements RouterInterface, WebRouterInterface
     private $schemeHost;
 
     /**
-     * @DefaultSchemeHost
+     * @var HttpMethodParamsInterface
+     */
+    private $httpMethodParams;
+
+    /**
+     * @DefaultSchemeHost("schemeHost")
      *
      * @param string $schemeHost
      */
-    public function __construct($schemeHost)
+    public function __construct($schemeHost, HttpMethodParamsInterface $httpMethodParams)
     {
         $this->schemeHost = $schemeHost;
+        $this->httpMethodParams = $httpMethodParams;
     }
 
     /**
@@ -35,7 +41,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
     public function match(array $globals, array $server)
     {
         $request = new RouterMatch;
-        list($request->method, $request->query) = (new HttpMethodParams)->get($server, $globals['_GET'], $globals['_POST']);
+        list($request->method, $request->query) = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
         $request->path = $this->schemeHost . parse_url($server['REQUEST_URI'], PHP_URL_PATH);
 
         return $request;
