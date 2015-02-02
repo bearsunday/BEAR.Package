@@ -4,6 +4,7 @@ namespace Provide\Router;
 
 use Aura\Router\RouterFactory;
 use BEAR\Package\Provide\Router\AuraRouter;
+use BEAR\Package\Provide\Router\HttpMethodParams;
 
 class AuraRouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,10 +13,16 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
      */
     private $routerAdapter;
 
+    /**
+     * @var AuraRouter
+     */
+    private $auraRouter;
+
     public function setUp()
     {
         parent::setUp();
         $this->routerAdapter = (new RouterFactory)->newInstance();
+        $this->auraRouter = new AuraRouter($this->routerAdapter, 'page://self', new HttpMethodParams);
     }
 
     public function testMatch()
@@ -30,8 +37,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => 'http://localhost/blog/PC6001?query=value#fragment'
         ];
-        $router = new AuraRouter($this->routerAdapter, 'page://self');
-        $request = $router->match($globals, $server);
+        $request = $this->auraRouter->match($globals, $server);
         $this->assertSame('post', $request->method);
         $this->assertSame('page://self/blog', $request->path);
         $this->assertSame(['id' => 'PC6001', 'title' => 'hello'], $request->query);
@@ -49,8 +55,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => 'http://localhost/blog/PC6001?query=value#fragment'
         ];
-        $router = new AuraRouter($this->routerAdapter, 'page://self');
-        $request = $router->match($globals, $server);
+        $request = $this->auraRouter->match($globals, $server);
         $this->assertSame('put', $request->method);
         $this->assertSame(['id' => 'PC6001', 'title' => 'hello'], $request->query);
     }
@@ -68,8 +73,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
             'REQUEST_URI' => 'http://localhost/blog/PC6001?query=value#fragment',
             'HTTP_X_HTTP_METHOD_OVERRIDE' => 'DELETE'
         ];
-        $router = new AuraRouter($this->routerAdapter, 'page://self');
-        $request = $router->match($globals, $server);
+        $request = $this->auraRouter->match($globals, $server);
         $this->assertSame('delete', $request->method);
         $this->assertSame(['id' => 'PC6001'], $request->query);
     }
@@ -86,8 +90,7 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => 'http://localhost/not_much_uri',
         ];
-        $router = new AuraRouter($this->routerAdapter, 'page://self');
-        $match = $router->match($globals, $server);
+        $match = $this->auraRouter->match($globals, $server);
         $this->assertFalse($match);
     }
 }

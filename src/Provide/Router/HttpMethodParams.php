@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-final class HttpMethodParams
+final class HttpMethodParams implements HttpMethodParamsInterface
 {
     const CONTENT_TYPE = 'Content-Type';
 
