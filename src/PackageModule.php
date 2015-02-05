@@ -11,6 +11,7 @@ use BEAR\Package\Provide\Router\AuraRouterModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\Package\Provide\Transfer\EtagResponseModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
+use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Module\SundayModule;
@@ -36,7 +37,7 @@ class PackageModule extends AbstractModule
     {
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
         $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
-        $this->bind('')->annotatedWith('app_name')->toInstance($this->appMeta->name);
+        $this->bind('')->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
         $this->bind(ErrorInterface::class)->to(VndError::class);
         $this->install(new SundayModule);
         $this->bindResources();
