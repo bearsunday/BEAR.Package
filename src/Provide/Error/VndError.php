@@ -13,6 +13,8 @@ use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
 use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
+use BEAR\Sunday\Extension\Transfer\TransferInterface;
+use BEAR\Sunday\Provide\Error\ErrorPage;
 
 /**
  * vnd.error for BEAR.Package
@@ -32,19 +34,21 @@ class VndError implements ErrorInterface
     private $code;
 
     /**
-     * @var string
-     */
-    private $header = 'Content-Type: application/vnd.error+json';
-
-    /**
      * @var array
      */
     private $body = ['message' => '', 'logref' => ''];
 
-    public function __construct(AbstractAppMeta $appMeta)
+    /**
+     * @var TransferInterface
+     */
+    private $responder;
+
+    public function __construct(AbstractAppMeta $appMeta, TransferInterface $responder)
     {
         $this->appMeta = $appMeta;
+        $this->responder = $responder;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -70,10 +74,14 @@ class VndError implements ErrorInterface
      */
     public function transfer()
     {
-
-        http_response_code($this->code);
-        header($this->header);
-        echo json_encode($this->body, JSON_PRETTY_PRINT) . PHP_EOL;
+        $ro = new ErrorPage;
+        $ro->code = $this->code;
+        $ro->headers['Content-Type'] = 'application/vnd.error+json';
+        $ro->body = $this->body;
+        if (is_null($this->body)) {
+            $ro->body = $ro->view = null;
+        }
+        $this->responder->__invoke($ro, []);
     }
 
     /**
