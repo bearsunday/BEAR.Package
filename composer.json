@@ -28,7 +28,8 @@
         "koriym/psr4list": "~1.0@dev",
         "aura/router": "~2.0",
         "aura/web": "~2.0",
-        "aura/cli": "~2.0"
+        "aura/cli": "~2.0",
+        "ray/web-param-module": "~0.1"
     },
     "require-dev": {
         "facebook/xhprof": "dev-master"
