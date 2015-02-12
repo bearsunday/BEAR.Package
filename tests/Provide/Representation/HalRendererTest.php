@@ -6,9 +6,11 @@ use Aura\Router\Router;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Router\AuraRouter;
 use BEAR\Package\Provide\Router\AuraRouterProvider;
+use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\ResourceClientFactory;
 use BEAR\Resource\ResourceInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ray\Di\Injector;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +28,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     {
         $router = (new AuraRouterProvider(new AppMeta('FakeVendor\HelloWorld'), 'page://self'))->get();
         $this->hal = new HalRenderer(new AnnotationReader, $router);
-        $this->resource = (new ResourceClientFactory)->newClient($_ENV['TMP_DIR'], 'FakeVendor\HelloWorld');
+        $this->resource = (new Injector(new ResourceModule('FakeVendor\HelloWorld')))->getInstance(ResourceInterface::class);
     }
 
     public function testRender()
