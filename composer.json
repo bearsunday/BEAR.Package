@@ -24,7 +24,7 @@
     "require": {
         "php": ">=5.5.0",
         "bear/sunday": "~1.0@dev",
-        "bear/query-repository": "~1.0@dev",
+        "bear/query-repository": "~0.1@dev",
         "koriym/psr4list": "~1.0@dev",
         "aura/router": "~2.0",
         "aura/web": "~2.0",
