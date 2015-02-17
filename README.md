@@ -1,7 +1,7 @@
 # BEAR.Package
 
 [![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Package/?branch=develop-2)
- [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=develop-2)] (https://travis-ci.org/koriym/BEAR.Package.svg?branch=develop-2)
+[![Build Status](https://travis-ci.org/koriym/BEAR.Package.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Package)
 
 ## Introduction
 
