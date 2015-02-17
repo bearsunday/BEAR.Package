@@ -10,7 +10,7 @@ use Aura\Router\Generator;
 use Aura\Router\RouteCollection;
 use Aura\Router\RouteFactory;
 use Aura\Router\Router;
-use BEAR\Package\AbstractAppMeta;
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use Ray\Di\ProviderInterface;
 

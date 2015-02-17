@@ -2,6 +2,7 @@
 
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AppMeta;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ArrayCache;
 use FakeVendor\HelloWorld\Module\AppModule;
@@ -12,7 +13,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         AppModule::$modules = [];
     }
-    
+
     public function testNewApp()
     {
         $app = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-app', new ArrayCache);

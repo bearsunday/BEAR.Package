@@ -2,7 +2,7 @@
 
 namespace BEAR\Package\Provide\Error;
 
-use BEAR\Package\AppMeta;
+use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Resource\Exception\ResourceNotFoundException;

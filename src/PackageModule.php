@@ -6,8 +6,10 @@
  */
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\VndError;
 use BEAR\Package\Provide\Router\AuraRouterModule;
+use BEAR\Package\Provide\Router\VndErrorModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\Package\Provide\Transfer\EtagResponseModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
@@ -35,16 +37,21 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
-        $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
-        $this->bind('')->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
-        $this->bind(ErrorInterface::class)->to(VndError::class);
+        $this->installAppModule();
         $this->install(new SundayModule);
-        $this->bindResources();
         $this->install(new QueryRepositoryModule);
         $this->install(new EtagResponseModule);
         $this->install(new AuraRouterModule());
         $this->install(new WebRouterModule);
+        $this->install(new VndErrorModule);
+        $this->bindResources();
+    }
+
+    private function installAppModule()
+    {
+        $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
+        $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
+        $this->bind('')->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
     }
 
     /**
@@ -52,7 +59,7 @@ class PackageModule extends AbstractModule
      */
     private function bindResources()
     {
-        $list = (new AppReflector($this->appMeta))->resourceList();
+        $list = $this->appMeta->getResourceListGenerator();
         foreach ($list as list($class,)) {
             $this->bind($class)->in(Scope::SINGLETON);
         }

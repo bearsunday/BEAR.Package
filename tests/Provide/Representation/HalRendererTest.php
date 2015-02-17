@@ -2,12 +2,10 @@
 
 namespace BEAR\Package;
 
-use Aura\Router\Router;
+use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Representation\HalRenderer;
-use BEAR\Package\Provide\Router\AuraRouter;
 use BEAR\Package\Provide\Router\AuraRouterProvider;
 use BEAR\Resource\Module\ResourceModule;
-use BEAR\Resource\ResourceClientFactory;
 use BEAR\Resource\ResourceInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Injector;

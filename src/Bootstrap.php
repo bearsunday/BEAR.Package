@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\Injector;

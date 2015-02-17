@@ -9,7 +9,7 @@ namespace BEAR\Package\Provide\Router;
 use Aura\Cli\CliFactory;
 use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
-use BEAR\Package\AbstractAppMeta;
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;

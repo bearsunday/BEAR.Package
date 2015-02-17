@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\Error;
 
-use BEAR\Package\AbstractAppMeta;
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Resource\Code;
 use BEAR\Resource\Exception\BadRequestException as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
