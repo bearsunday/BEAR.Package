@@ -4,9 +4,8 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace BEAR\Package\Provide\Router;
+namespace BEAR\Package\Provide\Error;
 
-use BEAR\Package\Provide\Error\VndError;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use Ray\Di\AbstractModule;
 

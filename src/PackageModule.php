@@ -7,15 +7,13 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Provide\Error\VndError;
+use BEAR\Package\Provide\Error\VndErrorModule;
 use BEAR\Package\Provide\Router\AuraRouterModule;
-use BEAR\Package\Provide\Router\VndErrorModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\Package\Provide\Transfer\EtagResponseModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Module\SundayModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
