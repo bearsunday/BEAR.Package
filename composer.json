@@ -23,16 +23,17 @@
     },
     "require": {
         "php": ">=5.5.0",
-        "bear/sunday": "~1.0@dev",
-        "bear/query-repository": "~0.1@dev",
-        "koriym/psr4list": "~1.0@dev",
+        "bear/sunday": "~1.0",
+        "bear/query-repository": "~0.1",
+        "bear/app-meta": "~0.1",
         "aura/router": "~2.0",
         "aura/web": "~2.0",
         "aura/cli": "~2.0",
         "ray/web-param-module": "~0.1"
     },
     "require-dev": {
-        "facebook/xhprof": "dev-master"
+        "facebook/xhprof": "dev-master",
+        "koriym/printo": "~1.0@dev"
     },
     "autoload": {
         "psr-4": {
