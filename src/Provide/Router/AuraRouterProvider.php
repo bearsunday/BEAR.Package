@@ -27,9 +27,10 @@ class AuraRouterProvider implements ProviderInterface
     private $schemeHost;
 
     /**
-     * @DefaultSchemeHost("schemeHost")
+     * @param AbstractAppMeta $appMeta
+     * @param string          $schemeHost
      *
-     * @param string $schemeHost
+     * @DefaultSchemeHost("schemeHost")
      */
     public function __construct(AbstractAppMeta $appMeta, $schemeHost)
     {

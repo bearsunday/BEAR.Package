@@ -26,11 +26,6 @@ class HalRenderer implements RenderInterface
     private $reader;
 
     /**
-     * @var Uri
-     */
-    private $uri;
-
-    /**
      * @var RouterInterface
      */
     private $router;

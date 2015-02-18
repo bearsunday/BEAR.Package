@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-
 interface HttpMethodParamsInterface
 {
     /**

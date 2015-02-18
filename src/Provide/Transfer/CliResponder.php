@@ -17,6 +17,7 @@ class CliResponder implements TransferInterface
      */
     public function __invoke(ResourceObject $resourceObject, array $server)
     {
+        unsetr($server);
         $body = (string) $resourceObject;
         // code
         $statusText = (new Code)->statusText[$resourceObject->code];

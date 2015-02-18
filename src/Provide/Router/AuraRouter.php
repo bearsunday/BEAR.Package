@@ -15,6 +15,7 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 
 class AuraRouter implements RouterInterface
 {
+
     const METHOD_FILED = '_method';
 
     const METHOD_OVERRIDE_HEADER = 'HTTP_X_HTTP_METHOD_OVERRIDE';
@@ -35,9 +36,11 @@ class AuraRouter implements RouterInterface
     private $httpMethodParams;
 
     /**
-     * @DefaultSchemeHost("schemeHost")
+     * @param Router                    $router
+     * @param string                    $schemeHost
+     * @param HttpMethodParamsInterface $httpMethodParams
      *
-     * @param string $schemeHost
+     * @DefaultSchemeHost("schemeHost")
      */
     public function __construct(Router $router, $schemeHost, HttpMethodParamsInterface $httpMethodParams)
     {

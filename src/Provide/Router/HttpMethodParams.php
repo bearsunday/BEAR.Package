@@ -17,7 +17,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * {@inheritdoc}
      */
-    public function get(array $server, array $get, array $post) {
+    public function get(array $server, array $get, array $post)
+    {
 
         // set the original value
         $method = strtolower($server['REQUEST_METHOD']);
@@ -42,9 +43,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * HTTP Method override
      *
      * @param array $server
-     * @param array &$post
+     * @param array $post
      *
-     * @return bool is override ?
+     * @return bool|string
      */
     private function getOverRideMethod(array $server, array &$post)
     {
@@ -75,8 +76,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function getParams($method, array $post, array $server)
     {
-        if ($method === 'put' || $method === 'patch'  || $method === 'delete') {
-
+        if ($method === 'put' || $method === 'patch' || $method === 'delete') {
             return $this->phpInput($server);
         }
 
@@ -96,7 +96,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return [];
         }
         $isFormUrlEncoded = strpos($server[self::CONTENT_TYPE], self::FORM_URL_ENCODE) !== false;
-        if($isFormUrlEncoded) {
+        if ($isFormUrlEncoded) {
             parse_str(file_get_contents('php://input'), $put);
 
             return $put;

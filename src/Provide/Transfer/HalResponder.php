@@ -13,6 +13,7 @@ class HalResponder implements TransferInterface
 {
     public function __invoke(ResourceObject $resourceObject, array $server)
     {
+        unset($server);
         // code
         http_response_code($resourceObject->code);
 

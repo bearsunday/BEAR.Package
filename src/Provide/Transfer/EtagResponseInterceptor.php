@@ -28,8 +28,8 @@ class EtagResponseInterceptor implements MethodInterceptor
     }
 
     /**
-     * @param $headers
-     * @param $server
+     * @param array $headers
+     * @param array $server
      */
     private function isNotModifiedSince($headers, $server)
     {
