@@ -1,6 +1,6 @@
 # BEAR.Package
 
-[![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Package/?branch=develop-2)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/BEAR.Package/?branch=develop-2)
 [![Build Status](https://travis-ci.org/koriym/BEAR.Package.svg?branch=develop-2)](https://travis-ci.org/koriym/BEAR.Package)
 
 ## Introduction
@@ -9,19 +9,19 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource 
 
 # Installation
 
-    $ composer create-project bear/package:~1.0@dev {PACKAGE_PATH} 
+    $ composer create-project bear/package:~1.0@dev {$Vendor.$Package} 
 
 ## built-in web server
 
 for demo app web page
 
-    $ php -S 0.0.0.0:8080 -t docs/demo-app/var/www/
+    $ php -S 127.0.0.1:8080 -t docs/demo-app/var/www/
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the `{"greeting":"Hello BEAR.Sunday"}` json output.
+You can then open a browser and go to `http://127.0.0.1:8080` to see the `{"greeting":"Hello BEAR.Sunday"}` json output.
 
 ## Virtual Host for Production
 
-Set up a virtual host to point to the `{$PACKAGE_PATH}docs/demo-app/var/www` directory of the application.
+Set up a virtual host to point to the `/path/to/package/docs/demo-app/var/www` directory of the application.
 
 ## Demo - Hypermedia Application Language (HAL)
 
