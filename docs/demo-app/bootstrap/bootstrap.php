@@ -2,8 +2,8 @@
 
 namespace MyVendor\MyApp;
 
+use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Bootstrap;
-use BEAR\Package\AppMeta;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 

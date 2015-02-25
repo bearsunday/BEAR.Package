@@ -2,7 +2,7 @@
 
 namespace MyVendor\MyApp\Module;
 
-use BEAR\Package\AppMeta;
+use BEAR\AppMeta\AppMeta;
 use BEAR\Package\PackageModule;
 use BEAR\Package\Provide\Router\AuraRouterModule;
 use Ray\Di\AbstractModule;
