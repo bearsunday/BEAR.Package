@@ -14,7 +14,7 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->router = new CliRouter(new WebRouter('page://self'));
+        $this->router = new CliRouter(new WebRouter('page://self'), new \InvalidArgumentException);
     }
 
     public function testMatch()
@@ -37,5 +37,19 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->router->generate('', []);
         $this->assertFalse($actual);
+    }
+
+
+    public function testError()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $globals = [
+            'argv' => [
+                'php',
+                'get'
+            ],
+            'argc' => 2
+        ];
+        $this->router->match($globals, []);
     }
 }
