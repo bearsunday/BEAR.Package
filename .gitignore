@@ -6,3 +6,5 @@ composer.lock
 vendor
 build
 preload.php
+
+tests/stdout.log

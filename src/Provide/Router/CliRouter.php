@@ -9,6 +9,7 @@ namespace BEAR\Package\Provide\Router;
 use Aura\Cli\CliFactory;
 use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
+use Aura\Cli\Stdio;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
@@ -26,6 +27,15 @@ class CliRouter implements RouterInterface
      */
     private $appMeta;
 
+    /**
+     * @var \LogicException
+     */
+    private $exception;
+
+    /**
+     * @var Stdio
+     */
+    private $stdIo;
 
     /**
      * @param AbstractAppMeta $appMeta
@@ -43,9 +53,11 @@ class CliRouter implements RouterInterface
      * @Inject
      * @Named("original")
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, \LogicException $exception = null, Stdio $stdIo = null)
     {
         $this->router = $router;
+        $this->exception = $exception;
+        $this->stdIo = $stdIo ?: (new CliFactory)->newStdio();
     }
 
     /**
@@ -54,7 +66,8 @@ class CliRouter implements RouterInterface
     public function match(array $globals, array $server)
     {
         if ($globals['argc'] !== 3) {
-            $this->error(Status::USAGE, basename($globals['argv'][0]));
+            $this->error(basename($globals['argv'][0]));
+            $this->exitProgram(Status::USAGE);
         };
         list(, $method, $uri) = $globals['argv'];
         $parsedUrl = parse_url($uri);
@@ -86,13 +99,19 @@ class CliRouter implements RouterInterface
      * @param string $status
      * @param string $command
      */
-    private function error($status, $command)
+    private function error($command)
     {
-        $cliFactory = new CliFactory;
-        $stdio = $cliFactory->newStdio();
-
         $help = new CliRouterHelp(new OptionFactory);
-        $stdio->outln($help->getHelp($command));
+        $this->stdIo->outln($help->getHelp($command));
+    }
+
+    private function exitProgram($status)
+    {
+        if ($this->exception) {
+            throw $this->exception;
+        }
+        // @codeCoverageIgnoreStart
         exit($status);
+        // @codeCoverageIgnoreEnd
     }
 }

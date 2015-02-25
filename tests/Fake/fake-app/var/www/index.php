@@ -2,7 +2,7 @@
 
 namespace FakeVendor\HelloWorld;
 
-use BEAR\Package\AppMeta;
+use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Bootstrap;
 use Doctrine\Common\Cache\ApcCache;
 

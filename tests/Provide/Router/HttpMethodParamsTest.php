@@ -2,8 +2,6 @@
 
 namespace BEAR\Package\Provide\Router;
 
-require __DIR__ . '/file_get_contents.php';
-
 class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
@@ -31,7 +29,9 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $server = ['REQUEST_METHOD' => 'PUT', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
         $post = ['name' => 'sunday'];
-        list($method, $params) = (new HttpMethodParams)->get($server, $get, $post);
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/query.txt');
+        list($method, $params) = $httpMethodParam->get($server, $get, $post);
         $this->assertSame('put', $method);
         $this->assertSame(['name' => 'kuma'], $params);
     }
@@ -41,8 +41,9 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $server = ['REQUEST_METHOD' => 'PATCH', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
         $post = ['name' => 'sunday'];
-        list($method, $params) = (new HttpMethodParams)->get($server, $get, $post);
-        $this->assertSame('patch', $method);
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/query.txt');
+        list($method, $params) = $httpMethodParam->get($server, $get, $post);
         $this->assertSame(['name' => 'kuma'], $params);
     }
 
@@ -51,7 +52,9 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $server = ['REQUEST_METHOD' => 'DELETE', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
         $post = ['name' => 'sunday'];
-        list($method, $params) = (new HttpMethodParams)->get($server, $get, $post);
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/query.txt');
+        list($method, $params) = $httpMethodParam->get($server, $get, $post);
         $this->assertSame('delete', $method);
         $this->assertSame(['name' => 'kuma'], $params);
     }
@@ -102,5 +105,42 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $post = ['name' => 'sunday'];
         list($method) = (new HttpMethodParams)->get($server, [], $post);
         $this->assertSame('delete', $method);
+    }
+
+    public function testContentTypeJson()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json.txt');
+        $server = [
+            'REQUEST_METHOD' => 'PUT',
+            'Content-Type' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = ['name' => 'BEAR.Sunday v1.0', 'age' => 0];
+        $this->assertSame($expected, $params);
+
+    }
+
+    public function testContentTypeUnknown()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $server = [
+            'REQUEST_METHOD' => 'PUT',
+            'Content-Type' => 'text/xml'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = [];
+        $this->assertSame($expected, $params);
+    }
+
+    public function testNoContentType()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $server = [
+            'REQUEST_METHOD' => 'PUT',
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = [];
+        $this->assertSame($expected, $params);
     }
 }
