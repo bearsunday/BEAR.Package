@@ -1,8 +1,8 @@
 <?php
 
-namespace BEAR\Package;
+namespace BEAR\Package\Provide\Router;
 
-use BEAR\Package\Provide\Router\CliRouter;
+use Aura\Cli\CliFactory;
 use BEAR\Sunday\Provide\Router\WebRouter;
 
 class CliRouterTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +14,9 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->router = new CliRouter(new WebRouter('page://self'), new \InvalidArgumentException);
+        $stdOut = $_ENV['TEST_DIR'] . '/stdout.log';
+        $stdIo = (new CliFactory())->newStdio('php://stdin', $stdOut);
+        $this->router = new CliRouter(new WebRouter('page://self'), new \InvalidArgumentException, $stdIo);
     }
 
     public function testMatch()
@@ -38,7 +40,6 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->router->generate('', []);
         $this->assertFalse($actual);
     }
-
 
     public function testError()
     {
