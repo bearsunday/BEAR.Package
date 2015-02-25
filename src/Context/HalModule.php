@@ -20,6 +20,5 @@ class HalModule extends AbstractModule
     protected function configure()
     {
         $this->bind(RenderInterface::class)->to(HalRenderer::class);
-        $this->bind(TransferInterface::class)->to(HalResponder::class);
     }
 }
