@@ -15,6 +15,19 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     const APPLICATION_JSON = 'application/json';
 
     /**
+     * @var string
+     */
+    private $stdIn = 'php://input';
+
+    /**
+     * @param string $stdIn
+     */
+    public function setStdIn($stdIn)
+    {
+        $this->stdIn = $stdIn;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function get(array $server, array $get, array $post)
@@ -97,13 +110,15 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         }
         $isFormUrlEncoded = strpos($server[self::CONTENT_TYPE], self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
-            parse_str(file_get_contents('php://input'), $put);
+            parse_str(rtrim(file_get_contents($this->stdIn)), $put);
 
             return $put;
         }
         $isApplicationJson = strpos($server[self::CONTENT_TYPE], self::APPLICATION_JSON) !== false;
         if ($isApplicationJson) {
-            return json_decode(file_get_contents('php://input'));
+            $content =  (array) json_decode(file_get_contents($this->stdIn));
+
+            return $content;
         }
 
         return [];
