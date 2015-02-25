@@ -32,4 +32,10 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('page://self/', $request->path);
         $this->assertSame(['name' => 'bear'], $request->query);
     }
+
+    public function testGenerate()
+    {
+        $actual = $this->router->generate('', []);
+        $this->assertFalse($actual);
+    }
 }
