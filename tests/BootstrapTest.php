@@ -27,4 +27,10 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $app = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'cli-app', new ArrayCache);
         $this->assertInstanceOf(AppInterface::class, $app);
     }
+
+    public function testContextCacheModule()
+    {
+        $app = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'app');
+        $this->assertInstanceOf(AppInterface::class, $app);
+    }
 }

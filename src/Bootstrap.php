@@ -8,7 +8,9 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\Injector;
 
 final class Bootstrap
@@ -22,8 +24,11 @@ final class Bootstrap
      *
      * @return AppInterface
      */
-    public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache)
+    public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
+        if (is_null($cache)) {
+            $cache = $this->contextCache($appMeta);
+        }
         $app = $cache->fetch($contexts);
         if ($app) {
             return $app;
@@ -41,5 +46,13 @@ final class Bootstrap
         $cache->save($contexts, $app);
 
         return $app;
+    }
+
+    public function contextCache(AbstractAppMeta $appMeta)
+    {
+        $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
+        $cache->setNamespace(filemtime($appMeta->appDir . '/src/.'));
+
+        return $cache;
     }
 }
