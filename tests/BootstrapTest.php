@@ -5,6 +5,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\FilesystemCache;
 use FakeVendor\HelloWorld\Module\AppModule;
 
 class BootstrapTest extends \PHPUnit_Framework_TestCase
@@ -32,5 +33,12 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $app = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'app');
         $this->assertInstanceOf(AppInterface::class, $app);
+    }
+
+    public function testCache()
+    {
+        $app1 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'cli-app', new FilesystemCache(__DIR__ . '/tmp'));
+        $app2 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'cli-app', new FilesystemCache(__DIR__ . '/tmp'));
+        $this->assertSame(serialize($app1), serialize($app2));
     }
 }
