@@ -2,8 +2,8 @@
 
 namespace BEAR\Package\Provide\Transfer;
 
-use Ray\Aop\ReflectiveMethodInvocation;
 use Ray\Aop\Arguments;
+use Ray\Aop\ReflectiveMethodInvocation;
 
 require_once dirname(dirname(__DIR__)) . '/Fake/Provide/Transfer/header.php';
 require_once dirname(dirname(__DIR__)) . '/Fake/Provide/Transfer/http_response_code.php';
@@ -74,5 +74,4 @@ class EtagResponseInterceptorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([], self::$code);
         $this->assertSame([], self::$headers);
     }
-
 }

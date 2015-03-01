@@ -96,7 +96,6 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * @param string $status
      * @param string $command
      */
     private function error($command)

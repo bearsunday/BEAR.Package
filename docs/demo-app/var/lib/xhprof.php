@@ -11,7 +11,6 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-
 ini_set('xhprof.output_dir', '/tmp');
 $enable = extension_loaded('xhprof');
 if (! $enable) {
@@ -26,7 +25,8 @@ register_shutdown_function(
     function () {
         $xhprof = xhprof_disable();
         if (! $xhprof) {
-            error_log('xhprof failed in ' . __FILE__ );
+            error_log('xhprof failed in ' . __FILE__);
+
             return;
         }
         $id = (new XHProfRuns_Default)->save_run($xhprof, '');

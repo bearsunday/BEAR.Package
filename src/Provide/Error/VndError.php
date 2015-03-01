@@ -54,6 +54,7 @@ class VndError implements ErrorInterface
      */
     public function handle(\Exception $e, Request $request)
     {
+        unset($request);
         $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest || $e instanceof ServerErrorException);
         if ($isCodeError) {
             list($this->code, $this->body) = $this->codeError($e);
@@ -103,7 +104,7 @@ class VndError implements ErrorInterface
      */
     private function logRef(\Exception $e)
     {
-        $logRef = (string)CRC32($e);
+        $logRef = (string) CRC32($e);
         file_put_contents($this->appMeta->logDir . "/$logRef.log", $e);
 
         return $logRef;

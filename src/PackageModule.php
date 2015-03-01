@@ -58,7 +58,7 @@ class PackageModule extends AbstractModule
     private function bindResources()
     {
         $list = $this->appMeta->getResourceListGenerator();
-        foreach ($list as list($class,)) {
+        foreach ($list as list($class, )) {
             $this->bind($class)->in(Scope::SINGLETON);
         }
     }

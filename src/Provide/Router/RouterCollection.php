@@ -50,6 +50,7 @@ class RouterCollection implements RouterInterface
                 return $uri;
             }
         }
+
         return false;
     }
 }

@@ -33,7 +33,7 @@ final class Bootstrap
         if ($app) {
             return $app;
         }
-        $app = $this->createAppInstance($appMeta ,$contexts);
+        $app = $this->createAppInstance($appMeta, $contexts);
         $cache->save($contexts, $app);
 
         return $app;
@@ -45,9 +45,9 @@ final class Bootstrap
      *
      * @return AppInterface
      */
-    private function createAppInstance(AbstractAppMeta $appMeta ,$contexts)
+    private function createAppInstance(AbstractAppMeta $appMeta, $contexts)
     {
-        $contextsArray = array_reverse(explode('-' ,$contexts));
+        $contextsArray = array_reverse(explode('-', $contexts));
         $module = null;
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
@@ -57,7 +57,7 @@ final class Bootstrap
             /** @var $module AbstractModule */
             $module = new $class($module);
         }
-        $app = (new Injector($module ,$appMeta->tmpDir))->getInstance(AppInterface::class);
+        $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);
 
         return $app;
     }

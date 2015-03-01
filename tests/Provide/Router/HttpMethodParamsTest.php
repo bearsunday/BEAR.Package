@@ -118,7 +118,6 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         list(, $params) = $httpMethodParam->get($server, [], []);
         $expected = ['name' => 'BEAR.Sunday v1.0', 'age' => 0];
         $this->assertSame($expected, $params);
-
     }
 
     public function testContentTypeUnknown()

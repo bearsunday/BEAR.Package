@@ -32,5 +32,4 @@ class RouterCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('page://self/blog', $request->path);
         $this->assertSame(['id' => 'PC6001', 'title' => 'hello'], $request->query);
     }
-
 }

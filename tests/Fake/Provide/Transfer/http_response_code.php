@@ -2,6 +2,7 @@
 
 namespace BEAR\Package\Provide\Transfer;
 
-function http_response_code($int) {
+function http_response_code($int)
+{
     EtagResponseInterceptorTest::$code = func_get_args();
 }

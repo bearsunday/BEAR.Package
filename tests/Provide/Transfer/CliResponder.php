@@ -9,7 +9,7 @@ namespace BEAR\Sunday\Provide\Transfer;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 
-class HalResponder implements TransferInterface
+class CliResponder implements TransferInterface
 {
     public function __invoke(ResourceObject $resourceObject)
     {

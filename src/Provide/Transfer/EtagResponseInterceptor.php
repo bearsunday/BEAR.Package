@@ -24,6 +24,7 @@ class EtagResponseInterceptor implements MethodInterceptor
 
             return;
         }
+
         return $invocation->proceed();
     }
 
@@ -49,7 +50,7 @@ class EtagResponseInterceptor implements MethodInterceptor
     private function isSameEtag($headers, $server)
     {
         if (isset($headers['Etag']) && isset($server['HTTP_IF_NONE_MATCH']) && stripslashes($server['HTTP_IF_NONE_MATCH']) === $headers['Etag']) {
-             return true;
+            return true;
         }
 
         return false;

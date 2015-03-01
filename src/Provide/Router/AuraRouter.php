@@ -15,7 +15,6 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 
 class AuraRouter implements RouterInterface
 {
-
     const METHOD_FILED = '_method';
 
     const METHOD_OVERRIDE_HEADER = 'HTTP_X_HTTP_METHOD_OVERRIDE';

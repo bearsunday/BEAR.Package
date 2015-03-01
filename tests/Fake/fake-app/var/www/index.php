@@ -8,7 +8,7 @@ use Doctrine\Common\Cache\ApcCache;
 
 route: {
     $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__), 'app', new ApcCache);
-    /** @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
+    /* @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
     $request = $app->router->match($GLOBALS, $_SERVER);
 }
 
@@ -19,7 +19,7 @@ try {
         ->uri($request->path)
         ->withQuery($request->query)
         ->request();
-    /** @var $page \BEAR\Resource\Request */
+    /* @var $page \BEAR\Resource\Request */
 
     // representation transfer
     $page()->transfer($app->responder, $_SERVER);
