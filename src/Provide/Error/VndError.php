@@ -62,9 +62,7 @@ class VndError implements ErrorInterface
         }
         $this->code = 500;
         $this->body = ['message' => '500 Server Error'];
-
-        error_log($request);
-        error_log($e);
+        $this->logRef($e);
 
         return $this;
     }
