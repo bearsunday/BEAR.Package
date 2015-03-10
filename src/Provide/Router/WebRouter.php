@@ -23,9 +23,10 @@ class WebRouter implements RouterInterface, WebRouterInterface
     private $httpMethodParams;
 
     /**
-     * @DefaultSchemeHost("schemeHost")
+     * @param string                    $schemeHost
+     * @param HttpMethodParamsInterface $httpMethodParams
      *
-     * @param string $schemeHost
+     * @DefaultSchemeHost("schemeHost")
      */
     public function __construct($schemeHost, HttpMethodParamsInterface $httpMethodParams)
     {

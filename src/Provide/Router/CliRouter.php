@@ -104,6 +104,11 @@ class CliRouter implements RouterInterface
         $this->stdIo->outln($help->getHelp($command));
     }
 
+    /**
+     * @param int $status
+     *
+     * @SuppressWarnings(PHPMD)
+     */
     private function exitProgram($status)
     {
         if ($this->exception) {

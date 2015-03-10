@@ -3,7 +3,6 @@
 namespace BEAR\Package\Context;
 
 use BEAR\Package\Provide\Representation\HalRenderer;
-use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Module\Annotation\DoctrineAnnotationModule;
 use BEAR\Sunday\Provide\Router\RouterModule;

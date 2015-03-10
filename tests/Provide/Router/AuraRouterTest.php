@@ -1,10 +1,8 @@
 <?php
 
-namespace Provide\Router;
+namespace BEAR\Package\Provide\Router;
 
 use Aura\Router\RouterFactory;
-use BEAR\Package\Provide\Router\AuraRouter;
-use BEAR\Package\Provide\Router\HttpMethodParams;
 
 class AuraRouterTest extends \PHPUnit_Framework_TestCase
 {
