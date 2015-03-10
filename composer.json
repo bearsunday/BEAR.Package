@@ -18,9 +18,6 @@
             "homepage": "https://github.com/koriym/BEAR.Package/graphs/contributors"
         }
     ],
-    "provide": {
-        "bear/framework": "1.0.0"
-    },
     "require": {
         "php": ">=5.5.0",
         "bear/sunday": "~1.0",
@@ -31,20 +28,9 @@
         "aura/cli": "~2.0",
         "ray/web-param-module": "~0.1"
     },
-    "require-dev": {
-        "facebook/xhprof": "dev-master",
-        "koriym/printo": "~1.0@dev"
-    },
     "autoload": {
         "psr-4": {
             "BEAR\\Package\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "BEAR\\Package\\": "tests/",
-            "BEAR\\Package\\": "tests/Fake",
-            "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src"
         }
     },
     "prefer-stable": true,

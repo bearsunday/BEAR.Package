@@ -2,7 +2,6 @@
 
 namespace BEAR\Package\Provide\Transfer;
 
-use BEAR\Package\Provide\Error\FakeVndError;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 

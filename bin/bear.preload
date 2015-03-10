@@ -1,6 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-$cmd = dirname(__DIR__) . '/vendor/bin/classpreloader.php compile --config="classpreloader.php" --output=preload.php';
-error_log($cmd);
-passthru($cmd);
