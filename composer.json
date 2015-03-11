@@ -35,8 +35,7 @@
     },
     "prefer-stable": true,
     "bin": [
-        "bin/bear.env",
-        "bin/bear.preload"
+        "bin/bear.env"
     ],
     "minimum-stability": "dev",
     "extra": {
