@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "bear/sunday": "~1.0",
+        "bear/sunday": "~1.0.0-rc",
         "bear/query-repository": "~0.1",
         "bear/app-meta": "~0.1",
         "aura/router": "~2.0",
@@ -33,11 +33,9 @@
             "BEAR\\Package\\": "src/"
         }
     },
-    "prefer-stable": true,
     "bin": [
         "bin/bear.env"
     ],
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-develop-2": "1.0.x-dev"
