@@ -133,7 +133,7 @@ class User extends ResourceObject
  * `hal` for Hypertext Application Language application
  * `prod` for production
 
-To run application, Include application invoke script with contexts value as `$context'.
+To run application, Include application invoke script with contexts value as `$context`.
 
 ```php
 $context = 'prod-api-hal-app'
