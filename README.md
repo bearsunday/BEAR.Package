@@ -27,21 +27,27 @@ Set up a virtual host to point to the `/path/to/package/docs/demo-app/var/www` d
 ## Demo - Hypermedia Application Language (HAL)
 
 ### ResourceObject
-[src/Resource/App/User.php](https://github.com/bearsunday/BEAR.Package/blob/develop-2/docs/demo-app/src/Resource/App/User.php)
+[src/Resource/App/User.php](https://github.com/bearsunday/BEAR.Package/blob/1.x/docs/demo-app/src/Resource/App/User.php)
 
 ```php
 namespace MyVendor\MyApp\Resource\App;
 
+use BEAR\Package\Annotation\Etag;
+use BEAR\RepositoryModule\Annotation\QueryRepository;
 use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 
+/**
+ * @QueryRepository
+ * @Etag
+ */
 class User extends ResourceObject
 {
     /**
      * @Link(rel="profile", href="/profile{?id}")
-     * @Embed(rel="website", src="app://self/website{?id}")
-     * @Embed(rel="contact", src="app://self/contact{?id}")
+     * @Embed(rel="website", src="/website{?id}")
+     * @Embed(rel="contact", src="/contact{?id}")
      */
     public function onGet($id)
     {
@@ -56,23 +62,23 @@ class User extends ResourceObject
 
 ### web access (page resource)
 
-    $ cd docs/demo/MyVendor/MyApp/var/bootstrap
+    $ cd docs/demo-app/bootstrap
     $ php web.php options /user
-    
-    code: 200
-    header:
-    allow: get
-    body:
 
-    
+    200 OK
+    allow: get
+
+
 ### api access (api resource)
 
-    $ cd docs/demo/MyVendor/MyApp/var/bootstrap
+    $ cd docs/demo-app/bootstrap
     $ php api.php get '/user?id=koriym'
 
-    code: 200
-    header:
-    body:
+    200 OK
+    Content-Type: application/hal+json
+    Etag: 2037294968
+    Last-Modified: Tue, 14 Apr 2015 13:29:05 GMT
+
     {
         "id": "koriym",
         "name": "Akihito Koriyama",
@@ -110,10 +116,10 @@ class User extends ResourceObject
         },
         "_links": {
             "self": {
-                "href": "/user?id=koriym"
+                "href": "/user/koriym"
             },
-            "contact": {
-                "href": "/contact?id=koriym"
+            "profile": {
+                "href": "/profile/koriym"
             }
         }
     }
@@ -127,7 +133,7 @@ class User extends ResourceObject
  * `hal` for Hypertext Application Language application
  * `prod` for production
 
-To run application, Include application invoke script with contexts value as `$context'.
+To run application, Include application invoke script with contexts value as `$context`.
 
 ```php
 $context = 'prod-api-hal-app'
@@ -169,7 +175,7 @@ $this->bind(\PDO::class)->toProvider(PdoProvider::class)->in(Scope::SINGLETON);
 Provide `PdoProvider.php`
 
 ```php
-class PdoProvider implements  ProviderInterface
+class PdoProvider implements ProviderInterface
 {
     public function get()
     {
