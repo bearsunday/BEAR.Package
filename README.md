@@ -62,23 +62,23 @@ class User extends ResourceObject
 
 ### web access (page resource)
 
-    $ cd docs/demo/MyVendor/MyApp/var/bootstrap
+    $ cd docs/demo-app/bootstrap
     $ php web.php options /user
-    
-    code: 200
-    header:
-    allow: get
-    body:
 
-    
+    200 OK
+    allow: get
+
+
 ### api access (api resource)
 
-    $ cd docs/demo/MyVendor/MyApp/var/bootstrap
+    $ cd docs/demo-app/bootstrap
     $ php api.php get '/user?id=koriym'
 
-    code: 200
-    header:
-    body:
+    200 OK
+    Content-Type: application/hal+json
+    Etag: 2037294968
+    Last-Modified: Tue, 14 Apr 2015 13:29:05 GMT
+
     {
         "id": "koriym",
         "name": "Akihito Koriyama",
@@ -116,10 +116,10 @@ class User extends ResourceObject
         },
         "_links": {
             "self": {
-                "href": "/user?id=koriym"
+                "href": "/user/koriym"
             },
-            "contact": {
-                "href": "/contact?id=koriym"
+            "profile": {
+                "href": "/profile/koriym"
             }
         }
     }
