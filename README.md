@@ -175,7 +175,7 @@ $this->bind(\PDO::class)->toProvider(PdoProvider::class)->in(Scope::SINGLETON);
 Provide `PdoProvider.php`
 
 ```php
-class PdoProvider implements  ProviderInterface
+class PdoProvider implements ProviderInterface
 {
     public function get()
     {
