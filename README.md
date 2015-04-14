@@ -27,21 +27,27 @@ Set up a virtual host to point to the `/path/to/package/docs/demo-app/var/www` d
 ## Demo - Hypermedia Application Language (HAL)
 
 ### ResourceObject
-[src/Resource/App/User.php](https://github.com/bearsunday/BEAR.Package/blob/develop-2/docs/demo-app/src/Resource/App/User.php)
+[src/Resource/App/User.php](https://github.com/bearsunday/BEAR.Package/blob/1.x/docs/demo-app/src/Resource/App/User.php)
 
 ```php
 namespace MyVendor\MyApp\Resource\App;
 
+use BEAR\Package\Annotation\Etag;
+use BEAR\RepositoryModule\Annotation\QueryRepository;
 use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 
+/**
+ * @QueryRepository
+ * @Etag
+ */
 class User extends ResourceObject
 {
     /**
      * @Link(rel="profile", href="/profile{?id}")
-     * @Embed(rel="website", src="app://self/website{?id}")
-     * @Embed(rel="contact", src="app://self/contact{?id}")
+     * @Embed(rel="website", src="/website{?id}")
+     * @Embed(rel="contact", src="/contact{?id}")
      */
     public function onGet($id)
     {
