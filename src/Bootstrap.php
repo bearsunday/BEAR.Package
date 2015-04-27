@@ -27,14 +27,14 @@ final class Bootstrap
     {
         if (is_null($cache)) {
             $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
-            $cache->setNamespace(filemtime($appMeta->appDir . '/src/.'));
         }
-        $app = $cache->fetch($contexts);
+        $appId = $appMeta->name . $contexts;
+        $app = $cache->fetch($appId);
         if ($app) {
             return $app;
         }
         $app = $this->createAppInstance($appMeta, $contexts);
-        $cache->save($contexts, $app);
+        $cache->save($appId, $app);
 
         return $app;
     }
