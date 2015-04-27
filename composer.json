@@ -35,10 +35,5 @@
     },
     "bin": [
         "bin/bear.env"
-    ],
-    "extra": {
-        "branch-alias": {
-            "dev-develop-2": "1.0.x-dev"
-        }
-    }
+    ]
 }
