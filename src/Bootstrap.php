@@ -11,6 +11,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\VoidCache;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
@@ -27,6 +28,11 @@ final class Bootstrap
     {
         if (is_null($cache)) {
             $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
+        }
+        $isNotProd = strpos($contexts, 'prod') === false;
+        if ($isNotProd) {
+            $cache = new VoidCache;
+            $this->clearDir($appMeta->tmpDir);
         }
         $appId = $appMeta->name . $contexts;
         $app = $cache->fetch($appId);
@@ -65,5 +71,16 @@ final class Bootstrap
         $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);
 
         return $app;
+    }
+
+    private function clearDir($dir)
+    {
+        $unlink = function ($path) use (&$unlink) {
+            foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
+                is_dir($file) ? $unlink($file) : unlink($file);
+                @rmdir($file);
+            }
+        };
+        $unlink($dir);
     }
 }
