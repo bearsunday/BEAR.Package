@@ -47,6 +47,11 @@ final class Bootstrap
      */
     private function createAppInstance(AbstractAppMeta $appMeta, $contexts)
     {
+        $tmpDir = $appMeta->tmpDir . '/' . $contexts;
+        if (! file_exists($tmpDir)) {
+            mkdir($tmpDir);
+        }
+        $appMeta->tmpDir = $tmpDir;
         $contextsArray = array_reverse(explode('-', $contexts));
         $module = null;
         foreach ($contextsArray as $context) {
