@@ -3,13 +3,13 @@
 namespace MyVendor\MyApp\Resource\App;
 
 use BEAR\Package\Annotation\Etag;
-use BEAR\RepositoryModule\Annotation\QueryRepository;
+use BEAR\RepositoryModule\Annotation\Cacheable;
 use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 
 /**
- * @QueryRepository
+ * @Cacheable
  * @Etag
  */
 class User extends ResourceObject
