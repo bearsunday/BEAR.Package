@@ -53,7 +53,7 @@ final class Bootstrap
         }
         $appMeta->tmpDir = $tmpDir;
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = null;
+        $module = new AppMetaModule($appMeta);
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (! class_exists($class)) {
