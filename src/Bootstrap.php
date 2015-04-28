@@ -48,7 +48,7 @@ final class Bootstrap
     private function createAppInstance(AbstractAppMeta $appMeta, $contexts)
     {
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = new AppMetaModule($appMeta);
+        $module = null;
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (! class_exists($class)) {
@@ -57,6 +57,7 @@ final class Bootstrap
             /** @var $module AbstractModule */
             $module = new $class($module);
         }
+        $module->install(new AppMetaModule($appMeta));
         $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);
 
         return $app;
