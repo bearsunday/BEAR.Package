@@ -3,6 +3,8 @@
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Router\Router;
+use BEAR\AppMeta\AppMeta;
+use BEAR\Package\AppMetaModule;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use FakeVendor\HelloWorld\Module\AppModule;
 use Ray\Di\Injector;
@@ -13,7 +15,9 @@ class AuraRouterModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testRouter()
     {
-        $injector = new Injector(new AuraRouterModule(new AppModule));
+        $module = (new AuraRouterModule(new AppModule));
+        $module->install(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld')));
+        $injector = new Injector($module);
         $router = $injector->getInstance(RouterInterface::class);
         $this->assertInstanceOf(RouterCollection::class, $router);
 

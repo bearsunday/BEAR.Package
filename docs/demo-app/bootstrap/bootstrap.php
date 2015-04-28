@@ -18,7 +18,7 @@ load: {
 
 route: {
     $context = isset($context) ? $context : 'app';
-    $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__), $context, new ApcCache);
+    $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__, $context), $context, new ApcCache);
     /* @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
     $request = $app->router->match($GLOBALS, $_SERVER);
 }
