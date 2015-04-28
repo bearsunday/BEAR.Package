@@ -1,25 +1,23 @@
 <?php
 
+/**
+ * @global string $context
+ */
 namespace MyVendor\MyApp;
 
-use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Bootstrap;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Cache\ApcCache;
 
 load: {
-    $dir = dirname(dirname(dirname(__DIR__)));
-    // include $dir . '/preload.php';
-    $loader = require $dir . '/vendor/autoload.php';
+    $loader = require dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
     /* @var $loader \Composer\Autoload\ClassLoader */
     $loader->addPsr4(__NAMESPACE__ . '\\', dirname(__DIR__) . '/src');
     AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 }
 
 route: {
-    $context = isset($context) ? $context : 'app';
-    $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__, $context), $context, new ApcCache);
-    /* @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
+    $app = (new Bootstrap)->getApp(__NAMESPACE__, $context);
+    /* @var $app AbstractApp \BEAR\Sunday\Extension\Application\AbstractApp */
     $request = $app->router->match($GLOBALS, $_SERVER);
 }
 
