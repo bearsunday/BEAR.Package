@@ -58,9 +58,9 @@ final class Bootstrap
                 $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
             }
             /** @var $module AbstractModule */
-            $module = new $class($module);
+            $module->override(new $class($module));
         }
-        $module->install(new AppMetaModule($appMeta));
+        $module->override(new AppMetaModule($appMeta));
         $injector = new ScriptInjector($appMeta->tmpDir);
         try {
             $app = $injector->getInstance(AppInterface::class);
