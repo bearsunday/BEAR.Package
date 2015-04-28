@@ -9,7 +9,7 @@
  * // at bootstrap
  * include /path/to/profile.php
  *
- * @license http://opensource.org/licenses/bsd-license.php BSD
+ * @license http://opensource.org/licenses/MIT MIT
  */
 ini_set('xhprof.output_dir', '/tmp');
 $enable = extension_loaded('xhprof');
