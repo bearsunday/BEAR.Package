@@ -10,7 +10,6 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 class AppMetaModule extends AbstractModule
 {
@@ -32,10 +31,5 @@ class AppMetaModule extends AbstractModule
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
         $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
         $this->bind('')->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
-        $list = $this->appMeta->getResourceListGenerator();
-        foreach ($list as list($class, )) {
-            $this->bind($class)->in(Scope::SINGLETON);
-        }
-
     }
 }

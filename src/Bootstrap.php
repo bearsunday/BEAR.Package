@@ -11,6 +11,9 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
+use Ray\Compiler\DiCompiler;
+use Ray\Compiler\Exception\NotCompiled;
+use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
@@ -48,7 +51,7 @@ final class Bootstrap
     private function createAppInstance(AbstractAppMeta $appMeta, $contexts)
     {
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = null;
+        $module = new AppMetaModule($appMeta);
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (! class_exists($class)) {
@@ -58,7 +61,14 @@ final class Bootstrap
             $module = new $class($module);
         }
         $module->install(new AppMetaModule($appMeta));
-        $app = (new Injector($module, $appMeta->tmpDir))->getInstance(AppInterface::class);
+        $injector = new ScriptInjector($appMeta->tmpDir);
+        try {
+            $app = $injector->getInstance(AppInterface::class);
+        } catch (NotCompiled $e) {
+            $compiler = new DiCompiler($module, $appMeta->tmpDir);
+            $app = $compiler->getInstance(AppInterface::class);
+            $compiler->compile();
+        }
 
         return $app;
     }
