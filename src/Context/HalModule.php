@@ -9,6 +9,7 @@ namespace BEAR\Package\Context;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Resource\RenderInterface;
 use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
 
 class HalModule extends AbstractModule
 {
@@ -17,6 +18,6 @@ class HalModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind(RenderInterface::class)->to(HalRenderer::class);
+        $this->bind(RenderInterface::class)->to(HalRenderer::class)->in(Scope::SINGLETON);
     }
 }
