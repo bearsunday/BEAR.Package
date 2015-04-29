@@ -2,11 +2,12 @@
 /**
  * This file is part of the BEAR.Package package
  *
- * @license http://opensource.org/licenses/bsd-license.php BSD
+ * @license http://opensource.org/licenses/MIT MIT
  */
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\AppMeta\AppMeta;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
@@ -43,6 +44,17 @@ final class Bootstrap
     }
 
     /**
+     * @param string $name     application name    (Vendor.Package)
+     * @param string $contexts application context (prd-html-app)
+     *
+     * @return AppInterface
+     */
+    public function getApp($name, $contexts)
+    {
+        return $this->newApp(new AppMeta($name, $contexts), $contexts);
+    }
+
+    /**
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
      *
@@ -51,19 +63,18 @@ final class Bootstrap
     private function createAppInstance(AbstractAppMeta $appMeta, $contexts)
     {
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = new AppMetaModule($appMeta);
+        $module = null;
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (! class_exists($class)) {
                 $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
             }
             /** @var $module AbstractModule */
-            $module->override(new $class($module));
+            $module = new $class($module);
         }
         $module->override(new AppMetaModule($appMeta));
-        $injector = new ScriptInjector($appMeta->tmpDir);
         try {
-            $app = $injector->getInstance(AppInterface::class);
+            $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AppInterface::class);
         } catch (NotCompiled $e) {
             $compiler = new DiCompiler($module, $appMeta->tmpDir);
             $app = $compiler->getInstance(AppInterface::class);
