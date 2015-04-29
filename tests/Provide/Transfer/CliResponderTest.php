@@ -25,11 +25,14 @@ class CliResponderTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $ro->transfer($this->responder, []);
         $actual =  ob_get_clean();
-        $expect = '200 OK
+        $expect = <<< EOT
+200 OK
 X-BEAR-VERSION: Sunday
+content-type: application/json
 
 {"greeting":"Hello BEAR.Sunday"}
-';
+
+EOT;
         $this->assertSame($expect, $actual);
     }
 }
