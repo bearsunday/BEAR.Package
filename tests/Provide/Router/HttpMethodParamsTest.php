@@ -113,7 +113,7 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $httpMethodParam->setStdIn(__DIR__ . '/json.txt');
         $server = [
             'REQUEST_METHOD' => 'PUT',
-            'Content-Type' => 'application/json'
+            'content-type' => 'application/json'
         ];
         list(, $params) = $httpMethodParam->get($server, [], []);
         $expected = ['name' => 'BEAR.Sunday v1.0', 'age' => 0];
@@ -125,7 +125,7 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $httpMethodParam = new HttpMethodParams;
         $server = [
             'REQUEST_METHOD' => 'PUT',
-            'Content-Type' => 'text/xml'
+            'content-type' => 'text/xml'
         ];
         list(, $params) = $httpMethodParam->get($server, [], []);
         $expected = [];

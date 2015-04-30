@@ -27,7 +27,7 @@ class VndErrorTest extends \PHPUnit_Framework_TestCase
         $e = new ResourceNotFoundException('', 404);
         $this->vndError->handle($e, new RouterMatch)->transfer();
         $this->assertSame(404, FakeHttpResponder::$code);
-        $this->assertSame(['Content-Type' => 'application/vnd.error+json'], FakeHttpResponder::$headers);
+        $this->assertSame(['content-type' => 'application/vnd.error+json'], FakeHttpResponder::$headers);
     }
 
     public function testBadRequest()

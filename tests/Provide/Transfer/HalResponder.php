@@ -23,7 +23,7 @@ class HalResponder implements TransferInterface
 
         // RFC 4627
         // @see http://www.rfc-editor.org/rfc/rfc4627.txt
-        header('Content-Type: application/json; charset=utf-8');
+        header('content-type: application/json; charset=utf-8');
 
         // body
         echo (string) $resourceObject;
