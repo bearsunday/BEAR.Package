@@ -1,7 +1,7 @@
 # BEAR.Package
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/?branch=2.x)
-[![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/?branch=2.x)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/?branch=2.x)
+[![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/badges/coverage.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/?branch=2.x)
 [![Build Status](https://travis-ci.org/bearsunday/BEAR.Package.svg?branch=1.x)](https://travis-ci.org/bearsunday/BEAR.Package)
 
 ## Introduction
@@ -10,7 +10,7 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resou
 
 # Installation
 
-    $ composer create-project bear/package:~1.0@dev {$Vendor.$Package} 
+    $ composer create-project bear/package:~1.0@dev {$Vendor.$Package}
 
 ## built-in web server
 
@@ -123,7 +123,7 @@ class User extends ResourceObject
             }
         }
     }
-    
+
 ## Application Context
 
 ### built-in module
@@ -137,12 +137,12 @@ To run application, Include application invoke script with contexts value as `$c
 
 ```php
 $context = 'prod-api-hal-app'
-require 'pat/to/bootstrap.php';   
+require 'pat/to/bootstrap.php';
 ```
 
 contexts example
 
- * `app` - "bare" JSON application 
+ * `app` - "bare" JSON application
  * `cli-app` - console application
  * `prod-hal-api-app` - HAL API application for production
  * `dev-html-app` - HTML application for development *1
@@ -202,7 +202,7 @@ Install built-in module to use existing `prod` binding, then you bind yours for 
 
 ```php
 use BEAR\Package\Context\ProdModule as Production;
-    
+
 class ProdModule extends AbstractModule
 {
     protected function configure()
