@@ -75,7 +75,7 @@ class User extends ResourceObject
     $ php api.php get '/user?id=koriym'
 
     200 OK
-    Content-Type: application/hal+json
+    content-type: application/hal+json
     Etag: 2037294968
     Last-Modified: Tue, 14 Apr 2015 13:29:05 GMT
 
