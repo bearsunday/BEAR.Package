@@ -8,7 +8,7 @@ namespace BEAR\Package\Provide\Router;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
-    const CONTENT_TYPE = 'content-type';
+    const CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
 
     const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
 
@@ -105,13 +105,12 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function phpInput(array $server)
     {
-        if (! isset($server['content-type'])) {
+        if (! isset($server[self::CONTENT_TYPE])) {
             return [];
         }
         $isFormUrlEncoded = strpos($server[self::CONTENT_TYPE], self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim(file_get_contents($this->stdIn)), $put);
-
             return $put;
         }
         $isApplicationJson = strpos($server[self::CONTENT_TYPE], self::APPLICATION_JSON) !== false;
