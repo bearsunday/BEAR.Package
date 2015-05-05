@@ -219,14 +219,14 @@ class ProdModule extends AbstractModule
 
 ## Build status
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/?branch=develop-2)
-[![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/?branch=develop-2)
-[![Build Status](https://travis-ci.org/bearsunday/BEAR.Sunday.svg?branch=develop-2)](https://travis-ci.org/bearsunday/BEAR.Sunday?branch=develop-2)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/?branch=1.x)
+[![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/badges/coverage.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Sunday/?branch=1.x)
+[![Build Status](https://travis-ci.org/bearsunday/BEAR.Sunday.svg?branch=1.x)](https://travis-ci.org/bearsunday/BEAR.Sunday?branch=1.x)
 **BEAR.Sunday** - [Resource Oriented Framework](https://github.com/bearsunday/BEAR.Sunday)
 
- [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/) [![Code Coverage](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/) [![Build Status](https://secure.travis-ci.org/ray-di/Ray.Aop.png?b=develop-2)](http://travis-ci.org/ray-di/Ray.Aop) **Ray.Aop** - [Aspect Oriented Framework](https://github.com/ray-di/Ray.Aop)
+ [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/badges/quality-score.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/) [![Code Coverage](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/badges/coverage.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Aop/) [![Build Status](https://secure.travis-ci.org/ray-di/Ray.Aop.png?b=2.x)](http://travis-ci.org/ray-di/Ray.Aop) **Ray.Aop** - [Aspect Oriented Framework](https://github.com/ray-di/Ray.Aop)
 
- [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/) [![Code Coverage](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/) [![Build Status](https://secure.travis-ci.org/ray-di/Ray.Di.png?b=develop-2)](http://travis-ci.org/ray-di/Ray.Di) **Ray.Di** - [Dependency Injection Framework](https://github.com/ray-di/Ray.Di)
+ [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/quality-score.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/) [![Code Coverage](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/coverage.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/) [![Build Status](https://secure.travis-ci.org/ray-di/Ray.Di.png?b=2.x)](http://travis-ci.org/ray-di/Ray.Di) **Ray.Di** - [Dependency Injection Framework](https://github.com/ray-di/Ray.Di)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.Resource/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Resource/?branch=develop-2) [![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.Resource/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Resource/?branch=develop-2) [![Build Status](https://travis-ci.org/bearsunday/BEAR.Resource.svg?branch=develop-2)](https://travis-ci.org/bearsunday/BEAR.Resource)
 **BEAR.Resource** - [Hypermedia Framework](https://github.com/bearsunday/BEAR.Resource)
