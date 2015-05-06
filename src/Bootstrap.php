@@ -76,9 +76,12 @@ final class Bootstrap
     }
 
     /**
+     * Return configured module
+     *
      * @param AbstractAppMeta $appMeta
-     * @param $contexts
-     * @return null|AbstractModule
+     * @param string          $contexts
+     *
+     * @return AbstractModule
      */
     private function newModule(AbstractAppMeta $appMeta, $contexts)
     {
@@ -92,6 +95,7 @@ final class Bootstrap
             /** @var $module AbstractModule */
             $module = new $class($module);
         }
+
         return $module;
     }
 }
