@@ -77,9 +77,6 @@ class VndError implements ErrorInterface
         $ro->code = $this->code;
         $ro->headers['content-type'] = 'application/vnd.error+json';
         $ro->body = $this->body;
-        if (is_null($this->body)) {
-            $ro->body = $ro->view = null;
-        }
         $this->responder->__invoke($ro, []);
     }
 
