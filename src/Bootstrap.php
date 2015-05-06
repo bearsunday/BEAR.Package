@@ -8,6 +8,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
+use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
@@ -16,7 +17,6 @@ use Ray\Compiler\DiCompiler;
 use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
-use Ray\Di\Injector;
 
 final class Bootstrap
 {
@@ -25,7 +25,7 @@ final class Bootstrap
      * @param string          $contexts
      * @param Cache           $cache
      *
-     * @return AppInterface
+     * @return AbstractApp
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
@@ -37,7 +37,7 @@ final class Bootstrap
         if ($app) {
             return $app;
         }
-        $app = $this->createAppInstance($appMeta, $contexts);
+        $app = $this->getAppInstance($appMeta, $contexts);
         $cache->save($appId, $app);
 
         return $app;
@@ -47,7 +47,7 @@ final class Bootstrap
      * @param string $name     application name    (Vendor.Package)
      * @param string $contexts application context (prd-html-app)
      *
-     * @return AppInterface
+     * @return AbstractApp
      */
     public function getApp($name, $contexts)
     {
@@ -58,20 +58,11 @@ final class Bootstrap
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
      *
-     * @return AppInterface
+     * @return AbstractApp
      */
-    private function createAppInstance(AbstractAppMeta $appMeta, $contexts)
+    private function getAppInstance(AbstractAppMeta $appMeta, $contexts)
     {
-        $contextsArray = array_reverse(explode('-', $contexts));
-        $module = null;
-        foreach ($contextsArray as $context) {
-            $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
-            if (! class_exists($class)) {
-                $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
-            }
-            /** @var $module AbstractModule */
-            $module = new $class($module);
-        }
+        $module = $this->newModule($appMeta, $contexts);
         $module->override(new AppMetaModule($appMeta));
         try {
             $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AppInterface::class);
@@ -82,5 +73,25 @@ final class Bootstrap
         }
 
         return $app;
+    }
+
+    /**
+     * @param AbstractAppMeta $appMeta
+     * @param $contexts
+     * @return null|AbstractModule
+     */
+    private function newModule(AbstractAppMeta $appMeta, $contexts)
+    {
+        $contextsArray = array_reverse(explode('-', $contexts));
+        $module = null;
+        foreach ($contextsArray as $context) {
+            $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
+            if (!class_exists($class)) {
+                $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
+            }
+            /** @var $module AbstractModule */
+            $module = new $class($module);
+        }
+        return $module;
     }
 }
