@@ -49,7 +49,7 @@ class HalRenderer implements RenderInterface
         $method = 'on' . ucfirst($ro->uri->method);
         $hasMethod = method_exists($ro, $method);
         if (! $hasMethod) {
-            $ro->view = ''; // options has no view
+            $ro->view = ''; // OPTIONS request no view
 
             return '';
         }

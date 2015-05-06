@@ -7,10 +7,11 @@
 namespace BEAR\Package\Provide\Router;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use Ray\Di\Exception\NotFound;
+use BEAR\Sunday\Extension\Router\RouterMatch;
 
 class RouterCollection implements RouterInterface
 {
+    const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
     /**
      * @var RouterInterface[]
      */
@@ -36,9 +37,20 @@ class RouterCollection implements RouterInterface
             }
         }
 
-        throw new NotFound($globals['_SERVER']['REQUEST_URI']);
+        return $this->routeNotFound();
     }
 
+    /**
+     * @return RouterMatch
+     */
+    private function routeNotFound()
+    {
+        $routeMatch = new RouterMatch;
+        $routeMatch->method = 'get';
+        $routeMatch->path = self::ROUTE_NOT_FOUND;
+
+        return $routeMatch;
+    }
     /**
      * {@inheritdoc}
      */
