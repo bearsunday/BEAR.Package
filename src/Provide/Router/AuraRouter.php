@@ -55,9 +55,6 @@ class AuraRouter implements RouterInterface
     public function match(array $globals, array $server)
     {
         $path = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
-        if ($path === false) {
-            return false;
-        }
         $route = $this->router->match($path, $server);
         if ($route === false) {
             return false;
@@ -81,7 +78,7 @@ class AuraRouter implements RouterInterface
 
     /**
      * Return resource request
-     * 
+     *
      * @param array $globals
      * @param array $server
      * @param Route $route

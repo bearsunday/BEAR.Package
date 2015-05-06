@@ -91,4 +91,17 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         $match = $this->auraRouter->match($globals, $server);
         $this->assertFalse($match);
     }
+
+    public function testInvalidPath()
+    {
+        $globals = [
+        ];
+        $server = [
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => null
+        ];
+        $match = $this->auraRouter->match($globals, $server);
+        $this->assertFalse($match);
+
+    }
 }
