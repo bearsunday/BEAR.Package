@@ -8,6 +8,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
+use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
@@ -76,9 +77,12 @@ final class Bootstrap
     }
 
     /**
+     * Return configured module
+     *
      * @param AbstractAppMeta $appMeta
-     * @param $contexts
-     * @return null|AbstractModule
+     * @param string          $contexts
+     *
+     * @return AbstractModule
      */
     private function newModule(AbstractAppMeta $appMeta, $contexts)
     {
@@ -89,9 +93,13 @@ final class Bootstrap
             if (!class_exists($class)) {
                 $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
             }
-            /** @var $module AbstractModule */
+            if (! is_a($class, AbstractModule::class, true)) {
+                throw new InvalidContextException($class);
+            }
+            /* @var $module AbstractModule */
             $module = new $class($module);
         }
+
         return $module;
     }
 }

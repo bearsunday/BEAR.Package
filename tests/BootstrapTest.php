@@ -3,6 +3,7 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AppMeta;
+use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
@@ -59,5 +60,11 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $appMeta->tmpDir = $newTmpDir;
         $app = (new Bootstrap)->newApp($appMeta, 'app', new VoidCache);
         $this->assertInstanceOf(AppInterface::class, $app);
+    }
+
+    public function testInvalidContext()
+    {
+        $this->setExpectedException(InvalidContextException::class);
+        (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'invalid');
     }
 }

@@ -102,6 +102,5 @@ class AuraRouterTest extends \PHPUnit_Framework_TestCase
         ];
         $match = $this->auraRouter->match($globals, $server);
         $this->assertFalse($match);
-
     }
 }
