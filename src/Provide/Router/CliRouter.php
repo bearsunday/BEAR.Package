@@ -11,6 +11,7 @@ use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
 use Aura\Cli\Stdio;
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Annotation\StdIn;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -37,6 +38,8 @@ class CliRouter implements RouterInterface
      */
     private $stdIo;
 
+    private $stdIn;
+
     /**
      * @param AbstractAppMeta $appMeta
      *
@@ -46,6 +49,15 @@ class CliRouter implements RouterInterface
     {
         $this->appMeta = $appMeta;
         ini_set('error_log', $appMeta->logDir . '/console.log');
+    }
+
+    /**
+     * @Inject
+     * @StdIn
+     */
+    public function setStdIn($stdIn)
+    {
+        $this->stdIn = $stdIn;
     }
     /**
      * @param RouterInterface $router
@@ -83,8 +95,31 @@ class CliRouter implements RouterInterface
             'REQUEST_METHOD' => strtoupper($method),
             'REQUEST_URI' => $parsedUrl['path']
         ];
+        $this->setQuery($method, $query, $globals, $server);
 
         return $this->router->match($globals, $server);
+    }
+
+    /**
+     * Set user input query to $globals or &$server
+     *
+     * @param string $method
+     * @param array  $query
+     * @param array  $globals
+     * @param array  $server
+     */
+    private function setQuery($method, array $query, array &$globals, array &$server)
+    {
+        if ($method === 'get') {
+            $globals['_GET'] = $query;
+        }
+        if ($method === 'post') {
+            $globals['_POST'] = $query;
+        }
+        if ($method === 'put' || $method === 'patch' || $method === 'delete') {
+            $server[HttpMethodParams::CONTENT_TYPE] = HttpMethodParams::FORM_URL_ENCODE;
+            file_put_contents($this->stdIn, http_build_query($query));
+        }
     }
 
     /**
