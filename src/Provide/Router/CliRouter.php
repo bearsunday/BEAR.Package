@@ -77,36 +77,24 @@ class CliRouter implements RouterInterface
      */
     public function match(array $globals, array $server)
     {
-        if ($globals['argc'] !== 3) {
-            $this->error(basename($globals['argv'][0]));
-            $this->exitProgram(Status::USAGE);
-        };
-        list(, $method, $uri) = $globals['argv'];
-        $parsedUrl = parse_url($uri);
-        $query = [];
-        if (isset($parsedUrl['query'])) {
-            parse_str($parsedUrl['query'], $query);
-        }
-        $globals = [
-            '_GET' => $query,
-            '_POST' => $query
-        ];
-        $server = [
-            'REQUEST_METHOD' => strtoupper($method),
-            'REQUEST_URI' => $parsedUrl['path']
-        ];
+        $this->validateArgs($globals);
+        list($method, $query, $server) = $this->parseGlobals($globals);
         $this->setQuery($method, $query, $globals, $server);
 
         return $this->router->match($globals, $server);
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $data)
+    {
+        return $this->router->generate($name, $data);
+    }
+
+    /**
      * Set user input query to $globals or &$server
-<<<<<<< HEAD
-     * 
-=======
      *
->>>>>>> 213e1f482d9aef105260175ddfc7969664f52eee
      * @param string $method
      * @param array  $query
      * @param array  $globals
@@ -116,22 +104,15 @@ class CliRouter implements RouterInterface
     {
         if ($method === 'get') {
             $globals['_GET'] = $query;
+
+            return;
         }
         if ($method === 'post') {
             $globals['_POST'] = $query;
-        }
-        if ($method === 'put' || $method === 'patch' || $method === 'delete') {
-            $server[HttpMethodParams::CONTENT_TYPE] = HttpMethodParams::FORM_URL_ENCODE;
-            file_put_contents($this->stdIn, http_build_query($query));
-        }
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function generate($name, $data)
-    {
-        return $this->router->generate($name, $data);
+            return;
+        }
+        $server = $this->getStdIn($method, $query, $server);
     }
 
     /**
@@ -156,5 +137,62 @@ class CliRouter implements RouterInterface
         // @codeCoverageIgnoreStart
         exit($status);
         // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * Return StdIn in PUT, PATCH or DELETE
+     *
+     * @param $method
+     * @param array $query
+     * @param array $server
+     *
+     * @return array
+     */
+    private function getStdIn($method, array $query, array &$server)
+    {
+        if ($method === 'put' || $method === 'patch' || $method === 'delete') {
+            $server[HttpMethodParams::CONTENT_TYPE] = HttpMethodParams::FORM_URL_ENCODE;
+            file_put_contents($this->stdIn, http_build_query($query));
+
+            return $server;
+        }
+
+        return $server;
+    }
+
+    /**
+     * Validate input
+     *
+     * @param array $globals
+     */
+    private function validateArgs(array $globals)
+    {
+        if ($globals['argc'] !== 3) {
+            $this->error(basename($globals['argv'][0]));
+            $this->exitProgram(Status::USAGE);
+        };
+    }
+
+    /**
+     * Return $method, $query, $server from $globals
+     *
+     * @param array $globals
+     *
+     * @return array
+     */
+    private function parseGlobals(array $globals)
+    {
+        list(, $method, $uri) = $globals['argv'];
+        $parsedUrl = parse_url($uri);
+        $query = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $query);
+        }
+        $server = [
+            'REQUEST_METHOD' => strtoupper($method),
+            'REQUEST_URI' => $parsedUrl['path']
+        ];
+
+        return [$method, $query, $server];
     }
 }
