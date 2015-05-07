@@ -14,6 +14,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\VoidCache;
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
@@ -21,6 +22,19 @@ use Ray\Di\AbstractModule;
 
 final class Bootstrap
 {
+    /**
+     * Return application instance by name and contexts
+     *
+     * @param string $name     application name    (Vendor.Package)
+     * @param string $contexts application context (prd-html-app)
+     *
+     * @return AbstractApp
+     */
+    public function getApp($name, $contexts)
+    {
+        return $this->newApp(new AppMeta($name, $contexts), $contexts);
+    }
+
     /**
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
@@ -30,9 +44,7 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
-        if (is_null($cache)) {
-            $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
-        }
+        $cache = $cache ?: $this->getCache($appMeta, $contexts);
         $appId = $appMeta->name . $contexts;
         $app = $cache->fetch($appId);
         if ($app) {
@@ -42,17 +54,6 @@ final class Bootstrap
         $cache->save($appId, $app);
 
         return $app;
-    }
-
-    /**
-     * @param string $name     application name    (Vendor.Package)
-     * @param string $contexts application context (prd-html-app)
-     *
-     * @return AbstractApp
-     */
-    public function getApp($name, $contexts)
-    {
-        return $this->newApp(new AppMeta($name, $contexts), $contexts);
     }
 
     /**
@@ -101,5 +102,23 @@ final class Bootstrap
         }
 
         return $module;
+    }
+
+    /**
+     * Return contextual cache
+     *
+     * @param AbstractAppMeta $appMeta
+     * @param string          $contexts
+     *
+     * @return ApcCache|FilesystemCache|VoidCache
+     */
+    private function getCache(AbstractAppMeta $appMeta, $contexts)
+    {
+        $isProd = strpos($contexts, 'prod') === false;
+        if ($isProd) {
+            return function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
+        }
+
+        return new VoidCache;
     }
 }
