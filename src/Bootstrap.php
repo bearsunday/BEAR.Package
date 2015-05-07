@@ -23,6 +23,19 @@ use Ray\Di\AbstractModule;
 final class Bootstrap
 {
     /**
+     * Return application instance by name and contexts
+     *
+     * @param string $name     application name    (Vendor.Package)
+     * @param string $contexts application context (prd-html-app)
+     *
+     * @return AbstractApp
+     */
+    public function getApp($name, $contexts)
+    {
+        return $this->newApp(new AppMeta($name, $contexts), $contexts);
+    }
+
+    /**
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
      * @param Cache           $cache
@@ -31,7 +44,7 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
-        $cache = $this->getCache($appMeta, $contexts, $cache);
+        $cache = $cache ?: $this->getCache($appMeta, $contexts);
         $appId = $appMeta->name . $contexts;
         $app = $cache->fetch($appId);
         if ($app) {
@@ -41,17 +54,6 @@ final class Bootstrap
         $cache->save($appId, $app);
 
         return $app;
-    }
-
-    /**
-     * @param string $name     application name    (Vendor.Package)
-     * @param string $contexts application context (prd-html-app)
-     *
-     * @return AbstractApp
-     */
-    public function getApp($name, $contexts)
-    {
-        return $this->newApp(new AppMeta($name, $contexts), $contexts);
     }
 
     /**
@@ -107,17 +109,16 @@ final class Bootstrap
      *
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
-     * @param Cache           $cache
      *
-     * @return ApcCache|Cache|FilesystemCache|VoidCache
+     * @return ApcCache|FilesystemCache|VoidCache
      */
-    private function getCache(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
+    private function getCache(AbstractAppMeta $appMeta, $contexts)
     {
         $isProd = strpos($contexts, 'prod') === false;
-        if ($isProd && is_null($cache)) {
+        if ($isProd) {
             return function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
         }
 
-        return is_null($cache) ? new VoidCache : $cache;
+        return new VoidCache;
     }
 }
