@@ -6,6 +6,10 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Annotation\StdIn;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
     const CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
@@ -21,6 +25,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * @param string $stdIn
+     *
+     * @Inject(optional=true)
+     * @StdIn
      */
     public function setStdIn($stdIn)
     {
