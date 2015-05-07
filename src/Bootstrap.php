@@ -14,6 +14,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\VoidCache;
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
@@ -30,9 +31,7 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
-        if (is_null($cache)) {
-            $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
-        }
+        $cache = $this->getCache($appMeta, $contexts, $cache);
         $appId = $appMeta->name . $contexts;
         $app = $cache->fetch($appId);
         if ($app) {
@@ -101,5 +100,24 @@ final class Bootstrap
         }
 
         return $module;
+    }
+
+    /**
+     * Return contextual cache
+     *
+     * @param AbstractAppMeta $appMeta
+     * @param string          $contexts
+     * @param Cache           $cache
+     *
+     * @return ApcCache|Cache|FilesystemCache|VoidCache
+     */
+    private function getCache(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
+    {
+        $isProd = strpos($contexts, 'prod') === false;
+        if ($isProd && is_null($cache)) {
+            return function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
+        }
+
+        return is_null($cache) ? new VoidCache : $cache;
     }
 }
