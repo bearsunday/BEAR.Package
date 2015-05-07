@@ -5,6 +5,7 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 namespace BEAR\Package\Annotation;
+
 use Ray\Di\Di\Qualifier;
 
 /**

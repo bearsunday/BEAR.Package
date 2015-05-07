@@ -102,7 +102,7 @@ class CliRouter implements RouterInterface
 
     /**
      * Set user input query to $globals or &$server
-     * 
+     *
      * @param string $method
      * @param array  $query
      * @param array  $globals
