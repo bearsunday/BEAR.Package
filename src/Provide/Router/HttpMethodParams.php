@@ -8,7 +8,6 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
 use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
