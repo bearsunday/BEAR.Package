@@ -2,11 +2,10 @@
 
 namespace Provide\Router;
 
-use Aura\Router\RouterFactory;
-use BEAR\Pacakge\Exception\RouteNotFoundException;
-use BEAR\Package\Provide\Router\AuraRouter;
+use BEAR\Package\FakeWebRouter;
 use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\RouterCollection;
+use BEAR\Package\Provide\Router\RouterCollectionProvider;
 use BEAR\Sunday\Provide\Router\WebRouter;
 
 class RouterCollectionTest extends \PHPUnit_Framework_TestCase
@@ -18,18 +17,15 @@ class RouterCollectionTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $routerAdapter = (new RouterFactory)->newInstance();
-        $auraRouter = new AuraRouter($routerAdapter, 'page://self', new HttpMethodParams);
         $webRouter = new WebRouter('page://self', new HttpMethodParams);
-        $this->routerCollection = new RouterCollection([$auraRouter, $webRouter]);
-        $routerAdapter
-            ->add('/blog', '/blog/{id}')
-            ->addValues(['path'  => '/blog']);
+        $fakeRouter = new FakeWebRouter('page://self', new HttpMethodParams);
+        $this->routerCollection = (new RouterCollectionProvider($webRouter, $fakeRouter))->get();
         parent::setUp();
     }
     public function testMatch()
     {
         $globals = [
+            '_GET' => [],
             '_POST' => ['title' => 'hello']
         ];
         $server = [
@@ -38,8 +34,7 @@ class RouterCollectionTest extends \PHPUnit_Framework_TestCase
         ];
         $request = $this->routerCollection->match($globals, $server);
         $this->assertSame('post', $request->method);
-        $this->assertSame('page://self/blog', $request->path);
-        $this->assertSame(['action' => '/blog', 'id' => 'PC6001', 'title' => 'hello'], $request->query);
+        $this->assertSame('page://self/blog/PC6001', $request->path);
     }
 
     public function testNotFound()
@@ -57,13 +52,13 @@ class RouterCollectionTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $uri = $this->routerCollection->generate('/blog', ['id' => 1]);
-        $expected = '/blog/1';
+        $expected = 'page://self/generated-uri';
         $this->assertSame($expected, $uri);
     }
 
-    public function testGenerateFaild()
+    public function testGenerateFalse()
     {
-        $uri = $this->routerCollection->generate('/invalid', ['id' => 1]);
+        $uri = $this->routerCollection->generate('/blog', false);
         $this->assertFalse($uri);
     }
 }
