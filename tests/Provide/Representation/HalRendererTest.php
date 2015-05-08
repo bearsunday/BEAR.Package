@@ -5,6 +5,8 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Router\AuraRouterProvider;
+use BEAR\Package\Provide\Router\HttpMethodParams;
+use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\ResourceInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -24,7 +26,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $router = (new AuraRouterProvider(new AppMeta('FakeVendor\HelloWorld'), 'page://self'))->get();
+        $router = new WebRouter('page://self', new HttpMethodParams());
         $this->hal = new HalRenderer(new AnnotationReader, $router);
         $this->resource = (new Injector(new ResourceModule('FakeVendor\HelloWorld')))->getInstance(ResourceInterface::class);
     }
@@ -40,10 +42,10 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     "org_id": "o1",
     "_links": {
         "self": {
-            "href": "/user/1"
+            "href": "/user?id=1"
         },
         "friend": {
-            "href": "/friend/f1"
+            "href": "/friend?id=f1"
         },
         "org": {
             "href": "/org?id=o1"
@@ -64,10 +66,10 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     "friend_id": "f1",
     "_links": {
         "self": {
-            "href": "/user/1"
+            "href": "/user?id=1"
         },
         "friend": {
-            "href": "/friend/f1"
+            "href": "/friend?id=f1"
         }
     }
 }
@@ -88,10 +90,10 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
             "org_id": "o1",
             "_links": {
                 "self": {
-                    "href": "/user/1"
+                    "href": "/user?id=1"
                 },
                 "friend": {
-                    "href": "/friend/f1"
+                    "href": "/friend?id=f1"
                 },
                 "org": {
                     "href": "/org?id=o1"

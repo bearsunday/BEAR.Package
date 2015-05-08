@@ -31,7 +31,6 @@ class PackageModule extends AbstractModule
         $this->install(new SundayModule);
         $this->install(new QueryRepositoryModule);
         $this->install(new EtagResponseModule);
-        $this->install(new AuraRouterModule());
         $this->install(new WebRouterModule);
         $this->install(new VndErrorModule);
     }
