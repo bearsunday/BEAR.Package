@@ -23,7 +23,6 @@
         "bear/sunday": "~1.0.0-rc",
         "bear/query-repository": "~0.1",
         "bear/app-meta": "~0.1",
-        "aura/router": "~2.0",
         "aura/web": "~2.0",
         "aura/cli": "~2.0",
         "ray/web-param-module": "~0.1"
