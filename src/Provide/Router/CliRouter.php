@@ -41,17 +41,6 @@ class CliRouter implements RouterInterface
     private $stdIn;
 
     /**
-     * @param AbstractAppMeta $appMeta
-     *
-     * @Inject
-     */
-    public function setAppMeta(AbstractAppMeta $appMeta)
-    {
-        $this->appMeta = $appMeta;
-        ini_set('error_log', $appMeta->logDir . '/console.log');
-    }
-
-    /**
      * @Inject
      * @StdIn
      */

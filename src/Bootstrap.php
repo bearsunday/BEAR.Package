@@ -114,7 +114,7 @@ final class Bootstrap
      */
     private function getCache(AbstractAppMeta $appMeta, $contexts)
     {
-        $isProd = strpos($contexts, 'prod') === false;
+        $isProd = is_int(strpos($contexts, 'prod'));
         if ($isProd) {
             return function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($appMeta->tmpDir);
         }
