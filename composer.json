@@ -20,12 +20,12 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "bear/sunday": "~1.0.0-rc",
-        "bear/query-repository": "~0.1",
-        "bear/app-meta": "~0.1",
-        "aura/web": "~2.0",
         "aura/cli": "~2.0",
-        "ray/web-param-module": "~0.1"
+        "aura/web": "~2.0",
+        "bear/app-meta": "~1.0",
+        "bear/query-repository": "~1.0",
+        "bear/sunday": "~1.0.0-rc",
+        "ray/web-param-module": "~1.0"
     },
     "autoload": {
         "psr-4": {
