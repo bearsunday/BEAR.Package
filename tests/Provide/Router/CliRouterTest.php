@@ -95,4 +95,3 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
         $this->router->match($globals, []);
     }
 }
-

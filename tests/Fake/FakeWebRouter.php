@@ -18,6 +18,7 @@ class FakeWebRouter extends WebRouter
         if ($data === false) {
             return false;
         }
+
         return 'page://self/generated-uri';
     }
 }
