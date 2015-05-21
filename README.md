@@ -39,8 +39,7 @@ use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 
 /**
- * @QueryRepository
- * @Etag
+ * @Cacheable
  */
 class User extends ResourceObject
 {

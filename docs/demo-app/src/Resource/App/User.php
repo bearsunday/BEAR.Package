@@ -2,7 +2,6 @@
 
 namespace MyVendor\MyApp\Resource\App;
 
-use BEAR\Package\Annotation\Etag;
 use BEAR\RepositoryModule\Annotation\Cacheable;
 use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
@@ -10,7 +9,6 @@ use BEAR\Resource\ResourceObject;
 
 /**
  * @Cacheable
- * @Etag
  */
 class User extends ResourceObject
 {
