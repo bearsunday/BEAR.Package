@@ -10,7 +10,6 @@ use Aura\Cli\CliFactory;
 use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
 use Aura\Cli\Stdio;
-use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\Di\Inject;
@@ -24,11 +23,6 @@ class CliRouter implements RouterInterface
     private $router;
 
     /**
-     * @var AbstractAppMeta
-     */
-    private $appMeta;
-
-    /**
      * @var \LogicException
      */
     private $exception;
@@ -38,6 +32,9 @@ class CliRouter implements RouterInterface
      */
     private $stdIo;
 
+    /**
+     * @var strings
+     */
     private $stdIn;
 
     /**
