@@ -2,7 +2,6 @@
 
 namespace BEAR\Package;
 
-use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Router\AuraRouterProvider;
 use BEAR\Package\Provide\Router\HttpMethodParams;

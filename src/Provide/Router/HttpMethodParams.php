@@ -113,7 +113,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function phpInput(array $server)
     {
-        $contentType =$this->getContentType($server);
+        $contentType = $this->getContentType($server);
         if (! $contentType) {
             return [];
         }
@@ -152,4 +152,3 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return '';
     }
 }
-

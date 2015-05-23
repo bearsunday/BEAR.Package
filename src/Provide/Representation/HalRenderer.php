@@ -31,7 +31,8 @@ class HalRenderer implements RenderInterface
     private $router;
 
     /**
-     * @param Reader $reader
+     * @param Reader          $reader
+     * @param RouterInterface $router
      */
     public function __construct(Reader $reader, RouterInterface $router)
     {

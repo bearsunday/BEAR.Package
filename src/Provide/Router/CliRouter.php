@@ -33,11 +33,13 @@ class CliRouter implements RouterInterface
     private $stdIo;
 
     /**
-     * @var strings
+     * @var string
      */
     private $stdIn;
 
     /**
+     * @param string $stdIn
+     *
      * @Inject
      * @StdIn
      */
@@ -45,8 +47,11 @@ class CliRouter implements RouterInterface
     {
         $this->stdIn = $stdIn;
     }
+
     /**
      * @param RouterInterface $router
+     * @param \LogicException $exception
+     * @param Stdio           $stdIo
      *
      * @Inject
      * @Named("original")
@@ -128,9 +133,9 @@ class CliRouter implements RouterInterface
     /**
      * Return StdIn in PUT, PATCH or DELETE
      *
-     * @param $method
-     * @param array $query
-     * @param array $server
+     * @param string $method
+     * @param array  $query
+     * @param array  $server
      *
      * @return array
      */
