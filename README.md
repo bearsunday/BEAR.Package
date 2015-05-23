@@ -4,8 +4,6 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/badges/coverage.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/?branch=1.x)
 [![Build Status](https://travis-ci.org/bearsunday/BEAR.Package.svg?branch=1.x)](https://travis-ci.org/bearsunday/BEAR.Package)
 
-# BEAR.Package
-
 BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resource oriented framework implementation package.
 
 ## Run demo app
