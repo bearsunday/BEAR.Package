@@ -11,7 +11,9 @@ use Ray\Di\Di\Inject;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
-    const CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
+    const CONTENT_TYPE = 'CONTENT_TYPE';
+
+    const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
 
     const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
 
@@ -111,16 +113,17 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function phpInput(array $server)
     {
-        if (! isset($server[self::CONTENT_TYPE])) {
+        $contentType =$this->getContentType($server);
+        if (! $contentType) {
             return [];
         }
-        $isFormUrlEncoded = strpos($server[self::CONTENT_TYPE], self::FORM_URL_ENCODE) !== false;
+        $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim(file_get_contents($this->stdIn)), $put);
 
             return $put;
         }
-        $isApplicationJson = strpos($server[self::CONTENT_TYPE], self::APPLICATION_JSON) !== false;
+        $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if ($isApplicationJson) {
             $content =  (array) json_decode(file_get_contents($this->stdIn));
 
@@ -129,4 +132,24 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
         return [];
     }
+
+    /**
+     * Return content-type
+     *
+     * @param array $server
+     *
+     * @return string '' if no "content" header
+     */
+    private function getContentType(array $server)
+    {
+        if (isset($server[self::CONTENT_TYPE])) {
+            return $server[self::CONTENT_TYPE];
+        }
+        if (isset($server[self::HTTP_CONTENT_TYPE])) {
+            return $server[self::HTTP_CONTENT_TYPE];
+        }
+
+        return '';
+    }
 }
+
