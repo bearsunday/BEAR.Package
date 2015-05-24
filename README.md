@@ -13,7 +13,7 @@ composer create-project -n bear/package bear.package ~1.0@dev
 cd bear.package
 ```
 
-A resource access in console. 
+A resource can then be accessed from the console. 
 ```
 php docs/demo-app/bootstrap/web.php get /
 ```
@@ -30,12 +30,12 @@ content-type: application/hal+json
     }
 }
 ```
-Fire up the php server.
+Fire up the built-in php web server.
 ```
 php -S 127.0.0.1:8080 -t docs/demo-app/var/www
 ```
-You can then open a browser and go to `http://127.0.0.1:8080` to see the json output.
+You can then open a browser at `http://127.0.0.1:8080` to see the json output.
 
 ## Documentation
 
-Documentation is available at http://bearsunday.github.io/ .
+Documentation is available at http://bearsunday.github.io/.
