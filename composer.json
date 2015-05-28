@@ -21,7 +21,6 @@
     "require": {
         "php": ">=5.5.0",
         "aura/cli": "~2.0",
-        "aura/web": "~2.0",
         "bear/app-meta": "~1.0",
         "bear/query-repository": "~1.0",
         "bear/sunday": "~1.0.0-rc",
