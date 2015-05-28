@@ -56,7 +56,9 @@ class HalRenderer implements RenderInterface
         }
         $links = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method), Link::class) : [];
         /* @var $links Link[] */
-        $hal = $this->getHal($ro->uri, $body, $links);
+        /* @var $ro ResourceObject */
+        $linkValue = $body + $ro->uri->query;
+        $hal = $this->getHal($ro->uri, $linkValue, $links);
         $ro->view = $hal->asJson(true) . PHP_EOL;
         $ro->headers['content-type'] = 'application/hal+json';
 
@@ -79,18 +81,18 @@ class HalRenderer implements RenderInterface
 
     /**
      * @param Uri   $uri
-     * @param array $body
+     * @param array $linkValue
      * @param array $links
      *
      * @return Hal
      */
-    private function getHal(Uri $uri, array $body, array $links)
+    private function getHal(Uri $uri, array $linkValue, array $links)
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
         $selfLink = $this->getReverseMatchedLink($path);
-        $hal = new Hal($selfLink, $body);
-        $this->getHalLink($body, $links, $hal);
+        $hal = new Hal($selfLink, $linkValue);
+        $this->getHalLink($linkValue, $links, $hal);
 
         return $hal;
     }
