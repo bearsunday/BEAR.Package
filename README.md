@@ -9,7 +9,7 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resou
 ## Run demo app
 
 ```
-composer create-project -n bear/package bear.package ~1.0@dev
+composer create-project -n bear/package bear.package ~1.0
 cd bear.package
 ```
 
