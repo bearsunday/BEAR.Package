@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the BEAR.Package package
+ * This file is part of the BEAR.Package package.
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
@@ -70,8 +70,8 @@ final class Bootstrap
             $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AppInterface::class);
         } catch (NotCompiled $e) {
             $compiler = new DiCompiler($module, $appMeta->tmpDir);
-            $app = $compiler->getInstance(AppInterface::class);
             $compiler->compile();
+            $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AppInterface::class);
         }
 
         return $app;
