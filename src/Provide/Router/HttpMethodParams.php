@@ -48,6 +48,19 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         if ($method === 'get') {
             return ['get', $get];
         }
+
+        return $this->unsafeMethod($method, $server, $post);
+    }
+
+    /**
+     * @param string $method
+     * @param array  $server
+     * @param array  $post
+     *
+     * @return array
+     */
+    private function unsafeMethod($method, array $server, array $post)
+    {
         // must be a POST to do an override
         $override = $this->getOverRideMethod($server, $post);
         if ($override) {
