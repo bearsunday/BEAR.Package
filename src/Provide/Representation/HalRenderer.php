@@ -85,7 +85,6 @@ class HalRenderer implements RenderInterface
      * @param array $annotations
      *
      * @return Hal
-     * @internal param array $query
      */
     private function getHal(AbstractUri $uri, array $body, array $annotations)
     {
