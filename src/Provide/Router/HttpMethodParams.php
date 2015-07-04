@@ -63,7 +63,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     {
         // must be a POST to do an override
         $override = $this->getOverRideMethod($server, $post);
-        if ($override) {
+        if (is_string($override)) {
             // must be a POST to do an override
             return [$override, $post];
         }

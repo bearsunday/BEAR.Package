@@ -67,7 +67,6 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('put', $method);
         $expected = ['id' => 1];
         $this->assertSame($expected, $param);
-
     }
 
     public function testOverridePatch()

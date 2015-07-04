@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
@@ -54,11 +55,10 @@ class HalRenderer implements RenderInterface
 
             return '';
         }
-        $links = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method), Link::class) : [];
-        /* @var $links Link[] */
+        $annotations = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method)) : [];
+        /* @var $annotations Link[] */
         /* @var $ro ResourceObject */
-        $linkValue = $body + $ro->uri->query;
-        $hal = $this->getHal($ro->uri, $linkValue, $links);
+        $hal = $this->getHal($ro->uri, $body, $annotations);
         $ro->view = $hal->asJson(true) . PHP_EOL;
         $ro->headers['content-type'] = 'application/hal+json';
 
@@ -81,18 +81,18 @@ class HalRenderer implements RenderInterface
 
     /**
      * @param Uri   $uri
-     * @param array $linkValue
-     * @param array $links
+     * @param array $body
+     * @param array $annotations
      *
      * @return Hal
      */
-    private function getHal(Uri $uri, array $linkValue, array $links)
+    private function getHal(AbstractUri $uri, array $body, array $annotations)
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
         $selfLink = $this->getReverseMatchedLink($path);
-        $hal = new Hal($selfLink, $linkValue);
-        $this->getHalLink($linkValue, $links, $hal);
+        $hal = new Hal($selfLink, $body);
+        $this->getHalLink($body, $annotations, $hal);
 
         return $hal;
     }
@@ -107,7 +107,7 @@ class HalRenderer implements RenderInterface
         $urlParts = parse_url($uri);
         $routeName = $urlParts['path'];
         isset($urlParts['query']) ? parse_str($urlParts['query'], $value) : $value = [];
-        $reverseUri = $this->router->generate($routeName, $value);
+        $reverseUri = $this->router->generate($routeName, (array) $value);
         if (is_string($reverseUri)) {
             return $reverseUri;
         }
@@ -118,7 +118,7 @@ class HalRenderer implements RenderInterface
     /**
      * @param ResourceObject $ro
      *
-     * @return array
+     * @return array [ResourceObject, array]
      */
     private function valuate(ResourceObject $ro)
     {
@@ -134,7 +134,7 @@ class HalRenderer implements RenderInterface
             return [$ro, $body];
         }
 
-        return[$ro, $body];
+        return[$ro, (array) $body];
     }
 
     /**
@@ -147,7 +147,7 @@ class HalRenderer implements RenderInterface
     private function getHalLink(array $body, array $links, Hal $hal)
     {
         foreach ($links as $link) {
-            if (!$link instanceof Link) {
+            if (! $link instanceof Link) {
                 continue;
             }
             $uri = uri_template($link->href, $body);
