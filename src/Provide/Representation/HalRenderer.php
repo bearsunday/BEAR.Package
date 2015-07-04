@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
@@ -86,7 +87,7 @@ class HalRenderer implements RenderInterface
      * @return Hal
      * @internal param array $query
      */
-    private function getHal(Uri $uri, array $body, array $links)
+    private function getHal(AbstractUri $uri, array $body, array $links)
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
@@ -107,7 +108,7 @@ class HalRenderer implements RenderInterface
         $urlParts = parse_url($uri);
         $routeName = $urlParts['path'];
         isset($urlParts['query']) ? parse_str($urlParts['query'], $value) : $value = [];
-        $reverseUri = $this->router->generate($routeName, $value);
+        $reverseUri = $this->router->generate($routeName, (array) $value);
         if (is_string($reverseUri)) {
             return $reverseUri;
         }
@@ -118,7 +119,7 @@ class HalRenderer implements RenderInterface
     /**
      * @param ResourceObject $ro
      *
-     * @return array
+     * @return array [ResourceObject, array]
      */
     private function valuate(ResourceObject $ro)
     {
@@ -134,7 +135,7 @@ class HalRenderer implements RenderInterface
             return [$ro, $body];
         }
 
-        return[$ro, $body];
+        return[$ro, (array) $body];
     }
 
     /**
