@@ -55,10 +55,10 @@ class HalRenderer implements RenderInterface
 
             return '';
         }
-        $links = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method), Link::class) : [];
-        /* @var $links Link[] */
+        $annotations = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method)) : [];
+        /* @var $annotations Link[] */
         /* @var $ro ResourceObject */
-        $hal = $this->getHal($ro->uri, $body, $links);
+        $hal = $this->getHal($ro->uri, $body, $annotations);
         $ro->view = $hal->asJson(true) . PHP_EOL;
         $ro->headers['content-type'] = 'application/hal+json';
 
@@ -82,18 +82,18 @@ class HalRenderer implements RenderInterface
     /**
      * @param Uri   $uri
      * @param array $body
-     * @param array $links
+     * @param array $annotations
      *
      * @return Hal
      * @internal param array $query
      */
-    private function getHal(AbstractUri $uri, array $body, array $links)
+    private function getHal(AbstractUri $uri, array $body, array $annotations)
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
         $selfLink = $this->getReverseMatchedLink($path);
         $hal = new Hal($selfLink, $body);
-        $this->getHalLink($body, $links, $hal);
+        $this->getHalLink($body, $annotations, $hal);
 
         return $hal;
     }
@@ -148,7 +148,7 @@ class HalRenderer implements RenderInterface
     private function getHalLink(array $body, array $links, Hal $hal)
     {
         foreach ($links as $link) {
-            if (!$link instanceof Link) {
+            if (! $link instanceof Link) {
                 continue;
             }
             $uri = uri_template($link->href, $body);
