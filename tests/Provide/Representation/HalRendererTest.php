@@ -32,7 +32,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $ro = $this->resource->get->uri('app://self/user')->withQuery(['id' => 1])->eager->request();
+        $ro = $this->resource->get->uri('app://self/user')->withQuery(['id' => 1, 'type' => 'type_a'])->eager->request();
         $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
