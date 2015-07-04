@@ -41,7 +41,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     "org_id": "o1",
     "_links": {
         "self": {
-            "href": "/user?id=1"
+            "href": "/user?id=1&type=type_a"
         },
         "friend": {
             "href": "/friend?id=f1"
