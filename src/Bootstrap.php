@@ -46,8 +46,9 @@ final class Bootstrap
     {
         $cache = $cache ?: $this->getCache($appMeta, $contexts);
         $appId = $appMeta->name . $contexts;
+        $isProd = is_int(strpos($contexts, 'prod'));
         $app = $cache->fetch($appId);
-        if ($app) {
+        if ($app && $isProd) {
             return $app;
         }
         $app = $this->getAppInstance($appMeta, $contexts);

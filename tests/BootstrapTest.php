@@ -45,8 +45,8 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testCache()
     {
-        $app1 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'cli-app', new FilesystemCache(__DIR__ . '/tmp'));
-        $app2 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'cli-app', new FilesystemCache(__DIR__ . '/tmp'));
+        $app1 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-cli-app', new FilesystemCache(__DIR__ . '/tmp'));
+        $app2 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-cli-app', new FilesystemCache(__DIR__ . '/tmp'));
         $this->assertSame(serialize($app1), serialize($app2));
     }
 
