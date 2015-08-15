@@ -139,7 +139,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         }
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if ($isApplicationJson) {
-            $content =  (array) json_decode(file_get_contents($this->stdIn));
+            $content =  json_decode(file_get_contents($this->stdIn), true);
 
             return $content;
         }

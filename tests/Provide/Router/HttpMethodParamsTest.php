@@ -126,6 +126,19 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $params);
     }
 
+    public function testContentTypeJsonAssocArray()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json_assoc.txt');
+        $server = [
+            'REQUEST_METHOD' => 'PUT',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = ['franeworks' => [['name' => 'BEAR.Sunday v1.0', 'age' => 0], ['name' => 'zend', 'age' => 9]]];
+        $this->assertSame($expected, $params);
+    }
+
     public function testContentTypeUnknown()
     {
         $httpMethodParam = new HttpMethodParams;
