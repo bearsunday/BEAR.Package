@@ -26,9 +26,9 @@ class PackageModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->install(new SundayModule);
         $this->install(new QueryRepositoryModule);
         $this->install(new WebRouterModule);
         $this->install(new VndErrorModule);
+        $this->install(new SundayModule);
     }
 }
