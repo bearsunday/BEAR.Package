@@ -22,7 +22,7 @@ use BEAR\Sunday\Provide\Error\ErrorPage;
  *
  * @see https://github.com/blongden/vnd.error
  */
-class VndError implements ErrorInterface
+class VndErrorHandler implements ErrorInterface
 {
     /**
      * @var int

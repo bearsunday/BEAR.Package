@@ -12,14 +12,14 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 class VndErrorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var VndError
+     * @var VndErrorHandler
      */
     private $vndError;
 
     public function setUp()
     {
         FakeHttpResponder::reset();
-        $this->vndError = new VndError(new AppMeta('FakeVendor\HelloWorld'), new FakeHttpResponder());
+        $this->vndError = new VndErrorHandler(new AppMeta('FakeVendor\HelloWorld'), new FakeHttpResponder());
     }
 
     public function testNotFound()
