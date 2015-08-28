@@ -14,6 +14,7 @@ use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
+use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Sunday\Provide\Error\ErrorPage;
 
 /**
@@ -24,11 +25,6 @@ use BEAR\Sunday\Provide\Error\ErrorPage;
 class VndError implements ErrorInterface
 {
     /**
-     * @var AbstractAppMeta
-     */
-    private $appMeta;
-
-    /**
      * @var int
      */
     private $code;
@@ -36,17 +32,44 @@ class VndError implements ErrorInterface
     /**
      * @var array
      */
+    private $headers = [];
+
+    /**
+     * @var array
+     */
     private $body = ['message' => '', 'logref' => ''];
+
+    /**
+     * @var string
+     */
+    private $logDir;
+
+    /**
+     * @var ErrorPage
+     */
+    private $errorPage;
 
     /**
      * @var TransferInterface
      */
     private $responder;
 
+    /**
+     * @var string
+     */
+    private $lastErrorFile;
+
+    /**
+     * @var ExceptionAsString
+     */
+    private $exceptionString;
+
     public function __construct(AbstractAppMeta $appMeta, TransferInterface $responder)
     {
-        $this->appMeta = $appMeta;
+        $this->logDir = $appMeta->logDir;
+        $this->lastErrorFile = $this->logDir . '/last_error.log';
         $this->responder = $responder;
+        $this->exceptionString = new ExceptionAsString;
     }
 
     /**
@@ -54,16 +77,20 @@ class VndError implements ErrorInterface
      */
     public function handle(\Exception $e, Request $request)
     {
-        unset($request);
+        $this->errorPage = PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $this->lastErrorFile)) : new ErrorPage;
         $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest || $e instanceof ServerErrorException);
         if ($isCodeError) {
             list($this->code, $this->body) = $this->codeError($e);
 
             return $this;
         }
+        // 500 exception
         $this->code = 500;
-        $this->body = ['message' => '500 Server Error'];
-        $this->logRef($e);
+        $logRef = $this->log($e, $request);
+        $this->body = [
+            'message' => '500 Server Error',
+            'logref' => $logRef
+        ];
 
         return $this;
     }
@@ -73,7 +100,7 @@ class VndError implements ErrorInterface
      */
     public function transfer()
     {
-        $ro = new ErrorPage;
+        $ro =$this->errorPage;
         $ro->code = $this->code;
         $ro->headers['content-type'] = 'application/vnd.error+json';
         $ro->body = $this->body;
@@ -96,14 +123,30 @@ class VndError implements ErrorInterface
 
     /**
      * @param \Exception $e
+     * @param Request $request
+     *
+     * @return int logRef
+     */
+    private function log(\Exception $e, Request $request)
+    {
+        $logRefId = $this->getLogRefId($e);
+        $logRefFile = sprintf('%s/e.%s.log', $this->logDir, $logRefId);
+        $log = $this->exceptionString->detail($e, $request);
+        file_put_contents($this->lastErrorFile, $log);
+        file_put_contents($logRefFile, $log);
+
+        return $logRefId;
+    }
+
+    /**
+     * Return log ref id
+     *
+     * @param \Exception $e
      *
      * @return string
      */
-    private function logRef(\Exception $e)
+    private function getLogRefId(\Exception $e)
     {
-        $logRef = (string) CRC32($e);
-        file_put_contents($this->appMeta->logDir . "/$logRef.log", $e);
-
-        return $logRef;
+        return (string) crc32(get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
     }
 }
