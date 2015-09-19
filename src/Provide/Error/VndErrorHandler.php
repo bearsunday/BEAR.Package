@@ -77,10 +77,11 @@ class VndErrorHandler implements ErrorInterface
      */
     public function handle(\Exception $e, Request $request)
     {
-        $this->errorPage = PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $this->lastErrorFile)) : new ErrorPage;
-        $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest || $e instanceof ServerErrorException);
+        $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest);
+        $this->errorPage = $this->getErrorPage($e, $this->lastErrorFile);
         if ($isCodeError) {
             list($this->code, $this->body) = $this->codeError($e);
+            $this->log($e, $request);
 
             return $this;
         }
@@ -93,6 +94,17 @@ class VndErrorHandler implements ErrorInterface
         ];
 
         return $this;
+    }
+
+    /**
+     * @param \Exception $e
+     * @param string     $lastErrorFile
+     *
+     * @return \BEAR\Package\Provide\Error\ErrorPage|ErrorPage
+     */
+    private function getErrorPage(\Exception $e, $lastErrorFile)
+    {
+        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new ErrorPage;
     }
 
     /**
