@@ -44,6 +44,7 @@ class ExceptionAsString
         if (PHP_SAPI === 'cli') {
             return '';
         }
+
         return sprintf("\nPHP Variables\n\n\$_SERVER => %s",  print_r($server, true));
     }
 }

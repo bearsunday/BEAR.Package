@@ -6,20 +6,19 @@ use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Resource\Exception\ResourceNotFoundException;
-use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
 class VndErrorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var VndError
+     * @var VndErrorHandler
      */
     private $vndError;
 
     public function setUp()
     {
         FakeHttpResponder::reset();
-        $this->vndError = new VndError(new AppMeta('FakeVendor\HelloWorld'), new FakeHttpResponder());
+        $this->vndError = new VndErrorHandler(new AppMeta('FakeVendor\HelloWorld'), new FakeHttpResponder());
     }
 
     public function testNotFound()
@@ -35,13 +34,6 @@ class VndErrorTest extends \PHPUnit_Framework_TestCase
         $e = new BadRequestException('invalid-method', 400);
         $this->vndError->handle($e, new RouterMatch)->transfer();
         $this->assertSame(400, FakeHttpResponder::$code);
-    }
-
-    public function testServerError()
-    {
-        $e = new ServerErrorException('message', 501);
-        $this->vndError->handle($e, new RouterMatch)->transfer();
-        $this->assertSame(501, FakeHttpResponder::$code);
     }
 
     public function testServerErrorNot50X()
