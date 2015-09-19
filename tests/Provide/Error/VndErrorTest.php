@@ -6,7 +6,6 @@ use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Resource\Exception\ResourceNotFoundException;
-use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
 class VndErrorTest extends \PHPUnit_Framework_TestCase

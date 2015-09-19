@@ -7,14 +7,13 @@
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Resource\Code;
 use BEAR\Resource\Exception\BadRequestException as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
-use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
-use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Sunday\Provide\Error\ErrorPage;
 
 /**
@@ -112,7 +111,7 @@ class VndErrorHandler implements ErrorInterface
      */
     public function transfer()
     {
-        $ro =$this->errorPage;
+        $ro = $this->errorPage;
         $ro->code = $this->code;
         $ro->headers['content-type'] = 'application/vnd.error+json';
         $ro->body = $this->body;
@@ -135,7 +134,7 @@ class VndErrorHandler implements ErrorInterface
 
     /**
      * @param \Exception $e
-     * @param Request $request
+     * @param Request    $request
      *
      * @return int logRef
      */
