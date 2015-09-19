@@ -37,13 +37,6 @@ class VndErrorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(400, FakeHttpResponder::$code);
     }
 
-    public function testServerError()
-    {
-        $e = new ServerErrorException('message', 501);
-        $this->vndError->handle($e, new RouterMatch)->transfer();
-        $this->assertSame(501, FakeHttpResponder::$code);
-    }
-
     public function testServerErrorNot50X()
     {
         $e = new \RuntimeException('message', 0);
