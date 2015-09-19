@@ -7,14 +7,13 @@
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Resource\Code;
 use BEAR\Resource\Exception\BadRequestException as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
-use BEAR\Resource\Exception\ServerErrorException;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
-use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Sunday\Provide\Error\ErrorPage;
 
 /**
@@ -22,7 +21,7 @@ use BEAR\Sunday\Provide\Error\ErrorPage;
  *
  * @see https://github.com/blongden/vnd.error
  */
-class VndError implements ErrorInterface
+class VndErrorHandler implements ErrorInterface
 {
     /**
      * @var int
@@ -77,10 +76,11 @@ class VndError implements ErrorInterface
      */
     public function handle(\Exception $e, Request $request)
     {
-        $this->errorPage = PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $this->lastErrorFile)) : new ErrorPage;
-        $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest || $e instanceof ServerErrorException);
+        $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest);
+        $this->errorPage = $this->getErrorPage($e, $this->lastErrorFile);
         if ($isCodeError) {
             list($this->code, $this->body) = $this->codeError($e);
+            $this->log($e, $request);
 
             return $this;
         }
@@ -96,11 +96,22 @@ class VndError implements ErrorInterface
     }
 
     /**
+     * @param \Exception $e
+     * @param string     $lastErrorFile
+     *
+     * @return \BEAR\Package\Provide\Error\ErrorPage|ErrorPage
+     */
+    private function getErrorPage(\Exception $e, $lastErrorFile)
+    {
+        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new ErrorPage;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function transfer()
     {
-        $ro =$this->errorPage;
+        $ro = $this->errorPage;
         $ro->code = $this->code;
         $ro->headers['content-type'] = 'application/vnd.error+json';
         $ro->body = $this->body;
@@ -123,7 +134,7 @@ class VndError implements ErrorInterface
 
     /**
      * @param \Exception $e
-     * @param Request $request
+     * @param Request    $request
      *
      * @return int logRef
      */
