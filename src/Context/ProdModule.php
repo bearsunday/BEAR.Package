@@ -28,8 +28,13 @@ class ProdModule extends AbstractModule
      */
     protected function configure()
     {
+        if (function_exists('apcu_fetch')) {
+            $this->installApcCache(ApcuCache::class);
+
+            return;
+        }
         if (function_exists('apc_fetch')) {
-            $this->installApcCache();
+            $this->installApcCache(ApcCache::class);
 
             return;
         }
@@ -37,17 +42,17 @@ class ProdModule extends AbstractModule
 
     }
 
-    private function installApcCache()
+    private function installApcCache($apcClass)
     {
-        $this->bind(Cache::class)->to(ApcCache::class)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->to($apcClass)->in(Scope::SINGLETON);
         $this->bind(Reader::class)->toConstructor(
             CachedReader::class,
             'reader=annotation_reader'
         );
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
-        $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->to(ApcCache::class)->in(Scope::SINGLETON);
-        $this->bind(Cache::class)->annotatedWith(LogicCache::class)->to(ApcCache::class)->in(Scope::SINGLETON);
-        $this->bind(Cache::class)->annotatedWith(Storage::class)->to(ApcCache::class)->in(Scope::SINGLETON);
+        $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->to($apcClass)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->annotatedWith(LogicCache::class)->to($apcClass)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->annotatedWith(Storage::class)->to($apcClass)->in(Scope::SINGLETON);
     }
 
     private function installFileCache()
