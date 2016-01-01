@@ -19,3 +19,4 @@ $unlink = function ($path) use (&$unlink) {
     }
 };
 $unlink($_ENV['TMP_DIR']);
+$unlink(__DIR__ . '/Fake/fake-app/var/tmp');

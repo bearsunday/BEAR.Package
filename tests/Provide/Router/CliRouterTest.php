@@ -35,6 +35,11 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
         $this->router->setStdIn($this->stdInFile);
     }
 
+    public function tearDown()
+    {
+        @unlink(dirname(dirname(__DIR__)) . '/stdin.text');
+    }
+
     /**
      * @dataProvider argvProvider
      */
