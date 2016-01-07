@@ -39,7 +39,6 @@ class ProdModule extends AbstractModule
             return;
         }
         $this->installFileCache();
-
     }
 
     private function installApcCache($apcClass)

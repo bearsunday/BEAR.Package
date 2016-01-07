@@ -22,7 +22,7 @@ $unlink = function ($path) use (&$unlink) {
 $unlink($_ENV['TMP_DIR']);
 $unlink(__DIR__ . '/Fake/fake-app/var/tmp');
 
-register_shutdown_function(function() use ($unlink) {
+register_shutdown_function(function () use ($unlink) {
     $unlink($_ENV['TMP_DIR']);
     $unlink(__DIR__ . '/Fake/fake-app/var/tmp');
     $unlink(__DIR__ . '/Fake/fake-app/var/log');
