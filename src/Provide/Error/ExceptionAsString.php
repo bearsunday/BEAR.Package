@@ -16,14 +16,15 @@ class ExceptionAsString
     }
 
     /**
-     * @param Request $request
-     * @param string  $lastErrorLog
+     * @param \Exception $e
+     * @param Request    $request
      *
      * @return string
      */
     public function detail(\Exception $e, Request $request)
     {
-        $eSummery = sprintf("[%s]\n%s\nin file %s on line %s\n\n%s",
+        $eSummery = sprintf(
+            "[%s]\n%s\nin file %s on line %s\n\n%s",
             get_class($e),
             $e->getMessage(),
             $e->getFile(),
@@ -45,6 +46,6 @@ class ExceptionAsString
             return '';
         }
 
-        return sprintf("\nPHP Variables\n\n\$_SERVER => %s",  print_r($server, true));
+        return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true));
     }
 }

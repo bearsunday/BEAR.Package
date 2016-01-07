@@ -31,11 +31,6 @@ class VndErrorHandler implements ErrorInterface
     /**
      * @var array
      */
-    private $headers = [];
-
-    /**
-     * @var array
-     */
     private $body = ['message' => '', 'logref' => ''];
 
     /**
