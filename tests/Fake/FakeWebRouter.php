@@ -15,6 +15,7 @@ class FakeWebRouter extends WebRouter
      */
     public function generate($name, $data)
     {
+        unset($name);
         if ($data === false) {
             return false;
         }
