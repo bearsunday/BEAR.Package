@@ -19,6 +19,7 @@ class FakeHttpResponder extends HttpResponder
 
     public function __invoke(ResourceObject $resourceObject, array $server)
     {
+        unset($server);
         self::$code = $resourceObject->code;
         self::$headers = $resourceObject->headers;
         self::$content = $resourceObject->view;

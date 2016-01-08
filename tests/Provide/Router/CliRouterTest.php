@@ -38,6 +38,7 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         @unlink(dirname(dirname(__DIR__)) . '/stdin.text');
+        @unlink(dirname(dirname(__DIR__)) . '/stdout.log');
     }
 
     /**
