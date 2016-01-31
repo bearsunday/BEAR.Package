@@ -27,6 +27,7 @@ class VndErrorTest extends \PHPUnit_Framework_TestCase
         $this->vndError->handle($e, new RouterMatch)->transfer();
         $this->assertSame(404, FakeHttpResponder::$code);
         $this->assertSame(['content-type' => 'application/vnd.error+json'], FakeHttpResponder::$headers);
+        $this->assertArrayNotHasKey('logref', FakeHttpResponder::$body);
     }
 
     public function testBadRequest()
@@ -34,6 +35,15 @@ class VndErrorTest extends \PHPUnit_Framework_TestCase
         $e = new BadRequestException('invalid-method', 400);
         $this->vndError->handle($e, new RouterMatch)->transfer();
         $this->assertSame(400, FakeHttpResponder::$code);
+        $this->assertArrayNotHasKey('logref', FakeHttpResponder::$body);
+    }
+
+    public function testServerError()
+    {
+        $e = new \RuntimeException('message', 500);
+        $this->vndError->handle($e, new RouterMatch)->transfer();
+        $this->assertSame(500, FakeHttpResponder::$code);
+        $this->assertArrayHasKey('logref', FakeHttpResponder::$body);
     }
 
     public function testServerErrorNot50X()
@@ -41,5 +51,6 @@ class VndErrorTest extends \PHPUnit_Framework_TestCase
         $e = new \RuntimeException('message', 0);
         $this->vndError->handle($e, new RouterMatch)->transfer();
         $this->assertSame(500, FakeHttpResponder::$code);
+        $this->assertArrayHasKey('logref', FakeHttpResponder::$body);
     }
 }

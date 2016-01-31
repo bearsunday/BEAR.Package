@@ -9,12 +9,12 @@ class FakeHttpResponder extends HttpResponder
 {
     public static $code = [];
     public static $headers = [];
-    public static $content;
+    public static $body = [];
 
     public static function reset()
     {
         static::$headers = [];
-        static::$content = null;
+        static::$body = [];
     }
 
     public function __invoke(ResourceObject $resourceObject, array $server)
@@ -22,6 +22,6 @@ class FakeHttpResponder extends HttpResponder
         unset($server);
         self::$code = $resourceObject->code;
         self::$headers = $resourceObject->headers;
-        self::$content = $resourceObject->view;
+        self::$body = $resourceObject->body;
     }
 }

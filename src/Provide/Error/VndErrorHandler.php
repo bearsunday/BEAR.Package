@@ -9,8 +9,6 @@ namespace BEAR\Package\Provide\Error;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Resource\Code;
-use BEAR\Resource\Exception\BadRequestException as BadRequest;
-use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
@@ -71,19 +69,26 @@ class VndErrorHandler implements ErrorInterface
      */
     public function handle(\Exception $e, Request $request)
     {
-        $isCodeError = ($e instanceof NotFound || $e instanceof BadRequest);
         $this->errorPage = $this->getErrorPage($e, $this->lastErrorFile);
-        if ($isCodeError) {
-            list($this->code, $this->body) = $this->codeError($e);
+
+        $isCodeError = array_key_exists($e->getCode(), (new Code)->statusText);
+        $code = $isCodeError ? $e->getCode() : Code::ERROR;
+        $message = $code . ' ' . (new Code)->statusText[$code];
+        // Client error
+        if (400 <= $code && $code < 500) {
             $this->log($e, $request);
+            $this->code = $code;
+            $this->body = [
+                'message' => $message
+            ];
 
             return $this;
         }
-        // 500 exception
-        $this->code = 500;
+        // Server error
         $logRef = $this->log($e, $request);
+        $this->code = $code;
         $this->body = [
-            'message' => '500 Server Error',
+            'message' => $message,
             'logref' => $logRef
         ];
 
@@ -111,20 +116,6 @@ class VndErrorHandler implements ErrorInterface
         $ro->headers['content-type'] = 'application/vnd.error+json';
         $ro->body = $this->body;
         $this->responder->__invoke($ro, []);
-    }
-
-    /**
-     * @param \Exception $e
-     *
-     * @return array [$code, $body]
-     */
-    private function codeError(\Exception $e)
-    {
-        $code = $e->getCode();
-        $message =  $code . ' ' . (new Code)->statusText[$code];
-        $body = ['message' => $message];
-
-        return [$code, $body];
     }
 
     /**
