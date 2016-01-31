@@ -9,8 +9,6 @@ namespace BEAR\Package\Provide\Error;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Resource\Code;
-use BEAR\Resource\Exception\BadRequestException as BadRequest;
-use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
