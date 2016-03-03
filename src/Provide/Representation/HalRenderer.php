@@ -107,6 +107,9 @@ class HalRenderer implements RenderInterface
         $urlParts = parse_url($uri);
         $routeName = $urlParts['path'];
         isset($urlParts['query']) ? parse_str($urlParts['query'], $value) : $value = [];
+        if ($value === []) {
+            return $uri;
+        }
         $reverseUri = $this->router->generate($routeName, (array) $value);
         if (is_string($reverseUri)) {
             return $reverseUri;
