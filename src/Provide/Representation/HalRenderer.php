@@ -47,7 +47,6 @@ class HalRenderer implements RenderInterface
     public function render(ResourceObject $ro)
     {
         list($ro, $body) = $this->valuate($ro);
-
         $method = 'on' . ucfirst($ro->uri->method);
         $hasMethod = method_exists($ro, $method);
         if (! $hasMethod) {
@@ -60,7 +59,7 @@ class HalRenderer implements RenderInterface
         /* @var $ro ResourceObject */
         $hal = $this->getHal($ro->uri, $body, $annotations);
         $ro->view = $hal->asJson(true) . PHP_EOL;
-        $ro->headers['content-type'] = 'application/hal+json';
+        $this->updateHeaders($ro);
 
         return $ro->view;
     }
@@ -156,6 +155,17 @@ class HalRenderer implements RenderInterface
             $uri = uri_template($link->href, $body);
             $reverseUri = $this->getReverseMatchedLink($uri);
             $hal->addLink($link->rel, $reverseUri);
+        }
+    }
+
+    /**
+     * @param ResourceObject $ro
+     */
+    private function updateHeaders(ResourceObject $ro)
+    {
+        $ro->headers['content-type'] = 'application/hal+json';
+        if (isset($ro->headers['Location'])) {
+            $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
         }
     }
 }
