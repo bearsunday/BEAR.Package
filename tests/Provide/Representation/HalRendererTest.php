@@ -2,13 +2,18 @@
 
 namespace BEAR\Package;
 
+use Aura\Router\RouterFactory;
 use BEAR\Package\Provide\Representation\HalRenderer;
+use BEAR\Package\Provide\Router\AuraRouter;
 use BEAR\Package\Provide\Router\AuraRouterProvider;
 use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\ResourceInterface;
+use BEAR\Resource\ResourceObject;
+use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
+use FakeVendor\HelloWorld\Resource\App\Task;
 use Ray\Di\Injector;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
@@ -134,5 +139,41 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         $result = (string) $ro;
         $expect = '';
         $this->assertSame($expect, $result);
+    }
+
+    public function testHalRendererNoParam()
+    {
+        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter);
+        $ro = new Task;
+        $ro->uri = new Uri('app://self/task');
+        $ro->uri->method = 'get';
+        $hal = $halRenderer->render($ro);
+        $expected = '{
+    "_links": {
+        "self": {
+            "href": "/task"
+        }
+    }
+}
+';
+        $this->assertSame($expected, $hal);
+    }
+
+    public function testHalRendererWithParam()
+    {
+        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter);
+        $ro = new Task;
+        $ro->uri = new Uri('app://self/task?id=1');
+        $ro->uri->method = 'get';
+        $hal = $halRenderer->render($ro);
+        $expected = '{
+    "_links": {
+        "self": {
+            "href": "/task/1"
+        }
+    }
+}
+';
+        $this->assertSame($expected, $hal);
     }
 }

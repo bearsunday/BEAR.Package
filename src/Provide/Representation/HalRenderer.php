@@ -47,7 +47,9 @@ class HalRenderer implements RenderInterface
     public function render(ResourceObject $ro)
     {
         list($ro, $body) = $this->valuate($ro);
+        if (isset($ro->headers['Location'])) {
 
+        }
         $method = 'on' . ucfirst($ro->uri->method);
         $hasMethod = method_exists($ro, $method);
         if (! $hasMethod) {
