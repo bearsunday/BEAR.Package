@@ -8,6 +8,8 @@ class Task extends ResourceObject
 {
     public function onGet($id = null)
     {
-        return (string) $id;
+        $this->headers['Location'] = '/self?id=10';
+
+        return $this;
     }
 }

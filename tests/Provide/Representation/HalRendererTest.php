@@ -165,6 +165,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'get';
+        $ro = $ro->onGet(1);
         $hal = $halRenderer->render($ro);
         $expected = '{
     "_links": {
@@ -175,5 +176,8 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 }
 ';
         $this->assertSame($expected, $hal);
+        $location = $ro->headers['Location'];
+        $expected = '/task/10';
+        $this->assertSame($expected, $location);
     }
 }
