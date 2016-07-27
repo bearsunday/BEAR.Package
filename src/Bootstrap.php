@@ -11,7 +11,6 @@ use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -112,17 +111,12 @@ final class Bootstrap
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
      *
-     * @return ApcCache|FilesystemCache|VoidCache
+     * @return ApcuCache|FilesystemCache|VoidCache
      */
     private function getCache(AbstractAppMeta $appMeta, $contexts)
     {
         $isProd = is_int(strpos($contexts, 'prod'));
         if ($isProd) {
-            
-            if(function_exists('apc_fetch')){
-                return new ApcCache;
-            }
-
             if(function_exists('apcu_fetch')){
                 return new ApcuCache;
             }

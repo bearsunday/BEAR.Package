@@ -12,12 +12,9 @@ use BEAR\Resource\Annotation\LogicCache;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\FileCache;
-use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
@@ -29,19 +26,15 @@ class ProdModule extends AbstractModule
     protected function configure()
     {
         if (function_exists('apcu_fetch') && class_exists(ApcuCache::class)) {
-            $this->installApcCache(ApcuCache::class);
+            $this->installApcuCache(ApcuCache::class);
 
             return;
         }
-        if (function_exists('apc_fetch')) {
-            $this->installApcCache(ApcCache::class);
 
-            return;
-        }
         $this->installFileCache();
     }
 
-    private function installApcCache($apcClass)
+    private function installApcuCache($apcClass)
     {
         $this->bind(Cache::class)->to($apcClass)->in(Scope::SINGLETON);
         $this->bind(Reader::class)->toConstructor(

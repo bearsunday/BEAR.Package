@@ -4,10 +4,10 @@ namespace FakeVendor\HelloWorld;
 
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Bootstrap;
-use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ApcuCache;
 
 route: {
-    $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__), 'app', new ApcCache);
+    $app = (new Bootstrap)->newApp(new AppMeta(__NAMESPACE__), 'app', new ApcuCache);
     /* @var $app \BEAR\Sunday\Extension\Application\AbstractApp */
     $request = $app->router->match($GLOBALS, $_SERVER);
 }
