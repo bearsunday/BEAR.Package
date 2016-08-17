@@ -61,33 +61,36 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function unsafeMethod($method, array $server, array $post)
     {
-        // must be a POST to do an override
-        $override = $this->getOverRideMethod($server, $post);
+        $params = $this->getParams($method, $server, $post);
+
+        $override = $this->getOverrideMethod($method, $server, $params);
         if (is_string($override)) {
-            // must be a POST to do an override
-            return [$override, $post];
+            return [$override, $params];
         }
-        if ($method === 'post') {
-            return ['post', $post];
-        }
-        // put / patch /delete
-        return [$method, $this->getParams($method, $post, $server)];
+
+        return [$method, $params];
     }
 
     /**
      * HTTP Method override
      *
-     * @param array $server
-     * @param array $post
+     * @param string $method
+     * @param array  $server
+     * @param array  $params
      *
      * @return bool|string
      */
-    private function getOverRideMethod(array $server, array &$post)
+    private function getOverrideMethod($method, array $server, array &$params)
     {
+        // must be a POST to do an override
+        if ($method !== 'post') {
+            return false;
+        }
+
         // look for override in post data
-        if (isset($post['_method'])) {
-            $method =  strtolower($post['_method']);
-            unset($post['_method']);
+        if (isset($params['_method'])) {
+            $method =  strtolower($params['_method']);
+            unset($params['_method']);
 
             return $method;
         }
@@ -104,14 +107,19 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * Return request parameters
      *
      * @param string $method
-     * @param array  $post
      * @param array  $server
+     * @param array  $post
      *
      * @return array
      */
-    private function getParams($method, array $post, array $server)
+    private function getParams($method, array $server, array $post)
     {
-        if ($method === 'put' || $method === 'patch' || $method === 'delete') {
+        // post data exists
+        if ($method === 'post' && $post) {
+            return $post;
+        }
+
+        if ($method === 'post' || $method === 'put' || $method === 'patch' || $method === 'delete') {
             return $this->phpInput($server);
         }
 
