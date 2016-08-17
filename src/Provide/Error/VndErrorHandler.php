@@ -132,7 +132,7 @@ class VndErrorHandler implements ErrorInterface
      * @param \Exception $e
      * @param Request    $request
      *
-     * @return int logRef
+     * @return string
      */
     private function log(\Exception $e, Request $request)
     {
