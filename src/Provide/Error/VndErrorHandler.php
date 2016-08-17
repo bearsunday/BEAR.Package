@@ -11,10 +11,11 @@ use BEAR\Package\Provide\Error\ErrorPage as CliErrorPage;
 use BEAR\Resource\Code;
 use BEAR\Resource\Exception\BadRequestException as BadRequest;
 use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
-use BEAR\Sunday\Provide\Error\ErrorPage;
+use BEAR\Sunday\Provide\Error\ErrorPage as SundayErrorPage;
 
 /**
  * vnd.error for BEAR.Package
@@ -39,7 +40,7 @@ class VndErrorHandler implements ErrorInterface
     private $logDir;
 
     /**
-     * @var ErrorPage
+     * @var ResourceObject
      */
     private $errorPage;
 
@@ -94,11 +95,11 @@ class VndErrorHandler implements ErrorInterface
      * @param \Exception $e
      * @param string     $lastErrorFile
      *
-     * @return \BEAR\Package\Provide\Error\ErrorPage|ErrorPage
+     * @return ResourceObject
      */
     private function getErrorPage(\Exception $e, $lastErrorFile)
     {
-        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new ErrorPage;
+        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new SundayErrorPage;
     }
 
     /**
@@ -131,7 +132,7 @@ class VndErrorHandler implements ErrorInterface
      * @param \Exception $e
      * @param Request    $request
      *
-     * @return int logRef
+     * @return string
      */
     private function log(\Exception $e, Request $request)
     {
