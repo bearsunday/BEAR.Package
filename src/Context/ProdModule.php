@@ -8,7 +8,6 @@ namespace BEAR\Package\Context;
 
 use BEAR\Package\Context\Provider\FilesystemCacheProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
-use BEAR\Resource\Annotation\LogicCache;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
@@ -43,7 +42,6 @@ class ProdModule extends AbstractModule
         );
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
         $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->to($apcClass)->in(Scope::SINGLETON);
-        $this->bind(Cache::class)->annotatedWith(LogicCache::class)->to($apcClass)->in(Scope::SINGLETON);
         $this->bind(Cache::class)->annotatedWith(Storage::class)->to($apcClass)->in(Scope::SINGLETON);
     }
 
@@ -56,7 +54,6 @@ class ProdModule extends AbstractModule
         );
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
         $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->toProvider(FilesystemCacheProvider::class)->in(Scope::SINGLETON);
-        $this->bind(Cache::class)->annotatedWith(LogicCache::class)->toProvider(FilesystemCacheProvider::class)->in(Scope::SINGLETON);
         $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(FilesystemCacheProvider::class)->in(Scope::SINGLETON);
     }
 }
