@@ -63,9 +63,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     {
         $params = $this->getParams($method, $server, $post);
 
-        $override = $this->getOverrideMethod($method, $server, $params);
-        if (is_string($override)) {
-            return [$override, $params];
+        if ($method === 'post') {
+            list($method, $params) = $this->getOverrideMethod($method, $server, $params);
         }
 
         return [$method, $params];
@@ -78,29 +77,26 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @param array  $server
      * @param array  $params
      *
-     * @return bool|string
+     * @return array
      */
-    private function getOverrideMethod($method, array $server, array &$params)
+    private function getOverrideMethod($method, array $server, array $params)
     {
         // must be a POST to do an override
-        if ($method !== 'post') {
-            return false;
-        }
 
         // look for override in post data
         if (isset($params['_method'])) {
-            $method =  strtolower($params['_method']);
+            $method = strtolower($params['_method']);
             unset($params['_method']);
 
-            return $method;
+            return [$method, $params];
         }
 
         // look for override in headers
         if (isset($server['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
-            return strtolower($server['HTTP_X_HTTP_METHOD_OVERRIDE']);
+            $method = strtolower($server['HTTP_X_HTTP_METHOD_OVERRIDE']);
         }
 
-        return false;
+        return [$method, $params];
     }
 
     /**
