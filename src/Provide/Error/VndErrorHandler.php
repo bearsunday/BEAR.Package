@@ -14,7 +14,7 @@ use BEAR\Resource\Exception\ResourceNotFoundException as NotFound;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
-use BEAR\Sunday\Provide\Error\ErrorPage;
+use BEAR\Sunday\Provide\Error\ErrorPage as SundayErrorPage;
 
 /**
  * vnd.error for BEAR.Package
@@ -94,11 +94,11 @@ class VndErrorHandler implements ErrorInterface
      * @param \Exception $e
      * @param string     $lastErrorFile
      *
-     * @return \BEAR\Package\Provide\Error\ErrorPage|ErrorPage
+     * @return CliErrorPage|SundayErrorPage
      */
     private function getErrorPage(\Exception $e, $lastErrorFile)
     {
-        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new ErrorPage;
+        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new SundayErrorPage;
     }
 
     /**
