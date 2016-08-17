@@ -113,7 +113,56 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('delete', $method);
     }
 
-    public function testContentTypeJson()
+    public function testPostContentTypeJson()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json.txt');
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = ['name' => 'BEAR.Sunday v1.0', 'age' => 0];
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPostContentTypeJsonAssocArray()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json_assoc.txt');
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = ['franeworks' => [['name' => 'BEAR.Sunday v1.0', 'age' => 0], ['name' => 'zend', 'age' => 9]]];
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPostContentTypeUnknown()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'text/xml'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = [];
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPostNoContentType()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = [];
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPutContentTypeJson()
     {
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json.txt');
@@ -126,7 +175,7 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testContentTypeJsonAssocArray()
+    public function testPutContentTypeJsonAssocArray()
     {
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_assoc.txt');
@@ -139,7 +188,7 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testContentTypeUnknown()
+    public function testPutContentTypeUnknown()
     {
         $httpMethodParam = new HttpMethodParams;
         $server = [
@@ -151,7 +200,7 @@ class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testNoContentType()
+    public function testPutNoContentType()
     {
         $httpMethodParam = new HttpMethodParams;
         $server = [

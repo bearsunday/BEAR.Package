@@ -117,7 +117,7 @@ final class Bootstrap
     {
         $isProd = is_int(strpos($contexts, 'prod'));
         if ($isProd) {
-            if(function_exists('apcu_fetch')){
+            if (function_exists('apcu_fetch')) {
                 return new ApcuCache;
             }
 
