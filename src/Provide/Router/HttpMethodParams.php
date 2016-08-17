@@ -115,7 +115,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     private function getParams($method, array $server, array $post)
     {
         // post data exists
-        if ($method === 'post' && $post) {
+        if ($method === 'post' && ! empty($post)) {
             return $post;
         }
 
