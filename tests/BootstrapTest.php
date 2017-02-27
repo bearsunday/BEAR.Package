@@ -11,6 +11,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
+use FakeVendor\HelloWorld\FakeApp;
 use FakeVendor\HelloWorld\Module\AppModule;
 
 class BootstrapTest extends \PHPUnit_Framework_TestCase
@@ -75,5 +76,11 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(InvalidContextException::class);
         (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'invalid');
+    }
+
+    public function testOverrideAbstractApp()
+    {
+        $app = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'test-app', new FilesystemCache(__DIR__ . '/tmp'));
+        $this->assertInstanceOf(FakeApp::class, $app);
     }
 }
