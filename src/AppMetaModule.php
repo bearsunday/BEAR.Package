@@ -18,9 +18,10 @@ class AppMetaModule extends AbstractModule
      */
     private $appMeta;
 
-    public function __construct(AbstractAppMeta $appMeta)
+    public function __construct(AbstractAppMeta $appMeta, AbstractModule $module = null)
     {
         $this->appMeta = $appMeta;
+        parent::__construct($module);
     }
 
     /**
