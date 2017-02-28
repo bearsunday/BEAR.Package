@@ -13,6 +13,7 @@ class User extends ResourceObject
      */
     public function onGet($id, $type = 'defaultType')
     {
+        unset($type);
         $this['id'] = $id;
         $this['friend_id'] = 'f' . $id;
         $this['org_id'] = 'o' . $id;

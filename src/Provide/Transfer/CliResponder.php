@@ -27,7 +27,7 @@ class CliResponder implements TransferInterface
             $ob .= "{$label}: {$value}" . PHP_EOL;
         }
         // empty line
-        $ob .=  PHP_EOL;
+        $ob .= PHP_EOL;
         // body
         $ob .= $body;
 

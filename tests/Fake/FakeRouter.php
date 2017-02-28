@@ -18,6 +18,8 @@ class FakeRouter implements RouterInterface
      */
     public function generate($name, $data)
     {
+        unset($name);
+
         return '/task/' . $data['id'];
     }
 }
