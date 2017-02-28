@@ -20,13 +20,25 @@ use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 
+/**
+ * Bootstrap
+ *
+ * Create an app object that contains all the objects used in the bootstrap script　The bootstrap script uses the public
+ * property of $ app to run the application.
+ *
+ * AppModule knows the binding of all interfaces. Other context modules override bindings on the interface. For example,
+ * `app` binds JsonRenderer and outputs JSON. In` html-prod`, HtmlModule overwrites the binding on TwigRenderer and
+ * outputs html.
+ */
 final class Bootstrap
 {
     /**
      * Return application instance by name and contexts
      *
-     * @param string $name     application name    (Vendor.Package)
-     * @param string $contexts application context (prd-html-app)
+     * Use newApp() instead for your own AppMeta and Cache.
+     *
+     * @param string $name     application name    'koriym\blog' (vendor\package)
+     * @param string $contexts application context 'prd-html-app'
      *
      * @return AbstractApp
      */
@@ -36,6 +48,8 @@ final class Bootstrap
     }
 
     /**
+     * Return application instance by AppMeta and Cache
+     *
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
      * @param Cache           $cache
