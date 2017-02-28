@@ -66,6 +66,14 @@ class CliRouter implements RouterInterface
     /**
      * {@inheritdoc}
      */
+    public function __destruct()
+    {
+        file_exists($this->stdIn) && unlink($this->stdIn);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function match(array $globals, array $server)
     {
         $this->validateArgs($globals);
