@@ -100,4 +100,14 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
         ];
         $this->router->match($globals, []);
     }
+
+    public function testStdinCleanup()
+    {
+        file_put_contents($this->stdInFile, '');
+        $exists = file_exists($this->stdInFile);
+        $this->assertTrue($exists);
+        unset($this->router);
+        $exists = file_exists($this->stdInFile);
+        $this->assertFalse($exists);
+    }
 }
