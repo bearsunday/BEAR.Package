@@ -10,7 +10,6 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Sunday\Extension\Application\AbstractApp;
-use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -82,11 +81,11 @@ final class Bootstrap
         $module = $this->newModule($appMeta, $contexts);
         $module->override(new AppMetaModule($appMeta));
         try {
-            $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AppInterface::class);
+            $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AbstractApp::class);
         } catch (NotCompiled $e) {
             $compiler = new DiCompiler($module, $appMeta->tmpDir);
             $compiler->compile();
-            $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AppInterface::class);
+            $app = (new ScriptInjector($appMeta->tmpDir))->getInstance(AbstractApp::class);
         }
 
         return $app;
@@ -103,7 +102,7 @@ final class Bootstrap
     private function newModule(AbstractAppMeta $appMeta, $contexts)
     {
         $contextsArray = array_reverse(explode('-', $contexts));
-        $module = null;
+        $module = new AbstractAppModule($appMeta);
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (!class_exists($class)) {
