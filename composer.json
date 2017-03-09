@@ -23,6 +23,9 @@
         "bear/sunday": "^1.1",
         "ray/web-param-module": "^1.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
     "autoload": {
         "psr-4": {
             "BEAR\\Package\\": "src/"
