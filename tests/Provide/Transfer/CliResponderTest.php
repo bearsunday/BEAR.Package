@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Sunday\Provide\Transfer;
 
 use BEAR\Package\Provide\Transfer\CliResponder;
@@ -24,8 +23,8 @@ class CliResponderTest extends \PHPUnit_Framework_TestCase
         $ro->headers['X-BEAR-VERSION'] = 'Sunday';
         ob_start();
         $ro->transfer($this->responder, []);
-        $actual =  ob_get_clean();
-        $expect = <<< EOT
+        $actual = ob_get_clean();
+        $expect = <<< 'EOT'
 200 OK
 X-BEAR-VERSION: Sunday
 content-type: application/json

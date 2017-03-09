@@ -1,5 +1,4 @@
 <?php
-
 namespace FakeVendor\HelloWorld\Module;
 
 use BEAR\AppMeta\AppMeta;
@@ -9,6 +8,7 @@ use Ray\Di\AbstractModule;
 class AppModule extends AbstractModule
 {
     public static $modules = [];
+
     /**
      * {@inheritdoc}
      */

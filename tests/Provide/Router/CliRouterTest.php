@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
@@ -12,17 +11,6 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
     private $router;
 
     private $stdInFile;
-
-    public function argvProvider()
-    {
-        return [
-            ['get', 'page://self/?name=bear', ['name' => 'bear'], [], ''],
-            ['post', 'page://self/?name=bear', [], ['name' => 'bear'], ''],
-            ['put', 'page://self/?name=bear', [], [], 'name=bear'],
-            ['patch', 'page://self/?name=bear', [], [], 'name=bear'],
-            ['delete', 'page://self/?name=bear', [], [], 'name=bear']
-        ];
-    }
 
     public function setUp()
     {
@@ -39,6 +27,17 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
     {
         @unlink(dirname(dirname(__DIR__)) . '/stdin.text');
         @unlink(dirname(dirname(__DIR__)) . '/stdout.log');
+    }
+
+    public function argvProvider()
+    {
+        return [
+            ['get', 'page://self/?name=bear', ['name' => 'bear'], [], ''],
+            ['post', 'page://self/?name=bear', [], ['name' => 'bear'], ''],
+            ['put', 'page://self/?name=bear', [], [], 'name=bear'],
+            ['patch', 'page://self/?name=bear', [], [], 'name=bear'],
+            ['delete', 'page://self/?name=bear', [], [], 'name=bear']
+        ];
     }
 
     /**

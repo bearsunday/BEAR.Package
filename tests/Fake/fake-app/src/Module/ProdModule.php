@@ -1,5 +1,4 @@
 <?php
-
 namespace FakeVendor\HelloWorld\Module;
 
 use Ray\Di\AbstractModule;

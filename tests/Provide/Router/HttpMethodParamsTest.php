@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Provide\Router;
 
 class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
