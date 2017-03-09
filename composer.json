@@ -33,7 +33,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BEAR\\Package\\": ["tests/", "tests/Fake", "tests/Fake/fake-app/src"]
+            "BEAR\\Package\\": ["tests/", "tests/Fake//"],
+            "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
         }
     }
 
