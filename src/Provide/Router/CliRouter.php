@@ -38,17 +38,6 @@ class CliRouter implements RouterInterface
     private $stdIn;
 
     /**
-     * @param string $stdIn
-     *
-     * @Inject
-     * @StdIn
-     */
-    public function setStdIn($stdIn)
-    {
-        $this->stdIn = $stdIn;
-    }
-
-    /**
      * @param RouterInterface $router
      * @param \LogicException $exception
      * @param Stdio           $stdIo
@@ -69,6 +58,17 @@ class CliRouter implements RouterInterface
     public function __destruct()
     {
         file_exists($this->stdIn) && unlink($this->stdIn);
+    }
+
+    /**
+     * @param string $stdIn
+     *
+     * @Inject
+     * @StdIn
+     */
+    public function setStdIn($stdIn)
+    {
+        $this->stdIn = $stdIn;
     }
 
     /**
@@ -169,7 +169,7 @@ class CliRouter implements RouterInterface
         if ($globals['argc'] !== 3) {
             $this->error(basename($globals['argv'][0]));
             $this->exitProgram(Status::USAGE);
-        };
+        }
     }
 
     /**

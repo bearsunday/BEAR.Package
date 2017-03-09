@@ -41,17 +41,6 @@ class RouterCollection implements RouterInterface
     }
 
     /**
-     * @return RouterMatch
-     */
-    private function routeNotFound()
-    {
-        $routeMatch = new RouterMatch;
-        $routeMatch->method = 'get';
-        $routeMatch->path = self::ROUTE_NOT_FOUND;
-
-        return $routeMatch;
-    }
-    /**
      * {@inheritdoc}
      */
     public function generate($name, $data)
@@ -64,5 +53,17 @@ class RouterCollection implements RouterInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return RouterMatch
+     */
+    private function routeNotFound()
+    {
+        $routeMatch = new RouterMatch;
+        $routeMatch->method = 'get';
+        $routeMatch->path = self::ROUTE_NOT_FOUND;
+
+        return $routeMatch;
     }
 }

@@ -23,7 +23,7 @@ class FilesystemCacheProvider implements ProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function get()
     {

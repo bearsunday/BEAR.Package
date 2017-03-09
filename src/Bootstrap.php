@@ -106,7 +106,7 @@ final class Bootstrap
         $module = null;
         foreach ($contextsArray as $context) {
             $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
-            if (!class_exists($class)) {
+            if (! class_exists($class)) {
                 $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
             }
             if (! is_a($class, AbstractModule::class, true)) {

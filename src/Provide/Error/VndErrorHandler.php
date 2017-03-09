@@ -92,17 +92,6 @@ class VndErrorHandler implements ErrorInterface
     }
 
     /**
-     * @param \Exception $e
-     * @param string     $lastErrorFile
-     *
-     * @return ResourceObject
-     */
-    private function getErrorPage(\Exception $e, $lastErrorFile)
-    {
-        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new SundayErrorPage;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function transfer()
@@ -116,13 +105,24 @@ class VndErrorHandler implements ErrorInterface
 
     /**
      * @param \Exception $e
+     * @param string     $lastErrorFile
+     *
+     * @return ResourceObject
+     */
+    private function getErrorPage(\Exception $e, $lastErrorFile)
+    {
+        return PHP_SAPI === 'cli' ? new CliErrorPage($this->exceptionString->summery($e, $lastErrorFile)) : new SundayErrorPage;
+    }
+
+    /**
+     * @param \Exception $e
      *
      * @return array [$code, $body]
      */
     private function codeError(\Exception $e)
     {
         $code = $e->getCode();
-        $message =  $code . ' ' . (new Code)->statusText[$code];
+        $message = $code . ' ' . (new Code)->statusText[$code];
         $body = ['message' => $message];
 
         return [$code, $body];
