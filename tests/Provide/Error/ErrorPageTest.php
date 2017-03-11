@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Provide\Error;
 
 class ErrorPageTest extends \PHPUnit_Framework_TestCase

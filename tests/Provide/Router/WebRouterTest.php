@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Provide\Router;
 
 class WebRouterTest extends \PHPUnit_Framework_TestCase
@@ -24,7 +23,6 @@ class WebRouterTest extends \PHPUnit_Framework_TestCase
         $server = [
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/'
-
         ];
         $request = $this->router->match($global, $server);
         $this->assertSame('get', $request->method);

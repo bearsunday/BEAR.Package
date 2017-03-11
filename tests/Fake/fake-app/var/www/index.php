@@ -1,5 +1,4 @@
 <?php
-
 namespace FakeVendor\HelloWorld;
 
 use BEAR\AppMeta\AppMeta;

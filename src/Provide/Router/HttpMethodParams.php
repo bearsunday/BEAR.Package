@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the BEAR.Sunday package
+ * This file is part of the BEAR.Package package.
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
@@ -40,7 +40,6 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     public function get(array $server, array $get, array $post)
     {
-
         // set the original value
         $method = strtolower($server['REQUEST_METHOD']);
 
@@ -115,7 +114,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return $post;
         }
 
-        if (in_array($method, ['post', 'put', 'patch', 'delete'])) {
+        if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
             return $this->phpInput($server);
         }
 
@@ -143,7 +142,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         }
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if ($isApplicationJson) {
-            $content =  json_decode(file_get_contents($this->stdIn), true);
+            $content = json_decode(file_get_contents($this->stdIn), true);
 
             return $content;
         }

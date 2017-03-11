@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Provide\Transfer;
 
 use BEAR\Resource\ResourceObject;

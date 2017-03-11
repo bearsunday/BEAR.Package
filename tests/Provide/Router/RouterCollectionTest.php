@@ -1,5 +1,4 @@
 <?php
-
 namespace Provide\Router;
 
 use BEAR\Package\FakeWebRouter;
@@ -22,6 +21,7 @@ class RouterCollectionTest extends \PHPUnit_Framework_TestCase
         $this->routerCollection = (new RouterCollectionProvider($webRouter, $fakeRouter))->get();
         parent::setUp();
     }
+
     public function testMatch()
     {
         $globals = [

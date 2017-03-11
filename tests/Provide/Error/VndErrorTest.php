@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AppMeta;

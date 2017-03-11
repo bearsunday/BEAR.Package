@@ -1,5 +1,4 @@
 <?php
-
 namespace BEAR\Package\Context;
 
 use BEAR\Package\Provide\Representation\HalRenderer;

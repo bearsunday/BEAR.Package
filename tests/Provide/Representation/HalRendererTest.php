@@ -1,16 +1,11 @@
 <?php
-
 namespace BEAR\Package;
 
-use Aura\Router\RouterFactory;
 use BEAR\Package\Provide\Representation\HalRenderer;
-use BEAR\Package\Provide\Router\AuraRouter;
-use BEAR\Package\Provide\Router\AuraRouterProvider;
 use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\ResourceInterface;
-use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
