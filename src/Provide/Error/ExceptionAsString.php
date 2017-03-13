@@ -46,6 +46,6 @@ class ExceptionAsString
             return '';
         }
 
-        return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true));
+        return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true)); // @codeCoverageIgnore
     }
 }

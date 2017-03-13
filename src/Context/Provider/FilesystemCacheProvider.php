@@ -10,6 +10,9 @@ use BEAR\AppMeta\AbstractAppMeta;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\ProviderInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class FilesystemCacheProvider implements ProviderInterface
 {
     /**
