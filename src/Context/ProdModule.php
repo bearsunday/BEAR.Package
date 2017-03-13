@@ -17,6 +17,9 @@ use Doctrine\Common\Cache\CacheProvider;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ProdModule extends AbstractModule
 {
     /**

@@ -80,9 +80,9 @@ final class Bootstrap
             return new VoidCache;
         }
         if (function_exists('apcu_fetch')) {
-            return new ApcuCache;
+            return new ApcuCache; // @codeCoverageIgnore
         }
 
-        return new FilesystemCache($appMeta->tmpDir);
+        return new FilesystemCache($appMeta->tmpDir); // @codeCoverageIgnore
     }
 }
