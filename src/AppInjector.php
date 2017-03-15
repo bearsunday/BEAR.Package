@@ -79,7 +79,7 @@ final class AppInjector implements InjectorInterface
      */
     private function compile(AbstractModule $module, AbstractAppMeta $appMeta, $scriptDir)
     {
-        $hashFile = $appMeta->tmpDir . '/.compile_hash';
+        $hashFile = $appMeta->tmpDir . '/compile_hash';
         $moduleHash = md5(serialize($module));
         $isUnchanged = file_exists($hashFile) && (file_get_contents($hashFile) === $moduleHash);
         if ($isUnchanged) {
