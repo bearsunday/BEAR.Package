@@ -8,6 +8,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\VndErrorModule;
+use BEAR\Package\Provide\Resource\ResourceObjectModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
 use BEAR\Sunday\Module\SundayModule;
@@ -15,9 +16,11 @@ use Ray\Di\AbstractModule;
 
 class PackageModule extends AbstractModule
 {
+    protected $appMeta;
+
     public function __construct(AbstractAppMeta $appMeta = null)
     {
-        unset($appMeta); // for BC
+        $this->appMeta = $appMeta;
         parent::__construct();
     }
 
@@ -30,5 +33,6 @@ class PackageModule extends AbstractModule
         $this->install(new WebRouterModule);
         $this->install(new VndErrorModule);
         $this->install(new SundayModule);
+        $this->install(new ResourceObjectModule($this->appMeta));
     }
 }
