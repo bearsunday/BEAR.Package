@@ -14,8 +14,8 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $stdOut = $_ENV['TEST_DIR'] . '/stdout.log';
-        $this->stdInFile = $_ENV['TEST_DIR'] . '/stdin.text';
+        $stdOut = __DIR__ . '/stdout.log';
+        $this->stdInFile = __DIR__ . '/stdin.text';
         $stdIo = (new CliFactory())->newStdio('php://stdin', $stdOut);
         $httpMethodParams = new HttpMethodParams;
         $httpMethodParams->setStdIn($this->stdInFile);
@@ -25,8 +25,8 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        @unlink(dirname(dirname(__DIR__)) . '/stdin.text');
-        @unlink(dirname(dirname(__DIR__)) . '/stdout.log');
+        @unlink(__DIR__ . '/stdin.text');
+        @unlink(__DIR__ . '/stdout.log');
     }
 
     public function argvProvider()
