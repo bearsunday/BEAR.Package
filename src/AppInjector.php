@@ -58,16 +58,37 @@ final class AppInjector implements InjectorInterface
     {
         $module = $this->newModule($appMeta, $contexts);
         $module->override(new AppMetaModule($appMeta));
-        $tmpDir = $appMeta->tmpDir;
+        $scriptDir = $appMeta->tmpDir;
+        $scriptInjector = new ScriptInjector($scriptDir);
         try {
-            $injector = (new ScriptInjector($tmpDir))->getInstance(InjectorInterface::class);
+            $injector = $scriptInjector->getInstance(InjectorInterface::class);
         } catch (NotCompiled $e) {
-            $compiler = new DiCompiler($module, $tmpDir);
-            $compiler->compile();
-            $injector = (new ScriptInjector($tmpDir))->getInstance(InjectorInterface::class);
+            $this->compile($module, $appMeta, $scriptDir);
+            $injector = $scriptInjector->getInstance(InjectorInterface::class);
         }
 
         return $injector;
+    }
+
+    /**
+     * Compile dependencies
+     *
+     * @param AbstractModule  $module
+     * @param AbstractAppMeta $appMeta
+     * @param string          $contexts
+     */
+    private function compile(AbstractModule $module, AbstractAppMeta $appMeta, $scriptDir)
+    {
+        $hashFile = $appMeta->tmpDir . '/.compile_hash';
+        $moduleHash = md5(serialize($module));
+        $isUnchanged = file_exists($hashFile) && (file_get_contents($hashFile) === $moduleHash);
+        if ($isUnchanged) {
+            return;
+        }
+        $this->cleanupDir($scriptDir);
+        $compiler = new DiCompiler($module, $scriptDir);
+        $compiler->compile();
+        file_put_contents($hashFile, $moduleHash);
     }
 
     /**
@@ -95,5 +116,19 @@ final class AppInjector implements InjectorInterface
         }
 
         return $module;
+    }
+
+    /**
+     * @param string $tmpDir Cleanup directory
+     */
+    private function cleanupDir($tmpDir)
+    {
+        $unlink = function ($path) use (&$unlink) {
+            foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
+                is_dir($file) ? $unlink($file) : unlink($file);
+                @rmdir($file);
+            }
+        };
+        $unlink($tmpDir);
     }
 }
