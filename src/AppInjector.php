@@ -9,6 +9,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Exception\InvalidContextException;
+use BEAR\Package\Provide\Resource\ResourceObjectModule;
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
@@ -114,6 +115,7 @@ final class AppInjector implements InjectorInterface
             /* @var $module AbstractModule */
             $module = new $class($module);
         }
+        $module->install(new ResourceObjectModule($appMeta));
 
         return $module;
     }

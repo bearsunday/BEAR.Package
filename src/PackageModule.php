@@ -8,7 +8,6 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\VndErrorModule;
-use BEAR\Package\Provide\Resource\ResourceObjectModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
 use BEAR\Sunday\Module\SundayModule;
@@ -33,6 +32,5 @@ class PackageModule extends AbstractModule
         $this->install(new WebRouterModule);
         $this->install(new VndErrorModule);
         $this->install(new SundayModule);
-        $this->install(new ResourceObjectModule($this->appMeta));
     }
 }
