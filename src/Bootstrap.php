@@ -79,7 +79,7 @@ final class Bootstrap
         if ($isDeveop) {
             return new VoidCache;
         }
-        if (function_exists('apcu_fetch')) {
+        if (PHP_SAPI !== 'cli' && function_exists('apcu_fetch')) {
             return new ApcuCache; // @codeCoverageIgnore
         }
 
