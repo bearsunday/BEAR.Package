@@ -21,14 +21,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $unlink = function ($path) use (&$unlink) {
-            foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
-                is_dir($file) ? $unlink($file) : unlink($file);
-                @rmdir($file);
-            }
-        };
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
-        $unlink($this->appMeta->tmpDir);
         AppModule::$modules = [];
         parent::setUp();
     }

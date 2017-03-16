@@ -15,6 +15,8 @@ use Ray\Di\AbstractModule;
 
 class PackageModule extends AbstractModule
 {
+    protected $appMeta;
+
     public function __construct(AbstractAppMeta $appMeta = null)
     {
         unset($appMeta); // for BC
