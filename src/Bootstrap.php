@@ -34,12 +34,13 @@ final class Bootstrap
      *
      * @param string $name     application name    'koriym\blog' (vendor\package)
      * @param string $contexts application context 'prd-html-app'
+     * @param string $appDir   application path
      *
      * @return AbstractApp
      */
-    public function getApp($name, $contexts)
+    public function getApp($name, $contexts, $appDir = null)
     {
-        return $this->newApp(new AppMeta($name, $contexts), $contexts);
+        return $this->newApp(new AppMeta($name, $contexts, $appDir), $contexts);
     }
 
     /**
