@@ -19,7 +19,7 @@ class PackageModule extends AbstractModule
 
     public function __construct(AbstractAppMeta $appMeta = null)
     {
-        $this->appMeta = $appMeta;
+        unset($appMeta); // for BC
         parent::__construct();
     }
 
