@@ -50,7 +50,8 @@
     "autoload": {
         "psr-4": {
             "BEAR\\Package\\": "src/"
-        }
+        },
+        "files": ["src/polyfill.php"]
     },
     "bin": [
         "bin/bear.compile",
