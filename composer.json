@@ -35,12 +35,13 @@
         "doctrine/dbal": "~2.0",
         "pagerfanta/pagerfanta": "~1.0",
         "symfony/http-foundation": "~2.0",
-        "twig/twig": "~1.0"
+        "twig/twig": "~1.0",
+        "bear/resource": "0.13.2"
     },
     "require-dev": {
         "bear/dev-package": "~0.2",
         "bear/demo-apps": "~0.1@dev",
-        "noiselabs/smarty": "~3.1",
+        "noiselabs/smarty": "3.1.16",
         "facebook/xhprof": "dev-master"
     },
     "suggest": {
