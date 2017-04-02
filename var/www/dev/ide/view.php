@@ -30,7 +30,7 @@ return <<<EOT
         <div id="label" class="editor_label"><span class="editor_file_save" id="save_now"> n/a </span></div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-        <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
         <script src="//koriym.github.io/BEAR.Package/dev/ide/js/codeEdit.js" type="text/javascript" charset="utf-8"></script>
         <script src="//koriym.github.io/BEAR.Package/dev/ide/js/jquery.easing.js" type="text/javascript"></script>
         <script src="js/init.js.php?root={$root}" type="text/javascript"></script>

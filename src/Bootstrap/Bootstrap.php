@@ -41,6 +41,7 @@ final class Bootstrap
      */
     public static function getApp($appName, $context, $tmpDir, Cache $cache = null)
     {
+        error_reporting(0);
         $diCompiler = (new DiCompilerProvider($appName, $context, $tmpDir, $cache))->get();
         $app = $diCompiler->getInstance('BEAR\Sunday\Extension\Application\AppInterface');
         /** $app \BEAR\Sunday\Extension\Application\AppInterface */

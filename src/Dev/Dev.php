@@ -18,6 +18,7 @@ use BEAR\Package\Provide\Application\AbstractApp;
 use BEAR\Package\Provide\ConsoleOutput\ConsoleOutput;
 use BEAR\Package\Provide\WebResponse\HttpFoundation as SymfonyResponse;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Whoops\Exception\ErrorException;
 
 class Dev
 {
@@ -208,7 +209,11 @@ class Dev
     public function registerExceptionHandler($logDir)
     {
         set_exception_handler(
-            function (\Exception $e) use ($logDir) {
+            function ($e) use ($logDir) {
+                if ($e instanceof \Error) {
+                    $e = new ErrorException($e->getMessage());
+                }
+                var_dump(get_class($e));
                 $handler = new ExceptionHandler(
                     new SymfonyResponse(new ConsoleOutput),
                     (dirname(__DIR__)) . '/Dev/Module/ExceptionHandle/template/exception.php'

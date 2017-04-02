@@ -1,36 +1,38 @@
-BEAR.Package
+BEAR.Package 0.x (ARCHIVED)
 =============================
 
-[![Latest Stable Version](https://poser.pugx.org/bear/package/v/stable.png)](https://packagist.org/packages/bear/package) [![Build Status](https://secure.travis-ci.org/koriym/BEAR.Package.png?branch=master)] (http://travis-ci.org/koriym/BEAR.Package)
+Requirement
+-----------
+
+*  PHP 5.4.0 - 7.1.0
 
 Introduction
 ------------
 
 BEAR.Package is a [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday) resource oriented framework implementation package.
 
-Installation
-------------
+Run Sandbox demo app
+--------------------
 
-    $ composer create-project bear/package {$PACKAGE_PATH}
-    $ composer create-project bear/package {$PACKAGE_PATH} dev-develop
-
-built-in web server for development
-------------------
-
-for Sandbox web page
-
+    $ composer create-project bear/package BEAR0 ~0.13
+    $ cd BEAR0
+    $ php apps/Demo.Sandbox/bin/install_db.sh
     $ bin/bear.server apps/Demo.Sandbox
-    $ bin/bear.server --context=api --port=8081 apps/Demo.Sandbox
 
-or
+You can then open a browser and go to `http://0.0.0.0:8080` to see the Sabdbox demo output.
 
-    $ php -S 0.0.0.0:8080 -t apps/Demo.Sandbox/var/www/ apps/Demo.Sandbox/bootstrap/contexts/dev.php
+Application Dev Tool
+--------------------
 
-You can then open a browser and go to `http://0.0.0.0:8080` to see the "Hello World" demo output. To see application dev tool page, go to `http://0.0.0.0:8080/dev/`
+To see application dev tool page, go to `http://0.0.0.0:8080/dev/`
 
-for system admin page
+System Admin Tool
+------------------
+To see system admin page
 
     $ php -S 0.0.0.0:8090 -t {$PACKAGE_PATH}/var/www/admin
+    
+go to `http://0.0.0.0:8090/`
 
 Virtual Host for Production
 ------------
