@@ -18,12 +18,7 @@ class Installer
      */
     public static function packageUpdate(Event $event)
     {
-        $version = $event->getComposer()->getPackage()->getPrettyVersion();
-        $hash = $event->getComposer()->getLocker()->getLockData()['hash'];
         $packageDir = dirname(__DIR__);
-        file_put_contents($packageDir . '/VERSION', $version);
-        file_put_contents($packageDir . '/ID', $hash);
-
         $targetHello = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Helloworld';
         $targetSandbox = dirname(__DIR__) . '/vendor/bear/demo-apps/Demo.Sandbox';
         $helloApp = dirname(__DIR__) . '/apps/Demo.Helloworld';
