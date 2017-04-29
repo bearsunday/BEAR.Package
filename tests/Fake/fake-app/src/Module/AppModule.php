@@ -1,7 +1,6 @@
 <?php
 namespace FakeVendor\HelloWorld\Module;
 
-use BEAR\AppMeta\AppMeta;
 use BEAR\Package\PackageModule;
 use Ray\Di\AbstractModule;
 

@@ -2,7 +2,6 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AppMeta;
-use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Provide\Router\CliRouter;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Transfer\CliResponder;
@@ -40,14 +39,13 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(AppInterface::class, $app);
         $this->assertInstanceOf(WebRouter::class, $app->router);
         $this->assertInstanceOf(HttpResponder::class, $app->responder);
-        $expect = ['FakeVendor\HelloWorld\Module\AppModule', 'FakeVendor\HelloWorld\Module\ProdModule'];
-        $this->assertSame($expect, AppModule::$modules);
     }
 
     public function testCache()
     {
-        $app1 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-cli-app', new FilesystemCache(__DIR__ . '/tmp'));
-        $app2 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-cli-app', new FilesystemCache(__DIR__ . '/tmp'));
+        $cache = new FilesystemCache(__DIR__ . '/tmp');
+        $app1 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-cli-app', $cache);
+        $app2 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld'), 'prod-cli-app', $cache);
         $this->assertSame(serialize($app1), serialize($app2));
     }
 
@@ -55,17 +53,16 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $appMeta = new AppMeta('FakeVendor\HelloWorld');
         $newTmpDir = $appMeta->tmpDir;
-        if (! file_exists($newTmpDir)) {
-            mkdir($newTmpDir);
-        }
         $appMeta->tmpDir = $newTmpDir;
         $app = (new Bootstrap)->newApp($appMeta, 'app', new VoidCache);
         $this->assertInstanceOf(AppInterface::class, $app);
     }
 
+    /**
+     * @expectedException \BEAR\Package\Exception\InvalidContextException
+     */
     public function testInvalidContext()
     {
-        $this->setExpectedException(InvalidContextException::class);
         (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'invalid');
     }
 }
