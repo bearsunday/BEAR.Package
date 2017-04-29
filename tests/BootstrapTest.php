@@ -54,7 +54,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     public function testNewApp()
     {
         $appMeta = new AppMeta('FakeVendor\HelloWorld');
-        $newTmpDir = $appMeta->tmpDir . 'new';
+        $newTmpDir = $appMeta->tmpDir;
         if (! file_exists($newTmpDir)) {
             mkdir($newTmpDir);
         }
