@@ -66,11 +66,9 @@ final class Bootstrap
         $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
         $scriptInjector = new ScriptInjector($appMeta->tmpDir);
         // save singleton instance cache
-        if (! defined('HHVM_VERSION')) {
-            $scriptInjector->getInstance(Reader::class);
-            $scriptInjector->getInstance(Cache::class);
-            $scriptInjector->getInstance(ResourceInterface::class);
-        }
+        $scriptInjector->getInstance(Reader::class);
+        $scriptInjector->getInstance(Cache::class);
+        $scriptInjector->getInstance(ResourceInterface::class);
         $cache->save($appId, [$app, $scriptInjector]);
 
         return $app;
