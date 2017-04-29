@@ -8,6 +8,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
+use BEAR\Resource\Resource;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -59,8 +60,8 @@ final class Bootstrap
     {
         $cache = $cache ?: $this->getCache($appMeta, $contexts);
         $appId = $appMeta->name . $contexts;
-        list($app, $scriptInjector) = $cache->fetch($appId); // $scriptInjector set serialized single instance in wakeup
-        if ($app) {
+        list($app, $scriptInjector) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
+        if ($app && $app instanceof AbstractApp) {
             return $app;
         }
         $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
