@@ -27,7 +27,7 @@ class ProdModule extends AbstractModule
      */
     protected function configure()
     {
-        if (function_exists('apcu_fetch') && class_exists(ApcuCache::class)) {
+        if (PHP_SAPI !== 'cli' && function_exists('apcu_fetch') && class_exists(ApcuCache::class)) {
             $this->installApcuCache(ApcuCache::class);
 
             return;
