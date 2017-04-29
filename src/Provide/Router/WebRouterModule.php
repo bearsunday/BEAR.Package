@@ -8,7 +8,6 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 class WebRouterModule extends AbstractModule
 {
@@ -17,8 +16,8 @@ class WebRouterModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind(RouterInterface::class)->to(WebRouter::class)->in(Scope::SINGLETON);
-        $this->bind(WebRouterInterface::class)->to(WebRouter::class)->in(Scope::SINGLETON);
-        $this->bind(HttpMethodParamsInterface::class)->to(HttpMethodParams::class)->in(Scope::SINGLETON);
+        $this->bind(RouterInterface::class)->to(WebRouter::class);
+        $this->bind(WebRouterInterface::class)->to(WebRouter::class);
+        $this->bind(HttpMethodParamsInterface::class)->to(HttpMethodParams::class);
     }
 }
