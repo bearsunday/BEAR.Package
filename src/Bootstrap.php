@@ -8,12 +8,15 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
+use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
+use Ray\Compiler\ScriptInjector;
 
 /**
  * Bootstrap
@@ -56,12 +59,17 @@ final class Bootstrap
     {
         $cache = $cache ?: $this->getCache($appMeta, $contexts);
         $appId = $appMeta->name . $contexts;
-        $app = $cache->fetch($appId);
+        list($app, $scriptInjector) = $cache->fetch($appId); // $scriptInjector set serialized single instance in wakeup
         if ($app) {
             return $app;
         }
         $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
-        $cache->save($appId, $app);
+        $scriptInjector = new ScriptInjector($appMeta->tmpDir);
+        // save singleton instance cache
+        $scriptInjector->getInstance(Reader::class);
+        $scriptInjector->getInstance(Cache::class);
+        $scriptInjector->getInstance(ResourceInterface::class);
+        $cache->save($appId, [$app, $scriptInjector]);
 
         return $app;
     }
