@@ -11,6 +11,6 @@ $rm = function ($dir) use (&$rm) {
     }
 };
 $rm (__DIR__ . '/tmp');
-$rm (__DIR__ . 'Fake/fake-app/var/tmp');
-$rm (__DIR__ . 'Fake/fake-app/var/log');
+$rm (__DIR__ . '/Fake/fake-app/var/tmp');
+$rm (__DIR__ . '/Fake/fake-app/var/log');
 $rm (dirname(__DIR__) . '/var/tmp');
