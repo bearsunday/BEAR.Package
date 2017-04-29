@@ -18,7 +18,9 @@ class CliResponder implements TransferInterface
     public function __invoke(ResourceObject $resourceObject, array $server)
     {
         unset($server);
-        $body = $resourceObject->toString();
+        if (! $resourceObject->view) {
+            $resourceObject->toString();
+        }
         // code
         $statusText = (new Code)->statusText[$resourceObject->code];
         $ob = $resourceObject->code . ' ' . $statusText . PHP_EOL;
@@ -29,7 +31,7 @@ class CliResponder implements TransferInterface
         // empty line
         $ob .= PHP_EOL;
         // body
-        $ob .= $body;
+        $ob .= $resourceObject->view;
 
         echo $ob . PHP_EOL;
     }
