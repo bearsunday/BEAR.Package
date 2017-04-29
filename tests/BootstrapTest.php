@@ -7,6 +7,7 @@ use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Transfer\CliResponder;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
 use FakeVendor\HelloWorld\Module\AppModule;
@@ -43,7 +44,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
     public function testCache()
     {
-        $cache = new FilesystemCache(__DIR__ . '/tmp');
+        $cache = new ArrayCache();
         $app1 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld', 'prod-cli-app'), 'prod-cli-app', $cache);
         $app2 = (new Bootstrap)->newApp(new AppMeta('FakeVendor\HelloWorld', 'prod-cli-app'), 'prod-cli-app', $cache);
         $this->assertSame(serialize($app1), serialize($app2));
