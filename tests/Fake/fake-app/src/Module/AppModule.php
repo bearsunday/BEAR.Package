@@ -15,6 +15,6 @@ class AppModule extends AbstractModule
     protected function configure()
     {
         self::$modules[] = get_class($this);
-        $this->install(new PackageModule(new AppMeta('FakeVendor\HelloWorld')));
+        $this->install(new PackageModule());
     }
 }
