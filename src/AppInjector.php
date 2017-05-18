@@ -76,7 +76,7 @@ final class AppInjector implements InjectorInterface
      *
      * @param AbstractModule  $module
      * @param AbstractAppMeta $appMeta
-     * @param string          $contexts
+     * @param string          $scriptDir
      */
     private function compile(AbstractModule $module, AbstractAppMeta $appMeta, $scriptDir)
     {
