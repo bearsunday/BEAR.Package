@@ -8,6 +8,8 @@ namespace BEAR\Package\Context;
 
 use BEAR\Package\Context\Provider\FilesystemCacheProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
+use BEAR\Resource\RenderInterface;
+use BEAR\Resource\VoidOptionsRenderer;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
@@ -27,13 +29,24 @@ class ProdModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->disableOptionsMethod();
         if (PHP_SAPI !== 'cli' && function_exists('apcu_fetch') && class_exists(ApcuCache::class)) {
             $this->installApcuCache(ApcuCache::class);
 
             return;
         }
-
         $this->installFileCache();
+    }
+
+    /**
+     * Disable OPTIONS resource request method in production
+     *
+     * OPTIONS method return 405 Method Not Allowed error code. To enable OPTIONS in `prod` context,
+     * Install BEAR\Resource\Module\OptionsMethodModule() in your ProdModule.
+     */
+    private function disableOptionsMethod()
+    {
+        $this->bind(RenderInterface::class)->annotatedWith('options')->to(VoidOptionsRenderer::class);
     }
 
     private function installApcuCache($apcClass)
