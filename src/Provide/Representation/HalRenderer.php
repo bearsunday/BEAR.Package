@@ -10,6 +10,7 @@ use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\RequestInterface;
+use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Router\RouterInterface;
@@ -32,13 +33,19 @@ class HalRenderer implements RenderInterface
     private $router;
 
     /**
+     * @var
+     */
+    private $resource;
+
+    /**
      * @param Reader          $reader
      * @param RouterInterface $router
      */
-    public function __construct(Reader $reader, RouterInterface $router)
+    public function __construct(Reader $reader, RouterInterface $router, ResourceInterface $resource)
     {
         $this->reader = $reader;
         $this->router = $router;
+        $this->resource = $resource;
     }
 
     /**
@@ -46,6 +53,11 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
+        if (isset($ro->headers['Location']) && ($ro->body === null || $ro->body === '')) {
+            $ro->view = $this->getLocatedView($ro);
+
+            return $ro->view;
+        }
         list($ro, $body) = $this->valuate($ro);
         $method = 'on' . ucfirst($ro->uri->method);
         $hasMethod = method_exists($ro, $method);
@@ -90,6 +102,7 @@ class HalRenderer implements RenderInterface
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
         $selfLink = $this->getReverseMatchedLink($path);
+
         $hal = new Hal($selfLink, $body);
         $this->getHalLink($body, $annotations, $hal);
 
@@ -167,5 +180,20 @@ class HalRenderer implements RenderInterface
         if (isset($ro->headers['Location'])) {
             $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
         }
+    }
+
+    /**
+     * Return `Location` URI view
+     *
+     * @return string
+     */
+    private function getLocatedView(ResourceObject $ro)
+    {
+        $url = parse_url($ro->uri);
+        $locationUri = sprintf('%s://%s%s', $url['scheme'], $url['host'], $ro->headers['Location']);
+        $locatedResource = $this->resource->uri($locationUri)->eager->request();
+        /* @var $locatedResource \BEAR\Resource\ResourceObject */
+
+        return $locatedResource->toString();
     }
 }
