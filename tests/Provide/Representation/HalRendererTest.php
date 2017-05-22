@@ -158,4 +158,30 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         $expected = '/task/10';
         $this->assertSame($expected, $location);
     }
+
+    public function test201Created()
+    {
+        $ro = $this->resource->post->uri('app://self/post')->eager->request();
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        $result = (string) $ro;
+        $expect = '{
+    "id": "10",
+    "name": "user_10",
+    "_links": {
+        "self": {
+            "href": "/post?id=10"
+        },
+        "comment": {
+            "href": "/comments/?id=10"
+        },
+        "category": {
+            "href": "/category/?id=10"
+        }
+    }
+}
+';
+        $this->assertSame($expect, $result);
+        $this->assertSame(201, $ro->code);
+        $this->assertSame('/post?id=10', $ro->headers['Location']);
+    }
 }

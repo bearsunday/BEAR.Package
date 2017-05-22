@@ -40,11 +40,6 @@ class HalRenderer implements RenderInterface
     private $resource;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @param Reader          $reader
      * @param RouterInterface $router
      */
@@ -60,10 +55,9 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
-        if (isset($ro->headers['Location']) && ($ro->body === null || $ro->body === '')) {
+        if ($ro->code === 201 && isset($ro->headers['Location']) && ($ro->body === null || $ro->body === '')) {
             $ro->view = $this->getLocatedView($ro);
-//
-//            return $ro->view;
+            return $ro->view;
         }
         list($ro, $body) = $this->valuate($ro);
         $method = 'on' . ucfirst($ro->uri->method);
@@ -222,7 +216,6 @@ class HalRenderer implements RenderInterface
         } catch (\Exception $e) {
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
-        /* @var $locatedResource \BEAR\Resource\ResourceObject */
 
         return $locatedResource->toString();
     }

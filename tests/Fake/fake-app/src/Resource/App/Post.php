@@ -15,7 +15,8 @@ class Post extends ResourceObject
      */
     public function onGet($id)
     {
-        $this['post_id'] = $id;
+        $this['id'] = $id;
+        $this['name'] = 'user_'  .$id;
 
         return $this;
     }
@@ -24,7 +25,6 @@ class Post extends ResourceObject
     {
         $this->code = 201;
         $this->headers['Location'] = '/post?id=10';
-        $this->body = $this->resource->uri('app://self' . $this->headers['Location'])->eager->request()->body;
 
         return $this;
     }
