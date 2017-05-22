@@ -6,10 +6,10 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Resource\AbstractRequest;
 use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
-use BEAR\Resource\RequestInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
@@ -81,13 +81,32 @@ class HalRenderer implements RenderInterface
      */
     private function valuateElements(ResourceObject &$ro)
     {
-        foreach ($ro->body as $key => &$element) {
-            if ($element instanceof RequestInterface) {
+        foreach ($ro->body as $key => &$embeded) {
+            if ($embeded instanceof AbstractRequest) {
+                $isDefferentSchema = $this->isDifferentSchema($ro, $embeded->resourceObject);
+                if ($isDefferentSchema === true) {
+                    $ro->body['_embedded'][$key] = $embeded()->body;
+                    unset($ro->body[$key]);
+                    continue;
+                }
                 unset($ro->body[$key]);
-                $view = $this->render($element());
+                $view = $this->render($embeded());
                 $ro->body['_embedded'][$key] = json_decode($view);
             }
         }
+    }
+
+    /**
+     * Return is different schema (page <-> app)
+     *
+     * @param ResourceObject $parentRo
+     * @param ResourceObject $childRo
+     *
+     * @return bool
+     */
+    private function isDifferentSchema(ResourceObject $parentRo, ResourceObject $childRo)
+    {
+        return $parentRo->uri->host . $parentRo->uri->host !== $childRo->uri->scheme . $childRo->uri->host;
     }
 
     /**
