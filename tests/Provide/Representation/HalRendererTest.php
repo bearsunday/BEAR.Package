@@ -5,6 +5,7 @@ use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Resource\Module\ResourceModule;
+use BEAR\Resource\Resource;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -26,8 +27,8 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $router = new WebRouter('page://self', new HttpMethodParams());
-        $this->hal = new HalRenderer(new AnnotationReader, $router);
         $this->resource = (new Injector(new ResourceModule('FakeVendor\HelloWorld')))->getInstance(ResourceInterface::class);
+        $this->hal = new HalRenderer(new AnnotationReader, $router, $this->resource);
     }
 
     public function testRender()
@@ -86,18 +87,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         "user": {
             "id": "1",
             "friend_id": "f1",
-            "org_id": "o1",
-            "_links": {
-                "self": {
-                    "href": "/user?id=1"
-                },
-                "friend": {
-                    "href": "/friend?id=f1"
-                },
-                "org": {
-                    "href": "/org?id=o1"
-                }
-            }
+            "org_id": "o1"
         }
     },
     "_links": {
@@ -138,12 +128,14 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter);
+        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
         $ro = new Task;
+        $ro->onPost();
         $ro->uri = new Uri('app://self/task');
-        $ro->uri->method = 'get';
+        $ro->uri->method = 'post';
         $hal = $halRenderer->render($ro);
         $expected = '{
+    "dummy_not_for_rendering": "1",
     "_links": {
         "self": {
             "href": "/task"
@@ -156,13 +148,14 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter);
+        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
-        $ro->uri->method = 'get';
-        $ro = $ro->onGet(1);
+        $ro->uri->method = 'post';
+        $ro = $ro->onPost(1);
         $hal = $halRenderer->render($ro);
         $expected = '{
+    "dummy_not_for_rendering": "1",
     "_links": {
         "self": {
             "href": "/task/1"
