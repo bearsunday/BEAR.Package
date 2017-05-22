@@ -4,13 +4,10 @@ namespace BEAR\Package;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\WebRouter;
-use BEAR\Resource\Module\ResourceModule;
-use BEAR\Resource\Resource;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
-use Ray\Di\Injector;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,15 +23,12 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $router = new WebRouter('page://self', new HttpMethodParams());
-        $this->resource = (new Injector(new ResourceModule('FakeVendor\HelloWorld')))->getInstance(ResourceInterface::class);
-        $this->hal = new HalRenderer(new AnnotationReader, $router, $this->resource);
+        $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
     }
 
     public function testRender()
     {
         $ro = $this->resource->get->uri('app://self/user')->withQuery(['id' => 1, 'type' => 'type_a'])->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "id": 1,
@@ -59,7 +53,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testRenderPost()
     {
         $ro = $this->resource->post->uri('app://self/user')->withQuery(['id' => 1])->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "id": 1,
@@ -80,7 +73,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testRenderEmbed()
     {
         $ro = $this->resource->get->uri('page://self/emb')->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "_embedded": {
@@ -103,7 +95,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testRenderScalar()
     {
         $ro = $this->resource->get->uri('app://self/scalar')->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "value": "ak",
@@ -120,7 +111,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testOptions()
     {
         $ro = $this->resource->options->uri('app://self/scalar')->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '';
         $this->assertSame($expect, $result);

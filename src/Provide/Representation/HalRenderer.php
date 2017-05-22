@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\AbstractRequest;
 use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
@@ -16,6 +17,7 @@ use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
+use Psr\Log\LoggerInterface;
 
 /**
  * HAL(Hypertext Application Language) renderer
@@ -38,6 +40,11 @@ class HalRenderer implements RenderInterface
     private $resource;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param Reader          $reader
      * @param RouterInterface $router
      */
@@ -55,8 +62,8 @@ class HalRenderer implements RenderInterface
     {
         if (isset($ro->headers['Location']) && ($ro->body === null || $ro->body === '')) {
             $ro->view = $this->getLocatedView($ro);
-
-            return $ro->view;
+//
+//            return $ro->view;
         }
         list($ro, $body) = $this->valuate($ro);
         $method = 'on' . ucfirst($ro->uri->method);
@@ -210,7 +217,11 @@ class HalRenderer implements RenderInterface
     {
         $url = parse_url($ro->uri);
         $locationUri = sprintf('%s://%s%s', $url['scheme'], $url['host'], $ro->headers['Location']);
-        $locatedResource = $this->resource->uri($locationUri)->eager->request();
+        try {
+            $locatedResource = $this->resource->uri($locationUri)->eager->request();
+        } catch (\Exception $e) {
+            throw new LocationHeaderRequestException($locationUri, 0, $e);
+        }
         /* @var $locatedResource \BEAR\Resource\ResourceObject */
 
         return $locatedResource->toString();
