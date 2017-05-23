@@ -16,11 +16,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
      */
     private $resource;
 
-    /**
-     * @var HalRenderer
-     */
-    private $hal;
-
     public function setUp()
     {
         $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
@@ -171,10 +166,17 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         "self": {
             "href": "/post?id=10"
         },
-        "comment": {
+        "curies": [
+            {
+                "href": "http://api.example.com/docs/{rel}",
+                "name": "ht",
+                "templated": true
+            }
+        ],
+        "ht:comment": {
             "href": "/comments/?id=10"
         },
-        "category": {
+        "ht:category": {
             "href": "/category/?id=10"
         },
         "test": {

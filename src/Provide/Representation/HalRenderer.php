@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Package\Annotation\Curies;
 use BEAR\Package\Annotation\ReturnCreatedResource;
 use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\AbstractRequest;
@@ -35,9 +36,15 @@ class HalRenderer implements RenderInterface
     private $router;
 
     /**
-     * @var
+     * @var ResourceInterface
      */
     private $resource;
+
+    /**
+     * @var Curies
+     *
+     */
+    private $curies;
 
     /**
      * @param Reader          $reader
@@ -63,6 +70,7 @@ class HalRenderer implements RenderInterface
             return '';
         }
         $annotations = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method)) : [];
+        $this->curies = $this->reader->getClassAnnotation(new \ReflectionClass($ro), Curies::class);
         $isReturnCreatedResource = $ro->code === 201 && isset($ro->headers['Location']) && $ro->uri->method === 'post' && $this->hasReturnCreatedResourceAnnotation($annotations);
         if ($isReturnCreatedResource) {
             $ro->view = $this->getLocatedView($ro);
@@ -190,24 +198,27 @@ class HalRenderer implements RenderInterface
 
     /**
      * @param array $body
-     * @param array $links
+     * @param array $methodAnnotations
      * @param Hal   $hal
      *
      * @internal param Uri $uri
      */
-    private function getHalLink(array $body, array $links, Hal $hal)
+    private function getHalLink(array $body, array $methodAnnotations, Hal $hal)
     {
-        foreach ($links as $link) {
-            if (! $link instanceof Link) {
+        if ($this->curies instanceof Curies) {
+            $hal->addCurie($this->curies->name, $this->curies->href);
+        }
+        foreach ($methodAnnotations as $annotation) {
+            if (! $annotation instanceof Link) {
                 continue;
             }
-            $uri = uri_template($link->href, $body);
+            $uri = uri_template($annotation->href, $body);
             $reverseUri = $this->getReverseMatchedLink($uri);
-            $hal->addLink($link->rel, $reverseUri);
+            $hal->addLink($annotation->rel, $reverseUri);
         }
         if (isset($body['_links'])) {
-            foreach ($body['_links'] as $rel => $link) {
-                $hal->addLink($rel, $link);
+            foreach ($body['_links'] as $rel => $annotation) {
+                $hal->addLink($rel, $annotation);
             }
         }
     }
