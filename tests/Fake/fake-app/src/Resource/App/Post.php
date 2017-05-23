@@ -1,6 +1,7 @@
 <?php
 namespace FakeVendor\HelloWorld\Resource\App;
 
+use BEAR\Package\Annotation\ReturnCreatedResource;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\ResourceInject;
@@ -21,6 +22,9 @@ class Post extends ResourceObject
         return $this;
     }
 
+    /**
+     * @ReturnCreatedResource
+     */
     public function onPost()
     {
         $this->code = 201;

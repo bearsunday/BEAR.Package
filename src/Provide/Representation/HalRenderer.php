@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Package\Annotation\ReturnCreatedResource;
 use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\AbstractRequest;
 use BEAR\Resource\AbstractUri;
@@ -54,12 +55,6 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
-        if ($ro->code === 201 && isset($ro->headers['Location']) && ($ro->body === null || $ro->body === '')) {
-            $ro->view = $this->getLocatedView($ro);
-
-            return $ro->view;
-        }
-        list($ro, $body) = $this->valuate($ro);
         $method = 'on' . ucfirst($ro->uri->method);
         $hasMethod = method_exists($ro, $method);
         if (! $hasMethod) {
@@ -68,6 +63,13 @@ class HalRenderer implements RenderInterface
             return '';
         }
         $annotations = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method)) : [];
+        $isReturnCreatedResource = $ro->code === 201 && isset($ro->headers['Location']) && $ro->uri->method === 'post' && $this->hasReturnCreatedResourceAnnotation($annotations);
+        if ($isReturnCreatedResource) {
+            $ro->view = $this->getLocatedView($ro);
+
+            return $ro->view;
+        }
+        list($ro, $body) = $this->valuate($ro);
         /* @var $annotations Link[] */
         /* @var $ro ResourceObject */
         $hal = $this->getHal($ro->uri, $body, $annotations);
@@ -75,6 +77,20 @@ class HalRenderer implements RenderInterface
         $this->updateHeaders($ro);
 
         return $ro->view;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasReturnCreatedResourceAnnotation(array $annotations)
+    {
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof ReturnCreatedResource) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
