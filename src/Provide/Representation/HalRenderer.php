@@ -17,7 +17,6 @@ use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
-use Psr\Log\LoggerInterface;
 
 /**
  * HAL(Hypertext Application Language) renderer
@@ -57,6 +56,7 @@ class HalRenderer implements RenderInterface
     {
         if ($ro->code === 201 && isset($ro->headers['Location']) && ($ro->body === null || $ro->body === '')) {
             $ro->view = $this->getLocatedView($ro);
+
             return $ro->view;
         }
         list($ro, $body) = $this->valuate($ro);
