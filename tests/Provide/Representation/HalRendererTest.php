@@ -176,6 +176,9 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         },
         "category": {
             "href": "/category/?id=10"
+        },
+        "test": {
+            "href": "/test"
         }
     }
 }

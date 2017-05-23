@@ -205,6 +205,11 @@ class HalRenderer implements RenderInterface
             $reverseUri = $this->getReverseMatchedLink($uri);
             $hal->addLink($link->rel, $reverseUri);
         }
+        if (isset($body['_links'])) {
+            foreach ($body['_links'] as $rel => $link) {
+                $hal->addLink($rel, $link);
+            }
+        }
     }
 
     /**

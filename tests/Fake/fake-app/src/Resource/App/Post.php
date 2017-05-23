@@ -18,6 +18,7 @@ class Post extends ResourceObject
     {
         $this['id'] = $id;
         $this['name'] = 'user_'  .$id;
+        $this['_links'] =['test' => '/test'];
 
         return $this;
     }
