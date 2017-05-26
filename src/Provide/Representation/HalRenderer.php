@@ -42,7 +42,6 @@ class HalRenderer implements RenderInterface
 
     /**
      * @var Curies
-     *
      */
     private $curies;
 
