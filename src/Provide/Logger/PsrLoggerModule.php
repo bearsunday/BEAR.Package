@@ -7,7 +7,6 @@
 namespace BEAR\Package\Provide\Logger;
 
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
