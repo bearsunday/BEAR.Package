@@ -25,12 +25,12 @@ class DevVndErrorPageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(500, $this->page->code);
         $this->assertArrayHasKey('content-type', $this->page->headers);
         $this->assertSame('application/vnd.error+json', $this->page->headers['content-type']);
-        $this->assertContains('{
+        $this->assertSame('{
     "message": "Internal Server Error",
-    "logref": "daa9d012",
+    "logref": "{logref}",
     "request": "get /",
     "exceptions": "LogicException(bear)",
-    "file": ' . __FILE__ . ':16"
+    "file": "' . __FILE__ . ':16"
 }', $this->page->view);
     }
 }

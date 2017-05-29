@@ -47,7 +47,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['content-type' => 'application/vnd.error+json'], FakeHttpResponder::$headers);
         $this->assertSame('{
     "message": "Internal Server Error",
-    "logref": "5097788e"
+    "logref": "{logref}"
 }', FakeHttpResponder::$content);
     }
 }

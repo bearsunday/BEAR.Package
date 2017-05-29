@@ -27,7 +27,7 @@ class ProdVndErrorPageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('application/vnd.error+json', $this->page->headers['content-type']);
         $this->assertSame('{
     "message": "Internal Server Error",
-    "logref": "226fff86"
+    "logref": "{logref}"
 }', $this->page->view);
     }
 }
