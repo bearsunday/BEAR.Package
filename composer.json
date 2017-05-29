@@ -22,7 +22,8 @@
         "bear/query-repository": "^1.2",
         "bear/sunday": "^1.1",
         "bear/resource": "^1.5",
-        "ray/web-param-module": "^1.0"
+        "ray/web-param-module": "^1.0",
+        "monolog/monolog": "^1.22"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
