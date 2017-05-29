@@ -24,15 +24,16 @@ class ExceptionAsString
     public function detail(\Exception $e, Request $request)
     {
         $eSummery = sprintf(
-            "[%s]\n%s\nin file %s on line %s\n\n%s",
+            "%s(%s)\n in file %s on line %s\n\n%s",
             get_class($e),
             $e->getMessage(),
             $e->getFile(),
             $e->getLine(),
             $e->getTraceAsString()
         );
+        $trace = print_r($e->getTrace(), true);
 
-        return sprintf("%s\n%s\n\n%s\n%s", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER));
+        return sprintf("%s\n%s\n\n%s\n%s\nTrace\n%s\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER), $trace);
     }
 
     /**
@@ -43,7 +44,7 @@ class ExceptionAsString
     private function getPhpVariables(array $server)
     {
         if (PHP_SAPI === 'cli') {
-            return '';
+//            return '';
         }
 
         return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true)); // @codeCoverageIgnore
