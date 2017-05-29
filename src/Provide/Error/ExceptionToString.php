@@ -21,21 +21,18 @@ final class ExceptionToString
         $date = date(DATE_RFC2822);
         $exceptions = $this->getExceptionString($e);
         $phpVal = $this->getPhpVariables($_SERVER);
-        $trace = print_r($e->getTrace(), true);
+        $trace = $e->getTraceAsString() . PHP_EOL . print_r($e->getTrace(), true);
 
         return <<<EOT
-Request:
-
-"{$request}" at {$date}
+{$date}
+{$request}
 
 Exceptions:
 
 {$exceptions}
-
 PHP Variables:
 
 {$phpVal}
-
 Trace:
 
 {$trace}
@@ -47,7 +44,7 @@ EOT;
     private function getExceptionString(\Exception $e, $string = '')
     {
         $string .= sprintf(
-            "%s(%s) in file %s on line %s\n",
+            "%s(%s) in %s(%s)\n",
             get_class($e),
             $e->getMessage(),
             $e->getFile(),
