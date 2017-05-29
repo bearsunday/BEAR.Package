@@ -3,3 +3,5 @@ composer.lock
 vendor
 build
 .php_cs.cache
+tests/Fake/fake-app/var/log/*
+tests/Fake/fake-app/var/tmp/*
