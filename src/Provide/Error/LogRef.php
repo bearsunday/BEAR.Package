@@ -37,5 +37,9 @@ final class LogRef
         $logRefFile = sprintf('%s/e.%s.log', $appMeta->logDir, $this->ref);
         $log = $this->exceptionString->__invoke($e, $request);
         file_put_contents($logRefFile, $log);
+        $linkFile = dirname($logRefFile) . '/last.log';
+        if (is_writable($logRefFile) && unlink($linkFile)) {
+            symlink($logRefFile, $linkFile);
+        }
     }
 }
