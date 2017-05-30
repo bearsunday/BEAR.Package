@@ -71,7 +71,8 @@ EOT;
             'POST' => $_POST,
             'COOKIE' => $_COOKIE,
             'FILES' => $_FILES,
-            'SERVER' => $_SERVER
+            'SERVER' => $_SERVER,
+            'app' => $GLOBALS['app']
         ];
 
         return print_r($phpGlobals, true);
