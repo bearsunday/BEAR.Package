@@ -90,9 +90,9 @@ EOT;
 
     private function getClassTrace(array $trace, $index)
     {
-        $trace = sprintf('#%d %s%s%s(%s)', $index, $trace['class'], $trace['type'], $trace['function'], $this->argsAsString($trace['args']));
+        $string = sprintf('#%d %s%s%s(%s)', $index, $trace['class'], $trace['type'], $trace['function'], $this->argsAsString($trace['args']));
 
-        return isset($trace['file']) ? $trace . sprintf(' in %s(%s)', $trace['file'], $trace['line']) : '';
+        return isset($trace['file']) ? $string . sprintf(' in %s(%s)', $trace['file'], $trace['line']) : $string;
     }
 
     private function getFunctionTrace(array $trace, $index)
