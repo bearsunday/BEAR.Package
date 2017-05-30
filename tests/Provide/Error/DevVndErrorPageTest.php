@@ -30,7 +30,7 @@ class DevVndErrorPageTest extends \PHPUnit_Framework_TestCase
     "logref": "{logref}",
     "request": "get /",
     "exceptions": "LogicException(bear)",
-    "file": "' . __FILE__ . ':16"
+    "file": "' . __FILE__ . '(16)"
 }', $this->page->view);
     }
 }
