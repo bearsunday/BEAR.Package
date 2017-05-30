@@ -24,7 +24,7 @@ final class LogRef
     public function __construct(\Exception $e)
     {
         $this->ref = (string) hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
-        $this->exceptionString = new ExceptionToString;
+        $this->exceptionString = new ExceptionAsString;
     }
 
     public function __toString()
@@ -32,11 +32,6 @@ final class LogRef
         return $this->ref;
     }
 
-    /**
-     * @param \Exception  $e
-     * @param RouterMatch $request
-     * @param             $logRef
-     */
     public function log(\Exception $e, RouterMatch $request, AbstractAppMeta $appMeta)
     {
         $logRefFile = sprintf('%s/e.%s.log', $appMeta->logDir, $this->ref);

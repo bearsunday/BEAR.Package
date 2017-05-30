@@ -35,7 +35,7 @@ final class DevVndErrorPage extends ResourceObject
     /**
      * @param \Exception  $e
      * @param RouterMatch $request
-     * @param int         $code
+     * @param Status      $status
      *
      * @return array
      */

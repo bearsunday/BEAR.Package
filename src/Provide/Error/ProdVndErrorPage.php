@@ -35,12 +35,13 @@ final class ProdVndErrorPage extends ResourceObject
     /**
      * @param \Exception  $e
      * @param RouterMatch $request
-     * @param int         $code
+     * @param Status      $status
      *
      * @return array
      */
     private function getResponseBody(\Exception $e, RouterMatch $request, Status $status)
     {
+        unset($request);
         $body = ['message' => $status->text];
         if ($status->code >= 500) {
             $body['logref'] = (string) new LogRef($e);
