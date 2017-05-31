@@ -16,6 +16,7 @@ use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
+use Psr\Log\LoggerInterface;
 use Ray\Compiler\ScriptInjector;
 
 /**
@@ -68,7 +69,10 @@ final class Bootstrap
         // save singleton instance cache
         $scriptInjector->getInstance(Reader::class);
         $scriptInjector->getInstance(Cache::class);
+        $scriptInjector->getInstance(LoggerInterface::class);
         $scriptInjector->getInstance(ResourceInterface::class);
+        $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
+        file_put_contents($log, print_r($app, true));
         $cache->save($appId, [$app, $scriptInjector]);
 
         return $app;

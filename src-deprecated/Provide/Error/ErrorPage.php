@@ -8,6 +8,9 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\ResourceObject;
 
+/**
+ * @deprecated
+ */
 class ErrorPage extends ResourceObject
 {
     /**

@@ -13,6 +13,8 @@ class VndErrorModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind(ErrorInterface::class)->to(VndErrorHandler::class);
+        $this->bind(ErrorLogger::class);
+        $this->bind(ErrorInterface::class)->to(ErrorHandler::class);
+        $this->bind(ErrorPageFactoryInterface::class)->to(DevVndErrorPageFactory::class);
     }
 }
