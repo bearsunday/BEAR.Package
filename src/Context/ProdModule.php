@@ -33,6 +33,8 @@ class ProdModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
+        $this->bind(LoggerInterface::class)->toProvider(ProdMonologProviver::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         if (PHP_SAPI !== 'cli' && function_exists('apcu_fetch') && class_exists(ApcuCache::class)) {
             $this->installApcuCache(ApcuCache::class);
@@ -40,8 +42,6 @@ class ProdModule extends AbstractModule
             return;
         }
         $this->installFileCache();
-        $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
-        $this->bind(LoggerInterface::class)->toProvider(ProdMonologProviver::class)->in(Scope::SINGLETON);
     }
 
     /**
