@@ -73,9 +73,6 @@ EOT;
             'FILES' => $_FILES,
             'SERVER' => $_SERVER
         ];
-        if (isset($GLOBALS['app'])) {
-            $phpGlobals['app'] = print_r($GLOBALS['app'], true);
-        }
 
         return print_r($phpGlobals, true);
     }

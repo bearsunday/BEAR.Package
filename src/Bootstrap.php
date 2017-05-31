@@ -71,6 +71,8 @@ final class Bootstrap
         $scriptInjector->getInstance(Cache::class);
         $scriptInjector->getInstance(LoggerInterface::class);
         $scriptInjector->getInstance(ResourceInterface::class);
+        $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
+        file_put_contents($log, print_r($app, true));
         $cache->save($appId, [$app, $scriptInjector]);
 
         return $app;
