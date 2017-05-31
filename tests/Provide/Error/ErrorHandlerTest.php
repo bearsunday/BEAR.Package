@@ -48,6 +48,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('{
     "message": "Internal Server Error",
     "logref": "{logref}"
-}', FakeHttpResponder::$content);
+}
+', FakeHttpResponder::$content);
     }
 }

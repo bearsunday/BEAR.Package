@@ -28,6 +28,7 @@ class ProdVndErrorPageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('{
     "message": "Internal Server Error",
     "logref": "{logref}"
-}', $this->page->view);
+}
+', $this->page->view);
     }
 }

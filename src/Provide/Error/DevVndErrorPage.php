@@ -21,7 +21,7 @@ final class DevVndErrorPage extends ResourceObject
 
     public function toString()
     {
-        $this->view = json_encode($this->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $this->view = json_encode($this->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
     }
 
     /**
