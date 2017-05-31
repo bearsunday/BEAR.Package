@@ -4,12 +4,10 @@ namespace BEAR\Package;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\WebRouter;
-use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
-use Ray\Di\Injector;
 
 class HalRendererTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,22 +16,14 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
      */
     private $resource;
 
-    /**
-     * @var HalRenderer
-     */
-    private $hal;
-
     public function setUp()
     {
-        $router = new WebRouter('page://self', new HttpMethodParams());
-        $this->hal = new HalRenderer(new AnnotationReader, $router);
-        $this->resource = (new Injector(new ResourceModule('FakeVendor\HelloWorld')))->getInstance(ResourceInterface::class);
+        $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
     }
 
     public function testRender()
     {
         $ro = $this->resource->get->uri('app://self/user')->withQuery(['id' => 1, 'type' => 'type_a'])->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "id": 1,
@@ -58,7 +48,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testRenderPost()
     {
         $ro = $this->resource->post->uri('app://self/user')->withQuery(['id' => 1])->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "id": 1,
@@ -79,25 +68,13 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testRenderEmbed()
     {
         $ro = $this->resource->get->uri('page://self/emb')->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "_embedded": {
         "user": {
             "id": "1",
             "friend_id": "f1",
-            "org_id": "o1",
-            "_links": {
-                "self": {
-                    "href": "/user?id=1"
-                },
-                "friend": {
-                    "href": "/friend?id=f1"
-                },
-                "org": {
-                    "href": "/org?id=o1"
-                }
-            }
+            "org_id": "o1"
         }
     },
     "_links": {
@@ -113,7 +90,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testRenderScalar()
     {
         $ro = $this->resource->get->uri('app://self/scalar')->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '{
     "value": "ak",
@@ -130,7 +106,6 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
     public function testOptions()
     {
         $ro = $this->resource->options->uri('app://self/scalar')->eager->request();
-        $ro->setRenderer($this->hal);
         $result = (string) $ro;
         $expect = '';
         $this->assertSame($expect, $result);
@@ -138,12 +113,14 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter);
+        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
         $ro = new Task;
+        $ro->onPost();
         $ro->uri = new Uri('app://self/task');
-        $ro->uri->method = 'get';
+        $ro->uri->method = 'post';
         $hal = $halRenderer->render($ro);
         $expected = '{
+    "dummy_not_for_rendering": "1",
     "_links": {
         "self": {
             "href": "/task"
@@ -156,13 +133,14 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter);
+        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
-        $ro->uri->method = 'get';
-        $ro = $ro->onGet(1);
+        $ro->uri->method = 'post';
+        $ro = $ro->onPost(1);
         $hal = $halRenderer->render($ro);
         $expected = '{
+    "dummy_not_for_rendering": "1",
     "_links": {
         "self": {
             "href": "/task/1"
@@ -174,5 +152,41 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         $location = $ro->headers['Location'];
         $expected = '/task/10';
         $this->assertSame($expected, $location);
+    }
+
+    public function test201Created()
+    {
+        $ro = $this->resource->post->uri('app://self/post')->eager->request();
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        $result = (string) $ro;
+        $expect = '{
+    "id": "10",
+    "name": "user_10",
+    "_links": {
+        "self": {
+            "href": "/post?id=10"
+        },
+        "curies": [
+            {
+                "href": "http://api.example.com/docs/{rel}",
+                "name": "ht",
+                "templated": true
+            }
+        ],
+        "ht:comment": {
+            "href": "/comments/?id=10"
+        },
+        "ht:category": {
+            "href": "/category/?id=10"
+        },
+        "test": {
+            "href": "/test"
+        }
+    }
+}
+';
+        $this->assertSame($expect, $result);
+        $this->assertSame(201, $ro->code);
+        $this->assertSame('/post?id=10', $ro->headers['Location']);
     }
 }

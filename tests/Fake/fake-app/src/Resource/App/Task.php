@@ -5,10 +5,11 @@ use BEAR\Resource\ResourceObject;
 
 class Task extends ResourceObject
 {
-    public function onGet($id = null)
+    public function onPost($id = null)
     {
         unset($id);
-        $this->headers['Location'] = '/self?id=10';
+        $this->headers['Location'] = '/?id=10';
+        $this['dummy_not_for_rendering'] = "1";
 
         return $this;
     }
