@@ -21,9 +21,7 @@
         "bear/app-meta": "^1.1",
         "bear/query-repository": "^1.3.1",
         "bear/sunday": "^1.1.1",
-        "bear/resource": "^1.5.3",
-        "ray/web-param-module": "^1.0.1",
-        "ray/di": "^2.5.2",
+        "bear/resource": "^1.6.0",
         "monolog/monolog": "^1.22"
     },
     "require-dev": {
