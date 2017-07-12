@@ -21,7 +21,6 @@ use BEAR\Sunday\Provide\Error\ErrorPage as SundayErrorPage;
  * vnd.error for BEAR.Package
  *
  * @see https://github.com/blongden/vnd.error
- *
  * @deprecated
  */
 class VndErrorHandler implements ErrorInterface

@@ -1,9 +1,12 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package;
 
 use BEAR\Package\Provide\Representation\HalRenderer;
-use BEAR\Package\Provide\Router\HttpMethodParams;
-use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;

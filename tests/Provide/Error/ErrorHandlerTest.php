@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AppMeta;
@@ -41,7 +46,6 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransfer(ErrorHandler $handler)
     {
-
         $handler->transfer();
         $this->assertSame(500, FakeHttpResponder::$code);
         $this->assertSame(['content-type' => 'application/vnd.error+json'], FakeHttpResponder::$headers);

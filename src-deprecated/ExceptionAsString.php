@@ -44,7 +44,7 @@ class ExceptionAsString
     private function getPhpVariables(array $server)
     {
         if (PHP_SAPI === 'cli') {
-//            return '';
+            //            return '';
         }
 
         return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true)); // @codeCoverageIgnore

@@ -1,10 +1,12 @@
 <?php
-
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace MyVendor\MyApp\Module;
 
-use BEAR\AppMeta\AppMeta;
 use BEAR\Package\PackageModule;
-use BEAR\Package\Provide\Router\AuraRouterModule;
 use Ray\Di\AbstractModule;
 
 class AppModule extends AbstractModule

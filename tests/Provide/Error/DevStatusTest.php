@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\Exception\BadRequestException;
@@ -23,21 +28,21 @@ class DevStatusTest extends \PHPUnit_Framework_TestCase
     public function testRuntimeException()
     {
         $e = new \RuntimeException();
-        $status =  new Status($e);
+        $status = new Status($e);
         $this->assertSame(503, $status->code);
     }
 
     public function testBadRequest()
     {
         $e = new BadRequestException;
-        $status =  new Status($e);
+        $status = new Status($e);
         $this->assertSame(400, $status->code);
     }
 
     public function testNotFound()
     {
         $e = new ResourceNotFoundException('/__not_found__');
-        $status =  new Status($e);
+        $status = new Status($e);
         $this->assertSame(404, $status->code);
     }
 }
