@@ -40,6 +40,9 @@
             "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
         }
     },
+    "bin": [
+        "bin/bear.compile"
+    ],
     "scripts" :{
         "test": ["@cs", "phpunit"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
