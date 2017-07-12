@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Warm-up script for deployment
+ *
+ * * Save $app application object
+ * * Create all resource factory code and AOP class
+ * * Check all resource class injection
+ * * Save all resource class annotation
+ */
+use BEAR\Package\Compiler;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
+if ($argc !== 4) {
+    echo 'usage: bear.compile app_name context app_dir' . PHP_EOL;
+    echo 'example: bear.compile \'MyVendor\MyProject\' prod-html-app /path/to/project' . PHP_EOL;
+    exit(1);
+}
+list(, $appName, $context, $appDir) = $argv;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+$loader = require $appDir . '/vendor/autoload.php';
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+
+(new Compiler)->__invoke($appName, $context, $appDir);
