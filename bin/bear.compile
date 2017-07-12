@@ -4,6 +4,8 @@
 /**
  * Warm-up script for deployment
  *
+ * Usage: bear.compile \'MyVendor\MyProject\' prod-html-app /path/to/project
+ *
  * * Save $app application object
  * * Create all resource factory code and AOP class
  * * Check all resource class injection
@@ -14,7 +16,6 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 if ($argc !== 4) {
     echo 'usage: bear.compile app_name context app_dir' . PHP_EOL;
-    echo 'example: bear.compile \'MyVendor\MyProject\' prod-html-app /path/to/project' . PHP_EOL;
     exit(1);
 }
 list(, $appName, $context, $appDir) = $argv;
