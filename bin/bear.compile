@@ -8,8 +8,8 @@
  *
  * * Save $app application object
  * * Create all resource factory code and AOP class
- * * Check all resource class injection
- * * Save all resource class annotation
+ * * Check dependency injection for all resource class
+ * * Save annotation cache for all resource
  */
 use BEAR\Package\Compiler;
 use Doctrine\Common\Annotations\AnnotationRegistry;
