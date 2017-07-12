@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package\Provide\Router;
 
 class WebRouterTest extends \PHPUnit_Framework_TestCase

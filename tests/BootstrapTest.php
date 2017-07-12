@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AppMeta;
@@ -8,7 +13,6 @@ use BEAR\Package\Provide\Transfer\CliResponder;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
 use FakeVendor\HelloWorld\Module\AppModule;
 

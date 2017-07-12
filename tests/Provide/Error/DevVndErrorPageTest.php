@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch;
@@ -25,13 +30,11 @@ class DevVndErrorPageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(500, $this->page->code);
         $this->assertArrayHasKey('content-type', $this->page->headers);
         $this->assertSame('application/vnd.error+json', $this->page->headers['content-type']);
-        $this->assertSame('{
+        $this->assertContains('{
     "message": "Internal Server Error",
     "logref": "{logref}",
     "request": "get /",
     "exceptions": "LogicException(bear)",
-    "file": "' . __FILE__ . '(16)"
-}
-', $this->page->view);
+    "file": "' . __FILE__, $this->page->view);
     }
 }
