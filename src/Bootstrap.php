@@ -14,6 +14,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
 use Psr\Log\LoggerInterface;
@@ -84,7 +85,7 @@ final class Bootstrap
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
      *
-     * @return ApcuCache|FilesystemCache|VoidCache
+     * @return Cache
      */
     private function getCache(AbstractAppMeta $appMeta, $contexts)
     {
@@ -92,10 +93,11 @@ final class Bootstrap
         if ($isDeveop) {
             return new VoidCache;
         }
-        if (PHP_SAPI !== 'cli' && function_exists('apcu_fetch')) {
-            return new ApcuCache; // @codeCoverageIgnore
+        $fileCache = new FilesystemCache($appMeta->tmpDir);
+        if (function_exists('apcu_fetch')) {
+            return new ChainCache([new ApcuCache, $fileCache]); // @codeCoverageIgnore
         }
 
-        return new FilesystemCache($appMeta->tmpDir); // @codeCoverageIgnore
+        return $fileCache; // @codeCoverageIgnore
     }
 }
