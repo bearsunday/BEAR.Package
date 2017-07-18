@@ -21,11 +21,6 @@ if ($argc !== 4) {
 list(, $appName, $context, $appDir) = $argv;
 
 // installed via composer?
-if (file_exists($a = dirname(dirname(dirname(__DIR__))) . '/autoload.php')) {
-    require $a;
-} else {
-    require __DIR__ . '/vendor/autoload.php';
-}
 
 $loader = require $appDir . '/vendor/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
