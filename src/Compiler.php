@@ -7,12 +7,18 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AppMeta;
+use BEAR\Resource\Exception\ParameterException;
+use BEAR\Resource\NamedParameterInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Ray\Di\InjectorInterface;
 
 final class Compiler
 {
     /**
+     * Compile application
+     *
      * @param string $appName application name "MyVendor|MyProject"
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
@@ -24,19 +30,56 @@ final class Compiler
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);
         /* @var $reader \Doctrine\Common\Annotations\Reader */
+        $namedParams = $injector->getInstance(NamedParameterInterface::class);
+        /* @var $namedParams NamedParameterInterface */
 
         // create DI factory class and AOP compiled class for all resources and save $app cache.
         (new Bootstrap)->newApp($appMeta, $context, $cache);
 
         // check resource injection and create annotation cache
-        foreach ($appMeta->getResourceListGenerator() as list($class)) {
-            $injector->getInstance($class);
-            $refClass = new \ReflectionClass($class);
-            $reader->getClassAnnotations($refClass);
-            $methods = (new \ReflectionClass($refClass))->getMethods();
-            foreach ($methods as $method) {
-                $reader->getMethodAnnotations($method);
+        foreach ($appMeta->getResourceListGenerator() as list($className)) {
+            $this->scanClass($injector, $reader, $namedParams, $className);
+        }
+    }
+
+    /**
+     * @param InjectorInterface       $injector
+     * @param Reader                  $reader
+     * @param NamedParameterInterface $namedParams
+     * @param string                  $className
+     */
+    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, $className)
+    {
+        $instance = $injector->getInstance($className);
+        $class = new \ReflectionClass($className);
+        $reader->getClassAnnotations($class);
+        $methods = $class->getMethods();
+        foreach ($methods as $method) {
+            $methodName = $method->getName();
+            if ($this->isMagicMethod($methodName)) {
+                continue;
             }
+            $this->saveNamedParam($namedParams, $instance, $methodName);
+            // method annotation
+            $reader->getMethodAnnotations($method);
+        }
+    }
+
+    private function isMagicMethod($method)
+    {
+        return in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
+    }
+
+    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, $method)
+    {
+        // named parameter
+        if (! in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
+            return;
+        }
+        try {
+            $namedParameter->getParameters([$instance, $method], []);
+        } catch (ParameterException $e) {
+            return;
         }
     }
 }
