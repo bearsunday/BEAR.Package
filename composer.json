@@ -22,8 +22,7 @@
         "bear/query-repository": "^1.3.1",
         "bear/sunday": "^1.1.1",
         "bear/resource": "^1.6.0",
-        "monolog/monolog": "^1.22",
-        "symfony/polyfill-apcu": "^1.4"
+        "monolog/monolog": "^1.22"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
@@ -39,7 +38,8 @@
         "psr-4": {
             "BEAR\\Package\\": ["tests/", "tests/Fake//"],
             "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
-        }
+        },
+        "files": ["src-files/apcu.php"]
     },
     "bin": [
         "bin/bear.compile"
