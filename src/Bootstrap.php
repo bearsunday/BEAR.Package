@@ -61,7 +61,7 @@ final class Bootstrap
     {
         $cache = $cache ?: $this->getCache($appMeta, $contexts);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
-        list($app, $scriptInjector) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
+        list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app && $app instanceof AbstractApp) {
             return $app;
         }
@@ -74,6 +74,7 @@ final class Bootstrap
         $scriptInjector->getInstance(ResourceInterface::class);
         $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
         file_put_contents($log, print_r($app, true));
+        // save $app with injector to for singleton instance (ScriptInjector::$singleton)
         $cache->save($appId, [$app, $scriptInjector]);
 
         return $app;
