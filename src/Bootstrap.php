@@ -49,7 +49,7 @@ final class Bootstrap
     }
 
     /**
-     * Return application instance by AppMeta and Cache
+     * Return cached contextual application instance
      *
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
@@ -59,42 +59,24 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
-        $cache = $cache ?: $this->getCache($appMeta, $contexts);
+        $cache = $cache ?: (is_int(strpos($contexts, 'prod')) ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
         list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app && $app instanceof AbstractApp) {
             return $app;
         }
         $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
-        $scriptInjector = new ScriptInjector($appMeta->tmpDir);
+        $injector = new ScriptInjector($appMeta->tmpDir);
         // save singleton instance cache
-        $scriptInjector->getInstance(Reader::class);
-        $scriptInjector->getInstance(Cache::class);
-        $scriptInjector->getInstance(LoggerInterface::class);
-        $scriptInjector->getInstance(ResourceInterface::class);
+        $injector->getInstance(Reader::class);
+        $injector->getInstance(Cache::class);
+        $injector->getInstance(LoggerInterface::class);
+        $injector->getInstance(ResourceInterface::class);
         $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
         file_put_contents($log, print_r($app, true));
-        // save $app with injector to for singleton instance (ScriptInjector::$singleton)
-        $cache->save($appId, [$app, $scriptInjector]);
+        // save $app with injector to save singleton instance (in ScriptInjector::$singletons)
+        $cache->save($appId, [$app, $injector]);
 
         return $app;
-    }
-
-    /**
-     * Return contextual cache
-     *
-     * @param AbstractAppMeta $appMeta
-     * @param string          $contexts
-     *
-     * @return Cache
-     */
-    private function getCache(AbstractAppMeta $appMeta, $contexts)
-    {
-        $isDeveop = ! is_int(strpos($contexts, 'prod'));
-        if ($isDeveop) {
-            return new VoidCache;
-        }
-
-        return new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]);
     }
 }
