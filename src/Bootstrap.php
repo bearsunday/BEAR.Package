@@ -14,6 +14,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
 use Psr\Log\LoggerInterface;
@@ -48,7 +49,7 @@ final class Bootstrap
     }
 
     /**
-     * Return application instance by AppMeta and Cache
+     * Return cached contextual application instance
      *
      * @param AbstractAppMeta $appMeta
      * @param string          $contexts
@@ -58,44 +59,25 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
-        $cache = $cache ?: $this->getCache($appMeta, $contexts);
-        $appId = $appMeta->name . $contexts;
-        list($app, $scriptInjector) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
+        $isCacheable = is_int(strpos($contexts, 'prod-')) || is_int(strpos($contexts, 'stage-'));
+        $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
+        $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
+        list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app && $app instanceof AbstractApp) {
             return $app;
         }
         $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
-        $scriptInjector = new ScriptInjector($appMeta->tmpDir);
+        $injector = new ScriptInjector($appMeta->tmpDir);
         // save singleton instance cache
-        $scriptInjector->getInstance(Reader::class);
-        $scriptInjector->getInstance(Cache::class);
-        $scriptInjector->getInstance(LoggerInterface::class);
-        $scriptInjector->getInstance(ResourceInterface::class);
+        $injector->getInstance(Reader::class);
+        $injector->getInstance(Cache::class);
+        $injector->getInstance(LoggerInterface::class);
+        $injector->getInstance(ResourceInterface::class);
         $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
         file_put_contents($log, print_r($app, true));
-        $cache->save($appId, [$app, $scriptInjector]);
+        // save $app with injector to save singleton instance (in ScriptInjector::$singletons)
+        $cache->save($appId, [$app, $injector]);
 
         return $app;
-    }
-
-    /**
-     * Return contextual cache
-     *
-     * @param AbstractAppMeta $appMeta
-     * @param string          $contexts
-     *
-     * @return ApcuCache|FilesystemCache|VoidCache
-     */
-    private function getCache(AbstractAppMeta $appMeta, $contexts)
-    {
-        $isDeveop = ! is_int(strpos($contexts, 'prod'));
-        if ($isDeveop) {
-            return new VoidCache;
-        }
-        if (PHP_SAPI !== 'cli' && function_exists('apcu_fetch')) {
-            return new ApcuCache; // @codeCoverageIgnore
-        }
-
-        return new FilesystemCache($appMeta->tmpDir); // @codeCoverageIgnore
     }
 }
