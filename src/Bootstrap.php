@@ -59,7 +59,8 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
     {
-        $cache = $cache ?: (is_int(strpos($contexts, 'prod')) ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
+        $isCacheable = is_int(strpos($contexts, 'prod-')) || is_int(strpos($contexts, 'stage-'));
+        $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
         list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app && $app instanceof AbstractApp) {
