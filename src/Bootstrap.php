@@ -94,11 +94,7 @@ final class Bootstrap
         if ($isDeveop) {
             return new VoidCache;
         }
-        $fileCache = new FilesystemCache($appMeta->tmpDir);
-        if (function_exists('apcu_fetch')) {
-            return new ChainCache([new ApcuCache, $fileCache]); // @codeCoverageIgnore
-        }
 
-        return $fileCache; // @codeCoverageIgnore
+        return new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]);
     }
 }
