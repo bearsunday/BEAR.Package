@@ -32,14 +32,14 @@
     "autoload": {
         "psr-4": {
             "BEAR\\Package\\": ["src/", "src-deprecated"]
-        }
+        },
+        "files": ["src-files/apcu.php"]
     },
     "autoload-dev": {
         "psr-4": {
             "BEAR\\Package\\": ["tests/", "tests/Fake//"],
             "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
-        },
-        "files": ["src-files/apcu.php"]
+        }
     },
     "bin": [
         "bin/bear.compile"
