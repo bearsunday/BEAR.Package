@@ -33,7 +33,8 @@
         "psr-4": {
             "BEAR\\Package\\": ["src/", "src-deprecated"]
         },
-        "files": ["src-files/apcu.php"]
+        "files": ["src-files/apcu.php"],
+        "exclude-from-classmap": ["/src-deprecated/", "/tests/", "/docs/"]
     },
     "autoload-dev": {
         "psr-4": {
