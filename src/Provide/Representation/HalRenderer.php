@@ -216,8 +216,10 @@ class HalRenderer implements RenderInterface
             $hal->addLink($annotation->rel, $reverseUri);
         }
         if (isset($body['_links'])) {
-            foreach ($body['_links'] as $rel => $annotation) {
-                $hal->addLink($rel, $annotation);
+            foreach ($body['_links'] as $rel => $link) {
+                $attr = $link;
+                unset($attr['href']);
+                $hal->addLink($rel, $link['href'], $attr);
             }
         }
     }
