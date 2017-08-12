@@ -195,7 +195,7 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testLinksAlreadyExists()
     {
-        $ro = $this->resource->get->uri('app://self/link')->eager->request();
+        $ro = $this->resource->get->uri('app://self/hal')->eager->request();
         $result = (string) $ro;
         $expect = '{
     "message": "Welcome",
@@ -217,4 +217,5 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 }
 ';
         $this->assertSame($expect, $result);
-    }}
+    }
+}

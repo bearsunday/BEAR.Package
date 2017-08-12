@@ -3,7 +3,7 @@ namespace FakeVendor\HelloWorld\Resource\App;
 
 use BEAR\Resource\ResourceObject;
 
-class Link extends ResourceObject
+class Hal extends ResourceObject
 {
     public $body = [
         'message' => 'Welcome',
