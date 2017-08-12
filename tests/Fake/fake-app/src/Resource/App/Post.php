@@ -20,9 +20,13 @@ class Post extends ResourceObject
      */
     public function onGet($id)
     {
-        $this['id'] = $id;
-        $this['name'] = 'user_'  .$id;
-        $this['_links'] =['test' => '/test'];
+        $this->body = [
+            'id' => $id,
+            'name' => 'user_'  .$id,
+            '_links' => [
+                'test' => ['href' => '/test']
+            ]
+        ];
 
         return $this;
     }
