@@ -192,4 +192,29 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(201, $ro->code);
         $this->assertSame('/post?id=10', $ro->headers['Location']);
     }
+
+    public function testLinksAlreadyExists()
+    {
+        $ro = $this->resource->get->uri('app://self/link')->eager->request();
+        $result = (string) $ro;
+        $expect = '{
+    "message": "Welcome",
+    "_links": {
+        "self": {
+            "href": "/"
+        },
+        "curies": [
+            {
+                "href": "http://localhost:8080/docs/{?rel}",
+                "name": "pt",
+                "templated": true
+            }
+        ],
+        "pt:todo": {
+            "href": "/todo"
+        }
+    }
 }
+';
+        $this->assertSame($expect, $result);
+    }}
