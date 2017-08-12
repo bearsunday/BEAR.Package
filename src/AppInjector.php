@@ -64,7 +64,7 @@ final class AppInjector implements InjectorInterface
         try {
             $injector = $scriptInjector->getInstance(InjectorInterface::class);
         } catch (NotCompiled $e) {
-            $this->compile($module, $appMeta, $scriptDir);
+            $this->compile($module, $scriptDir);
             $injector = $scriptInjector->getInstance(InjectorInterface::class);
         }
 
@@ -74,11 +74,12 @@ final class AppInjector implements InjectorInterface
     /**
      * Compile dependencies
      *
-     * @param AbstractModule  $module
-     * @param AbstractAppMeta $appMeta
-     * @param string          $scriptDir
+     * @param AbstractModule $module
+     * @param string         $scriptDir
+     *
+     * @internal param AbstractAppMeta $appMeta
      */
-    private function compile(AbstractModule $module, AbstractAppMeta $appMeta, $scriptDir)
+    private function compile(AbstractModule $module, $scriptDir)
     {
         $compiler = new DiCompiler($module, $scriptDir);
         $compiler->compile();

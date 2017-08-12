@@ -8,7 +8,7 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 
-class ExceptionAsString
+final class ExceptionAsString
 {
     public function summery(\Exception $e, $log)
     {
@@ -31,9 +31,8 @@ class ExceptionAsString
             $e->getLine(),
             $e->getTraceAsString()
         );
-        $trace = print_r($e->getTrace(), true);
 
-        return sprintf("%s\n%s\n\n%s\n%s\nTrace\n%s\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER), $trace);
+        return sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 
     /**

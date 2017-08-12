@@ -35,7 +35,6 @@ X-BEAR-VERSION: Sunday
 content-type: application/json
 
 {"greeting":"Hello BEAR.Sunday"}
-
 EOT;
         $this->assertSame($expect, $actual);
     }

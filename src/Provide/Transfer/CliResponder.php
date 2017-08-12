@@ -33,6 +33,6 @@ class CliResponder implements TransferInterface
         // body
         $ob .= $resourceObject->view;
 
-        echo $ob . PHP_EOL;
+        echo $ob;
     }
 }
