@@ -73,6 +73,7 @@ class HalRenderer implements RenderInterface
         $isReturnCreatedResource = $ro->code === 201 && isset($ro->headers['Location']) && $ro->uri->method === 'post' && $this->hasReturnCreatedResourceAnnotation($annotations);
         if ($isReturnCreatedResource) {
             $ro->view = $this->getLocatedView($ro);
+            $this->updateHeaders($ro);
 
             return $ro->view;
         }
