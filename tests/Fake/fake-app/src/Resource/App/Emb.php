@@ -4,17 +4,18 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Resource\App;
+namespace FakeVendor\HelloWorld\Resource\App;
 
+use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\ResourceObject;
 
-class Website extends ResourceObject
+class Emb extends ResourceObject
 {
+    /**
+     * @Embed(rel="user", src="/user{?id}")
+     */
     public function onGet($id)
     {
-        $this['url'] = "http:://example.org/{$id}";
-        $this['id'] = $id;
-
         return $this;
     }
 }

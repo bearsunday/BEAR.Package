@@ -120,7 +120,7 @@ class HalRenderer implements RenderInterface
      */
     private function isDifferentSchema(ResourceObject $parentRo, ResourceObject $childRo) : bool
     {
-        return $parentRo->uri->host . $parentRo->uri->host !== $childRo->uri->scheme . $childRo->uri->host;
+        return $parentRo->uri->scheme . $parentRo->uri->host !== $childRo->uri->scheme . $childRo->uri->host;
     }
 
     private function getHal(AbstractUri $uri, array $body, array $annotations) : Hal

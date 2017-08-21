@@ -70,6 +70,39 @@ class HalRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderEmbed()
     {
+        $ro = $this->resource->get->uri('app://self/emb?id=1')->eager->request();
+        $result = (string) $ro;
+        $expect = '{
+    "_embedded": {
+        "user": {
+            "id": "1",
+            "friend_id": "f1",
+            "org_id": "o1",
+            "_links": {
+                "self": {
+                    "href": "/user?id=1"
+                },
+                "friend": {
+                    "href": "/friend?id=f1"
+                },
+                "org": {
+                    "href": "/org?id=o1"
+                }
+            }
+        }
+    },
+    "_links": {
+        "self": {
+            "href": "/emb?id=1"
+        }
+    }
+}
+';
+        $this->assertSame($expect, $result);
+    }
+
+    public function testNoEmbededLinksWhenSchemaIsDifferent()
+    {
         $ro = $this->resource->get->uri('page://self/emb')->eager->request();
         $result = (string) $ro;
         $expect = '{
