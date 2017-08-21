@@ -8,8 +8,9 @@ namespace BEAR\Package;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
+use PHPUnit\Framework\TestCase;
 
-class AppInjectorTest extends \PHPUnit_Framework_TestCase
+class AppInjectorTest extends TestCase
 {
     public function testGetInstance()
     {

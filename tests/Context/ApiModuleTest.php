@@ -7,9 +7,10 @@
 namespace BEAR\Package\Context;
 
 use BEAR\Sunday\Annotation\DefaultSchemeHost;
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
-class ApiModuleTest extends \PHPUnit_Framework_TestCase
+class ApiModuleTest extends TestCase
 {
     public function testModule()
     {

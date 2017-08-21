@@ -9,10 +9,11 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Context\ProdModule;
 use BEAR\Package\Provide\Logger\PsrLoggerModule;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Ray\Di\Injector;
 
-class PsrLoggerModuleTest extends \PHPUnit_Framework_TestCase
+class PsrLoggerModuleTest extends TestCase
 {
     public function testPsrLoggerModule()
     {

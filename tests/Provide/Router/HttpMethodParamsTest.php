@@ -6,7 +6,9 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-class HttpMethodParamsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class HttpMethodParamsTest extends TestCase
 {
     public function testGet()
     {

@@ -11,9 +11,10 @@ use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Module\Annotation\DoctrineAnnotationModule;
 use BEAR\Sunday\Provide\Router\RouterModule;
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
-class HalModuleTest extends \PHPUnit_Framework_TestCase
+class HalModuleTest extends TestCase
 {
     public function testModule()
     {

@@ -11,8 +11,9 @@ use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
+use PHPUnit\Framework\TestCase;
 
-class HalRendererTest extends \PHPUnit_Framework_TestCase
+class HalRendererTest extends TestCase
 {
     /**
      * @var ResourceInterface

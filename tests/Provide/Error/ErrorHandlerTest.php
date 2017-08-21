@@ -9,9 +9,10 @@ namespace BEAR\Package\Provide\Error;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlerTest extends TestCase
 {
     /**
      * @var ErrorHandler

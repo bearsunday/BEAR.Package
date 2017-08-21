@@ -8,8 +8,9 @@ namespace BEAR\Sunday\Provide\Transfer;
 
 use BEAR\Package\Provide\Transfer\CliResponder;
 use FakeVendor\HelloWorld\Resource\Page\Index;
+use PHPUnit\Framework\TestCase;
 
-class CliResponderTest extends \PHPUnit_Framework_TestCase
+class CliResponderTest extends TestCase
 {
     /**
      * @var HttpResponder

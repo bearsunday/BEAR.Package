@@ -7,8 +7,9 @@
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use PHPUnit\Framework\TestCase;
 
-class ProdVndErrorPageTest extends \PHPUnit_Framework_TestCase
+class ProdVndErrorPageTest extends TestCase
 {
     /**
      * @var DevVndErrorPage

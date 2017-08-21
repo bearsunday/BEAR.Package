@@ -9,8 +9,9 @@ namespace BEAR\Package\Provide\Error;
 use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use PHPUnit\Framework\TestCase;
 
-class DevStatusTest extends \PHPUnit_Framework_TestCase
+class DevStatusTest extends TestCase
 {
     /**
      * @var RouterMatch

@@ -12,9 +12,10 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Module\ProdModule;
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
-class NewAppTest extends \PHPUnit_Framework_TestCase
+class NewAppTest extends TestCase
 {
     public function testGetInstanceByHand()
     {

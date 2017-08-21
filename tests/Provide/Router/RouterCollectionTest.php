@@ -11,8 +11,9 @@ use BEAR\Package\Provide\Router\HttpMethodParams;
 use BEAR\Package\Provide\Router\RouterCollection;
 use BEAR\Package\Provide\Router\RouterCollectionProvider;
 use BEAR\Sunday\Provide\Router\WebRouter;
+use PHPUnit\Framework\TestCase;
 
-class RouterCollectionTest extends \PHPUnit_Framework_TestCase
+class RouterCollectionTest extends TestCase
 {
     /**
      * @var RouterCollection

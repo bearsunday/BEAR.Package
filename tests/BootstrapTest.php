@@ -15,8 +15,9 @@ use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\VoidCache;
 use FakeVendor\HelloWorld\Module\AppModule;
+use PHPUnit\Framework\TestCase;
 
-class BootstrapTest extends \PHPUnit_Framework_TestCase
+class BootstrapTest extends TestCase
 {
     /**
      * @var AppMeta

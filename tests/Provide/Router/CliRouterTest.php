@@ -7,8 +7,9 @@
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
+use PHPUnit\Framework\TestCase;
 
-class CliRouterTest extends \PHPUnit_Framework_TestCase
+class CliRouterTest extends TestCase
 {
     /**
      * @var CliRouter
@@ -94,7 +95,7 @@ class CliRouterTest extends \PHPUnit_Framework_TestCase
 
     public function testError()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $globals = [
             'argv' => [
                 'php',

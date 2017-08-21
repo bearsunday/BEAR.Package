@@ -6,7 +6,9 @@
  */
 namespace BEAR\Package\Provide\Error;
 
-class ErrorPageTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ErrorPageTest extends TestCase
 {
     private $errorPage;
 

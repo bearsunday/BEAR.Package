@@ -10,9 +10,10 @@ use BEAR\AppMeta\AppMeta;
 use BEAR\Package\AppMetaModule;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
-class ProdModuleTest extends \PHPUnit_Framework_TestCase
+class ProdModuleTest extends TestCase
 {
     public function testModule()
     {

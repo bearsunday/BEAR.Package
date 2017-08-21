@@ -6,7 +6,9 @@
  */
 namespace BEAR\Package;
 
-class CompilerTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class CompilerTest extends TestCase
 {
     public function testInvoke()
     {
