@@ -42,13 +42,7 @@ final class Compiler
         }
     }
 
-    /**
-     * @param InjectorInterface       $injector
-     * @param Reader                  $reader
-     * @param NamedParameterInterface $namedParams
-     * @param string                  $className
-     */
-    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, $className)
+    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className)
     {
         $instance = $injector->getInstance($className);
         $class = new \ReflectionClass($className);
@@ -65,12 +59,12 @@ final class Compiler
         }
     }
 
-    private function isMagicMethod($method)
+    private function isMagicMethod($method) : bool
     {
         return in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
-    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, $method)
+    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method)
     {
         // named parameter
         if (! in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
