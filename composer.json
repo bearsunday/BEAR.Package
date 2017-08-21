@@ -28,10 +28,10 @@
     },
     "autoload": {
         "psr-4": {
-            "BEAR\\Package\\": ["src/", "src-deprecated/"]
+            "BEAR\\Package\\": ["src/"]
         },
         "files": ["src-files/apcu.php"],
-        "exclude-from-classmap": ["/src-deprecated/", "/tests/", "/docs/"]
+        "exclude-from-classmap": ["/tests/", "/example/"]
     },
     "autoload-dev": {
         "psr-4": {
