@@ -24,22 +24,12 @@ final class ProdVndErrorPage extends ResourceObject
         $this->view = json_encode($this->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
     }
 
-    /**
-     * @return array
-     */
-    private function getHeader($code)
+    private function getHeader($code) : array
     {
         return ['content-type' => ($code >= 500) ? 'application/vnd.error+json' : 'application/json'];
     }
 
-    /**
-     * @param \Exception  $e
-     * @param RouterMatch $request
-     * @param Status      $status
-     *
-     * @return array
-     */
-    private function getResponseBody(\Exception $e, RouterMatch $request, Status $status)
+    private function getResponseBody(\Exception $e, RouterMatch $request, Status $status) : array
     {
         unset($request);
         $body = ['message' => $status->text];

@@ -87,10 +87,7 @@ class HalRenderer implements RenderInterface
         return $ro->view;
     }
 
-    /**
-     * @return bool
-     */
-    private function hasReturnCreatedResourceAnnotation(array $annotations)
+    private function hasReturnCreatedResourceAnnotation(array $annotations) : bool
     {
         foreach ($annotations as $annotation) {
             if ($annotation instanceof ReturnCreatedResource) {
@@ -101,9 +98,6 @@ class HalRenderer implements RenderInterface
         return false;
     }
 
-    /**
-     * @param \BEAR\Resource\ResourceObject $ro
-     */
     private function valuateElements(ResourceObject &$ro)
     {
         foreach ($ro->body as $key => &$embeded) {
@@ -122,26 +116,14 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * Return is different schema (page <-> app)
-     *
-     * @param ResourceObject $parentRo
-     * @param ResourceObject $childRo
-     *
-     * @return bool
+     * Return "is different schema" (page <-> app)
      */
-    private function isDifferentSchema(ResourceObject $parentRo, ResourceObject $childRo)
+    private function isDifferentSchema(ResourceObject $parentRo, ResourceObject $childRo) : bool
     {
         return $parentRo->uri->scheme . $parentRo->uri->host !== $childRo->uri->scheme . $childRo->uri->host;
     }
 
-    /**
-     * @param Uri   $uri
-     * @param array $body
-     * @param array $annotations
-     *
-     * @return Hal
-     */
-    private function getHal(AbstractUri $uri, array $body, array $annotations)
+    private function getHal(AbstractUri $uri, array $body, array $annotations) : Hal
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
@@ -154,11 +136,9 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * @param string $uri
-     *
      * @return mixed
      */
-    private function getReverseMatchedLink($uri)
+    private function getReverseMatchedLink(string $uri)
     {
         $urlParts = parse_url($uri);
         $routeName = $urlParts['path'];
@@ -175,11 +155,9 @@ class HalRenderer implements RenderInterface
     }
 
     /**
-     * @param ResourceObject $ro
-     *
      * @return array [ResourceObject, array]
      */
-    private function valuate(ResourceObject $ro)
+    private function valuate(ResourceObject $ro) : array
     {
         // evaluate all request in body.
         if (is_array($ro->body)) {
@@ -196,13 +174,6 @@ class HalRenderer implements RenderInterface
         return[$ro, (array) $body];
     }
 
-    /**
-     * @param array $body
-     * @param array $methodAnnotations
-     * @param Hal   $hal
-     *
-     * @internal param Uri $uri
-     */
     private function getHalLink(array $body, array $methodAnnotations, Hal $hal)
     {
         if ($this->curies instanceof Curies) {
@@ -225,9 +196,6 @@ class HalRenderer implements RenderInterface
         }
     }
 
-    /**
-     * @param ResourceObject $ro
-     */
     private function updateHeaders(ResourceObject $ro)
     {
         $ro->headers['content-type'] = 'application/hal+json';
@@ -238,10 +206,8 @@ class HalRenderer implements RenderInterface
 
     /**
      * Return `Location` URI view
-     *
-     * @return string
      */
-    private function getLocatedView(ResourceObject $ro)
+    private function getLocatedView(ResourceObject $ro) : string
     {
         $url = parse_url($ro->uri);
         $locationUri = sprintf('%s://%s%s', $url['scheme'], $url['host'], $ro->headers['Location']);

@@ -40,24 +40,16 @@ final class Bootstrap
      * @param string $name     application name    'koriym\blog' (vendor\package)
      * @param string $contexts application context 'prd-html-app'
      * @param string $appDir   application path
-     *
-     * @return AbstractApp
      */
-    public function getApp($name, $contexts, $appDir = null)
+    public function getApp(string $name, string $contexts, string $appDir = null) : AbstractApp
     {
         return $this->newApp(new AppMeta($name, $contexts, $appDir), $contexts);
     }
 
     /**
      * Return cached contextual application instance
-     *
-     * @param AbstractAppMeta $appMeta
-     * @param string          $contexts
-     * @param Cache           $cache
-     *
-     * @return AbstractApp
      */
-    public function newApp(AbstractAppMeta $appMeta, $contexts, Cache $cache = null)
+    public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
         $isCacheable = is_int(strpos($contexts, 'prod-')) || is_int(strpos($contexts, 'stage-'));
         $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);

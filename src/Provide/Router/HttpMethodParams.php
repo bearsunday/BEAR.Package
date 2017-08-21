@@ -51,14 +51,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $this->unsafeMethod($method, $server, $post);
     }
 
-    /**
-     * @param string $method
-     * @param array  $server
-     * @param array  $post
-     *
-     * @return array
-     */
-    private function unsafeMethod($method, array $server, array $post)
+    private function unsafeMethod($method, array $server, array $post) : array
     {
         $params = $this->getParams($method, $server, $post);
 
@@ -69,16 +62,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return [$method, $params];
     }
 
-    /**
-     * HTTP Method override
-     *
-     * @param string $method
-     * @param array  $server
-     * @param array  $params
-     *
-     * @return array
-     */
-    private function getOverrideMethod($method, array $server, array $params)
+    private function getOverrideMethod($method, array $server, array $params) : array
     {
         // must be a POST to do an override
 
@@ -100,14 +84,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Return request parameters
-     *
-     * @param string $method
-     * @param array  $server
-     * @param array  $post
-     *
-     * @return array
      */
-    private function getParams($method, array $server, array $post)
+    private function getParams($method, array $server, array $post) : array
     {
         // post data exists
         if ($method === 'post' && ! empty($post)) {
@@ -123,12 +101,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Take 'php://input' as input in form-urlencoded or json
-     *
-     * @param array $server
-     *
-     * @return array
      */
-    private function phpInput(array $server)
+    private function phpInput(array $server) : array
     {
         $contentType = $this->getContentType($server);
         if (! $contentType) {
@@ -150,14 +124,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return [];
     }
 
-    /**
-     * Return content-type
-     *
-     * @param array $server
-     *
-     * @return string '' if no "content" header
-     */
-    private function getContentType(array $server)
+    private function getContentType(array $server) : string
     {
         if (isset($server[self::CONTENT_TYPE])) {
             return $server[self::CONTENT_TYPE];

@@ -10,13 +10,7 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 
 final class ProdVndErrorPageFactory implements ErrorPageFactoryInterface
 {
-    /**
-     * @param \Exception  $e
-     * @param RouterMatch $request
-     *
-     * @return ProdVndErrorPage
-     */
-    public function newInstance(\Exception $e, RouterMatch $request)
+    public function newInstance(\Exception $e, RouterMatch $request) : ProdVndErrorPage
     {
         return new ProdVndErrorPage($e, $request);
     }

@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 final class ErrorLogger
 {
     /**
-     * @var
+     * @var LoggerInterface
      */
     private $logger;
 
@@ -29,13 +29,7 @@ final class ErrorLogger
         $this->appMeta = $appMeta;
     }
 
-    /**
-     * @param \Exception  $e
-     * @param RouterMatch $request
-     *
-     * @return string logref
-     */
-    public function __invoke(\Exception $e, RouterMatch $request)
+    public function __invoke(\Exception $e, RouterMatch $request) : string
     {
         $level = $e->getCode() >= 500 ? Logger::ERROR : Logger::DEBUG;
         $logRef = new LogRef($e);
