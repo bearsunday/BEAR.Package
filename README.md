@@ -6,35 +6,36 @@
 
 BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resource oriented framework implementation package.
 
-## Run demo app
+## Package Components
+ * Bootstrap
+ * AppInjector
+ * Compiler
+ * Modules
+    * PackageModule 
+    * ProdModule
+    * ApiModule
+    * CliModile
+    * HalModule
+ * Renderer
+    * HaLRenderer
+ * Router
+    * CliRouter
+    * WebRouter
+ * Error
+    * DevVndErrorPage
+    * ProdVndErrorPage
+    * ErrorHandler  
+ * Logger
+    * Monologger with psr interface  
+ * Transfer
+    * CliResponder
+ * Annotations
+	 * `@Curies`
+	 * `@ReturnCreatedResource`
 
-```
-composer create-project -n bear/package bear.package ~1.0
-cd bear.package
-```
+## Example
 
-A resource can then be accessed from the console. 
-```
-php docs/demo-app/bootstrap/web.php get /
-```
-```
-200 OK
-content-type: application/hal+json
-
-{
-    "greeting": "Hello BEAR.Sunday",
-    "_links": {
-        "self": {
-            "href": "/"
-        }
-    }
-}
-```
-Fire up the built-in php web server.
-```
-php -S 127.0.0.1:8080 -t docs/demo-app/var/www
-```
-You can then open a browser at `http://127.0.0.1:8080` to see the json output.
+See [example/](https://github.com/bearsunday/BEAR.Package/tree/1.x/example) for a reference application.
 
 ## Documentation
 
