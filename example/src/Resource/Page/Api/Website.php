@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Resource\App;
+namespace MyVendor\MyApp\Resource\Page\Api;
 
 use BEAR\Resource\ResourceObject;
 
@@ -12,8 +12,9 @@ class Website extends ResourceObject
 {
     public function onGet($id)
     {
-        $this['url'] = "http:://example.org/{$id}";
-        $this['id'] = $id;
+        $this->body = [
+            'url' => "http:://example.org/{$id}"
+        ];
 
         return $this;
     }

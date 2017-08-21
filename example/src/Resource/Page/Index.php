@@ -6,16 +6,14 @@
  */
 namespace MyVendor\MyApp\Resource\Page;
 
-use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\ResourceObject;
 
-class User extends ResourceObject
+class Index extends ResourceObject
 {
-    /**
-     * @Embed(rel="user1", src="app://self/user{?id}")
-     */
-    public function onGet($id)
+    public function onGet($name = 'BEAR.Sunday') : ResourceObject
     {
+        $this->body = ['greeting' => 'Hello ' . $name];
+
         return $this;
     }
 }
