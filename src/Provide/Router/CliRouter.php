@@ -38,11 +38,6 @@ class CliRouter implements RouterInterface
     private $stdIn;
 
     /**
-     * @param RouterInterface $router
-     * @param \LogicException $exception
-     * @param Stdio           $stdIo
-     *
-     * @Inject
      * @Named("original")
      */
     public function __construct(RouterInterface $router, \LogicException $exception = null, Stdio $stdIo = null)
@@ -61,12 +56,10 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * @param string $stdIn
-     *
      * @Inject
      * @StdIn
      */
-    public function setStdIn($stdIn)
+    public function setStdIn(string $stdIn)
     {
         $this->stdIn = $stdIn;
     }
@@ -93,13 +86,8 @@ class CliRouter implements RouterInterface
 
     /**
      * Set user input query to $globals or &$server
-     *
-     * @param string $method
-     * @param array  $query
-     * @param array  $globals
-     * @param array  $server
      */
-    private function setQuery($method, array $query, array &$globals, array &$server)
+    private function setQuery(string $method, array $query, array &$globals, array &$server)
     {
         if ($method === 'get') {
             $globals['_GET'] = $query;
@@ -114,10 +102,7 @@ class CliRouter implements RouterInterface
         $server = $this->getStdIn($method, $query, $server);
     }
 
-    /**
-     * @param string $command
-     */
-    private function error($command)
+    private function error(string $command)
     {
         $help = new CliRouterHelp(new OptionFactory);
         $this->stdIo->outln($help->getHelp($command));
@@ -140,14 +125,8 @@ class CliRouter implements RouterInterface
 
     /**
      * Return StdIn in PUT, PATCH or DELETE
-     *
-     * @param string $method
-     * @param array  $query
-     * @param array  $server
-     *
-     * @return array
      */
-    private function getStdIn($method, array $query, array &$server)
+    private function getStdIn(string $method, array $query, array &$server) : array
     {
         if ($method === 'put' || $method === 'patch' || $method === 'delete') {
             $server[HttpMethodParams::CONTENT_TYPE] = HttpMethodParams::FORM_URL_ENCODE;
@@ -159,11 +138,6 @@ class CliRouter implements RouterInterface
         return $server;
     }
 
-    /**
-     * Validate input
-     *
-     * @param array $globals
-     */
     private function validateArgs(array $globals)
     {
         if ($globals['argc'] !== 3) {
@@ -174,12 +148,8 @@ class CliRouter implements RouterInterface
 
     /**
      * Return $method, $query, $server from $globals
-     *
-     * @param array $globals
-     *
-     * @return array
      */
-    private function parseGlobals(array $globals)
+    private function parseGlobals(array $globals) : array
     {
         list(, $method, $uri) = $globals['argv'];
         $parsedUrl = parse_url($uri);

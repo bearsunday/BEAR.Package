@@ -49,13 +49,7 @@ final class AppInjector implements InjectorInterface
         }
     }
 
-    /**
-     * @param AbstractAppMeta $appMeta
-     * @param string          $contexts
-     *
-     * @return InjectorInterface
-     */
-    private function getInjector(AbstractAppMeta $appMeta, $contexts)
+    private function getInjector(AbstractAppMeta $appMeta, string $contexts) : InjectorInterface
     {
         $module = $this->newModule($appMeta, $contexts);
         $module->override(new AppMetaModule($appMeta));
@@ -71,15 +65,7 @@ final class AppInjector implements InjectorInterface
         return $injector;
     }
 
-    /**
-     * Compile dependencies
-     *
-     * @param AbstractModule $module
-     * @param string         $scriptDir
-     *
-     * @internal param AbstractAppMeta $appMeta
-     */
-    private function compile(AbstractModule $module, $scriptDir)
+    private function compile(AbstractModule $module, string $scriptDir)
     {
         $compiler = new DiCompiler($module, $scriptDir);
         $compiler->compile();
@@ -87,13 +73,8 @@ final class AppInjector implements InjectorInterface
 
     /**
      * Return configured module
-     *
-     * @param AbstractAppMeta $appMeta
-     * @param string          $contexts
-     *
-     * @return AbstractModule
      */
-    private function newModule(AbstractAppMeta $appMeta, $contexts)
+    private function newModule(AbstractAppMeta $appMeta, string $contexts) : AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $contexts));
         $module = null;
