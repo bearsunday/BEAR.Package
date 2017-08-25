@@ -6,9 +6,13 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Resource\JsonRenderer;
+use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
+use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
+use Ray\Di\AbstractModule;
 
 class AppInjectorTest extends TestCase
 {
@@ -32,5 +36,23 @@ class AppInjectorTest extends TestCase
     public function testInvalidInterface()
     {
         (new AppInjector('FakeVendor\HelloWorld', 'prod-cli-app'))->getInstance('__Invalid__');
+    }
+
+    public function testGetOverrideInstance()
+    {
+        $module = new class extends AbstractModule {
+            protected function configure()
+            {
+                $this->bind(RenderInterface::class)->to(JsonRenderer::class);
+            }
+        };
+        $appInjector = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'));
+        $renderer = $appInjector->getOverrideInstance($module, RenderInterface::class);
+        $this->assertInstanceOf(JsonRenderer::class, $renderer);
+        $index = $appInjector->getOverrideInstance($module, Index::class);
+        $prop = (new \ReflectionProperty($index, 'renderer'));
+        $prop->setAccessible(true);
+        $renderer = $prop->getValue($index);
+        $this->assertInstanceOf(JsonRenderer::class, $renderer);
     }
 }
