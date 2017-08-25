@@ -14,25 +14,33 @@ use Ray\Compiler\DiCompiler;
 use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
 
 final class AppInjector implements InjectorInterface
 {
     /**
-     * @var InjectorInterface
+     * @var AbstractModule
      */
-    private $injector;
+    private $appModule;
 
     /**
-     * @var AppMeta
+     * @var string
      */
-    private $appMeta;
+    private $scriptDir;
+
+    /**
+     * @var string
+     */
+    private $logDir;
 
     public function __construct($name, $contexts)
     {
-        $this->appMeta = new AppMeta($name, $contexts);
-        $this->injector = $this->getInjector($this->appMeta, $contexts);
+        $appMeta = new AppMeta($name, $contexts);
+        $this->scriptDir = $appMeta->tmpDir;
+        $this->logDir = $appMeta->logDir;
+        $this->appModule = $this->newModule($appMeta, $contexts);
     }
 
     /**
@@ -41,24 +49,29 @@ final class AppInjector implements InjectorInterface
     public function getInstance($interface, $name = Name::ANY)
     {
         try {
-            return $this->injector->getInstance($interface, $name);
+            return $this->getInjector()->getInstance($interface, $name);
         } catch (NotCompiled $e) {
-            file_put_contents(sprintf('%s/%s', $this->appMeta->logDir, 'compile-err.log'), (string) $e);
+            file_put_contents(sprintf('%s/%s', $this->logDir, 'compile-err.log'), (string) $e);
 
             throw $e;
         }
     }
 
-    private function getInjector(AbstractAppMeta $appMeta, string $contexts) : InjectorInterface
+    public function getOverrideInstance(AbstractModule $module, $inteface, $name = Name::ANY)
     {
-        $module = $this->newModule($appMeta, $contexts);
-        $module->override(new AppMetaModule($appMeta));
-        $scriptDir = $appMeta->tmpDir;
-        $scriptInjector = new ScriptInjector($scriptDir);
+        $appModule = clone $this->appModule;
+        $appModule->override($module);
+
+        return (new Injector($appModule, $this->scriptDir))->getInstance($inteface, $name);
+    }
+
+    private function getInjector() : InjectorInterface
+    {
+        $scriptInjector = new ScriptInjector($this->scriptDir);
         try {
             $injector = $scriptInjector->getInstance(InjectorInterface::class);
         } catch (NotCompiled $e) {
-            $this->compile($module, $scriptDir);
+            $this->compile($this->appModule, $this->scriptDir);
             $injector = $scriptInjector->getInstance(InjectorInterface::class);
         }
 
@@ -90,6 +103,7 @@ final class AppInjector implements InjectorInterface
             $module = new $class($module);
         }
         $module->install(new ResourceObjectModule($appMeta));
+        $module->override(new AppMetaModule($appMeta));
 
         return $module;
     }
