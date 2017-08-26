@@ -11,6 +11,7 @@ use BEAR\Package\Provide\Error\VndErrorModule;
 use BEAR\Package\Provide\Logger\PsrLoggerModule;
 use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
+use BEAR\Streamer\StreamModule;
 use BEAR\Sunday\Module\SundayModule;
 use Ray\Di\AbstractModule;
 
@@ -33,6 +34,7 @@ class PackageModule extends AbstractModule
         $this->install(new WebRouterModule);
         $this->install(new VndErrorModule);
         $this->install(new PsrLoggerModule);
+        $this->install(new StreamModule);
         $this->install(new SundayModule);
     }
 }
