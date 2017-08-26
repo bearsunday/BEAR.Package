@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package;
 
-use BEAR\Resource\JsonRenderer;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
@@ -40,19 +39,27 @@ class AppInjectorTest extends TestCase
 
     public function testGetOverrideInstance()
     {
-        $module = new class extends AbstractModule {
+        $mock = $this->createMock(RenderInterface::class);
+        $module = new class($mock) extends AbstractModule {
+            private $mock;
+
+            public function __construct(RenderInterface $mock)
+            {
+                $this->mock = $mock;
+            }
+
             protected function configure()
             {
-                $this->bind(RenderInterface::class)->to(JsonRenderer::class);
+                $this->bind(RenderInterface::class)->toInstance($this->mock);
             }
         };
         $appInjector = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'));
         $renderer = $appInjector->getOverrideInstance($module, RenderInterface::class);
-        $this->assertInstanceOf(JsonRenderer::class, $renderer);
+        $this->assertInstanceOf(RenderInterface::class, $renderer);
         $index = $appInjector->getOverrideInstance($module, Index::class);
         $prop = (new \ReflectionProperty($index, 'renderer'));
         $prop->setAccessible(true);
         $renderer = $prop->getValue($index);
-        $this->assertInstanceOf(JsonRenderer::class, $renderer);
+        $this->assertInstanceOf(RenderInterface::class, $renderer);
     }
 }
