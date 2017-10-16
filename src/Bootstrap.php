@@ -58,6 +58,14 @@ final class Bootstrap
         if ($app && $app instanceof AbstractApp) {
             return $app;
         }
+        list($app, $injector) = $this->getInstance($appMeta, $contexts);
+        $cache->save($appId, [$app, $injector]); // save $app with injector to save singleton instance (in ScriptInjector::$singletons)
+
+        return $app;
+    }
+
+    private function getInstance(AbstractAppMeta $appMeta, string $contexts) : array
+    {
         $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
         $injector = new ScriptInjector($appMeta->tmpDir);
         // save singleton instance cache
@@ -67,9 +75,7 @@ final class Bootstrap
         $injector->getInstance(ResourceInterface::class);
         $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
         file_put_contents($log, print_r($app, true));
-        // save $app with injector to save singleton instance (in ScriptInjector::$singletons)
-        $cache->save($appId, [$app, $injector]);
 
-        return $app;
+        return [$app, $injector];
     }
 }
