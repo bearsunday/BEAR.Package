@@ -62,21 +62,22 @@ class HalRenderer implements RenderInterface
     public function render(ResourceObject $ro)
     {
         $method = 'on' . ucfirst($ro->uri->method);
-        $hasMethod = method_exists($ro, $method);
-        if (! $hasMethod) {
-            $ro->view = ''; // OPTIONS request no view
+        if (! method_exists($ro, $method)) {
+            $ro->view = ''; // no view for OPTIONS request
 
             return '';
         }
-        $annotations = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method)) : [];
+        $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
         $this->curies = $this->reader->getClassAnnotation(new \ReflectionClass($ro), Curies::class);
-        $isReturnCreatedResource = $ro->code === 201 && isset($ro->headers['Location']) && $ro->uri->method === 'post' && $this->hasReturnCreatedResourceAnnotation($annotations);
-        if ($isReturnCreatedResource) {
-            $ro->view = $this->getLocatedView($ro);
-            $this->updateHeaders($ro);
-
-            return $ro->view;
+        if ($this->isReturnCreatedResource($ro, $annotations)) {
+            return $this->returnCreatedResource($ro);
         }
+
+        return $this->renderHal($ro, $annotations);
+    }
+
+    private function renderHal(ResourceObject $ro, $annotations) : string
+    {
         list($ro, $body) = $this->valuate($ro);
         /* @var $annotations Link[] */
         /* @var $ro ResourceObject */
@@ -87,7 +88,12 @@ class HalRenderer implements RenderInterface
         return $ro->view;
     }
 
-    private function hasReturnCreatedResourceAnnotation(array $annotations) : bool
+    private function isReturnCreatedResource(ResourceObject $ro, array $annotations) : bool
+    {
+        return $ro->code === 201 && $ro->uri->method === 'post' && isset($ro->headers['Location']) && $this->hasReturnCreatedResource($annotations);
+    }
+
+    private function hasReturnCreatedResource(array $annotations) : bool
     {
         foreach ($annotations as $annotation) {
             if ($annotation instanceof ReturnCreatedResource) {
@@ -96,6 +102,14 @@ class HalRenderer implements RenderInterface
         }
 
         return false;
+    }
+
+    private function returnCreatedResource(ResourceObject $ro) : string
+    {
+        $ro->view = $this->getLocatedView($ro);
+        $this->updateHeaders($ro);
+
+        return $ro->view;
     }
 
     private function valuateElements(ResourceObject &$ro)
@@ -130,7 +144,7 @@ class HalRenderer implements RenderInterface
         $selfLink = $this->getReverseMatchedLink($path);
 
         $hal = new Hal($selfLink, $body);
-        $this->getHalLink($body, $annotations, $hal);
+        $hal = $this->getHalLink($body, $annotations, $hal);
 
         return $hal;
     }
@@ -174,26 +188,19 @@ class HalRenderer implements RenderInterface
         return[$ro, (array) $body];
     }
 
-    private function getHalLink(array $body, array $methodAnnotations, Hal $hal)
+    private function getHalLink(array $body, array $methodAnnotations, Hal $hal) : Hal
     {
         if ($this->curies instanceof Curies) {
             $hal->addCurie($this->curies->name, $this->curies->href);
         }
-        foreach ($methodAnnotations as $annotation) {
-            if (! $annotation instanceof Link) {
-                continue;
-            }
-            $uri = uri_template($annotation->href, $body);
-            $reverseUri = $this->getReverseMatchedLink($uri);
-            $hal->addLink($annotation->rel, $reverseUri);
+        if (! empty($methodAnnotations)) {
+            $hal = $this->linkAnnotation($body, $methodAnnotations, $hal);
         }
         if (isset($body['_links'])) {
-            foreach ($body['_links'] as $rel => $link) {
-                $attr = $link;
-                unset($attr['href']);
-                $hal->addLink($rel, $link['href'], $attr);
-            }
+            $hal = $this->bodyLink($body, $hal);
         }
+
+        return $hal;
     }
 
     private function updateHeaders(ResourceObject $ro)
@@ -218,5 +225,30 @@ class HalRenderer implements RenderInterface
         }
 
         return $locatedResource->toString();
+    }
+
+    private function linkAnnotation(array $body, array $methodAnnotations, Hal $hal) : Hal
+    {
+        foreach ($methodAnnotations as $annotation) {
+            if (! $annotation instanceof Link) {
+                continue;
+            }
+            $uri = uri_template($annotation->href, $body);
+            $reverseUri = $this->getReverseMatchedLink($uri);
+            $hal->addLink($annotation->rel, $reverseUri);
+        }
+
+        return $hal;
+    }
+
+    private function bodyLink(array $body, Hal $hal) : Hal
+    {
+        foreach ($body['_links'] as $rel => $link) {
+            $attr = $link;
+            unset($attr['href']);
+            $hal->addLink($rel, $link['href'], $attr);
+        }
+
+        return $hal;
     }
 }
