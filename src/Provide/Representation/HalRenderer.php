@@ -62,13 +62,12 @@ class HalRenderer implements RenderInterface
     public function render(ResourceObject $ro)
     {
         $method = 'on' . ucfirst($ro->uri->method);
-        $hasMethod = method_exists($ro, $method);
-        if (! $hasMethod) {
-            $ro->view = ''; // OPTIONS request no view
+        if (! method_exists($ro, $method)) {
+            $ro->view = ''; // no view for OPTIONS request
 
             return '';
         }
-        $annotations = ($hasMethod) ? $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method)) : [];
+        $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
         $this->curies = $this->reader->getClassAnnotation(new \ReflectionClass($ro), Curies::class);
         if ($this->isReturnCreatedResource($ro, $annotations)) {
             return $this->returnCreatedResource($ro);
