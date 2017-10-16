@@ -193,7 +193,7 @@ class HalRenderer implements RenderInterface
         if ($this->curies instanceof Curies) {
             $hal->addCurie($this->curies->name, $this->curies->href);
         }
-        if ($methodAnnotations) {
+        if (! empty($methodAnnotations)) {
             $hal = $this->linkAnnotation($body, $methodAnnotations, $hal);
         }
         if (isset($body['_links'])) {
