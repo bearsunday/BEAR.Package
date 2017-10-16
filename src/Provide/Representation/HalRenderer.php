@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
-use BEAR\Package\Annotation\Curies;
 use BEAR\Package\Annotation\ReturnCreatedResource;
 use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\AbstractRequest;
@@ -15,7 +14,6 @@ use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
-use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
@@ -41,11 +39,6 @@ class HalRenderer implements RenderInterface
     private $resource;
 
     /**
-     * @var Curies
-     */
-    private $curies;
-
-    /**
      * @param Reader          $reader
      * @param RouterInterface $router
      */
@@ -68,7 +61,6 @@ class HalRenderer implements RenderInterface
             return '';
         }
         $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
-        $this->curies = $this->reader->getClassAnnotation(new \ReflectionClass($ro), Curies::class);
         if ($this->isReturnCreatedResource($ro, $annotations)) {
             return $this->returnCreatedResource($ro);
         }
@@ -190,9 +182,6 @@ class HalRenderer implements RenderInterface
 
     private function getHalLink(array $body, array $methodAnnotations, Hal $hal) : Hal
     {
-        if ($this->curies instanceof Curies) {
-            $hal->addCurie($this->curies->name, $this->curies->href);
-        }
         if (! empty($methodAnnotations)) {
             $hal = $this->linkAnnotation($body, $methodAnnotations, $hal);
         }

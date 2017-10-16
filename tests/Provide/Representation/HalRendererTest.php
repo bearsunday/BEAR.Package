@@ -203,13 +203,6 @@ class HalRendererTest extends TestCase
         "self": {
             "href": "/post?id=10"
         },
-        "curies": [
-            {
-                "href": "http://api.example.com/docs/{rel}",
-                "name": "ht",
-                "templated": true
-            }
-        ],
         "ht:comment": {
             "href": "/comments/?id=10"
         },
