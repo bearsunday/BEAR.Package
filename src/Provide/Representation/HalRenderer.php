@@ -73,6 +73,12 @@ class HalRenderer implements RenderInterface
         if ($this->isReturnCreatedResource($ro, $annotations)) {
             return $this->returnCreatedResource($ro);
         }
+
+        return $this->renderHal($ro, $annotations);
+    }
+
+    private function renderHal(ResourceObject $ro, $annotations) : string
+    {
         list($ro, $body) = $this->valuate($ro);
         /* @var $annotations Link[] */
         /* @var $ro ResourceObject */
@@ -85,10 +91,11 @@ class HalRenderer implements RenderInterface
 
     private function isReturnCreatedResource(ResourceObject $ro, array $annotations) : bool
     {
-        $isPost201 = $ro->code === 201 && $ro->uri->method === 'post' && isset($ro->headers['Location']);
-        if (! $isPost201) {
-            return false;
-        }
+        return $ro->code === 201 && $ro->uri->method === 'post' && isset($ro->headers['Location']) && $this->hasReturnCreatedResource($annotations);
+    }
+
+    private function hasReturnCreatedResource(array $annotations) : bool
+    {
         foreach ($annotations as $annotation) {
             if ($annotation instanceof ReturnCreatedResource) {
                 return true;
