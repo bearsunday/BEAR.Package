@@ -62,14 +62,6 @@ class CreatedResourceRenderer implements RenderInterface
         return $locatedResource->toString();
     }
 
-    private function updateHeaders(ResourceObject $ro)
-    {
-        $ro->headers['content-type'] = 'application/hal+json';
-        if (isset($ro->headers['Location'])) {
-            $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
-        }
-    }
-
     /**
      * @return mixed
      */
@@ -87,5 +79,13 @@ class CreatedResourceRenderer implements RenderInterface
         }
 
         return $uri;
+    }
+
+    private function updateHeaders(ResourceObject $ro)
+    {
+        $ro->headers['content-type'] = 'application/hal+json';
+        if (isset($ro->headers['Location'])) {
+            $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
+        }
     }
 }

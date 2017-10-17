@@ -6,29 +6,19 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
-use BEAR\Resource\ResourceInterface;
-use BEAR\Sunday\Extension\Router\RouterInterface;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use Ray\Di\InjectorInterface;
 
 class CreatedResourceInterceptor implements MethodInterceptor
 {
     /**
-     * @var ResourceInterface
+     * @var CreatedResourceRenderer
      */
-    private $resource;
+    private $renderer;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    private $injector;
-
-    public function __construct(InjectorInterface $injector)
+    public function __construct(CreatedResourceRenderer $renderer)
     {
-        $this->injector = $injector;
+        $this->renderer = $renderer;
     }
 
     /**
@@ -41,8 +31,7 @@ class CreatedResourceInterceptor implements MethodInterceptor
         if (! $isCreated) {
             return $ro;
         }
-        $renderer = $this->injector->getInstance(CreatedResourceRenderer::class);
-        $ro->setRenderer($renderer);
+        $ro->setRenderer($this->renderer);
 
         return $ro;
     }

@@ -16,6 +16,7 @@ class CreatedResourceModule extends AbstractModule
      */
     protected function configure()
     {
+        $this->bind(CreatedResourceRenderer::class);
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith(ReturnCreatedResource::class),
