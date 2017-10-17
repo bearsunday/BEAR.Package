@@ -224,6 +224,22 @@ class HalRendererTest extends TestCase
         $this->assertSame('/post?id=10', $ro->headers['Location']);
     }
 
+    public function testCreatedResourceAnnotationButFailed()
+    {
+        $ro = $this->resource->post->uri('app://self/post?code=500');
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        $result = (string) $ro;
+        $expect = '{
+    "_links": {
+        "self": {
+            "href": "/post?code=500"
+        }
+    }
+}
+';
+        $this->assertSame($expect, $result);
+    }
+
     public function testLinksAlreadyExists()
     {
         $ro = $this->resource->get->uri('app://self/hal')->eager->request();

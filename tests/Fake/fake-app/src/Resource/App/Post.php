@@ -35,9 +35,9 @@ class Post extends ResourceObject
     /**
      * @ReturnCreatedResource
      */
-    public function onPost()
+    public function onPost($code = 201)
     {
-        $this->code = 201;
+        $this->code = $code;
         $this->headers['Location'] = '/post?id=10';
 
         return $this;
