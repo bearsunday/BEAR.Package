@@ -55,6 +55,8 @@ class CreatedResourceRenderer implements RenderInterface
             $locatedResource = $this->resource->uri($locationUri)();
             /* @var $locatedResource ResourceObject */
         } catch (\Exception $e) {
+            $ro->code = 500;
+            $ro->view = '';
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
         $this->updateHeaders($ro);

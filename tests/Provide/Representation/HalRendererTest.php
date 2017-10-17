@@ -240,6 +240,15 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
+    public function testCreatedResourceInvaliUri()
+    {
+        $ro = $this->resource->post->uri('app://self/post?uri=__INVALID_*+')();
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        (string) $ro;
+        $this->assertSame('', $ro->view);
+        $this->assertSame(500, $ro->code);
+    }
+
     public function testLinksAlreadyExists()
     {
         $ro = $this->resource->get->uri('app://self/hal')->eager->request();
