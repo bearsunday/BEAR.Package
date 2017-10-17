@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Package\Provide\Representation\HalLink;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
@@ -153,7 +154,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
+        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
@@ -173,7 +174,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
+        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';

@@ -12,7 +12,6 @@ use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
-use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
 
@@ -27,24 +26,20 @@ class HalRenderer implements RenderInterface
     private $reader;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var ResourceInterface
      */
     private $resource;
 
     /**
-     * @param Reader          $reader
-     * @param RouterInterface $router
+     * @var HalLink
      */
-    public function __construct(Reader $reader, RouterInterface $router, ResourceInterface $resource)
+    private $link;
+
+    public function __construct(Reader $reader, ResourceInterface $resource, HalLink $link)
     {
         $this->reader = $reader;
-        $this->router = $router;
         $this->resource = $resource;
+        $this->link = $link;
     }
 
     /**
@@ -107,31 +102,12 @@ class HalRenderer implements RenderInterface
     {
         $query = $uri->query ? '?' . http_build_query($uri->query) : '';
         $path = $uri->path . $query;
-        $selfLink = $this->getReverseMatchedLink($path);
+        $selfLink = $this->link->getReverseLink($path);
 
         $hal = new Hal($selfLink, $body);
-        $hal = $this->getHalLink($body, $annotations, $hal);
+        $hal = $this->link->addHalLink($body, $annotations, $hal);
 
         return $hal;
-    }
-
-    /**
-     * @return mixed
-     */
-    private function getReverseMatchedLink(string $uri)
-    {
-        $urlParts = parse_url($uri);
-        $routeName = $urlParts['path'];
-        isset($urlParts['query']) ? parse_str($urlParts['query'], $value) : $value = [];
-        if ($value === []) {
-            return $uri;
-        }
-        $reverseUri = $this->router->generate($routeName, (array) $value);
-        if (is_string($reverseUri)) {
-            return $reverseUri;
-        }
-
-        return $uri;
     }
 
     /**
@@ -154,48 +130,11 @@ class HalRenderer implements RenderInterface
         return[$ro, (array) $body];
     }
 
-    private function getHalLink(array $body, array $methodAnnotations, Hal $hal) : Hal
-    {
-        if (! empty($methodAnnotations)) {
-            $hal = $this->linkAnnotation($body, $methodAnnotations, $hal);
-        }
-        if (isset($body['_links'])) {
-            $hal = $this->bodyLink($body, $hal);
-        }
-
-        return $hal;
-    }
-
     private function updateHeaders(ResourceObject $ro)
     {
         $ro->headers['content-type'] = 'application/hal+json';
         if (isset($ro->headers['Location'])) {
-            $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
+            $ro->headers['Location'] = $this->link->getReverseLink($ro->headers['Location']);
         }
-    }
-
-    private function linkAnnotation(array $body, array $methodAnnotations, Hal $hal) : Hal
-    {
-        foreach ($methodAnnotations as $annotation) {
-            if (! $annotation instanceof Link) {
-                continue;
-            }
-            $uri = uri_template($annotation->href, $body);
-            $reverseUri = $this->getReverseMatchedLink($uri);
-            $hal->addLink($annotation->rel, $reverseUri);
-        }
-
-        return $hal;
-    }
-
-    private function bodyLink(array $body, Hal $hal) : Hal
-    {
-        foreach ($body['_links'] as $rel => $link) {
-            $attr = $link;
-            unset($attr['href']);
-            $hal->addLink($rel, $link['href'], $attr);
-        }
-
-        return $hal;
     }
 }
