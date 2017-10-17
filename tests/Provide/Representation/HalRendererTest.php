@@ -144,7 +144,10 @@ class HalRendererTest extends TestCase
     {
         $ro = $this->resource->options->uri('app://self/scalar')->eager->request();
         $result = (string) $ro;
-        $expect = '';
+        $expect = '{
+    "GET": []
+}
+';
         $this->assertSame($expect, $result);
     }
 

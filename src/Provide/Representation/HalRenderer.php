@@ -6,8 +6,6 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
-use BEAR\Package\Annotation\ReturnCreatedResource;
-use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\AbstractRequest;
 use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
@@ -54,6 +52,9 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
+        if ($ro->view) {
+            return $ro->view;
+        }
         $method = 'on' . ucfirst($ro->uri->method);
         if (! method_exists($ro, $method)) {
             $ro->view = ''; // no view for OPTIONS request
@@ -61,9 +62,6 @@ class HalRenderer implements RenderInterface
             return '';
         }
         $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
-        if ($this->isReturnCreatedResource($ro, $annotations)) {
-            return $this->returnCreatedResource($ro);
-        }
 
         return $this->renderHal($ro, $annotations);
     }
@@ -75,30 +73,6 @@ class HalRenderer implements RenderInterface
         /* @var $ro ResourceObject */
         $hal = $this->getHal($ro->uri, $body, $annotations);
         $ro->view = $hal->asJson(true) . PHP_EOL;
-        $this->updateHeaders($ro);
-
-        return $ro->view;
-    }
-
-    private function isReturnCreatedResource(ResourceObject $ro, array $annotations) : bool
-    {
-        return $ro->code === 201 && $ro->uri->method === 'post' && isset($ro->headers['Location']) && $this->hasReturnCreatedResource($annotations);
-    }
-
-    private function hasReturnCreatedResource(array $annotations) : bool
-    {
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof ReturnCreatedResource) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function returnCreatedResource(ResourceObject $ro) : string
-    {
-        $ro->view = $this->getLocatedView($ro);
         $this->updateHeaders($ro);
 
         return $ro->view;
@@ -198,22 +172,6 @@ class HalRenderer implements RenderInterface
         if (isset($ro->headers['Location'])) {
             $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
         }
-    }
-
-    /**
-     * Return `Location` URI view
-     */
-    private function getLocatedView(ResourceObject $ro) : string
-    {
-        $url = parse_url($ro->uri);
-        $locationUri = sprintf('%s://%s%s', $url['scheme'], $url['host'], $ro->headers['Location']);
-        try {
-            $locatedResource = $this->resource->uri($locationUri)();
-        } catch (\Exception $e) {
-            throw new LocationHeaderRequestException($locationUri, 0, $e);
-        }
-
-        return $locatedResource->toString();
     }
 
     private function linkAnnotation(array $body, array $methodAnnotations, Hal $hal) : Hal
