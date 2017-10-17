@@ -19,7 +19,7 @@ class Post extends ResourceObject
      * @Link(rel="ht:comment", href="/comments/{?id}")
      * @Link(rel="ht:category", href="/category/{?id}")
      */
-    public function onGet($id)
+    public function onGet($id = 10)
     {
         $this->body = [
             'id' => $id,

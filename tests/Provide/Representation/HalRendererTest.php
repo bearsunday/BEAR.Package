@@ -224,6 +224,15 @@ class HalRendererTest extends TestCase
         $this->assertSame('/post?id=10', $ro->headers['Location']);
     }
 
+    public function test201CreatedWithNoQuery()
+    {
+        $ro = $this->resource->post->uri('app://self/post?uri=/post')->eager->request();
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        $result = (string) $ro;
+        $this->assertSame(201, $ro->code);
+        $this->assertSame('/post', $ro->headers['Location']);
+    }
+
     public function testCreatedResourceAnnotationButFailed()
     {
         $ro = $this->resource->post->uri('app://self/post?code=500');
