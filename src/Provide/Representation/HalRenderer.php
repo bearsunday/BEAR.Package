@@ -208,7 +208,7 @@ class HalRenderer implements RenderInterface
         $url = parse_url($ro->uri);
         $locationUri = sprintf('%s://%s%s', $url['scheme'], $url['host'], $ro->headers['Location']);
         try {
-            $locatedResource = $this->resource->uri($locationUri)->eager->request();
+            $locatedResource = $this->resource->uri($locationUri)();
         } catch (\Exception $e) {
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
