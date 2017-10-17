@@ -1,15 +1,16 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace FakeVendor\HelloWorld\Resource\App;
 
-use BEAR\Package\Annotation\Curies;
 use BEAR\Package\Annotation\ReturnCreatedResource;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\ResourceInject;
 
-/**
- * @Curies(name="ht", href="http://api.example.com/docs/{rel}")
- */
 class Post extends ResourceObject
 {
     use ResourceInject;
@@ -18,11 +19,11 @@ class Post extends ResourceObject
      * @Link(rel="ht:comment", href="/comments/{?id}")
      * @Link(rel="ht:category", href="/category/{?id}")
      */
-    public function onGet($id)
+    public function onGet($id = 10)
     {
         $this->body = [
             'id' => $id,
-            'name' => 'user_'  .$id,
+            'name' => 'user_' . $id,
             '_links' => [
                 'test' => ['href' => '/test']
             ]
@@ -34,10 +35,10 @@ class Post extends ResourceObject
     /**
      * @ReturnCreatedResource
      */
-    public function onPost()
+    public function onPost($code = 201, $uri = '/post?id=10')
     {
-        $this->code = 201;
-        $this->headers['Location'] = '/post?id=10';
+        $this->code = $code;
+        $this->headers['Location'] = $uri;
 
         return $this;
     }

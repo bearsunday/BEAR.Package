@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Package\Provide\Representation\HalLink;
 use BEAR\Package\Provide\Representation\HalRenderer;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
@@ -144,13 +145,16 @@ class HalRendererTest extends TestCase
     {
         $ro = $this->resource->options->uri('app://self/scalar')->eager->request();
         $result = (string) $ro;
-        $expect = '';
+        $expect = '{
+    "GET": []
+}
+';
         $this->assertSame($expect, $result);
     }
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
+        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
@@ -170,7 +174,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new FakeRouter, $this->resource);
+        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';
@@ -203,13 +207,6 @@ class HalRendererTest extends TestCase
         "self": {
             "href": "/post?id=10"
         },
-        "curies": [
-            {
-                "href": "http://api.example.com/docs/{rel}",
-                "name": "ht",
-                "templated": true
-            }
-        ],
         "ht:comment": {
             "href": "/comments/?id=10"
         },
@@ -225,6 +222,40 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
         $this->assertSame(201, $ro->code);
         $this->assertSame('/post?id=10', $ro->headers['Location']);
+    }
+
+    public function test201CreatedWithNoQuery()
+    {
+        $ro = $this->resource->post->uri('app://self/post?uri=/post')->eager->request();
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        $result = (string) $ro;
+        $this->assertSame(201, $ro->code);
+        $this->assertSame('/post', $ro->headers['Location']);
+    }
+
+    public function testCreatedResourceAnnotationButFailed()
+    {
+        $ro = $this->resource->post->uri('app://self/post?code=500');
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        $result = (string) $ro;
+        $expect = '{
+    "_links": {
+        "self": {
+            "href": "/post?code=500"
+        }
+    }
+}
+';
+        $this->assertSame($expect, $result);
+    }
+
+    public function testCreatedResourceInvaliUri()
+    {
+        $ro = $this->resource->post->uri('app://self/post?uri=__INVALID_*+')();
+        /* @var $ro \BEAR\Resource\ResourceObject */
+        (string) $ro;
+        $this->assertSame('', $ro->view);
+        $this->assertSame(500, $ro->code);
     }
 
     public function testLinksAlreadyExists()

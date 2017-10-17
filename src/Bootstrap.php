@@ -51,8 +51,7 @@ final class Bootstrap
      */
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
-        $isCacheable = is_int(strpos($contexts, 'prod-')) || is_int(strpos($contexts, 'stage-'));
-        $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
+        $cache = $this->getCache($appMeta, $contexts, $cache);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
         list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app && $app instanceof AbstractApp) {
@@ -77,5 +76,13 @@ final class Bootstrap
         file_put_contents($log, print_r($app, true));
 
         return [$app, $injector];
+    }
+
+    private function getCache(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : Cache
+    {
+        $isCacheable = is_int(strpos($contexts, 'prod-')) || is_int(strpos($contexts, 'stage-'));
+        $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
+
+        return $cache;
     }
 }
