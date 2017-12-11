@@ -1,0 +1,40 @@
+{
+    "name": "my-vendor/my-project",
+    "type": "project",
+    "description": "",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.0.0",
+        "roave/security-advisories": "dev-master",
+        "bear/package": "^1.5",
+        "josegonzalez/dotenv": "^2.1"
+    },
+    "require-dev": {
+        "bear/qatools": "^1.4.2",
+        "phpunit/phpunit": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyVendor\\MyProject\\": "src/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit"
+        ],
+        "coverage": [
+            "php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"
+        ],
+        "cs": [
+            "php-cs-fixer fix -v --dry-run",
+            "phpcs --standard=./phpcs.xml src"
+        ],
+        "cs-fix": [
+            "php-cs-fixer fix -v",
+            "phpcbf src"
+        ],
+        "serve": "php -S 127.0.0.1:8080 -t public",
+        "api": "php bootstrap/api.php",
+        "web": "php bootstrap/web.php"
+    }
+}
