@@ -10,6 +10,7 @@ use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProviver;
+use BEAR\RepositoryModule\Annotation\Storage;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\VoidOptionsRenderer;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -36,6 +37,7 @@ class ProdModule extends AbstractModule
         // prod cache
         $this->bind()->annotatedWith('cache_namespace')->toInstance(uniqid('', false));
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
         $this->bind(Reader::class)->toConstructor(
