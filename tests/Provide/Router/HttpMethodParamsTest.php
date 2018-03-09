@@ -145,6 +145,23 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
+    /**
+     * @expectedException TypeError
+     * @expectedExceptionMessageRegExp /^.*HttpMethodParams::phpInput\(\) must be of the type array, null returned$/
+     */
+    public function testPostContentTypeJsonEmpty()
+    {
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json_empty.txt');
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = null;
+        $this->assertSame($expected, $params);
+    }
+
     public function testPostContentTypeUnknown()
     {
         $httpMethodParam = new HttpMethodParams;
