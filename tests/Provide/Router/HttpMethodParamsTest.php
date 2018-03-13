@@ -149,6 +149,7 @@ class HttpMethodParamsTest extends TestCase
     public function testPostContentTypeJsonEmpty()
     {
         $this->expectException(InvalidJsonException::class);
+        $this->expectExceptionCode(400);
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_empty.txt');
         $server = [
@@ -163,6 +164,7 @@ class HttpMethodParamsTest extends TestCase
     public function testPostContentTypeJsonInvalid()
     {
         $this->expectException(InvalidJsonException::class);
+        $this->expectExceptionCode(400);
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_invalid.txt');
         $server = [
