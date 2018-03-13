@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Exception\InvalidJsonException;
 use PHPUnit\Framework\TestCase;
 
 class HttpMethodParamsTest extends TestCase
@@ -145,14 +146,25 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessageRegExp /^.*HttpMethodParams::phpInput\(\) must be of the type array, null returned$/
-     */
     public function testPostContentTypeJsonEmpty()
     {
+        $this->expectException(InvalidJsonException::class);
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_empty.txt');
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = null;
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPostContentTypeJsonInvalid()
+    {
+        $this->expectException(InvalidJsonException::class);
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json_invalid.txt');
         $server = [
             'REQUEST_METHOD' => 'POST',
             'HTTP_CONTENT_TYPE' => 'application/json'
