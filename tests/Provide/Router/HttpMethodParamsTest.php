@@ -150,6 +150,7 @@ class HttpMethodParamsTest extends TestCase
     {
         $this->expectException(InvalidJsonException::class);
         $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Syntax error');
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_empty.txt');
         $server = [
@@ -165,6 +166,7 @@ class HttpMethodParamsTest extends TestCase
     {
         $this->expectException(InvalidJsonException::class);
         $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Syntax error');
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_invalid.txt');
         $server = [

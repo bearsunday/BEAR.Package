@@ -120,7 +120,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             $content = json_decode(file_get_contents($this->stdIn), true);
             $error = json_last_error();
             if ($error !== JSON_ERROR_NONE) {
-                throw new InvalidJsonException((string) $error);
+                throw new InvalidJsonException(json_last_error_msg());
             }
 
             return $content;
