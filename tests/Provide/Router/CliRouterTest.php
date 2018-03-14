@@ -25,7 +25,7 @@ class CliRouterTest extends TestCase
         $stdIo = (new CliFactory())->newStdio('php://stdin', $stdOut);
         $httpMethodParams = new HttpMethodParams;
         $httpMethodParams->setStdIn($this->stdInFile);
-        $this->router = new CliRouter(new WebRouter('page://self', $httpMethodParams), new \InvalidArgumentException, $stdIo);
+        $this->router = new CliRouter(new WebRouter('page://self', $httpMethodParams), $stdIo);
         $this->router->setStdIn($this->stdInFile);
     }
 
@@ -95,6 +95,7 @@ class CliRouterTest extends TestCase
 
     public function testError()
     {
+        $this->router->setTerminateException(new \InvalidArgumentException);
         $this->expectException(\InvalidArgumentException::class);
         $globals = [
             'argv' => [
