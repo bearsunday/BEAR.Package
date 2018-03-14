@@ -27,7 +27,7 @@ class CreatedResourceInterceptor implements MethodInterceptor
      */
     public function invoke(MethodInvocation $invocation)
     {
-        /* @var ResourceObject $ro */
+        /** @var ResourceObject $ro */
         $ro = $invocation->proceed();
         $isCreated = $ro->code === 201 && isset($ro->headers['Location']);
         if (! $isCreated) {
