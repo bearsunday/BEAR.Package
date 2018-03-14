@@ -9,7 +9,7 @@ namespace BEAR\Package\Context;
 use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
-use BEAR\Package\Provide\Logger\ProdMonologProdiver;
+use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\VoidOptionsRenderer;
@@ -32,7 +32,7 @@ class ProdModule extends AbstractModule
     protected function configure()
     {
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
-        $this->bind(LoggerInterface::class)->toProvider(ProdMonologProdiver::class)->in(Scope::SINGLETON);
+        $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         // prod cache
         $this->bind()->annotatedWith('cache_namespace')->toInstance(uniqid('', false));

@@ -11,7 +11,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use Ray\Di\ProviderInterface;
 
-class ProdMonologProdiver implements ProviderInterface
+class ProdMonologProvider implements ProviderInterface
 {
     /**
      * @var AbstractAppMeta

@@ -1,0 +1,38 @@
+[14-Mar-2018 06:24:01 Europe/Zurich] Exception caught in FakeVendor_HelloWorld_Resource_App_Post_dEEYNAA::__toString() (log only)BEAR\Resource\Exception\UriException: app://self__INVALID_*  in /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/Uri.php:44
+Stack trace:
+#0 /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/Uri.php(23): BEAR\Resource\Uri->validate('app://self__INV...')
+#1 /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/Resource.php(121): BEAR\Resource\Uri->__construct('app://self__INV...')
+#2 /Users/akihito/git/BEAR.Package/src/Provide/Representation/CreatedResourceRenderer.php(55): BEAR\Resource\Resource->uri('app://self__INV...')
+#3 /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/ResourceObject.php(203): BEAR\Package\Provide\Representation\CreatedResourceRenderer->render(Object(FakeVendor_HelloWorld_Resource_App_Post_dEEYNAA))
+#4 /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/ResourceObject.php(71): BEAR\Resource\ResourceObject->toString()
+#5 /Users/akihito/git/BEAR.Package/tests/Provide/Representation/HalRendererTest.php(255): BEAR\Resource\ResourceObject->__toString()
+#6 [internal function]: BEAR\Package\Provide\Representation\HalRendererTest->testCreatedResourceInvaliUri()
+#7 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(1071): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Representation\HalRendererTest), Array)
+#8 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(939): PHPUnit\Framework\TestCase->runTest()
+#9 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestResult.php(698): PHPUnit\Framework\TestCase->runBare()
+#10 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(894): PHPUnit\Framework\TestResult->run(Object(BEAR\Package\Provide\Representation\HalRendererTest))
+#11 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(755): PHPUnit\Framework\TestCase->run(Object(PHPUnit\Framework\TestResult))
+#12 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(755): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#13 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(546): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#14 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/Command.php(195): PHPUnit\TextUI\TestRunner->doRun(Object(PHPUnit\Framework\TestSuite), Array, true)
+#15 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/Command.php(148): PHPUnit\TextUI\Command->run(Array, true)
+#16 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/phpunit(53): PHPUnit\TextUI\Command::main()
+#17 {main}
+
+Next BEAR\Package\Exception\LocationHeaderRequestException: app://self__INVALID_*  in /Users/akihito/git/BEAR.Package/src/Provide/Representation/CreatedResourceRenderer.php:60
+Stack trace:
+#0 /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/ResourceObject.php(203): BEAR\Package\Provide\Representation\CreatedResourceRenderer->render(Object(FakeVendor_HelloWorld_Resource_App_Post_dEEYNAA))
+#1 /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/ResourceObject.php(71): BEAR\Resource\ResourceObject->toString()
+#2 /Users/akihito/git/BEAR.Package/tests/Provide/Representation/HalRendererTest.php(255): BEAR\Resource\ResourceObject->__toString()
+#3 [internal function]: BEAR\Package\Provide\Representation\HalRendererTest->testCreatedResourceInvaliUri()
+#4 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(1071): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Representation\HalRendererTest), Array)
+#5 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(939): PHPUnit\Framework\TestCase->runTest()
+#6 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestResult.php(698): PHPUnit\Framework\TestCase->runBare()
+#7 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(894): PHPUnit\Framework\TestResult->run(Object(BEAR\Package\Provide\Representation\HalRendererTest))
+#8 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(755): PHPUnit\Framework\TestCase->run(Object(PHPUnit\Framework\TestResult))
+#9 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(755): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#10 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(546): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#11 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/Command.php(195): PHPUnit\TextUI\TestRunner->doRun(Object(PHPUnit\Framework\TestSuite), Array, true)
+#12 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/Command.php(148): PHPUnit\TextUI\Command->run(Array, true)
+#13 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/phpunit(53): PHPUnit\TextUI\Command::main()
+#14 {main}
