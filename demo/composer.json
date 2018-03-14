@@ -1,7 +1,7 @@
 {
     "name": "my-vendor/hello-package",
     "require": {
-        "bear/package": "^1.x-dev"
+        "bear/package": "1.x-dev"
     },
     "autoload": {
         "psr-4": {
