@@ -33,9 +33,14 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resou
 	 * `@Curies`
 	 * `@ReturnCreatedResource`
 
-## Example
+## Demo
 
-See [example/](https://github.com/bearsunday/BEAR.Package/tree/1.x/example) for a reference application.
+```
+cd demo
+composer install
+vendor/bin/phpunit
+php bin/run.php
+```
 
 ## Documentation
 
