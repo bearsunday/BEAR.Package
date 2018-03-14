@@ -14,7 +14,7 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 
 /**
- * 201 @CreatedResource renderer
+ * 201 CreatedResource renderer
  */
 class CreatedResourceRenderer implements RenderInterface
 {
