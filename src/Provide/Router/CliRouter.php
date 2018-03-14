@@ -113,8 +113,6 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * @param int $status
-     *
      * @SuppressWarnings(PHPMD)
      */
     private function terminate(int $status)
