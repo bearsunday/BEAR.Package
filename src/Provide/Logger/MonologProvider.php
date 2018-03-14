@@ -11,7 +11,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Ray\Di\ProviderInterface;
 
-class MonologProviver implements ProviderInterface
+class MonologProvider implements ProviderInterface
 {
     /**
      * @var AbstractAppMeta
