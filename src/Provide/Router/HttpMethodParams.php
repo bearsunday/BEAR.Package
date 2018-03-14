@@ -102,15 +102,10 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Return request query by media-type
-     *
-     * parsed standard input in form-urlencoded or JSON in application/json
      */
     private function phpInput(array $server) : array
     {
         $contentType = $this->getContentType($server);
-        if (! $contentType) {
-            return [];
-        }
         $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim(file_get_contents($this->stdIn)), $put);
@@ -118,17 +113,16 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return $put;
         }
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
-        if ($isApplicationJson) {
-            $content = json_decode(file_get_contents($this->stdIn), true);
-            $error = json_last_error();
-            if ($error !== JSON_ERROR_NONE) {
-                throw new InvalidRequestJsonException(json_last_error_msg());
-            }
-
-            return $content;
+        if (! $isApplicationJson) {
+            return [];
+        }
+        $content = json_decode(file_get_contents($this->stdIn), true);
+        $error = json_last_error();
+        if ($error !== JSON_ERROR_NONE) {
+            throw new InvalidRequestJsonException(json_last_error_msg());
         }
 
-        return [];
+        return $content;
     }
 
     private function getContentType(array $server) : string
