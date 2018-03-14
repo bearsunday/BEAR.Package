@@ -11,18 +11,12 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use Doctrine\Common\Annotations\Reader;
 
 /**
  * 201 CreatedResource renderer
  */
 class CreatedResourceRenderer implements RenderInterface
 {
-    /**
-     * @var Reader
-     */
-    private $reader;
-
     /**
      * @var RouterInterface
      */
@@ -33,9 +27,8 @@ class CreatedResourceRenderer implements RenderInterface
      */
     private $resource;
 
-    public function __construct(Reader $reader, RouterInterface $router, ResourceInterface $resource)
+    public function __construct(RouterInterface $router, ResourceInterface $resource)
     {
-        $this->reader = $reader;
         $this->router = $router;
         $this->resource = $resource;
     }

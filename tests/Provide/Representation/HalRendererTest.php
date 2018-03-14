@@ -153,7 +153,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
+        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
@@ -173,7 +173,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
+        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';

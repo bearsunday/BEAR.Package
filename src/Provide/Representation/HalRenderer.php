@@ -26,19 +26,13 @@ class HalRenderer implements RenderInterface
     private $reader;
 
     /**
-     * @var ResourceInterface
-     */
-    private $resource;
-
-    /**
      * @var HalLink
      */
     private $link;
 
-    public function __construct(Reader $reader, ResourceInterface $resource, HalLink $link)
+    public function __construct(Reader $reader, HalLink $link)
     {
         $this->reader = $reader;
-        $this->resource = $resource;
         $this->link = $link;
     }
 
