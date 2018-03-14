@@ -4,12 +4,9 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace Provide\Router;
+namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\FakeWebRouter;
-use BEAR\Package\Provide\Router\HttpMethodParams;
-use BEAR\Package\Provide\Router\RouterCollection;
-use BEAR\Package\Provide\Router\RouterCollectionProvider;
 use BEAR\Sunday\Provide\Router\WebRouter;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +19,7 @@ class RouterCollectionTest extends TestCase
 
     protected function setUp()
     {
-        $webRouter = new WebRouter('page://self', new HttpMethodParams);
+        $webRouter = new WebRouter('page://self');
         $fakeRouter = new FakeWebRouter('page://self', new HttpMethodParams);
         $this->routerCollection = (new RouterCollectionProvider($webRouter, $fakeRouter))->get();
         parent::setUp();
@@ -59,12 +56,18 @@ class RouterCollectionTest extends TestCase
     {
         $uri = $this->routerCollection->generate('/blog', ['id' => 1]);
         $expected = 'page://self/generated-uri';
+        if (is_bool($uri)) {
+            throw new \LogicException;
+        }
         $this->assertSame($expected, $uri);
     }
 
     public function testGenerateFalse()
     {
-        $uri = $this->routerCollection->generate('/blog', false);
+        $uri = $this->routerCollection->generate('/blog', []);
+        if (! is_bool($uri)) {
+            throw new \LogicException;
+        }
         $this->assertFalse($uri);
     }
 }

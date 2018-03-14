@@ -4,16 +4,15 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace BEAR\Sunday\Provide\Transfer;
+namespace BEAR\Package\Provide\Transfer;
 
-use BEAR\Package\Provide\Transfer\CliResponder;
 use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
 
 class CliResponderTest extends TestCase
 {
     /**
-     * @var HttpResponder
+     * @var CliResponder
      */
     private $responder;
 

@@ -17,6 +17,6 @@ class PsrLoggerModule extends AbstractModule
      */
     protected function configure()
     {
-        $this->bind(LoggerInterface::class)->toProvider(MonologProviver::class)->in(Scope::SINGLETON);
+        $this->bind(LoggerInterface::class)->toProvider(MonologProvider::class)->in(Scope::SINGLETON);
     }
 }

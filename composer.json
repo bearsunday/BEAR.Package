@@ -1,6 +1,6 @@
 {
     "name": "bear/package",
-    "description": "BEAR.Sunday framework package",
+    "description": "BEAR.Sunday application framework package",
     "keywords": [
         "BEAR.Sunday",
         "DI",
@@ -36,7 +36,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BEAR\\Package\\": ["tests/", "tests/Fake//"],
+            "BEAR\\Package\\": ["tests/", "tests/Fake/"],
             "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
         }
     },
@@ -44,7 +44,7 @@
         "bin/bear.compile"
     ],
     "scripts" :{
-        "test": ["@cs", "phpunit"],
+      "test": ["@cs", "phpunit", "phpstan analyse -l max src tests -c phpstan.neon --no-progress"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
         "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"]

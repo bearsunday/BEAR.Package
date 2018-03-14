@@ -23,11 +23,6 @@ class CliRouter implements RouterInterface
     private $router;
 
     /**
-     * @var \LogicException
-     */
-    private $exception;
-
-    /**
      * @var Stdio
      */
     private $stdIo;
@@ -38,12 +33,16 @@ class CliRouter implements RouterInterface
     private $stdIn;
 
     /**
+     * @var \Exception|null
+     */
+    private $terminateException;
+
+    /**
      * @Named("original")
      */
-    public function __construct(RouterInterface $router, \LogicException $exception = null, Stdio $stdIo = null)
+    public function __construct(RouterInterface $router, Stdio $stdIo = null)
     {
         $this->router = $router;
-        $this->exception = $exception;
         $this->stdIo = $stdIo ?: (new CliFactory)->newStdio();
     }
 
@@ -53,6 +52,11 @@ class CliRouter implements RouterInterface
     public function __destruct()
     {
         file_exists($this->stdIn) && unlink($this->stdIn);
+    }
+
+    public function setTerminateException(\Exception $e)
+    {
+        $this->terminateException = $e;
     }
 
     /**
@@ -109,14 +113,12 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * @param int $status
-     *
      * @SuppressWarnings(PHPMD)
      */
-    private function exitProgram($status)
+    private function terminate(int $status)
     {
-        if ($this->exception) {
-            throw $this->exception;
+        if ($this->terminateException instanceof \Exception) {
+            throw $this->terminateException;
         }
         // @codeCoverageIgnoreStart
         exit($status);
@@ -142,7 +144,7 @@ class CliRouter implements RouterInterface
     {
         if ($globals['argc'] !== 3) {
             $this->error(basename($globals['argv'][0]));
-            $this->exitProgram(Status::USAGE);
+            $this->terminate(Status::USAGE);
         }
     }
 

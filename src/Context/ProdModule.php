@@ -9,7 +9,7 @@ namespace BEAR\Package\Context;
 use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
-use BEAR\Package\Provide\Logger\ProdMonologProviver;
+use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\VoidOptionsRenderer;
@@ -32,10 +32,11 @@ class ProdModule extends AbstractModule
     protected function configure()
     {
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
-        $this->bind(LoggerInterface::class)->toProvider(ProdMonologProviver::class)->in(Scope::SINGLETON);
+        $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         // prod cache
-        $this->bind()->annotatedWith('cache_namespace')->toInstance(uniqid('', false));
+        $shortHash = strtr(rtrim(base64_encode(pack('H*', crc32(uniqid('', true)))), '='), '+/', '-_');
+        $this->bind()->annotatedWith('cache_namespace')->toInstance($shortHash);
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader

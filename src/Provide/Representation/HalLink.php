@@ -30,8 +30,8 @@ final class HalLink
         if ($value === []) {
             return $uri;
         }
-        $reverseUri = $this->router->generate($routeName, (array) $value);
-        if (is_string($reverseUri)) {
+        $reverseUri = $this->router->generate($routeName, $value);
+        if (\is_string($reverseUri)) {
             return $reverseUri;
         }
 
@@ -66,7 +66,7 @@ final class HalLink
 
     private function bodyLink(array $body, Hal $hal) : Hal
     {
-        foreach ($body['_links'] as $rel => $link) {
+        foreach ((array) $body['_links'] as $rel => $link) {
             $attr = $link;
             unset($attr['href']);
             $hal->addLink($rel, $link['href'], $attr);

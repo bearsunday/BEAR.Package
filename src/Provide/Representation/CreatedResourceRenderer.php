@@ -11,18 +11,12 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use Doctrine\Common\Annotations\Reader;
 
 /**
- * 201 @CreatedResource renderer
+ * 201 CreatedResource renderer
  */
 class CreatedResourceRenderer implements RenderInterface
 {
-    /**
-     * @var Reader
-     */
-    private $reader;
-
     /**
      * @var RouterInterface
      */
@@ -33,13 +27,8 @@ class CreatedResourceRenderer implements RenderInterface
      */
     private $resource;
 
-    /**
-     * @param Reader          $reader
-     * @param RouterInterface $router
-     */
-    public function __construct(Reader $reader, RouterInterface $router, ResourceInterface $resource)
+    public function __construct(RouterInterface $router, ResourceInterface $resource)
     {
-        $this->reader = $reader;
         $this->router = $router;
         $this->resource = $resource;
     }
@@ -64,10 +53,7 @@ class CreatedResourceRenderer implements RenderInterface
         return $locatedResource->toString();
     }
 
-    /**
-     * @return mixed
-     */
-    private function getReverseMatchedLink(string $uri)
+    private function getReverseMatchedLink(string $uri) : string
     {
         $urlParts = parse_url($uri);
         $routeName = $urlParts['path'];
@@ -75,8 +61,8 @@ class CreatedResourceRenderer implements RenderInterface
         if ($value === []) {
             return $uri;
         }
-        $reverseUri = $this->router->generate($routeName, (array) $value);
-        if (is_string($reverseUri)) {
+        $reverseUri = $this->router->generate($routeName, $value);
+        if (\is_string($reverseUri)) {
             return $reverseUri;
         }
 

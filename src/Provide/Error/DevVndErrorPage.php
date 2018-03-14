@@ -33,9 +33,9 @@ final class DevVndErrorPage extends ResourceObject
     {
         return [
             'message' => $status->text,
-            'logref' => (string) (new LogRef($e)),
+            'logref' => (string) new LogRef($e),
             'request' => (string) $request,
-            'exceptions' => sprintf('%s(%s)', get_class($e), $e->getMessage()),
+            'exceptions' => sprintf('%s(%s)', \get_class($e), $e->getMessage()),
             'file' => sprintf('%s(%s)', $e->getFile(), $e->getLine())
         ];
     }

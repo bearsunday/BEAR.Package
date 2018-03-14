@@ -58,6 +58,6 @@ class WebRouterTest extends TestCase
     public function testGenerate()
     {
         $actual = $this->router->generate('', []);
-        $this->assertFalse($actual);
+        $this->assertFalse((bool) $actual);
     }
 }

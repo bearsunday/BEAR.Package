@@ -80,7 +80,7 @@ final class Bootstrap
 
     private function getCache(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : Cache
     {
-        $isCacheable = is_int(strpos($contexts, 'prod-')) || is_int(strpos($contexts, 'stage-'));
+        $isCacheable = \is_int(strpos($contexts, 'prod-')) || \is_int(strpos($contexts, 'stage-'));
         $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
 
         return $cache;

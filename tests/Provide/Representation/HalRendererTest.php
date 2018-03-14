@@ -4,10 +4,9 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace BEAR\Package;
+namespace BEAR\Package\Provide\Representation;
 
-use BEAR\Package\Provide\Representation\HalLink;
-use BEAR\Package\Provide\Representation\HalRenderer;
+use BEAR\Package\AppInjector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -154,7 +153,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
+        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
@@ -174,7 +173,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, $this->resource, new HalLink(new FakeRouter));
+        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new FakeRouter));
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';

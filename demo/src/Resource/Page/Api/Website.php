@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Resource\Page\Api;
+namespace MyVendor\MyProject\Resource\Page\Api;
 
 use BEAR\Resource\ResourceObject;
 

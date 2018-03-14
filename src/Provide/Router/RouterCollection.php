@@ -32,7 +32,7 @@ class RouterCollection implements RouterInterface
     {
         foreach ($this->routers as $route) {
             $match = $route->match($globals, $server);
-            if ($match !== false) {
+            if ($match instanceof RouterMatch) {
                 return $match;
             }
         }

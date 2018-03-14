@@ -1,5 +1,5 @@
 <?php
-namespace BEAR\Package;
+namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;
 

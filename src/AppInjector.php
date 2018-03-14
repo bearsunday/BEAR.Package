@@ -57,12 +57,12 @@ final class AppInjector implements InjectorInterface
         }
     }
 
-    public function getOverrideInstance(AbstractModule $module, $inteface, $name = Name::ANY)
+    public function getOverrideInstance(AbstractModule $module, $interface, $name = Name::ANY)
     {
         $appModule = clone $this->appModule;
         $appModule->override($module);
 
-        return (new Injector($appModule, $this->scriptDir))->getInstance($inteface, $name);
+        return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
 
     private function getInjector() : InjectorInterface

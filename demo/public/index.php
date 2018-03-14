@@ -1,13 +1,16 @@
 <?php
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 use BEAR\Package\Bootstrap;
-use BEAR\Sunday\Extension\Application\AbstractApp;
 
-require dirname(__DIR__) . '/load.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $context = PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app';
 
-$app = (new Bootstrap)->getApp('MyVendor\MyApp', $context);
-/* @var $app AbstractApp */
+$app = (new Bootstrap)->getApp('MyVendor\MyProject', $context);
 $request = $app->router->match($GLOBALS, $_SERVER);
 try {
     $page = $app

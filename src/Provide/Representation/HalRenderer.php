@@ -10,7 +10,6 @@ use BEAR\Resource\AbstractRequest;
 use BEAR\Resource\AbstractUri;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\RenderInterface;
-use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use Doctrine\Common\Annotations\Reader;
 use Nocarrier\Hal;
@@ -26,19 +25,13 @@ class HalRenderer implements RenderInterface
     private $reader;
 
     /**
-     * @var ResourceInterface
-     */
-    private $resource;
-
-    /**
      * @var HalLink
      */
     private $link;
 
-    public function __construct(Reader $reader, ResourceInterface $resource, HalLink $link)
+    public function __construct(Reader $reader, HalLink $link)
     {
         $this->reader = $reader;
-        $this->resource = $resource;
         $this->link = $link;
     }
 
@@ -51,11 +44,6 @@ class HalRenderer implements RenderInterface
             return $ro->view;
         }
         $method = 'on' . ucfirst($ro->uri->method);
-        if (! method_exists($ro, $method)) {
-            $ro->view = ''; // no view for OPTIONS request
-
-            return '';
-        }
         $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
 
         return $this->renderHal($ro, $annotations);
@@ -73,18 +61,18 @@ class HalRenderer implements RenderInterface
         return $ro->view;
     }
 
-    private function valuateElements(ResourceObject &$ro)
+    private function valuateElements(ResourceObject $ro)
     {
-        foreach ($ro->body as $key => &$embeded) {
-            if ($embeded instanceof AbstractRequest) {
-                $isDefferentSchema = $this->isDifferentSchema($ro, $embeded->resourceObject);
-                if ($isDefferentSchema === true) {
-                    $ro->body['_embedded'][$key] = $embeded()->body;
+        foreach ((array) $ro->body as $key => &$embedded) {
+            if ($embedded instanceof AbstractRequest) {
+                $isDifferentSchema = $this->isDifferentSchema($ro, $embedded->resourceObject);
+                if ($isDifferentSchema === true) {
+                    $ro->body['_embedded'][$key] = $embedded()->body;
                     unset($ro->body[$key]);
                     continue;
                 }
                 unset($ro->body[$key]);
-                $view = $this->render($embeded());
+                $view = $this->render($embedded());
                 $ro->body['_embedded'][$key] = json_decode($view);
             }
         }
@@ -116,7 +104,7 @@ class HalRenderer implements RenderInterface
     private function valuate(ResourceObject $ro) : array
     {
         // evaluate all request in body.
-        if (is_array($ro->body)) {
+        if (\is_array($ro->body)) {
             $this->valuateElements($ro);
         }
         // HAL
@@ -127,7 +115,7 @@ class HalRenderer implements RenderInterface
             return [$ro, $body];
         }
 
-        return[$ro, (array) $body];
+        return[$ro, $body];
     }
 
     private function updateHeaders(ResourceObject $ro)
