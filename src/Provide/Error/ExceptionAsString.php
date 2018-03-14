@@ -12,7 +12,7 @@ final class ExceptionAsString
 {
     public function summery(\Exception $e, $log)
     {
-        return sprintf("\n\n[%s]\n%s\n %s", get_class($e), $e->getMessage(), $log);
+        return sprintf("\n\n[%s]\n%s\n %s", \get_class($e), $e->getMessage(), $log);
     }
 
     /**
@@ -21,11 +21,11 @@ final class ExceptionAsString
      *
      * @return string
      */
-    public function detail(\Exception $e, Request $request)
+    public function detail(\Exception $e, Request $request): string
     {
         $eSummery = sprintf(
             "%s(%s)\n in file %s on line %s\n\n%s",
-            get_class($e),
+            \get_class($e),
             $e->getMessage(),
             $e->getFile(),
             $e->getLine(),
@@ -40,7 +40,7 @@ final class ExceptionAsString
      *
      * @return string
      */
-    private function getPhpVariables(array $server)
+    private function getPhpVariables(array $server): string
     {
         if (PHP_SAPI === 'cli') {
             //            return '';
