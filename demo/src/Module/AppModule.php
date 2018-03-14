@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Module;
+namespace MyVendor\MyProject\Module;
 
 use BEAR\Package\PackageModule;
 use Ray\Di\AbstractModule;

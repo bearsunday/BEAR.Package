@@ -4,7 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Resource\Page;
+namespace MyVendor\MyProject\Resource\Page;
 
 use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\ResourceObject;
