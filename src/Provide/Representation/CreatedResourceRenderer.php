@@ -60,10 +60,7 @@ class CreatedResourceRenderer implements RenderInterface
         return $locatedResource->toString();
     }
 
-    /**
-     * @return mixed
-     */
-    private function getReverseMatchedLink(string $uri)
+    private function getReverseMatchedLink(string $uri) : string
     {
         $urlParts = parse_url($uri);
         $routeName = $urlParts['path'];
