@@ -33,7 +33,7 @@ final class ErrorLogger
     {
         $level = $e->getCode() >= 500 ? Logger::ERROR : Logger::DEBUG;
         $logRef = new LogRef($e);
-        $message = sprintf('req:"%s" code:%s e:%s(%s) logref:%s', (string) $request, $e->getCode(), get_class($e), $e->getMessage(), (string) $logRef);
+        $message = sprintf('req:"%s" code:%s e:%s(%s) logref:%s', (string) $request, $e->getCode(), \get_class($e), $e->getMessage(), (string) $logRef);
         $this->logger->log($level, $message);
         $logRef->log($e, $request, $this->appMeta);
 

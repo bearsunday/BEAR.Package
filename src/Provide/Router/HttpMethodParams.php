@@ -93,7 +93,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return $post;
         }
 
-        if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
+        if (\in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
             return $this->phpInput($server);
         }
 

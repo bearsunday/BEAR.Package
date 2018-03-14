@@ -116,7 +116,7 @@ class HalRenderer implements RenderInterface
     private function valuate(ResourceObject $ro) : array
     {
         // evaluate all request in body.
-        if (is_array($ro->body)) {
+        if (\is_array($ro->body)) {
             $this->valuateElements($ro);
         }
         // HAL
