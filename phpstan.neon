@@ -1,7 +1,7 @@
 
 parameters:
     ignoreErrors:
-        - '#does not call parent constructor from#'
+        - '#does not call parent constructor from Ray\\Di\\AbstractModule#'
     excludes_analyse:
         - */tests/hash.php
         - */tests/*/tmp/*
