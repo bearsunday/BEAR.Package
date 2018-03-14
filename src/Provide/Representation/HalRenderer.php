@@ -75,16 +75,16 @@ class HalRenderer implements RenderInterface
 
     private function valuateElements(ResourceObject &$ro)
     {
-        foreach ($ro->body as $key => &$embeded) {
-            if ($embeded instanceof AbstractRequest) {
-                $isDifferentSchema = $this->isDifferentSchema($ro, $embeded->resourceObject);
+        foreach ((array) $ro->body as $key => &$embedded) {
+            if ($embedded instanceof AbstractRequest) {
+                $isDifferentSchema = $this->isDifferentSchema($ro, $embedded->resourceObject);
                 if ($isDifferentSchema === true) {
-                    $ro->body['_embedded'][$key] = $embeded()->body;
+                    $ro->body['_embedded'][$key] = $embedded()->body;
                     unset($ro->body[$key]);
                     continue;
                 }
                 unset($ro->body[$key]);
-                $view = $this->render($embeded());
+                $view = $this->render($embedded());
                 $ro->body['_embedded'][$key] = json_decode($view);
             }
         }

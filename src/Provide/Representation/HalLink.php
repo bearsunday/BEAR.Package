@@ -66,7 +66,7 @@ final class HalLink
 
     private function bodyLink(array $body, Hal $hal) : Hal
     {
-        foreach ($body['_links'] as $rel => $link) {
+        foreach ((array) $body['_links'] as $rel => $link) {
             $attr = $link;
             unset($attr['href']);
             $hal->addLink($rel, $link['href'], $attr);
