@@ -127,7 +127,7 @@ class HalRenderer implements RenderInterface
             return [$ro, $body];
         }
 
-        return[$ro, (array) $body];
+        return[$ro, $body];
     }
 
     private function updateHeaders(ResourceObject $ro)
