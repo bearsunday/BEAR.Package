@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class ProdVndErrorPageTest extends TestCase
 {
     /**
-     * @var DevVndErrorPage
+     * @var ProdVndErrorPage
      */
     private $page;
 
