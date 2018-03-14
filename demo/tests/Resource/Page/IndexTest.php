@@ -28,7 +28,7 @@ class IndexTest extends TestCase
 
     public function testGet()
     {
-        $ro = $this->resource->uri('ro://self/index')(['name' => 'World']);
+        $ro = $this->resource->uri('page://self/index')(['name' => 'World']);
         /* @var Index $ro */
         $this->assertSame(200, $ro->code);
         $this->assertSame('Hello World', $ro->body['greeting']);
