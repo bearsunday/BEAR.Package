@@ -1,5 +1,7 @@
+
 parameters:
-	ignoreErrors:
-		- '#does not call parent constructor from#'
-	excludes_analyse:
-		- %currentWorkingDirectory%/tests/*/tmp/*
+    ignoreErrors:
+        - '#does not call parent constructor from#'
+    excludes_analyse:
+        - */tests/hash.php
+        - */tests/*/tmp/*
