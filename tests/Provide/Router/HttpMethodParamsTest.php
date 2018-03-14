@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Exception\InvalidRequestJsonException;
 use PHPUnit\Framework\TestCase;
 
 class HttpMethodParamsTest extends TestCase
@@ -142,6 +143,38 @@ class HttpMethodParamsTest extends TestCase
         ];
         list(, $params) = $httpMethodParam->get($server, [], []);
         $expected = ['franeworks' => [['name' => 'BEAR.Sunday v1.0', 'age' => 0], ['name' => 'zend', 'age' => 9]]];
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPostContentTypeJsonEmpty()
+    {
+        $this->expectException(InvalidRequestJsonException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Syntax error');
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json_empty.txt');
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = null;
+        $this->assertSame($expected, $params);
+    }
+
+    public function testPostContentTypeJsonInvalid()
+    {
+        $this->expectException(InvalidRequestJsonException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Syntax error');
+        $httpMethodParam = new HttpMethodParams;
+        $httpMethodParam->setStdIn(__DIR__ . '/json_invalid.txt');
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ];
+        list(, $params) = $httpMethodParam->get($server, [], []);
+        $expected = null;
         $this->assertSame($expected, $params);
     }
 

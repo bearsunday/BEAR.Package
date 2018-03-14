@@ -7,6 +7,7 @@
 namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
+use BEAR\Package\Exception\InvalidRequestJsonException;
 use Ray\Di\Di\Inject;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
@@ -117,6 +118,10 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if ($isApplicationJson) {
             $content = json_decode(file_get_contents($this->stdIn), true);
+            $error = json_last_error();
+            if ($error !== JSON_ERROR_NONE) {
+                throw new InvalidRequestJsonException(json_last_error_msg());
+            }
 
             return $content;
         }
