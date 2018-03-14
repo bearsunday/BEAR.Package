@@ -10,12 +10,12 @@ use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 
 final class ExceptionAsString
 {
-    public function summery(\Exception $e, $log)
-    {
-        return sprintf("\n\n[%s]\n%s\n %s", \get_class($e), $e->getMessage(), $log);
-    }
+    /**
+     * @var string
+     */
+    private $string;
 
-    public function detail(\Exception $e, Request $request) : string
+    public function __construct(\Exception $e, Request $request)
     {
         $eSummery = sprintf(
             "%s(%s)\n in file %s on line %s\n\n%s",
@@ -26,7 +26,12 @@ final class ExceptionAsString
             $e->getTraceAsString()
         );
 
-        return sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER));
+        $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER));
+    }
+
+    public function __toString()
+    {
+        return $this->string;
     }
 
     private function getPhpVariables(array $server) : string
