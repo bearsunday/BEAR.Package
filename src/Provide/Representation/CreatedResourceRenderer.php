@@ -75,7 +75,7 @@ class CreatedResourceRenderer implements RenderInterface
         if ($value === []) {
             return $uri;
         }
-        $reverseUri = $this->router->generate($routeName, (array) $value);
+        $reverseUri = $this->router->generate($routeName, $value);
         if (\is_string($reverseUri)) {
             return $reverseUri;
         }

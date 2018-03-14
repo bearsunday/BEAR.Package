@@ -23,7 +23,7 @@ final class LogRef
 
     public function __construct(\Exception $e)
     {
-        $this->ref = (string) hash('crc32b', \get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
+        $this->ref = hash('crc32b', \get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
         $this->exceptionString = new ExceptionAsString;
     }
 
