@@ -19,7 +19,7 @@ class RouterCollectionTest extends TestCase
 
     protected function setUp()
     {
-        $webRouter = new WebRouter('page://self', new HttpMethodParams);
+        $webRouter = new WebRouter('page://self');
         $fakeRouter = new FakeWebRouter('page://self', new HttpMethodParams);
         $this->routerCollection = (new RouterCollectionProvider($webRouter, $fakeRouter))->get();
         parent::setUp();
@@ -56,12 +56,18 @@ class RouterCollectionTest extends TestCase
     {
         $uri = $this->routerCollection->generate('/blog', ['id' => 1]);
         $expected = 'page://self/generated-uri';
+        if (is_bool($uri)) {
+            throw new \LogicException;
+        }
         $this->assertSame($expected, $uri);
     }
 
     public function testGenerateFalse()
     {
-        $uri = $this->routerCollection->generate('/blog', false);
+        $uri = $this->routerCollection->generate('/blog', []);
+        if (! is_bool($uri)) {
+            throw new \LogicException;
+        }
         $this->assertFalse($uri);
     }
 }

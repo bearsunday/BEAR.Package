@@ -7,8 +7,8 @@
 namespace BEAR\Package\Provide\Logger;
 
 use BEAR\AppMeta\AppMeta;
+use BEAR\Package\AppMetaModule;
 use BEAR\Package\Context\ProdModule;
-use BEAR\Package\Provide\Logger\PsrLoggerModule;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Ray\Di\Injector;

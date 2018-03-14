@@ -90,7 +90,7 @@ class CliRouterTest extends TestCase
     public function testGenerate()
     {
         $actual = $this->router->generate('', []);
-        $this->assertFalse($actual);
+        $this->assertFalse((bool) $actual);
     }
 
     public function testError()
