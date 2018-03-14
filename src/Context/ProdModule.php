@@ -35,7 +35,8 @@ class ProdModule extends AbstractModule
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         // prod cache
-        $this->bind()->annotatedWith('cache_namespace')->toInstance(uniqid());
+        $shortHash = strtr(rtrim(base64_encode(pack('H*', CRC32(uniqid('', true)))), '='), '+/', '-_');
+        $this->bind()->annotatedWith('cache_namespace')->toInstance($shortHash);
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader
