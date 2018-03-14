@@ -1,11 +1,11 @@
 {
     "name": "my-vendor/hello-package",
     "require": {
-        "bear/sunday": "^1.2"
+        "bear/package": "^1.x-dev"
     },
     "autoload": {
         "psr-4": {
-            "MyVendor\\HelloWorld\\": "src"
+            "MyVendor\\MyApp\\": "src"
         }
     },
     "require-dev": {
