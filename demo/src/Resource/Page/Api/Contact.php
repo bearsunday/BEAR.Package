@@ -4,8 +4,9 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Resource\Page\Api;
+namespace MyVendor\MyProject\Resource\Page\Api;
 
+use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Inject\ResourceInject;
 
@@ -13,10 +14,11 @@ class Contact extends ResourceObject
 {
     use ResourceInject;
 
+    /**
+     * @Embed(rel="contact", src="/api/user/friend{?id}")
+     */
     public function onGet($id)
     {
-        $this['contact'] = $this->resource->get->uri('app://self/user/friend')->withQuery(['id' => $id])->eager->request();
-
         return $this;
     }
 }

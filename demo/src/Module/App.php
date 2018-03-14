@@ -4,11 +4,10 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace MyVendor\MyApp\Module;
+namespace MyVendor\MyProject\Module;
 
 use BEAR\Sunday\Extension\Application\AbstractApp;
 
 class App extends AbstractApp
 {
-    public $appDir = __DIR__;
 }

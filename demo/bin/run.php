@@ -7,7 +7,7 @@
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $page = (new \BEAR\Package\Bootstrap())
-    ->getApp('MyVendor\MyApp', 'hal-app')
+    ->getApp('MyVendor\MyProject', 'hal-app')
     ->resource
     ->get
     ->uri('page://self/api/user')(['id' => 1]);

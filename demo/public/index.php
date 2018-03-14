@@ -10,7 +10,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $context = PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app';
 
-$app = (new Bootstrap)->getApp('MyVendor\MyApp', $context);
+$app = (new Bootstrap)->getApp('MyVendor\MyProject', $context);
 $request = $app->router->match($GLOBALS, $_SERVER);
 try {
     $page = $app
