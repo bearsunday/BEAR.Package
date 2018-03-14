@@ -101,7 +101,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * Take 'php://input' as input in form-urlencoded or json
+     * Return request query by media-type
+     *
+     * parsed standard input in form-urlencoded or JSON in application/json
      */
     private function phpInput(array $server) : array
     {
