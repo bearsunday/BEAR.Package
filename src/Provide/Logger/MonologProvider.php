@@ -18,14 +18,14 @@ class MonologProvider implements ProviderInterface
      */
     private $appMeta;
 
-    /**
-     * @param AbstractAppMeta $appMeta
-     */
     public function __construct(AbstractAppMeta $appMeta)
     {
         $this->appMeta = $appMeta;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get()
     {
         return new Logger($this->appMeta->name, [new StreamHandler($this->appMeta->logDir . '/app.log', Logger::DEBUG)]);
