@@ -35,7 +35,7 @@ class ProdModule extends AbstractModule
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         // prod cache
-        $this->bind()->annotatedWith('cache_namespace')->toInstance(uniqid('', false));
+        $this->bind()->annotatedWith('cache_namespace')->toInstance(uniqid());
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader
