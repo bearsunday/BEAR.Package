@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Representation;
 
+use BEAR\Resource\ResourceObject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
@@ -26,6 +27,7 @@ class CreatedResourceInterceptor implements MethodInterceptor
      */
     public function invoke(MethodInvocation $invocation)
     {
+        /* @var ResourceObject $ro */
         $ro = $invocation->proceed();
         $isCreated = $ro->code === 201 && isset($ro->headers['Location']);
         if (! $isCreated) {
