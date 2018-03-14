@@ -4,8 +4,6 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-
-
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $page = (new \BEAR\Package\Bootstrap())

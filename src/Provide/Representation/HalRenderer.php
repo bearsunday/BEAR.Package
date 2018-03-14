@@ -73,7 +73,7 @@ class HalRenderer implements RenderInterface
         return $ro->view;
     }
 
-    private function valuateElements(ResourceObject &$ro)
+    private function valuateElements(ResourceObject $ro)
     {
         foreach ((array) $ro->body as $key => &$embedded) {
             if ($embedded instanceof AbstractRequest) {

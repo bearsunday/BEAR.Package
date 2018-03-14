@@ -6,8 +6,6 @@
  */
 namespace BEAR\Package\Provide\Transfer;
 
-use BEAR\Package\Provide\Transfer\CliResponder;
-use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
 
