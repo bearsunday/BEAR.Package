@@ -44,11 +44,6 @@ class HalRenderer implements RenderInterface
             return $ro->view;
         }
         $method = 'on' . ucfirst($ro->uri->method);
-        if (! method_exists($ro, $method)) {
-            $ro->view = ''; // no view for OPTIONS request
-
-            return '';
-        }
         $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
 
         return $this->renderHal($ro, $annotations);
