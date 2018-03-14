@@ -6,7 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router;
 
-use BEAR\Package\Exception\InvalidJsonException;
+use BEAR\Package\Exception\InvalidRequestJsonException;
 use PHPUnit\Framework\TestCase;
 
 class HttpMethodParamsTest extends TestCase
@@ -148,7 +148,7 @@ class HttpMethodParamsTest extends TestCase
 
     public function testPostContentTypeJsonEmpty()
     {
-        $this->expectException(InvalidJsonException::class);
+        $this->expectException(InvalidRequestJsonException::class);
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage('Syntax error');
         $httpMethodParam = new HttpMethodParams;
@@ -164,7 +164,7 @@ class HttpMethodParamsTest extends TestCase
 
     public function testPostContentTypeJsonInvalid()
     {
-        $this->expectException(InvalidJsonException::class);
+        $this->expectException(InvalidRequestJsonException::class);
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage('Syntax error');
         $httpMethodParam = new HttpMethodParams;

@@ -8,6 +8,6 @@ namespace BEAR\Package\Exception;
 
 use BEAR\Resource\Exception\BadRequestException;
 
-class InvalidJsonException extends BadRequestException implements ExceptionInterface
+class InvalidRequestJsonException extends BadRequestException implements ExceptionInterface
 {
 }
