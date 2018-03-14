@@ -4,12 +4,9 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace Provide\Router;
+namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\FakeWebRouter;
-use BEAR\Package\Provide\Router\HttpMethodParams;
-use BEAR\Package\Provide\Router\RouterCollection;
-use BEAR\Package\Provide\Router\RouterCollectionProvider;
 use BEAR\Sunday\Provide\Router\WebRouter;
 use PHPUnit\Framework\TestCase;
 

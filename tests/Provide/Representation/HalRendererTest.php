@@ -4,10 +4,9 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-namespace BEAR\Package;
+namespace BEAR\Package\Provide\Representation;
 
-use BEAR\Package\Provide\Representation\HalLink;
-use BEAR\Package\Provide\Representation\HalRenderer;
+use BEAR\Package\AppInjector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
