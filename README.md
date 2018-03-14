@@ -41,6 +41,7 @@ composer install
 vendor/bin/phpunit
 php bin/run.php
 ```
+See more at [demo/README.md](https://github.com/bearsunday/BEAR.Package/tree/1.x/demo)
 
 ## Documentation
 
