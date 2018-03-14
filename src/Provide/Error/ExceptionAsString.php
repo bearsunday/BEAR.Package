@@ -15,12 +15,6 @@ final class ExceptionAsString
         return sprintf("\n\n[%s]\n%s\n %s", \get_class($e), $e->getMessage(), $log);
     }
 
-    /**
-     * @param \Exception $e
-     * @param Request    $request
-     *
-     * @return string
-     */
     public function detail(\Exception $e, Request $request) : string
     {
         $eSummery = sprintf(
@@ -35,11 +29,6 @@ final class ExceptionAsString
         return sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 
-    /**
-     * @param array $server
-     *
-     * @return string
-     */
     private function getPhpVariables(array $server) : string
     {
         if (PHP_SAPI === 'cli') {

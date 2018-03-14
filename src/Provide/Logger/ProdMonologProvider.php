@@ -18,9 +18,6 @@ class ProdMonologProvider implements ProviderInterface
      */
     private $appMeta;
 
-    /**
-     * @param AbstractAppMeta $appMeta
-     */
     public function __construct(AbstractAppMeta $appMeta)
     {
         $this->appMeta = $appMeta;

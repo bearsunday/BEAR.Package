@@ -14,7 +14,7 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 
 /**
- * 201 @CreatedResource renderer
+ * 201 CreatedResource renderer
  */
 class CreatedResourceRenderer implements RenderInterface
 {
@@ -33,10 +33,6 @@ class CreatedResourceRenderer implements RenderInterface
      */
     private $resource;
 
-    /**
-     * @param Reader          $reader
-     * @param RouterInterface $router
-     */
     public function __construct(Reader $reader, RouterInterface $router, ResourceInterface $resource)
     {
         $this->reader = $reader;
