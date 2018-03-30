@@ -41,7 +41,7 @@ final class Bootstrap
      * @param string $contexts application context 'prd-html-app'
      * @param string $appDir   application path
      */
-    public function getApp(string $name, string $contexts, string $appDir = null) : AbstractApp
+    public function getApp(string $name, string $contexts, string $appDir = '') : AbstractApp
     {
         return $this->newApp(new AppMeta($name, $contexts, $appDir), $contexts);
     }
