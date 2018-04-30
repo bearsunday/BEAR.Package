@@ -14,7 +14,9 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\VoidCache;
+use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\Module\AppModule;
+use FakeVendor\HelloWorld\Resource\Page\Dep;
 use PHPUnit\Framework\TestCase;
 
 class BootstrapTest extends TestCase
@@ -70,5 +72,27 @@ class BootstrapTest extends TestCase
     public function testInvalidContext()
     {
         (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'invalid');
+    }
+
+    public function testCompileOnDemandInDevelop()
+    {
+        (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'app');
+        $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'app');
+        $this->assertInstanceOf(AppInterface::class, $app);
+        /** @var Dep $dep */
+        $dep = $app->resource->uri('page://self/dep')();
+        $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
+        $this->assertInstanceOf(FakeDep::class, $dep->dep);
+    }
+
+    public function testCompileOnDemandInProduction()
+    {
+        (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
+        $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
+        $this->assertInstanceOf(AppInterface::class, $app);
+        /** @var Dep $dep */
+        $dep = $app->resource->uri('page://self/dep')();
+        $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
+        $this->assertInstanceOf(FakeDep::class, $dep->dep);
     }
 }
