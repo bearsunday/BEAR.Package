@@ -65,8 +65,12 @@ final class Bootstrap
 
     private function getInstance(AbstractAppMeta $appMeta, string $contexts) : array
     {
-        $app = (new AppInjector($appMeta->name, $contexts))->getInstance(AppInterface::class);
-        $injector = new ScriptInjector($appMeta->tmpDir);
+        $appInjector = new AppInjector($appMeta->name, $contexts);
+        $getModule = function () use ($appInjector) {
+            return $appInjector->getModule();
+        };
+        $app = $appInjector->getInstance(AppInterface::class);
+        $injector = new ScriptInjector($appMeta->tmpDir, $getModule);
         // save singleton instance cache
         $injector->getInstance(Reader::class);
         $injector->getInstance(Cache::class);

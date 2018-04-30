@@ -65,9 +65,19 @@ final class AppInjector implements InjectorInterface
         return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
 
+    public function getModule() : AbstractModule
+    {
+        return $this->appModule;
+    }
+
     private function getInjector() : InjectorInterface
     {
-        $scriptInjector = new ScriptInjector($this->scriptDir);
+        $scriptInjector = new ScriptInjector(
+            $this->scriptDir,
+            function () {
+                return $this->appModule;
+            }
+        );
         try {
             $injector = $scriptInjector->getInstance(InjectorInterface::class);
         } catch (NotCompiled $e) {
@@ -84,9 +94,6 @@ final class AppInjector implements InjectorInterface
         $compiler->compile();
     }
 
-    /**
-     * Return configured module
-     */
     private function newModule(AbstractAppMeta $appMeta, string $contexts) : AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $contexts));
@@ -102,7 +109,7 @@ final class AppInjector implements InjectorInterface
             /* @var $module AbstractModule */
             $module = new $class($module);
         }
-        $module->install(new ResourceObjectModule($appMeta));
+//        $module->install(new ResourceObjectModule($appMeta));
         $module->override(new AppMetaModule($appMeta));
 
         return $module;
