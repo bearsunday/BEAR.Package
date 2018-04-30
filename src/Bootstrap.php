@@ -65,6 +65,7 @@ final class Bootstrap
 
     private function getInstance(AbstractAppMeta $appMeta, string $contexts) : array
     {
+        $t = microtime(true);
         $appInjector = new AppInjector($appMeta->name, $contexts);
         $getModule = function () use ($appInjector) {
             return $appInjector->getModule();
@@ -76,8 +77,13 @@ final class Bootstrap
         $injector->getInstance(Cache::class);
         $injector->getInstance(LoggerInterface::class);
         $injector->getInstance(ResourceInterface::class);
-        $log = sprintf('%s/context.%s.log', $appMeta->logDir, $contexts);
-        file_put_contents($log, print_r($app, true));
+        $logFile = sprintf('%s/app.log', $appMeta->logDir);
+        $log = sprintf(
+            "compile: %.4f msec\n\n%s",
+            (microtime(true) - $t) * 1000,
+            print_r($app, true)
+        );
+        file_put_contents($logFile, $log);
 
         return [$app, $injector];
     }
