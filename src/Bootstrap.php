@@ -17,8 +17,6 @@ use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
-use Psr\Log\LoggerInterface;
-use Ray\Compiler\ScriptInjector;
 
 /**
  * Bootstrap
@@ -54,36 +52,24 @@ final class Bootstrap
         $cache = $this->getCache($appMeta, $contexts, $cache);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
         list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
-        if ($app && $app instanceof AbstractApp) {
+        if ($app instanceof AbstractApp) {
             return $app;
         }
+        $t = microtime(true);
         list($app, $injector) = $this->getInstance($appMeta, $contexts);
-        $cache->save($appId, [$app, $injector]); // save $app with injector to save singleton instance (in ScriptInjector::$singletons)
+        file_put_contents(sprintf('%s/app.log', $appMeta->logDir), sprintf("compile: %.4f msec\n\n", (microtime(true) - $t) * 1000));
 
         return $app;
     }
 
     private function getInstance(AbstractAppMeta $appMeta, string $contexts) : array
     {
-        $t = microtime(true);
-        $appInjector = new AppInjector($appMeta->name, $contexts);
-        $getModule = function () use ($appInjector) {
-            return $appInjector->getModule();
-        };
-        $app = $appInjector->getInstance(AppInterface::class);
-        $injector = new ScriptInjector($appMeta->tmpDir, $getModule);
+        $injector = new AppInjector($appMeta->name, $contexts);
+        $app = $injector->getInstance(AppInterface::class);
         // save singleton instance cache
         $injector->getInstance(Reader::class);
         $injector->getInstance(Cache::class);
-        $injector->getInstance(LoggerInterface::class);
         $injector->getInstance(ResourceInterface::class);
-        $logFile = sprintf('%s/app.log', $appMeta->logDir);
-        $log = sprintf(
-            "compile: %.4f msec\n\n%s",
-            (microtime(true) - $t) * 1000,
-            print_r($app, true)
-        );
-        file_put_contents($logFile, $log);
 
         return [$app, $injector];
     }

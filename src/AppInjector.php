@@ -6,13 +6,11 @@
  */
 namespace BEAR\Package;
 
-use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Exception\InvalidContextException;
-use Ray\Compiler\DiCompiler;
-use Ray\Compiler\Exception\NotCompiled;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Bind;
 use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
@@ -20,9 +18,14 @@ use Ray\Di\Name;
 final class AppInjector implements InjectorInterface
 {
     /**
-     * @var AbstractModule
+     * @var AppMeta
      */
-    private $appModule;
+    private $appMeta;
+
+    /**
+     * @var string
+     */
+    private $context;
 
     /**
      * @var string
@@ -30,16 +33,18 @@ final class AppInjector implements InjectorInterface
     private $scriptDir;
 
     /**
-     * @var string
+     * @var ScriptInjector
      */
-    private $logDir;
+    private $injector;
 
-    public function __construct($name, $contexts)
+    public function __construct(string $name, string $context)
     {
-        $appMeta = new AppMeta($name, $contexts);
-        $this->scriptDir = $appMeta->tmpDir;
-        $this->logDir = $appMeta->logDir;
-        $this->appModule = $this->newModule($appMeta, $contexts);
+        $this->context = $context;
+        $this->appMeta = new AppMeta($name, $context);
+        $this->scriptDir = $this->appMeta->tmpDir;
+        $this->injector = new ScriptInjector($this->scriptDir, function () {
+            return $this->getModule();
+        });
     }
 
     /**
@@ -47,58 +52,23 @@ final class AppInjector implements InjectorInterface
      */
     public function getInstance($interface, $name = Name::ANY)
     {
-        try {
-            return $this->getInjector()->getInstance($interface, $name);
-        } catch (NotCompiled $e) {
-            file_put_contents(sprintf('%s/%s', $this->logDir, 'compile-err.log'), (string) $e);
-
-            throw $e;
-        }
+        return $this->injector->getInstance($interface, $name);
     }
 
     public function getOverrideInstance(AbstractModule $module, $interface, $name = Name::ANY)
     {
-        $appModule = clone $this->appModule;
+        $appModule = clone $this->getModule();
         $appModule->override($module);
 
         return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
 
-    public function getModule() : AbstractModule
+    private function getModule() : AbstractModule
     {
-        return $this->appModule;
-    }
-
-    private function getInjector() : InjectorInterface
-    {
-        $scriptInjector = new ScriptInjector(
-            $this->scriptDir,
-            function () {
-                return $this->appModule;
-            }
-        );
-        try {
-            $injector = $scriptInjector->getInstance(InjectorInterface::class);
-        } catch (NotCompiled $e) {
-            $this->compile($this->appModule, $this->scriptDir);
-            $injector = $scriptInjector->getInstance(InjectorInterface::class);
-        }
-
-        return $injector;
-    }
-
-    private function compile(AbstractModule $module, string $scriptDir)
-    {
-        $compiler = new DiCompiler($module, $scriptDir);
-        $compiler->compile();
-    }
-
-    private function newModule(AbstractAppMeta $appMeta, string $contexts) : AbstractModule
-    {
-        $contextsArray = array_reverse(explode('-', $contexts));
+        $contextsArray = array_reverse(explode('-', $this->context));
         $module = null;
         foreach ($contextsArray as $context) {
-            $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
+            $class = $this->appMeta->name . '\Module\\' . ucwords($context) . 'Module';
             if (! class_exists($class)) {
                 $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
             }
@@ -108,7 +78,8 @@ final class AppInjector implements InjectorInterface
             /* @var $module AbstractModule */
             $module = new $class($module);
         }
-        $module->override(new AppMetaModule($appMeta));
+        $module->override(new AppMetaModule($this->appMeta));
+        (new Bind($module->getContainer(), InjectorInterface::class))->toInstance($this->injector);
 
         return $module;
     }
