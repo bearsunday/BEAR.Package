@@ -10,6 +10,7 @@ use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Router\CliRouter;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Transfer\CliResponder;
+use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\ArrayCache;
@@ -18,6 +19,7 @@ use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Resource\Page\Dep;
 use PHPUnit\Framework\TestCase;
+use Ray\Di\AbstractModule;
 
 class BootstrapTest extends TestCase
 {
@@ -84,6 +86,14 @@ class BootstrapTest extends TestCase
         $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
         $this->assertInstanceOf(FakeDep::class, $dep->dep);
     }
+
+    public function testSerializeApp()
+    {
+        $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
+
+        $this->assertInstanceOf(AbstractApp::class, unserialize(serialize($app)));
+    }
+
 
     public function testCompileOnDemandInProduction()
     {
