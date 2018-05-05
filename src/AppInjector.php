@@ -19,7 +19,7 @@ use Ray\Di\Name;
 final class AppInjector implements InjectorInterface
 {
     /**
-     * @var AppMeta
+     * @var AbstractAppMeta
      */
     private $appMeta;
 
@@ -41,7 +41,6 @@ final class AppInjector implements InjectorInterface
     public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null)
     {
         $this->context = $context;
-        $this->name = $name;
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new AppMeta($name, $context);
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! \file_exists($scriptDir) && \mkdir($scriptDir);
