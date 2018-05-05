@@ -31,7 +31,7 @@ class BootstrapTest extends TestCase
     {
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
         AppModule::$modules = [];
-        parent::setUp();
+        delete_dir(__DIR__ . '/Fake/fake-app/var/tmp');
     }
 
     public function testBuiltInCliModule()
@@ -89,7 +89,6 @@ class BootstrapTest extends TestCase
     public function testSerializeApp()
     {
         $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
-
         $this->assertInstanceOf(AbstractApp::class, unserialize(serialize($app)));
     }
 

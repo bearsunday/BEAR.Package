@@ -9,13 +9,14 @@ $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 require __DIR__ . '/hash.php';
 
-$rm = function ($dir) use (&$rm) {
+function delete_dir($dir) {
     foreach (glob($dir . '/*') as $file) {
-        is_dir($file) ? $rm($file) : unlink($file);
+        is_dir($file) ? delete_dir($file) : unlink($file);
         @rmdir($file);
     }
 };
-$rm(__DIR__ . '/tmp');
-$rm(__DIR__ . '/Fake/fake-app/var/tmp');
-$rm(__DIR__ . '/Fake/fake-app/var/log');
-$rm(dirname(__DIR__) . '/var/tmp');
+
+delete_dir(__DIR__ . '/tmp');
+delete_dir(__DIR__ . '/Fake/fake-app/var/tmp');
+delete_dir(__DIR__ . '/Fake/fake-app/var/log');
+delete_dir(dirname(__DIR__) . '/var/tmp');
