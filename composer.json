@@ -23,6 +23,7 @@
         "bear/sunday": "^1.2.2",
         "monolog/monolog": "^1.22",
         "bear/streamer": "^1.0",
+        "ray/di": "^2.6.7",
         "ray/compiler": "^1.2.2"
     },
     "require-dev": {
