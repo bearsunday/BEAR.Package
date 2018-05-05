@@ -36,7 +36,7 @@ final class Bootstrap
 
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
-        $cache = $this->getCache($appMeta, $contexts, $cache);
+        $cache = $cache ?: $this->getCache($appMeta, $contexts, $cache);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
         $app = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app instanceof AbstractApp) {
