@@ -12,11 +12,7 @@ use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\ChainCache;
-use Doctrine\Common\Cache\FilesystemCache;
-use Doctrine\Common\Cache\VoidCache;
 
 final class Bootstrap
 {
@@ -36,27 +32,18 @@ final class Bootstrap
 
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
-        $cache = $cache ?: $this->getCache($appMeta, $contexts, $cache);
+        $injector = new AppInjector($appMeta->name, $contexts, $appMeta);
+        $cache = $cache instanceof Cache ? $cache : $injector->getInstance(Cache::class);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
-        $app = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
+        $app = $cache->fetch($appId);
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $injector = new AppInjector($appMeta->name, $contexts, $appMeta);
         $app = $injector->getInstance(AppInterface::class);
         $injector->getInstance(Reader::class);
-        $injector->getInstance(Cache::class);
         $injector->getInstance(ResourceInterface::class);
         $cache->save($appId, $app);
 
         return $app;
-    }
-
-    private function getCache(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : Cache
-    {
-        $isCacheable = \is_int(strpos($contexts, 'prod-')) || \is_int(strpos($contexts, 'stage-'));
-        $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
-
-        return $cache;
     }
 }
