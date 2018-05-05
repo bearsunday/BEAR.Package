@@ -23,7 +23,7 @@
         "bear/sunday": "^1.2.2",
         "monolog/monolog": "^1.22",
         "bear/streamer": "^1.0",
-        "ray/compiler": "^1.2.1"
+        "ray/compiler": "^1.2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2"
@@ -39,7 +39,8 @@
         "psr-4": {
             "BEAR\\Package\\": ["tests/", "tests/Fake/"],
             "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
-        }
+        },
+        "files": ["tests/delete_dir.php"]
     },
     "bin": [
         "bin/bear.compile"

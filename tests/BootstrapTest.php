@@ -10,6 +10,7 @@ use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Router\CliRouter;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Transfer\CliResponder;
+use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\ArrayCache;
@@ -30,7 +31,7 @@ class BootstrapTest extends TestCase
     {
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
         AppModule::$modules = [];
-        parent::setUp();
+        delete_dir(__DIR__ . '/Fake/fake-app/var/tmp');
     }
 
     public function testBuiltInCliModule()
@@ -83,6 +84,12 @@ class BootstrapTest extends TestCase
         $dep = $app->resource->uri('page://self/dep')();
         $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
         $this->assertInstanceOf(FakeDep::class, $dep->dep);
+    }
+
+    public function testSerializeApp()
+    {
+        $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
+        $this->assertInstanceOf(AbstractApp::class, unserialize(serialize($app)));
     }
 
     public function testCompileOnDemandInProduction()

@@ -4,18 +4,10 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-$loader = require dirname(__DIR__) . '/vendor/autoload.php';
-/* @var $loader \Composer\Autoload\ClassLoader */
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+require dirname(__DIR__) . '/vendor/autoload.php';
 require __DIR__ . '/hash.php';
 
-$rm = function ($dir) use (&$rm) {
-    foreach (glob($dir . '/*') as $file) {
-        is_dir($file) ? $rm($file) : unlink($file);
-        @rmdir($file);
-    }
-};
-$rm(__DIR__ . '/tmp');
-$rm(__DIR__ . '/Fake/fake-app/var/tmp');
-$rm(__DIR__ . '/Fake/fake-app/var/log');
-$rm(dirname(__DIR__) . '/var/tmp');
+delete_dir(__DIR__ . '/tmp');
+delete_dir(__DIR__ . '/Fake/fake-app/var/tmp');
+delete_dir(__DIR__ . '/Fake/fake-app/var/log');
+delete_dir(dirname(__DIR__) . '/var/tmp');
