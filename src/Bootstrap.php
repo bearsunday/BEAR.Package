@@ -48,7 +48,7 @@ final class Bootstrap
         $injector->getInstance(Cache::class);
         $injector->getInstance(ResourceInterface::class);
         $cache->save($appId, $app);
-        
+
         return $app;
     }
 
