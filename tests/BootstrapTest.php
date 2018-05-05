@@ -19,7 +19,6 @@ use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Resource\Page\Dep;
 use PHPUnit\Framework\TestCase;
-use Ray\Di\AbstractModule;
 
 class BootstrapTest extends TestCase
 {
@@ -93,7 +92,6 @@ class BootstrapTest extends TestCase
 
         $this->assertInstanceOf(AbstractApp::class, unserialize(serialize($app)));
     }
-
 
     public function testCompileOnDemandInProduction()
     {

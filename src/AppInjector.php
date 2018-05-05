@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use Ray\Compiler\ScriptInjector;
@@ -37,11 +38,14 @@ final class AppInjector implements InjectorInterface
      */
     private $injector;
 
-    public function __construct(string $name, string $context)
+    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null)
     {
         $this->context = $context;
-        $this->appMeta = new AppMeta($name, $context);
-        $this->scriptDir = $this->appMeta->tmpDir;
+        $this->name = $name;
+        $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new AppMeta($name, $context);
+        $scriptDir = $this->appMeta->tmpDir . '/di';
+        ! \file_exists($scriptDir) && \mkdir($scriptDir);
+        $this->scriptDir = $scriptDir;
         $this->injector = new ScriptInjector($this->scriptDir, function () {
             return $this->getModule();
         });

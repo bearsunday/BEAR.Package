@@ -18,20 +18,10 @@ use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\VoidCache;
 
-/**
- * Bootstrap
- *
- * Create an app object that contains all the objects used in the bootstrap script　The bootstrap script uses the public
- * property of $ app to run the application.
- *
- * AppModule knows the binding of all interfaces. Other context modules override bindings on the interface. For example,
- * `app` binds JsonRenderer and outputs JSON. In` html-prod`, HtmlModule overwrites the binding on TwigRenderer and
- * outputs html.
- */
 final class Bootstrap
 {
     /**
-     * Return application instance by name and contexts
+     * Return application instance
      *
      * Use newApp() instead for your own AppMeta and Cache.
      *
@@ -44,34 +34,30 @@ final class Bootstrap
         return $this->newApp(new AppMeta($name, $contexts, $appDir), $contexts);
     }
 
-    /**
-     * Return cached contextual application instance
-     */
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
         $cache = $this->getCache($appMeta, $contexts, $cache);
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
-        list($app) = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
+        $app = $cache->fetch($appId); // $scriptInjector set cached single instance in wakeup
         if ($app instanceof AbstractApp) {
             return $app;
         }
         $t = microtime(true);
-        list($app, $injector) = $this->getInstance($appMeta, $contexts);
+        $app = $this->getInstance($appMeta, $contexts);
         file_put_contents(sprintf('%s/app.log', $appMeta->logDir), sprintf("compile: %.4f msec\n\n", (microtime(true) - $t) * 1000));
 
         return $app;
     }
 
-    private function getInstance(AbstractAppMeta $appMeta, string $contexts) : array
+    private function getInstance(AbstractAppMeta $appMeta, string $contexts) : AbstractApp
     {
-        $injector = new AppInjector($appMeta->name, $contexts);
+        $injector = new AppInjector($appMeta->name, $contexts, $appMeta);
         $app = $injector->getInstance(AppInterface::class);
-        // save singleton instance cache
         $injector->getInstance(Reader::class);
         $injector->getInstance(Cache::class);
         $injector->getInstance(ResourceInterface::class);
 
-        return [$app, $injector];
+        return $app;
     }
 
     private function getCache(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : Cache
