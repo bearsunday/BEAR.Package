@@ -4,9 +4,7 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-$loader = require dirname(__DIR__) . '/vendor/autoload.php';
-/* @var $loader \Composer\Autoload\ClassLoader */
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+require dirname(__DIR__) . '/vendor/autoload.php';
 require __DIR__ . '/hash.php';
 
 delete_dir(__DIR__ . '/tmp');
