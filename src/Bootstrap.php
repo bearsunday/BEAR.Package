@@ -42,21 +42,13 @@ final class Bootstrap
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $t = microtime(true);
-        $app = $this->getInstance($appMeta, $contexts);
-        file_put_contents(sprintf('%s/app.log', $appMeta->logDir), sprintf("compile: %.4f msec\n\n", (microtime(true) - $t) * 1000));
-
-        return $app;
-    }
-
-    private function getInstance(AbstractAppMeta $appMeta, string $contexts) : AbstractApp
-    {
         $injector = new AppInjector($appMeta->name, $contexts, $appMeta);
         $app = $injector->getInstance(AppInterface::class);
         $injector->getInstance(Reader::class);
         $injector->getInstance(Cache::class);
         $injector->getInstance(ResourceInterface::class);
-
+        $cache->save($appId, $app);
+        
         return $app;
     }
 
