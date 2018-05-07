@@ -81,7 +81,7 @@ final class Bootstrap
         $log = sprintf(
             "compile: %.4f msec\n\n%s",
             (microtime(true) - $t) * 1000,
-            print_r($app, true)
+            ''
         );
         file_put_contents($logFile, $log);
 
