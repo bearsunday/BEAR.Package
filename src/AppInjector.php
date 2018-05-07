@@ -65,7 +65,7 @@ final class AppInjector implements InjectorInterface
 
         return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
-    
+
     public function clear()
     {
         $this->injector->clear();
