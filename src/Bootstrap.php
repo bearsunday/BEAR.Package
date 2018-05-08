@@ -40,7 +40,6 @@ final class Bootstrap
             return $app;
         }
         $injector = new AppInjector($appMeta->name, $contexts, $appMeta);
-        $injector->clear();
         $app = $injector->getInstance(AppInterface::class);
         $injector->getInstance(Reader::class);
         $injector->getInstance(ResourceInterface::class);
