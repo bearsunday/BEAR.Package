@@ -6,12 +6,15 @@
  */
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Ray\Di\AbstractModule;
+use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
 
 final class Compiler
@@ -23,7 +26,7 @@ final class Compiler
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
      */
-    public function __invoke($appName, $context, $appDir)
+    public function __invoke($appName, $context, $appDir) : string
     {
         $appMeta = new AppMeta($appName, $context, $appDir);
         $injector = new AppInjector($appName, $context);
@@ -40,6 +43,10 @@ final class Compiler
         foreach ($appMeta->getResourceListGenerator() as list($className)) {
             $this->scanClass($injector, $reader, $namedParams, $className);
         }
+        $logFile = $appMeta->logDir . '/compile.log';
+        $this->saveCompileLog($appMeta, $context, $logFile);
+
+        return $logFile;
     }
 
     private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className)
@@ -75,5 +82,16 @@ final class Compiler
         } catch (ParameterException $e) {
             return;
         }
+    }
+
+    private function saveCompileLog(AbstractAppMeta $appMeta, string $context, string $logFile)
+    {
+        $module = (new Module)($appMeta, $context);
+        /** @var AbstractModule $module */
+        $container = $module->getContainer();
+        foreach ($appMeta->getResourceListGenerator() as list($class)) {
+            new Bind($container, $class);
+        }
+        file_put_contents($logFile, (string) $module);
     }
 }
