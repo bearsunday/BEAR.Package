@@ -33,7 +33,7 @@ final class Bootstrap
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
         $injector = new AppInjector($appMeta->name, $contexts, $appMeta);
-        $cache = $cache instanceof Cache ? $cache : $injector->getInstance(Cache::class);
+        $cache = $cache instanceof Cache ? $cache : $injector->getInstance(Cache::class, 'app');
         $appId = $appMeta->name . $contexts . filemtime($appMeta->appDir . '/src');
         $app = $cache->fetch($appId);
         if ($app instanceof AbstractApp) {

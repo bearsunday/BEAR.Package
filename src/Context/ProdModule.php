@@ -38,6 +38,7 @@ class ProdModule extends AbstractModule
         $shortHash = strtr(rtrim(base64_encode(pack('H*', crc32(uniqid('', true)))), '='), '+/', '-_');
         $this->bind()->annotatedWith('cache_namespace')->toInstance($shortHash);
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->annotatedWith('app')->toProvider(ProdCacheProvider::class);
         $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
