@@ -44,6 +44,21 @@ final class Bootstrap
         $app = $injector->getInstance(AppInterface::class);
         $injector->getInstance(Reader::class);
         $injector->getInstance(ResourceInterface::class);
+        $logFile = sprintf('%s/app.log', $appMeta->logDir);
+        $log = sprintf(
+            "compile: %.4f msec\n\n%s",
+            (microtime(true) - $t) * 1000,
+            ''
+        );
+        file_put_contents($logFile, $log);
+
+        return [$app, $injector];
+    }
+
+    private function getCache(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : Cache
+    {
+        $isCacheable = \is_int(strpos($contexts, 'prod-')) || \is_int(strpos($contexts, 'stage-'));
+        $cache = $cache ?: ($isCacheable ? new ChainCache([new ApcuCache, new FilesystemCache($appMeta->tmpDir)]) : new VoidCache);
         $cache->save($appId, $app);
         file_put_contents(
             $appMeta->logDir . '/app.log',
