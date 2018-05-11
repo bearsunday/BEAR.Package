@@ -68,6 +68,7 @@ final class AppInjector implements InjectorInterface
     public function clear()
     {
         $this->injector->clear();
+        file_put_contents($this->scriptDir . ScriptInjector::MODULE, $this->getModule());
     }
 
     private function getModule() : AbstractModule
