@@ -8,7 +8,6 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\AppMeta;
-use BEAR\Package\Exception\InvalidContextException;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
@@ -73,20 +72,8 @@ final class AppInjector implements InjectorInterface
 
     private function getModule() : AbstractModule
     {
-        $contextsArray = array_reverse(explode('-', $this->context));
-        $module = null;
-        foreach ($contextsArray as $context) {
-            $class = $this->appMeta->name . '\Module\\' . ucwords($context) . 'Module';
-            if (! class_exists($class)) {
-                $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
-            }
-            if (! is_a($class, AbstractModule::class, true)) {
-                throw new InvalidContextException($class);
-            }
-            /* @var $module AbstractModule */
-            $module = new $class($module);
-        }
-        $module->override(new AppMetaModule($this->appMeta));
+        $module = (new Module)($this->appMeta, $this->context);
+        /* @var AbstractModule $module */
         (new Bind($module->getContainer(), InjectorInterface::class))->toInstance($this->injector);
 
         return $module;
