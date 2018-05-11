@@ -78,7 +78,7 @@ final class AppInjector implements InjectorInterface
 
     public function clear()
     {
-        $doNotClear = in_array($this->scriptDir, self::$clearDirs) || file_exists($this->appMeta->tmpDir . '/.do_not_clear');
+        $doNotClear = in_array($this->scriptDir, self::$clearDirs, true) || file_exists($this->appMeta->tmpDir . '/.do_not_clear');
         if ($doNotClear) {
             return;
         }
