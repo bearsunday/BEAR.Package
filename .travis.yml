@@ -11,6 +11,7 @@ cache:
 env:
   matrix:
     - DEPENDENCIES=""
+    - DEPENDENCIES="--prefer-lowest --prefer-stable"
 before_script:
   - composer self-update
   - composer update $DEPENDENCIES

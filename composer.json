@@ -19,11 +19,12 @@
         "php": ">=7.0.0",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.2",
-        "bear/query-repository": "^1.4",
+        "bear/query-repository": "1.4.5",
         "bear/sunday": "^1.2.2",
-        "monolog/monolog": "^1.22",
-        "bear/streamer": "^1.0",
-        "ray/di": "^2.7"
+        "bear/streamer": "^1.0.1",
+        "monolog/monolog" : "^1.22",
+        "ray/di":  "^2.7",
+        "ray/aop":  "^2.7.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2"
