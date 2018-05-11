@@ -18,7 +18,7 @@
     "require": {
         "php": ">=7.0.0",
         "aura/cli": "^2.2",
-        "bear/app-meta": "^1.2",
+        "bear/app-meta": "^1.4",
         "bear/query-repository": "1.4.5",
         "bear/sunday": "^1.2.2",
         "bear/streamer": "^1.0.1",
