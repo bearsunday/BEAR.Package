@@ -39,19 +39,11 @@ final class Bootstrap
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $t = microtime(true);
         $injector->clear();
         $app = $injector->getInstance(AppInterface::class);
         $injector->getInstance(Reader::class);
         $injector->getInstance(ResourceInterface::class);
         $cache->save($appId, $app);
-        file_put_contents(
-            $appMeta->logDir . '/app.log',
-            sprintf(
-                "%d mssec\n",
-                ((microtime(true) - $t) * 1000)
-            )
-        );
 
         return $app;
     }
