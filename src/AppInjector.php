@@ -42,6 +42,11 @@ final class AppInjector implements InjectorInterface
      */
     private $cacheSpace;
 
+    /**
+     * @var array
+     */
+    private static $clearDirs = [];
+
     public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
     {
         $this->context = $context;
@@ -73,6 +78,11 @@ final class AppInjector implements InjectorInterface
 
     public function clear()
     {
+        $doNotClear = in_array($this->scriptDir, self::$clearDirs) || file_exists($this->appMeta->tmpDir . '/.do_not_clear');
+        if ($doNotClear) {
+            return;
+        }
+        self::$clearDirs[] = $this->scriptDir;
         $this->injector->clear();
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, $this->getModule());
     }
