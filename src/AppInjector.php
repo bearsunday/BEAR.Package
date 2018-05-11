@@ -37,10 +37,16 @@ final class AppInjector implements InjectorInterface
      */
     private $injector;
 
-    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null)
+    /**
+     * @var string
+     */
+    private $cacheSpace;
+
+    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
     {
         $this->context = $context;
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new AppMeta($name, $context);
+        $this->cacheSpace = $cacheSpace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! \file_exists($scriptDir) && \mkdir($scriptDir);
         $this->scriptDir = $scriptDir;
@@ -75,7 +81,9 @@ final class AppInjector implements InjectorInterface
     {
         $module = (new Module)($this->appMeta, $this->context);
         /* @var AbstractModule $module */
-        (new Bind($module->getContainer(), InjectorInterface::class))->toInstance($this->injector);
+        $container = $module->getContainer();
+        (new Bind($container, InjectorInterface::class))->toInstance($this->injector);
+        (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($this->cacheSpace);
 
         return $module;
     }
