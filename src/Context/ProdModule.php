@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
 use Psr\Log\LoggerInterface;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
@@ -38,7 +39,8 @@ class ProdModule extends AbstractModule
         $shortHash = strtr(rtrim(base64_encode(pack('H*', crc32(uniqid('', true)))), '='), '+/', '-_');
         $this->bind()->annotatedWith('cache_namespace')->toInstance($shortHash);
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
-        $this->bind(Cache::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
+        $this->bind(Cache::class)->annotatedWith('annotation_cache')->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
+        $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
         $this->bind(Reader::class)->toConstructor(
