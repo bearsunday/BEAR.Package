@@ -7,7 +7,7 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\AppMeta;
+use BEAR\AppMeta\Meta;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
@@ -50,7 +50,7 @@ final class AppInjector implements InjectorInterface
     public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
     {
         $this->context = $context;
-        $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new AppMeta($name, $context);
+        $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
         $this->cacheSpace = $cacheSpace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! \file_exists($scriptDir) && \mkdir($scriptDir);
@@ -82,9 +82,15 @@ final class AppInjector implements InjectorInterface
         if ($doNotClear) {
             return;
         }
-        self::$clearDirs[] = $this->scriptDir;
-        $this->injector->clear();
-        file_put_contents($this->scriptDir . ScriptInjector::MODULE, $this->getModule());
+        self::$clearDirs[] = $this->appMeta->tmpDir;
+        $unlink = function ($path) use (&$unlink) {
+            foreach (\glob(\rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
+                \is_dir($file) ? $unlink($file) : \unlink($file);
+                @\rmdir($file);
+            }
+        };
+        $unlink($this->appMeta->tmpDir);
+        \mkdir($this->appMeta->tmpDir . '/di');
     }
 
     private function getModule() : AbstractModule
