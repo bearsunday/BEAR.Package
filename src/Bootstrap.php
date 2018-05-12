@@ -41,8 +41,6 @@ final class Bootstrap
         }
         $injector->clear();
         $app = $injector->getInstance(AppInterface::class);
-        $injector->getInstance(Reader::class);
-        $injector->getInstance(ResourceInterface::class);
         $cache->save($appId, $app);
 
         return $app;
