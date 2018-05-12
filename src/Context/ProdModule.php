@@ -35,14 +35,15 @@ class ProdModule extends AbstractModule
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
-        // prod cache
-        $shortHash = strtr(rtrim(base64_encode(pack('H*', crc32(uniqid('', true)))), '='), '+/', '-_');
-        $this->bind()->annotatedWith('cache_namespace')->toInstance($shortHash);
+        // prod cache namespace (override in AppInjector)
+        $this->bind()->annotatedWith('cache_namespace')->toInstance(microtime());
+        // generic cache for user
         $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
-        $this->bind(Cache::class)->annotatedWith('annotation_cache')->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
+        // query repository (shared-server) cache
         $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         // prod annotation reader
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
+        $this->bind(Cache::class)->annotatedWith('annotation_cache')->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         $this->bind(Reader::class)->toConstructor(
             CachedReader::class,
             'reader=annotation_reader'
