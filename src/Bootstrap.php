@@ -8,10 +8,8 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
-use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 
 final class Bootstrap
