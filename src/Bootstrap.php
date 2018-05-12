@@ -7,7 +7,7 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\AppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -27,7 +27,7 @@ final class Bootstrap
      */
     public function getApp(string $name, string $contexts, string $appDir = '') : AbstractApp
     {
-        return $this->newApp(new AppMeta($name, $contexts, $appDir), $contexts);
+        return $this->newApp(new Meta($name, $contexts, $appDir), $contexts);
     }
 
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
