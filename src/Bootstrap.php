@@ -8,10 +8,8 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
-use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 
 final class Bootstrap
@@ -32,17 +30,16 @@ final class Bootstrap
 
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
-        $injector = new AppInjector($appMeta->name, $contexts, $appMeta, filemtime($appMeta->appDir . '/src'));
+        $cacheNs = filemtime($appMeta->appDir . '/src');
+        $injector = new AppInjector($appMeta->name, $contexts, $appMeta, $cacheNs);
         $cache = $cache instanceof Cache ? $cache : $injector->getInstance(Cache::class);
-        $appId = $appMeta->name . $contexts;
+        $appId = $appMeta->name . $contexts . $cacheNs;
         $app = $cache->fetch($appId);
         if ($app instanceof AbstractApp) {
             return $app;
         }
         $injector->clear();
         $app = $injector->getInstance(AppInterface::class);
-        $injector->getInstance(Reader::class);
-        $injector->getInstance(ResourceInterface::class);
         $cache->save($appId, $app);
 
         return $app;

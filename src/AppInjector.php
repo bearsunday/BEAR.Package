@@ -7,7 +7,7 @@
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\AppMeta;
+use BEAR\AppMeta\Meta;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
@@ -42,15 +42,10 @@ final class AppInjector implements InjectorInterface
      */
     private $cacheSpace;
 
-    /**
-     * @var array
-     */
-    private static $clearDirs = [];
-
     public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
     {
         $this->context = $context;
-        $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new AppMeta($name, $context);
+        $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
         $this->cacheSpace = $cacheSpace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! \file_exists($scriptDir) && \mkdir($scriptDir);
@@ -78,12 +73,10 @@ final class AppInjector implements InjectorInterface
 
     public function clear()
     {
-        $doNotClear = in_array($this->scriptDir, self::$clearDirs, true) || file_exists($this->appMeta->tmpDir . '/.do_not_clear');
-        if ($doNotClear) {
+        if ((new Unlink)->once($this->appMeta->tmpDir)) {
             return;
         }
-        self::$clearDirs[] = $this->scriptDir;
-        $this->injector->clear();
+        ! is_dir($this->appMeta->tmpDir . '/di') && \mkdir($this->appMeta->tmpDir . '/di');
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, $this->getModule());
     }
 
