@@ -7,7 +7,7 @@
 namespace BEAR\Package;
 
 use BEAR\Resource\RenderInterface;
-use BEAR\Sunday\Extension\Application\AbstractApp;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +17,7 @@ class AppInjectorTest extends TestCase
 {
     public function testGetInstance()
     {
-        $app = (new AppInjector('FakeVendor\HelloWorld', 'prod-cli-app'))->getInstance(AbstractApp::class);
+        $app = (new AppInjector('FakeVendor\HelloWorld', 'prod-cli-app'))->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
     }
 
@@ -26,7 +26,7 @@ class AppInjectorTest extends TestCase
      */
     public function testInvalidContext()
     {
-        (new AppInjector('FakeVendor\HelloWorld', '__invalid__'))->getInstance(AbstractApp::class);
+        (new AppInjector('FakeVendor\HelloWorld', '__invalid__'))->getInstance(AppInterface::class);
     }
 
     /**

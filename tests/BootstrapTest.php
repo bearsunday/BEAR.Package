@@ -11,6 +11,7 @@ use BEAR\Package\Provide\Router\CliRouter;
 use BEAR\Package\Provide\Router\WebRouter;
 use BEAR\Package\Provide\Transfer\CliResponder;
 use BEAR\Sunday\Extension\Application\AbstractApp;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Provide\Transfer\HttpResponder;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\VoidCache;
@@ -38,13 +39,13 @@ class BootstrapTest extends TestCase
         $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'cli-app');
         $this->assertInstanceOf(CliRouter::class, $app->router);
         $this->assertInstanceOf(CliResponder::class, $app->responder);
-        $this->assertInstanceOf(AbstractApp::class, $app);
+        $this->assertInstanceOf(AppInterface::class, $app);
     }
 
     public function testGetApp()
     {
         $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
-        $this->assertInstanceOf(AbstractApp::class, $app);
+        $this->assertInstanceOf(AppInterface::class, $app);
         $this->assertInstanceOf(WebRouter::class, $app->router);
         $this->assertInstanceOf(HttpResponder::class, $app->responder);
     }
@@ -63,7 +64,7 @@ class BootstrapTest extends TestCase
         $newTmpDir = $appMeta->tmpDir;
         $appMeta->tmpDir = $newTmpDir;
         $app = (new Bootstrap)->newApp($appMeta, 'app', new VoidCache);
-        $this->assertInstanceOf(AbstractApp::class, $app);
+        $this->assertInstanceOf(AppInterface::class, $app);
     }
 
     /**
@@ -78,7 +79,7 @@ class BootstrapTest extends TestCase
     {
         (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'app');
         $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'app');
-        $this->assertInstanceOf(AbstractApp::class, $app);
+        $this->assertInstanceOf(AppInterface::class, $app);
         /** @var Dep $dep */
         $dep = $app->resource->uri('page://self/dep')();
         $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
@@ -95,7 +96,7 @@ class BootstrapTest extends TestCase
     {
         (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
         $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
-        $this->assertInstanceOf(AbstractApp::class, $app);
+        $this->assertInstanceOf(AppInterface::class, $app);
         /** @var Dep $dep */
         $dep = $app->resource->uri('page://self/dep')();
         $this->assertInstanceOf(FakeDep::class, $dep->depInterface);

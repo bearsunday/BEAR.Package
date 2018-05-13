@@ -9,6 +9,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Sunday\Extension\Application\AbstractApp;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
 
 final class Bootstrap
@@ -37,7 +38,8 @@ final class Bootstrap
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $app = $injector->getInstance(AbstractApp::class);
+        $injector->clear();
+        $app = $injector->getInstance(AppInterface::class);
         $cache->save($appId, $app);
 
         return $app;

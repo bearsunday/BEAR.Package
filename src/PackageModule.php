@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\VndErrorModule;
 use BEAR\Package\Provide\Logger\PsrLoggerModule;
 use BEAR\Package\Provide\Representation\CreatedResourceModule;
@@ -17,6 +18,14 @@ use Ray\Di\AbstractModule;
 
 class PackageModule extends AbstractModule
 {
+    protected $appMeta;
+
+    public function __construct(AbstractAppMeta $appMeta = null)
+    {
+        unset($appMeta); // for BC
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */

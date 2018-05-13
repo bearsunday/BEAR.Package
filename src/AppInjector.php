@@ -53,7 +53,6 @@ final class AppInjector implements InjectorInterface
         $this->injector = new ScriptInjector($this->scriptDir, function () {
             return $this->getModule();
         });
-        $this->clear();
     }
 
     /**
@@ -72,7 +71,7 @@ final class AppInjector implements InjectorInterface
         return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
 
-    private function clear()
+    public function clear()
     {
         if ((new Unlink)->once($this->appMeta->tmpDir)) {
             return;

@@ -8,7 +8,6 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Resource\Annotation\AppName;
-use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\AbstractModule;
 
@@ -31,8 +30,7 @@ class AppMetaModule extends AbstractModule
     protected function configure()
     {
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
-        $this->bind(AbstractApp::class)->to($this->appMeta->name . '\Module\App');
-        $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App'); // BC
+        $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App');
         $this->bind()->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
     }
 }
