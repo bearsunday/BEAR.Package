@@ -31,7 +31,7 @@ class BootstrapTest extends TestCase
     {
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
         AppModule::$modules = [];
-        delete_dir(__DIR__ . '/Fake/fake-app/var/tmp');
+        (new Unlink)(__DIR__ . '/Fake/fake-app/var/tmp');
     }
 
     public function testBuiltInCliModule()
