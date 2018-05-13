@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package;
 
-use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\VndErrorModule;
 use BEAR\Package\Provide\Logger\PsrLoggerModule;
 use BEAR\Package\Provide\Representation\CreatedResourceModule;
