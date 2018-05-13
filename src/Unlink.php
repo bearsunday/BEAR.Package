@@ -29,6 +29,7 @@ final class Unlink
         if (in_array($path, self::$unlinkedPath, true)) {
             return true;
         }
+        self::$unlinkedPath[] = $path;
         $this->__invoke($path);
 
         return false;
