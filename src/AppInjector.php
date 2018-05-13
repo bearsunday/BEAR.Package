@@ -42,7 +42,7 @@ final class AppInjector implements InjectorInterface
      */
     private $cacheSpace;
 
-    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
+    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '', callable $init = null)
     {
         $this->context = $context;
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
@@ -53,6 +53,7 @@ final class AppInjector implements InjectorInterface
         $this->injector = new ScriptInjector($this->scriptDir, function () {
             return $this->getModule();
         });
+        is_callable($init) ? $init() : $this->clear();
     }
 
     /**
