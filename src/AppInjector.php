@@ -6,8 +6,10 @@
  */
 namespace BEAR\Package;
 
+use BEAR\Accept\Module\App;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
@@ -33,6 +35,11 @@ final class AppInjector implements InjectorInterface
     private $scriptDir;
 
     /**
+     * @var string
+     */
+    private $appDir;
+
+    /**
      * @var ScriptInjector
      */
     private $injector;
@@ -50,6 +57,10 @@ final class AppInjector implements InjectorInterface
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! \file_exists($scriptDir) && \mkdir($scriptDir);
         $this->scriptDir = $scriptDir;
+        $appDir = $this->appMeta->tmpDir . '/app';
+        ! \file_exists($appDir) && \mkdir($appDir);
+        touch($appDir . '/.do_not_clear');
+        $this->appDir = $appDir;
         $this->injector = new ScriptInjector($this->scriptDir, function () {
             return $this->getModule();
         });
@@ -80,7 +91,24 @@ final class AppInjector implements InjectorInterface
             return;
         }
         ! is_dir($this->appMeta->tmpDir . '/di') && \mkdir($this->appMeta->tmpDir . '/di');
-        file_put_contents($this->scriptDir . ScriptInjector::MODULE, $this->getModule());
+        file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
+    }
+
+    public function getCachedInstance($interface, $name = Name::ANY)
+    {
+        $lockFile = $this->appMeta->appDir . '/composer.lock';
+        $this->cacheSpace .= file_exists($lockFile) ? (string) filemtime($lockFile) : '';
+        $cache = new FilesystemCache($this->appDir);
+        $id = $interface . $name . $this->context . $this->cacheSpace;
+        $instance = $cache->fetch($id);
+        if ($instance) {
+            return $instance;
+        }
+        $this->clear();
+        $instance = $this->injector->getInstance($interface, $name);
+        $cache->save($id, $instance);
+
+        return $instance;
     }
 
     private function getModule() : AbstractModule
