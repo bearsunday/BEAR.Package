@@ -103,6 +103,7 @@ final class AppInjector implements InjectorInterface
         $instance = $cache->fetch($id);
         if ($instance) {
             $this->clear();
+
             return $instance;
         }
         $this->clear();
