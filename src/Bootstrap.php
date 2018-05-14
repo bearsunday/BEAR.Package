@@ -32,14 +32,13 @@ final class Bootstrap
     {
         $cacheNs = filemtime($appMeta->appDir . '/src');
         $injector = new AppInjector($appMeta->name, $contexts, $appMeta, $cacheNs);
-        $cache = $cache instanceof Cache ? $cache : $injector->getInstance(Cache::class);
+        $cache = $cache instanceof Cache ? $cache : $injector->getCachedInstance(Cache::class);
         $appId = $appMeta->name . $contexts . $cacheNs;
         $app = $cache->fetch($appId);
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $injector->clear();
-        $app = $injector->getInstance(AppInterface::class);
+        $app = $injector->getCachedInstance(AppInterface::class);
         $cache->save($appId, $app);
 
         return $app;

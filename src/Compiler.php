@@ -29,6 +29,7 @@ final class Compiler
     public function __invoke($appName, $context, $appDir) : string
     {
         $appMeta = new AppMeta($appName, $context, $appDir);
+        (new Unlink)->force($appMeta->tmpDir);
         $injector = new AppInjector($appName, $context);
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);

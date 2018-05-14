@@ -31,7 +31,7 @@ class BootstrapTest extends TestCase
     {
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
         AppModule::$modules = [];
-        (new Unlink)(__DIR__ . '/Fake/fake-app/var/tmp');
+        (new Unlink)->force(__DIR__ . '/Fake/fake-app/var/tmp');
     }
 
     public function testBuiltInCliModule()
@@ -90,6 +90,17 @@ class BootstrapTest extends TestCase
     {
         $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'prod-app');
         $this->assertInstanceOf(AbstractApp::class, unserialize(serialize($app)));
+    }
+
+    public function testCompileOnDemandInDevelopment()
+    {
+        (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'app');
+        $app = (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'app');
+        $this->assertInstanceOf(AppInterface::class, $app);
+        /** @var Dep $dep */
+        $dep = $app->resource->uri('page://self/dep')();
+        $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
+        $this->assertInstanceOf(FakeDep::class, $dep->dep);
     }
 
     public function testCompileOnDemandInProduction()
