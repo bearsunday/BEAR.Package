@@ -13,9 +13,14 @@ final class Unlink
      */
     private static $unlinkedPath = [];
 
+    /**
+     * @var bool
+     */
+    private $isOptional = true;
+
     public function __invoke(string $path)
     {
-        if (file_exists($path . '/.do_not_clear')) {
+        if ($this->isOptional && file_exists($path . '/.do_not_clear')) {
             return;
         }
         foreach (\glob(\rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
@@ -33,5 +38,13 @@ final class Unlink
         $this->__invoke($path);
 
         return false;
+    }
+
+    public function force(string $path) : bool
+    {
+        $this->isOptional = false;
+        ($this)($path);
+
+        return true;
     }
 }
