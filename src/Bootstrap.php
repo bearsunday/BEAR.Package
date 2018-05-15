@@ -38,6 +38,7 @@ final class Bootstrap
         if ($app instanceof AbstractApp) {
             return $app;
         }
+        $injector->clear();
         $app = $injector->getCachedInstance(AppInterface::class);
         $cache->save($appId, $app);
 
