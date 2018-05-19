@@ -37,19 +37,26 @@ class UserTest extends TestCase
     "user": {
         "website": {
             "uri": null,
-            "resourceObject": {
-                "url": "http:://example.org/1"
-            },
             "method": "get",
             "query": {
                 "id": "1"
             },
             "options": [],
             "in": null,
-            "links": []
+            "links": [],
+            "resourceObject": {
+                "url": "http:://example.org/1"
+            }
         },
         "contact": {
             "uri": null,
+            "method": "get",
+            "query": {
+                "id": "1"
+            },
+            "options": [],
+            "in": null,
+            "links": [],
             "resourceObject": {
                 "contact": [
                     {
@@ -65,14 +72,7 @@ class UserTest extends TestCase
                         "name": "Aramis"
                     }
                 ]
-            },
-            "method": "get",
-            "query": {
-                "id": "1"
-            },
-            "options": [],
-            "in": null,
-            "links": []
+            }
         },
         "id": "1",
         "name": "Koriym"
