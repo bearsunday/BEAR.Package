@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package;
 
-use BEAR\Accept\Module\App;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use Doctrine\Common\Cache\FilesystemCache;
