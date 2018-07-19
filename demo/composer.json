@@ -1,7 +1,7 @@
 {
     "name": "my-vendor/my-project",
     "require": {
-        "bear/package": "1.x-dev"
+        "bear/package": "^1.7"
     },
     "autoload": {
         "psr-4": {
