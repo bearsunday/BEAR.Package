@@ -126,5 +126,6 @@ return \PhpCsFixer\Config::create()
         PhpCsFixer\Finder::create()
             ->exclude('tests/Fake')
             ->exclude('example/')
+            ->exclude('demo/var/tmp')
             ->in(__DIR__)
     )->setLineEnding("\n");

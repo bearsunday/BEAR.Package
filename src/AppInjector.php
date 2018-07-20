@@ -6,7 +6,6 @@
  */
 namespace BEAR\Package;
 
-use BEAR\Accept\Module\App;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use Doctrine\Common\Cache\FilesystemCache;
@@ -48,6 +47,11 @@ final class AppInjector implements InjectorInterface
      * @var string
      */
     private $cacheSpace;
+
+    /**
+     * @var AbstractModule|null
+     */
+    private $module;
 
     public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
     {
@@ -112,11 +116,15 @@ final class AppInjector implements InjectorInterface
 
     private function getModule() : AbstractModule
     {
+        if ($this->module instanceof AbstractModule) {
+            return $this->module;
+        }
         $module = (new Module)($this->appMeta, $this->context);
         /* @var AbstractModule $module */
         $container = $module->getContainer();
         (new Bind($container, InjectorInterface::class))->toInstance($this->injector);
         (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($this->cacheSpace);
+        $this->module = $module;
 
         return $module;
     }
