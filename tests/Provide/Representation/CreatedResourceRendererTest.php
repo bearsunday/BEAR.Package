@@ -55,6 +55,7 @@ class CreatedResourceRendererTest extends TestCase
 }
 ';
         $this->assertSame($expected, $view);
+        $this->assertSame($expected, $this->ro->view);
 
         return $this->ro;
     }

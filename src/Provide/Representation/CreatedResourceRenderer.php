@@ -49,8 +49,9 @@ class CreatedResourceRenderer implements RenderInterface
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
         $this->updateHeaders($ro);
+        $ro->view = $locatedResource->toString();
 
-        return $locatedResource->toString();
+        return $ro->view;
     }
 
     private function getReverseMatchedLink(string $uri) : string
