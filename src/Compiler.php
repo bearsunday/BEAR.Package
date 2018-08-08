@@ -59,7 +59,7 @@ final class Compiler
         foreach ($appMeta->getResourceListGenerator() as list($className)) {
             $this->scanClass($injector, $reader, $namedParams, $className);
         }
-        $logFile = realpath($appMeta->logDir . '/compile.log');
+        $logFile = realpath($appMeta->logDir) . '/compile.log';
         $this->saveCompileLog($appMeta, $context, $logFile);
 
         return $logFile;
