@@ -20,12 +20,14 @@ if ($argc !== 4) {
     exit(1);
 }
 list(, $appName, $context, $appDir) = $argv;
+$dir = realpath($appDir);
 
-require $appDir . '/vendor/autoload.php';
+require $dir . '/vendor/autoload.php';
+
 try {
-    $logFile = (new Compiler)($appName, $context, $appDir);
-    printf("%s(%s) is compiled succesfully.\nLog file: %s\n", $appName, $context, realpath($logFile));
+    error_log((new Compiler)($appName, $context, $appDir));
+    exit(0);
 } catch (\Exception $e) {
-    error_log('Compile Error:' . (string) $e);
+    error_log($e);
     exit(1);
 }

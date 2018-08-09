@@ -36,8 +36,9 @@ final class Compiler
     {
         $loader = $this->compileLoader($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
+        $msg = sprintf("Compile Log: %s\nautload.php: %s", $log, $loader);
 
-        return sprintf("%s\nautload.php: %s", $log, $loader);
+        return $msg;
     }
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
@@ -58,7 +59,7 @@ final class Compiler
         foreach ($appMeta->getResourceListGenerator() as list($className)) {
             $this->scanClass($injector, $reader, $namedParams, $className);
         }
-        $logFile = $appMeta->logDir . '/compile.log';
+        $logFile = realpath($appMeta->logDir) . '/compile.log';
         $this->saveCompileLog($appMeta, $context, $logFile);
 
         return $logFile;
@@ -66,14 +67,14 @@ final class Compiler
 
     private function compileLoader(string $appName, string $context, string $appDir) : string
     {
-        $loader = $appDir . '/vendor/autoload.php';
-        if (! file_exists($loader)) {
+        $loaderFile = $appDir . '/vendor/autoload.php';
+        if (! file_exists($loaderFile)) {
             return '';
         }
-        $loader = require $loader;
+        $loaderFile = require $loaderFile;
         spl_autoload_register(
-            function ($class) use ($loader) {
-                $loader->loadClass($class);
+            function ($class) use ($loaderFile) {
+                $loaderFile->loadClass($class);
                 if ($class !== NullPage::class) {
                     $this->classes[] = $class;
                 }
@@ -85,16 +86,20 @@ final class Compiler
         $this->invokeTypicalReuqest($appName, $context);
         $fies = '<?php' . PHP_EOL;
         foreach ($this->classes as $class) {
+            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false); // could be phpdoc tag by anotation loader
+            if ($isAutoloadFailed) {
+                continue;
+            }
             $fies .= sprintf(
                 "require %s';\n",
                 $this->getRelaticePath($appDir, (new \ReflectionClass($class))->getFileName())
             );
         }
         $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL . PHP_EOL;
-        $laoder = $appDir . '/autoload.php';
-        file_put_contents($laoder, $fies);
+        $loaderFile = realpath($appDir) . '/autoload.php';
+        file_put_contents($loaderFile, $fies);
 
-        return $laoder;
+        return $loaderFile;
     }
 
     private function getRelaticePath(string $rootDir, string $file)
@@ -116,7 +121,13 @@ final class Compiler
 
     private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className)
     {
-        $instance = $injector->getInstance($className);
+        try {
+            $instance = $injector->getInstance($className);
+        } catch (\Exception $e) {
+            error_log(sprintf('Failed to instantiate [%s]: %s(%s)', $className, get_class($e), $e->getMessage()));
+
+            return;
+        }
         $class = new \ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
