@@ -96,7 +96,7 @@ final class Compiler
             );
         }
         $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL . PHP_EOL;
-        $loaderFile = realpath($appDir . '/autoload.php');
+        $loaderFile = realpath($appDir) . '/autoload.php';
         file_put_contents($loaderFile, $fies);
 
         return $loaderFile;
