@@ -30,7 +30,7 @@ final class Bootstrap
 
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null) : AbstractApp
     {
-        $cacheNs = filemtime($appMeta->appDir . '/src');
+        $cacheNs = (string) filemtime($appMeta->appDir . '/src');
         $injector = new AppInjector($appMeta->name, $contexts, $appMeta, $cacheNs);
         $cache = $cache instanceof Cache ? $cache : $injector->getCachedInstance(Cache::class);
         $appId = $appMeta->name . $contexts . $cacheNs;
