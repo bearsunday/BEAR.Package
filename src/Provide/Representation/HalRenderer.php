@@ -44,7 +44,7 @@ class HalRenderer implements RenderInterface
             return $ro->view;
         }
         $method = 'on' . ucfirst($ro->uri->method);
-        $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
+        $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod((object) $ro, $method));
 
         return $this->renderHal($ro, $annotations);
     }
