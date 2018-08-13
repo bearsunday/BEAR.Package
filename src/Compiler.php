@@ -45,7 +45,8 @@ final class Compiler
     {
         $appMeta = new AppMeta($appName, $context, $appDir);
         (new Unlink)->force($appMeta->tmpDir);
-        $injector = new AppInjector($appName, $context);
+        $cacheNs = (string) filemtime($appMeta->appDir . '/src');
+        $injector = new AppInjector($appName, $context, $appMeta, $cacheNs);
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);
         /* @var $reader \Doctrine\Common\Annotations\Reader */
