@@ -30,9 +30,10 @@ class Module
             /* @var $module AbstractModule */
             $module = new $class($module);
         }
-        if ($module instanceof AbstractModule) {
-            $module->override(new AppMetaModule($appMeta));
+        if (! $module instanceof AbstractModule) {
+            throw new \LogicException; // @codeCoverageIgnore
         }
+        $module->override(new AppMetaModule($appMeta));
 
         return $module;
     }
