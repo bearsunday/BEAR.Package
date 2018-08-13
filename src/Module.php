@@ -30,7 +30,9 @@ class Module
             /* @var $module AbstractModule */
             $module = new $class($module);
         }
-        $module->override(new AppMetaModule($appMeta));
+        if ($module instanceof AbstractModule) {
+            $module->override(new AppMetaModule($appMeta));
+        }
 
         return $module;
     }
