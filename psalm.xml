@@ -41,5 +41,6 @@
         <UnresolvableInclude errorLevel="info" />
 
         <RawObjectIteration errorLevel="info" />
+        <NoInterfaceProperties errorLevel="info" />
     </issueHandlers>
 </psalm>
