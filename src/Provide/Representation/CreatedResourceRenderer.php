@@ -38,7 +38,7 @@ class CreatedResourceRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
-        $url = parse_url($ro->uri);
+        $url = parse_url((string)$ro->uri);
         $locationUri = sprintf('%s://%s%s', $url['scheme'], $url['host'], $ro->headers['Location']);
         try {
             $locatedResource = $this->resource->uri($locationUri)();
