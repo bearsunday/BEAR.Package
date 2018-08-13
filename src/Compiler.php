@@ -92,20 +92,21 @@ final class Compiler
             }
             $fies .= sprintf(
                 "require %s';\n",
-                $this->getRelaticePath($appDir, (new \ReflectionClass($class))->getFileName())
+                $this->getRelativePath($appDir, (new \ReflectionClass($class))->getFileName())
             );
         }
-        $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL . PHP_EOL;
-        $loaderFile = realpath($appDir) . '/autoload.php';
+        $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
+        $loaderFile = realpath($appDir . '/autoload.php');
         file_put_contents($loaderFile, $fies);
 
         return $loaderFile;
     }
 
-    private function getRelaticePath(string $rootDir, string $file)
+    private function getRelativePath(string $rootDir, string $file)
     {
-        if (strpos($file, $rootDir) !== false) {
-            return str_replace("{$rootDir}", "__DIR__ . '", $file);
+        $dir = realpath($rootDir);
+        if (strpos($file, $dir) !== false) {
+            return str_replace("{$dir}", "__DIR__ . '", $file);
         }
 
         return "'" . $file;
