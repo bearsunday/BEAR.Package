@@ -9,6 +9,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use Doctrine\Common\Cache\FilesystemCache;
+use josegonzalez\Dotenv\Loader;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
@@ -53,7 +54,14 @@ final class AppInjector implements InjectorInterface
      */
     private $module;
 
-    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
+    /**
+     * @param string               $name       application name      'MyVendor\MyProject'
+     * @param string               $context    application context   'prod-app'
+     * @param AbstractAppMeta|null $appMeta    application meta
+     * @param string               $cacheSpace cache namespace
+     * @param string               $envFile    .env file path        '/path/to/project/.env'
+     */
+    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '', string $envFile = '')
     {
         $this->context = $context;
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
@@ -65,7 +73,11 @@ final class AppInjector implements InjectorInterface
         ! \file_exists($appDir) && \mkdir($appDir);
         touch($appDir . '/.do_not_clear');
         $this->appDir = $appDir;
-        $this->injector = new ScriptInjector($this->scriptDir, function () {
+        $this->injector = new ScriptInjector($this->scriptDir, function () use ($envFile) {
+            if (file_exists($envFile)) {
+                (new Loader($envFile))->parse()->toEnv(true);
+            }
+
             return $this->getModule();
         });
         if (! $cacheSpace) {
