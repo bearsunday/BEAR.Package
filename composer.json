@@ -23,7 +23,8 @@
         "bear/sunday": "^1.2.2",
         "bear/streamer": "^1.0.1",
         "monolog/monolog" : "^1.23",
-        "bear/resource": "^1.9.7"
+        "bear/resource": "^1.9.7",
+        "josegonzalez/dotenv": "^3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2"
