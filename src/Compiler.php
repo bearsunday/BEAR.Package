@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the BEAR.Package package.
  *
@@ -85,7 +85,7 @@ final class Compiler
         );
 
         $this->invokeTypicalReuqest($appName, $context);
-        $fies = '<?php' . PHP_EOL;
+        $fies = '<?php declare(strict_types=1);' . PHP_EOL;
         foreach ($this->classes as $class) {
             $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false); // could be phpdoc tag by anotation loader
             if ($isAutoloadFailed) {
