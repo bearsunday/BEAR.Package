@@ -6,6 +6,7 @@
  */
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Sunday\Extension\Router\NullMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
@@ -32,7 +33,7 @@ class RouterCollection implements RouterInterface
     {
         foreach ($this->routers as $route) {
             $match = $route->match($globals, $server);
-            if ($match instanceof RouterMatch) {
+            if ($match instanceof RouterMatch && ! ($match instanceof NullMatch)) {
                 return $match;
             }
         }
