@@ -10,13 +10,13 @@ class FakeHttpResponder extends HttpResponder
     public static $headers = [];
     public static $content;
 
-    public function __invoke(ResourceObject $resourceObject, array $server)
+    public function __invoke(ResourceObject $ro, array $server)
     {
         unset($server);
-        $resourceObject->toString();
-        self::$code = $resourceObject->code;
-        self::$headers = $resourceObject->headers;
-        self::$content = $resourceObject->view;
+        $ro->toString();
+        self::$code = $ro->code;
+        self::$headers = $ro->headers;
+        self::$content = $ro->view;
     }
 
     public static function reset()
