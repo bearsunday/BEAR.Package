@@ -20,10 +20,9 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.4",
         "bear/query-repository": "^1.5.5",
-        "bear/sunday": "^1.2.2",
+        "bear/sunday": "^1.2.3",
         "bear/streamer": "^1.0.1",
-        "monolog/monolog" : "^1.23",
-        "bear/resource": "^1.9.7"
+        "monolog/monolog" : "^1.23"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2"
@@ -32,8 +31,7 @@
         "psr-4": {
             "BEAR\\Package\\": ["src/"]
         },
-        "files": ["src-files/apcu.php"],
-        "exclude-from-classmap": ["/tests/", "/example/"]
+        "files": ["src-files/apcu.php"]
     },
     "autoload-dev": {
         "psr-4": {
