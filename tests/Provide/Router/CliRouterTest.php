@@ -4,10 +4,18 @@
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
+/**
+ * This file is part of the BEAR.Package package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
 use PHPUnit\Framework\TestCase;
+use function serialize;
+use function unserialize;
 
 class CliRouterTest extends TestCase
 {
@@ -115,5 +123,20 @@ class CliRouterTest extends TestCase
         unset($this->router);
         $exists = file_exists($this->stdInFile);
         $this->assertFalse($exists);
+    }
+
+    public function testSerializable()
+    {
+        $router = unserialize(serialize($this->router));
+        $router->setTerminateException(new \InvalidArgumentException);
+        $this->expectException(\InvalidArgumentException::class);
+        /* @var CliRouter $router */
+        $router->match(
+            [
+            'argc' => 1,
+            'argv' => ['page.php']
+        ],
+            []
+        );
     }
 }
