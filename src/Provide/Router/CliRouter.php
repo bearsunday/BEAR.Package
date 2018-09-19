@@ -54,6 +54,11 @@ class CliRouter implements RouterInterface
         file_exists($this->stdIn) && unlink($this->stdIn);
     }
 
+    public function __wakeup()
+    {
+        $this->stdIo = (new CliFactory)->newStdio();
+    }
+
     public function setTerminateException(\Exception $e)
     {
         $this->terminateException = $e;
