@@ -8,7 +8,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
-use BEAR\Sunday\Extension\Application\AbstractApp;
+use BEAR\Pacakge\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
 
