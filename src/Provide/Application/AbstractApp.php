@@ -10,12 +10,13 @@ namespace BEAR\Pacakge\Extension\Application;
 
 use BEAR\QueryRepository\HttpCacheInterface;
 use BEAR\Resource\ResourceInterface;
+use BEAR\Sunday\Extension\Application\AbstractApp as AbstractOriginApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 
-class AbstractApp implements AppInterface
+class AbstractApp extends AbstractOriginApp implements AppInterface
 {
     /**
      * @var HttpCacheInterface
