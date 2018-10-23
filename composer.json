@@ -19,8 +19,8 @@
         "php": ">=7.0.0",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.4",
-        "bear/query-repository": "^1.5.5",
-        "bear/sunday": "^1.2.3",
+        "bear/query-repository": "^1.6",
+        "bear/sunday": "^1.3.1",
         "bear/streamer": "^1.0.1",
         "monolog/monolog" : "^1.23"
     },

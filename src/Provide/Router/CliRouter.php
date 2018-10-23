@@ -147,7 +147,7 @@ class CliRouter implements RouterInterface
 
     private function validateArgs(array $globals)
     {
-        if ($globals['argc'] !== 3) {
+        if ($globals['argc'] < 3) {
             $this->error(basename($globals['argv'][0]));
             $this->terminate(Status::USAGE);
         }
