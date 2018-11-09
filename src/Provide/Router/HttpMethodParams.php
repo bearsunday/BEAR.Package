@@ -108,7 +108,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         $contentType = $this->getContentType($server);
         $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
-            parse_str(rtrim(file_get_contents($this->stdIn)), $put);
+            parse_str(rtrim($this->getRawBody($server)), $put);
 
             return $put;
         }
@@ -116,13 +116,22 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         if (! $isApplicationJson) {
             return [];
         }
-        $content = json_decode(file_get_contents($this->stdIn), true);
+        $content = json_decode($this->getRawBody($server), true);
         $error = json_last_error();
         if ($error !== JSON_ERROR_NONE) {
             throw new InvalidRequestJsonException(json_last_error_msg());
         }
 
         return $content;
+    }
+
+    private function getRawBody(array $server) : string
+    {
+        if (isset($server['HTTP_RAW_POST_DATA'])) {
+            return $server['HTTP_RAW_POST_DATA'];
+        }
+
+        return rtrim(file_get_contents($this->stdIn));
     }
 
     private function getContentType(array $server) : string
