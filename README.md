@@ -1,20 +1,23 @@
-# MyVendor.MyProject
+# BEAR.HelloworldBenchmark
 
 ## Installation
 
-    composer install
-    composer setup
+    composer install --no-dev
+    composer dump-autoload --no-dev
 
-## Usage
+### Setup
 
-### Run server
+#### Apache
 
-    composer serve
+Place `public/{index.php favicon.ico .htaccess}` into web document root. 
 
-### QA
+#### Swoole
 
-    composer test     // run unit test
-    composer tests    // run test and quality checks
-    composer coverage // test coverage
-    composer cs-fix   // fix the coding standard
+    php bin/swoole.php
 
+### Benchmarking
+
+Benchmarking Tool: [wrk](https://github.com/wg/wrk)
+
+    wrk -t4 -c10 -d10s http://127.0.0.1/
+    wrk -t4 -c10 -d10s http://127.0.0.1:8080/
