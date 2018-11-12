@@ -2,20 +2,23 @@
 
 ## Installation
 
+    pecl install swoole
     composer install --no-dev
-    composer dump-autoload --no-dev
+    composer compile
 
-### Setup
+See more for the installation of swoole at [Swoole:Getting Started](https://www.swoole.co.uk/docs/get-started/installation).
 
-#### Apache
+## Setup
+
+### Apache
 
 Place `public/{index.php favicon.ico .htaccess}` into web document root. 
 
-#### Swoole
+### Swoole
 
     php bin/swoole.php
 
-### Benchmarking
+## Benchmarking
 
 Benchmarking Tool: [wrk](https://github.com/wg/wrk)
 
