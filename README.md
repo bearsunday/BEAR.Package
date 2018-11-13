@@ -1,20 +1,26 @@
-# MyVendor.MyProject
+# BEAR.HelloworldBenchmark
 
 ## Installation
 
-    composer install
-    composer setup
+    pecl install swoole
+    composer install --no-dev
+    composer compile
 
-## Usage
+See more for the installation of swoole at [Swoole:Getting Started](https://www.swoole.co.uk/docs/get-started/installation).
 
-### Run server
+## Setup
 
-    composer serve
+### Apache
 
-### QA
+Place `public/{index.php favicon.ico .htaccess}` into web document root. 
 
-    composer test     // run unit test
-    composer tests    // run test and quality checks
-    composer coverage // test coverage
-    composer cs-fix   // fix the coding standard
+### Swoole
 
+    php bin/swoole.php
+
+## Benchmarking
+
+Benchmarking Tool: [wrk](https://github.com/wg/wrk)
+
+    wrk -t4 -c10 -d10s http://127.0.0.1/
+    wrk -t4 -c10 -d10s http://127.0.0.1:8080/
