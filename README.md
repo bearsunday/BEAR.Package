@@ -1,5 +1,7 @@
 # BEAR.HelloworldBenchmark
 
+The BEAR.Sunday hellworld project for benchmarking.
+
 ## Installation
 
     pecl install swoole
