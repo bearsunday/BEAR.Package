@@ -1,22 +1,18 @@
 <?php
 namespace MyVendor\MyProject\Module;
 
+use BEAR\Package\AbstractAppModule;
 use BEAR\Package\PackageModule;
-use josegonzalez\Dotenv\Loader as Dotenv;
-use Ray\Di\AbstractModule;
 
-class AppModule extends AbstractModule
+class AppModule extends AbstractAppModule
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $appDir = dirname(dirname(__DIR__));
-        Dotenv::load([
-            'filepath' => dirname(dirname(__DIR__)) . '/.env',
-            'toEnv' => true
-        ]);
+        $appDir = $this->appMeta->appDir;
+        require_once $appDir . '/env.php';
         $this->install(new PackageModule);
     }
 }

@@ -1,40 +1,70 @@
 {
     "name": "my-vendor/my-project",
     "type": "project",
-    "description": "",
     "license": "proprietary",
+    "description": "",
     "require": {
         "php": ">=7.0.0",
-        "roave/security-advisories": "dev-master",
-        "bear/package": "^1.5",
-        "josegonzalez/dotenv": "^2.1"
+        "bear/package": "^1.9",
+        "josegonzalez/dotenv": "^3.2",
+        "bear/swoole": "^0.2.0"
     },
     "require-dev": {
-        "bear/qatools": "^1.4.2",
-        "phpunit/phpunit": "^6.2"
+        "bear/qatools": "dev-master",
+        "roave/security-advisories": "dev-master"
     },
     "autoload": {
         "psr-4": {
             "MyVendor\\MyProject\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "MyVendor\\MyProject\\": "tests/"
+        }
+    },
     "scripts": {
+        "setup": [
+            "php bin/setup.php"
+        ],
+        "compile": "bear.compile 'MyVendor\\MyProject' prod-app ./",
         "test": [
             "phpunit"
         ],
+        "tests": [
+            "@cs",
+            "phpmd src,tests text ./phpmd.xml",
+            "phpstan analyse -l max src tests -c phpstan.neon --no-progress",
+            "@test"
+        ],
         "coverage": [
-            "php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"
+            "php -dzend_extension=xdebug.so phpunit --coverage-text --coverage-html=build/coverage"
         ],
         "cs": [
             "php-cs-fixer fix -v --dry-run",
-            "phpcs --standard=./phpcs.xml src"
+            "phpcs --standard=phpcs.xml src;"
         ],
         "cs-fix": [
             "php-cs-fixer fix -v",
-            "phpcbf src"
+            "phpcbf src tests"
         ],
-        "serve": "php -S 127.0.0.1:8080 -t public",
-        "api": "php bootstrap/api.php",
-        "web": "php bootstrap/web.php"
+        "serve": "php -dzend_extension=xdebug.so -S 127.0.0.1:8080 -t public",
+        "app": "php bin/app.php",
+        "page": "php bin/page.php"
+    },
+    "scripts-descriptions": {
+        "setup": "Setup the project",
+        "compile": "Compile autoload and DI scripts",
+        "test": "Run unit tests",
+        "tests": "Run tests and quality checks",
+        "coverage": "Generate test coverage report",
+        "cs": "Checks the coding standard",
+        "cs-fix": "Fix the coding standard",
+        "serve": "Start php built-in server",
+        "app": "Request app resource",
+        "page": "Request page resource"
+    },
+    "config": {
+        "process-timeout": 0
     }
 }
