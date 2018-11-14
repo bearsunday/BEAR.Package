@@ -22,5 +22,12 @@ Place `public/{index.php favicon.ico .htaccess}` into web document root.
 
 Benchmarking Tool: [wrk](https://github.com/wg/wrk)
 
-    wrk -t4 -c10 -d10s http://127.0.0.1/
-    wrk -t4 -c10 -d10s http://127.0.0.1:8080/
+apache
+
+    wrk -t4 -c100 -d10s http://127.0.0.1/
+
+swoole
+
+    wrk -t4 -c100 -d10s http://127.0.0.1:8080/
+
+See the results at [https://github.com/bearsunday/BEAR.HelloworldBenchmark/wiki](https://github.com/bearsunday/BEAR.HelloworldBenchmark/wiki)
