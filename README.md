@@ -6,7 +6,7 @@ A BEAR.Sunday hellworld project for benchmarking.
 
     pecl install swoole
     (Add extension=swoole.so to your php.ini.)
-    git clone https://github.com/bearsunday/BEAR.HelloworldBenchmark/blob/master/README.md
+    git clone https://github.com/bearsunday/BEAR.HelloworldBenchmark
     cd BEAR.HelloworldBenchmark
     composer install --no-dev
     composer compile
