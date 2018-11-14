@@ -1,6 +1,6 @@
 # BEAR.HelloworldBenchmark
 
-The BEAR.Sunday hellworld project for benchmarking.
+A BEAR.Sunday hellworld project for benchmarking.
 
 ## Installation
 
