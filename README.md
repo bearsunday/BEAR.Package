@@ -3,9 +3,12 @@
 ## Installation
 
     pecl install swoole
+    (Add extension=swoole.so to your php.ini.)
+    git clone https://github.com/bearsunday/BEAR.HelloworldBenchmark/blob/master/README.md
+    cd BEAR.HelloworldBenchmark
     composer install --no-dev
     composer compile
-
+    
 See more for the installation of swoole at [Swoole:Getting Started](https://www.swoole.co.uk/docs/get-started/installation).
 
 ## Setup
