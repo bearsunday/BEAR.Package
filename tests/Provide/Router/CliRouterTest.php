@@ -118,7 +118,7 @@ class CliRouterTest extends TestCase
         file_put_contents($this->stdInFile, '');
         $exists = file_exists($this->stdInFile);
         $this->assertTrue($exists);
-        $this->router = null;
+        unset($this->router);
         $exists = file_exists($this->stdInFile);
         $this->assertFalse($exists);
     }
