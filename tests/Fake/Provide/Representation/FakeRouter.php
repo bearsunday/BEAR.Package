@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;

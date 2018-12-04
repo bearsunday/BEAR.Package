@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Package\AppInjector;
@@ -20,7 +18,7 @@ class HalRendererTest extends TestCase
      */
     private $resource;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
     }

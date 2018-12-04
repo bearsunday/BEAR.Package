@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 namespace BEAR\Package;
 
 use BEAR\Resource\RenderInterface;
@@ -21,19 +19,17 @@ class AppInjectorTest extends TestCase
         $this->assertInstanceOf(App::class, $app);
     }
 
-    /**
-     * @expectedException \BEAR\Package\Exception\InvalidContextException
-     */
     public function testInvalidContext()
     {
+        $this->expectException(\BEAR\Package\Exception\InvalidContextException::class);
+
         (new AppInjector('FakeVendor\HelloWorld', '__invalid__'))->getInstance(AppInterface::class);
     }
 
-    /**
-     * @expectedException \Ray\Compiler\Exception\NotCompiled
-     */
     public function testInvalidInterface()
     {
+        $this->expectException(\Ray\Compiler\Exception\NotCompiled::class);
+
         (new AppInjector('FakeVendor\HelloWorld', 'prod-cli-app'))->getInstance('__Invalid__');
     }
 

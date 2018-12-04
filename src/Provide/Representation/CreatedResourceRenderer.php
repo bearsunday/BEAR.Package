@@ -1,9 +1,7 @@
-<?php declare(strict_types=1);
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+<?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Package\Exception\LocationHeaderRequestException;
@@ -46,6 +44,7 @@ class CreatedResourceRenderer implements RenderInterface
         } catch (\Exception $e) {
             $ro->code = 500;
             $ro->view = '';
+
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
         $this->updateHeaders($ro);

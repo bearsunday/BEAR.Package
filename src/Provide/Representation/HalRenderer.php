@@ -1,9 +1,7 @@
-<?php declare(strict_types=1);
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+<?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Resource\AbstractRequest;
@@ -69,6 +67,7 @@ class HalRenderer implements RenderInterface
                 if ($isDifferentSchema === true) {
                     $ro->body['_embedded'][$key] = $embedded()->body;
                     unset($ro->body[$key]);
+
                     continue;
                 }
                 unset($ro->body[$key]);
@@ -93,9 +92,8 @@ class HalRenderer implements RenderInterface
         $selfLink = $this->link->getReverseLink($path);
 
         $hal = new Hal($selfLink, $body);
-        $hal = $this->link->addHalLink($body, $annotations, $hal);
 
-        return $hal;
+        return $this->link->addHalLink($body, $annotations, $hal);
     }
 
     /**

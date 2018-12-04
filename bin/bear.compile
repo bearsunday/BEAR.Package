@@ -1,5 +1,7 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * BEAR/Sunday application compiler
@@ -13,6 +15,7 @@
  * * Compile all AOP classes
  * * Save annotation cache for all resources
  */
+
 use BEAR\Package\Compiler;
 
 if ($argc !== 4) {
@@ -28,6 +31,6 @@ try {
     error_log((new Compiler)($appName, $context, $appDir));
     exit(0);
 } catch (\Exception $e) {
-    error_log($e);
+    error_log((string) $e);
     exit(1);
 }

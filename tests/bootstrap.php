@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 use BEAR\Package\Unlink;
 
 require dirname(__DIR__) . '/vendor/autoload.php';

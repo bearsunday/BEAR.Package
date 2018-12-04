@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch;
@@ -16,7 +14,7 @@ class DevVndErrorPageTest extends TestCase
      */
     private $page;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $e = new \LogicException('bear');

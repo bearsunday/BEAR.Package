@@ -1,9 +1,7 @@
-<?php declare(strict_types=1);
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+<?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Router;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;
@@ -24,9 +22,6 @@ class RouterCollectionProvider implements ProviderInterface
     private $webRouter;
 
     /**
-     * @param RouterInterface    $router
-     * @param WebRouterInterface $webRouter
-     *
      * @Inject
      * @Named("router=primary_router")
      */

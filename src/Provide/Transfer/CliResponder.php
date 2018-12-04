@@ -1,9 +1,7 @@
-<?php declare(strict_types=1);
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+<?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Transfer;
 
 use BEAR\Resource\Code;
@@ -33,7 +31,5 @@ class CliResponder implements TransferInterface
         // body
         $ob .= (string) $ro->view;
         echo $ob;
-
-        return null;
     }
 }
