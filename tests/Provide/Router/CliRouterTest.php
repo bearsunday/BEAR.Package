@@ -1,15 +1,13 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
 
 /**
  * This file is part of the BEAR.Package package.
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
@@ -26,7 +24,7 @@ class CliRouterTest extends TestCase
 
     private $stdInFile;
 
-    public function setUp()
+    protected function setUp()
     {
         $stdOut = __DIR__ . '/stdout.log';
         $this->stdInFile = __DIR__ . '/stdin.text';
@@ -37,7 +35,7 @@ class CliRouterTest extends TestCase
         $this->router->setStdIn($this->stdInFile);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         @unlink(__DIR__ . '/stdin.text');
         @unlink(__DIR__ . '/stdout.log');
@@ -133,9 +131,9 @@ class CliRouterTest extends TestCase
         /* @var CliRouter $router */
         $router->match(
             [
-            'argc' => 1,
-            'argv' => ['page.php']
-        ],
+                'argc' => 1,
+                'argv' => ['page.php']
+            ],
             []
         );
     }

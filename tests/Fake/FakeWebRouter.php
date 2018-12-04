@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package;
 
 use BEAR\Package\Provide\Router\WebRouter;

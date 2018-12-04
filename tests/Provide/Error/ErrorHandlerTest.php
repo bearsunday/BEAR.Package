@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AppMeta;
@@ -24,7 +22,7 @@ class ErrorHandlerTest extends TestCase
      */
     private $responder;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->responder = new FakeHttpResponder;

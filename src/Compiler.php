@@ -1,9 +1,7 @@
-<?php declare(strict_types=1);
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+<?php
+
+declare(strict_types=1);
+
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
@@ -36,9 +34,8 @@ final class Compiler
     {
         $loader = $this->compileLoader($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
-        $msg = sprintf("Compile Log: %s\nautload.php: %s", $log, $loader);
 
-        return $msg;
+        return sprintf("Compile Log: %s\nautload.php: %s", $log, $loader);
     }
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string

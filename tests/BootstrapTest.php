@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AppMeta;
@@ -27,7 +25,7 @@ class BootstrapTest extends TestCase
      */
     private $appMeta;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
         AppModule::$modules = [];
@@ -67,11 +65,10 @@ class BootstrapTest extends TestCase
         $this->assertInstanceOf(AppInterface::class, $app);
     }
 
-    /**
-     * @expectedException \BEAR\Package\Exception\InvalidContextException
-     */
     public function testInvalidContext()
     {
+        $this->expectException(\BEAR\Package\Exception\InvalidContextException::class);
+
         (new Bootstrap)->getApp('FakeVendor\HelloWorld', 'invalid');
     }
 

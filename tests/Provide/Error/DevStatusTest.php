@@ -1,9 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\Exception\BadRequestException;
@@ -18,7 +16,7 @@ class DevStatusTest extends TestCase
      */
     private $request;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $request = new RouterMatch();
