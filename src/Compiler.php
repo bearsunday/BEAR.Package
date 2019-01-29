@@ -104,7 +104,7 @@ final class Compiler
     {
         $dir = realpath($rootDir);
         if (strpos($file, $dir) !== false) {
-            return str_replace("{$dir}", "__DIR__ . '", $file);
+            return preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
         }
 
         return "'" . $file;
