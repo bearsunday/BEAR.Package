@@ -20,11 +20,11 @@ final class HalLink
         $this->router = $router;
     }
 
-    public function getReverseLink($uri) : string
+    public function getReverseLink(string $uri) : string
     {
-        $urlParts = parse_url($uri);
-        $routeName = $urlParts['path'];
-        isset($urlParts['query']) ? parse_str($urlParts['query'], $value) : $value = [];
+        $routeName = (string) parse_url($uri, PHP_URL_PATH);
+        $urlQuery = parse_url($uri, PHP_URL_QUERY);
+        $urlQuery ? parse_str($urlQuery, $value) : $value = [];
         if ($value === []) {
             return $uri;
         }

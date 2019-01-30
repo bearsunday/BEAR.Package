@@ -35,6 +35,7 @@ class AppInjectorTest extends TestCase
 
     public function testGetOverrideInstance()
     {
+        /** @var RenderInterface $mock */
         $mock = $this->createMock(RenderInterface::class);
         $module = new class($mock) extends AbstractModule {
             private $mock;
@@ -42,6 +43,7 @@ class AppInjectorTest extends TestCase
             public function __construct(RenderInterface $mock)
             {
                 $this->mock = $mock;
+                parent::__construct();
             }
 
             protected function configure()

@@ -232,8 +232,8 @@ class HalRendererTest extends TestCase
 
     public function testCreatedResourceAnnotationButFailed()
     {
+        /** @var \BEAR\Resource\ResourceObject $ro */
         $ro = $this->resource->post->uri('app://self/post?code=500');
-        /* @var $ro \BEAR\Resource\ResourceObject */
         $result = (string) $ro;
         $expect = '{
     "_links": {

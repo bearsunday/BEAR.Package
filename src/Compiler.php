@@ -90,7 +90,7 @@ final class Compiler
             }
             $fies .= sprintf(
                 "require %s';\n",
-                $this->getRelativePath($appDir, (new \ReflectionClass($class))->getFileName())
+                $this->getRelativePath($appDir, (string) (new \ReflectionClass($class))->getFileName())
             );
         }
         $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
@@ -100,11 +100,11 @@ final class Compiler
         return $loaderFile;
     }
 
-    private function getRelativePath(string $rootDir, string $file)
+    private function getRelativePath(string $rootDir, string $file) : string
     {
-        $dir = realpath($rootDir);
+        $dir = (string) realpath($rootDir);
         if (strpos($file, $dir) !== false) {
-            return preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
+            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
         }
 
         return "'" . $file;
@@ -146,14 +146,18 @@ final class Compiler
         return \in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
-    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method)
+    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method) : void
     {
         // named parameter
         if (! \in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
             return;
         }
+        $callable = [$instance, $method];
+        if (! is_callable($callable)) {
+            return;
+        }
         try {
-            $namedParameter->getParameters([$instance, $method], []);
+            $namedParameter->getParameters($callable, []);
         } catch (ParameterException $e) {
             return;
         }
