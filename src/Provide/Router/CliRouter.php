@@ -157,14 +157,15 @@ class CliRouter implements RouterInterface
     private function parseGlobals(array $globals) : array
     {
         list(, $method, $uri) = $globals['argv'];
-        $parsedUrl = parse_url($uri);
+        $urlQuery = parse_url($uri, PHP_URL_QUERY);
+        $urlPath =  parse_url($uri, PHP_URL_PATH);
         $query = [];
-        if (isset($parsedUrl['query'])) {
-            parse_str($parsedUrl['query'], $query);
+        if ($urlQuery) {
+            parse_str($urlQuery, $query);
         }
         $server = [
             'REQUEST_METHOD' => strtoupper($method),
-            'REQUEST_URI' => $parsedUrl['path']
+            'REQUEST_URI' => $urlPath
         ];
 
         return [$method, $query, $server];
