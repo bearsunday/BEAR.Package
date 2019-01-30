@@ -146,14 +146,18 @@ final class Compiler
         return \in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
-    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method)
+    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method) : void
     {
         // named parameter
         if (! \in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
             return;
         }
+        $callable = [$instance, $method];
+        if (! is_callable($callable)) {
+            return;
+        }
         try {
-            $namedParameter->getParameters([$instance, $method], []);
+            $namedParameter->getParameters($callable, []);
         } catch (ParameterException $e) {
             return;
         }
