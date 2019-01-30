@@ -19,5 +19,5 @@ try {
     $code = $e->getCode() ?: 500;
     http_response_code($code);
     echo $code;
-    error_log($e);
+    error_log((string) $e);
 }
