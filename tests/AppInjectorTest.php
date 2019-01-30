@@ -43,6 +43,7 @@ class AppInjectorTest extends TestCase
             public function __construct(RenderInterface $mock)
             {
                 $this->mock = $mock;
+                parent::__construct();
             }
 
             protected function configure()
