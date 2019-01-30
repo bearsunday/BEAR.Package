@@ -16,7 +16,7 @@ use FakeVendor\HelloWorld\Module\ProdModule;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
-class ContextProviderTest extends TestCase
+class ContextProviderCompileTest extends TestCase
 {
     public function estContextualProvider()
     {
