@@ -102,7 +102,7 @@ final class Compiler
 
     private function getRelativePath(string $rootDir, string $file) : string
     {
-        $dir = realpath($rootDir);
+        $dir = (string) realpath($rootDir);
         if (strpos($file, $dir) !== false) {
             return preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
         }
