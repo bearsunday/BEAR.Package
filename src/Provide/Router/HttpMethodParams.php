@@ -129,7 +129,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return $server['HTTP_RAW_POST_DATA'];
         }
 
-        return rtrim(file_get_contents($this->stdIn));
+        $file = file_get_contents($this->stdIn);
+        return rtrim(is_string($file) ? $file : '');
     }
 
     private function getContentType(array $server) : string
