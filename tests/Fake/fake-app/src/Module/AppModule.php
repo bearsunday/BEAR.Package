@@ -21,5 +21,6 @@ class AppModule extends AbstractModule
         self::$modules[] = get_class($this);
         $this->bind(FakeDepInterface::class)->to(FakeDep::class);
         $this->install(new PackageModule());
+        $this->install(new ContextModule());
     }
 }
