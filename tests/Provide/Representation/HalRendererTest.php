@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Package\AppInjector;
+use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -249,8 +250,21 @@ class HalRendererTest extends TestCase
     public function testCreatedResourceInvaliUri()
     {
         $ro = $this->resource->post->uri('app://self/post?uri=__INVALID_*+')();
+
+        $errNo = $errStr = '';
+        set_error_handler(function (int $no, string $str) use (&$errNo, &$errStr) {
+            $errNo = $no;
+            $errStr = $str;
+        });
+
         /* @var $ro \BEAR\Resource\ResourceObject */
         (string) $ro;
+
+        $this->assertSame(512, $errNo);
+        $this->assertContains(LocationHeaderRequestException::class, $errStr);
+
+        restore_error_handler();
+
         $this->assertSame('', $ro->view);
         $this->assertSame(500, $ro->code);
     }
