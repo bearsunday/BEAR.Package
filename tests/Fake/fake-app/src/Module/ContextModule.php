@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FakeVendor\HelloWorld\Module;
 
-use BEAR\Package\AbstractAppModule;
 use FakeVendor\HelloWorld\Module\Provider\ContextlProvider;
+use Ray\Di\AbstractModule;
 
-class ContextModule extends AbstractAppModule
+class ContextModule extends AbstractModule
 {
     protected function configure()
     {
