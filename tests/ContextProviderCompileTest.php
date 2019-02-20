@@ -4,17 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
-use BEAR\AppMeta\AppMeta;
-use BEAR\Package\Context\CliModule;
 use BEAR\Resource\ResourceInterface;
-use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Sunday\Inject\ResourceInject;
-use FakeVendor\HelloWorld\Module\App;
-use FakeVendor\HelloWorld\Module\AppModule;
-use FakeVendor\HelloWorld\Module\ContextModule;
-use FakeVendor\HelloWorld\Module\ProdModule;
 use PHPUnit\Framework\TestCase;
-use Ray\Di\Injector;
 
 class ContextProviderCompileTest extends TestCase
 {
