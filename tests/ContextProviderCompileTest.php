@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ContextProviderCompileTest extends TestCase
 {
-    public function estContextualProvider()
+    public function testContextualProvider()
     {
         /** @var ResourceInterface $resource */
         $resource = (new AppInjector('FakeVendor\HelloWorld', 'prod-context-cli-app'))->getInstance(ResourceInterface::class);
