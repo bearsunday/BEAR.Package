@@ -18,7 +18,7 @@ final class Bootstrap
      * Use newApp() instead for your own AppMeta and Cache.
      *
      * @param string $name     application name    'koriym\blog' (vendor\package)
-     * @param string $contexts application context 'prd-html-app'
+     * @param string $contexts application context 'prod-html-app'
      * @param string $appDir   application path
      */
     public function getApp(string $name, string $contexts, string $appDir = '') : AbstractApp
