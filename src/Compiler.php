@@ -81,7 +81,7 @@ final class Compiler
             true
         );
 
-        $this->invokeTypicalReuqest($appName, $context);
+        $this->invokeTypicalRequest($appName, $context);
         $fies = '<?php declare(strict_types=1);' . PHP_EOL;
         foreach ($this->classes as $class) {
             $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false); // could be phpdoc tag by anotation loader
@@ -110,7 +110,7 @@ final class Compiler
         return "'" . $file;
     }
 
-    private function invokeTypicalReuqest(string $appName, string $context)
+    private function invokeTypicalRequest(string $appName, string $context)
     {
         $app = (new Bootstrap)->getApp($appName, $context);
         $ro = new NullPage;
