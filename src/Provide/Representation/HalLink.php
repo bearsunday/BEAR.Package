@@ -56,6 +56,10 @@ final class HalLink
             }
             $uri = uri_template($annotation->href, $body);
             $reverseUri = $this->getReverseLink($uri);
+            if (isset($body['_links'][$annotation->rel])) {
+                // skip if already difined links in ResourceObject
+                continue;
+            }
             $hal->addLink($annotation->rel, $reverseUri);
         }
 
