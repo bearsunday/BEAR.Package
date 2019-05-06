@@ -38,17 +38,17 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
+        if ($ro->view) {
+            return $ro->view;
+        }
         $ro = $this->renderHal($ro);
         $this->updateHeaders($ro);
 
-        return $ro->view;
+        return (string) $ro->view;
     }
 
     private function renderHal(ResourceObject $ro) : ResourceObject
     {
-        if ($ro->view) {
-            return $ro->view;
-        }
         $method = 'on' . ucfirst($ro->uri->method);
         $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
 
@@ -73,7 +73,7 @@ class HalRenderer implements RenderInterface
                 }
                 unset($ro->body[$key]);
                 $view = $this->renderHal($embedded())->view;
-                $ro->body['_embedded'][$key] = json_decode($view);
+                $ro->body['_embedded'][$key] = json_decode((string) $view);
             }
         }
     }
