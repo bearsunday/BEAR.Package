@@ -41,38 +41,39 @@ class HalRenderer implements RenderInterface
         if ($ro->view) {
             return $ro->view;
         }
+        $ro = $this->renderHal($ro);
+        $this->updateHeaders($ro);
+
+        return (string) $ro->view;
+    }
+
+    private function renderHal(ResourceObject $ro) : ResourceObject
+    {
         $method = 'on' . ucfirst($ro->uri->method);
         $annotations = $this->reader->getMethodAnnotations(new \ReflectionMethod($ro, $method));
 
-        return $this->renderHal($ro, $annotations);
-    }
-
-    private function renderHal(ResourceObject $ro, $annotations) : string
-    {
-        list($ro, $body) = $this->valuate($ro);
+        [$ro, $body] = $this->valuate($ro);
         /* @var $annotations Link[] */
         /* @var $ro ResourceObject */
         $hal = $this->getHal($ro->uri, $body, $annotations);
         $ro->view = $hal->asJson(true) . PHP_EOL;
-        $this->updateHeaders($ro);
 
-        return $ro->view;
+        return $ro;
     }
 
     private function valuateElements(ResourceObject $ro)
     {
         foreach ((array) $ro->body as $key => &$embedded) {
             if ($embedded instanceof AbstractRequest) {
-                $isDifferentSchema = $this->isDifferentSchema($ro, $embedded->resourceObject);
-                if ($isDifferentSchema === true) {
+                if ($this->isDifferentSchema($ro, $embedded->resourceObject)) {
                     $ro->body['_embedded'][$key] = $embedded()->body;
                     unset($ro->body[$key]);
 
                     continue;
                 }
                 unset($ro->body[$key]);
-                $view = $this->render($embedded());
-                $ro->body['_embedded'][$key] = json_decode($view);
+                $view = $this->renderHal($embedded())->view;
+                $ro->body['_embedded'][$key] = json_decode((string) $view);
             }
         }
     }

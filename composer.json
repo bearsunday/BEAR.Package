@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
+        "ext-json": "*",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.4",
         "bear/query-repository": "^1.6",
