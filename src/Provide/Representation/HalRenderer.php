@@ -38,6 +38,14 @@ class HalRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
+        $ro = $this->renderHal($ro);
+        $this->updateHeaders($ro);
+
+        return $ro->view;
+    }
+
+    private function renderHal(ResourceObject $ro) : ResourceObject
+    {
         if ($ro->view) {
             return $ro->view;
         }
