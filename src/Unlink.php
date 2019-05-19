@@ -21,7 +21,8 @@ final class Unlink
         if ($this->isOptional && file_exists($path . '/.do_not_clear')) {
             return;
         }
-        foreach ((array) \glob(\rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
+        foreach ((array) \glob(\rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $f) {
+            $file = (string) $f;
             \is_dir($file) ? $this->__invoke($file) : \unlink($file);
             @\rmdir($file);
         }
