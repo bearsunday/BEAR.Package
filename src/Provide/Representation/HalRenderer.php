@@ -41,7 +41,7 @@ class HalRenderer implements RenderInterface
         $ro = $this->renderHal($ro);
         $this->updateHeaders($ro);
 
-        return $ro->view;
+        return (string) $ro->view;
     }
 
     private function renderHal(ResourceObject $ro) : ResourceObject
