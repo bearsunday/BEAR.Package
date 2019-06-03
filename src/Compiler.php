@@ -123,7 +123,7 @@ final class Compiler
         try {
             $instance = $injector->getInstance($className);
         } catch (\Exception $e) {
-            error_log(sprintf('Failed to instantiate [%s]: %s(%s)', $className, get_class($e), $e->getMessage()));
+            error_log(sprintf('Failed to instantiate [%s]: %s(%s) in %s on line %s', $className, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()));
 
             return;
         }
