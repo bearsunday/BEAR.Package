@@ -6,4 +6,7 @@ namespace FakeVendor\HelloWorld;
 
 class FakeDep implements FakeDepInterface
 {
+    public function foo()
+    {
+    }
 }
