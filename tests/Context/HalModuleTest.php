@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Context;
 
-use BEAR\Package\Provide\Representation\HalRenderer;
+use BEAR\Resource\HalRenderer;
 use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\RenderInterface;
 use BEAR\Sunday\Module\Annotation\DoctrineAnnotationModule;
