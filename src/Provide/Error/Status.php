@@ -23,8 +23,8 @@ final class Status
     {
         $text = (new StatusCode)->statusText;
         if ($e instanceof BadRequestException) {
-            $this->code = $e->getCode();
-            $this->text = $text[$this->code];
+            $this->code = (int) $e->getCode();
+            $this->text = $text[$this->code] ?? '';
 
             return;
         }
