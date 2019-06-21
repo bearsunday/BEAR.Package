@@ -28,8 +28,7 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resou
  * Transfer
     * CliResponder
  * Annotations
-	 * `@Curies`
-	 * `@ReturnCreatedResource`
+    * `@ReturnCreatedResource`
 
 ## Demo
 
