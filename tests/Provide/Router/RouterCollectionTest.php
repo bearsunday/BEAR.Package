@@ -15,7 +15,7 @@ class RouterCollectionTest extends TestCase
      */
     private $routerCollection;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $webRouter = new WebRouter('page://self');
         $fakeRouter = new FakeWebRouter('page://self', new HttpMethodParams);

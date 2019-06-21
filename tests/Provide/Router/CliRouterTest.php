@@ -24,7 +24,7 @@ class CliRouterTest extends TestCase
 
     private $stdInFile;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $stdOut = __DIR__ . '/stdout.log';
         $this->stdInFile = __DIR__ . '/stdin.text';
@@ -35,7 +35,7 @@ class CliRouterTest extends TestCase
         $this->router->setStdIn($this->stdInFile);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         @unlink(__DIR__ . '/stdin.text');
         @unlink(__DIR__ . '/stdout.log');
