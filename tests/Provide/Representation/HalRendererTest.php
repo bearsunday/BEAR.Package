@@ -19,7 +19,7 @@ class HalRendererTest extends TestCase
      */
     private $resource;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
     }

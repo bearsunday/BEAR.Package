@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use function is_dir;
+use function rtrim;
+use function unlink;
+
 final class Unlink
 {
     /**
@@ -21,9 +25,9 @@ final class Unlink
         if ($this->isOptional && file_exists($path . '/.do_not_clear')) {
             return;
         }
-        foreach (\glob(\rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
-            \is_dir($file) ? $this->__invoke($file) : \unlink($file);
-            @\rmdir($file);
+        foreach ((array) glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
+            is_dir((string) $file) ? $this->__invoke((string) $file) : unlink((string) $file);
+            @rmdir((string) $file);
         }
     }
 
