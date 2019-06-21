@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use function glob;
+use function is_dir;
 use function rtrim;
 use function unlink;
 

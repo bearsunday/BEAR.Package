@@ -14,7 +14,7 @@ class CliResponderTest extends TestCase
      */
     private $responder;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->responder = new CliResponder;

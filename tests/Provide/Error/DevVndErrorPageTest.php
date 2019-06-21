@@ -14,7 +14,7 @@ class DevVndErrorPageTest extends TestCase
      */
     private $page;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $e = new \LogicException('bear');
