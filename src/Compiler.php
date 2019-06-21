@@ -13,9 +13,12 @@ use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
+use function substr;
+use function var_dump;
 
 final class Compiler
 {
@@ -82,15 +85,19 @@ final class Compiler
         );
 
         $this->invokeTypicalRequest($appName, $context);
-        $fies = '<?php declare(strict_types=1);' . PHP_EOL;
+        $fies = '<?php' . PHP_EOL;
         foreach ($this->classes as $class) {
             $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false); // could be phpdoc tag by anotation loader
             if ($isAutoloadFailed) {
                 continue;
             }
+            $filePath =  (string) (new \ReflectionClass($class))->getFileName();
+            if (! file_exists($filePath) || substr($filePath, 0, 4) === 'phar') {
+                continue;
+            }
             $fies .= sprintf(
                 "require %s';\n",
-                $this->getRelativePath($appDir, (string) (new \ReflectionClass($class))->getFileName())
+                $this->getRelativePath($appDir, $filePath)
             );
         }
         $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
