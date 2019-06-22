@@ -50,7 +50,7 @@ final class CliResponder implements TransferInterface
         $ob .= PHP_EOL;
 
         // body
-        $ob .= $output->view;
+        $ob .= (string) $output->view;
 
         echo $ob;
     }
