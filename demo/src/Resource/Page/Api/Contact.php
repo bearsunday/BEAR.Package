@@ -1,9 +1,8 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
+declare(strict_types=1);
+
+
 namespace MyVendor\MyProject\Resource\Page\Api;
 
 use BEAR\Resource\Annotation\Embed;

@@ -1,11 +1,7 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
 
-// APCu stub
+declare(strict_types=1);
+
 if (! function_exists('apcu_store')) {
     function apcu_cache_info($limited = false)
     {

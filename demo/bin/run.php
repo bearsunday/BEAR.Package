@@ -1,9 +1,5 @@
 <?php
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 use BEAR\Package\Bootstrap;
 
 /* @var \Composer\Autoload\ClassLoader $loader */

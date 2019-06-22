@@ -21,15 +21,13 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.4",
         "bear/query-repository": "^1.6",
-        "bear/sunday": "^1.3",
+        "bear/sunday": "^1.3.4",
         "bear/streamer": "^1.0.1",
-        "monolog/monolog" : "^1.24",
-        "ray/di" : "^2.8.1"
+        "monolog/monolog" : "^1.24"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",
-        "bear/cs": "^1.0",
-        "bear/resource": "1.x-dev"
+        "vimeo/psalm": "^3.4"
     },
     "autoload": {
         "psr-4": {
@@ -48,7 +46,7 @@
     ],
     "scripts" :{
         "test": ["phpunit"],
-        "tests": ["@cs", "phpstan analyse -l max src tests -c phpstan.neon --no-progress",   "@test"],
+        "tests": ["@cs", "phpstan analyse -l max src tests -c phpstan.neon --no-progress", "vendor/bin/psalm --show-info=false", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
         "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"]

@@ -18,7 +18,6 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
 use function substr;
-use function var_dump;
 
 final class Compiler
 {
@@ -91,7 +90,7 @@ final class Compiler
             if ($isAutoloadFailed) {
                 continue;
             }
-            $filePath =  (string) (new \ReflectionClass($class))->getFileName();
+            $filePath = (string) (new \ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || substr($filePath, 0, 4) === 'phar') {
                 continue;
             }
