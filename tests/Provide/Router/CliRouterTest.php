@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-
-
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
@@ -13,9 +11,6 @@ use function unserialize;
 
 class CliRouterTest extends TestCase
 {
-    /**
-     * @var CliRouter
-     */
     private $router;
 
     private $stdInFile;
