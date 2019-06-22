@@ -10,9 +10,6 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponseInterface;
 use BEAR\Sunday\Provide\Transfer\HeaderInterface;
 use BEAR\Sunday\Provide\Transfer\Output;
-use function function_exists;
-use function headers_list;
-use function ob_start;
 use const PHP_EOL;
 
 final class CliResponder implements TransferInterface

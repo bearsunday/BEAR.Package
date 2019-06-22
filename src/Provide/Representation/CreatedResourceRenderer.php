@@ -36,7 +36,7 @@ class CreatedResourceRenderer implements RenderInterface
      */
     public function render(ResourceObject $ro)
     {
-        $urlSchema =  (string) parse_url((string) $ro->uri, PHP_URL_SCHEME);
+        $urlSchema = (string) parse_url((string) $ro->uri, PHP_URL_SCHEME);
         $urlHost = (string) parse_url((string) $ro->uri, PHP_URL_HOST);
         $locationUri = sprintf('%s://%s%s', $urlSchema, $urlHost, $ro->headers['Location']);
         try {
@@ -56,8 +56,8 @@ class CreatedResourceRenderer implements RenderInterface
 
     private function getReverseMatchedLink(string $uri) : string
     {
-        $routeName =  (string) parse_url($uri, PHP_URL_PATH);
-        $urlQuery =  (string) parse_url($uri, PHP_URL_QUERY);
+        $routeName = (string) parse_url($uri, PHP_URL_PATH);
+        $urlQuery = (string) parse_url($uri, PHP_URL_QUERY);
         $urlQuery ? parse_str($urlQuery, $value) : $value = [];
         if ($value === []) {
             return $uri;

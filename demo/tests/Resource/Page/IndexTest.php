@@ -1,11 +1,5 @@
 <?php
 
-declare(strict_types=1);
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
 namespace MyVendor\MyProjecct\Resource\Page;
 
 use BEAR\Package\Bootstrap;
@@ -20,7 +14,7 @@ class IndexTest extends TestCase
      */
     private $resource;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->resource = (new Bootstrap)->getApp('MyVendor\MyProject', 'app')->resource;

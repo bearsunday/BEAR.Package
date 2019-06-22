@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the BEAR.Package package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 
 namespace BEAR\Package\Provide\Router;
 
@@ -118,7 +114,7 @@ class CliRouterTest extends TestCase
         file_put_contents($this->stdInFile, '');
         $exists = file_exists($this->stdInFile);
         $this->assertTrue($exists);
-        unset($this->router);
+        $this->router = null;
         $exists = file_exists($this->stdInFile);
         $this->assertFalse($exists);
     }
