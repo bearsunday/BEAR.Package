@@ -7,6 +7,8 @@ namespace BEAR\Package\Provide\Error;
 use BEAR\AppMeta\AppMeta;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use BEAR\Sunday\Provide\Transfer\ConditionalResponse;
+use BEAR\Sunday\Provide\Transfer\Header;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -22,10 +24,10 @@ class ErrorHandlerTest extends TestCase
      */
     private $responder;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->responder = new FakeHttpResponder;
+        $this->responder = new FakeHttpResponder(new Header, new ConditionalResponse);
         $this->handler = new ErrorHandler($this->responder, new ErrorLogger(new NullLogger, new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
     }
 

@@ -24,7 +24,7 @@ class CreatedResourceRendererTest extends TestCase
      */
     private $ro;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
         $this->ro = $resource->post->uri('app://self/post')();

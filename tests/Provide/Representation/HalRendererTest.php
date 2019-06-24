@@ -6,6 +6,8 @@ namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Package\AppInjector;
 use BEAR\Package\Exception\LocationHeaderRequestException;
+use BEAR\Resource\HalLink;
+use BEAR\Resource\HalRenderer;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -19,7 +21,7 @@ class HalRendererTest extends TestCase
      */
     private $resource;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
     }
@@ -152,7 +154,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererNoParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new FakeRouter));
+        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new RouterReverseLink(new FakeRouter)));
         $ro = new Task;
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
@@ -172,7 +174,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererWithParam()
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new FakeRouter));
+        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new RouterReverseLink(new FakeRouter)));
         $ro = new Task;
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';

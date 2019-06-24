@@ -25,7 +25,7 @@ class BootstrapTest extends TestCase
      */
     private $appMeta;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld');
         AppModule::$modules = [];

@@ -10,7 +10,7 @@ class ErrorPageTest extends TestCase
 {
     private $errorPage;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->errorPage = new ErrorPage('some_text_after_error_message');

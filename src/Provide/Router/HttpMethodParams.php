@@ -103,7 +103,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function phpInput(array $server) : array
     {
-        $contentType = $this->getContentType($server);
+        $contentType = $server[self::CONTENT_TYPE] ?? ($server[self::HTTP_CONTENT_TYPE]) ?? '';
         $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
@@ -125,23 +125,6 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     private function getRawBody(array $server) : string
     {
-        if (isset($server['HTTP_RAW_POST_DATA'])) {
-            return $server['HTTP_RAW_POST_DATA'];
-        }
-
-        $file = file_get_contents($this->stdIn);
-        return rtrim(is_string($file) ? $file : '');
-    }
-
-    private function getContentType(array $server) : string
-    {
-        if (isset($server[self::CONTENT_TYPE])) {
-            return $server[self::CONTENT_TYPE];
-        }
-        if (isset($server[self::HTTP_CONTENT_TYPE])) {
-            return $server[self::HTTP_CONTENT_TYPE];
-        }
-
-        return '';
+        return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));
     }
 }

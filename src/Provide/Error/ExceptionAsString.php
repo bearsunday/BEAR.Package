@@ -24,7 +24,7 @@ final class ExceptionAsString
             $e->getTraceAsString()
         );
 
-        $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), $request, $eSummery, $this->getPhpVariables($_SERVER));
+        $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), (string) $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 
     public function __toString()
