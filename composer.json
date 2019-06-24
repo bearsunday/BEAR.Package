@@ -23,7 +23,8 @@
         "bear/query-repository": "^1.6",
         "bear/sunday": "^1.3.4",
         "bear/streamer": "^1.0.1",
-        "monolog/monolog" : "^1.24"
+        "monolog/monolog" : "^1.24",
+        "ray/di": "^2.8.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",
