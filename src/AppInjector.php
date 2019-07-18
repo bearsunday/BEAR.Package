@@ -44,18 +44,18 @@ final class AppInjector implements InjectorInterface
     /**
      * @var string
      */
-    private $cacheSpace;
+    private $cacheNamespace;
 
     /**
      * @var null|AbstractModule
      */
     private $module;
 
-    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = null)
+    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheNamespace = null)
     {
         $this->context = $context;
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
-        $this->cacheSpace = (string) $cacheSpace;
+        $this->cacheNamespace = (string) $cacheNamespace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! \file_exists($scriptDir) && \mkdir($scriptDir);
         $this->scriptDir = $scriptDir;
@@ -66,7 +66,7 @@ final class AppInjector implements InjectorInterface
         $this->injector = new ScriptInjector($this->scriptDir, function () {
             return $this->getModule();
         });
-        if ($cacheSpace === null) {
+        if ($cacheNamespace === null) {
             $this->clear();
         }
     }
@@ -99,9 +99,9 @@ final class AppInjector implements InjectorInterface
     public function getCachedInstance($interface, $name = Name::ANY)
     {
         $lockFile = $this->appMeta->appDir . '/composer.lock';
-        $this->cacheSpace .= file_exists($lockFile) ? (string) filemtime($lockFile) : '';
+        $this->cacheNamespace .= file_exists($lockFile) ? (string) filemtime($lockFile) : '';
         $cache = new FilesystemCache($this->appDir);
-        $id = $interface . $name . $this->context . $this->cacheSpace;
+        $id = $interface . $name . $this->context . $this->cacheNamespace;
         $instance = $cache->fetch($id);
         if ($instance) {
             return $instance;
@@ -121,7 +121,7 @@ final class AppInjector implements InjectorInterface
         /* @var AbstractModule $module */
         $container = $module->getContainer();
         (new Bind($container, InjectorInterface::class))->toInstance($this->injector);
-        (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($this->cacheSpace);
+        (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($this->cacheNamespace);
         $this->module = $module;
 
         return $module;
