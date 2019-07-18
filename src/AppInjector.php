@@ -98,8 +98,6 @@ final class AppInjector implements InjectorInterface
 
     public function getCachedInstance($interface, $name = Name::ANY)
     {
-        $lockFile = $this->appMeta->appDir . '/composer.lock';
-        $this->cacheNamespace .= file_exists($lockFile) ? (string) filemtime($lockFile) : '';
         $cache = new FilesystemCache($this->appDir);
         $id = $interface . $name . $this->context . $this->cacheNamespace;
         $instance = $cache->fetch($id);
