@@ -21,12 +21,11 @@ final class Bootstrap
      * @param string $name     application name    'koriym\blog' (vendor\package)
      * @param string $contexts application context 'prod-html-app'
      * @param string $appDir   application path
-     * @param Cache  $cache    cache engine
-     * @param string $cacheKey cache key
+     * @param string $cacheKey cache key changed every time you deploy
      */
-    public function getApp(string $name, string $contexts, string $appDir = '', Cache $cache = null, string $cacheKey = null) : AbstractApp
+    public function getApp(string $name, string $contexts, string $appDir = '', string $cacheKey = null) : AbstractApp
     {
-        return $this->newApp(new Meta($name, $contexts, $appDir), $contexts, $cache, $cacheKey);
+        return $this->newApp(new Meta($name, $contexts, $appDir), $contexts, null, $cacheKey);
     }
 
     public function newApp(AbstractAppMeta $appMeta, string $contexts, Cache $cache = null, string $cacheKey = null) : AbstractApp
