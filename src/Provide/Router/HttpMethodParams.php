@@ -103,7 +103,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function phpInput(array $server) : array
     {
-        $contentType = $server[self::CONTENT_TYPE] ?? ($server[self::HTTP_CONTENT_TYPE]) ?? '';
+        $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
         $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
