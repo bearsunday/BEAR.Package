@@ -37,7 +37,7 @@ final class Compiler
         $loader = $this->compileLoader($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
 
-        return sprintf("Compile Log: %s\nautload.php: %s", $log, $loader);
+        return sprintf("Compile Log: %s\nautoload.php: %s", $log, $loader);
     }
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
@@ -86,7 +86,8 @@ final class Compiler
         $this->invokeTypicalRequest($appName, $context);
         $fies = '<?php' . PHP_EOL;
         foreach ($this->classes as $class) {
-            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false); // could be phpdoc tag by anotation loader
+            // could be phpdoc tag by annotation loader
+            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
             if ($isAutoloadFailed) {
                 continue;
             }
