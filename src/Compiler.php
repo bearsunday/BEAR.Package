@@ -16,6 +16,7 @@ use Doctrine\Common\Cache\Cache;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
+use ReflectionClass;
 use function file_exists;
 
 final class Compiler
@@ -88,7 +89,7 @@ final class Compiler
             if ($isAutoloadFailed) {
                 continue;
             }
-            $filePath = (string) (new \ReflectionClass($class))->getFileName();
+            $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
             }
@@ -131,7 +132,7 @@ final class Compiler
 
             return;
         }
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
         foreach ($methods as $method) {
