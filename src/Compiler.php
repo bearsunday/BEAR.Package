@@ -17,7 +17,6 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
 use function file_exists;
-use function substr;
 
 final class Compiler
 {
@@ -90,7 +89,7 @@ final class Compiler
                 continue;
             }
             $filePath = (string) (new \ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || substr($filePath, 0, 4) === 'phar') {
+            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
             }
             $fies .= sprintf(
