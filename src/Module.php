@@ -7,7 +7,6 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidModuleException;
-use BEAR\Package\Exception\LogicException;
 use Ray\Di\AbstractModule;
 use Ray\Di\NullModule;
 
