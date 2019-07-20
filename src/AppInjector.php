@@ -13,6 +13,8 @@ use Ray\Di\Bind;
 use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
+use function is_dir;
+use function mkdir;
 
 final class AppInjector implements InjectorInterface
 {
@@ -59,10 +61,10 @@ final class AppInjector implements InjectorInterface
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
         $this->cacheNs = $cacheNs;
         $scriptDir = $this->appMeta->tmpDir . '/di';
-        ! \file_exists($scriptDir) && \mkdir($scriptDir);
+        ! is_dir($scriptDir) && ! mkdir($scriptDir) && ! is_dir($scriptDir);
         $this->scriptDir = $scriptDir;
         $appDir = $this->appMeta->tmpDir . '/app';
-        ! \file_exists($appDir) && \mkdir($appDir);
+        ! is_dir($appDir) && ! mkdir($appDir) && ! is_dir($appDir);
         touch($appDir . '/.do_not_clear');
         $this->appDir = $appDir;
         $this->injector = new ScriptInjector($this->scriptDir, function () {
@@ -94,7 +96,8 @@ final class AppInjector implements InjectorInterface
         if ((new Unlink)->once($this->appMeta->tmpDir)) {
             return;
         }
-        ! is_dir($this->appMeta->tmpDir . '/di') && \mkdir($this->appMeta->tmpDir . '/di');
+        $diDir = $this->appMeta->tmpDir . '/di';
+        ! is_dir($diDir) && ! mkdir($diDir) && ! is_dir($diDir);
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
