@@ -6,6 +6,8 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
+use BEAR\Package\Exception\InvalidModuleException;
+use BEAR\Package\Exception\LogicException;
 use Ray\Di\AbstractModule;
 use Ray\Di\NullModule;
 
@@ -30,7 +32,7 @@ class Module
             $module = is_subclass_of($class, AbstractAppModule::class) ? new $class($appMeta, $module) : new $class($module);
         }
         if (! $module instanceof AbstractModule) {
-            throw new \LogicException; // @codeCoverageIgnore
+            throw new InvalidModuleException; // @codeCoverageIgnore
         }
         $module->override(new AppMetaModule($appMeta));
 
