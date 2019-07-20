@@ -18,13 +18,13 @@ class Module
     {
         $contextsArray = array_reverse(explode('-', $context));
         $module = new NullModule;
-        foreach ($contextsArray as $context) {
-            $class = $appMeta->name . '\Module\\' . ucwords($context) . 'Module';
+        foreach ($contextsArray as $contextItem) {
+            $class = $appMeta->name . '\Module\\' . ucwords($contextItem) . 'Module';
             if (! class_exists($class)) {
-                $class = 'BEAR\Package\Context\\' . ucwords($context) . 'Module';
+                $class = 'BEAR\Package\Context\\' . ucwords($contextItem) . 'Module';
             }
             if (! is_a($class, AbstractModule::class, true)) {
-                throw new InvalidContextException($context);
+                throw new InvalidContextException($contextItem);
             }
             /* @var $module AbstractModule */
             $module = is_subclass_of($class, AbstractAppModule::class) ? new $class($appMeta, $module) : new $class($module);
