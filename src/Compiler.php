@@ -13,10 +13,10 @@ use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
-use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
+use function file_exists;
 use function substr;
 
 final class Compiler
@@ -57,7 +57,7 @@ final class Compiler
 
         // check resource injection and create annotation cache
         foreach ($appMeta->getResourceListGenerator() as list($className)) {
-            $this->scanClass($injector, $reader, $namedParams, $className);
+            $this->scanClass($injector, $reader, $namedParams, (string) $className);
         }
         $logFile = realpath($appMeta->logDir) . '/compile.log';
         $this->saveCompileLog($appMeta, $context, $logFile);
