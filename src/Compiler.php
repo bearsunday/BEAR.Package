@@ -17,13 +17,11 @@ use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
-use function substr;
+use ReflectionClass;
 
 final class Compiler
 {
     private $classes = [];
-
-    private $files = [];
 
     /**
      * Compile application
@@ -37,7 +35,7 @@ final class Compiler
         $loader = $this->compileLoader($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
 
-        return sprintf("Compile Log: %s\nautload.php: %s", $log, $loader);
+        return sprintf("Compile Log: %s\nautoload.php: %s", $log, $loader);
     }
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
@@ -56,8 +54,8 @@ final class Compiler
         (new Bootstrap)->newApp($appMeta, $context, $cache);
 
         // check resource injection and create annotation cache
-        foreach ($appMeta->getResourceListGenerator() as list($className)) {
-            $this->scanClass($injector, $reader, $namedParams, $className);
+        foreach ($appMeta->getResourceListGenerator() as [$className]) {
+            $this->scanClass($injector, $reader, $namedParams, (string) $className);
         }
         $logFile = realpath($appMeta->logDir) . '/compile.log';
         $this->saveCompileLog($appMeta, $context, $logFile);
@@ -86,12 +84,13 @@ final class Compiler
         $this->invokeTypicalRequest($appName, $context);
         $fies = '<?php' . PHP_EOL;
         foreach ($this->classes as $class) {
-            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false); // could be phpdoc tag by anotation loader
+            // could be phpdoc tag by annotation loader
+            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
             if ($isAutoloadFailed) {
                 continue;
             }
-            $filePath = (string) (new \ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || substr($filePath, 0, 4) === 'phar') {
+            $filePath = (string) (new ReflectionClass($class))->getFileName();
+            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
             }
             $fies .= sprintf(
@@ -116,7 +115,7 @@ final class Compiler
         return "'" . $file;
     }
 
-    private function invokeTypicalRequest(string $appName, string $context)
+    private function invokeTypicalRequest(string $appName, string $context) : void
     {
         $app = (new Bootstrap)->getApp($appName, $context);
         $ro = new NullPage;
@@ -124,7 +123,7 @@ final class Compiler
         $app->resource->get->object($ro)();
     }
 
-    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className)
+    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className) : void
     {
         try {
             $instance = $injector->getInstance($className);
@@ -133,7 +132,7 @@ final class Compiler
 
             return;
         }
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
         foreach ($methods as $method) {
@@ -169,13 +168,13 @@ final class Compiler
         }
     }
 
-    private function saveCompileLog(AbstractAppMeta $appMeta, string $context, string $logFile)
+    private function saveCompileLog(AbstractAppMeta $appMeta, string $context, string $logFile) : void
     {
         $module = (new Module)($appMeta, $context);
         /** @var AbstractModule $module */
         $container = $module->getContainer();
-        foreach ($appMeta->getResourceListGenerator() as list($class)) {
-            new Bind($container, $class);
+        foreach ($appMeta->getResourceListGenerator() as [$class]) {
+            new Bind($container, (string) $class);
         }
         file_put_contents($logFile, (string) $module);
     }

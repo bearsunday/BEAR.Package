@@ -54,7 +54,7 @@ class ProdModule extends AbstractModule
      * OPTIONS method return 405 Method Not Allowed error code. To enable OPTIONS in `prod` context,
      * Install BEAR\Resource\Module\OptionsMethodModule() in your ProdModule.
      */
-    private function disableOptionsMethod()
+    private function disableOptionsMethod() : void
     {
         $this->bind(RenderInterface::class)->annotatedWith('options')->to(VoidOptionsRenderer::class);
     }

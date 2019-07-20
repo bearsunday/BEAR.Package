@@ -45,7 +45,7 @@ final class Unlink
     public function force(string $path) : bool
     {
         $this->isOptional = false;
-        ($this)($path);
+        $this($path);
 
         return true;
     }
