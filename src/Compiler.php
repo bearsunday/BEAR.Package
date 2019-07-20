@@ -23,8 +23,6 @@ final class Compiler
 {
     private $classes = [];
 
-    private $files = [];
-
     /**
      * Compile application
      *
