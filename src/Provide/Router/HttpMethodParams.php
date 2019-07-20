@@ -29,7 +29,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @Inject(optional=true)
      * @StdIn
      */
-    public function setStdIn($stdIn)
+    public function setStdIn($stdIn) : void
     {
         $this->stdIn = $stdIn;
     }
@@ -37,7 +37,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * {@inheritdoc}
      */
-    public function get(array $server, array $get, array $post)
+    public function get(array $server, array $get, array $post) : array
     {
         // set the original value
         $method = strtolower($server['REQUEST_METHOD']);

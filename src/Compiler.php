@@ -115,7 +115,7 @@ final class Compiler
         return "'" . $file;
     }
 
-    private function invokeTypicalRequest(string $appName, string $context)
+    private function invokeTypicalRequest(string $appName, string $context) : void
     {
         $app = (new Bootstrap)->getApp($appName, $context);
         $ro = new NullPage;
@@ -123,7 +123,7 @@ final class Compiler
         $app->resource->get->object($ro)();
     }
 
-    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className)
+    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className) : void
     {
         try {
             $instance = $injector->getInstance($className);
@@ -168,7 +168,7 @@ final class Compiler
         }
     }
 
-    private function saveCompileLog(AbstractAppMeta $appMeta, string $context, string $logFile)
+    private function saveCompileLog(AbstractAppMeta $appMeta, string $context, string $logFile) : void
     {
         $module = (new Module)($appMeta, $context);
         /** @var AbstractModule $module */

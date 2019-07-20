@@ -24,7 +24,7 @@ final class LogRef
         return $this->ref;
     }
 
-    public function log(\Exception $e, RouterMatch $request, AbstractAppMeta $appMeta)
+    public function log(\Exception $e, RouterMatch $request, AbstractAppMeta $appMeta) : void
     {
         $logRefFile = sprintf('%s/logref.%s.log', $appMeta->logDir, $this->ref);
         $log = (string) (new ExceptionAsString($e, $request));

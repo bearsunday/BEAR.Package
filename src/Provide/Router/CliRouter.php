@@ -57,7 +57,7 @@ class CliRouter implements RouterInterface
         $this->stdIo = (new CliFactory)->newStdio();
     }
 
-    public function setTerminateException(\Exception $e)
+    public function setTerminateException(\Exception $e) : void
     {
         $this->terminateException = $e;
     }
@@ -66,7 +66,7 @@ class CliRouter implements RouterInterface
      * @Inject
      * @StdIn
      */
-    public function setStdIn(string $stdIn)
+    public function setStdIn(string $stdIn) : void
     {
         $this->stdIn = $stdIn;
     }
@@ -94,7 +94,7 @@ class CliRouter implements RouterInterface
     /**
      * Set user input query to $globals or &$server
      */
-    private function setQuery(string $method, array $query, array &$globals, array &$server)
+    private function setQuery(string $method, array $query, array &$globals, array &$server) : void
     {
         if ($method === 'get') {
             $globals['_GET'] = $query;
@@ -109,7 +109,7 @@ class CliRouter implements RouterInterface
         $server = $this->getStdIn($method, $query, $server);
     }
 
-    private function error(string $command)
+    private function error(string $command) : void
     {
         $help = new CliRouterHelp(new OptionFactory);
         $this->stdIo->outln($help->getHelp($command));
@@ -118,7 +118,7 @@ class CliRouter implements RouterInterface
     /**
      * @SuppressWarnings(PHPMD)
      */
-    private function terminate(int $status)
+    private function terminate(int $status) : void
     {
         if ($this->terminateException instanceof \Exception) {
             throw $this->terminateException;
@@ -143,7 +143,7 @@ class CliRouter implements RouterInterface
         return $server;
     }
 
-    private function validateArgs(array $globals)
+    private function validateArgs(array $globals) : void
     {
         if ($globals['argc'] < 3) {
             $this->error(basename($globals['argv'][0]));

@@ -91,7 +91,7 @@ final class AppInjector implements InjectorInterface
         return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
 
-    public function clear()
+    public function clear() : void
     {
         if ((new Unlink)->once($this->appMeta->tmpDir)) {
             return;
