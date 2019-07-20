@@ -174,7 +174,7 @@ final class Compiler
         /** @var AbstractModule $module */
         $container = $module->getContainer();
         foreach ($appMeta->getResourceListGenerator() as list($class)) {
-            new Bind($container, $class);
+            new Bind($container, (string) $class);
         }
         file_put_contents($logFile, (string) $module);
     }
