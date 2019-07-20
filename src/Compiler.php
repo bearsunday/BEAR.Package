@@ -13,11 +13,11 @@ use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\InjectorInterface;
 use ReflectionClass;
-use function file_exists;
 
 final class Compiler
 {

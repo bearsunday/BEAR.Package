@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Transfer;
 
-use const PHP_EOL;
 use BEAR\Resource\Code;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponseInterface;
 use BEAR\Sunday\Provide\Transfer\HeaderInterface;
 use BEAR\Sunday\Provide\Transfer\Output;
+use const PHP_EOL;
 
 final class CliResponder implements TransferInterface
 {

@@ -7,14 +7,14 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use Doctrine\Common\Cache\FilesystemCache;
+use function is_dir;
+use function mkdir;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
 use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
-use function is_dir;
-use function mkdir;
 
 final class AppInjector implements InjectorInterface
 {
