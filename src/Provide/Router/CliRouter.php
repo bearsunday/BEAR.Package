@@ -77,7 +77,7 @@ class CliRouter implements RouterInterface
     public function match(array $globals, array $server)
     {
         $this->validateArgs($globals);
-        list($method, $query, $server) = $this->parseGlobals($globals);
+        [$method, $query, $server] = $this->parseGlobals($globals);
         $this->setQuery($method, $query, $globals, $server);
 
         return $this->router->match($globals, $server);
@@ -156,7 +156,7 @@ class CliRouter implements RouterInterface
      */
     private function parseGlobals(array $globals) : array
     {
-        list(, $method, $uri) = $globals['argv'];
+        [, $method, $uri] = $globals['argv'];
         $urlQuery = parse_url($uri, PHP_URL_QUERY);
         $urlPath = parse_url($uri, PHP_URL_PATH);
         $query = [];

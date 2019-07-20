@@ -35,7 +35,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
     public function match(array $globals, array $server)
     {
         $request = new RouterMatch;
-        list($request->method, $request->query) = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
+        [$request->method, $request->query] = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
         $request->path = $this->schemeHost . parse_url($server['REQUEST_URI'], PHP_URL_PATH);
 
         return $request;

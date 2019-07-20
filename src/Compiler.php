@@ -54,7 +54,7 @@ final class Compiler
         (new Bootstrap)->newApp($appMeta, $context, $cache);
 
         // check resource injection and create annotation cache
-        foreach ($appMeta->getResourceListGenerator() as list($className)) {
+        foreach ($appMeta->getResourceListGenerator() as [$className]) {
             $this->scanClass($injector, $reader, $namedParams, (string) $className);
         }
         $logFile = realpath($appMeta->logDir) . '/compile.log';
@@ -173,7 +173,7 @@ final class Compiler
         $module = (new Module)($appMeta, $context);
         /** @var AbstractModule $module */
         $container = $module->getContainer();
-        foreach ($appMeta->getResourceListGenerator() as list($class)) {
+        foreach ($appMeta->getResourceListGenerator() as [$class]) {
             new Bind($container, (string) $class);
         }
         file_put_contents($logFile, (string) $module);
