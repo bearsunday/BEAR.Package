@@ -57,6 +57,7 @@ final class CliResponder implements TransferInterface
 
     private function getOutput(ResourceObject $ro, array $server) : Output
     {
+        $ro->toString(); // set headers as well
         return new Output($ro->code, ($this->header)($ro, $server), $ro->view ?: $ro->toString());
     }
 }
