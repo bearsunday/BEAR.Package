@@ -10,8 +10,8 @@
         "bear/swoole": "^0.3"
     },
     "require-dev": {
-        "bear/qatools": "dev-master",
-        "roave/security-advisories": "dev-master"
+        "roave/security-advisories": "dev-master",
+        "eaglewu/swoole-ide-helper": "dev-master"
     },
     "autoload": {
         "psr-4": {
