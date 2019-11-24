@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 require __DIR__ . '/vendor/bear/package/src/Bootstrap.php';
 require __DIR__ . '/vendor/bear/app-meta/src/AbstractAppMeta.php';
 require __DIR__ . '/vendor/bear/app-meta/src/Meta.php';
@@ -19,9 +19,6 @@ require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/MultiOperati
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/CacheProvider.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/FileCache.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/FilesystemCache.php';
-require __DIR__ . '/vendor/ray/di/src/ProviderInterface.php';
-require __DIR__ . '/vendor/bear/package/src/Context/Provider/ProdCacheProvider.php';
-require __DIR__ . '/vendor/bear/app-meta/src/AppMeta.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/ChainCache.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/ApcuCache.php';
 require __DIR__ . '/vendor/bear/sunday/src/Extension/ExtensionInterface.php';
@@ -29,7 +26,7 @@ require __DIR__ . '/vendor/bear/sunday/src/Extension/Application/AppInterface.ph
 require __DIR__ . '/vendor/bear/sunday/src/Extension/Application/AbstractApp.php';
 require __DIR__ . '/src/Module/App.php';
 require __DIR__ . '/vendor/bear/sunday/src/Extension/Transfer/HttpCacheInterface.php';
-require __DIR__ . '/vendor/bear/query-repository/src/HttpCacheInterface.php';
+require __DIR__ . '/vendor/bear/query-repository/src-deprecated/HttpCacheInterface.php';
 require __DIR__ . '/vendor/bear/query-repository/src/HttpCache.php';
 require __DIR__ . '/vendor/bear/query-repository/src/ResourceStorageInterface.php';
 require __DIR__ . '/vendor/bear/query-repository/src/ResourceStorage.php';
@@ -41,6 +38,10 @@ require __DIR__ . '/vendor/bear/package/src/Provide/Router/HttpMethodParams.php'
 require __DIR__ . '/vendor/bear/resource/src/TransferInterface.php';
 require __DIR__ . '/vendor/bear/sunday/src/Extension/Transfer/TransferInterface.php';
 require __DIR__ . '/vendor/bear/sunday/src/Provide/Transfer/HttpResponder.php';
+require __DIR__ . '/vendor/bear/sunday/src/Provide/Transfer/HeaderInterface.php';
+require __DIR__ . '/vendor/bear/sunday/src/Provide/Transfer/Header.php';
+require __DIR__ . '/vendor/bear/sunday/src/Provide/Transfer/ConditionalResponseInterface.php';
+require __DIR__ . '/vendor/bear/sunday/src/Provide/Transfer/ConditionalResponse.php';
 require __DIR__ . '/vendor/bear/resource/src/ResourceInterface.php';
 require __DIR__ . '/vendor/bear/resource/src/Resource.php';
 require __DIR__ . '/vendor/bear/resource/src/FactoryInterface.php';
@@ -68,10 +69,15 @@ require __DIR__ . '/vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.
 require __DIR__ . '/vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php';
 require __DIR__ . '/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php';
 require __DIR__ . '/vendor/monolog/monolog/src/Monolog/Handler/ErrorLogHandler.php';
+require __DIR__ . '/vendor/bear/resource/src/HttpAdapter.php';
+require __DIR__ . '/vendor/bear/resource/src/UriFactory.php';
 require __DIR__ . '/vendor/bear/resource/src/InvokerInterface.php';
 require __DIR__ . '/vendor/bear/resource/src/Invoker.php';
+require __DIR__ . '/vendor/bear/resource/src/ExtraMethodInvoker.php';
 require __DIR__ . '/vendor/bear/resource/src/RenderInterface.php';
 require __DIR__ . '/vendor/bear/resource/src/VoidOptionsRenderer.php';
+require __DIR__ . '/vendor/bear/resource/src/LoggerInterface.php';
+require __DIR__ . '/vendor/bear/resource/src/NullLogger.php';
 require __DIR__ . '/vendor/bear/resource/src/AnchorInterface.php';
 require __DIR__ . '/vendor/bear/resource/src/Anchor.php';
 require __DIR__ . '/vendor/bear/resource/src/LinkerInterface.php';
