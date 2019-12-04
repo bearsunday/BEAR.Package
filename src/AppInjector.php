@@ -96,9 +96,6 @@ final class AppInjector implements InjectorInterface
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
-    /**
-     * @param \BEAR\Sunday\Extension\Application\AppInterface::class|\Doctrine\Common\Cache\Cache::class $interface
-     */
     public function getCachedInstance(string $interface, $name = Name::ANY)
     {
         $lockFile = $this->appMeta->appDir . '/composer.lock';
