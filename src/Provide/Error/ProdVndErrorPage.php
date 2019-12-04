@@ -24,7 +24,7 @@ final class ProdVndErrorPage extends ResourceObject
         return $this->view;
     }
 
-    private function getHeader($code) : array
+    private function getHeader(int $code) : array
     {
         return ['content-type' => ($code >= 500) ? 'application/vnd.error+json' : 'application/json'];
     }

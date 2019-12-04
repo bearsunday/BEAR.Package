@@ -147,7 +147,7 @@ final class Compiler
         }
     }
 
-    private function isMagicMethod($method) : bool
+    private function isMagicMethod(string $method) : bool
     {
         return \in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
