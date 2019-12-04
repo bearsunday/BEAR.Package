@@ -30,7 +30,7 @@
     },
     "autoload": {
         "psr-4": {
-            "BEAR\\Package\\": ["src/", "src-deprecated/"]
+            "BEAR\\Package\\": ["src/"]
         },
         "files": ["src-files/apcu.php"]
     },
