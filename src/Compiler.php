@@ -133,6 +133,7 @@ final class Compiler
 
             return;
         }
+        assert(class_exists($className));
         $class = new \ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
