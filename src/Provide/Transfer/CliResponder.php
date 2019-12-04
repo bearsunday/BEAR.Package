@@ -35,8 +35,8 @@ final class CliResponder implements TransferInterface
      */
     public function __invoke(ResourceObject $ro, array $server)
     {
-        $isModifed = $this->condResponse->isModified($ro, $server);
-        $output = $isModifed ? $this->getOutput($ro, $server) : $this->condResponse->getOutput($ro->headers);
+        $isModified = $this->condResponse->isModified($ro, $server);
+        $output = $isModified ? $this->getOutput($ro, $server) : $this->condResponse->getOutput($ro->headers);
 
         $statusText = (new Code)->statusText[$ro->code] ?? '';
         $ob = $output->code . ' ' . $statusText . PHP_EOL;
@@ -57,6 +57,7 @@ final class CliResponder implements TransferInterface
 
     private function getOutput(ResourceObject $ro, array $server) : Output
     {
+        $ro->toString(); // set headers as well
         return new Output($ro->code, ($this->header)($ro, $server), $ro->view ?: $ro->toString());
     }
 }

@@ -10,13 +10,13 @@ use Ray\Di\Di\Inject;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
-    const CONTENT_TYPE = 'CONTENT_TYPE';
+    public const CONTENT_TYPE = 'CONTENT_TYPE';
 
-    const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
+    public const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
 
-    const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
+    public const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
 
-    const APPLICATION_JSON = 'application/json';
+    public const APPLICATION_JSON = 'application/json';
 
     /**
      * @var string
@@ -29,7 +29,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @Inject(optional=true)
      * @StdIn
      */
-    public function setStdIn($stdIn)
+    public function setStdIn($stdIn) : void
     {
         $this->stdIn = $stdIn;
     }
@@ -37,7 +37,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * {@inheritdoc}
      */
-    public function get(array $server, array $get, array $post)
+    public function get(array $server, array $get, array $post) : array
     {
         // set the original value
         $method = strtolower($server['REQUEST_METHOD']);
@@ -55,7 +55,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         $params = $this->getParams($method, $server, $post);
 
         if ($method === 'post') {
-            list($method, $params) = $this->getOverrideMethod($method, $server, $params);
+            [$method, $params] = $this->getOverrideMethod($method, $server, $params);
         }
 
         return [$method, $params];
@@ -103,7 +103,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      */
     private function phpInput(array $server) : array
     {
-        $contentType = $server[self::CONTENT_TYPE] ?? ($server[self::HTTP_CONTENT_TYPE]) ?? '';
+        $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
         $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);

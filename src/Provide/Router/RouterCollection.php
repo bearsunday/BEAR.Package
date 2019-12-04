@@ -10,7 +10,7 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 
 class RouterCollection implements RouterInterface
 {
-    const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
+    private const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
 
     /**
      * @var RouterInterface[]
