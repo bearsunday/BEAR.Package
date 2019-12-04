@@ -70,7 +70,7 @@ class CreatedResourceRenderer implements RenderInterface
         return $uri;
     }
 
-    private function updateHeaders(ResourceObject $ro)
+    private function updateHeaders(ResourceObject $ro) : void
     {
         $ro->headers['content-type'] = 'application/hal+json';
         if (isset($ro->headers['Location'])) {

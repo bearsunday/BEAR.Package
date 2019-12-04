@@ -44,29 +44,29 @@ final class AppInjector implements InjectorInterface
     /**
      * @var string
      */
-    private $cacheSpace;
+    private $cacheNamespace;
 
     /**
      * @var null|AbstractModule
      */
     private $module;
 
-    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheSpace = '')
+    public function __construct(string $name, string $context, AbstractAppMeta $appMeta = null, string $cacheNamespace = null)
     {
         $this->context = $context;
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
-        $this->cacheSpace = $cacheSpace;
+        $this->cacheNamespace = (string) $cacheNamespace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
-        ! \file_exists($scriptDir) && \mkdir($scriptDir);
+        ! is_dir($scriptDir) && ! mkdir($scriptDir) && ! is_dir($scriptDir);
         $this->scriptDir = $scriptDir;
         $appDir = $this->appMeta->tmpDir . '/app';
-        ! \file_exists($appDir) && \mkdir($appDir);
+        ! is_dir($appDir) && ! mkdir($appDir) && ! is_dir($appDir);
         touch($appDir . '/.do_not_clear');
         $this->appDir = $appDir;
         $this->injector = new ScriptInjector($this->scriptDir, function () {
             return $this->getModule();
         });
-        if (! $cacheSpace) {
+        if ($cacheNamespace === null) {
             $this->clear();
         }
     }
@@ -92,16 +92,15 @@ final class AppInjector implements InjectorInterface
         if ((new Unlink)->once($this->appMeta->tmpDir)) {
             return;
         }
-        ! is_dir($this->appMeta->tmpDir . '/di') && \mkdir($this->appMeta->tmpDir . '/di');
+        $diDir = $this->appMeta->tmpDir . '/di';
+        ! is_dir($diDir) && ! mkdir($diDir) && ! is_dir($diDir);
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
     public function getCachedInstance(string $interface, $name = Name::ANY)
     {
-        $lockFile = $this->appMeta->appDir . '/composer.lock';
-        $this->cacheSpace .= file_exists($lockFile) ? (string) filemtime($lockFile) : '';
         $cache = new FilesystemCache($this->appDir);
-        $id = $interface . $name . $this->context . $this->cacheSpace;
+        $id = $interface . $name . $this->context . $this->cacheNamespace;
         $instance = $cache->fetch($id);
         if ($instance) {
             return $instance;
@@ -121,7 +120,7 @@ final class AppInjector implements InjectorInterface
         /* @var AbstractModule $module */
         $container = $module->getContainer();
         (new Bind($container, InjectorInterface::class))->toInstance($this->injector);
-        (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($this->cacheSpace);
+        (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($this->cacheNamespace);
         $this->module = $module;
 
         return $module;
