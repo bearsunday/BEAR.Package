@@ -97,7 +97,7 @@ final class AppInjector implements InjectorInterface
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
-    public function getCachedInstance($interface, $name = Name::ANY)
+    public function getCachedInstance(string $interface, $name = Name::ANY)
     {
         $cache = new FilesystemCache($this->appDir);
         $id = $interface . $name . $this->context . $this->cacheNamespace;
