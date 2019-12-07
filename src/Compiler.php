@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\AppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
@@ -40,7 +40,7 @@ final class Compiler
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
     {
-        $appMeta = new AppMeta($appName, $context, $appDir);
+        $appMeta = new Meta($appName, $context, $appDir);
         (new Unlink)->force($appMeta->tmpDir);
         $cacheNs = (string) filemtime($appMeta->appDir . '/src');
         $injector = new AppInjector($appName, $context, $appMeta, $cacheNs);
@@ -82,7 +82,7 @@ final class Compiler
         );
 
         $this->invokeTypicalRequest($appName, $context);
-        $fies = '<?php' . PHP_EOL;
+        $files = '<?php' . PHP_EOL;
         foreach ($this->classes as $class) {
             // could be phpdoc tag by annotation loader
             $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
@@ -93,14 +93,14 @@ final class Compiler
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
             }
-            $fies .= sprintf(
+            $files .= sprintf(
                 "require %s';\n",
                 $this->getRelativePath($appDir, $filePath)
             );
         }
-        $fies .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
+        $files .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         $loaderFile = realpath($appDir) . '/autoload.php';
-        file_put_contents($loaderFile, $fies);
+        file_put_contents($loaderFile, $files);
 
         return $loaderFile;
     }
