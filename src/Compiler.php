@@ -36,7 +36,6 @@ final class Compiler
         $loader = $this->dumpAutoload($appDir, $files);
         $preload = $this->dumpPreload($appDir, $files);
         $log = $this->compileDiScripts($appName, $context, $appDir);
-
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $loader, $preload);
     }
 
@@ -106,6 +105,7 @@ final class Compiler
         $autoloadFile = '<?php' . PHP_EOL;
         foreach ($files as $file) {
             $autoloadFile .= sprintf(
+            $files .= sprintf(
                 "require %s';\n",
                 $this->getRelativePath($appDir, $file)
             );
