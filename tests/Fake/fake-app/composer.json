@@ -1,0 +1,11 @@
+{
+    "name": "fakevendor/helloworld",
+    "require": {
+        "bear/package": "^1.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyVendor\\MyProject\\": "src"
+        }
+    }
+}
