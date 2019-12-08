@@ -69,7 +69,7 @@ final class Compiler
     {
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
-            throw new \RuntimeException($appDir);
+           return [];
         }
         $loaderFile = require $loaderFile;
         spl_autoload_register(
