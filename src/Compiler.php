@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\AppMeta\ResMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
@@ -34,9 +35,8 @@ final class Compiler
     {
         $this->registerLoader($appDir);
         $autoload = $this->compileAutoload($appName, $context, $appDir);
-        $preload = $this->compilePreload($appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
-
+        $preload = $this->compilePreload($appName, $context, $appDir);
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
     }
 
@@ -108,13 +108,14 @@ final class Compiler
         return $loaderFile;
     }
 
-    private function compilePreload(string $appDir) : string
+    private function compilePreload(string $appName, string $context, string $appDir) : string
     {
+        $this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
         foreach ($paths as $path) {
             $output .= sprintf(
-                "opcache_compile_file(%s');\n",
+                "require %s';\n",
                 $this->getRelativePath($appDir, $path)
             );
         }
@@ -216,5 +217,15 @@ final class Compiler
         }
 
         return $paths;
+    }
+
+    private function loadResources(string $appName, string $context, string $appDir): void
+    {
+        $meta = new Meta($appName, $context, $appDir);
+        /* @var ResMeta $resMeta */
+        $injector = new AppInjector($appName, $context, $meta, 'a');
+        foreach ($meta->getGenerator('*') as $resMeta) {
+            $injector->getInstance($resMeta->class);
+        }
     }
 }

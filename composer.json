@@ -41,7 +41,8 @@
         }
     },
     "bin": [
-        "bin/bear.compile"
+        "bin/bear.compile",
+        "bin/bear.compile.php"
     ],
     "scripts" :{
         "post-update-cmd":["cd tests/Fake/fake-app; composer install;"],
