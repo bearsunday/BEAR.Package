@@ -11,10 +11,11 @@ final class ProdVndErrorPage extends ResourceObject
 {
     public function __construct(\Exception $e, RouterMatch $request)
     {
+        unset($request);
         $status = new Status($e);
         $this->code = $status->code;
         $this->headers = $this->getHeader($status->code);
-        $this->body = $this->getResponseBody($e, $request, $status);
+        $this->body = $this->getResponseBody($e, $status);
     }
 
     public function toString()
@@ -24,14 +25,13 @@ final class ProdVndErrorPage extends ResourceObject
         return $this->view;
     }
 
-    private function getHeader($code) : array
+    private function getHeader(int $code) : array
     {
         return ['content-type' => ($code >= 500) ? 'application/vnd.error+json' : 'application/json'];
     }
 
-    private function getResponseBody(\Exception $e, RouterMatch $request, Status $status) : array
+    private function getResponseBody(\Exception $e, Status $status) : array
     {
-        unset($request);
         $body = ['message' => $status->text];
         if ($status->code >= 500) {
             $body['logref'] = (string) new LogRef($e);

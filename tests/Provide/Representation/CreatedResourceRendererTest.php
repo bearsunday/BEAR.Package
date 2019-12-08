@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Representation;
 
-namespace BEAR\Package\Provide\Representation;
-
 use BEAR\Package\AppInjector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;

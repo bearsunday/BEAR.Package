@@ -24,10 +24,10 @@ final class LogRef
         return $this->ref;
     }
 
-    public function log(\Exception $e, RouterMatch $request, AbstractAppMeta $appMeta)
+    public function log(\Exception $e, RouterMatch $request, AbstractAppMeta $appMeta) : void
     {
         $logRefFile = sprintf('%s/logref.%s.log', $appMeta->logDir, $this->ref);
-        $log = (string) (new ExceptionAsString($e, $request));
+        $log = (string) new ExceptionAsString($e, $request);
         @file_put_contents($logRefFile, $log);
         $linkFile = sprintf('%s/last.logref.log', $appMeta->logDir);
         is_link($linkFile) && is_writable($linkFile) && @unlink($linkFile);

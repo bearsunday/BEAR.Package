@@ -16,15 +16,14 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.2.0",
         "ext-json": "*",
         "aura/cli": "^2.2",
-        "bear/app-meta": "^1.4",
+        "bear/app-meta": "^1.6",
         "bear/query-repository": "^1.6",
-        "bear/sunday": "^1.3.4",
+        "bear/sunday": "^1.4",
         "bear/streamer": "^1.0.1",
-        "monolog/monolog" : "^1.24",
-        "ray/di": "^2.8.3"
+        "monolog/monolog" : "^1.25"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5"
@@ -47,9 +46,10 @@
     "scripts" :{
         "post-update-cmd":["cd tests/Fake/fake-app; composer update;"],
         "test": ["phpunit"],
-        "tests": ["@cs", "phpstan analyse -l max src tests -c phpstan.neon --no-progress", "vendor/bin/psalm --show-info=false", "@test"],
+        "tests": ["@cs", "phpstan analyse -l max src tests -c phpstan.neon --no-progress", "psalm --show-info=false", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
-        "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"]
+        "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"],
+        "metrics": ["phpmetrics --report-html=build/metrics/ --extensions=php src,composer.json,composer.lock"]
     }
 }
