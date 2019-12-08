@@ -32,11 +32,31 @@ final class Compiler
      */
     public function __invoke(string $appName, string $context, string $appDir) : string
     {
-        $files = $this->compileLoader($appName, $context, $appDir);
-        $loader = $this->dumpAutoload($appDir, $files);
-        $preload = $this->dumpPreload($appDir, $files);
+        $this->registerLoader($appDir);
+        $autoload = $this->compileAutoload($appName, $context, $appDir);
+        $preload = $this->compilePreload($appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
-        return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $loader, $preload);
+
+        return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
+    }
+
+    public function registerLoader(string $appDir) : void
+    {
+        $loaderFile = $appDir . '/vendor/autoload.php';
+        if (! file_exists($loaderFile)) {
+            throw new \RuntimeException('no loader');
+        }
+        $loaderFile = require $loaderFile;
+        spl_autoload_register(
+            function ($class) use ($loaderFile) {
+                $loaderFile->loadClass($class);
+                if ($class !== NullPage::class) {
+                    $this->classes[] = $class;
+                }
+            },
+            false,
+            true
+        );
     }
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
@@ -64,50 +84,21 @@ final class Compiler
         return $logFile;
     }
 
-    private function compileLoader(string $appName, string $context, string $appDir) : array
+    private function compileAutoload(string $appName, string $context, string $appDir) : string
     {
-        $loaderFile = $appDir . '/vendor/autoload.php';
-        if (! file_exists($loaderFile)) {
-           return [];
-        }
-        $loaderFile = require $loaderFile;
-        spl_autoload_register(
-            function ($class) use ($loaderFile) {
-                $loaderFile->loadClass($class);
-                if ($class !== NullPage::class) {
-                    $this->classes[] = $class;
-                }
-            },
-            false,
-            true
-        );
-
         $this->invokeTypicalRequest($appName, $context);
-        $paths = [];
-        foreach ($this->classes as $class) {
-            // could be phpdoc tag by annotation loader
-            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
-            if ($isAutoloadFailed) {
-                continue;
-            }
-            $filePath = (string) (new ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
-                continue;
-            }
-            $paths[] = $this->getRelativePath($appDir, $filePath);
-        }
+        $paths = $this->getPaths($this->classes, $appDir);
 
-        return $paths;
+        return $this->dumpAutoload($appDir, $paths);
     }
 
-    private function dumpAutoload(string $appDir, array $files) : string
+    private function dumpAutoload(string $appDir, array $paths) : string
     {
         $autoloadFile = '<?php' . PHP_EOL;
-        foreach ($files as $file) {
+        foreach ($paths as $path) {
             $autoloadFile .= sprintf(
-            $files .= sprintf(
                 "require %s';\n",
-                $this->getRelativePath($appDir, $file)
+                $this->getRelativePath($appDir, $path)
             );
         }
         $autoloadFile .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
@@ -117,13 +108,14 @@ final class Compiler
         return $loaderFile;
     }
 
-    private function dumpPreload(string $appDir, array $files) : string
+    private function compilePreload(string $appDir) : string
     {
+        $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
-        foreach ($files as $file) {
+        foreach ($paths as $path) {
             $output .= sprintf(
                 "opcache_compile_file(%s');\n",
-                $this->getRelativePath($appDir, $file)
+                $this->getRelativePath($appDir, $path)
             );
         }
         $preloadFile = realpath($appDir) . '/preload.php';
@@ -205,5 +197,24 @@ final class Compiler
             new Bind($container, (string) $class);
         }
         file_put_contents($logFile, (string) $module);
+    }
+
+    private function getPaths(array $classes, string $appDir) : array
+    {
+        $paths = [];
+        foreach ($classes as $class) {
+            // could be phpdoc tag by annotation loader
+            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
+            if ($isAutoloadFailed) {
+                continue;
+            }
+            $filePath = (string) (new ReflectionClass($class))->getFileName();
+            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
+                continue;
+            }
+            $paths[] = $this->getRelativePath($appDir, $filePath);
+        }
+
+        return $paths;
     }
 }
