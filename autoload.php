@@ -19,6 +19,9 @@ require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/MultiOperati
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/CacheProvider.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/FileCache.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/FilesystemCache.php';
+require __DIR__ . '/vendor/ray/di/src/ProviderInterface.php';
+require __DIR__ . '/vendor/bear/package/src/Context/Provider/ProdCacheProvider.php';
+require __DIR__ . '/vendor/bear/app-meta/src-deprecated/AppMeta.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/ChainCache.php';
 require __DIR__ . '/vendor/doctrine/cache/lib/Doctrine/Common/Cache/ApcuCache.php';
 require __DIR__ . '/vendor/bear/sunday/src/Extension/ExtensionInterface.php';
