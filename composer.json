@@ -4,8 +4,8 @@
     "license": "proprietary",
     "description": "",
     "require": {
-        "php": ">=7.0.0",
-        "bear/package": "^1.9",
+        "php": ">=7.1.0",
+        "bear/package": "dev-preload",
         "josegonzalez/dotenv": "^3.2",
         "bear/swoole": "^0.3"
     },

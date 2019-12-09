@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7860e056c95fa90eee974df58c2b034a",
+    "content-hash": "18091a3c0c313cd2e2e2a2090ea9ac34",
     "packages": [
         {
             "name": "aura/cli",
@@ -106,32 +106,30 @@
         },
         {
             "name": "bear/package",
-            "version": "1.9.6",
+            "version": "dev-preload",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bearsunday/BEAR.Package.git",
-                "reference": "9cd6a2a12ca5e267ab922a58ec06752f6120ea18"
+                "reference": "78b58f73faaf2d9e849541b2efcb3fb08047ccdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bearsunday/BEAR.Package/zipball/9cd6a2a12ca5e267ab922a58ec06752f6120ea18",
-                "reference": "9cd6a2a12ca5e267ab922a58ec06752f6120ea18",
+                "url": "https://api.github.com/repos/bearsunday/BEAR.Package/zipball/78b58f73faaf2d9e849541b2efcb3fb08047ccdb",
+                "reference": "78b58f73faaf2d9e849541b2efcb3fb08047ccdb",
                 "shasum": ""
             },
             "require": {
                 "aura/cli": "^2.2",
-                "bear/app-meta": "^1.4",
+                "bear/app-meta": "^1.6",
                 "bear/query-repository": "^1.6",
                 "bear/streamer": "^1.0.1",
-                "bear/sunday": "^1.3.4",
+                "bear/sunday": "^1.4",
                 "ext-json": "*",
-                "monolog/monolog": "^1.24",
-                "php": ">=7.1.0",
-                "ray/di": "^2.8.3"
+                "monolog/monolog": "^1.25",
+                "php": ">=7.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.5",
-                "vimeo/psalm": "^3.4"
+                "phpunit/phpunit": "^7.5"
             },
             "bin": [
                 "bin/bear.compile"
@@ -165,7 +163,7 @@
                 "framework",
                 "rest"
             ],
-            "time": "2019-08-07T05:51:22+00:00"
+            "time": "2019-12-08T03:55:15+00:00"
         },
         {
             "name": "bear/query-repository",
@@ -2538,13 +2536,14 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "bear/package": 20,
         "roave/security-advisories": 20,
         "eaglewu/swoole-ide-helper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.0.0"
+        "php": ">=7.1.0"
     },
     "platform-dev": []
 }
