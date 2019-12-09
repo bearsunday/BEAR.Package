@@ -37,6 +37,7 @@ final class Compiler
         $autoload = $this->compileAutoload($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
         $preload = $this->compilePreload($appName, $context, $appDir);
+
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
     }
 
@@ -219,7 +220,7 @@ final class Compiler
         return $paths;
     }
 
-    private function loadResources(string $appName, string $context, string $appDir): void
+    private function loadResources(string $appName, string $context, string $appDir) : void
     {
         $meta = new Meta($appName, $context, $appDir);
         /* @var ResMeta $resMeta */
