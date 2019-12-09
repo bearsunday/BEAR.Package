@@ -114,6 +114,7 @@ final class Compiler
         $this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
+        $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         foreach ($paths as $path) {
             $output .= sprintf(
                 "require %s';\n",
