@@ -20,13 +20,13 @@ declare(strict_types=1);
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Unlink;
 
-require dirname(__DIR__) . '/autoload.php';
-
 if ($argc !== 4) {
-    echo 'usage: bear.compile <MyVendor\MyProject> <prod-app>' . PHP_EOL;
+    echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
     exit(1);
 }
-[, $appName, $context] = $argv;
+[, $appName, $context, $appDir] = $argv;
+$dir = realpath($appDir);
+require $dir . '/vendor/autoload.php';
 
 clear:
     $meta = new Meta($appName, $context);
