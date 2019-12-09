@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bearsunday/BEAR.Package.git",
-                "reference": "78b58f73faaf2d9e849541b2efcb3fb08047ccdb"
+                "reference": "2e1a83f97447113c2f2c866114642192b730c78f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bearsunday/BEAR.Package/zipball/78b58f73faaf2d9e849541b2efcb3fb08047ccdb",
-                "reference": "78b58f73faaf2d9e849541b2efcb3fb08047ccdb",
+                "url": "https://api.github.com/repos/bearsunday/BEAR.Package/zipball/2e1a83f97447113c2f2c866114642192b730c78f",
+                "reference": "2e1a83f97447113c2f2c866114642192b730c78f",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +132,8 @@
                 "phpunit/phpunit": "^7.5"
             },
             "bin": [
-                "bin/bear.compile"
+                "bin/bear.compile",
+                "bin/bear.compile.php"
             ],
             "type": "library",
             "autoload": {
@@ -163,7 +164,7 @@
                 "framework",
                 "rest"
             ],
-            "time": "2019-12-08T03:55:15+00:00"
+            "time": "2019-12-09T03:14:43+00:00"
         },
         {
             "name": "bear/query-repository",
