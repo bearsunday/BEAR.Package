@@ -1,15 +1,16 @@
-#!/usr/bin/env php
 <?php
 
 declare(strict_types=1);
 
 use BEAR\Package\Compiler;
 
-[,$appName, $context, $appDir] = $argv;
+$opt = getopt('n:c:d:o');
+[$appName, $context, $appDir] = [$opt['n'], $opt['c'], $opt['d']];
 require realpath($appDir) . '/vendor/autoload.php';
 
 try {
-    error_log((new Compiler)($appName, $context, $appDir));
+    $output = (new Compiler)($appName, $context, $appDir);
+    echo isset($opt['o']) ? $output . PHP_EOL : PHP_EOL;
     exit(0);
 } catch (\Exception $e) {
     error_log((string) $e);

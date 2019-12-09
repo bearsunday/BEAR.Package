@@ -31,7 +31,7 @@ if ($argc !== 4) {
 clear:
     $meta = new Meta($appName, $context);
     (new Unlink)->force($meta->tmpDir);
-write:
-    $compile = sprintf("php %s/bear.compile.php '%s' '%s' '%s'", __DIR__, $appName, $context, $meta->appDir);
-    passthru($compile);
-    passthru($compile);
+run:
+    $compile = sprintf("php %s/bear.compile.php '-n%s' -c%s '-d%s'", __DIR__, $appName, $context, $meta->appDir);
+    passthru($compile); // cache write
+    passthru($compile . ' -o'); // cache read
