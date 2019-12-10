@@ -22,7 +22,15 @@ use ReflectionClass;
 
 final class Compiler
 {
+    /**
+     * @var string[]
+     */
     private $classes = [];
+
+    /**
+     * @var string
+     */
+    private $ns;
 
     /**
      * Compile application
@@ -37,6 +45,7 @@ final class Compiler
         $autoload = $this->compileAutoload($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
         $preload = $this->compilePreload($appName, $context, $appDir);
+        $this->ns = (string) filemtime(realpath($appDir) . '/src');
 
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
     }
@@ -64,8 +73,8 @@ final class Compiler
     {
         $appMeta = new Meta($appName, $context, $appDir);
         (new Unlink)->force($appMeta->tmpDir);
-        $cacheNs = (string) filemtime($appMeta->appDir . '/src');
-        $injector = new AppInjector($appName, $context, $appMeta, $cacheNs);
+
+        $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);
         /* @var $reader \Doctrine\Common\Annotations\Reader */
@@ -114,6 +123,7 @@ final class Compiler
         $this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
+        $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         foreach ($paths as $path) {
             $output .= sprintf(
                 "require %s';\n",
@@ -224,7 +234,7 @@ final class Compiler
     {
         $meta = new Meta($appName, $context, $appDir);
         /* @var ResMeta $resMeta */
-        $injector = new AppInjector($appName, $context, $meta, 'a');
+        $injector = new AppInjector($appName, $context, $meta, $this->ns);
         foreach ($meta->getGenerator('*') as $resMeta) {
             $injector->getInstance($resMeta->class);
         }
