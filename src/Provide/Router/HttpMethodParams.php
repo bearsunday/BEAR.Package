@@ -50,7 +50,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $this->unsafeMethod($method, $server, $post);
     }
 
-    private function unsafeMethod($method, array $server, array $post) : array
+    private function unsafeMethod(string $method, array $server, array $post) : array
     {
         $params = $this->getParams($method, $server, $post);
 
@@ -61,7 +61,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return [$method, $params];
     }
 
-    private function getOverrideMethod($method, array $server, array $params) : array
+    private function getOverrideMethod(string $method, array $server, array $params) : array
     {
         // must be a POST to do an override
 
