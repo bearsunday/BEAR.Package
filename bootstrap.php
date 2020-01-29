@@ -1,4 +1,5 @@
 <?php
+
 use BEAR\Package\Bootstrap;
 use BEAR\Resource\ResourceObject;
 
