@@ -1,0 +1,3 @@
+[submodule "xhprof-html"]
+	path = xhprof-html
+	url = https://github.com/sters/xhprof-html
