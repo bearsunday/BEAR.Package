@@ -1,4 +1,5 @@
 <?php
+
 use BEAR\Package\AppInjector;
 use BEAR\Resource\ResourceObject;
 use BEAR\Swoole\App;
@@ -7,6 +8,10 @@ use BEAR\Swoole\WebContext;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server;
+
+if (! class_exists(Server::class)) {
+    throw new \RuntimeException('Swoole is not installed. See https://github.com/swoole/swoole-src/wiki/Installing');
+}
 
 require dirname(__DIR__) . '/autoload.php';
 (function (
@@ -41,7 +46,7 @@ require dirname(__DIR__) . '/autoload.php';
             $app->error->transfer($e, $request, $response);
         }
         file_put_contents(
-            sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . '.swoole.xhprof',
+            '/tmp' . DIRECTORY_SEPARATOR . uniqid() . '.swoole.xhprof',
             serialize(tideways_xhprof_disable())
         );
     });
@@ -50,6 +55,5 @@ require dirname(__DIR__) . '/autoload.php';
     'prod-app',       // context
     'MyVendor\MyProject',      // application name
     '127.0.0.1',          // IP
-    '8080'                // port
+    '8088'                // port
 );
-
