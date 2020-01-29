@@ -24,6 +24,10 @@
         }
     },
     "scripts": {
+        "serve:php": "php -dextension=tideways_xhprof.so -S 127.0.0.1:8090 -t public public/profile.php",
+        "serve:swoole": "php -dextension=tideways_xhprof.so -dextension=swoole.so bin/swoole_profile.php",
+        "serve:profile": "php -dextension=tideways_xhprof.so -S 127.0.0.1:8091 -t xhprof-html/ & open http://127.0.0.1:8091/?dir=/tmp",
+        "clear:prof": "find /tmp -name \"*.xhprof\" -print | xargs rm",
         "setup": [
             "php bin/setup.php"
         ],
