@@ -1,4 +1,5 @@
 <?php
+
 use josegonzalez\Dotenv\Loader;
 
 $env = __DIR__ . '/.env';
