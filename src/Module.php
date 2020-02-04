@@ -8,6 +8,7 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidModuleException;
 use Ray\Di\AbstractModule;
+use Ray\Di\AssistedModule;
 use Ray\Di\NullModule;
 
 class Module
@@ -18,7 +19,7 @@ class Module
     public function __invoke(AbstractAppMeta $appMeta, string $context) : AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $context));
-        $module = new NullModule;
+        $module = new AssistedModule;
         foreach ($contextsArray as $contextItem) {
             $class = $appMeta->name . '\Module\\' . ucwords($contextItem) . 'Module';
             if (! class_exists($class)) {
