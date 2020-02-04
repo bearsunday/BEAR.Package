@@ -9,7 +9,6 @@ use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidModuleException;
 use Ray\Di\AbstractModule;
 use Ray\Di\AssistedModule;
-use Ray\Di\NullModule;
 
 class Module
 {
