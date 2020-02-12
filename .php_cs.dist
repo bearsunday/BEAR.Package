@@ -1,7 +1,7 @@
 <?php
 
 /*
- * PHP Coding Standards Fixer Config file for PHP7.1 and up
+ * PHP Coding Standards Fixer Config file for PHP7.0 and up
  *
  * @see https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/master/README.rst
  */
@@ -10,7 +10,7 @@ $header = <<<'EOF'
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude(['tests/Fake', 'tests/tmp', 'demo'])
+    ->exclude(['tests/Fake', 'tests/tmp', 'template'])
     ->in(__DIR__);
 
 return \PhpCsFixer\Config::create()
@@ -18,7 +18,6 @@ return \PhpCsFixer\Config::create()
     ->setRules([
         '@PSR2' => true,
         '@PHP70Migration:risky' => true,
-        '@PHP71Migration:risky' => true,
         'align_multiline_comment' => true,
         'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],
@@ -48,7 +47,7 @@ return \PhpCsFixer\Config::create()
         'function_to_constant' => true, // @Symfony:risky
         'function_typehint_space' => true, // @Symfony
         'general_phpdoc_annotation_remove' => ['author', 'category', 'package', 'copyright', 'version'],
-        'header_comment' => ['header' => ''],
+        'header_comment' => ['header' => $header, 'comment_type' => 'comment'],
         'heredoc_to_nowdoc' => true,
         'include' => true, // @Symfony
 //      'increment_style' => 'pre', // @Symfony
@@ -92,7 +91,7 @@ return \PhpCsFixer\Config::create()
         'no_singleline_whitespace_before_semicolons' => true, // @Symfony
         'no_spaces_around_offset' => true, // @Symfony
         'no_superfluous_elseif' => true,
-        'no_superfluous_phpdoc_tags' => true,
+        'no_superfluous_phpdoc_tags' => ['allow_mixed' => true],
         'no_trailing_comma_in_list_call' => true, // @Symfony
         'no_trailing_comma_in_singleline_array' => true, // @Symfony
         'no_trailing_whitespace' => true,
@@ -101,7 +100,7 @@ return \PhpCsFixer\Config::create()
         'no_unneeded_curly_braces' => true, // @Symfony
         'no_unneeded_final_method' => true, // @Symfony
         'no_unreachable_default_argument_value' => true,
-        'no_unset_on_property' => true,
+//      'no_unset_on_property' => true,
         'no_unused_imports' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,
@@ -159,7 +158,7 @@ return \PhpCsFixer\Config::create()
         'semicolon_after_instruction' => true, // @Symfony
         'set_type_to_cast' => true, // @Symfony:risky
         'short_scalar_cast' => true, // @Symfony:risky
-        'simplified_null_return' => true,
+//      'simplified_null_return' => true,
         'single_blank_line_before_namespace' => true, // @Symfony
 //      'single_line_comment_style' => true, // @Symfony
         'single_line_after_imports' => true,
@@ -178,7 +177,7 @@ return \PhpCsFixer\Config::create()
         'trim_array_spaces' => true, // @Symfony
         'unary_operator_spaces' => true, // @Symfony
         'visibility_required' => true,
-        'void_return' => false, // @PHP71Migration:risky
+//      'void_return' => true, // @PHP71Migration:risky
         'whitespace_after_comma_in_array' => true, // @Symfony
 //      'yoda_style' => true // @Symfony
     ])

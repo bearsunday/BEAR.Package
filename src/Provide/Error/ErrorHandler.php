@@ -57,7 +57,7 @@ final class ErrorHandler implements ErrorInterface
     /**
      * {@inheritdoc}
      */
-    public function transfer()
+    public function transfer() : void
     {
         $this->responder->__invoke($this->errorPage, []);
     }

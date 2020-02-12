@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MyVendor\MyProjecct\Resource\Page;
 
 use BEAR\Package\Bootstrap;

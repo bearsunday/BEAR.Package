@@ -18,7 +18,7 @@ class CliModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->rename(RouterInterface::class, 'original');
         $this->bind(RouterInterface::class)->to(CliRouter::class);

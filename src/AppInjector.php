@@ -72,14 +72,22 @@ final class AppInjector implements InjectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {inheritdoc}
+     *
+     * @param string $interface
+     * @param string $name
+     *
+     * @return mixed
      */
     public function getInstance($interface, $name = Name::ANY)
     {
         return $this->injector->getInstance($interface, $name);
     }
 
-    public function getOverrideInstance(AbstractModule $module, $interface, $name = Name::ANY)
+    /**
+     * @return mixed
+     */
+    public function getOverrideInstance(AbstractModule $module, string $interface, string $name = Name::ANY)
     {
         $appModule = clone $this->getModule();
         $appModule->override($module);
@@ -87,7 +95,7 @@ final class AppInjector implements InjectorInterface
         return (new Injector($appModule, $this->scriptDir))->getInstance($interface, $name);
     }
 
-    public function clear()
+    public function clear() : void
     {
         if ((new Unlink)->once($this->appMeta->tmpDir)) {
             return;
@@ -97,7 +105,10 @@ final class AppInjector implements InjectorInterface
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
-    public function getCachedInstance(string $interface, $name = Name::ANY)
+    /**
+     * @return mixed
+     */
+    public function getCachedInstance(string $interface, string $name = Name::ANY)
     {
         $cache = new FilesystemCache($this->appDir);
         $id = $interface . $name . $this->context . $this->cacheNamespace;

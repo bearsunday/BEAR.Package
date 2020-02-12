@@ -1,5 +1,17 @@
 parameters:
-    excludes_analyse:
-        - */tests/hash.php
-        - */tests/*/tmp/*
-        - */tests/Fake/*
+  level: max
+  paths:
+    - src
+    - tests
+  excludes_analyse:
+    - */tests/hash.php
+    - */tests/*/tmp/*
+    - */tests/Fake/*
+  ignoreErrors:
+  -
+      message: "#has no return typehint specified\\.$#"
+      path: tests/*.php
+  -
+      message: "#return null but return statement is missing\\.$#"
+      path: src/Provide/Router/CliRouterHelp.php
+  checkMissingIterableValueType: false

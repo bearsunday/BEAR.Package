@@ -16,7 +16,7 @@ class ErrorPage extends ResourceObject
      */
     private $postBody;
 
-    public function __construct($postBody)
+    public function __construct(string $postBody)
     {
         $this->postBody = $postBody;
     }

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace MyVendor\MyProject\Resource\Page\Api;
 
 use BEAR\RepositoryModule\Annotation\Cacheable;

@@ -29,7 +29,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @Inject(optional=true)
      * @StdIn
      */
-    public function setStdIn($stdIn)
+    public function setStdIn($stdIn) : void
     {
         $this->stdIn = $stdIn;
     }
@@ -84,7 +84,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request parameters
      */
-    private function getParams($method, array $server, array $post) : array
+    private function getParams(string $method, array $server, array $post) : array
     {
         // post data exists
         if ($method === 'post' && ! empty($post)) {

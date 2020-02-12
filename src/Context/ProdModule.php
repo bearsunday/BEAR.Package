@@ -28,7 +28,7 @@ class ProdModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);

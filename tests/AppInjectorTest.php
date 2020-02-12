@@ -38,6 +38,9 @@ class AppInjectorTest extends TestCase
         /** @var RenderInterface $mock */
         $mock = $this->createMock(RenderInterface::class);
         $module = new class($mock) extends AbstractModule {
+            /**
+             * @var RenderInterface
+             */
             private $mock;
 
             public function __construct(RenderInterface $mock)
