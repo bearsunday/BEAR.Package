@@ -72,8 +72,6 @@ final class Compiler
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
     {
         $appMeta = new Meta($appName, $context, $appDir);
-        (new Unlink)->force($appMeta->tmpDir);
-
         $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);
