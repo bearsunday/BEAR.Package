@@ -179,7 +179,7 @@ final class Compiler
         return \in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
-    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method) : void
+    private function saveNamedParam(NamedParameterInterface $namedParameter, string $instance, string $method) : void
     {
         // named parameter
         if (! \in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
