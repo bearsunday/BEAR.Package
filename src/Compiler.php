@@ -118,7 +118,7 @@ final class Compiler
 
     private function compilePreload(string $appName, string $context, string $appDir) : string
     {
-        $this->loadResources($appName, $context, $appDir);
+        //$this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
         $output .= "opcache_compile_file(__DIR__ . '/vendor/autoload.php');" . PHP_EOL;
