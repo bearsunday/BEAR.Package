@@ -35,7 +35,7 @@ class ProdCacheProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get()
+    public function get() : ChainCache
     {
         $cache = new ChainCache([new ApcuCache, new FilesystemCache($this->cacheDir)]);
         $cache->setNamespace($this->namespace);
