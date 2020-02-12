@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class ErrorPageTest extends TestCase
 {
+    /**
+     * @var ErrorPage
+     */
     private $errorPage;
 
     protected function setUp() : void
