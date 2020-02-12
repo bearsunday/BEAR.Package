@@ -3,8 +3,8 @@
 -BEAR\Resource\Annotation\AppName => (string) MyVendor\MyProject
 -BEAR\Streamer\Annotation\Stream => (provider) (dependency) BEAR\Streamer\StreamProvider
 -BEAR\Sunday\Annotation\DefaultSchemeHost => (string) page://self
--cache_namespace => (string) 0.77000200 1575824022
-BEAR\AppMeta\AbstractAppMeta- => (object) BEAR\AppMeta\AppMeta
+-cache_namespace => (string) 0.10777900 1581478617
+BEAR\AppMeta\AbstractAppMeta- => (object) BEAR\AppMeta\Meta
 BEAR\Package\Provide\Error\ErrorLogger- => (dependency) BEAR\Package\Provide\Error\ErrorLogger
 BEAR\Package\Provide\Error\ErrorPageFactoryInterface- => (dependency) BEAR\Package\Provide\Error\ProdVndErrorPageFactory
 BEAR\Package\Provide\Representation\CreatedResourceInterceptor- => (dependency) BEAR\Package\Provide\Representation\CreatedResourceInterceptor
