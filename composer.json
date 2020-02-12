@@ -18,6 +18,7 @@
     "require": {
         "php": ">=7.2.0",
         "ext-json": "*",
+        "ext-zend-opcache": "*",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6",
         "bear/query-repository": "^1.6",
