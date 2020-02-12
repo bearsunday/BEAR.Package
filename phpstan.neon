@@ -2,3 +2,4 @@ parameters:
     excludes_analyse:
         - */tests/hash.php
         - */tests/*/tmp/*
+        - */tests/Fake/*

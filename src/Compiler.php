@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\AppMeta\ResMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
@@ -21,7 +22,15 @@ use ReflectionClass;
 
 final class Compiler
 {
+    /**
+     * @var string[]
+     */
     private $classes = [];
+
+    /**
+     * @var string
+     */
+    private $ns;
 
     /**
      * Compile application
@@ -32,18 +41,38 @@ final class Compiler
      */
     public function __invoke(string $appName, string $context, string $appDir) : string
     {
-        $loader = $this->compileLoader($appName, $context, $appDir);
+        $this->registerLoader($appDir);
+        $autoload = $this->compileAutoload($appName, $context, $appDir);
+        $preload = $this->compilePreload($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
+        $this->ns = (string) filemtime(realpath($appDir) . '/src');
 
-        return sprintf("Compile Log: %s\nautoload.php: %s", $log, $loader);
+        return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
+    }
+
+    public function registerLoader(string $appDir) : void
+    {
+        $loaderFile = $appDir . '/vendor/autoload.php';
+        if (! file_exists($loaderFile)) {
+            throw new \RuntimeException('no loader');
+        }
+        $loaderFile = require $loaderFile;
+        spl_autoload_register(
+            function ($class) use ($loaderFile) {
+                $loaderFile->loadClass($class);
+                if ($class !== NullPage::class) {
+                    $this->classes[] = $class;
+                }
+            },
+            false,
+            true
+        );
     }
 
     public function compileDiScripts(string $appName, string $context, string $appDir) : string
     {
         $appMeta = new Meta($appName, $context, $appDir);
-        (new Unlink)->force($appMeta->tmpDir);
-        $cacheNs = (string) filemtime($appMeta->appDir . '/src');
-        $injector = new AppInjector($appName, $context, $appMeta, $cacheNs);
+        $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);
         /* @var $reader \Doctrine\Common\Annotations\Reader */
@@ -63,46 +92,46 @@ final class Compiler
         return $logFile;
     }
 
-    private function compileLoader(string $appName, string $context, string $appDir) : string
+    private function compileAutoload(string $appName, string $context, string $appDir) : string
     {
-        $loaderFile = $appDir . '/vendor/autoload.php';
-        if (! file_exists($loaderFile)) {
-            return '';
-        }
-        $loaderFile = require $loaderFile;
-        spl_autoload_register(
-            function ($class) use ($loaderFile) {
-                $loaderFile->loadClass($class);
-                if ($class !== NullPage::class) {
-                    $this->classes[] = $class;
-                }
-            },
-            false,
-            true
-        );
-
         $this->invokeTypicalRequest($appName, $context);
-        $files = '<?php' . PHP_EOL;
-        foreach ($this->classes as $class) {
-            // could be phpdoc tag by annotation loader
-            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
-            if ($isAutoloadFailed) {
-                continue;
-            }
-            $filePath = (string) (new ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
-                continue;
-            }
-            $files .= sprintf(
+        $paths = $this->getPaths($this->classes, $appDir);
+
+        return $this->dumpAutoload($appDir, $paths);
+    }
+
+    private function dumpAutoload(string $appDir, array $paths) : string
+    {
+        $autoloadFile = '<?php' . PHP_EOL;
+        foreach ($paths as $path) {
+            $autoloadFile .= sprintf(
                 "require %s';\n",
-                $this->getRelativePath($appDir, $filePath)
+                $this->getRelativePath($appDir, $path)
             );
         }
-        $files .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
+        $autoloadFile .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         $loaderFile = realpath($appDir) . '/autoload.php';
-        file_put_contents($loaderFile, $files);
+        file_put_contents($loaderFile, $autoloadFile);
 
         return $loaderFile;
+    }
+
+    private function compilePreload(string $appName, string $context, string $appDir) : string
+    {
+        //$this->loadResources($appName, $context, $appDir);
+        $paths = $this->getPaths($this->classes, $appDir);
+        $output = '<?php' . PHP_EOL;
+        $output .= "opcache_compile_file(__DIR__ . '/vendor/autoload.php');" . PHP_EOL;
+        foreach ($paths as $path) {
+            $output .= sprintf(
+                "opcache_compile_file(%s');\n",
+                $this->getRelativePath($appDir, $path)
+            );
+        }
+        $preloadFile = realpath($appDir) . '/preload.php';
+        file_put_contents($preloadFile, $output);
+
+        return $preloadFile;
     }
 
     private function getRelativePath(string $rootDir, string $file) : string
@@ -112,7 +141,7 @@ final class Compiler
             return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
         }
 
-        return "'" . $file;
+        return $file;
     }
 
     private function invokeTypicalRequest(string $appName, string $context) : void
@@ -178,5 +207,34 @@ final class Compiler
             new Bind($container, (string) $class);
         }
         file_put_contents($logFile, (string) $module);
+    }
+
+    private function getPaths(array $classes, string $appDir) : array
+    {
+        $paths = [];
+        foreach ($classes as $class) {
+            // could be phpdoc tag by annotation loader
+            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
+            if ($isAutoloadFailed) {
+                continue;
+            }
+            $filePath = (string) (new ReflectionClass($class))->getFileName();
+            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
+                continue;
+            }
+            $paths[] = $this->getRelativePath($appDir, $filePath);
+        }
+
+        return $paths;
+    }
+
+    private function loadResources(string $appName, string $context, string $appDir) : void
+    {
+        $meta = new Meta($appName, $context, $appDir);
+        /* @var ResMeta $resMeta */
+        $injector = new AppInjector($appName, $context, $meta, $this->ns);
+        foreach ($meta->getGenerator('*') as $resMeta) {
+            $injector->getInstance($resMeta->class);
+        }
     }
 }

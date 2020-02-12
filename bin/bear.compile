@@ -6,31 +6,32 @@ declare(strict_types=1);
 /**
  * BEAR/Sunday application compiler
  *
- * Warm-up script for deployment
+ * Usage: bear.compile \'MyVendor\MyProject\' prod-html-app
  *
- * Usage: bear.compile \'MyVendor\MyProject\' prod-html-app /path/to/project
- *
+ * * Create autoload.php
+ * * Create preaload.php
  * * Save $app application object
  * * Compile all DI scripts
  * * Compile all AOP classes
- * * Save annotation cache for all resources
+ * * Save all annotations
+ * * Save all parameter metas
  */
 
-use BEAR\Package\Compiler;
+use BEAR\AppMeta\Meta;
+use BEAR\Package\Unlink;
 
 if ($argc !== 4) {
     echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
     exit(1);
 }
-list(, $appName, $context, $appDir) = $argv;
+[, $appName, $context, $appDir] = $argv;
 $dir = realpath($appDir);
-
 require $dir . '/vendor/autoload.php';
 
-try {
-    error_log((new Compiler)($appName, $context, $appDir));
-    exit(0);
-} catch (\Exception $e) {
-    error_log((string) $e);
-    exit(1);
-}
+clear:
+    $meta = new Meta($appName, $context);
+    (new Unlink)->force($meta->tmpDir);
+run:
+    $compile = sprintf("php %s/bear.compile.php '-n%s' -c%s '-d%s'", __DIR__, $appName, $context, $meta->appDir);
+    passthru($compile); // cache write
+    passthru($compile . ' -o'); // cache read
