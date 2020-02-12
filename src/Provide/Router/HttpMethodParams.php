@@ -29,7 +29,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @Inject(optional=true)
      * @StdIn
      */
-    public function setStdIn($stdIn)
+    public function setStdIn($stdIn) : void
     {
         $this->stdIn = $stdIn;
     }
