@@ -43,8 +43,8 @@ final class Compiler
     {
         $this->registerLoader($appDir);
         $autoload = $this->compileAutoload($appName, $context, $appDir);
-        $log = $this->compileDiScripts($appName, $context, $appDir);
         $preload = $this->compilePreload($appName, $context, $appDir);
+        $log = $this->compileDiScripts($appName, $context, $appDir);
         $this->ns = (string) filemtime(realpath($appDir) . '/src');
 
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
