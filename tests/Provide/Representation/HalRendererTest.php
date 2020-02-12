@@ -263,7 +263,7 @@ class HalRendererTest extends TestCase
         $ro->__toString();
 
         $this->assertSame(512, $errNo);
-        $this->assertContains(LocationHeaderRequestException::class, $errStr);
+        $this->assertStringContainsString(LocationHeaderRequestException::class, $errStr);
 
         restore_error_handler();
 
