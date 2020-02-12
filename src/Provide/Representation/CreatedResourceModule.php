@@ -12,7 +12,7 @@ class CreatedResourceModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void 
+    protected function configure() : void
     {
         $this->bind(CreatedResourceRenderer::class);
         $this->bindInterceptor(
