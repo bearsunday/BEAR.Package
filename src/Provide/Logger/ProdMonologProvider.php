@@ -21,7 +21,7 @@ class ProdMonologProvider implements ProviderInterface
         $this->appMeta = $appMeta;
     }
 
-    public function get()
+    public function get() : Logger
     {
         return new Logger($this->appMeta->name, [new ErrorLogHandler]);
     }
