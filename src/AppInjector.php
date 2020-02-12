@@ -72,7 +72,12 @@ final class AppInjector implements InjectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {inheritdoc}
+     *
+     * @param string $interface
+     * @param string $name
+     *
+     * @return mixed
      */
     public function getInstance($interface, $name = Name::ANY)
     {
