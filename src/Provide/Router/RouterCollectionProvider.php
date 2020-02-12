@@ -34,7 +34,7 @@ class RouterCollectionProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get()
+    public function get() : RouterCollection
     {
         return new RouterCollection([$this->primaryRouter, $this->webRouter]);
     }
