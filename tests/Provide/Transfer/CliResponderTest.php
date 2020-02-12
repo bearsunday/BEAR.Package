@@ -25,7 +25,7 @@ class CliResponderTest extends TestCase
     public function testTransfer()
     {
         $ro = (new Index)->onGet();
-        (string) $ro;
+        assert(is_string((string) $ro));
         $ro->headers['X-BEAR-VERSION'] = 'Sunday';
         ob_start();
         $ro->transfer($this->responder, []);
