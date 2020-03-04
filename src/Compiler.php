@@ -41,11 +41,11 @@ final class Compiler
      */
     public function __invoke(string $appName, string $context, string $appDir) : string
     {
+        $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
         $autoload = $this->compileAutoload($appName, $context, $appDir);
         $preload = $this->compilePreload($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
-        $this->ns = (string) filemtime(realpath($appDir) . '/src');
 
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
     }
@@ -118,7 +118,7 @@ final class Compiler
 
     private function compilePreload(string $appName, string $context, string $appDir) : string
     {
-        //$this->loadResources($appName, $context, $appDir);
+        $this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
         $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
