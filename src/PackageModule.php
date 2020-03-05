@@ -18,7 +18,7 @@ class PackageModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->install(new QueryRepositoryModule);
         $this->install(new WebRouterModule);

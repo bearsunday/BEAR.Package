@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use BEAR\Package\Bootstrap;
 
 /* @var \Composer\Autoload\ClassLoader $loader */

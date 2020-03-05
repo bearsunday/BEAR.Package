@@ -11,8 +11,14 @@ use function unserialize;
 
 class CliRouterTest extends TestCase
 {
+    /**
+     * @var CliRouter
+     */
     private $router;
 
+    /**
+     * @var string
+     */
     private $stdInFile;
 
     protected function setUp() : void
@@ -46,7 +52,14 @@ class CliRouterTest extends TestCase
     /**
      * @dataProvider argvProvider
      */
-    public function testMatch($argv2, $argv3, array $get, array $post, $stdin)
+
+    /**
+     * @dataProvider argvProvider
+     *
+     * @param array<string> $get
+     * @param array<string> $post
+     */
+    public function testMatch(string $argv2, string $argv3, array $get, array $post, string $stdin)
     {
         $globals = [
             'argv' => [
@@ -109,7 +122,7 @@ class CliRouterTest extends TestCase
         file_put_contents($this->stdInFile, '');
         $exists = file_exists($this->stdInFile);
         $this->assertTrue($exists);
-        $this->router = null;
+        unset($this->router);
         $exists = file_exists($this->stdInFile);
         $this->assertFalse($exists);
     }

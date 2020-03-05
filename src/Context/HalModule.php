@@ -16,7 +16,7 @@ class HalModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->bind(CreatedResourceRenderer::class);
         $this->bind(RenderInterface::class)->to(HalRenderer::class);

@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class ErrorPageTest extends TestCase
 {
+    /**
+     * @var ErrorPage
+     */
     private $errorPage;
 
     protected function setUp() : void
@@ -19,6 +22,6 @@ class ErrorPageTest extends TestCase
     public function testToString()
     {
         $text = (string) $this->errorPage;
-        $this->assertContains('some_text_after_error_message', $text);
+        $this->assertStringContainsString('some_text_after_error_message', $text);
     }
 }

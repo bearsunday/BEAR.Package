@@ -33,7 +33,7 @@ final class CliResponder implements TransferInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke(ResourceObject $ro, array $server)
+    public function __invoke(ResourceObject $ro, array $server) : void
     {
         $isModified = $this->condResponse->isModified($ro, $server);
         $output = $isModified ? $this->getOutput($ro, $server) : $this->condResponse->getOutput($ro->headers);

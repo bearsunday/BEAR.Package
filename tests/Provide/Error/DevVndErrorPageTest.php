@@ -29,11 +29,11 @@ class DevVndErrorPageTest extends TestCase
         $this->assertSame(500, $this->page->code);
         $this->assertArrayHasKey('content-type', $this->page->headers);
         $this->assertSame('application/vnd.error+json', $this->page->headers['content-type']);
-        $this->assertContains('{
+        $this->assertStringContainsString('{
     "message": "Internal Server Error",
     "logref": "{logref}",
     "request": "get /",
     "exceptions": "LogicException(bear)",
-    "file": "' . __FILE__, $this->page->view);
+    "file": "' . __FILE__, (string) $this->page->view);
     }
 }

@@ -20,7 +20,7 @@ final class Unlink
      */
     private $isOptional = true;
 
-    public function __invoke(string $path)
+    public function __invoke(string $path) : void
     {
         if ($this->isOptional && file_exists($path . '/.do_not_clear')) {
             return;

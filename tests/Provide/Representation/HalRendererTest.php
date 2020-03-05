@@ -9,6 +9,7 @@ use BEAR\Package\Exception\LocationHeaderRequestException;
 use BEAR\Resource\HalLink;
 use BEAR\Resource\HalRenderer;
 use BEAR\Resource\ResourceInterface;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
@@ -227,7 +228,7 @@ class HalRendererTest extends TestCase
     public function test201CreatedWithNoQuery()
     {
         $ro = $this->resource->post->uri('app://self/post?uri=/post')->eager->request();
-        /* @var $ro \BEAR\Resource\ResourceObject */
+        assert($ro instanceof ResourceObject);
         $result = (string) $ro;
         $this->assertSame(201, $ro->code);
         $this->assertSame('/post', $ro->headers['Location']);
@@ -258,12 +259,11 @@ class HalRendererTest extends TestCase
             $errNo = $no;
             $errStr = $str;
         });
-
-        /* @var $ro \BEAR\Resource\ResourceObject */
-        (string) $ro;
+        assert($ro instanceof ResourceObject);
+        $ro->__toString();
 
         $this->assertSame(512, $errNo);
-        $this->assertContains(LocationHeaderRequestException::class, $errStr);
+        $this->assertStringContainsString(LocationHeaderRequestException::class, $errStr);
 
         restore_error_handler();
 

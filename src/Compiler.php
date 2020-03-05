@@ -6,7 +6,6 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
-use BEAR\AppMeta\ResMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
@@ -44,7 +43,7 @@ final class Compiler
         $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
         $autoload = $this->compileAutoload($appName, $context, $appDir);
-        $preload = $this->compilePreload($appName, $context, $appDir);
+        $preload = $this->compilePreload($appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
 
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
@@ -58,7 +57,7 @@ final class Compiler
         }
         $loaderFile = require $loaderFile;
         spl_autoload_register(
-            function ($class) use ($loaderFile) {
+            function ($class) use ($loaderFile) : void {
                 $loaderFile->loadClass($class);
                 if ($class !== NullPage::class) {
                     $this->classes[] = $class;
@@ -116,7 +115,7 @@ final class Compiler
         return $loaderFile;
     }
 
-    private function compilePreload(string $appName, string $context, string $appDir) : string
+    private function compilePreload(string $appDir) : string
     {
         $this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
@@ -181,7 +180,7 @@ final class Compiler
         return \in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
-    private function saveNamedParam(NamedParameterInterface $namedParameter, $instance, string $method) : void
+    private function saveNamedParam(NamedParameterInterface $namedParameter, object $instance, string $method) : void
     {
         // named parameter
         if (! \in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
@@ -226,15 +225,5 @@ final class Compiler
         }
 
         return $paths;
-    }
-
-    private function loadResources(string $appName, string $context, string $appDir) : void
-    {
-        $meta = new Meta($appName, $context, $appDir);
-        /* @var ResMeta $resMeta */
-        $injector = new AppInjector($appName, $context, $meta, $this->ns);
-        foreach ($meta->getGenerator('*') as $resMeta) {
-            $injector->getInstance($resMeta->class);
-        }
     }
 }
