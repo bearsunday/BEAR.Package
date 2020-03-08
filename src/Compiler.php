@@ -40,11 +40,11 @@ final class Compiler
      */
     public function __invoke(string $appName, string $context, string $appDir) : string
     {
+        $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
         $autoload = $this->compileAutoload($appName, $context, $appDir);
-        $preload = $this->compilePreload($appDir);
+        $preload = $this->compilePreload($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
-        $this->ns = (string) filemtime(realpath($appDir) . '/src');
 
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
     }
@@ -115,14 +115,15 @@ final class Compiler
         return $loaderFile;
     }
 
-    private function compilePreload(string $appDir) : string
+    private function compilePreload(string $appName, string $context, string $appDir) : string
     {
+        $this->loadResources($appName, $context, $appDir);
         $paths = $this->getPaths($this->classes, $appDir);
         $output = '<?php' . PHP_EOL;
-        $output .= "opcache_compile_file(__DIR__ . '/vendor/autoload.php');" . PHP_EOL;
+        $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         foreach ($paths as $path) {
             $output .= sprintf(
-                "opcache_compile_file(%s');\n",
+                "require %s';\n",
                 $this->getRelativePath($appDir, $path)
             );
         }
@@ -224,5 +225,14 @@ final class Compiler
         }
 
         return $paths;
+    }
+
+    private function loadResources(string $appName, string $context, string $appDir) : void
+    {
+        $meta = new Meta($appName, $context, $appDir);
+        $injector = new AppInjector($appName, $context, $meta, $this->ns);
+        foreach ($meta->getGenerator('*') as $resMeta) {
+            $injector->getInstance($resMeta->class);
+        }
     }
 }
