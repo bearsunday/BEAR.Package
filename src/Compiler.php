@@ -13,10 +13,9 @@ use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
-use Ray\Di\Exception\MethodInvocationNotAvailable;
 use function file_exists;
 use Ray\Di\AbstractModule;
-use Ray\Di\Bind;
+use Ray\Di\Exception\MethodInvocationNotAvailable;
 use Ray\Di\InjectorInterface;
 use ReflectionClass;
 
@@ -43,12 +42,16 @@ final class Compiler
     {
         $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
-        $autoload = $this->compileAutoload($appName, $context, $appDir);
-        $preload = $this->compilePreload($appName, $context, $appDir);
-        $this->compileSrc($appName, $context, $appDir);
-        $log = $this->compileDiScripts($appName, $context, $appDir);
+        $appMeta = new Meta($appName, $context, $appDir);
+        $autoload = $this->compileAutoload($appMeta, $context);
+        $preload = $this->compilePreload($appMeta, $context);
+        $module = (new Module)($appMeta, $context);
+        $this->compileSrc($module, $appMeta, $context);
+        $this->compileDiScripts($appMeta, $context);
+        $logFile = realpath($appMeta->logDir) . '/compile.log';
+        file_put_contents($logFile, (string) $module);
 
-        return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
+        return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $logFile, $autoload, $preload);
     }
 
     public function registerLoader(string $appDir) : void
@@ -70,10 +73,9 @@ final class Compiler
         );
     }
 
-    public function compileDiScripts(string $appName, string $context, string $appDir) : string
+    public function compileDiScripts(AbstractAppMeta $appMeta, string $context) : void
     {
-        $appMeta = new Meta($appName, $context, $appDir);
-        $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
+        $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
         $reader = $injector->getInstance(AnnotationReader::class);
         /* @var $reader \Doctrine\Common\Annotations\Reader */
@@ -87,19 +89,13 @@ final class Compiler
         foreach ($appMeta->getResourceListGenerator() as [$className]) {
             $this->scanClass($injector, $reader, $namedParams, (string) $className);
         }
-        $logFile = realpath($appMeta->logDir) . '/compile.log';
-        $this->saveCompileLog($appMeta, $context, $logFile);
-
-        return $logFile;
     }
 
-    public function compileSrc(string $appName, string $context, string $appDir) : void
+    public function compileSrc(AbstractModule $module, AbstractAppMeta $appMeta, string $context) : AbstractModule
     {
-        $appMeta = new Meta($appName, $context, $appDir);
-        $module = (new Module)($appMeta, $context);
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
-        $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
+        $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         foreach ($dependencies as $dependencyIndex) {
             [$interface, $name] = \explode('-', $dependencyIndex);
             try {
@@ -108,14 +104,16 @@ final class Compiler
                 continue;
             }
         }
+
+        return $module;
     }
 
-    private function compileAutoload(string $appName, string $context, string $appDir) : string
+    private function compileAutoload(AbstractAppMeta $appMeta, string $context) : string
     {
-        $this->invokeTypicalRequest($appName, $context);
-        $paths = $this->getPaths($this->classes, $appDir);
+        $this->invokeTypicalRequest($appMeta->name, $context);
+        $paths = $this->getPaths($this->classes, $appMeta->appDir);
 
-        return $this->dumpAutoload($appDir, $paths);
+        return $this->dumpAutoload($appMeta->appDir, $paths);
     }
 
     private function dumpAutoload(string $appDir, array $paths) : string
@@ -134,19 +132,19 @@ final class Compiler
         return $loaderFile;
     }
 
-    private function compilePreload(string $appName, string $context, string $appDir) : string
+    private function compilePreload(AbstractAppMeta $appMeta, string $context) : string
     {
-        $this->loadResources($appName, $context, $appDir);
-        $paths = $this->getPaths($this->classes, $appDir);
+        $this->loadResources($appMeta->name, $context, $appMeta->appDir);
+        $paths = $this->getPaths($this->classes, $appMeta->appDir);
         $output = '<?php' . PHP_EOL;
         $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         foreach ($paths as $path) {
             $output .= sprintf(
                 "require %s';\n",
-                $this->getRelativePath($appDir, $path)
+                $this->getRelativePath($appMeta->appDir, $path)
             );
         }
-        $preloadFile = realpath($appDir) . '/preload.php';
+        $preloadFile = realpath($appMeta->appDir) . '/preload.php';
         file_put_contents($preloadFile, $output);
 
         return $preloadFile;
@@ -214,17 +212,6 @@ final class Compiler
         } catch (ParameterException $e) {
             return;
         }
-    }
-
-    private function saveCompileLog(AbstractAppMeta $appMeta, string $context, string $logFile) : void
-    {
-        $module = (new Module)($appMeta, $context);
-        /** @var AbstractModule $module */
-        $container = $module->getContainer();
-        foreach ($appMeta->getResourceListGenerator() as [$class]) {
-            new Bind($container, (string) $class);
-        }
-        file_put_contents($logFile, (string) $module);
     }
 
     private function getPaths(array $classes, string $appDir) : array
