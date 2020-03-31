@@ -44,6 +44,7 @@ final class Compiler
         $this->registerLoader($appDir);
         $autoload = $this->compileAutoload($appName, $context, $appDir);
         $preload = $this->compilePreload($appName, $context, $appDir);
+        $this->compileSrc($appName, $context, $appDir);
         $log = $this->compileDiScripts($appName, $context, $appDir);
 
         return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $log, $autoload, $preload);
@@ -89,6 +90,19 @@ final class Compiler
         $this->saveCompileLog($appMeta, $context, $logFile);
 
         return $logFile;
+    }
+
+    public function compileSrc(string $appName, string $context, string $appDir) : void
+    {
+        $appMeta = new Meta($appName, $context, $appDir);
+        $module = (new Module)($appMeta, $context);
+        $container = $module->getContainer()->getContainer();
+        $dependencies = array_keys($container);
+        $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
+        foreach ($dependencies as $dependencyIndex) {
+            [$interface, $name] = \explode('-', $dependencyIndex);
+            $injector->getInstance($interface, $name);
+        }
     }
 
     private function compileAutoload(string $appName, string $context, string $appDir) : string
