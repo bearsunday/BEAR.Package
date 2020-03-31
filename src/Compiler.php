@@ -13,6 +13,7 @@ use BEAR\Resource\Uri;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Ray\Di\Exception\MethodInvocationNotAvailable;
 use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Bind;
@@ -101,7 +102,11 @@ final class Compiler
         $injector = new AppInjector($appName, $context, $appMeta, $this->ns);
         foreach ($dependencies as $dependencyIndex) {
             [$interface, $name] = \explode('-', $dependencyIndex);
-            $injector->getInstance($interface, $name);
+            try {
+                $injector->getInstance($interface, $name);
+            } catch (MethodInvocationNotAvailable $e) {
+                continue;
+            }
         }
     }
 
