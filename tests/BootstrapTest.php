@@ -110,4 +110,14 @@ class BootstrapTest extends TestCase
         $this->assertInstanceOf(FakeDep::class, $dep->depInterface);
         $this->assertInstanceOf(FakeDep::class, $dep->dep);
     }
+
+    public function testAsyncBoot()
+    {
+        $testDir = sprintf('%s/tests/Fake', dirname(__DIR__));
+        $cmd = sprintf('php %s/boot.php', $testDir);
+        file_put_contents($testDir . '/error.log', '');
+        (new AsyncRequest)($cmd);
+        // no error should be recorded
+        $this->assertSame('', file_get_contents($testDir . '/error.log'));
+    }
 }
