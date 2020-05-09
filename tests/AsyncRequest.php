@@ -20,6 +20,7 @@ final class AsyncRequest
             }
             for (; ;) {
                 foreach ($procs as $p) {
+                    assert(is_resource($p));
                     if (proc_get_status($p)['running']) {
                         sleep(1);
 
@@ -31,6 +32,7 @@ final class AsyncRequest
             }
         } finally {
             foreach ($procs as $p) {
+                assert(is_resource($p));
                 proc_close($p);
             }
         }
