@@ -9,7 +9,9 @@ use BEAR\AppMeta\Meta;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
+
 use function is_string;
+use malkusch\lock\mutex\FlockMutex;
 
 final class Bootstrap
 {
@@ -32,16 +34,24 @@ final class Bootstrap
     {
         $cacheNamespace = is_string($cacheNamespace) ? $cacheNamespace : (string) filemtime($appMeta->appDir . '/src');
         $injector = new AppInjector($appMeta->name, $contexts, $appMeta, $cacheNamespace);
-        $cache = $cache instanceof Cache ? $cache : $injector->getCachedInstance(Cache::class);
+        $cache = $cache instanceof Cache ? $cache : $injector->getCachedInstance(Cache::class); // array cache in non-production
+        assert($cache instanceof Cache);
         $appId = $appMeta->name . $contexts . $cacheNamespace;
         $app = $cache->fetch($appId);
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $injector->clear();
-        $app = $injector->getCachedInstance(AppInterface::class);
-        $cache->save($appId, $app);
+        $mutex = new FlockMutex(fopen(__FILE__, 'rb'));
+        return $mutex->synchronized(function () use ($injector, $cache, $appId) : AbstractApp {
+            $app = $cache->fetch($appId);
+            if ($app instanceof AbstractApp) {
+                return $app;
+            }
+            $injector->disableCache();
+            $app = $injector->getCachedInstance(AppInterface::class);
+            $cache->save($appId, $app);
 
-        return $app;
+            return $app;
+        });
     }
 }
