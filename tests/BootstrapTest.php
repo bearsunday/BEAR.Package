@@ -116,8 +116,10 @@ class BootstrapTest extends TestCase
         $testDir = sprintf('%s/tests/Fake', dirname(__DIR__));
         $cmd = sprintf('php %s/boot.php', $testDir);
         file_put_contents($testDir . '/error.log', '');
-        (new AsyncRequest)($cmd);
+        $cmds = array_fill(0, 7, $cmd);
+        $exitCode = (new AsyncRun)($cmds, $testDir . '/error.log');
         // no error should be recorded
         $this->assertSame('', file_get_contents($testDir . '/error.log'));
+        $this->assertSame(0, $exitCode);
     }
 }
