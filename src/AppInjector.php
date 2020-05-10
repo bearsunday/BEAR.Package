@@ -57,7 +57,7 @@ final class AppInjector implements InjectorInterface
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
         $this->cacheNamespace = (string) $cacheNamespace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
-        !is_dir($scriptDir) && !@mkdir($scriptDir) && !is_dir($scriptDir);
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $this->scriptDir = $scriptDir;
         $appDir = $this->appMeta->tmpDir . '/app';
         ! is_dir($appDir) && ! @mkdir($appDir) && ! is_dir($appDir);
