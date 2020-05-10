@@ -11,7 +11,6 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
 
 use function is_string;
-use malkusch\lock\mutex\FlockMutex;
 
 final class Bootstrap
 {
@@ -41,17 +40,10 @@ final class Bootstrap
         if ($app instanceof AbstractApp) {
             return $app;
         }
-        $mutex = new FlockMutex(fopen(__FILE__, 'rb'));
-        return $mutex->synchronized(function () use ($injector, $cache, $appId) : AbstractApp {
-            $app = $cache->fetch($appId);
-            if ($app instanceof AbstractApp) {
-                return $app;
-            }
-            $injector->disableCache();
-            $app = $injector->getCachedInstance(AppInterface::class);
-            $cache->save($appId, $app);
+        $injector->disableCache();
+        $app = $injector->getCachedInstance(AppInterface::class);
+        $cache->save($appId, $app);
 
-            return $app;
-        });
+        return $app;
     }
 }

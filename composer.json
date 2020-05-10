@@ -25,7 +25,6 @@
         "bear/sunday": "^1.4",
         "bear/streamer": "^1.0.1",
         "monolog/monolog" : "^1.25|^2.0",
-        "malkusch/lock": "^2.1",
         "ray/compiler": "1.x-dev"
     },
     "require-dev": {
