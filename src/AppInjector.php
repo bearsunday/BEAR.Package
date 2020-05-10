@@ -57,10 +57,10 @@ final class AppInjector implements InjectorInterface
         $this->appMeta = $appMeta instanceof AbstractAppMeta ? $appMeta : new Meta($name, $context);
         $this->cacheNamespace = (string) $cacheNamespace;
         $scriptDir = $this->appMeta->tmpDir . '/di';
-        ! is_dir($scriptDir) && ! mkdir($scriptDir) && ! is_dir($scriptDir);
+        !is_dir($scriptDir) && !@mkdir($scriptDir) && !is_dir($scriptDir);
         $this->scriptDir = $scriptDir;
         $appDir = $this->appMeta->tmpDir . '/app';
-        ! is_dir($appDir) && ! mkdir($appDir) && ! is_dir($appDir);
+        ! is_dir($appDir) && ! @mkdir($appDir) && ! is_dir($appDir);
         touch($appDir . '/.do_not_clear');
         $this->appDir = $appDir;
         $this->injector = new ScriptInjector($this->scriptDir, function () {
@@ -101,7 +101,7 @@ final class AppInjector implements InjectorInterface
             return;
         }
         $diDir = $this->appMeta->tmpDir . '/di';
-        ! is_dir($diDir) && ! mkdir($diDir) && ! is_dir($diDir);
+        ! is_dir($diDir) && ! @mkdir($diDir) && ! is_dir($diDir);
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
