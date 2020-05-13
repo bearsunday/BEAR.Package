@@ -25,7 +25,7 @@ final class Injector implements InjectorInterface
     private static $cache;
 
     /**
-     * @var Injector
+     * @var InjectorInterface
      */
     private $injector;
 
@@ -41,16 +41,15 @@ final class Injector implements InjectorInterface
         $this->injector = $injector instanceof InjectorInterface ? $injector : $this->getCachedInjector($meta, $context, $cacheNamespace, $cache, $scriptDir);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getInstance($interface, $name = '')
     {
         return $this->injector->getInstance($interface, $name);
     }
 
-    public function clear(string $context, string $cacheNamepsace)
-    {
-    }
-
-    private function getCachedInjector($meta, $context, $cacheNamespace, $firstCache, $scriptDir) : InjectorInterface
+    private function getCachedInjector(Meta $meta, string $context, string $cacheNamespace, ChainCache $firstCache, string $scriptDir) : InjectorInterface
     {
         $id = $context . $cacheNamespace;
         if (isset(self::$cache[$id])) {

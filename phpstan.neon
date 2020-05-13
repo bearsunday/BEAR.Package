@@ -15,3 +15,5 @@ parameters:
       message: "#return null but return statement is missing\\.$#"
       path: src/Provide/Router/CliRouterHelp.php
   checkMissingIterableValueType: false
+  autoload_files:
+    - vendor/autoload.php

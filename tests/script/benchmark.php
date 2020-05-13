@@ -3,7 +3,7 @@
 declare(strict_types=1);
 $time = microtime(true);
 register_shutdown_function(
-    function () use ($time) {
+    function () use ($time) : void {
         printf(
             "Memory: %s / %s bytes\nTime: %f ms\nDeclared: %d classes\nIncluded: %d files > include_files.txt\n\n",
             number_format(memory_get_usage()),
