@@ -7,6 +7,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidModuleException;
+use BEAR\Package\Provide\Boot\CacheNamespaceModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\AssistedModule;
 
@@ -15,7 +16,7 @@ class Module
     /**
      * Return module from $appMeta and $context
      */
-    public function __invoke(AbstractAppMeta $appMeta, string $context) : AbstractModule
+    public function __invoke(AbstractAppMeta $appMeta, string $context, string $cacheNamespace = '') : AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $context));
         $module = new AssistedModule;
@@ -34,6 +35,7 @@ class Module
             throw new InvalidModuleException; // @codeCoverageIgnore
         }
         $module->override(new AppMetaModule($appMeta));
+        $module->override(new CacheNamespaceModule($cacheNamespace));
 
         return $module;
     }
