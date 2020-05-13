@@ -105,11 +105,6 @@ final class AppInjector implements InjectorInterface
         file_put_contents($this->scriptDir . ScriptInjector::MODULE, serialize($this->getModule()));
     }
 
-    public function disableCache() : void
-    {
-        $this->injector->disableCache();
-    }
-
     /**
      * @return mixed
      */
