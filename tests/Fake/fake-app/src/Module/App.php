@@ -13,11 +13,11 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 
 class App extends AbstractApp
 {
-    public static $construct = 0;
+    public static $counfOfNew = 0;
 
     public function __construct(HttpCacheInterface $httpCache, RouterInterface $router, TransferInterface $responder, ResourceInterface $resource, ErrorInterface $error)
     {
         parent::__construct($httpCache, $router, $responder, $resource, $error);
-        self::$construct++;
+        self::$counfOfNew++;
     }
 }

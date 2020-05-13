@@ -4,69 +4,78 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
-use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Context\Provider\ProdCacheProvider;
+use BEAR\Package\Provide\Boot\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Doctrine\Common\Cache\ApcuCache;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
-use Doctrine\Common\Cache\FilesystemCache;
-use Ray\Di\Bind;
+use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
 final class Injector implements InjectorInterface
 {
     /**
-     * @var InjectorInterface
+     * Injector cache for unit testing
+     *
+     * @var array<InjectorInterface>
+     */
+    private static $cache;
+
+    /**
+     * @var Injector
      */
     private $injector;
 
-    public function __construct(string $name, string $context, string $appDir, string $cacheNamespace = '')
+    public function __construct(string $appName, string $context, string $appDir, string $cacheNamespace = '')
     {
-        $meta = new Meta($name, $context, $appDir);
-        $firstCache = new ChainCache([new ApcuCache, new FilesystemCache($meta->tmpDir)]);
-        $firstCache->setNamespace($name . $context . $cacheNamespace);
-        $secondCache = $firstCache->fetch(Cache::class); // ArrayCache or ChainCache based on context
-        if (! $secondCache instanceof Cache) {
-            $freshInjector = $this->createInjector($meta, $context, $cacheNamespace);
-            /** @var Cache $secondCache */
-            $secondCache = $freshInjector->getInstance(Cache::class);
-            $firstCache->save(Cache::class, $secondCache);
-            // put App object into container as a singleton
-            $freshInjector->getInstance(AppInterface::class);
-            $secondCache->save(InjectorInterface::class, $freshInjector);
-        }
-        /** @var bool|InjectorInterface $cachedInjector */
-        $cachedInjector = $secondCache->fetch(InjectorInterface::class);
-        if ($cachedInjector instanceof InjectorInterface) {
-            $this->injector = $cachedInjector;
-
-            return;
-        }
-        $this->injector = isset($freshInjector) ? $freshInjector : $this->createInjector($meta, $context, $cacheNamespace);
-        $secondCache->save(InjectorInterface::class, $this->injector);
+        $meta = new Meta($appName, $context, $appDir);
+        $scriptDir = $meta->tmpDir . '/di';
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
+        $cacheDir = $meta->tmpDir . '/cache';
+        ! is_dir($cacheDir) && ! @mkdir($cacheDir) && ! is_dir($cacheDir);
+        $cache = (new ProdCacheProvider($meta, $cacheNamespace))->get();
+        $injector = $cache->fetch(InjectorInterface::class);
+        $this->injector = $injector instanceof InjectorInterface ? $injector : $this->getCachedInjector($meta, $context, $cacheNamespace, $cache, $scriptDir);
     }
 
-    /**
-     * @template T
-     *
-     * @param class-string<T> $interface
-     * @param string          $name
-     *
-     * @return T
-     */
     public function getInstance($interface, $name = '')
     {
         return $this->injector->getInstance($interface, $name);
     }
 
-    private function createInjector(AbstractAppMeta $meta, string $context, string $cacheNamespace) : InjectorInterface
+    public function clear(string $context, string $cacheNamepsace)
     {
-        $module = (new Module)($meta, $context);
-        $container = $module->getContainer();
-        (new Bind($container, ''))->annotatedWith('cache_namespace')->toInstance($cacheNamespace);
+    }
 
-        return new RayInjector($module);
+    private function getCachedInjector($meta, $context, $cacheNamespace, $firstCache, $scriptDir) : InjectorInterface
+    {
+        $id = $context . $cacheNamespace;
+        if (isset(self::$cache[$id])) {
+            return self::$cache[$id];
+        }
+        $injector = $this->getInjector($meta, $context, $cacheNamespace, $firstCache, $scriptDir);
+        self::$cache[$id] = $injector;
+
+        return $injector;
+    }
+
+    private function getInjector(Meta $meta, string $context, string $cacheNamespace, ChainCache $firstCache, string $scriptDir) : InjectorInterface
+    {
+        $module = (new Module)($meta, $context, $cacheNamespace);
+        $rayInjector = new RayInjector($module, $scriptDir);
+        $isDev = $rayInjector->getInstance(Cache::class) instanceof ArrayCache;
+        if ($isDev) {
+            return $rayInjector;
+        }
+        $injector = new ScriptInjector($scriptDir, function () use ($scriptDir, $module) {
+            return new ScriptinjectorModule($scriptDir, $module);
+        });
+        $injector->getInstance(AppInterface::class); // cache App as a singleton
+        $firstCache->save(InjectorInterface::class, $injector);
+
+        return $injector;
     }
 }
