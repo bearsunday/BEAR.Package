@@ -11,8 +11,14 @@ class CompilerTest extends TestCase
     public function testInvoke()
     {
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
+        $compiledFile2 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/module.txt';
+        $compiledFile3 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
         @unlink($compiledFile1);
+        @unlink($compiledFile2);
+        @unlink($compiledFile3);
         (new Compiler)('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app');
         $this->assertFileExists($compiledFile1);
+        $this->assertFileExists($compiledFile2);
+        $this->assertFileExists($compiledFile3);
     }
 }
