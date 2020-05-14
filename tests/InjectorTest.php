@@ -18,15 +18,15 @@ class InjectorTest extends TestCase
     public function CountOfNewProvider() : array
     {
         return [
-            ['prod-app', 0],
-            ['app', 1]
+            ['prod-app', 0, 0],
+            ['app', 1, 2]
         ];
     }
 
     /**
      * @dataProvider CountOfNewProvider
      */
-    public function testCachedGetInstance(string $context, int $countOfNew) : void
+    public function testCachedGetInstance(string $context, int $countOfNew1, int $countOfNew2) : void
     {
         $appDir = __DIR__ . '/Fake/fake-app';
         $cn = (string) getmypid();
@@ -37,13 +37,13 @@ class InjectorTest extends TestCase
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
-        $this->assertSame($countOfNew, App::$counfOfNew);
+        $this->assertSame($countOfNew1, App::$counfOfNew);
         // 2nd injector; AppInterface object should be stored as a singleton.
         $injector = new Injector('FakeVendor\HelloWorld', $context, $appDir, $cn);
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
-        $this->assertSame($countOfNew, App::$counfOfNew);
+        $this->assertSame($countOfNew2, App::$counfOfNew);
     }
 
     /**
