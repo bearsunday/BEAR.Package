@@ -36,9 +36,17 @@ final class Injector implements InjectorInterface
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $cacheDir = $meta->tmpDir . '/cache';
         ! is_dir($cacheDir) && ! @mkdir($cacheDir) && ! is_dir($cacheDir);
+        $id = $context . $cacheNamespace;
+        if (isset(self::$cache[$id])) {
+            $this->injector = unserialize(self::$cache[$id]); // activation
+
+            return;
+        }
         $cache = (new ProdCacheProvider($meta, $cacheNamespace))->get();
         $injector = $cache->fetch(InjectorInterface::class);
-        $this->injector = $injector instanceof InjectorInterface ? $injector : $this->getCachedInjector($meta, $context, $cacheNamespace, $cache, $scriptDir);
+        $this->injector = $injector instanceof InjectorInterface ? $injector : $this->getInjector($meta, $context, $cacheNamespace, $cache, $scriptDir);
+        $this->injector->getInstance(AppInterface::class); // cache App as a singleton
+        self::$cache[$id] = serialize($this->injector);
     }
 
     /**
@@ -47,18 +55,6 @@ final class Injector implements InjectorInterface
     public function getInstance($interface, $name = '')
     {
         return $this->injector->getInstance($interface, $name);
-    }
-
-    private function getCachedInjector(Meta $meta, string $context, string $cacheNamespace, ChainCache $firstCache, string $scriptDir) : InjectorInterface
-    {
-        $id = $context . $cacheNamespace;
-        if (isset(self::$cache[$id])) {
-            return self::$cache[$id];
-        }
-        $injector = $this->getInjector($meta, $context, $cacheNamespace, $firstCache, $scriptDir);
-        self::$cache[$id] = $injector;
-
-        return $injector;
     }
 
     private function getInjector(Meta $meta, string $context, string $cacheNamespace, ChainCache $firstCache, string $scriptDir) : InjectorInterface
