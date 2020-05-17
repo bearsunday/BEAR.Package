@@ -14,6 +14,11 @@ use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
 
+/**
+ * @deprecated
+ *
+ * use Injector instead
+ */
 final class AppInjector implements InjectorInterface
 {
     /**
