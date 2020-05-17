@@ -18,7 +18,7 @@ use Ray\Di\InjectorInterface;
 final class Injector
 {
     /**
-     * Injector serialized instances
+     * Serialized injector instances
      *
      * @var array<string>
      */
