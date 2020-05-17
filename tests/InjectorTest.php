@@ -19,7 +19,7 @@ class InjectorTest extends TestCase
     {
         return [
             ['prod-app', 0, 0],
-            ['app', 1, 2]
+            ['app', 2, 3]
         ];
     }
 
