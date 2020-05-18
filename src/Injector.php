@@ -20,7 +20,7 @@ final class Injector
     /**
      * Serialized injector instances
      *
-     * @var array<string>
+     * @var array<InjectorInterface>
      */
     private static $instances;
 
@@ -32,13 +32,13 @@ final class Injector
     {
         $injectorId = $appName . $context . $cacheNamespace;
         if (isset(self::$instances[$injectorId])) {
-            return unserialize(self::$instances[$injectorId], ['allowed_classes' => true]); // __wakeup the injector
+            return self::$instances[$injectorId];
         }
         $meta = new Meta($appName, $context, $appDir);
         $cache = (new ProdCacheProvider($meta, $injectorId))->get();
         $cachedInjector = $cache->fetch(InjectorInterface::class);
         $injector = $cachedInjector instanceof InjectorInterface ? $cachedInjector : self::factory($meta, $context, $cacheNamespace, $cache);
-        self::$instances[$injectorId] = serialize($injector);
+        self::$instances[$injectorId] = $injector;
 
         return $injector;
     }
