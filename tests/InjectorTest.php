@@ -51,9 +51,6 @@ class InjectorTest extends TestCase
      */
     public function testRaceConditionBoot(string $context)
     {
-        if (strtolower(getenv('TRAVIS')) === 'true') {
-            $this->markTestSkipped('Avoid segmentation fault in Travis CI');
-        }
         $cn = microtime();
         $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php -c%s -n%s', (string) E_ALL, __DIR__, $context, $cn);
         $errorLog = __DIR__ . '/script/error.log';
