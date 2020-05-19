@@ -12,6 +12,11 @@ use Doctrine\Common\Cache\Cache;
 
 use function is_string;
 
+/**
+ * @deprecated
+ *
+ * use Injector instead
+ */
 final class Bootstrap
 {
     /**

@@ -19,7 +19,7 @@ class InjectorTest extends TestCase
     {
         return [
             ['prod-app', 0],
-            ['app', 1]
+            //            ['app', 1]
         ];
     }
 
@@ -33,13 +33,13 @@ class InjectorTest extends TestCase
         $exitCode = $this->runOnce($context, $cn);
         $this->assertSame(0, $exitCode);
         App::$counfOfNew = 0;
-        $injector = new Injector('FakeVendor\HelloWorld', $context, $appDir, $cn);
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir, $cn);
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
         $this->assertSame($countOfNew, App::$counfOfNew);
         // 2nd injector; AppInterface object should be stored as a singleton.
-        $injector = new Injector('FakeVendor\HelloWorld', $context, $appDir, $cn);
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir, $cn);
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
