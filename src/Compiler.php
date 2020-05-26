@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\AppMeta\ResMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
@@ -85,13 +86,15 @@ final class Compiler
         assert($reader instanceof AnnotationReader);
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
-
         // create DI factory class and AOP compiled class for all resources and save $app cache.
         (new Bootstrap)->newApp($appMeta, $context, $cache);
 
         // check resource injection and create annotation cache
-        foreach ($appMeta->getResourceListGenerator() as [$className]) {
-            $this->scanClass($injector, $reader, $namedParams, (string) $className);
+        /** @var array{0: string, 1:string} $meta */
+        foreach ($appMeta->getResourceListGenerator() as $meta) {
+            /** @var string $className */
+            [$className] = $meta;
+            $this->scanClass($injector, $reader, $namedParams, $className);
         }
     }
 
