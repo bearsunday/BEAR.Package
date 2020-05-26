@@ -170,6 +170,10 @@ final class Compiler
         return $file;
     }
 
+    /**
+     * @psalm-suppress MixedFunctionCall
+     * @psalm-suppress NoInterfaceProperties
+     */
     private function invokeTypicalRequest(string $appName, string $context) : void
     {
         $app = (new Bootstrap)->getApp($appName, $context);
