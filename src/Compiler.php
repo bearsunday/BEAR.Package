@@ -6,7 +6,6 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
-use BEAR\AppMeta\ResMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
@@ -128,7 +127,7 @@ final class Compiler
     }
 
     /**
-     * @param array<string>  $paths
+     * @param array<string> $paths
      */
     private function dumpAutoload(string $appDir, array $paths) : string
     {
@@ -192,6 +191,7 @@ final class Compiler
      * Save annotation and method meta information
      *
      * @template T
+     *
      * @param class-string<T> $className
      */
     private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className) : void
