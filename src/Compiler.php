@@ -180,6 +180,7 @@ final class Compiler
         $app = (new Bootstrap)->getApp($appName, $context);
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
+        /** @psalm-suppress MixedMethodCall */
         $app->resource->get->object($ro)();
     }
 
