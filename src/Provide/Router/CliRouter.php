@@ -76,14 +76,13 @@ class CliRouter implements RouterInterface
      */
     public function match(array $globals, array $server)
     {
-        assert(isset($server['argc']));
+        assert(isset($server['argc']) && is_int($server['argc']));
         assert(isset($server['argv']));
-        /** @var int $argc */
         $argc = $server['argc'];
         /** @var array<int, string> $argv */
         $argv = $server['argv'];
         $this->validateArgs($argc, $argv);
-        [$method, $query, $server] = $this->parseGlobals($globals, $server);
+        [$method, $query, $server] = $this->parseServer($server);
         [$globals, $server] = $this->addQuery($method, $query, $globals, $server);
 
         return $this->router->match($globals, $server);
@@ -100,10 +99,11 @@ class CliRouter implements RouterInterface
     /**
      * Set user input query to $globals or &$server
      *
-     * @param array<mixed> $server
-     * @param array{REQUEST_METHOD: string, REQUEST_URI: string} $globals
+     * @param array<string, array|string>                                                  $query
+     * @param array{_GET: array<string, string|array>, _POST: array<string, string|array>} $globals
+     * @param array<string, mixed>                                                         $server
      *
-     * @return array{0: array{REQUEST_METHOD: string, REQUEST_URI: string}, 1: array<string, array|string>}
+     * @return array{0: array{_GET: array<string, string|array>, _POST: array<string, string|array>}, 1: array<string, mixed>}
      */
     private function addQuery(string $method, array $query, array $globals, array $server) : array
     {
@@ -144,9 +144,10 @@ class CliRouter implements RouterInterface
     /**
      * Return StdIn in PUT, PATCH or DELETE
      *
+     * @param array<string, mixed> $query
      * @param array<string, mixed> $server
      *
-     * @return array<string, mixed> $server
+     * @return array<string, mixed>
      */
     private function getStdIn(string $method, array $query, array $server) : array
     {
@@ -172,19 +173,16 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * Return $method, $query, $server from $globals
+     * Return $method, $query, $server from $server
      *
-     * @param array{argc: int, argv: array<string>} $server
-     *
-     * @return array{0: string, 1: array<mixed>, 2: array{REQUEST_METHOD: string, REQUEST_URI: string}}
+     * @return array{0: string, 1: array<string, string|array>, 2: array{REQUEST_METHOD: string, REQUEST_URI: string}}
      */
-    private function parseGlobals(array $globals, array $server) : array
+    private function parseServer(array $server) : array
     {
-        /** @var array{argv: array<string>} $globals */
+        /** @var array{argv: array<string>} $server */
         [, $method, $uri] = $server['argv'];
         $urlQuery = parse_url($uri, PHP_URL_QUERY);
         $urlPath = (string) parse_url($uri, PHP_URL_PATH);
-        /** @var array<mixed> $query */
         $query = [];
         if ($urlQuery) {
             parse_str($urlQuery, $query);
@@ -194,6 +192,7 @@ class CliRouter implements RouterInterface
             'REQUEST_URI' => $urlPath
         ];
 
+        /** @var array<string, array|string> $query */
         return [$method, $query, $server];
     }
 }
