@@ -13,9 +13,9 @@ interface HttpMethodParamsInterface
      * get method return $_GET, post method return $_POST
      * patch | put | delete  return parsed 'php://input' value if form-urlencoded or json content
      *
-     * @param array $server $_SERVER
-     * @param array $get    $_GET
-     * @param array $post   $_POST
+     * @param array{REQUEST_METHOD: string, HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server $_SERVER
+     * @param array{_method?: string}                                             $get    $_GET
+     * @param array<string, mixed>                                                $post   $_POST
      *
      * @return array [$method, $params]
      */

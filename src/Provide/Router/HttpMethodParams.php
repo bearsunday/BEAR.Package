@@ -52,12 +52,11 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
-     * @param array<string, mixed> $post
-     *
-     * @return array
+     * @param array<string, mixed>                        $post
      */
     private function unsafeMethod(string $method, array $server, array $post) : array
     {
+        /** @var array{_method?: string} $params */
         $params = $this->getParams($method, $server, $post);
 
         if ($method === 'post') {
@@ -94,8 +93,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request parameters
      *
-     * @param array<string, mixed> $server
-     * @param array<string, mixed> $post
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server
+     * @param array<string, mixed>                                     $post
      *
      * @return array<string, mixed>
      */
