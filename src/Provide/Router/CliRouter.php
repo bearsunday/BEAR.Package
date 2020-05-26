@@ -83,11 +83,9 @@ class CliRouter implements RouterInterface
         /** @var array<int, string> $argv */
         $argv = $server['argv'];
         $this->validateArgs($argc, $argv);
-        [$method, $query, $server] = $this->parseGlobals($globals);
-        /** @var array{_GET: array<string, string>, _POST: array<string, string>} $globals */
+        [$method, $query, $server] = $this->parseGlobals($globals, $server);
         [$globals, $server] = $this->addQuery($method, $query, $globals, $server);
 
-        /** @var array{HTTP_CONTENT_TYPE?: string, REQUEST_METHOD: string, REQUEST_URI: string} $server */
         return $this->router->match($globals, $server);
     }
 
@@ -102,9 +100,10 @@ class CliRouter implements RouterInterface
     /**
      * Set user input query to $globals or &$server
      *
-     * @param array<string, mixed> $server
+     * @param array<mixed> $server
+     * @param array{REQUEST_METHOD: string, REQUEST_URI: string} $globals
      *
-     * @return array{0: array, 1: array}
+     * @return array{0: array{REQUEST_METHOD: string, REQUEST_URI: string}, 1: array<string, array|string>}
      */
     private function addQuery(string $method, array $query, array $globals, array $server) : array
     {
@@ -175,14 +174,17 @@ class CliRouter implements RouterInterface
     /**
      * Return $method, $query, $server from $globals
      *
+     * @param array{argc: int, argv: array<string>} $server
+     *
      * @return array{0: string, 1: array<mixed>, 2: array{REQUEST_METHOD: string, REQUEST_URI: string}}
      */
-    private function parseGlobals(array $globals) : array
+    private function parseGlobals(array $globals, array $server) : array
     {
-        /** @var array<string, array<string>> $globals */
-        [, $method, $uri] = $globals['argv'];
+        /** @var array{argv: array<string>} $globals */
+        [, $method, $uri] = $server['argv'];
         $urlQuery = parse_url($uri, PHP_URL_QUERY);
         $urlPath = (string) parse_url($uri, PHP_URL_PATH);
+        /** @var array<mixed> $query */
         $query = [];
         if ($urlQuery) {
             parse_str($urlQuery, $query);
