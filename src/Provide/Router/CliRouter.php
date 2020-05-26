@@ -28,7 +28,7 @@ class CliRouter implements RouterInterface
     /**
      * @var string
      */
-    private $stdIn;
+    private $stdIn = '';
 
     /**
      * @var null|\Exception
