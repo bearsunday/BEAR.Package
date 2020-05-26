@@ -76,10 +76,18 @@ class CliRouter implements RouterInterface
      */
     public function match(array $globals, array $server)
     {
-        $this->validateArgs($globals);
+        assert(isset($server['argc']));
+        assert(isset($server['argv']));
+        /** @var int $argc */
+        $argc = $server['argc'];
+        /** @var array<int, string> $argv */
+        $argv = $server['argv'];
+        $this->validateArgs($argc, $argv);
         [$method, $query, $server] = $this->parseGlobals($globals);
-        $this->setQuery($method, $query, $globals, $server);
+        /** @var array{_GET: array<string, string>, _POST: array<string, string>} $globals */
+        [$globals, $server] = $this->addQuery($method, $query, $globals, $server);
 
+        /** @var array{HTTP_CONTENT_TYPE?: string, REQUEST_METHOD: string, REQUEST_URI: string} $server */
         return $this->router->match($globals, $server);
     }
 
@@ -93,20 +101,26 @@ class CliRouter implements RouterInterface
 
     /**
      * Set user input query to $globals or &$server
+     *
+     * @param array<string, mixed> $server
+     *
+     * @return array{0: array, 1: array}
      */
-    private function setQuery(string $method, array $query, array &$globals, array &$server) : void
+    private function addQuery(string $method, array $query, array $globals, array $server) : array
     {
         if ($method === 'get') {
             $globals['_GET'] = $query;
 
-            return;
+            return [$globals, $server];
         }
         if ($method === 'post') {
             $globals['_POST'] = $query;
 
-            return;
+            return [$globals, $server];
         }
         $server = $this->getStdIn($method, $query, $server);
+
+        return [$globals, $server];
     }
 
     private function error(string $command) : void
@@ -130,8 +144,12 @@ class CliRouter implements RouterInterface
 
     /**
      * Return StdIn in PUT, PATCH or DELETE
+     *
+     * @param array<string, mixed> $server
+     *
+     * @return array<string, mixed> $server
      */
-    private function getStdIn(string $method, array $query, array &$server) : array
+    private function getStdIn(string $method, array $query, array $server) : array
     {
         if ($method === 'put' || $method === 'patch' || $method === 'delete') {
             $server[HttpMethodParams::CONTENT_TYPE] = HttpMethodParams::FORM_URL_ENCODE;
@@ -143,23 +161,28 @@ class CliRouter implements RouterInterface
         return $server;
     }
 
-    private function validateArgs(array $globals) : void
+    /**
+     * @param array<int, string> $argv
+     */
+    private function validateArgs(int $argc, array $argv) : void
     {
-        if ($globals['argc'] < 3) {
-            $this->error(basename($globals['argv'][0]));
+        if ($argc < 3) {
+            $this->error(basename($argv[0]));
             $this->terminate(Status::USAGE);
         }
     }
 
     /**
      * Return $method, $query, $server from $globals
+     *
+     * @return array{0: string, 1: array<mixed>, 2: array{REQUEST_METHOD: string, REQUEST_URI: string}}
      */
     private function parseGlobals(array $globals) : array
     {
         /** @var array<string, array<string>> $globals */
         [, $method, $uri] = $globals['argv'];
         $urlQuery = parse_url($uri, PHP_URL_QUERY);
-        $urlPath = parse_url($uri, PHP_URL_PATH);
+        $urlPath = (string) parse_url($uri, PHP_URL_PATH);
         $query = [];
         if ($urlQuery) {
             parse_str($urlQuery, $query);
