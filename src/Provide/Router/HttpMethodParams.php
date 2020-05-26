@@ -100,6 +100,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Return request query by media-type
+     *
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server  $_SERVER
      */
     private function phpInput(array $server) : array
     {
