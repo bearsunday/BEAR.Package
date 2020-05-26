@@ -17,7 +17,7 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 final class ErrorHandler implements ErrorInterface
 {
     /**
-     * @var ResourceObject
+     * @var ?ResourceObject
      */
     private $errorPage;
 
@@ -59,6 +59,6 @@ final class ErrorHandler implements ErrorInterface
      */
     public function transfer() : void
     {
-        $this->responder->__invoke($this->errorPage, []);
+        $this->responder->__invoke($this->errorPage ?? new NullPage, []);
     }
 }
