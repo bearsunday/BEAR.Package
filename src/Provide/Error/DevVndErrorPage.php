@@ -24,6 +24,9 @@ final class DevVndErrorPage extends ResourceObject
         return $this->view;
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getHeader() : array
     {
         return ['content-type' => 'application/vnd.error+json'];
