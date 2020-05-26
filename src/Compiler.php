@@ -104,7 +104,7 @@ final class Compiler
         $dependencies = array_keys($container);
         $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         foreach ($dependencies as $dependencyIndex) {
-            [$interface, $name] = \explode('-', $dependencyIndex);
+            [$interface, $name] = \explode('-', (string) $dependencyIndex);
             try {
                 $injector->getInstance($interface, $name);
             } catch (MethodInvocationNotAvailable $e) {
