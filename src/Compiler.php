@@ -94,6 +94,7 @@ final class Compiler
         foreach ($appMeta->getResourceListGenerator() as $meta) {
             /** @var string $className */
             [$className] = $meta;
+            assert(class_exists($className));
             $this->scanClass($injector, $reader, $namedParams, $className);
         }
     }
@@ -182,16 +183,23 @@ final class Compiler
         $app->resource->get->object($ro)();
     }
 
+    /**
+     * Save annotation and method meta information
+     *
+     * @template T
+     * @param class-string<T> $className
+     */
     private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className) : void
     {
         try {
+            /** @var T $instance */
             $instance = $injector->getInstance($className);
+            assert($instance instanceof $className);
         } catch (\Exception $e) {
             error_log(sprintf('Failed to instantiate [%s]: %s(%s) in %s on line %s', $className, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()));
 
             return;
         }
-        assert(class_exists($className));
         $class = new ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
