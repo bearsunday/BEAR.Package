@@ -156,6 +156,7 @@ class CliRouter implements RouterInterface
      */
     private function parseGlobals(array $globals) : array
     {
+        /** @var array<string, array<string>> $globals */
         [, $method, $uri] = $globals['argv'];
         $urlQuery = parse_url($uri, PHP_URL_QUERY);
         $urlPath = parse_url($uri, PHP_URL_PATH);
