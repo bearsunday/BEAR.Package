@@ -13,5 +13,8 @@ class CliRouterHelp extends Help
         $this->setSummary('CLI Router');
         $this->setUsage('<method> <uri>');
         $this->setDescr("E.g. \"get /\", \"options /users\", \"post 'app://self/users?name=Sunday'\"");
+        $this->descr = '';
+        $this->summary = '';
+        $this->usage = '';
     }
 }
