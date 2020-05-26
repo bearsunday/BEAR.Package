@@ -102,6 +102,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * Return request query by media-type
      *
      * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server  $_SERVER
+     *
+     * @return array<string, mixed>
      */
     private function phpInput(array $server) : array
     {
@@ -110,12 +112,14 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
 
+            /** @var array<string, mixed> $put */
             return $put;
         }
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if (! $isApplicationJson) {
             return [];
         }
+        /** @var array<string, mixed> $content */
         $content = json_decode($this->getRawBody($server), true);
         $error = json_last_error();
         if ($error !== JSON_ERROR_NONE) {
