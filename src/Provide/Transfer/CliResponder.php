@@ -42,7 +42,7 @@ final class CliResponder implements TransferInterface
         $statusText = (new Code)->statusText[$ro->code] ?? '';
         $ob = $output->code . ' ' . $statusText . PHP_EOL;
 
-            // header
+        // header
         foreach ($output->headers as $label => $value) {
             $ob .= "{$label}: {$value}" . PHP_EOL;
         }
