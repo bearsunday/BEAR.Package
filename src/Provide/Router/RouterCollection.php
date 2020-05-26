@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Exception\RouterException;
 use BEAR\Sunday\Extension\Router\NullMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
@@ -31,8 +32,12 @@ class RouterCollection implements RouterInterface
     public function match(array $globals, array $server)
     {
         foreach ($this->routers as $route) {
-            $match = $route->match($globals, $server);
-            if ($match instanceof RouterMatch && ! ($match instanceof NullMatch)) {
+            try {
+                $match = $route->match($globals, $server);
+            } catch (\Exception $e) {
+                throw new RouterException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
+            }
+            if (! $match instanceof NullMatch) {
                 return $match;
             }
         }
