@@ -240,6 +240,7 @@ final class Compiler
             if ($isAutoloadFailed) {
                 continue;
             }
+            assert(class_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
