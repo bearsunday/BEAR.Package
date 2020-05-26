@@ -228,6 +228,9 @@ final class Compiler
         }
     }
 
+    /**
+     * @return array<string>
+     */
     private function getPaths(array $classes, string $appDir) : array
     {
         $paths = [];
