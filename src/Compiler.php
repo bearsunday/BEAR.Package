@@ -123,6 +123,9 @@ final class Compiler
         return $this->dumpAutoload($appMeta->appDir, $paths);
     }
 
+    /**
+     * @param array<string>  $paths
+     */
     private function dumpAutoload(string $appDir, array $paths) : string
     {
         $autoloadFile = '<?php' . PHP_EOL;
