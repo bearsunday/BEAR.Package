@@ -82,9 +82,9 @@ final class Compiler
         $cache = $injector->getInstance(Cache::class);
         assert($cache instanceof Cache);
         $reader = $injector->getInstance(AnnotationReader::class);
-        /* @var $reader \Doctrine\Common\Annotations\Reader */
+        assert($reader instanceof AnnotationReader);
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
-        /* @var $namedParams NamedParameterInterface */
+        assert($namedParams instanceof NamedParameterInterface);
 
         // create DI factory class and AOP compiled class for all resources and save $app cache.
         (new Bootstrap)->newApp($appMeta, $context, $cache);
