@@ -29,7 +29,7 @@ final class Compiler
     /**
      * @var string
      */
-    private $ns;
+    private $ns = '';
 
     /**
      * Compile application
