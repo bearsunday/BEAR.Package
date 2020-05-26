@@ -23,9 +23,14 @@ use ReflectionClass;
 final class Compiler
 {
     /**
-     * @var string[]
+     * @var class-string[]
      */
     private $classes = [];
+
+    /**
+     * @var array<string>
+     */
+    private $unloadable = [];
 
     /**
      * @var string
@@ -64,11 +69,15 @@ final class Compiler
         /** @var ClassLoader $loaderFile */
         $loaderFile = require $loaderFile;
         spl_autoload_register(
-            /** @var class-string $class */
             function (string $class) use ($loaderFile) : void {
                 $loaderFile->loadClass($class);
                 if ($class !== NullPage::class) {
-                    $this->classes[] = $class;
+                    if (class_exists($class, true) || interface_exists($class, true) || trait_exists($class, true)) {
+                        $this->classes[] = $class;
+
+                        return;
+                    }
+                    $this->unloadable[] = $class;
                 }
             },
             false,
@@ -242,7 +251,7 @@ final class Compiler
     }
 
     /**
-     * @param array<string> $classes
+     * @param array<class-string> $classes
      *
      * @return array<string>
      */
@@ -255,7 +264,6 @@ final class Compiler
             if ($isAutoloadFailed) {
                 continue;
             }
-            assert(class_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
