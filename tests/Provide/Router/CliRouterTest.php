@@ -56,25 +56,27 @@ class CliRouterTest extends TestCase
     /**
      * @dataProvider argvProvider
      *
-     * @param array<string> $get
-     * @param array<string> $post
+     * @param array<string, string> $get
+     * @param array<string, string> $post
      */
     public function testMatch(string $argv2, string $argv3, array $get, array $post, string $stdin)
     {
-        $globals = [
+        $server = [
             'argv' => [
                 'php',
                 $argv2,
                 $argv3
             ],
-            'argc' => 3,
+            'argc' => 3
+        ];
+        $globals = [
             '_GET' => $get,
             '_POST' => $post,
         ];
         if ($stdin) {
             file_put_contents($this->stdInFile, $stdin);
         }
-        $request = $this->router->match($globals, []);
+        $request = $this->router->match($globals, $server);
         $this->assertSame($argv2, $request->method);
         $this->assertSame('page://self/', $request->path);
         $this->assertSame(['name' => 'bear'], $request->query);
@@ -82,17 +84,19 @@ class CliRouterTest extends TestCase
 
     public function testOption()
     {
-        $globals = [
+        $server = [
             'argv' => [
                 'php',
                 'options',
                 'page://self/'
             ],
-            'argc' => 3,
+            'argc' => 3
+        ];
+        $globals = [
             '_GET' => [],
             '_POST' => [],
         ];
-        $request = $this->router->match($globals, []);
+        $request = $this->router->match($globals, $server);
         $this->assertSame('options', $request->method);
         $this->assertSame('page://self/', $request->path);
     }
@@ -107,14 +111,18 @@ class CliRouterTest extends TestCase
     {
         $this->router->setTerminateException(new \InvalidArgumentException);
         $this->expectException(\InvalidArgumentException::class);
-        $globals = [
+        $server = [
             'argv' => [
                 'php',
                 'get'
             ],
             'argc' => 2
         ];
-        $this->router->match($globals, []);
+        $globals = [
+            '_GET' => [],
+            '_POST' => [],
+        ];
+        $this->router->match($globals, $server);
     }
 
     public function testStdInCleanup()
@@ -135,10 +143,13 @@ class CliRouterTest extends TestCase
         /* @var CliRouter $router */
         $router->match(
             [
+                '_GET' => [],
+                '_POST' => [],
+            ],
+            [
                 'argc' => 1,
                 'argv' => ['page.php']
-            ],
-            []
+            ]
         );
     }
 }

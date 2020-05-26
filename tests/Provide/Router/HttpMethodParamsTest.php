@@ -67,30 +67,30 @@ class HttpMethodParamsTest extends TestCase
     public function testOverridePut()
     {
         $server = ['REQUEST_METHOD' => 'POST', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
-        $post = ['_method' => 'PUT', 'id' => 1];
+        $post = ['_method' => 'PUT', 'id' => '1'];
         list($method, $param) = (new HttpMethodParams)->get($server, [], $post);
         $this->assertSame('put', $method);
-        $expected = ['id' => 1];
+        $expected = ['id' => '1'];
         $this->assertSame($expected, $param);
     }
 
     public function testOverridePatch()
     {
         $server = ['REQUEST_METHOD' => 'POST', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
-        $post = ['_method' => 'PATCH', 'id' => 1];
+        $post = ['_method' => 'PATCH', 'id' => '1'];
         list($method, $param) = (new HttpMethodParams)->get($server, [], $post);
         $this->assertSame('patch', $method);
-        $expected = ['id' => 1];
+        $expected = ['id' => '1'];
         $this->assertSame($expected, $param);
     }
 
     public function testOverrideDelete()
     {
         $server = ['REQUEST_METHOD' => 'POST', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
-        $post = ['_method' => 'DELETE', 'id' => 1];
+        $post = ['_method' => 'DELETE', 'id' => '1'];
         list($method, $param) = (new HttpMethodParams)->get($server, [], $post);
         $this->assertSame('delete', $method);
-        $expected = ['id' => 1];
+        $expected = ['id' => '1'];
         $this->assertSame($expected, $param);
     }
 
