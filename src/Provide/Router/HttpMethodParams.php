@@ -50,6 +50,12 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $this->unsafeMethod($method, $server, $post);
     }
 
+    /**
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array<string, mixed> $post
+     *
+     * @return array
+     */
     private function unsafeMethod(string $method, array $server, array $post) : array
     {
         $params = $this->getParams($method, $server, $post);
@@ -61,6 +67,10 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return [$method, $params];
     }
 
+    /**
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array{_method?: string}                     $params
+     */
     private function getOverrideMethod(string $method, array $server, array $params) : array
     {
         // must be a POST to do an override
@@ -83,6 +93,11 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Return request parameters
+     *
+     * @param array<string, mixed> $server
+     * @param array<string, mixed> $post
+     *
+     * @return array<string, mixed>
      */
     private function getParams(string $method, array $server, array $post) : array
     {
@@ -101,7 +116,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request query by media-type
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server  $_SERVER
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server $_SERVER
      *
      * @return array<string, mixed>
      */
