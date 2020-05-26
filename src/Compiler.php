@@ -237,6 +237,8 @@ final class Compiler
     }
 
     /**
+     * @param array<string> $classes
+     *
      * @return array<string>
      */
     private function getPaths(array $classes, string $appDir) : array
