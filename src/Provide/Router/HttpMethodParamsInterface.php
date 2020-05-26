@@ -17,7 +17,7 @@ interface HttpMethodParamsInterface
      * @param array<string, array|string>                                         $get    $_GET
      * @param array<string, array|string>                                         $post   $_POST
      *
-     * @return array [$method, $params]
+     * @return array{0: string, 1: array<string, mixed>}
      */
     public function get(array $server, array $get, array $post);
 }

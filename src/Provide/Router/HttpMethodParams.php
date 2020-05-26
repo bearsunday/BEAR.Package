@@ -53,6 +53,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
      * @param array<string, mixed>                        $post
+     *
+     * @return array{0: string, 1: array<string, mixed>}
      */
     private function unsafeMethod(string $method, array $server, array $post) : array
     {
@@ -69,6 +71,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
      * @param array{_method?: string}                     $params
+     *
+     * @return array{0: string, 1: array<string, mixed>}
      */
     private function getOverrideMethod(string $method, array $server, array $params) : array
     {
