@@ -79,6 +79,7 @@ final class Compiler
 
     public function compileDiScripts(AbstractAppMeta $appMeta, string $context) : void
     {
+        /** @psalm-suppress DeprecatedClass */
         $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
         assert($cache instanceof Cache);
@@ -87,6 +88,7 @@ final class Compiler
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
         // create DI factory class and AOP compiled class for all resources and save $app cache.
+        /** @psalm-suppress DeprecatedClass */
         (new Bootstrap)->newApp($appMeta, $context, $cache);
 
         // check resource injection and create annotation cache
@@ -103,6 +105,7 @@ final class Compiler
     {
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
+        /** @psalm-suppress DeprecatedClass */
         $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         foreach ($dependencies as $dependencyIndex) {
             [$interface, $name] = \explode('-', (string) $dependencyIndex);
@@ -177,6 +180,7 @@ final class Compiler
      */
     private function invokeTypicalRequest(string $appName, string $context) : void
     {
+        /** @psalm-suppress DeprecatedClass */
         $app = (new Bootstrap)->getApp($appName, $context);
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
@@ -265,6 +269,7 @@ final class Compiler
     private function loadResources(string $appName, string $context, string $appDir) : void
     {
         $meta = new Meta($appName, $context, $appDir);
+        /** @psalm-suppress DeprecatedClass */
         $injector = new AppInjector($appName, $context, $meta, $this->ns);
         foreach ($meta->getGenerator('*') as $resMeta) {
             $injector->getInstance($resMeta->class);
