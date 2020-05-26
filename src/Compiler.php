@@ -64,7 +64,8 @@ final class Compiler
         /** @var ClassLoader $loaderFile */
         $loaderFile = require $loaderFile;
         spl_autoload_register(
-            function ($class) use ($loaderFile) : void {
+            /** @var class-string $class */
+            function (string $class) use ($loaderFile) : void {
                 $loaderFile->loadClass($class);
                 if ($class !== NullPage::class) {
                     $this->classes[] = $class;
