@@ -80,6 +80,7 @@ final class Compiler
     {
         $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
+        assert($cache instanceof Cache);
         $reader = $injector->getInstance(AnnotationReader::class);
         /* @var $reader \Doctrine\Common\Annotations\Reader */
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
