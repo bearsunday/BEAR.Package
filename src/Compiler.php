@@ -10,6 +10,7 @@ use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
+use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
@@ -60,6 +61,7 @@ final class Compiler
         if (! file_exists($loaderFile)) {
             throw new \RuntimeException('no loader');
         }
+        /** @var ClassLoader $loaderFile */
         $loaderFile = require $loaderFile;
         spl_autoload_register(
             function ($class) use ($loaderFile) : void {
