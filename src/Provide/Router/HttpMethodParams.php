@@ -55,7 +55,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         $params = $this->getParams($method, $server, $post);
 
         if ($method === 'post') {
-            list($method, $params) = $this->getOverrideMethod($method, $server, $params);
+            [$method, $params] = $this->getOverrideMethod($method, $server, $params);
         }
 
         return [$method, $params];
@@ -123,6 +123,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $content;
     }
 
+    /**
+     * @param array{HTTP_RAW_POST_DATA?: string} $server
+     */
     private function getRawBody(array $server) : string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));
