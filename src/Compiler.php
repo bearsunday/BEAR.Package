@@ -10,6 +10,7 @@ use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
+use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
@@ -29,7 +30,7 @@ final class Compiler
     /**
      * @var string
      */
-    private $ns;
+    private $ns = '';
 
     /**
      * Compile application
@@ -40,6 +41,9 @@ final class Compiler
      */
     public function __invoke(string $appName, string $context, string $appDir) : string
     {
+        if (! is_dir($appDir)) {
+            throw new \RuntimeException($appDir);
+        }
         $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
         $appMeta = new Meta($appName, $context, $appDir);
@@ -60,10 +64,12 @@ final class Compiler
         if (! file_exists($loaderFile)) {
             throw new \RuntimeException('no loader');
         }
-        $loaderFile = require $loaderFile;
+        /** @var ClassLoader $loader */
+        $loader = require $loaderFile;
         spl_autoload_register(
-            function ($class) use ($loaderFile) : void {
-                $loaderFile->loadClass($class);
+            /** @var class-string $class */
+            function (string $class) use ($loader) : void {
+                $loader->loadClass($class);
                 if ($class !== NullPage::class) {
                     $this->classes[] = $class;
                 }
@@ -75,19 +81,25 @@ final class Compiler
 
     public function compileDiScripts(AbstractAppMeta $appMeta, string $context) : void
     {
+        /** @psalm-suppress DeprecatedClass */
         $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         $cache = $injector->getInstance(Cache::class);
+        assert($cache instanceof Cache);
         $reader = $injector->getInstance(AnnotationReader::class);
-        /* @var $reader \Doctrine\Common\Annotations\Reader */
+        assert($reader instanceof AnnotationReader);
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
-        /* @var $namedParams NamedParameterInterface */
-
+        assert($namedParams instanceof NamedParameterInterface);
         // create DI factory class and AOP compiled class for all resources and save $app cache.
+        /** @psalm-suppress DeprecatedClass */
         (new Bootstrap)->newApp($appMeta, $context, $cache);
 
         // check resource injection and create annotation cache
-        foreach ($appMeta->getResourceListGenerator() as [$className]) {
-            $this->scanClass($injector, $reader, $namedParams, (string) $className);
+        /** @var array{0: string, 1:string} $meta */
+        foreach ($appMeta->getResourceListGenerator() as $meta) {
+            /** @var string $className */
+            [$className] = $meta;
+            assert(class_exists($className));
+            $this->scanClass($injector, $reader, $namedParams, $className);
         }
     }
 
@@ -95,9 +107,10 @@ final class Compiler
     {
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
+        /** @psalm-suppress DeprecatedClass */
         $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
         foreach ($dependencies as $dependencyIndex) {
-            [$interface, $name] = \explode('-', $dependencyIndex);
+            [$interface, $name] = \explode('-', (string) $dependencyIndex);
             try {
                 $injector->getInstance($interface, $name);
             } catch (MethodInvocationNotAvailable $e) {
@@ -116,6 +129,9 @@ final class Compiler
         return $this->dumpAutoload($appMeta->appDir, $paths);
     }
 
+    /**
+     * @param array<string> $paths
+     */
     private function dumpAutoload(string $appDir, array $paths) : string
     {
         $autoloadFile = '<?php' . PHP_EOL;
@@ -160,24 +176,38 @@ final class Compiler
         return $file;
     }
 
+    /**
+     * @psalm-suppress MixedFunctionCall
+     * @psalm-suppress NoInterfaceProperties
+     */
     private function invokeTypicalRequest(string $appName, string $context) : void
     {
+        /** @psalm-suppress DeprecatedClass */
         $app = (new Bootstrap)->getApp($appName, $context);
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
+        /** @psalm-suppress MixedMethodCall */
         $app->resource->get->object($ro)();
     }
 
+    /**
+     * Save annotation and method meta information
+     *
+     * @template T
+     *
+     * @param class-string<T> $className
+     */
     private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className) : void
     {
         try {
+            /** @var T $instance */
             $instance = $injector->getInstance($className);
+            assert($instance instanceof $className);
         } catch (\Exception $e) {
             error_log(sprintf('Failed to instantiate [%s]: %s(%s) in %s on line %s', $className, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()));
 
             return;
         }
-        assert(class_exists($className));
         $class = new ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
@@ -214,6 +244,11 @@ final class Compiler
         }
     }
 
+    /**
+     * @param array<string> $classes
+     *
+     * @return array<string>
+     */
     private function getPaths(array $classes, string $appDir) : array
     {
         $paths = [];
@@ -223,6 +258,7 @@ final class Compiler
             if ($isAutoloadFailed) {
                 continue;
             }
+            assert(class_exists($class) || interface_exists($class) || trait_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
@@ -236,6 +272,7 @@ final class Compiler
     private function loadResources(string $appName, string $context, string $appDir) : void
     {
         $meta = new Meta($appName, $context, $appDir);
+        /** @psalm-suppress DeprecatedClass */
         $injector = new AppInjector($appName, $context, $meta, $this->ns);
         foreach ($meta->getGenerator('*') as $resMeta) {
             $injector->getInstance($resMeta->class);

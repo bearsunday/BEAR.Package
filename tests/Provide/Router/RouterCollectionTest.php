@@ -40,12 +40,16 @@ class RouterCollectionTest extends TestCase
 
     public function testNotFound()
     {
+        $globals = [
+            '_GET' => [],
+            '_POST' => []
+        ];
         $server = [
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => 'http://localhost/'
         ];
         $routerCollection = new RouterCollection([]);
-        $matchUri = (string) $routerCollection->match([], $server);
+        $matchUri = (string) $routerCollection->match($globals, $server);
         $expected = 'get page://self/__route_not_found';
         $this->assertSame($expected, $matchUri);
     }

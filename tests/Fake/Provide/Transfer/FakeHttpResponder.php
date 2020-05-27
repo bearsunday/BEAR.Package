@@ -13,7 +13,7 @@ class FakeHttpResponder extends HttpResponder
     public static $headers = [];
     public static $content;
 
-    public function __invoke(ResourceObject $ro, array $server)
+    public function __invoke(ResourceObject $ro, array $server) : void
     {
         unset($server);
         $ro->toString();

@@ -36,6 +36,7 @@ final class Injector
         }
         $meta = new Meta($appName, $context, $appDir);
         $cache = (new ProdCacheProvider($meta, $injectorId))->get();
+        /** @var ?InjectorInterface $cachedInjector */
         $cachedInjector = $cache->fetch(InjectorInterface::class);
         $injector = $cachedInjector instanceof InjectorInterface ? $cachedInjector : self::factory($meta, $context, $cacheNamespace, $cache);
         self::$instances[$injectorId] = $injector;

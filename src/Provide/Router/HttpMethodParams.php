@@ -50,17 +50,30 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $this->unsafeMethod($method, $server, $post);
     }
 
+    /**
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array<string, mixed>                        $post
+     *
+     * @return array{0: string, 1: array<string, mixed>}
+     */
     private function unsafeMethod(string $method, array $server, array $post) : array
     {
+        /** @var array{_method?: string} $params */
         $params = $this->getParams($method, $server, $post);
 
         if ($method === 'post') {
-            list($method, $params) = $this->getOverrideMethod($method, $server, $params);
+            [$method, $params] = $this->getOverrideMethod($method, $server, $params);
         }
 
         return [$method, $params];
     }
 
+    /**
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array{_method?: string}                     $params
+     *
+     * @return array{0: string, 1: array<string, mixed>}
+     */
     private function getOverrideMethod(string $method, array $server, array $params) : array
     {
         // must be a POST to do an override
@@ -83,6 +96,11 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Return request parameters
+     *
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server
+     * @param array<string, mixed>                                     $post
+     *
+     * @return array<string, mixed>
      */
     private function getParams(string $method, array $server, array $post) : array
     {
@@ -100,6 +118,10 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * Return request query by media-type
+     *
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server $_SERVER
+     *
+     * @return array<string, mixed>
      */
     private function phpInput(array $server) : array
     {
@@ -108,12 +130,14 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
 
+            /** @var array<string, mixed> $put */
             return $put;
         }
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if (! $isApplicationJson) {
             return [];
         }
+        /** @var array<string, mixed> $content */
         $content = json_decode($this->getRawBody($server), true);
         $error = json_last_error();
         if ($error !== JSON_ERROR_NONE) {
@@ -123,6 +147,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $content;
     }
 
+    /**
+     * @param array{HTTP_RAW_POST_DATA?: string} $server
+     */
     private function getRawBody(array $server) : string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));

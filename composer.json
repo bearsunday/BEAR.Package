@@ -22,7 +22,10 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6",
         "bear/query-repository": "^1.6",
-        "bear/sunday": "^1.4",
+        "ray/aop": "2.x-dev",
+        "ray/di": "2.x-dev",
+        "bear/resource": "1.x-dev",
+        "bear/sunday": "1.x-dev",
         "bear/streamer": "^1.0.1",
         "monolog/monolog" : "^1.25|^2.0",
         "ray/compiler": "1.x-dev"
@@ -47,7 +50,6 @@
         "bin/bear.compile.php"
     ],
     "scripts" :{
-        "post-update-cmd":["cd tests/Fake/fake-app; composer install;"],
         "test": ["phpunit"],
         "tests": ["@cs", "phpstan analyse -c phpstan.neon", "psalm --show-info=false", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],

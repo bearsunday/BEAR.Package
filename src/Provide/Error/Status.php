@@ -21,6 +21,7 @@ final class Status
 
     public function __construct(\Exception $e)
     {
+        /** @var array<int, string> $text */
         $text = (new StatusCode)->statusText;
         if ($e instanceof BadRequestException) {
             $this->code = (int) $e->getCode();

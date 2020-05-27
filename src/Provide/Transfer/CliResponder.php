@@ -35,6 +35,7 @@ final class CliResponder implements TransferInterface
      */
     public function __invoke(ResourceObject $ro, array $server) : void
     {
+        /** @var array{HTTP_IF_NONE_MATCH?: string} $server */
         $isModified = $this->condResponse->isModified($ro, $server);
         $output = $isModified ? $this->getOutput($ro, $server) : $this->condResponse->getOutput($ro->headers);
 
@@ -55,6 +56,9 @@ final class CliResponder implements TransferInterface
         echo $ob;
     }
 
+    /**
+     * @param array<string, string> $server
+     */
     private function getOutput(ResourceObject $ro, array $server) : Output
     {
         $ro->toString(); // set headers as well
