@@ -28,11 +28,6 @@ final class Compiler
     private $classes = [];
 
     /**
-     * @var array<string>
-     */
-    private $unloadable = [];
-
-    /**
      * @var string
      */
     private $ns = '';
@@ -46,6 +41,9 @@ final class Compiler
      */
     public function __invoke(string $appName, string $context, string $appDir) : string
     {
+        if (! is_dir($appDir)) {
+            throw new \RuntimeException($appDir);
+        }
         $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
         $appMeta = new Meta($appName, $context, $appDir);
@@ -66,18 +64,14 @@ final class Compiler
         if (! file_exists($loaderFile)) {
             throw new \RuntimeException('no loader');
         }
-        /** @var ClassLoader $loaderFile */
-        $loaderFile = require $loaderFile;
+        /** @var ClassLoader $loader */
+        $loader = require $loaderFile;
         spl_autoload_register(
-            function (string $class) use ($loaderFile) : void {
-                $loaderFile->loadClass($class);
+            /** @var class-string $class */
+            function (string $class) use ($loader) : void {
+                $loader->loadClass($class);
                 if ($class !== NullPage::class) {
-                    if (class_exists($class, true) || interface_exists($class, true) || trait_exists($class, true)) {
-                        $this->classes[] = $class;
-
-                        return;
-                    }
-                    $this->unloadable[] = $class;
+                    $this->classes[] = $class;
                 }
             },
             false,
@@ -251,7 +245,7 @@ final class Compiler
     }
 
     /**
-     * @param array<class-string> $classes
+     * @param array<string> $classes
      *
      * @return array<string>
      */
@@ -264,6 +258,7 @@ final class Compiler
             if ($isAutoloadFailed) {
                 continue;
             }
+            assert(class_exists($class) || interface_exists($class) || trait_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
