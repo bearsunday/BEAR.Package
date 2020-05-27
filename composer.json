@@ -50,7 +50,6 @@
         "bin/bear.compile.php"
     ],
     "scripts" :{
-        "post-update-cmd":["cd tests/Fake/fake-app; composer install;"],
         "test": ["phpunit"],
         "tests": ["@cs", "phpstan analyse -c phpstan.neon", "psalm --show-info=false", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
