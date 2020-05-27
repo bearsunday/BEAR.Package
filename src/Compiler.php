@@ -23,7 +23,7 @@ use ReflectionClass;
 final class Compiler
 {
     /**
-     * @var class-string[]
+     * @var string[]
      */
     private $classes = [];
 
