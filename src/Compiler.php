@@ -10,6 +10,8 @@ use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
+use BEAR\Sunday\Extension\Application\AbstractApp;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
@@ -81,8 +83,7 @@ final class Compiler
 
     public function compileDiScripts(AbstractAppMeta $appMeta, string $context) : void
     {
-        /** @psalm-suppress DeprecatedClass */
-        $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
+        $injector = Injector::getInstance($appMeta->name, $context, $appMeta->appDir);
         $cache = $injector->getInstance(Cache::class);
         assert($cache instanceof Cache);
         $reader = $injector->getInstance(AnnotationReader::class);
@@ -90,8 +91,8 @@ final class Compiler
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
         // create DI factory class and AOP compiled class for all resources and save $app cache.
-        /** @psalm-suppress DeprecatedClass */
-        (new Bootstrap)->newApp($appMeta, $context, $cache);
+        $app = Injector::getInstance($appMeta->name, $context, $appMeta->appDir)->getInstance(AppInterface::class);
+        assert($app instanceof AppInterface);
 
         // check resource injection and create annotation cache
         /** @var array{0: string, 1:string} $meta */
@@ -107,8 +108,7 @@ final class Compiler
     {
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
-        /** @psalm-suppress DeprecatedClass */
-        $injector = new AppInjector($appMeta->name, $context, $appMeta, $this->ns);
+        $injector = Injector::getInstance($appMeta->name, $context, $appMeta->appDir);
         foreach ($dependencies as $dependencyIndex) {
             [$interface, $name] = \explode('-', (string) $dependencyIndex);
             try {
@@ -123,7 +123,7 @@ final class Compiler
 
     private function compileAutoload(AbstractAppMeta $appMeta, string $context) : string
     {
-        $this->invokeTypicalRequest($appMeta->name, $context);
+        $this->invokeTypicalRequest($appMeta, $context);
         $paths = $this->getPaths($this->classes, $appMeta->appDir);
 
         return $this->dumpAutoload($appMeta->appDir, $paths);
@@ -180,10 +180,10 @@ final class Compiler
      * @psalm-suppress MixedFunctionCall
      * @psalm-suppress NoInterfaceProperties
      */
-    private function invokeTypicalRequest(string $appName, string $context) : void
+    private function invokeTypicalRequest(AbstractAppMeta $appMeta, string $context) : void
     {
-        /** @psalm-suppress DeprecatedClass */
-        $app = (new Bootstrap)->getApp($appName, $context);
+        $app = Injector::getInstance($appMeta->name, $context, $appMeta->appDir)->getInstance(AppInterface::class);
+        assert($app instanceof AbstractApp);
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
         /** @psalm-suppress MixedMethodCall */
