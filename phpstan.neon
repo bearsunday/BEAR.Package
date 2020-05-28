@@ -7,9 +7,5 @@ parameters:
     - tests/hash.php
     - tests/tmp/*
     - tests/Fake/*
-  ignoreErrors:
-  -
-      message: "#return null but return statement is missing\\.$#"
-      path: src/Provide/Router/CliRouterHelp.php
   autoload_files:
     - vendor/autoload.php

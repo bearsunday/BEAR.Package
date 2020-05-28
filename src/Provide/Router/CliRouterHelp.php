@@ -8,6 +8,9 @@ use Aura\Cli\Help;
 
 class CliRouterHelp extends Help
 {
+    /**
+     * @return null
+     */
     protected function init()
     {
         $this->setSummary('CLI Router');
@@ -16,5 +19,7 @@ class CliRouterHelp extends Help
         $this->descr = '';
         $this->summary = '';
         $this->usage = '';
+
+        return null;
     }
 }
