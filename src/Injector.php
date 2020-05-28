@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Annotation\DiCompile;
 use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Boot\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
 use Ray\Compiler\ScriptInjector;
@@ -50,8 +50,9 @@ final class Injector
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $module = (new Module)($meta, $context, $cacheNamespace);
         $rayInjector = new RayInjector($module, $scriptDir);
-        $isDev = $rayInjector->getInstance(Cache::class) instanceof ArrayCache;
-        if ($isDev) {
+        /** @var bool $isProd */
+        $isProd = $rayInjector->getInstance(DiCompile::class);
+        if (! $isProd) {
             $rayInjector->getInstance(AppInterface::class);
 
             return $rayInjector;
