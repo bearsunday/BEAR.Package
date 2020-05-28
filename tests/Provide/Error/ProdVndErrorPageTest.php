@@ -23,7 +23,7 @@ class ProdVndErrorPageTest extends TestCase
         $this->page = (new ProdVndErrorPageFactory())->newInstance($e, $request);
     }
 
-    public function testToString(): void
+    public function testToString() : void
     {
         $this->page->toString();
         $this->assertSame(500, $this->page->code);

@@ -10,14 +10,14 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleTest extends TestCase
 {
-    public function testModule(): void
+    public function testModule() : void
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'cli-app');
         $module = (new Module)($meta, 'cli-app');
         $this->assertStringContainsString('BEAR\AppMeta\AbstractAppMeta- => (object) BEAR\AppMeta\Meta', (string) $module);
     }
 
-    public function testAppMetaInjection(): void
+    public function testAppMetaInjection() : void
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'meta-cli-app');
         $meta->appDir = '/tmp';

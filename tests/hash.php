@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Error;
 
-function hash($alog, $data): string
+function hash($alog, $data) : string
 {
     return '{logref}';
 }

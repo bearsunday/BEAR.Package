@@ -11,7 +11,7 @@ use function unlink;
 final class Unlink
 {
     /**
-     * @var array
+     * @var array<int, string>
      */
     private static $unlinkedPath = [];
 

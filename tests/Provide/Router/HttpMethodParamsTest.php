@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class HttpMethodParamsTest extends TestCase
 {
-    public function testGet(): void
+    public function testGet() : void
     {
         $server = ['REQUEST_METHOD' => 'GET'];
         $get = ['id' => '1'];
@@ -19,7 +19,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame(['id' => '1'], $params);
     }
 
-    public function testPost(): void
+    public function testPost() : void
     {
         $server = ['REQUEST_METHOD' => 'POST'];
         $get = [];
@@ -29,7 +29,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame(['id' => '1'], $params);
     }
 
-    public function testPut(): void
+    public function testPut() : void
     {
         $server = ['REQUEST_METHOD' => 'PUT', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
@@ -41,7 +41,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame(['name' => 'kuma'], $params);
     }
 
-    public function testPatch(): void
+    public function testPatch() : void
     {
         $server = ['REQUEST_METHOD' => 'PATCH', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
@@ -52,7 +52,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame(['name' => 'kuma'], $params);
     }
 
-    public function testDelete(): void
+    public function testDelete() : void
     {
         $server = ['REQUEST_METHOD' => 'DELETE', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
@@ -64,7 +64,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame(['name' => 'kuma'], $params);
     }
 
-    public function testOverridePut(): void
+    public function testOverridePut() : void
     {
         $server = ['REQUEST_METHOD' => 'POST', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $post = ['_method' => 'PUT', 'id' => '1'];
@@ -74,7 +74,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $param);
     }
 
-    public function testOverridePatch(): void
+    public function testOverridePatch() : void
     {
         $server = ['REQUEST_METHOD' => 'POST', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $post = ['_method' => 'PATCH', 'id' => '1'];
@@ -84,7 +84,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $param);
     }
 
-    public function testOverrideDelete(): void
+    public function testOverrideDelete() : void
     {
         $server = ['REQUEST_METHOD' => 'POST', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $post = ['_method' => 'DELETE', 'id' => '1'];
@@ -94,7 +94,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $param);
     }
 
-    public function testOverrideHeaderPut(): void
+    public function testOverrideHeaderPut() : void
     {
         $server = ['REQUEST_METHOD' => 'POST', 'HTTP_X_HTTP_METHOD_OVERRIDE' => 'PUT'];
         $post = ['name' => 'sunday'];
@@ -102,7 +102,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame('put', $method);
     }
 
-    public function testOverrideHeaderPatch(): void
+    public function testOverrideHeaderPatch() : void
     {
         $server = ['REQUEST_METHOD' => 'POST', 'HTTP_X_HTTP_METHOD_OVERRIDE' => 'PATCH'];
         $post = ['name' => 'sunday'];
@@ -110,7 +110,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame('patch', $method);
     }
 
-    public function testOverrideHeaderDelete(): void
+    public function testOverrideHeaderDelete() : void
     {
         $server = ['REQUEST_METHOD' => 'POST', 'HTTP_X_HTTP_METHOD_OVERRIDE' => 'DELETE'];
         $post = ['name' => 'sunday'];
@@ -118,7 +118,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame('delete', $method);
     }
 
-    public function testPostContentTypeJson(): void
+    public function testPostContentTypeJson() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json.txt');
@@ -131,7 +131,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPostContentTypeJsonAssocArray(): void
+    public function testPostContentTypeJsonAssocArray() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_assoc.txt');
@@ -144,7 +144,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPostContentTypeJsonEmpty(): void
+    public function testPostContentTypeJsonEmpty() : void
     {
         $this->expectException(InvalidRequestJsonException::class);
         $this->expectExceptionCode(400);
@@ -160,7 +160,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPostContentTypeJsonInvalid(): void
+    public function testPostContentTypeJsonInvalid() : void
     {
         $this->expectException(InvalidRequestJsonException::class);
         $this->expectExceptionCode(400);
@@ -176,7 +176,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPostContentTypeUnknown(): void
+    public function testPostContentTypeUnknown() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $server = [
@@ -188,7 +188,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPostNoContentType(): void
+    public function testPostNoContentType() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $server = [
@@ -199,7 +199,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPutContentTypeJson(): void
+    public function testPutContentTypeJson() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json.txt');
@@ -212,7 +212,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPutContentTypeJsonAssocArray(): void
+    public function testPutContentTypeJsonAssocArray() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $httpMethodParam->setStdIn(__DIR__ . '/json_assoc.txt');
@@ -225,7 +225,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPutContentTypeUnknown(): void
+    public function testPutContentTypeUnknown() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $server = [
@@ -237,7 +237,7 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame($expected, $params);
     }
 
-    public function testPutNoContentType(): void
+    public function testPutNoContentType() : void
     {
         $httpMethodParam = new HttpMethodParams;
         $server = [

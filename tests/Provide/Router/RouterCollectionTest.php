@@ -23,7 +23,7 @@ class RouterCollectionTest extends TestCase
         parent::setUp();
     }
 
-    public function testMatch(): void
+    public function testMatch() : void
     {
         $globals = [
             '_GET' => [],
@@ -38,7 +38,7 @@ class RouterCollectionTest extends TestCase
         $this->assertSame('page://self/blog/PC6001', $request->path);
     }
 
-    public function testNotFound(): void
+    public function testNotFound() : void
     {
         $globals = [
             '_GET' => [],
@@ -54,7 +54,7 @@ class RouterCollectionTest extends TestCase
         $this->assertSame($expected, $matchUri);
     }
 
-    public function testGenerate(): void
+    public function testGenerate() : void
     {
         $uri = $this->routerCollection->generate('/blog', ['id' => 1]);
         $expected = 'page://self/generated-uri';
@@ -64,7 +64,7 @@ class RouterCollectionTest extends TestCase
         $this->assertSame($expected, $uri);
     }
 
-    public function testGenerateFalse(): void
+    public function testGenerateFalse() : void
     {
         $uri = $this->routerCollection->generate('/blog', []);
         if (! is_bool($uri)) {

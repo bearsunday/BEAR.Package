@@ -175,6 +175,8 @@ class CliRouter implements RouterInterface
     /**
      * Return $method, $query, $server from $server
      *
+     * @param array<string, mixed> $server
+     *
      * @return array{0: string, 1: array<string, string|array>, 2: array{REQUEST_METHOD: string, REQUEST_URI: string}}
      */
     private function parseServer(array $server) : array

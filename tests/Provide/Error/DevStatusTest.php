@@ -24,21 +24,21 @@ class DevStatusTest extends TestCase
         $this->request = $request;
     }
 
-    public function testRuntimeException(): void
+    public function testRuntimeException() : void
     {
         $e = new \RuntimeException();
         $status = new Status($e);
         $this->assertSame(503, $status->code);
     }
 
-    public function testBadRequest(): void
+    public function testBadRequest() : void
     {
         $e = new BadRequestException;
         $status = new Status($e);
         $this->assertSame(400, $status->code);
     }
 
-    public function testNotFound(): void
+    public function testNotFound() : void
     {
         $e = new ResourceNotFoundException('/__not_found__');
         $status = new Status($e);

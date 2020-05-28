@@ -13,13 +13,13 @@ use Ray\Di\Injector;
 
 class PsrLoggerModuleTest extends TestCase
 {
-    public function testPsrLoggerModule(): void
+    public function testPsrLoggerModule() : void
     {
         $logger = (new Injector(new PsrLoggerModule(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld')))))->getInstance(LoggerInterface::class);
         $this->assertInstanceOf(LoggerInterface::class, $logger);
     }
 
-    public function testProdPsrLoggerModule(): void
+    public function testProdPsrLoggerModule() : void
     {
         $logger = (new Injector(new ProdModule(new PsrLoggerModule(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'))))))->getInstance(LoggerInterface::class);
         $this->assertInstanceOf(LoggerInterface::class, $logger);

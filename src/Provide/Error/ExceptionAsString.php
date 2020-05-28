@@ -24,6 +24,7 @@ final class ExceptionAsString
             $e->getTraceAsString()
         );
 
+        /** @var array<string, mixed> $_SERVER */
         $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), (string) $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 
@@ -32,6 +33,9 @@ final class ExceptionAsString
         return $this->string;
     }
 
+    /**
+     * @param array<string, mixed> $server
+     */
     private function getPhpVariables(array $server) : string
     {
         return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true)); // @codeCoverageIgnore

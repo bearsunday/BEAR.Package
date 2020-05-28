@@ -15,6 +15,9 @@ class InjectorTest extends TestCase
         parent::setUp();
     }
 
+    /**
+     * @return array<array{0: string, 1:int}>
+     */
     public function CountOfNewProvider() : array
     {
         return [
@@ -48,10 +51,8 @@ class InjectorTest extends TestCase
 
     /**
      * @dataProvider CountOfNewProvider
-     *
-     * @return void
      */
-    public function testRaceConditionBoot(string $context): void
+    public function testRaceConditionBoot(string $context) : void
     {
         $cn = microtime();
         $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php -c%s -n%s', (string) E_ALL, __DIR__, $context, $cn);

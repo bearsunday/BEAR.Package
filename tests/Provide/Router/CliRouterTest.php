@@ -40,10 +40,9 @@ class CliRouterTest extends TestCase
 
     /**
      * @return (string|string[])[][]
-     *
-     * @return array{0: array{0: string, 1: string, 2: array<string>, 3: array<string>, 4: string}}
+     * @return array{0:              array{0: string, 1: string, 2: array<string>, 3: array<string>, 4: string}}
      */
-    public function argvProvider(): array
+    public function argvProvider() : array
     {
         return [
             ['get', 'page://self/?name=bear', ['name' => 'bear'], [], ''],
@@ -63,10 +62,8 @@ class CliRouterTest extends TestCase
      *
      * @param array<string, string> $get
      * @param array<string, string> $post
-     *
-     * @return void
      */
-    public function testMatch(string $argv2, string $argv3, array $get, array $post, string $stdin): void
+    public function testMatch(string $argv2, string $argv3, array $get, array $post, string $stdin) : void
     {
         $server = [
             'argv' => [
@@ -89,7 +86,7 @@ class CliRouterTest extends TestCase
         $this->assertSame(['name' => 'bear'], $request->query);
     }
 
-    public function testOption(): void
+    public function testOption() : void
     {
         $server = [
             'argv' => [
@@ -108,13 +105,13 @@ class CliRouterTest extends TestCase
         $this->assertSame('page://self/', $request->path);
     }
 
-    public function testGenerate(): void
+    public function testGenerate() : void
     {
         $actual = $this->router->generate('', []);
         $this->assertFalse((bool) $actual);
     }
 
-    public function testError(): void
+    public function testError() : void
     {
         $this->router->setTerminateException(new \InvalidArgumentException);
         $this->expectException(\InvalidArgumentException::class);
@@ -132,7 +129,7 @@ class CliRouterTest extends TestCase
         $this->router->match($globals, $server);
     }
 
-    public function testStdInCleanup(): void
+    public function testStdInCleanup() : void
     {
         file_put_contents($this->stdInFile, '');
         $exists = file_exists($this->stdInFile);
@@ -142,7 +139,7 @@ class CliRouterTest extends TestCase
         $this->assertFalse($exists);
     }
 
-    public function testSerializable(): void
+    public function testSerializable() : void
     {
         $router = unserialize(serialize($this->router));
         $router->setTerminateException(new \InvalidArgumentException);

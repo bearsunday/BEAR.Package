@@ -31,7 +31,7 @@ class ErrorHandlerTest extends TestCase
         $this->handler = new ErrorHandler($this->responder, new ErrorLogger(new NullLogger, new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
     }
 
-    public function testHandle(): ErrorHandler
+    public function testHandle() : ErrorHandler
     {
         $e = new \LogicException('msg');
         $request = new RouterMatch;
@@ -45,10 +45,8 @@ class ErrorHandlerTest extends TestCase
 
     /**
      * @depends testHandle
-     *
-     * @return void
      */
-    public function testTransfer(ErrorHandler $handler): void
+    public function testTransfer(ErrorHandler $handler) : void
     {
         $handler->transfer();
         $this->assertSame(500, FakeHttpResponder::$code);

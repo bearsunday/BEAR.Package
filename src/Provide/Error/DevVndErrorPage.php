@@ -32,6 +32,9 @@ final class DevVndErrorPage extends ResourceObject
         return ['content-type' => 'application/vnd.error+json'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getResponseBody(\Exception $e, RouterMatch $request, Status $status) : array
     {
         return [
