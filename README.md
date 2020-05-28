@@ -7,15 +7,17 @@
 BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resource oriented framework implementation package.
 
 ## Package Components
- * Bootstrap
- * AppInjector
+ * Injector
  * Compiler
  * Modules
     * PackageModule 
-    * ProdModule
-    * ApiModule
-    * CliModile
-    * HalModule
+    * DiCompileModule
+    * CacheNamespaceModule
+    * Context
+      * ProdModule
+      * ApiModule
+      * CliModile
+      * HalModule
  * Router
     * CliRouter
     * WebRouter
@@ -24,11 +26,9 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resou
     * ProdVndErrorPage
     * ErrorHandler  
  * Logger
-    * Monologger with psr interface  
+    * PsrLogger
  * Transfer
     * CliResponder
- * Annotations
-    * `@ReturnCreatedResource`
 
 ## Demo
 
