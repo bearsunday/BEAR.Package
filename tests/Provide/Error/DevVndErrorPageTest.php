@@ -23,7 +23,7 @@ class DevVndErrorPageTest extends TestCase
         $this->page = (new DevVndErrorPageFactory())->newInstance($e, $request);
     }
 
-    public function testToString()
+    public function testToString() : void
     {
         $this->page->toString();
         $this->assertSame(500, $this->page->code);

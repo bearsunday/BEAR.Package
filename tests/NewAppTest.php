@@ -15,7 +15,7 @@ use Ray\Di\Injector;
 
 class NewAppTest extends TestCase
 {
-    public function testGetInstanceByHand()
+    public function testGetInstanceByHand() : App
     {
         $app = (new Injector(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule()))), __DIR__ . '/tmp'))->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
@@ -26,7 +26,7 @@ class NewAppTest extends TestCase
     /**
      * @depends testGetInstanceByHand
      */
-    public function testSerializable(App $app)
+    public function testSerializable(App $app) : void
     {
         $this->assertInstanceOf(App::class, unserialize(serialize($app)));
     }

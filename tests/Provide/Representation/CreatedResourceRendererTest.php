@@ -29,7 +29,7 @@ class CreatedResourceRendererTest extends TestCase
         $this->renderer = new CreatedResourceRenderer(new FakeRouter, $resource);
     }
 
-    public function testRender()
+    public function testRender() : ResourceObject
     {
         $view = $this->renderer->render($this->ro);
         $expected = '{
@@ -60,7 +60,7 @@ class CreatedResourceRendererTest extends TestCase
     /**
      * @depends testRender
      */
-    public function testReverseRoutedHeader(ResourceObject $ro)
+    public function testReverseRoutedHeader(ResourceObject $ro) : void
     {
         $this->assertSame('/task/10', $ro->headers['Location']);
     }

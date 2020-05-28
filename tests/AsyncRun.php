@@ -6,6 +6,9 @@ namespace BEAR\Package;
 
 final class AsyncRun
 {
+    /**
+     * @param array<string> $cmds
+     */
     public function __invoke(array $cmds, string $errorLog) : int
     {
         $times = count($cmds);

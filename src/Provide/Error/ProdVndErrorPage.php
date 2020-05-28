@@ -33,6 +33,9 @@ final class ProdVndErrorPage extends ResourceObject
         return ['content-type' => ($code >= 500) ? 'application/vnd.error+json' : 'application/json'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getResponseBody(\Exception $e, Status $status) : array
     {
         $body = ['message' => $status->text];

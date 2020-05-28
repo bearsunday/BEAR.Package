@@ -22,7 +22,7 @@ class CliResponderTest extends TestCase
         $this->responder = new CliResponder(new Header, new ConditionalResponse);
     }
 
-    public function testTransfer()
+    public function testTransfer() : void
     {
         $ro = (new Index)->onGet();
         assert(is_string((string) $ro));

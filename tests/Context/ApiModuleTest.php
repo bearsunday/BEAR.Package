@@ -10,7 +10,7 @@ use Ray\Di\Injector;
 
 class ApiModuleTest extends TestCase
 {
-    public function testModule()
+    public function testModule() : void
     {
         $scheme = (new Injector(new ApiModule))->getInstance('', DefaultSchemeHost::class);
         $this->assertSame('app://self', $scheme);
