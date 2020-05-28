@@ -14,7 +14,7 @@ use Ray\Di\Injector;
 
 class HalModuleTest extends TestCase
 {
-    public function testModule()
+    public function testModule(): void
     {
         $renderer = (new Injector(new HalModule(new RouterModule(new DoctrineAnnotationModule(new ResourceModule('FakeVendor\HelloWorld'))))))->getInstance(RenderInterface::class);
         $this->assertInstanceOf(HalRenderer::class, $renderer);

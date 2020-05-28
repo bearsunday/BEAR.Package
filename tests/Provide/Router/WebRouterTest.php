@@ -19,7 +19,7 @@ class WebRouterTest extends TestCase
         $this->router = new WebRouter('page://self', new HttpMethodParams);
     }
 
-    public function testMatchRoot()
+    public function testMatchRoot(): void
     {
         $global = [
             '_GET' => [],
@@ -35,7 +35,7 @@ class WebRouterTest extends TestCase
         $this->assertSame([], $request->query);
     }
 
-    public function testMatchWithQuery()
+    public function testMatchWithQuery(): void
     {
         $global = [
             '_GET' => [
@@ -53,7 +53,7 @@ class WebRouterTest extends TestCase
         $this->assertSame(['id' => '1'], $request->query);
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $actual = $this->router->generate('', []);
         $this->assertFalse((bool) $actual);

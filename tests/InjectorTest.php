@@ -48,8 +48,10 @@ class InjectorTest extends TestCase
 
     /**
      * @dataProvider CountOfNewProvider
+     *
+     * @return void
      */
-    public function testRaceConditionBoot(string $context)
+    public function testRaceConditionBoot(string $context): void
     {
         $cn = microtime();
         $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php -c%s -n%s', (string) E_ALL, __DIR__, $context, $cn);
