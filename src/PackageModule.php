@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use BEAR\Package\Provide\Boot\DiCompileModule;
 use BEAR\Package\Provide\Error\VndErrorModule;
 use BEAR\Package\Provide\Logger\PsrLoggerModule;
 use BEAR\Package\Provide\Representation\CreatedResourceModule;
@@ -26,6 +27,7 @@ class PackageModule extends AbstractModule
         $this->install(new PsrLoggerModule);
         $this->install(new StreamModule);
         $this->install(new CreatedResourceModule);
+        $this->install(new DiCompileModule(false));
         $this->install(new SundayModule);
     }
 }
