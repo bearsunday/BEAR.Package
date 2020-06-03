@@ -7,6 +7,11 @@ use BEAR\Package\Compiler;
 $opt = getopt('n:c:d:o');
 [$appName, $context, $appDir] = [$opt['n'], $opt['c'], $opt['d']];
 require realpath($appDir) . '/vendor/autoload.php';
+// $compileScript load a null object class to complete the compilation.
+$compileScript = realpath($appDir) . '/.compile.php';
+if (file_exists($compileScript)) {
+    require $compileScript;
+}
 
 try {
     $output = (new Compiler)($appName, $context, $appDir);
