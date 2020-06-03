@@ -20,6 +20,8 @@ declare(strict_types=1);
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Unlink;
 
+ini_set('memory_limit', '-1');
+
 if ($argc !== 4) {
     echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
     exit(1);
