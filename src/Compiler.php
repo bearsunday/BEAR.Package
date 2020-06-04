@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use function file_exists;
 use Ray\Di\AbstractModule;
+use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
 use ReflectionClass;
 
@@ -63,7 +64,7 @@ final class Compiler
     private $compiled = [];
 
     /**
-     * @var array<int, string>
+     * @var array<string, string>
      */
     private $failed = [];
 
@@ -106,8 +107,8 @@ final class Compiler
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", count($this->compiled), count($this->failed));
         printf("preload.php: %s\n", $preload);
-        foreach ($this->failed as $faild) {
-            printf("UNBOUND: %s \n", $faild);
+        foreach ($this->failed as $depedencyIndex => $error) {
+            printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
         }
 
         return $this->failed ? 1 : 0;
@@ -351,8 +352,14 @@ final class Compiler
             $this->injector->getInstance($interface, $name);
             $this->compiled[] = $dependencyIndex;
             $this->progress('.');
+        } catch (Unbound $e) {
+            if ($dependencyIndex === 'Ray\Aop\MethodInvocation-') {
+                return;
+            }
+            $this->failed[$dependencyIndex] = $e->getMessage();
+            $this->progress('F');
         } catch (\Exception $e) {
-            $this->failed[] = $dependencyIndex;
+            $this->failed[$dependencyIndex] = sprintf('%s: %s', get_class($e), $e->getMessage());
             $this->progress('F');
         }
     }
