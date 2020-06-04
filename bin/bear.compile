@@ -20,18 +20,18 @@ declare(strict_types=1);
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Unlink;
 
-if ($argc !== 4) {
-    echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
-    exit(1);
-}
-[, $appName, $context, $appDir] = $argv;
-$dir = realpath($appDir);
-require $dir . '/vendor/autoload.php';
-
-clear:
-    $meta = new Meta($appName, $context);
-    (new Unlink)->force($meta->tmpDir);
+init:
+    ini_set('memory_limit', '-1');
+    if ($argc !== 4) {
+        echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
+        exit(1);
+    }
+    [, $appName, $context, $appDir] = $argv;
+    $dir = realpath($appDir);
+    require $dir . '/vendor/autoload.php';
 run:
+    $meta = new Meta($appName, $context);
     $compile = sprintf("php %s/bear.compile.php '-n%s' -c%s '-d%s'", __DIR__, $appName, $context, $meta->appDir);
-    passthru($compile); // cache write
-    passthru($compile . ' -o'); // cache read
+    passthru($compile, $return1); // cache write - dump DI/AOP script and preload.php
+    passthru($compile . ' -o', $return2); // cache read - dump autoload.php
+    exit($return1 | $return2);
