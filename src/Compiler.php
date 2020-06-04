@@ -13,12 +13,10 @@ use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use function file_exists;
 use Ray\Di\AbstractModule;
-use Ray\Di\Exception\MethodInvocationNotAvailable;
 use Ray\Di\InjectorInterface;
 use ReflectionClass;
 
@@ -30,34 +28,105 @@ final class Compiler
     private $classes = [];
 
     /**
-     * @var string
+     * @var InjectorInterface
      */
-    private $ns = '';
+    private $injector;
 
     /**
-     * Compile application
-     *
+     * @var string
+     */
+    private $appName;
+
+    /**
+     * @var string
+     */
+    private $context;
+
+    /**
+     * @var string
+     */
+    private $appDir;
+
+    /**
+     * @var string
+     */
+    private $cacheNs;
+
+    /**
+     * @var Meta
+     */
+    private $appMeta;
+
+    /**
+     * @var array<int, string>
+     */
+    private $compiled = [];
+
+    /**
+     * @var array<int, string>
+     */
+    private $failed = [];
+
+    /**
      * @param string $appName application name "MyVendor|MyProject"
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
+     * @param string $cacheNs cache namespace
      */
-    public function __invoke(string $appName, string $context, string $appDir) : string
+    public function __construct(string $appName, string $context, string $appDir, string $cacheNs = '')
     {
-        if (! is_dir($appDir)) {
-            throw new \RuntimeException($appDir);
-        }
-        $this->ns = (string) filemtime(realpath($appDir) . '/src');
         $this->registerLoader($appDir);
-        $appMeta = new Meta($appName, $context, $appDir);
-        $autoload = $this->compileAutoload($appMeta, $context);
-        $preload = $this->compilePreload($appMeta, $context);
-        $module = (new Module)($appMeta, $context);
-        $this->compileSrc($module, $appMeta, $context);
-        $this->compileDiScripts($appMeta, $context);
-        $logFile = realpath($appMeta->logDir) . '/compile.log';
-        file_put_contents($logFile, (string) $module);
+        $this->appName = $appName;
+        $this->context = $context;
+        $this->appDir = $appDir;
+        $this->cacheNs = $cacheNs;
+        $this->appMeta = new Meta($appName, $context, $appDir);
+        /** @psalm-suppress MixedAssignment */
+        $this->injector = Injector::getInstance($appName, $context, $appDir, $cacheNs);
+    }
 
-        return sprintf("Compile Log: %s\nautoload.php: %s\npreload.php: %s", $logFile, $autoload, $preload);
+    /**
+     * Compile application
+     */
+    public function compile() : int
+    {
+        if (! is_dir($this->appDir)) {
+            throw new \RuntimeException($this->appDir);
+        }
+        $preload = $this->compilePreload($this->appMeta, $this->context);
+        $module = (new Module)($this->appMeta, $this->context);
+        $this->compileSrc($module);
+        echo PHP_EOL;
+        $this->compileDiScripts($this->appMeta);
+        /** @var float $start */
+        $start = $_SERVER['REQUEST_TIME_FLOAT'];
+        $time = number_format(microtime(true) - $start, 2);
+        $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
+        echo PHP_EOL;
+        printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
+        printf("Success: %d Failed: %d\n", count($this->compiled), count($this->failed));
+        printf("preload.php: %s\n", $preload);
+        foreach ($this->failed as $faild) {
+            printf("UNBOUND: %s \n", $faild);
+        }
+
+        return $this->failed ? 1 : 0;
+    }
+
+    public function dumpAutoload() : int
+    {
+        echo PHP_EOL;
+        $this->invokeTypicalRequest();
+        $paths = $this->getPaths($this->classes);
+        $autolaod = $this->saveAutoloadFile($this->appMeta->appDir, $paths);
+        /** @var float $start */
+        $start = $_SERVER['REQUEST_TIME_FLOAT'];
+        $time = number_format(microtime(true) - $start, 2);
+        $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
+        printf("Compilation (2/2) took %f seconds and used %fMB of memory\n", $time, $memory);
+        printf("autoload.php: %s\n", $autolaod);
+
+        return 0;
     }
 
     public function registerLoader(string $appDir) : void
@@ -81,60 +150,50 @@ final class Compiler
         );
     }
 
-    public function compileDiScripts(AbstractAppMeta $appMeta, string $context) : void
+    public function compileDiScripts(AbstractAppMeta $appMeta) : void
     {
-        $injector = Injector::getInstance($appMeta->name, $context, $appMeta->appDir);
-        $cache = $injector->getInstance(Cache::class);
-        assert($cache instanceof Cache);
-        $reader = $injector->getInstance(AnnotationReader::class);
-        assert($reader instanceof AnnotationReader);
-        $namedParams = $injector->getInstance(NamedParameterInterface::class);
+        $reader = $this->injector->getInstance(Reader::class);
+        assert($reader instanceof Reader);
+        $namedParams = $this->injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
         // create DI factory class and AOP compiled class for all resources and save $app cache.
-        $app = Injector::getInstance($appMeta->name, $context, $appMeta->appDir)->getInstance(AppInterface::class);
+        $app = $this->injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);
 
         // check resource injection and create annotation cache
+        $metas = $appMeta->getResourceListGenerator();
         /** @var array{0: string, 1:string} $meta */
-        foreach ($appMeta->getResourceListGenerator() as $meta) {
+        foreach ($metas as $meta) {
             /** @var string $className */
             [$className] = $meta;
             assert(class_exists($className));
-            $this->scanClass($injector, $reader, $namedParams, $className);
+            $this->scanClass($reader, $namedParams, $className);
         }
     }
 
-    public function compileSrc(AbstractModule $module, AbstractAppMeta $appMeta, string $context) : AbstractModule
+    public function compileSrc(AbstractModule $module) : AbstractModule
     {
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
-        $injector = Injector::getInstance($appMeta->name, $context, $appMeta->appDir);
+        sort($dependencies);
         foreach ($dependencies as $dependencyIndex) {
-            [$interface, $name] = \explode('-', (string) $dependencyIndex);
-            try {
-                $injector->getInstance($interface, $name);
-            } catch (MethodInvocationNotAvailable $e) {
-                continue;
-            }
+            $pos = strpos((string) $dependencyIndex, '-');
+            assert(is_int($pos));
+            $interface = substr((string) $dependencyIndex, 0, $pos);
+            $name = substr((string) $dependencyIndex, $pos + 1);
+            $this->getInstance($interface, $name);
         }
 
         return $module;
     }
 
-    private function compileAutoload(AbstractAppMeta $appMeta, string $context) : string
-    {
-        $this->invokeTypicalRequest($appMeta, $context);
-        $paths = $this->getPaths($this->classes, $appMeta->appDir);
-
-        return $this->dumpAutoload($appMeta->appDir, $paths);
-    }
-
     /**
      * @param array<string> $paths
      */
-    private function dumpAutoload(string $appDir, array $paths) : string
+    private function saveAutoloadFile(string $appDir, array $paths) : string
     {
-        $autoloadFile = '<?php' . PHP_EOL;
+        $autoloadFile = '<?php' . PHP_EOL . 'require __DIR__ . \'/vendor/ray/di/src/ProviderInterface.php\';
+' . PHP_EOL;
         foreach ($paths as $path) {
             $autoloadFile .= sprintf(
                 "require %s';\n",
@@ -151,12 +210,12 @@ final class Compiler
     private function compilePreload(AbstractAppMeta $appMeta, string $context) : string
     {
         $this->loadResources($appMeta->name, $context, $appMeta->appDir);
-        $paths = $this->getPaths($this->classes, $appMeta->appDir);
+        $paths = $this->getPaths($this->classes);
         $output = '<?php' . PHP_EOL;
         $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
         foreach ($paths as $path) {
             $output .= sprintf(
-                "require %s';\n",
+                "require_once %s';\n",
                 $this->getRelativePath($appMeta->appDir, $path)
             );
         }
@@ -180,9 +239,9 @@ final class Compiler
      * @psalm-suppress MixedFunctionCall
      * @psalm-suppress NoInterfaceProperties
      */
-    private function invokeTypicalRequest(AbstractAppMeta $appMeta, string $context) : void
+    private function invokeTypicalRequest() : void
     {
-        $app = Injector::getInstance($appMeta->name, $context, $appMeta->appDir)->getInstance(AppInterface::class);
+        $app = $this->injector->getInstance(AppInterface::class);
         assert($app instanceof AbstractApp);
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
@@ -197,29 +256,31 @@ final class Compiler
      *
      * @param class-string<T> $className
      */
-    private function scanClass(InjectorInterface $injector, Reader $reader, NamedParameterInterface $namedParams, string $className) : void
+    private function scanClass(Reader $reader, NamedParameterInterface $namedParams, string $className) : void
     {
-        try {
-            /** @var T $instance */
-            $instance = $injector->getInstance($className);
-            assert($instance instanceof $className);
-        } catch (\Exception $e) {
-            error_log(sprintf('Failed to instantiate [%s]: %s(%s) in %s on line %s', $className, get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()));
-
+        $class = new \ReflectionClass($className);
+        /** @var T $instance */
+        $instance = $class->newInstanceWithoutConstructor();
+        if (! $instance instanceof $className) {
             return;
         }
-        $class = new ReflectionClass($className);
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
+        $log = sprintf('M %s:', $className);
         foreach ($methods as $method) {
             $methodName = $method->getName();
             if ($this->isMagicMethod($methodName)) {
                 continue;
             }
-            $this->saveNamedParam($namedParams, $instance, $methodName);
+            if (substr($methodName, 0, 2) === 'on') {
+                $log .= sprintf(' %s', $methodName);
+                $this->saveNamedParam($namedParams, $instance, $methodName);
+            }
             // method annotation
             $reader->getMethodAnnotations($method);
+            $log .= sprintf('@ %s', $methodName);
         }
+//        echo $log . PHP_EOL;
     }
 
     private function isMagicMethod(string $method) : bool
@@ -249,7 +310,7 @@ final class Compiler
      *
      * @return array<string>
      */
-    private function getPaths(array $classes, string $appDir) : array
+    private function getPaths(array $classes) : array
     {
         $paths = [];
         foreach ($classes as $class) {
@@ -263,7 +324,7 @@ final class Compiler
             if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
                 continue;
             }
-            $paths[] = $this->getRelativePath($appDir, $filePath);
+            $paths[] = $this->getRelativePath($this->appDir, $filePath);
         }
 
         return $paths;
@@ -272,10 +333,42 @@ final class Compiler
     private function loadResources(string $appName, string $context, string $appDir) : void
     {
         $meta = new Meta($appName, $context, $appDir);
-        /** @psalm-suppress DeprecatedClass */
-        $injector = new AppInjector($appName, $context, $meta, $this->ns);
-        foreach ($meta->getGenerator('*') as $resMeta) {
-            $injector->getInstance($resMeta->class);
+        $resMetas = $meta->getGenerator('*');
+        foreach ($resMetas as $resMeta) {
+            $this->getInstance($resMeta->class);
+        }
+    }
+
+    private function getInstance(string $interface, string $name = '') : void
+    {
+        $dependencyIndex = $interface . '-' . $name;
+        if (in_array($dependencyIndex, $this->compiled, true)) {
+            printf("S %s:%s\n", $interface, $name);
+
+            return;
+        }
+        try {
+            $this->injector->getInstance($interface, $name);
+            $this->compiled[] = $dependencyIndex;
+            $this->progress('.');
+        } catch (\Exception $e) {
+            $this->failed[] = $dependencyIndex;
+            $this->progress('F');
+        }
+    }
+
+    private function progress(string $char) : void
+    {
+        /**
+         * @var int
+         */
+        static $cnt = 0;
+
+        echo $char;
+        $cnt++;
+        if ($cnt === 60) {
+            $cnt = 0;
+            echo PHP_EOL;
         }
     }
 }

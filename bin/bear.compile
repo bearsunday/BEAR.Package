@@ -35,5 +35,6 @@ clear:
     (new Unlink)->force($meta->tmpDir);
 run:
     $compile = sprintf("php %s/bear.compile.php '-n%s' -c%s '-d%s'", __DIR__, $appName, $context, $meta->appDir);
-    passthru($compile); // cache write
-    passthru($compile . ' -o'); // cache read
+    passthru($compile, $return1); // cache write
+    passthru($compile . ' -o', $return2); // cache read
+    exit($return1 | $return2);
