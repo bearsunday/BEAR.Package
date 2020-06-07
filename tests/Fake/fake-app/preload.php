@@ -214,7 +214,7 @@ require_once __DIR__ . '/src/Module/ProdModule.php';
 require_once /Users/akihito/git/BEAR.Package/src/Context/ProdModule.php';
 require_once /Users/akihito/git/BEAR.Package/src/Provide/Error/ProdVndErrorPageFactory.php';
 require_once /Users/akihito/git/BEAR.Package/src/Provide/Logger/ProdMonologProvider.php';
-require_once /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/VoidOptionsRenderer.php';
+require_once /Users/akihito/git/BEAR.Package/vendor/bear/resource/src/NullOptionsRenderer.php';
 require_once /Users/akihito/git/BEAR.Package/src/AppMetaModule.php';
 require_once __DIR__ . '/src/Module/App.php';
 require_once /Users/akihito/git/BEAR.Package/src/Provide/Boot/CacheNamespaceModule.php';

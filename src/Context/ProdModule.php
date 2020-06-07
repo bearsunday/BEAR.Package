@@ -12,7 +12,6 @@ use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
-use BEAR\Resource\VoidOptionsRenderer;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
