@@ -10,6 +10,7 @@ use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
+use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\VoidOptionsRenderer;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -58,6 +59,6 @@ class ProdModule extends AbstractModule
      */
     private function disableOptionsMethod() : void
     {
-        $this->bind(RenderInterface::class)->annotatedWith('options')->to(VoidOptionsRenderer::class);
+        $this->bind(RenderInterface::class)->annotatedWith('options')->to(NullOptionsRenderer::class);
     }
 }
