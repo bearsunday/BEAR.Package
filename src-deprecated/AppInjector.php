@@ -16,8 +16,8 @@ use Ray\Di\Name;
 
 /**
  * @deprecated
- *
- * use Injector instead
+ * @see http://bearsunday.github.io/manuals/1.0/en/upgrade/injector.html (en)
+ * @see http://bearsunday.github.io/manuals/1.0/ja/upgrade/injector.html (ja)
  */
 final class AppInjector implements InjectorInterface
 {
