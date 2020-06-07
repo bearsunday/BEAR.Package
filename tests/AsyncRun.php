@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use RuntimeException;
+
 final class AsyncRun
 {
     /**
@@ -22,7 +24,7 @@ final class AsyncRun
                     $pipes
                 );
                 if (! is_resource($proc)) {
-                    throw new \RuntimeException;
+                    throw new RuntimeException;
                 }
                 $procs[] = $proc;
             }

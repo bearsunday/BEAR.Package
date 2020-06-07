@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
+use Exception;
+use function get_class;
 
 final class ExceptionAsString
 {
@@ -13,11 +15,11 @@ final class ExceptionAsString
      */
     private $string;
 
-    public function __construct(\Exception $e, Request $request)
+    public function __construct(Exception $e, Request $request)
     {
         $eSummery = sprintf(
             "%s(%s)\n in file %s on line %s\n\n%s",
-            \get_class($e),
+            get_class($e),
             $e->getMessage(),
             $e->getFile(),
             $e->getLine(),

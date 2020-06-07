@@ -15,11 +15,13 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
+use Exception;
 use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
 use ReflectionClass;
+use RuntimeException;
 
 final class Compiler
 {
@@ -92,7 +94,7 @@ final class Compiler
     public function compile() : int
     {
         if (! is_dir($this->appDir)) {
-            throw new \RuntimeException($this->appDir);
+            throw new RuntimeException($this->appDir);
         }
         $preload = $this->compilePreload($this->appMeta, $this->context);
         $module = (new Module)($this->appMeta, $this->context);
@@ -134,7 +136,7 @@ final class Compiler
     {
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
-            throw new \RuntimeException('no loader');
+            throw new RuntimeException('no loader');
         }
         /** @var ClassLoader $loader */
         $loader = require $loaderFile;
@@ -259,7 +261,7 @@ final class Compiler
      */
     private function scanClass(Reader $reader, NamedParameterInterface $namedParams, string $className) : void
     {
-        $class = new \ReflectionClass($className);
+        $class = new ReflectionClass($className);
         /** @var T $instance */
         $instance = $class->newInstanceWithoutConstructor();
         if (! $instance instanceof $className) {
@@ -358,7 +360,7 @@ final class Compiler
             }
             $this->failed[$dependencyIndex] = $e->getMessage();
             $this->progress('F');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->failed[$dependencyIndex] = sprintf('%s: %s', get_class($e), $e->getMessage());
             $this->progress('F');
         }

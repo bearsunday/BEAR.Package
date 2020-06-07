@@ -9,6 +9,7 @@ use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponse;
 use BEAR\Sunday\Provide\Transfer\Header;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -33,7 +34,7 @@ class ErrorHandlerTest extends TestCase
 
     public function testHandle() : ErrorHandler
     {
-        $e = new \LogicException('msg');
+        $e = new LogicException('msg');
         $request = new RouterMatch;
         list($request->method, $request->path, $request->query) = ['get', '/', []];
         $handler = $this->handler->handle($e, $request);

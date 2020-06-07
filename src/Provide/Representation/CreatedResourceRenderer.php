@@ -9,6 +9,8 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use Exception;
+use function is_string;
 
 /**
  * 201 CreatedResource renderer
@@ -42,7 +44,7 @@ class CreatedResourceRenderer implements RenderInterface
         try {
             $locatedResource = $this->resource->uri($locationUri)();
             /* @var $locatedResource ResourceObject */
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $ro->code = 500;
             $ro->view = '';
 
@@ -64,7 +66,7 @@ class CreatedResourceRenderer implements RenderInterface
         }
         /** @var array<string, mixed> $value */
         $reverseUri = $this->router->generate($routeName, $value);
-        if (\is_string($reverseUri)) {
+        if (is_string($reverseUri)) {
             return $reverseUri;
         }
 

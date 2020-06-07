@@ -10,6 +10,7 @@ use Aura\Cli\Status;
 use Aura\Cli\Stdio;
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use Exception;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -31,7 +32,7 @@ class CliRouter implements RouterInterface
     private $stdIn = '';
 
     /**
-     * @var null|\Exception
+     * @var null|Exception
      */
     private $terminateException;
 
@@ -57,7 +58,7 @@ class CliRouter implements RouterInterface
         $this->stdIo = (new CliFactory)->newStdio();
     }
 
-    public function setTerminateException(\Exception $e) : void
+    public function setTerminateException(Exception $e) : void
     {
         $this->terminateException = $e;
     }
@@ -133,7 +134,7 @@ class CliRouter implements RouterInterface
      */
     private function terminate(int $status) : void
     {
-        if ($this->terminateException instanceof \Exception) {
+        if ($this->terminateException instanceof Exception) {
             throw $this->terminateException;
         }
         // @codeCoverageIgnoreStart

@@ -6,10 +6,12 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Exception;
+use function get_class;
 
 final class DevVndErrorPage extends ResourceObject
 {
-    public function __construct(\Exception $e, RouterMatch $request)
+    public function __construct(Exception $e, RouterMatch $request)
     {
         $status = new Status($e);
         $this->code = $status->code;
@@ -35,13 +37,13 @@ final class DevVndErrorPage extends ResourceObject
     /**
      * @return array<string, string>
      */
-    private function getResponseBody(\Exception $e, RouterMatch $request, Status $status) : array
+    private function getResponseBody(Exception $e, RouterMatch $request, Status $status) : array
     {
         return [
             'message' => $status->text,
             'logref' => (string) new LogRef($e),
             'request' => (string) $request,
-            'exceptions' => sprintf('%s(%s)', \get_class($e), $e->getMessage()),
+            'exceptions' => sprintf('%s(%s)', get_class($e), $e->getMessage()),
             'file' => sprintf('%s(%s)', $e->getFile(), $e->getLine())
         ];
     }

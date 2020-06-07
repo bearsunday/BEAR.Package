@@ -10,6 +10,7 @@ use FakeVendor\HelloWorld\Module\App;
 use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
+use ReflectionProperty;
 
 class AppInjectorTest extends TestCase
 {
@@ -58,7 +59,7 @@ class AppInjectorTest extends TestCase
         $renderer = $appInjector->getOverrideInstance($module, RenderInterface::class);
         $this->assertInstanceOf(RenderInterface::class, $renderer);
         $index = $appInjector->getOverrideInstance($module, Index::class);
-        $prop = (new \ReflectionProperty($index, 'renderer'));
+        $prop = (new ReflectionProperty($index, 'renderer'));
         $prop->setAccessible(true);
         $renderer = $prop->getValue($index);
         $this->assertInstanceOf(RenderInterface::class, $renderer);

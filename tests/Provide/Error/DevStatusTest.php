@@ -8,6 +8,7 @@ use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class DevStatusTest extends TestCase
 {
@@ -26,7 +27,7 @@ class DevStatusTest extends TestCase
 
     public function testRuntimeException() : void
     {
-        $e = new \RuntimeException();
+        $e = new RuntimeException();
         $status = new Status($e);
         $this->assertSame(503, $status->code);
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 class ProdVndErrorPageTest extends TestCase
@@ -17,7 +18,7 @@ class ProdVndErrorPageTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        $e = new \LogicException('bear');
+        $e = new LogicException('bear');
         $request = new RouterMatch();
         list($request->method, $request->path, $request->query) = ['get', '/', []];
         $this->page = (new ProdVndErrorPageFactory())->newInstance($e, $request);

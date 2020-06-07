@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\FakeWebRouter;
 use BEAR\Sunday\Provide\Router\WebRouter;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 class RouterCollectionTest extends TestCase
@@ -59,7 +60,7 @@ class RouterCollectionTest extends TestCase
         $uri = $this->routerCollection->generate('/blog', ['id' => 1]);
         $expected = 'page://self/generated-uri';
         if (is_bool($uri)) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         $this->assertSame($expected, $uri);
     }
@@ -68,7 +69,7 @@ class RouterCollectionTest extends TestCase
     {
         $uri = $this->routerCollection->generate('/blog', []);
         if (! is_bool($uri)) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         $this->assertFalse($uri);
     }
