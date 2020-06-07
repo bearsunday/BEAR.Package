@@ -6,6 +6,8 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Exception;
+use function get_class;
 
 final class LogRef
 {
@@ -14,9 +16,9 @@ final class LogRef
      */
     private $ref;
 
-    public function __construct(\Exception $e)
+    public function __construct(Exception $e)
     {
-        $this->ref = hash('crc32b', \get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
+        $this->ref = hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
     }
 
     public function __toString()
@@ -24,7 +26,7 @@ final class LogRef
         return $this->ref;
     }
 
-    public function log(\Exception $e, RouterMatch $request, AbstractAppMeta $appMeta) : void
+    public function log(Exception $e, RouterMatch $request, AbstractAppMeta $appMeta) : void
     {
         $logRefFile = sprintf('%s/logref.%s.log', $appMeta->logDir, $this->ref);
         $log = (string) new ExceptionAsString($e, $request);

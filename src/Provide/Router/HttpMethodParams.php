@@ -6,17 +6,18 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Package\Exception\InvalidRequestJsonException;
+use function in_array;
 use Ray\Di\Di\Inject;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
-    const CONTENT_TYPE = 'CONTENT_TYPE';
+    public const CONTENT_TYPE = 'CONTENT_TYPE';
 
-    const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
+    public const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
 
-    const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
+    public const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
 
-    const APPLICATION_JSON = 'application/json';
+    public const APPLICATION_JSON = 'application/json';
 
     /**
      * @var string
@@ -109,7 +110,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return $post;
         }
 
-        if (\in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
+        if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
             return $this->phpInput($server);
         }
 

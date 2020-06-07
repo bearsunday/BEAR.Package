@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use function serialize;
 use function unserialize;
@@ -113,8 +114,8 @@ class CliRouterTest extends TestCase
 
     public function testError() : void
     {
-        $this->router->setTerminateException(new \InvalidArgumentException);
-        $this->expectException(\InvalidArgumentException::class);
+        $this->router->setTerminateException(new InvalidArgumentException);
+        $this->expectException(InvalidArgumentException::class);
         $server = [
             'argv' => [
                 'php',
@@ -142,8 +143,8 @@ class CliRouterTest extends TestCase
     public function testSerializable() : void
     {
         $router = unserialize(serialize($this->router));
-        $router->setTerminateException(new \InvalidArgumentException);
-        $this->expectException(\InvalidArgumentException::class);
+        $router->setTerminateException(new InvalidArgumentException);
+        $this->expectException(InvalidArgumentException::class);
         /* @var CliRouter $router */
         $router->match(
             [

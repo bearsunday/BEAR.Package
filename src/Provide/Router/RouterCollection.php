@@ -8,6 +8,7 @@ use BEAR\Package\Exception\RouterException;
 use BEAR\Sunday\Extension\Router\NullMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Exception;
 
 class RouterCollection implements RouterInterface
 {
@@ -34,7 +35,7 @@ class RouterCollection implements RouterInterface
         foreach ($this->routers as $route) {
             try {
                 $match = $route->match($globals, $server);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new RouterException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
             }
             if (! $match instanceof NullMatch) {

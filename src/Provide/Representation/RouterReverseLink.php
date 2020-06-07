@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Resource\ReverseLinkInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use function is_string;
 
 final class RouterReverseLink implements ReverseLinkInterface
 {
@@ -29,7 +30,7 @@ final class RouterReverseLink implements ReverseLinkInterface
         }
         /** @var array<string, mixed> $value */
         $reverseUri = $this->router->generate($routeName, $value);
-        if (\is_string($reverseUri)) {
+        if (is_string($reverseUri)) {
             return $reverseUri;
         }
 

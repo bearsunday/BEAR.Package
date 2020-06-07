@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\Exception\BadRequestException;
+use Exception;
 use Koriym\HttpConstants\StatusCode;
+use RuntimeException;
 
 final class Status
 {
@@ -19,7 +21,7 @@ final class Status
      */
     public $text;
 
-    public function __construct(\Exception $e)
+    public function __construct(Exception $e)
     {
         /** @var array<int, string> $text */
         $text = (new StatusCode)->statusText;
@@ -29,7 +31,7 @@ final class Status
 
             return;
         }
-        if ($e instanceof \RuntimeException) {
+        if ($e instanceof RuntimeException) {
             $this->code = 503;
             $this->text = $text[$this->code];
 
