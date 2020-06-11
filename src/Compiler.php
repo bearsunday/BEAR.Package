@@ -14,9 +14,9 @@ use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\Cache;
 use Exception;
 use function file_exists;
+use const PHP_EOL;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
@@ -213,6 +213,9 @@ final class Compiler
 require __DIR__ . '/vendor/autoload.php';
 ", $this->context, $requiredFile);
         $fileName = realpath($appDir) . '/autoload.php';
+        if (file_exists($fileName)) {
+            $fileName .= ' (overwritten)';
+        }
         file_put_contents($fileName, $autoloadFile);
 
         return $fileName;
@@ -237,6 +240,9 @@ require __DIR__ . '/vendor/autoload.php'
 
 %s", $this->context, $requiredOnceFile);
         $fileName = realpath($appMeta->appDir) . '/preload.php';
+        if (file_exists($fileName)) {
+            $fileName .= 'overwritten';
+        }
         file_put_contents($fileName, $preloadFile);
 
         return $fileName;
