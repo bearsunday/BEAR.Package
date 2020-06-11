@@ -14,14 +14,16 @@ use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\Cache;
 use Exception;
 use function file_exists;
+use const PHP_EOL;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
+use function realpath;
 use ReflectionClass;
 use RuntimeException;
+use function sprintf;
 
 final class Compiler
 {
@@ -79,6 +81,7 @@ final class Compiler
     public function __construct(string $appName, string $context, string $appDir, string $cacheNs = '')
     {
         $this->registerLoader($appDir);
+        $this->hookNullObjectClass($appDir);
         $this->appName = $appName;
         $this->context = $context;
         $this->appDir = $appDir;
@@ -195,37 +198,54 @@ final class Compiler
      */
     private function saveAutoloadFile(string $appDir, array $paths) : string
     {
-        $autoloadFile = '<?php' . PHP_EOL . 'require __DIR__ . \'/vendor/ray/di/src/ProviderInterface.php\';
-' . PHP_EOL;
+        $requiredFile = '';
         foreach ($paths as $path) {
-            $autoloadFile .= sprintf(
+            $requiredFile .= sprintf(
                 "require %s';\n",
                 $this->getRelativePath($appDir, $path)
             );
         }
-        $autoloadFile .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
-        $loaderFile = realpath($appDir) . '/autoload.php';
-        file_put_contents($loaderFile, $autoloadFile);
+        $autoloadFile = sprintf("<?php
 
-        return $loaderFile;
+// %s autoload
+
+%s
+require __DIR__ . '/vendor/autoload.php';
+", $this->context, $requiredFile);
+        $fileName = realpath($appDir) . '/autoload.php';
+        if (file_exists($fileName)) {
+            $fileName .= ' (overwritten)';
+        }
+        file_put_contents($fileName, $autoloadFile);
+
+        return $fileName;
     }
 
     private function compilePreload(AbstractAppMeta $appMeta, string $context) : string
     {
         $this->loadResources($appMeta->name, $context, $appMeta->appDir);
         $paths = $this->getPaths($this->classes);
-        $output = '<?php' . PHP_EOL;
-        $output .= "require __DIR__ . '/vendor/autoload.php';" . PHP_EOL;
+        $requiredOnceFile = '';
         foreach ($paths as $path) {
-            $output .= sprintf(
+            $requiredOnceFile .= sprintf(
                 "require_once %s';\n",
                 $this->getRelativePath($appMeta->appDir, $path)
             );
         }
-        $preloadFile = realpath($appMeta->appDir) . '/preload.php';
-        file_put_contents($preloadFile, $output);
+        $preloadFile = sprintf("<?php
 
-        return $preloadFile;
+// %s preload
+
+require __DIR__ . '/vendor/autoload.php'
+
+%s", $this->context, $requiredOnceFile);
+        $fileName = realpath($appMeta->appDir) . '/preload.php';
+        if (file_exists($fileName)) {
+            $fileName .= 'overwritten';
+        }
+        file_put_contents($fileName, $preloadFile);
+
+        return $fileName;
     }
 
     private function getRelativePath(string $rootDir, string $file) : string
@@ -378,6 +398,14 @@ final class Compiler
         if ($cnt === 60) {
             $cnt = 0;
             echo PHP_EOL;
+        }
+    }
+
+    private function hookNullObjectClass(string $appDir) : void
+    {
+        $compileScript = realpath($appDir) . '/.compile.php';
+        if (file_exists($compileScript)) {
+            require $compileScript;
         }
     }
 }
