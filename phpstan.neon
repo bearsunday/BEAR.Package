@@ -7,5 +7,3 @@ parameters:
     - tests/hash.php
     - tests/tmp/*
     - tests/Fake/*
-  autoload_files:
-    - vendor/autoload.php
