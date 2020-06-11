@@ -197,8 +197,7 @@ final class Compiler
      */
     private function saveAutoloadFile(string $appDir, array $paths) : string
     {
-        $autoloadFile = '<?php' . PHP_EOL . 'require __DIR__ . \'/vendor/ray/di/src/ProviderInterface.php\';
-' . PHP_EOL;
+        $autoloadFile = '<?php' . PHP_EOL;
         foreach ($paths as $path) {
             $autoloadFile .= sprintf(
                 "require %s';\n",
