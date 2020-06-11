@@ -20,6 +20,7 @@ use function file_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
+use function realpath;
 use ReflectionClass;
 use RuntimeException;
 
@@ -79,6 +80,7 @@ final class Compiler
     public function __construct(string $appName, string $context, string $appDir, string $cacheNs = '')
     {
         $this->registerLoader($appDir);
+        $this->hookNullObjectClass($appDir);
         $this->appName = $appName;
         $this->context = $context;
         $this->appDir = $appDir;
@@ -378,6 +380,14 @@ final class Compiler
         if ($cnt === 60) {
             $cnt = 0;
             echo PHP_EOL;
+        }
+    }
+
+    private function hookNullObjectClass(string $appDir) : void
+    {
+        $compileScript = realpath($appDir) . '/.compile.php';
+        if (file_exists($compileScript)) {
+            require $compileScript;
         }
     }
 }
