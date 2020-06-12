@@ -51,7 +51,7 @@ final class Injector
         $module = (new Module)($meta, $context, $cacheNamespace);
         $rayInjector = new RayInjector($module, $scriptDir);
         /** @var bool $isProd */
-        $isProd = $rayInjector->getInstance(DiCompile::class);
+        $isProd = $rayInjector->getInstance('', DiCompile::class);
         if (! $isProd) {
             $rayInjector->getInstance(AppInterface::class);
 

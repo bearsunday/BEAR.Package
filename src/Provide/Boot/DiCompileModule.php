@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Boot;
 
+use BEAR\Package\Annotation\DiCompile;
 use Ray\Di\AbstractModule;
 
 class DiCompileModule extends AbstractModule
@@ -24,6 +25,6 @@ class DiCompileModule extends AbstractModule
      */
     protected function configure() : void
     {
-        $this->bind()->annotatedWith(self::class)->toInstance($this->doCompile);
+        $this->bind()->annotatedWith(DiCompile::class)->toInstance($this->doCompile);
     }
 }
