@@ -40,13 +40,13 @@ class InjectorTest extends TestCase
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
-        $this->assertSame($countOfNew, App::$counfOfNew);
+        $this->assertSame(1, App::$counfOfNew);
         // 2nd injector; AppInterface object should be stored as a singleton.
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir, $cn);
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
-        $this->assertSame($countOfNew, App::$counfOfNew);
+        $this->assertSame(1, App::$counfOfNew);
     }
 
     /**
@@ -54,8 +54,7 @@ class InjectorTest extends TestCase
      */
     public function testRaceConditionBoot(string $context) : void
     {
-        $cn = microtime();
-        $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php -c%s -n%s', (string) E_ALL, __DIR__, $context, $cn);
+        $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php', (string) E_ALL, __DIR__);
         $errorLog = __DIR__ . '/script/error.log';
         file_put_contents($errorLog, '');
         $cmds = array_fill(0, 7, $cmd);

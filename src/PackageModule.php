@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
-use BEAR\Package\Provide\Boot\DiCompileModule;
 use BEAR\Package\Provide\Error\VndErrorModule;
 use BEAR\Package\Provide\Logger\PsrLoggerModule;
 use BEAR\Package\Provide\Representation\CreatedResourceModule;
@@ -12,6 +11,7 @@ use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
 use BEAR\Streamer\StreamModule;
 use BEAR\Sunday\Module\SundayModule;
+use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 
 class PackageModule extends AbstractModule

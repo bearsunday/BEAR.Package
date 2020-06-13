@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Context;
 
 use BEAR\Package\Context\Provider\ProdCacheProvider;
-use BEAR\Package\Provide\Boot\DiCompileModule;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
@@ -18,6 +17,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
 use Psr\Log\LoggerInterface;
+use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
