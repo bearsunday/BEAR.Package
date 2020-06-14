@@ -10,7 +10,7 @@ use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Boot\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\ChainCache;
+use Doctrine\Common\Cache\CacheProvider;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
@@ -44,7 +44,7 @@ final class Injector
         return $injector;
     }
 
-    private static function factory(Meta $meta, string $context, string $cacheNamespace, ChainCache $cache) : InjectorInterface
+    private static function factory(Meta $meta, string $context, string $cacheNamespace, CacheProvider $cache) : InjectorInterface
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
