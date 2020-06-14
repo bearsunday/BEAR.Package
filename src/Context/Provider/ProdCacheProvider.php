@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace BEAR\Package\Context\Provider;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use Doctrine\Common\Cache\ApcuCache;
-use Doctrine\Common\Cache\ChainCache;
-use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\Common\Cache\PhpFileCache;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
@@ -35,9 +34,9 @@ class ProdCacheProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get() : ChainCache
+    public function get() : CacheProvider
     {
-        $cache = new ChainCache([new ApcuCache, new FilesystemCache($this->cacheDir)]);
+        $cache = new PhpFileCache($this->cacheDir);
         $cache->setNamespace($this->namespace);
 
         return $cache;
