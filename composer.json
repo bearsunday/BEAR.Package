@@ -31,7 +31,7 @@
         "monolog/monolog": "^1.25 || ^2.0",
         "psr/log": "^1.1",
         "ray/aop": "^2.9",
-        "ray/compiler": "^1.5",
+        "ray/compiler": "1.x-dev",
         "ray/di": "^2.10"
     },
     "require-dev": {

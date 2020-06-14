@@ -7,7 +7,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Ray\Compiler\CachedFactory;
+use Ray\Compiler\CachedInjectorFactory;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
 use function sprintf;
@@ -28,6 +28,6 @@ final class Injector
         };
         $scriptDir = sprintf('%s/di', $meta->tmpDir);
 
-        return CachedFactory::getInstance($module, $scriptDir, $cache, [AppInterface::class]);
+        return CachedInjectorFactory::getInstance($injectorId, $scriptDir, $module, $cache, [AppInterface::class]);
     }
 }
