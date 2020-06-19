@@ -22,13 +22,14 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6",
         "bear/query-repository": "^1.6",
-        "ray/aop": "2.x-dev",
-        "ray/di": "2.x-dev",
-        "bear/resource": "1.x-dev",
+        "ray/aop": "^2.9",
+        "ray/di": "^2.10",
+        "bear/resource": "^1.14",
         "bear/sunday": "1.x-dev",
         "bear/streamer": "^1.0.1",
         "monolog/monolog" : "^1.25|^2.0",
-        "ray/compiler": "1.x-dev"
+        "ray/compiler": "^1.5",
+        "ray/object-visual-grapher": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5"
