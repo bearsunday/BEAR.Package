@@ -22,6 +22,7 @@ use function printf;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
+use Ray\ObjectGrapher\ObjectGrapher;
 use function realpath;
 use ReflectionClass;
 use RuntimeException;
@@ -106,6 +107,7 @@ final class Compiler
         $this->compileSrc($module);
         echo PHP_EOL;
         $this->compileDiScripts($this->appMeta);
+        $dot = $this->compileObjectGraphDotFile($module);
         /** @var float $start */
         $start = $_SERVER['REQUEST_TIME_FLOAT'];
         $time = number_format(microtime(true) - $start, 2);
@@ -114,6 +116,8 @@ final class Compiler
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", count($this->compiled), count($this->failed));
         printf("preload.php: %s\n", $preload);
+        printf("module.dot: %s\n", $dot);
+
         foreach ($this->failed as $depedencyIndex => $error) {
             printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
         }
@@ -411,5 +415,13 @@ require __DIR__ . '/vendor/autoload.php'
             $fileName .= ' (overwritten)';
         }
         file_put_contents($fileName, $content);
+    }
+
+    private function compileObjectGraphDotFile(AbstractModule $module) : string 
+    {
+        $dot = sprintf('%s/module.dot', $this->appDir);
+        $this->putFileContents($dot, (new ObjectGrapher)($module));
+
+        return $dot;
     }
 }
