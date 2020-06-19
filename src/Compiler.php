@@ -417,11 +417,11 @@ require __DIR__ . '/vendor/autoload.php'
         file_put_contents($fileName, $content);
     }
 
-    private function compileObjectGraphDotFile(AbstractModule $module) : string 
+    private function compileObjectGraphDotFile(AbstractModule $module) : string
     {
-        $dot = sprintf('%s/module.dot', $this->appDir);
-        $this->putFileContents($dot, (new ObjectGrapher)($module));
+        $dotFile = sprintf('%s/module.dot', $this->appDir);
+        $this->putFileContents($dotFile, (new ObjectGrapher)($module));
 
-        return $dot;
+        return $dotFile;
     }
 }
