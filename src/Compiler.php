@@ -16,7 +16,9 @@ use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
 use Exception;
 use function file_exists;
+use function file_put_contents;
 use const PHP_EOL;
+use function printf;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
@@ -213,10 +215,7 @@ final class Compiler
 require __DIR__ . '/vendor/autoload.php';
 ", $this->context, $requiredFile);
         $fileName = realpath($appDir) . '/autoload.php';
-        if (file_exists($fileName)) {
-            $fileName .= ' (overwritten)';
-        }
-        file_put_contents($fileName, $autoloadFile);
+        $this->putFileContents($fileName, $autoloadFile);
 
         return $fileName;
     }
@@ -240,10 +239,7 @@ require __DIR__ . '/vendor/autoload.php'
 
 %s", $this->context, $requiredOnceFile);
         $fileName = realpath($appMeta->appDir) . '/preload.php';
-        if (file_exists($fileName)) {
-            $fileName .= 'overwritten';
-        }
-        file_put_contents($fileName, $preloadFile);
+        $this->putFileContents($fileName, $preloadFile);
 
         return $fileName;
     }
@@ -407,5 +403,13 @@ require __DIR__ . '/vendor/autoload.php'
         if (file_exists($compileScript)) {
             require $compileScript;
         }
+    }
+
+    private function putFileContents(string $fileName, string $content) : void
+    {
+        if (file_exists($fileName)) {
+            $fileName .= ' (overwritten)';
+        }
+        file_put_contents($fileName, $content);
     }
 }
