@@ -22,13 +22,12 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6",
         "bear/query-repository": "^1.6",
-        "ray/aop": "^2.9",
-        "ray/di": "^2.10",
         "bear/resource": "^1.14",
-        "bear/sunday": "1.x-dev",
         "bear/streamer": "^1.0.1",
-        "monolog/monolog" : "^1.25|^2.0",
+        "bear/sunday": "^1.4.1",
+        "monolog/monolog": "^1.25 || ^2.0",
         "ray/compiler": "^1.5",
+        "ray/di": "^2.10.3",
         "ray/object-visual-grapher": "^1.0"
     },
     "require-dev": {
@@ -36,26 +35,53 @@
     },
     "autoload": {
         "psr-4": {
-            "BEAR\\Package\\": ["src/", "src-deprecated"]
+            "BEAR\\Package\\": [
+                "src/",
+                "src-deprecated"
+            ]
         },
-        "files": ["src-files/apcu.php"]
+        "files": [
+            "src-files/apcu.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "BEAR\\Package\\": ["tests/", "tests/Fake/"],
-            "FakeVendor\\HelloWorld\\": ["tests/Fake/fake-app/src/"]
+            "BEAR\\Package\\": [
+                "tests/",
+                "tests/Fake/"
+            ],
+            "FakeVendor\\HelloWorld\\": [
+                "tests/Fake/fake-app/src/"
+            ]
         }
     },
     "bin": [
         "bin/bear.compile",
         "bin/bear.compile.php"
     ],
-    "scripts" :{
-        "test": ["phpunit"],
-        "tests": ["@cs", "phpstan analyse -c phpstan.neon", "psalm --show-info=false", "@test"],
-        "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
-        "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
-        "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"],
-        "metrics": ["phpmetrics --report-html=build/metrics/ --extensions=php src,composer.json,composer.lock"]
+    "scripts": {
+        "coverage": [
+            "php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"
+        ],
+        "cs": [
+            "php-cs-fixer fix -v --dry-run",
+            "phpcs --standard=./phpcs.xml src"
+        ],
+        "cs-fix": [
+            "php-cs-fixer fix -v",
+            "phpcbf src"
+        ],
+        "metrics": [
+            "phpmetrics --report-html=build/metrics/ --extensions=php src,composer.json,composer.lock"
+        ],
+        "test": [
+            "phpunit"
+        ],
+        "tests": [
+            "@cs",
+            "phpstan analyse -c phpstan.neon",
+            "psalm --show-info=false",
+            "@test"
+        ]
     }
 }
