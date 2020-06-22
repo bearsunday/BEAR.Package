@@ -24,15 +24,17 @@
         "bear/query-repository": "^1.6",
         "bear/resource": "^1.14",
         "bear/streamer": "^1.0.1",
-        "bear/sunday": "1.x-dev",
         "doctrine/annotations": "^1.10",
         "doctrine/cache": "^1.10",
         "koriym/http-constants": "^1.1",
         "monolog/monolog": "^1.25 || ^2.0",
         "psr/log": "^1.1",
         "ray/aop": "^2.9",
-        "ray/compiler": "1.x-dev",
-        "ray/di": "^2.10"
+        "bear/sunday": "^1.4.1",
+        "monolog/monolog": "^1.25 || ^2.0",
+        "ray/compiler": "^1.5",
+        "ray/di": "^2.10.3",
+        "ray/object-visual-grapher": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5"

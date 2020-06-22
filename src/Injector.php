@@ -9,6 +9,10 @@ use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\CachedInjectorFactory;
 use Ray\Di\AbstractModule;
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
+use Ray\Compiler\ScriptInjector;
+use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 use function sprintf;
 

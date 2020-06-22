@@ -16,10 +16,13 @@ use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
 use Exception;
 use function file_exists;
+use function file_put_contents;
 use const PHP_EOL;
+use function printf;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
+use Ray\ObjectGrapher\ObjectGrapher;
 use function realpath;
 use ReflectionClass;
 use RuntimeException;
@@ -104,6 +107,7 @@ final class Compiler
         $this->compileSrc($module);
         echo PHP_EOL;
         $this->compileDiScripts($this->appMeta);
+        $dot = $this->compileObjectGraphDotFile($module);
         /** @var float $start */
         $start = $_SERVER['REQUEST_TIME_FLOAT'];
         $time = number_format(microtime(true) - $start, 2);
@@ -112,6 +116,8 @@ final class Compiler
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", count($this->compiled), count($this->failed));
         printf("preload.php: %s\n", $preload);
+        printf("module.dot: %s\n", $dot);
+
         foreach ($this->failed as $depedencyIndex => $error) {
             printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
         }
@@ -213,10 +219,7 @@ final class Compiler
 require __DIR__ . '/vendor/autoload.php';
 ", $this->context, $requiredFile);
         $fileName = realpath($appDir) . '/autoload.php';
-        if (file_exists($fileName)) {
-            $fileName .= ' (overwritten)';
-        }
-        file_put_contents($fileName, $autoloadFile);
+        $this->putFileContents($fileName, $autoloadFile);
 
         return $fileName;
     }
@@ -240,10 +243,7 @@ require __DIR__ . '/vendor/autoload.php'
 
 %s", $this->context, $requiredOnceFile);
         $fileName = realpath($appMeta->appDir) . '/preload.php';
-        if (file_exists($fileName)) {
-            $fileName .= 'overwritten';
-        }
-        file_put_contents($fileName, $preloadFile);
+        $this->putFileContents($fileName, $preloadFile);
 
         return $fileName;
     }
@@ -407,5 +407,21 @@ require __DIR__ . '/vendor/autoload.php'
         if (file_exists($compileScript)) {
             require $compileScript;
         }
+    }
+
+    private function putFileContents(string $fileName, string $content) : void
+    {
+        if (file_exists($fileName)) {
+            $fileName .= ' (overwritten)';
+        }
+        file_put_contents($fileName, $content);
+    }
+
+    private function compileObjectGraphDotFile(AbstractModule $module) : string
+    {
+        $dotFile = sprintf('%s/module.dot', $this->appDir);
+        $this->putFileContents($dotFile, (new ObjectGrapher)($module));
+
+        return $dotFile;
     }
 }
