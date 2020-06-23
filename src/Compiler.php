@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\Reader;
 use Exception;
 use function file_exists;
 use function file_put_contents;
+use function in_array;
 use const PHP_EOL;
 use function printf;
 use Ray\Di\AbstractModule;
@@ -56,11 +57,6 @@ final class Compiler
     private $appDir;
 
     /**
-     * @var string
-     */
-    private $cacheNs;
-
-    /**
      * @var Meta
      */
     private $appMeta;
@@ -76,22 +72,25 @@ final class Compiler
     private $failed = [];
 
     /**
+     * @var list<string>
+     */
+    private $overwritten = [];
+
+    /**
      * @param string $appName application name "MyVendor|MyProject"
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
-     * @param string $cacheNs cache namespace
      */
-    public function __construct(string $appName, string $context, string $appDir, string $cacheNs = '')
+    public function __construct(string $appName, string $context, string $appDir)
     {
         $this->registerLoader($appDir);
         $this->hookNullObjectClass($appDir);
         $this->appName = $appName;
         $this->context = $context;
         $this->appDir = $appDir;
-        $this->cacheNs = $cacheNs;
         $this->appMeta = new Meta($appName, $context, $appDir);
         /** @psalm-suppress MixedAssignment */
-        $this->injector = Injector::getInstance($appName, $context, $appDir, $cacheNs);
+        $this->injector = Injector::getInstance($appName, $context, $appDir);
     }
 
     /**
@@ -115,8 +114,8 @@ final class Compiler
         echo PHP_EOL;
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", count($this->compiled), count($this->failed));
-        printf("preload.php: %s\n", $preload);
-        printf("module.dot: %s\n", $dot);
+        printf("preload.php: %s\n", $this->getFileInfo($preload));
+        printf("module.dot: %s\n", $this->getFileInfo($dot));
 
         foreach ($this->failed as $depedencyIndex => $error) {
             printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
@@ -136,7 +135,7 @@ final class Compiler
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
         printf("Compilation (2/2) took %f seconds and used %fMB of memory\n", $time, $memory);
-        printf("autoload.php: %s\n", $autolaod);
+        printf("autoload.php: %s\n", $this->getFileInfo($autolaod));
 
         return 0;
     }
@@ -197,6 +196,15 @@ final class Compiler
         }
 
         return $module;
+    }
+
+    private function getFileInfo(string $filename) : string
+    {
+        if (in_array($filename, $this->overwritten, true)) {
+            return $filename . ' (overwritten)';
+        }
+
+        return $filename;
     }
 
     /**
@@ -308,13 +316,13 @@ require __DIR__ . '/vendor/autoload.php'
 
     private function isMagicMethod(string $method) : bool
     {
-        return \in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
+        return in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
     private function saveNamedParam(NamedParameterInterface $namedParameter, object $instance, string $method) : void
     {
         // named parameter
-        if (! \in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
+        if (! in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
             return;
         }
         $callable = [$instance, $method];
@@ -412,7 +420,7 @@ require __DIR__ . '/vendor/autoload.php'
     private function putFileContents(string $fileName, string $content) : void
     {
         if (file_exists($fileName)) {
-            $fileName .= ' (overwritten)';
+            $this->overwritten[] = $fileName;
         }
         file_put_contents($fileName, $content);
     }

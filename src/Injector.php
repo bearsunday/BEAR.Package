@@ -6,11 +6,12 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Annotation\DiCompile;
-use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Boot\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\Common\Cache\PhpFileCache;
+use function is_dir;
+use function mkdir;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
@@ -28,41 +29,44 @@ final class Injector
     {
     }
 
-    public static function getInstance(string $appName, string $context, string $appDir, string $cacheNamespace = '') : InjectorInterface
+    public static function getInstance(string $appName, string $context, string $appDir, CacheProvider $cache = null) : InjectorInterface
     {
-        $injectorId = $appName . $context . $cacheNamespace;
+        $injectorId = $appName . $context;
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
         $meta = new Meta($appName, $context, $appDir);
-        $cache = (new ProdCacheProvider($meta, $injectorId))->get();
+        $cache = $cache ?? new PhpFileCache($meta->tmpDir . '/injector');
+        $cache->setNamespace($injectorId);
         /** @var ?InjectorInterface $cachedInjector */
         $cachedInjector = $cache->fetch(InjectorInterface::class);
-        $injector = $cachedInjector instanceof InjectorInterface ? $cachedInjector : self::factory($meta, $context, $cacheNamespace, $cache);
+        if ($cachedInjector instanceof InjectorInterface) {
+            return $cachedInjector;
+        }
+        $injector = self::factory($meta, $context);
+        $injector->getInstance(AppInterface::class);
+        if ($injector instanceof ScriptInjector) {
+            $cache->save(InjectorInterface::class, $injector);
+        }
         self::$instances[$injectorId] = $injector;
 
         return $injector;
     }
 
-    private static function factory(Meta $meta, string $context, string $cacheNamespace, CacheProvider $cache) : InjectorInterface
+    private static function factory(Meta $meta, string $context) : InjectorInterface
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
-        $module = (new Module)($meta, $context, $cacheNamespace);
+        $module = (new Module)($meta, $context, '');
         $rayInjector = new RayInjector($module, $scriptDir);
         /** @var bool $isProd */
         $isProd = $rayInjector->getInstance('', DiCompile::class);
-        if (! $isProd) {
-            $rayInjector->getInstance(AppInterface::class);
-
-            return $rayInjector;
+        if ($isProd) {
+            return new ScriptInjector($scriptDir, function () use ($scriptDir, $module) {
+                return new ScriptinjectorModule($scriptDir, $module);
+            });
         }
-        $scriptInjector = new ScriptInjector($scriptDir, function () use ($scriptDir, $module) {
-            return new ScriptinjectorModule($scriptDir, $module);
-        });
-        $scriptInjector->getInstance(AppInterface::class); // cache App as a singleton
-        $cache->save(InjectorInterface::class, $scriptInjector);
 
-        return $scriptInjector;
+        return $rayInjector;
     }
 }
