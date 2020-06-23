@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Annotation\DiCompile;
 use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\PhpFileCache;
 use function is_dir;
 use function mkdir;
+use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
@@ -60,7 +60,7 @@ final class Injector
         $module = (new Module)($meta, $context, '');
         $rayInjector = new RayInjector($module, $scriptDir);
         /** @var bool $isProd */
-        $isProd = $rayInjector->getInstance('', DiCompile::class);
+        $isProd = $rayInjector->getInstance('', Compile::class);
         if ($isProd) {
             return new ScriptInjector($scriptDir, function () use ($scriptDir, $module) {
                 return new ScriptinjectorModule($scriptDir, $module);
