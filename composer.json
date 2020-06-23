@@ -55,7 +55,7 @@
             ]
         },
         "files": [
-            "tests/hash.php"
+            "tests-files/hash.php"
         ]
     },
     "bin": [
