@@ -53,7 +53,10 @@
             "FakeVendor\\HelloWorld\\": [
                 "tests/Fake/fake-app/src/"
             ]
-        }
+        },
+        "files": [
+            "tests-files/hash.php"
+        ]
     },
     "bin": [
         "bin/bear.compile",

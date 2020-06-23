@@ -8,6 +8,9 @@ use function is_dir;
 use function rtrim;
 use function unlink;
 
+/**
+ * @deprecated A deprecated AppInjector use this.
+ */
 final class Unlink
 {
     /**

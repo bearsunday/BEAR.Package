@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Provide\Boot;
+namespace BEAR\Package\Module;
 
 use BEAR\Package\Annotation\DiCompile;
 use Ray\Di\AbstractModule;

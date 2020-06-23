@@ -6,7 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Annotation\DiCompile;
-use BEAR\Package\Provide\Boot\ScriptinjectorModule;
+use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\PhpFileCache;
