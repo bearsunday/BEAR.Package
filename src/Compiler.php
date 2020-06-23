@@ -57,11 +57,6 @@ final class Compiler
     private $appDir;
 
     /**
-     * @var string
-     */
-    private $cacheNs;
-
-    /**
      * @var Meta
      */
     private $appMeta;
@@ -85,19 +80,17 @@ final class Compiler
      * @param string $appName application name "MyVendor|MyProject"
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
-     * @param string $cacheNs cache namespace
      */
-    public function __construct(string $appName, string $context, string $appDir, string $cacheNs = '')
+    public function __construct(string $appName, string $context, string $appDir)
     {
         $this->registerLoader($appDir);
         $this->hookNullObjectClass($appDir);
         $this->appName = $appName;
         $this->context = $context;
         $this->appDir = $appDir;
-        $this->cacheNs = $cacheNs;
         $this->appMeta = new Meta($appName, $context, $appDir);
         /** @psalm-suppress MixedAssignment */
-        $this->injector = Injector::getInstance($appName, $context, $appDir, $cacheNs);
+        $this->injector = Injector::getInstance($appName, $context, $appDir);
     }
 
     /**

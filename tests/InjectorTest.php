@@ -32,17 +32,16 @@ class InjectorTest extends TestCase
     public function testCachedGetInstance(string $context, int $countOfNew) : void
     {
         $appDir = __DIR__ . '/Fake/fake-app';
-        $cn = (string) getmypid();
-        $exitCode = $this->runOnce($context, $cn);
+        $exitCode = $this->runOnce($context);
         $this->assertSame(0, $exitCode);
         App::$counfOfNew = 0;
-        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir, $cn);
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
         $this->assertSame($countOfNew, App::$counfOfNew);
         // 2nd injector; AppInterface object should be stored as a singleton.
-        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir, $cn);
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         /** @var App $app */
         $app = $injector->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
@@ -65,9 +64,9 @@ class InjectorTest extends TestCase
         $this->assertSame(0, $exitCode);
     }
 
-    private function runOnce(string $context, string $cn) : int
+    private function runOnce(string $context) : int
     {
-        $cmd = sprintf('php %s/script/boot.php -c%s -n%s', __DIR__, $context, $cn);
+        $cmd = sprintf('php %s/script/boot.php -c%s', __DIR__, $context);
         passthru($cmd, $exitCode);
 
         return $exitCode;

@@ -12,9 +12,8 @@ require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $opt = getopt('c:n:');
 $context = isset($opt['c']) && is_string($opt['c']) ? $opt['c'] : 'prod-app';
-$cn = isset($opt['n']) && is_string($opt['n']) ? $opt['n'] : '';
 $appDir = dirname(__DIR__) . '/Fake/fake-app';
-$injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir, $cn);
+$injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
 $app = $injector->getInstance(AppInterface::class);
 assert($app instanceof AbstractApp);
 $ro = $app->resource->get('/');
