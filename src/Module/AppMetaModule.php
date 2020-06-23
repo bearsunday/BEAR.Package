@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package;
+namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Resource\Annotation\AppName;

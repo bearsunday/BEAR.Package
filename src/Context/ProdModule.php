@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Context;
 
 use BEAR\Package\Context\Provider\ProdCacheProvider;
-use BEAR\Package\Provide\Boot\DiCompileModule;
+use BEAR\Package\Module\DiCompileModule;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;

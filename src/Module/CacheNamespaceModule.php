@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Provide\Boot;
+namespace BEAR\Package\Module;
 
 use Ray\Di\AbstractModule;
 
