@@ -17,7 +17,9 @@ class CompilerTest extends TestCase
         @unlink($compiledFile1);
         @unlink($compiledFile2);
         @unlink($compiledFile3);
-        (new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app'))->compile();
+        $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app');
+        $compiler->compile();
+        $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile2);
         $this->assertFileExists($compiledFile3);
