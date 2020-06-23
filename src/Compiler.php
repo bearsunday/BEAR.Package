@@ -247,7 +247,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 // %s preload
 
-require __DIR__ . '/vendor/autoload.php'
+require __DIR__ . '/vendor/autoload.php';
 
 %s", $this->context, $requiredOnceFile);
         $fileName = realpath($appMeta->appDir) . '/preload.php';
