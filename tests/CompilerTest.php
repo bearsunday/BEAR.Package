@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
-use http\Exception;
 use PHPUnit\Framework\TestCase;
 use Ray\Compiler\ScriptInjector;
 use RuntimeException;

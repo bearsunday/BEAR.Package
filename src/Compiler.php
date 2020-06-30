@@ -19,7 +19,6 @@ use function file_exists;
 use function file_put_contents;
 use function in_array;
 use function is_int;
-use function strpos;
 use const PHP_EOL;
 use function printf;
 use Ray\Di\AbstractModule;
@@ -30,6 +29,7 @@ use function realpath;
 use ReflectionClass;
 use RuntimeException;
 use function sprintf;
+use function strpos;
 
 final class Compiler
 {
