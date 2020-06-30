@@ -64,7 +64,7 @@
     ],
     "scripts": {
         "coverage": [
-            "php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"
+            "phpunit -v --coverage-clover ./build/logs/clover.xml --coverage-text --coverage-html=build/coverage"
         ],
         "cs": [
             "php-cs-fixer fix -v --dry-run",

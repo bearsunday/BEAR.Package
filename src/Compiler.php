@@ -18,6 +18,7 @@ use Exception;
 use function file_exists;
 use function file_put_contents;
 use function in_array;
+use function is_int;
 use const PHP_EOL;
 use function printf;
 use Ray\Di\AbstractModule;
@@ -28,6 +29,7 @@ use function realpath;
 use ReflectionClass;
 use RuntimeException;
 use function sprintf;
+use function strpos;
 
 final class Compiler
 {
@@ -98,9 +100,6 @@ final class Compiler
      */
     public function compile() : int
     {
-        if (! is_dir($this->appDir)) {
-            throw new RuntimeException($this->appDir);
-        }
         $preload = $this->compilePreload($this->appMeta, $this->context);
         $module = (new Module)($this->appMeta, $this->context);
         $this->compileSrc($module);
@@ -293,7 +292,7 @@ require __DIR__ . '/vendor/autoload.php';
         /** @var T $instance */
         $instance = $class->newInstanceWithoutConstructor();
         if (! $instance instanceof $className) {
-            return;
+            return; // @codeCoverageIgnore
         }
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
@@ -323,11 +322,11 @@ require __DIR__ . '/vendor/autoload.php';
     {
         // named parameter
         if (! in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
-            return;
+            return;  // @codeCoverageIgnore
         }
         $callable = [$instance, $method];
         if (! is_callable($callable)) {
-            return;
+            return;  // @codeCoverageIgnore
         }
         try {
             $namedParameter->getParameters($callable, []);
@@ -352,8 +351,8 @@ require __DIR__ . '/vendor/autoload.php';
             }
             assert(class_exists($class) || interface_exists($class) || trait_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
-                continue;
+            if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
+                continue; // @codeCoverageIgnore
             }
             $paths[] = $this->getRelativePath($this->appDir, $filePath);
         }
@@ -374,9 +373,11 @@ require __DIR__ . '/vendor/autoload.php';
     {
         $dependencyIndex = $interface . '-' . $name;
         if (in_array($dependencyIndex, $this->compiled, true)) {
+            // @codeCoverageIgnoreStart
             printf("S %s:%s\n", $interface, $name);
 
             return;
+            // @codeCoverageIgnoreEnd
         }
         try {
             $this->injector->getInstance($interface, $name);
@@ -388,9 +389,11 @@ require __DIR__ . '/vendor/autoload.php';
             }
             $this->failed[$dependencyIndex] = $e->getMessage();
             $this->progress('F');
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             $this->failed[$dependencyIndex] = sprintf('%s: %s', get_class($e), $e->getMessage());
             $this->progress('F');
+            // @codeCoverageIgnoreEnd
         }
     }
 

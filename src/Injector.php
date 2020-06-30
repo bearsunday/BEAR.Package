@@ -25,6 +25,9 @@ final class Injector
      */
     private static $instances;
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function __construct()
     {
     }
