@@ -20,7 +20,7 @@
         "ext-json": "*",
         "ext-zend-opcache": "*",
         "aura/cli": "^2.2",
-        "bear/app-meta": "^1.6",
+        "bear/app-meta": "^1.6.2",
         "bear/query-repository": "^1.6",
         "bear/resource": "^1.14",
         "bear/streamer": "^1.0.1",
