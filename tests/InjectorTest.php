@@ -7,12 +7,31 @@ namespace BEAR\Package;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\TestCase;
+use Ray\Di\InjectorInterface;
+use function spl_object_hash;
 
 class InjectorTest extends TestCase
 {
     protected function setUp() : void
     {
         parent::setUp();
+    }
+
+    public function testRayInjector()
+    {
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
+        $this->assertInstanceOf(\Ray\Di\Injector::class, $injector);
+
+        return $injector;
+    }
+
+    /**
+     * @depends testRayInjector
+     */
+    public function testRayInjectorAsSingleton(\Ray\Di\Injector $injector)
+    {
+        $singletonInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
+        $this->assertSame(spl_object_hash($injector), spl_object_hash($singletonInjector));
     }
 
     /**
