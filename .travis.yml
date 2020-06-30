@@ -38,7 +38,7 @@ jobs:
       before_script:
         - pecl install pcov
       script:
-        - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
+        - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml --coverage-text;
       after_script:
         - wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover;
 
