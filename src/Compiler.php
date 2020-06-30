@@ -18,6 +18,8 @@ use Exception;
 use function file_exists;
 use function file_put_contents;
 use function in_array;
+use function is_int;
+use function strpos;
 use const PHP_EOL;
 use function printf;
 use Ray\Di\AbstractModule;
@@ -352,7 +354,7 @@ require __DIR__ . '/vendor/autoload.php';
             }
             assert(class_exists($class) || interface_exists($class) || trait_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || strpos($filePath, 'phar') === 0) {
+            if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
                 continue; // @codeCoverageIgnore
             }
             $paths[] = $this->getRelativePath($this->appDir, $filePath);
