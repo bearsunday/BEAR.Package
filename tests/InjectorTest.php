@@ -17,7 +17,7 @@ class InjectorTest extends TestCase
         parent::setUp();
     }
 
-    public function testRayInjector()
+    public function testRayInjector() : InjectorInterface
     {
         $injector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
         $this->assertInstanceOf(\Ray\Di\Injector::class, $injector);
@@ -28,7 +28,7 @@ class InjectorTest extends TestCase
     /**
      * @depends testRayInjector
      */
-    public function testRayInjectorAsSingleton(\Ray\Di\Injector $injector)
+    public function testRayInjectorAsSingleton(\Ray\Di\Injector $injector) : void
     {
         $singletonInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
         $this->assertSame(spl_object_hash($injector), spl_object_hash($singletonInjector));
