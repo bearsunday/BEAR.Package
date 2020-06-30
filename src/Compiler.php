@@ -100,9 +100,6 @@ final class Compiler
      */
     public function compile() : int
     {
-        if (! is_dir($this->appDir)) {
-            throw new RuntimeException($this->appDir);
-        }
         $preload = $this->compilePreload($this->appMeta, $this->context);
         $module = (new Module)($this->appMeta, $this->context);
         $this->compileSrc($module);
