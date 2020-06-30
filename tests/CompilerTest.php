@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use http\Exception;
 use PHPUnit\Framework\TestCase;
 use Ray\Compiler\ScriptInjector;
+use RuntimeException;
+use function unlink;
 
 class CompilerTest extends TestCase
 {
@@ -23,5 +26,27 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile2);
         $this->assertFileExists($compiledFile3);
+    }
+
+    public function testInvokeAgain() : void
+    {
+        $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
+        $compiledFile2 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di' . ScriptInjector::MODULE;
+        $compiledFile3 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
+        @unlink($compiledFile1);
+        @unlink($compiledFile2);
+        @unlink($compiledFile3);
+        $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app');
+        $compiler->compile();
+        $compiler->dumpAutoload();
+        $this->assertFileExists($compiledFile1);
+        $this->assertFileNotExists($compiledFile2); // because cached
+        $this->assertFileExists($compiledFile3);
+    }
+
+    public function testWrongAppDir() : void
+    {
+        $this->expectException(RuntimeException::class);
+        (new Compiler('FakeVendor\HelloWorld', 'app', '__invalid__'))->compile();
     }
 }
