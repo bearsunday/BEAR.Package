@@ -10,8 +10,8 @@ use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
-use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use BEAR\Sunday\Provide\Application\App;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
 use Exception;
@@ -21,6 +21,7 @@ use function in_array;
 use function is_int;
 use const PHP_EOL;
 use function printf;
+use function property_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
@@ -272,7 +273,8 @@ require __DIR__ . '/vendor/autoload.php';
     private function invokeTypicalRequest() : void
     {
         $app = $this->injector->getInstance(AppInterface::class);
-        assert($app instanceof AbstractApp);
+        assert($app instanceof AppInterface);
+        assert(property_exists($app, 'resource'));
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
         /** @psalm-suppress MixedMethodCall */
