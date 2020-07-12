@@ -10,7 +10,6 @@ use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
-use BEAR\Sunday\Extension\Application\AbstractApp;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
@@ -272,7 +271,7 @@ require __DIR__ . '/vendor/autoload.php';
     private function invokeTypicalRequest() : void
     {
         $app = $this->injector->getInstance(AppInterface::class);
-        assert($app instanceof AbstractApp);
+        assert($app instanceof AppInterface);
         $ro = new NullPage;
         $ro->uri = new Uri('app://self/');
         /** @psalm-suppress MixedMethodCall */
