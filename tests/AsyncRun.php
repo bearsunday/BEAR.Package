@@ -32,6 +32,9 @@ final class AsyncRun
             do {
                 foreach ($procs as $p) {
                     $status = proc_get_status($p);
+                    if (! $status) {
+                        throw new RuntimeException; // @codeCoverageIgnore
+                    }
                     if ($status['exitcode'] == -1) {
                         // over
                         continue;
