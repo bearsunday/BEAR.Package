@@ -29,7 +29,7 @@ class Module
             if (! is_a($class, AbstractModule::class, true)) {
                 throw new InvalidContextException($contextItem);
             }
-            /* @var $module AbstractModule */
+            /** @psalm-suppress UnsafeInstantiation */
             $module = is_subclass_of($class, AbstractAppModule::class) ? new $class($appMeta, $module) : new $class($module);
         }
         if (! $module instanceof AbstractModule) {
