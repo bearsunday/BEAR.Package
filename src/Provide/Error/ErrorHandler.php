@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
-use Throwable;
+use Exception;
 
 /**
  * vnd.error for BEAR.Package
@@ -39,7 +39,7 @@ final class ErrorHandler implements ErrorInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Throwable $e, Request $request)
+    public function handle(Exception $e, Request $request) // phpcs:ignore SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
     {
         $this->logger->__invoke($e, $request);
         $this->errorPage = $this->factory->newInstance($e, $request);
