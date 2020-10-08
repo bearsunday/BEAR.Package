@@ -13,9 +13,12 @@ use FakeVendor\HelloWorld\Module\ProdModule;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
+use function serialize;
+use function unserialize;
+
 class NewAppTest extends TestCase
 {
-    public function testGetInstanceByHand() : App
+    public function testGetInstanceByHand(): App
     {
         $app = (new Injector(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule()))), __DIR__ . '/tmp'))->getInstance(AppInterface::class);
         $this->assertInstanceOf(App::class, $app);
@@ -26,7 +29,7 @@ class NewAppTest extends TestCase
     /**
      * @depends testGetInstanceByHand
      */
-    public function testSerializable(App $app) : void
+    public function testSerializable(App $app): void
     {
         $this->assertInstanceOf(App::class, unserialize(serialize($app)));
     }

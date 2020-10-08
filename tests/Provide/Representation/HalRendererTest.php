@@ -15,19 +15,21 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
 use PHPUnit\Framework\TestCase;
 
+use function assert;
+use function restore_error_handler;
+use function set_error_handler;
+
 class HalRendererTest extends TestCase
 {
-    /**
-     * @var ResourceInterface
-     */
+    /** @var ResourceInterface */
     private $resource;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
     }
 
-    public function testRender() : void
+    public function testRender(): void
     {
         $ro = $this->resource->get->uri('app://self/user')->withQuery(['id' => 1, 'type' => 'type_a'])->eager->request();
         $result = (string) $ro;
@@ -51,7 +53,7 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testRenderPost() : void
+    public function testRenderPost(): void
     {
         $ro = $this->resource->post->uri('app://self/user')->withQuery(['id' => 1])->eager->request();
         $result = (string) $ro;
@@ -71,7 +73,7 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testRenderEmbed() : void
+    public function testRenderEmbed(): void
     {
         $ro = $this->resource->get->uri('app://self/emb?id=1')->eager->request();
         $result = (string) $ro;
@@ -104,7 +106,7 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testNoEmbededLinksWhenSchemaIsDifferent() : void
+    public function testNoEmbededLinksWhenSchemaIsDifferent(): void
     {
         $ro = $this->resource->get->uri('page://self/emb')->eager->request();
         $result = (string) $ro;
@@ -126,7 +128,7 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testRenderScalar() : void
+    public function testRenderScalar(): void
     {
         $ro = $this->resource->get->uri('app://self/scalar')->eager->request();
         $result = (string) $ro;
@@ -142,7 +144,7 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testOptions() : void
+    public function testOptions(): void
     {
         $ro = $this->resource->options->uri('app://self/scalar')->eager->request();
         $result = (string) $ro;
@@ -153,10 +155,10 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testHalRendererNoParam() : void
+    public function testHalRendererNoParam(): void
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new RouterReverseLink(new FakeRouter)));
-        $ro = new Task;
+        $halRenderer = new HalRenderer(new AnnotationReader(), new HalLink(new RouterReverseLink(new FakeRouter())));
+        $ro = new Task();
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
         $ro->uri->method = 'post';
@@ -173,10 +175,10 @@ class HalRendererTest extends TestCase
         $this->assertSame($expected, $hal);
     }
 
-    public function testHalRendererWithParam() : void
+    public function testHalRendererWithParam(): void
     {
-        $halRenderer = new HalRenderer(new AnnotationReader, new HalLink(new RouterReverseLink(new FakeRouter)));
-        $ro = new Task;
+        $halRenderer = new HalRenderer(new AnnotationReader(), new HalLink(new RouterReverseLink(new FakeRouter())));
+        $ro = new Task();
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';
         $ro = $ro->onPost(1);
@@ -196,10 +198,10 @@ class HalRendererTest extends TestCase
         $this->assertSame($expected, $location);
     }
 
-    public function test201Created() : void
+    public function test201Created(): void
     {
         $ro = $this->resource->post->uri('app://self/post')->eager->request();
-        /* @var $ro \BEAR\Resource\ResourceObject */
+        /** @var ResourceObject $ro */
         $result = (string) $ro;
         $expect = '{
     "id": "10",
@@ -225,7 +227,7 @@ class HalRendererTest extends TestCase
         $this->assertSame('/post?id=10', $ro->headers['Location']);
     }
 
-    public function test201CreatedWithNoQuery() : void
+    public function test201CreatedWithNoQuery(): void
     {
         $ro = $this->resource->post->uri('app://self/post?uri=/post')->eager->request();
         assert($ro instanceof ResourceObject);
@@ -234,10 +236,10 @@ class HalRendererTest extends TestCase
         $this->assertSame('/post', $ro->headers['Location']);
     }
 
-    public function testCreatedResourceAnnotationButFailed() : void
+    public function testCreatedResourceAnnotationButFailed(): void
     {
-        /** @var \BEAR\Resource\ResourceObject $ro */
         $ro = $this->resource->post->uri('app://self/post?code=500');
+        assert($ro instanceof ResourceObject);
         $result = (string) $ro;
         $expect = '{
     "_links": {
@@ -250,12 +252,12 @@ class HalRendererTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function testCreatedResourceInvaliUri() : void
+    public function testCreatedResourceInvaliUri(): void
     {
         $ro = $this->resource->post->uri('app://self/post?uri=__INVALID_*+')();
 
         $errNo = $errStr = '';
-        set_error_handler(function (int $no, string $str) use (&$errNo, &$errStr) {
+        set_error_handler(static function (int $no, string $str) use (&$errNo, &$errStr) {
             $errNo = $no;
             $errStr = $str;
         });
@@ -271,7 +273,7 @@ class HalRendererTest extends TestCase
         $this->assertSame(500, $ro->code);
     }
 
-    public function testLinksAlreadyExists() : void
+    public function testLinksAlreadyExists(): void
     {
         $ro = $this->resource->get->uri('app://self/hal')->eager->request();
         $result = (string) $ro;

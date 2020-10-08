@@ -10,21 +10,19 @@ use PHPUnit\Framework\TestCase;
 
 class ProdVndErrorPageTest extends TestCase
 {
-    /**
-     * @var ProdVndErrorPage
-     */
+    /** @var ProdVndErrorPage */
     private $page;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $e = new LogicException('bear');
         $request = new RouterMatch();
-        list($request->method, $request->path, $request->query) = ['get', '/', []];
+        [$request->method, $request->path, $request->query] = ['get', '/', []];
         $this->page = (new ProdVndErrorPageFactory())->newInstance($e, $request);
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         $this->page->toString();
         $this->assertSame(500, $this->page->code);
