@@ -9,7 +9,7 @@ use Ray\Di\AbstractModule;
 
 class VndErrorModule extends AbstractModule
 {
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind(ErrorLogger::class);
         $this->bind(ErrorInterface::class)->to(ErrorHandler::class);

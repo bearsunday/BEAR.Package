@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
-use Exception;
+use Throwable;
 
 /**
  * vnd.error for BEAR.Package
@@ -17,24 +17,16 @@ use Exception;
  */
 final class ErrorHandler implements ErrorInterface
 {
-    /**
-     * @var ?ResourceObject
-     */
+    /** @var ?ResourceObject */
     private $errorPage;
 
-    /**
-     * @var TransferInterface
-     */
+    /** @var TransferInterface */
     private $responder;
 
-    /**
-     * @var ErrorLogger
-     */
+    /** @var ErrorLogger */
     private $logger;
 
-    /**
-     * @var ErrorPageFactoryInterface
-     */
+    /** @var ErrorPageFactoryInterface */
     private $factory;
 
     public function __construct(TransferInterface $responder, ErrorLogger $logger, ErrorPageFactoryInterface $factory)
@@ -47,7 +39,7 @@ final class ErrorHandler implements ErrorInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Exception $e, Request $request)
+    public function handle(Throwable $e, Request $request)
     {
         $this->logger->__invoke($e, $request);
         $this->errorPage = $this->factory->newInstance($e, $request);
@@ -58,8 +50,8 @@ final class ErrorHandler implements ErrorInterface
     /**
      * {@inheritdoc}
      */
-    public function transfer() : void
+    public function transfer(): void
     {
-        $this->responder->__invoke($this->errorPage ?? new NullPage, []);
+        $this->responder->__invoke($this->errorPage ?? new NullPage(), []);
     }
 }

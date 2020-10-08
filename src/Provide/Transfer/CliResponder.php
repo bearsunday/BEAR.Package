@@ -10,18 +10,15 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponseInterface;
 use BEAR\Sunday\Provide\Transfer\HeaderInterface;
 use BEAR\Sunday\Provide\Transfer\Output;
+
 use const PHP_EOL;
 
 final class CliResponder implements TransferInterface
 {
-    /**
-     * @var HeaderInterface
-     */
+    /** @var HeaderInterface */
     private $header;
 
-    /**
-     * @var ConditionalResponseInterface
-     */
+    /** @var ConditionalResponseInterface */
     private $condResponse;
 
     public function __construct(HeaderInterface $header, ConditionalResponseInterface $condResponse)
@@ -33,13 +30,13 @@ final class CliResponder implements TransferInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke(ResourceObject $ro, array $server) : void
+    public function __invoke(ResourceObject $ro, array $server): void
     {
         /** @var array{HTTP_IF_NONE_MATCH?: string} $server */
         $isModified = $this->condResponse->isModified($ro, $server);
         $output = $isModified ? $this->getOutput($ro, $server) : $this->condResponse->getOutput($ro->headers);
 
-        $statusText = (new Code)->statusText[$ro->code] ?? '';
+        $statusText = (new Code())->statusText[$ro->code] ?? '';
         $ob = $output->code . ' ' . $statusText . PHP_EOL;
 
         // header
@@ -59,7 +56,7 @@ final class CliResponder implements TransferInterface
     /**
      * @param array<string, string> $server
      */
-    private function getOutput(ResourceObject $ro, array $server) : Output
+    private function getOutput(ResourceObject $ro, array $server): Output
     {
         $ro->toString(); // set headers as well
 

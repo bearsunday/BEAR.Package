@@ -6,8 +6,19 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Package\Exception\InvalidRequestJsonException;
-use function in_array;
 use Ray\Di\Di\Inject;
+
+use function file_get_contents;
+use function in_array;
+use function json_decode;
+use function json_last_error;
+use function json_last_error_msg;
+use function parse_str;
+use function rtrim;
+use function strpos;
+use function strtolower;
+
+use const JSON_ERROR_NONE;
 
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
@@ -19,9 +30,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     public const APPLICATION_JSON = 'application/json';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $stdIn = 'php://input';
 
     /**
@@ -30,7 +39,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @Inject(optional=true)
      * @StdIn
      */
-    public function setStdIn($stdIn) : void
+    public function setStdIn($stdIn): void
     {
         $this->stdIn = $stdIn;
     }
@@ -57,7 +66,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
-    private function unsafeMethod(string $method, array $server, array $post) : array
+    private function unsafeMethod(string $method, array $server, array $post): array
     {
         /** @var array{_method?: string} $params */
         $params = $this->getParams($method, $server, $post);
@@ -75,7 +84,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
-    private function getOverrideMethod(string $method, array $server, array $params) : array
+    private function getOverrideMethod(string $method, array $server, array $params): array
     {
         // must be a POST to do an override
 
@@ -103,7 +112,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array<string, mixed>
      */
-    private function getParams(string $method, array $server, array $post) : array
+    private function getParams(string $method, array $server, array $post): array
     {
         // post data exists
         if ($method === 'post' && ! empty($post)) {
@@ -124,9 +133,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array<string, mixed>
      */
-    private function phpInput(array $server) : array
+    private function phpInput(array $server): array
     {
-        $contentType = $server[self::CONTENT_TYPE] ?? ($server[self::HTTP_CONTENT_TYPE]) ?? '';
+        $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
         $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
@@ -134,10 +143,12 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             /** @var array<string, mixed> $put */
             return $put;
         }
+
         $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
         if (! $isApplicationJson) {
             return [];
         }
+
         /** @var array<string, mixed> $content */
         $content = json_decode($this->getRawBody($server), true);
         $error = json_last_error();
@@ -151,7 +162,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * @param array{HTTP_RAW_POST_DATA?: string} $server
      */
-    private function getRawBody(array $server) : string
+    private function getRawBody(array $server): string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));
     }

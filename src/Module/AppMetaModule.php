@@ -12,12 +12,10 @@ use Ray\Di\Scope;
 
 class AppMetaModule extends AbstractModule
 {
-    /**
-     * @var AbstractAppMeta
-     */
+    /** @var AbstractAppMeta */
     private $appMeta;
 
-    public function __construct(AbstractAppMeta $appMeta, AbstractModule $module = null)
+    public function __construct(AbstractAppMeta $appMeta, ?AbstractModule $module = null)
     {
         $this->appMeta = $appMeta;
         parent::__construct($module);
@@ -26,7 +24,7 @@ class AppMetaModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
         $this->bind(AppInterface::class)->to($this->appMeta->name . '\Module\App')->in(Scope::SINGLETON);

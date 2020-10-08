@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 
 class NullPage extends ResourceObject
 {
-    public function onGet() : ResourceObject
+    public function onGet(): ResourceObject
     {
         return $this;
     }

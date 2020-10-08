@@ -12,7 +12,7 @@ class ApiModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind()->annotatedWith(DefaultSchemeHost::class)->toInstance('app://self');
     }

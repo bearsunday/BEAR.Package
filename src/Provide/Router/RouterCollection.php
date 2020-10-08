@@ -8,16 +8,15 @@ use BEAR\Package\Exception\RouterException;
 use BEAR\Sunday\Extension\Router\NullMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Throwable;
+
 use function error_log;
-use Exception;
 
 class RouterCollection implements RouterInterface
 {
     private const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
 
-    /**
-     * @var RouterInterface[]
-     */
+    /** @var RouterInterface[] */
     private $routers;
 
     /**
@@ -36,12 +35,13 @@ class RouterCollection implements RouterInterface
         foreach ($this->routers as $route) {
             try {
                 $match = $route->match($globals, $server);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $e = new RouterException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
                 error_log((string) $e);
 
                 return $this->routeNotFound();
             }
+
             if (! $match instanceof NullMatch) {
                 return $match;
             }
@@ -65,9 +65,9 @@ class RouterCollection implements RouterInterface
         return false;
     }
 
-    private function routeNotFound() : RouterMatch
+    private function routeNotFound(): RouterMatch
     {
-        $routeMatch = new RouterMatch;
+        $routeMatch = new RouterMatch();
         $routeMatch->method = 'get';
         $routeMatch->path = self::ROUTE_NOT_FOUND;
 

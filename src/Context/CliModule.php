@@ -13,12 +13,16 @@ use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Ray\Di\AbstractModule;
 
+use function crc32;
+use function sys_get_temp_dir;
+use function tempnam;
+
 class CliModule extends AbstractModule
 {
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->rename(RouterInterface::class, 'original');
         $this->bind(RouterInterface::class)->to(CliRouter::class);

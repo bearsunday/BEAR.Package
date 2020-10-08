@@ -21,6 +21,8 @@ use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
+use function microtime;
+
 /**
  * @codeCoverageIgnore
  */
@@ -29,7 +31,7 @@ class ProdModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
@@ -56,7 +58,7 @@ class ProdModule extends AbstractModule
      * OPTIONS method return 405 Method Not Allowed error code. To enable OPTIONS in `prod` context,
      * Install BEAR\Resource\Module\OptionsMethodModule() in your ProdModule.
      */
-    private function disableOptionsMethod() : void
+    private function disableOptionsMethod(): void
     {
         $this->bind(RenderInterface::class)->annotatedWith('options')->to(NullOptionsRenderer::class);
     }

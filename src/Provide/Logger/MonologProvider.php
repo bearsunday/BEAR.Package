@@ -12,9 +12,7 @@ use Ray\Di\ProviderInterface;
 
 class MonologProvider implements ProviderInterface
 {
-    /**
-     * @var AbstractAppMeta
-     */
+    /** @var AbstractAppMeta */
     private $appMeta;
 
     public function __construct(AbstractAppMeta $appMeta)
@@ -25,7 +23,7 @@ class MonologProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get() : Logger
+    public function get(): Logger
     {
         $format = "[%datetime%] %level_name%: %message% %context%\n";
         $stream = new StreamHandler($this->appMeta->logDir . '/app.log', Logger::DEBUG);

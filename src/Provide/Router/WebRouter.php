@@ -8,16 +8,16 @@ use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
+use function assert;
+use function is_string;
+use function parse_url;
+
 class WebRouter implements RouterInterface, WebRouterInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $schemeHost;
 
-    /**
-     * @var HttpMethodParamsInterface
-     */
+    /** @var HttpMethodParamsInterface */
     private $httpMethodParams;
 
     /**
@@ -41,9 +41,9 @@ class WebRouter implements RouterInterface, WebRouterInterface
     {
         assert(isset($server['REQUEST_URI']));
         assert(isset($server['REQUEST_METHOD']));
-        /** @var string $requestUri */
         $requestUri = $server['REQUEST_URI'];
-        $request = new RouterMatch;
+        assert(is_string($requestUri));
+        $request = new RouterMatch();
         /** @var array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, REQUEST_METHOD: string} $server */
         [$request->method, $request->query] = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
         $request->path = $this->schemeHost . parse_url($requestUri, 5); // 5 = PHP_URL_PATH

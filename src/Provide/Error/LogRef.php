@@ -6,17 +6,23 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterMatch;
-use Exception;
+use Throwable;
+
+use function file_put_contents;
 use function get_class;
+use function hash;
+use function is_link;
+use function is_writable;
+use function sprintf;
+use function symlink;
+use function unlink;
 
 final class LogRef
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $ref;
 
-    public function __construct(Exception $e)
+    public function __construct(Throwable $e)
     {
         $this->ref = hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
     }
@@ -26,7 +32,7 @@ final class LogRef
         return $this->ref;
     }
 
-    public function log(Exception $e, RouterMatch $request, AbstractAppMeta $appMeta) : void
+    public function log(Throwable $e, RouterMatch $request, AbstractAppMeta $appMeta): void
     {
         $logRefFile = sprintf('%s/logref.%s.log', $appMeta->logDir, $this->ref);
         $log = (string) new ExceptionAsString($e, $request);

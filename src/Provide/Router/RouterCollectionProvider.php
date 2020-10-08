@@ -11,14 +11,10 @@ use Ray\Di\ProviderInterface;
 
 class RouterCollectionProvider implements ProviderInterface
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $primaryRouter;
 
-    /**
-     * @var WebRouterInterface
-     */
+    /** @var WebRouterInterface */
     private $webRouter;
 
     /**
@@ -34,7 +30,7 @@ class RouterCollectionProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get() : RouterCollection
+    public function get(): RouterCollection
     {
         return new RouterCollection([$this->primaryRouter, $this->webRouter]);
     }

@@ -12,7 +12,7 @@ class WebRouterModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind(RouterInterface::class)->to(WebRouter::class);
         $this->bind(WebRouterInterface::class)->to(WebRouter::class);

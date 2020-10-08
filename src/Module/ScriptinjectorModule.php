@@ -10,12 +10,10 @@ use Ray\Di\InjectorInterface;
 
 class ScriptinjectorModule extends AbstractModule
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $scriptDir;
 
-    public function __construct(string $scriptDir, AbstractModule $module = null)
+    public function __construct(string $scriptDir, ?AbstractModule $module = null)
     {
         $this->scriptDir = $scriptDir;
         parent::__construct($module);
@@ -24,7 +22,7 @@ class ScriptinjectorModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind(InjectorInterface::class)->toInstance(new ScriptInjector($this->scriptDir));
     }

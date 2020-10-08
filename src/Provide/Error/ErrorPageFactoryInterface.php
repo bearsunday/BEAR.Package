@@ -6,12 +6,12 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterMatch;
-use Exception;
+use Throwable;
 
 interface ErrorPageFactoryInterface
 {
     /**
      * @return ResourceObject
      */
-    public function newInstance(Exception $e, RouterMatch $request);
+    public function newInstance(Throwable $e, RouterMatch $request);
 }
