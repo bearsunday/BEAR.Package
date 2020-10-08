@@ -67,11 +67,9 @@
             "phpunit -v --coverage-clover ./build/logs/clover.xml --coverage-text --coverage-html=build/coverage"
         ],
         "cs": [
-            "php-cs-fixer fix -v --dry-run",
             "phpcs --standard=./phpcs.xml src"
         ],
         "cs-fix": [
-            "php-cs-fixer fix -v",
             "phpcbf src"
         ],
         "metrics": [
