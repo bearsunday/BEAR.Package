@@ -27,7 +27,7 @@ final class LogRef
         $this->ref = hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->ref;
     }

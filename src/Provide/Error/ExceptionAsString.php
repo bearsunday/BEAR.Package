@@ -30,11 +30,10 @@ final class ExceptionAsString
             $e->getTraceAsString()
         );
 
-        /** @var array<string, mixed> $_SERVER */
         $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), (string) $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->string;
     }

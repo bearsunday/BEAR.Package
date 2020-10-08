@@ -26,7 +26,7 @@ final class DevVndErrorPage extends ResourceObject
         $this->body = $this->getResponseBody($e, $request, $status);
     }
 
-    public function toString()
+    public function toString(): string
     {
         $this->view = json_encode($this->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 

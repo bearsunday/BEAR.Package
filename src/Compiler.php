@@ -60,9 +60,6 @@ final class Compiler
     private $injector;
 
     /** @var string */
-    private $appName;
-
-    /** @var string */
     private $context;
 
     /** @var string */
@@ -294,7 +291,6 @@ require __DIR__ . '/vendor/autoload.php';
     {
         $class = new ReflectionClass($className);
         $instance = $class->newInstanceWithoutConstructor();
-        assert($instance instanceof T);
         if (! $instance instanceof $className) {
             return; // @codeCoverageIgnore
         }
