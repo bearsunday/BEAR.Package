@@ -155,9 +155,7 @@ final class Compiler
                 if ($class !== NullPage::class) {
                     $this->classes[] = $class;
                 }
-            },
-            false,
-            true
+            }
         );
     }
 
