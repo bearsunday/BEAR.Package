@@ -8,6 +8,7 @@ use Aura\Cli\CliFactory;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+use function assert;
 use function file_exists;
 use function file_put_contents;
 use function serialize;
@@ -41,7 +42,7 @@ class CliRouterTest extends TestCase
 
     /**
      * @return (string|string[])[][]
-     * @return array{0:              array{0: string, 1: string, 2: array<string>, 3: array<string>, 4: string}}
+     * @phpstan-return array{0:              array{0: string, 1: string, 2: array<string>, 3: array<string>, 4: string}}
      */
     public function argvProvider(): array
     {
@@ -144,9 +145,9 @@ class CliRouterTest extends TestCase
     public function testSerializable(): void
     {
         $router = unserialize(serialize($this->router));
+        assert($router instanceof CliRouter);
         $router->setTerminateException(new InvalidArgumentException());
         $this->expectException(InvalidArgumentException::class);
-        /** @var CliRouter $router */
         $router->match(
             [
                 '_GET' => [],

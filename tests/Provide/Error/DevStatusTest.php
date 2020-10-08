@@ -12,15 +12,11 @@ use RuntimeException;
 
 class DevStatusTest extends TestCase
 {
-    /** @var RouterMatch */
-    private $request;
-
     protected function setUp(): void
     {
         parent::setUp();
         $request = new RouterMatch();
         [$request->method, $request->path, $request->query] = ['get', '/', []];
-        $this->request = $request;
     }
 
     public function testRuntimeException(): void

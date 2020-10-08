@@ -47,7 +47,7 @@ class InjectorTest extends TestCase
     /**
      * @return array<array{0: string, 1:int}>
      */
-    public function CountOfNewProvider(): array
+    public function countOfNewProvider(): array
     {
         return [
             ['prod-app', 0],
@@ -56,7 +56,7 @@ class InjectorTest extends TestCase
     }
 
     /**
-     * @dataProvider CountOfNewProvider
+     * @dataProvider countOfNewProvider
      */
     public function testCachedGetInstance(string $context, int $countOfNew): void
     {
@@ -78,7 +78,7 @@ class InjectorTest extends TestCase
     }
 
     /**
-     * @dataProvider CountOfNewProvider
+     * @dataProvider countOfNewProvider
      */
     public function testRaceConditionBoot(string $context): void
     {

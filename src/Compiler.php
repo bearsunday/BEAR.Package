@@ -86,7 +86,6 @@ final class Compiler
     {
         $this->registerLoader($appDir);
         $this->hookNullObjectClass($appDir);
-        $this->appName = $appName;
         $this->context = $context;
         $this->appDir = $appDir;
         $this->appMeta = new Meta($appName, $context, $appDir);
