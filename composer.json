@@ -16,18 +16,18 @@
         }
     ],
     "require": {
-        "php": ">=7.2.0",
+        "php": "^7.2 || ^8.0",
         "ext-json": "*",
         "ext-zend-opcache": "*",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6.2",
         "bear/query-repository": "^1.6",
-        "bear/resource": "^1.14",
+        "bear/resource": "^1.14 || 1.x-dev",
         "bear/streamer": "^1.0.1",
-        "bear/sunday": "^1.4.1",
+        "bear/sunday": "^1.4.1 || 1.x-dev",
         "monolog/monolog": "^1.25 || ^2.0",
-        "ray/compiler": "^1.5",
-        "ray/di": "^2.10.3",
+        "ray/di": "^2.10.5",
+        "ray/aop": "^2.9.9",
         "ray/object-visual-grapher": "^1.0"
     },
     "require-dev": {
