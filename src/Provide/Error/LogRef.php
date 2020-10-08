@@ -10,7 +10,6 @@ use Throwable;
 
 use function file_put_contents;
 use function get_class;
-use function hash;
 use function is_link;
 use function is_writable;
 use function sprintf;
@@ -24,6 +23,7 @@ final class LogRef
 
     public function __construct(Throwable $e)
     {
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         $this->ref = hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
     }
 
