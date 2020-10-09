@@ -33,7 +33,6 @@ use function interface_exists;
 use function is_callable;
 use function is_float;
 use function is_int;
-use function is_string;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
@@ -172,7 +171,6 @@ final class Compiler
         /** @var array{0: string, 1:string} $meta */
         foreach ($metas as $meta) {
             [$className] = $meta;
-            assert(is_string($className));
             assert(class_exists($className));
             $this->scanClass($reader, $namedParams, $className);
         }

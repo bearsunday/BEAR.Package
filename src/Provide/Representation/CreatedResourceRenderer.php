@@ -11,7 +11,6 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Throwable;
 
-use function assert;
 use function is_string;
 use function parse_str;
 use function parse_url;
@@ -49,7 +48,6 @@ class CreatedResourceRenderer implements RenderInterface
         $locationUri = sprintf('%s://%s%s', $urlSchema, $urlHost, $ro->headers['Location']);
         try {
             $locatedResource = $this->resource->uri($locationUri)();
-            assert($locatedResource instanceof ResourceObject);
         } catch (Throwable $e) {
             $ro->code = 500;
             $ro->view = '';

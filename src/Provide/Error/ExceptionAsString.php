@@ -30,6 +30,7 @@ final class ExceptionAsString
             $e->getTraceAsString()
         );
 
+        /** @var array<string, string> $_SERVER */ //phpcs:ignore SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.NoAssignment
         $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), (string) $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 

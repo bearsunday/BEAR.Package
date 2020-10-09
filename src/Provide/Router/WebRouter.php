@@ -9,7 +9,6 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
 use function assert;
-use function is_string;
 use function parse_url;
 
 class WebRouter implements RouterInterface, WebRouterInterface
@@ -42,7 +41,6 @@ class WebRouter implements RouterInterface, WebRouterInterface
         assert(isset($server['REQUEST_URI']));
         assert(isset($server['REQUEST_METHOD']));
         $requestUri = $server['REQUEST_URI'];
-        assert(is_string($requestUri));
         $request = new RouterMatch();
         /** @var array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, REQUEST_METHOD: string} $server */
         [$request->method, $request->query] = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
