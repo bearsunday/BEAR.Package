@@ -6,12 +6,22 @@ namespace BEAR\Package;
 
 use RuntimeException;
 
+use function count;
+use function is_resource;
+use function proc_close;
+use function proc_get_status;
+use function proc_open;
+use function usleep;
+
+use const STDIN;
+use const STDOUT;
+
 final class AsyncRun
 {
     /**
      * @param array<string> $cmds
      */
-    public function __invoke(array $cmds, string $errorLog) : int
+    public function __invoke(array $cmds, string $errorLog): int
     {
         $times = count($cmds);
         $procs = [];
@@ -24,28 +34,34 @@ final class AsyncRun
                     $pipes
                 );
                 if (! is_resource($proc)) {
-                    throw new RuntimeException;
+                    throw new RuntimeException();
                 }
+
                 $procs[] = $proc;
             }
+
             $exitCode = $completed = 0;
             do {
                 foreach ($procs as $p) {
                     $status = proc_get_status($p);
                     if (! $status) {
-                        throw new RuntimeException; // @codeCoverageIgnore
+                        throw new RuntimeException(); // @codeCoverageIgnore
                     }
-                    if ($status['exitcode'] == -1) {
+
+                    if ($status['exitcode'] === -1) {
                         // over
                         continue;
                     }
+
                     if (! $status['running']) {
                         // just completed
                         $completed++;
                         $exitCode |= $status['exitcode'];
                     }
+
                     usleep(100 * 1000);
                 }
+
                 $isNotComletedAll = $completed !== $times;
             } while ($isNotComletedAll);
         } finally {

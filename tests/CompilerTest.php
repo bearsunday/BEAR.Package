@@ -7,11 +7,12 @@ namespace BEAR\Package;
 use PHPUnit\Framework\TestCase;
 use Ray\Compiler\ScriptInjector;
 use RuntimeException;
+
 use function unlink;
 
 class CompilerTest extends TestCase
 {
-    public function testInvoke() : void
+    public function testInvoke(): void
     {
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
         $compiledFile2 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di' . ScriptInjector::MODULE;
@@ -27,7 +28,7 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
-    public function testInvokeAgain() : void
+    public function testInvokeAgain(): void
     {
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
         $compiledFile2 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di' . ScriptInjector::MODULE;
@@ -43,7 +44,7 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
-    public function testWrongAppDir() : void
+    public function testWrongAppDir(): void
     {
         $this->expectException(RuntimeException::class);
         (new Compiler('FakeVendor\HelloWorld', 'app', '__invalid__'))->compile();

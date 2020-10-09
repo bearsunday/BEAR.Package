@@ -8,26 +8,24 @@ use PHPUnit\Framework\TestCase;
 
 class WebRouterTest extends TestCase
 {
-    /**
-     * @var WebRouter
-     */
+    /** @var WebRouter */
     private $router;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->router = new WebRouter('page://self', new HttpMethodParams);
+        $this->router = new WebRouter('page://self', new HttpMethodParams());
     }
 
-    public function testMatchRoot() : void
+    public function testMatchRoot(): void
     {
         $global = [
             '_GET' => [],
-            '_POST' => []
+            '_POST' => [],
         ];
         $server = [
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/'
+            'REQUEST_URI' => '/',
         ];
         $request = $this->router->match($global, $server);
         $this->assertSame('get', $request->method);
@@ -35,17 +33,15 @@ class WebRouterTest extends TestCase
         $this->assertSame([], $request->query);
     }
 
-    public function testMatchWithQuery() : void
+    public function testMatchWithQuery(): void
     {
         $global = [
-            '_GET' => [
-                'id' => '1'
-            ],
-            '_POST' => []
+            '_GET' => ['id' => '1'],
+            '_POST' => [],
         ];
         $server = [
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/?id=1'
+            'REQUEST_URI' => '/?id=1',
         ];
         $request = $this->router->match($global, $server);
         $this->assertSame('get', $request->method);
@@ -53,7 +49,7 @@ class WebRouterTest extends TestCase
         $this->assertSame(['id' => '1'], $request->query);
     }
 
-    public function testGenerate() : void
+    public function testGenerate(): void
     {
         $actual = $this->router->generate('', []);
         $this->assertFalse((bool) $actual);

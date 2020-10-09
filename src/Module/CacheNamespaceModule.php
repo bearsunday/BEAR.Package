@@ -8,12 +8,10 @@ use Ray\Di\AbstractModule;
 
 class CacheNamespaceModule extends AbstractModule
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $cacheNamespace;
 
-    public function __construct(string $cacheNamespace, AbstractModule $module = null)
+    public function __construct(string $cacheNamespace, ?AbstractModule $module = null)
     {
         $this->cacheNamespace = $cacheNamespace;
         parent::__construct($module);
@@ -22,7 +20,7 @@ class CacheNamespaceModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind()->annotatedWith('cache_namespace')->toInstance($this->cacheNamespace);
     }

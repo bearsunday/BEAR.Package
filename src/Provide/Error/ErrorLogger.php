@@ -6,21 +6,19 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterMatch;
-use Exception;
-use function get_class;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Throwable;
+
+use function get_class;
+use function sprintf;
 
 final class ErrorLogger
 {
-    /**
-     * @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $logger;
 
-    /**
-     * @var AbstractAppMeta
-     */
+    /** @var AbstractAppMeta */
     private $appMeta;
 
     public function __construct(LoggerInterface $logger, AbstractAppMeta $appMeta)
@@ -29,7 +27,7 @@ final class ErrorLogger
         $this->appMeta = $appMeta;
     }
 
-    public function __invoke(Exception $e, RouterMatch $request) : string
+    public function __invoke(Throwable $e, RouterMatch $request): string
     {
         $level = $e->getCode() >= 500 ? Logger::ERROR : Logger::DEBUG;
         $logRef = new LogRef($e);

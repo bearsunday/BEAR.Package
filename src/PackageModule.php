@@ -19,15 +19,15 @@ class PackageModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
-        $this->install(new QueryRepositoryModule);
-        $this->install(new WebRouterModule);
-        $this->install(new VndErrorModule);
-        $this->install(new PsrLoggerModule);
-        $this->install(new StreamModule);
-        $this->install(new CreatedResourceModule);
+        $this->install(new QueryRepositoryModule());
+        $this->install(new WebRouterModule());
+        $this->install(new VndErrorModule());
+        $this->install(new PsrLoggerModule());
+        $this->install(new StreamModule());
+        $this->install(new CreatedResourceModule());
         $this->install(new DiCompileModule(false));
-        $this->install(new SundayModule);
+        $this->install(new SundayModule());
     }
 }

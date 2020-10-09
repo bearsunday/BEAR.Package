@@ -12,34 +12,28 @@ use RuntimeException;
 
 class DevStatusTest extends TestCase
 {
-    /**
-     * @var RouterMatch
-     */
-    private $request;
-
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $request = new RouterMatch();
-        list($request->method, $request->path, $request->query) = ['get', '/', []];
-        $this->request = $request;
+        [$request->method, $request->path, $request->query] = ['get', '/', []];
     }
 
-    public function testRuntimeException() : void
+    public function testRuntimeException(): void
     {
         $e = new RuntimeException();
         $status = new Status($e);
         $this->assertSame(503, $status->code);
     }
 
-    public function testBadRequest() : void
+    public function testBadRequest(): void
     {
-        $e = new BadRequestException;
+        $e = new BadRequestException();
         $status = new Status($e);
         $this->assertSame(400, $status->code);
     }
 
-    public function testNotFound() : void
+    public function testNotFound(): void
     {
         $e = new ResourceNotFoundException('/__not_found__');
         $status = new Status($e);

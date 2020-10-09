@@ -12,14 +12,10 @@ use Ray\Di\ProviderInterface;
 
 class ProdCacheProvider implements ProviderInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $namespace;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $cacheDir;
 
     /**
@@ -34,7 +30,7 @@ class ProdCacheProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get() : CacheProvider
+    public function get(): CacheProvider
     {
         $cache = new PhpFileCache($this->cacheDir);
         $cache->setNamespace($this->namespace);

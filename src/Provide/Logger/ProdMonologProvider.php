@@ -11,9 +11,7 @@ use Ray\Di\ProviderInterface;
 
 class ProdMonologProvider implements ProviderInterface
 {
-    /**
-     * @var AbstractAppMeta
-     */
+    /** @var AbstractAppMeta */
     private $appMeta;
 
     public function __construct(AbstractAppMeta $appMeta)
@@ -21,8 +19,8 @@ class ProdMonologProvider implements ProviderInterface
         $this->appMeta = $appMeta;
     }
 
-    public function get() : Logger
+    public function get(): Logger
     {
-        return new Logger($this->appMeta->name, [new ErrorLogHandler]);
+        return new Logger($this->appMeta->name, [new ErrorLogHandler()]);
     }
 }

@@ -11,72 +11,69 @@ use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Sunday\Provide\Application\App;
 use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\Reader;
-use Exception;
-use function file_exists;
-use function file_put_contents;
-use function in_array;
-use function is_int;
-use const PHP_EOL;
-use function printf;
-use function property_exists;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
 use Ray\ObjectGrapher\ObjectGrapher;
-use function realpath;
 use ReflectionClass;
 use RuntimeException;
+use Throwable;
+
+use function array_keys;
+use function assert;
+use function class_exists;
+use function count;
+use function file_exists;
+use function file_put_contents;
+use function get_class;
+use function in_array;
+use function interface_exists;
+use function is_callable;
+use function is_float;
+use function is_int;
+use function memory_get_peak_usage;
+use function microtime;
+use function number_format;
+use function preg_quote;
+use function preg_replace;
+use function printf;
+use function property_exists;
+use function realpath;
+use function sort;
+use function spl_autoload_register;
 use function sprintf;
 use function strpos;
+use function substr;
+use function trait_exists;
+
+use const PHP_EOL;
 
 final class Compiler
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $classes = [];
 
-    /**
-     * @var InjectorInterface
-     */
+    /** @var InjectorInterface */
     private $injector;
 
-    /**
-     * @var string
-     */
-    private $appName;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $context;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $appDir;
 
-    /**
-     * @var Meta
-     */
+    /** @var Meta */
     private $appMeta;
 
-    /**
-     * @var array<int, string>
-     */
+    /** @var array<int, string> */
     private $compiled = [];
 
-    /**
-     * @var array<string, string>
-     */
+    /** @var array<string, string> */
     private $failed = [];
 
-    /**
-     * @var list<string>
-     */
+    /** @var list<string> */
     private $overwritten = [];
 
     /**
@@ -88,7 +85,6 @@ final class Compiler
     {
         $this->registerLoader($appDir);
         $this->hookNullObjectClass($appDir);
-        $this->appName = $appName;
         $this->context = $context;
         $this->appDir = $appDir;
         $this->appMeta = new Meta($appName, $context, $appDir);
@@ -99,16 +95,16 @@ final class Compiler
     /**
      * Compile application
      */
-    public function compile() : int
+    public function compile(): int
     {
         $preload = $this->compilePreload($this->appMeta, $this->context);
-        $module = (new Module)($this->appMeta, $this->context);
+        $module = (new Module())($this->appMeta, $this->context);
         $this->compileSrc($module);
         echo PHP_EOL;
         $this->compileDiScripts($this->appMeta);
         $dot = $this->compileObjectGraphDotFile($module);
-        /** @var float $start */
         $start = $_SERVER['REQUEST_TIME_FLOAT'];
+        assert(is_float($start));
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
         echo PHP_EOL;
@@ -124,14 +120,14 @@ final class Compiler
         return $this->failed ? 1 : 0;
     }
 
-    public function dumpAutoload() : int
+    public function dumpAutoload(): int
     {
         echo PHP_EOL;
         $this->invokeTypicalRequest();
         $paths = $this->getPaths($this->classes);
         $autolaod = $this->saveAutoloadFile($this->appMeta->appDir, $paths);
-        /** @var float $start */
         $start = $_SERVER['REQUEST_TIME_FLOAT'];
+        assert(is_float($start));
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
         printf("Compilation (2/2) took %f seconds and used %fMB of memory\n", $time, $memory);
@@ -140,17 +136,18 @@ final class Compiler
         return 0;
     }
 
-    public function registerLoader(string $appDir) : void
+    public function registerLoader(string $appDir): void
     {
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
             throw new RuntimeException('no loader');
         }
-        /** @var ClassLoader $loader */
+
         $loader = require $loaderFile;
+        assert($loader instanceof ClassLoader);
         spl_autoload_register(
             /** @var class-string $class */
-            function (string $class) use ($loader) : void {
+            function (string $class) use ($loader): void {
                 $loader->loadClass($class);
                 if ($class !== NullPage::class) {
                     $this->classes[] = $class;
@@ -159,7 +156,7 @@ final class Compiler
         );
     }
 
-    public function compileDiScripts(AbstractAppMeta $appMeta) : void
+    public function compileDiScripts(AbstractAppMeta $appMeta): void
     {
         $reader = $this->injector->getInstance(Reader::class);
         assert($reader instanceof Reader);
@@ -173,14 +170,13 @@ final class Compiler
         $metas = $appMeta->getResourceListGenerator();
         /** @var array{0: string, 1:string} $meta */
         foreach ($metas as $meta) {
-            /** @var string $className */
             [$className] = $meta;
             assert(class_exists($className));
             $this->scanClass($reader, $namedParams, $className);
         }
     }
 
-    public function compileSrc(AbstractModule $module) : AbstractModule
+    public function compileSrc(AbstractModule $module): AbstractModule
     {
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
@@ -196,7 +192,7 @@ final class Compiler
         return $module;
     }
 
-    private function getFileInfo(string $filename) : string
+    private function getFileInfo(string $filename): string
     {
         if (in_array($filename, $this->overwritten, true)) {
             return $filename . ' (overwritten)';
@@ -208,7 +204,7 @@ final class Compiler
     /**
      * @param array<string> $paths
      */
-    private function saveAutoloadFile(string $appDir, array $paths) : string
+    private function saveAutoloadFile(string $appDir, array $paths): string
     {
         $requiredFile = '';
         foreach ($paths as $path) {
@@ -217,6 +213,7 @@ final class Compiler
                 $this->getRelativePath($appDir, $path)
             );
         }
+
         $autoloadFile = sprintf("<?php
 
 // %s autoload
@@ -230,7 +227,7 @@ require __DIR__ . '/vendor/autoload.php';
         return $fileName;
     }
 
-    private function compilePreload(AbstractAppMeta $appMeta, string $context) : string
+    private function compilePreload(AbstractAppMeta $appMeta, string $context): string
     {
         $this->loadResources($appMeta->name, $context, $appMeta->appDir);
         $paths = $this->getPaths($this->classes);
@@ -241,6 +238,7 @@ require __DIR__ . '/vendor/autoload.php';
                 $this->getRelativePath($appMeta->appDir, $path)
             );
         }
+
         $preloadFile = sprintf("<?php
 
 // %s preload
@@ -254,7 +252,7 @@ require __DIR__ . '/vendor/autoload.php';
         return $fileName;
     }
 
-    private function getRelativePath(string $rootDir, string $file) : string
+    private function getRelativePath(string $rootDir, string $file): string
     {
         $dir = (string) realpath($rootDir);
         if (strpos($file, $dir) !== false) {
@@ -268,12 +266,12 @@ require __DIR__ . '/vendor/autoload.php';
      * @psalm-suppress MixedFunctionCall
      * @psalm-suppress NoInterfaceProperties
      */
-    private function invokeTypicalRequest() : void
+    private function invokeTypicalRequest(): void
     {
         $app = $this->injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);
         assert(property_exists($app, 'resource'));
-        $ro = new NullPage;
+        $ro = new NullPage();
         $ro->uri = new Uri('app://self/');
         /** @psalm-suppress MixedMethodCall */
         $app->resource->get->object($ro)();
@@ -282,18 +280,18 @@ require __DIR__ . '/vendor/autoload.php';
     /**
      * Save annotation and method meta information
      *
-     * @template T
-     *
      * @param class-string<T> $className
+     *
+     * @template T
      */
-    private function scanClass(Reader $reader, NamedParameterInterface $namedParams, string $className) : void
+    private function scanClass(Reader $reader, NamedParameterInterface $namedParams, string $className): void
     {
         $class = new ReflectionClass($className);
-        /** @var T $instance */
         $instance = $class->newInstanceWithoutConstructor();
         if (! $instance instanceof $className) {
             return; // @codeCoverageIgnore
         }
+
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
         $log = sprintf('M %s:', $className);
@@ -302,32 +300,37 @@ require __DIR__ . '/vendor/autoload.php';
             if ($this->isMagicMethod($methodName)) {
                 continue;
             }
+
             if (substr($methodName, 0, 2) === 'on') {
                 $log .= sprintf(' %s', $methodName);
                 $this->saveNamedParam($namedParams, $instance, $methodName);
             }
+
             // method annotation
             $reader->getMethodAnnotations($method);
             $log .= sprintf('@ %s', $methodName);
         }
+
 //        echo $log . PHP_EOL;
     }
 
-    private function isMagicMethod(string $method) : bool
+    private function isMagicMethod(string $method): bool
     {
         return in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
     }
 
-    private function saveNamedParam(NamedParameterInterface $namedParameter, object $instance, string $method) : void
+    private function saveNamedParam(NamedParameterInterface $namedParameter, object $instance, string $method): void
     {
         // named parameter
         if (! in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
             return;  // @codeCoverageIgnore
         }
+
         $callable = [$instance, $method];
         if (! is_callable($callable)) {
             return;  // @codeCoverageIgnore
         }
+
         try {
             $namedParameter->getParameters($callable, []);
         } catch (ParameterException $e) {
@@ -340,7 +343,7 @@ require __DIR__ . '/vendor/autoload.php';
      *
      * @return array<string>
      */
-    private function getPaths(array $classes) : array
+    private function getPaths(array $classes): array
     {
         $paths = [];
         foreach ($classes as $class) {
@@ -349,18 +352,20 @@ require __DIR__ . '/vendor/autoload.php';
             if ($isAutoloadFailed) {
                 continue;
             }
+
             assert(class_exists($class) || interface_exists($class) || trait_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
                 continue; // @codeCoverageIgnore
             }
+
             $paths[] = $this->getRelativePath($this->appDir, $filePath);
         }
 
         return $paths;
     }
 
-    private function loadResources(string $appName, string $context, string $appDir) : void
+    private function loadResources(string $appName, string $context, string $appDir): void
     {
         $meta = new Meta($appName, $context, $appDir);
         $resMetas = $meta->getGenerator('*');
@@ -369,7 +374,7 @@ require __DIR__ . '/vendor/autoload.php';
         }
     }
 
-    private function getInstance(string $interface, string $name = '') : void
+    private function getInstance(string $interface, string $name = ''): void
     {
         $dependencyIndex = $interface . '-' . $name;
         if (in_array($dependencyIndex, $this->compiled, true)) {
@@ -377,8 +382,10 @@ require __DIR__ . '/vendor/autoload.php';
             printf("S %s:%s\n", $interface, $name);
 
             return;
+
             // @codeCoverageIgnoreEnd
         }
+
         try {
             $this->injector->getInstance($interface, $name);
             $this->compiled[] = $dependencyIndex;
@@ -387,17 +394,18 @@ require __DIR__ . '/vendor/autoload.php';
             if ($dependencyIndex === 'Ray\Aop\MethodInvocation-') {
                 return;
             }
+
             $this->failed[$dependencyIndex] = $e->getMessage();
             $this->progress('F');
             // @codeCoverageIgnoreStart
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->failed[$dependencyIndex] = sprintf('%s: %s', get_class($e), $e->getMessage());
             $this->progress('F');
             // @codeCoverageIgnoreEnd
         }
     }
 
-    private function progress(string $char) : void
+    private function progress(string $char): void
     {
         /**
          * @var int
@@ -412,7 +420,7 @@ require __DIR__ . '/vendor/autoload.php';
         }
     }
 
-    private function hookNullObjectClass(string $appDir) : void
+    private function hookNullObjectClass(string $appDir): void
     {
         $compileScript = realpath($appDir) . '/.compile.php';
         if (file_exists($compileScript)) {
@@ -420,18 +428,19 @@ require __DIR__ . '/vendor/autoload.php';
         }
     }
 
-    private function putFileContents(string $fileName, string $content) : void
+    private function putFileContents(string $fileName, string $content): void
     {
         if (file_exists($fileName)) {
             $this->overwritten[] = $fileName;
         }
+
         file_put_contents($fileName, $content);
     }
 
-    private function compileObjectGraphDotFile(AbstractModule $module) : string
+    private function compileObjectGraphDotFile(AbstractModule $module): string
     {
         $dotFile = sprintf('%s/module.dot', $this->appDir);
-        $this->putFileContents($dotFile, (new ObjectGrapher)($module));
+        $this->putFileContents($dotFile, (new ObjectGrapher())($module));
 
         return $dotFile;
     }

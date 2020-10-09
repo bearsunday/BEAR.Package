@@ -9,9 +9,7 @@ use Ray\Di\AbstractModule;
 
 abstract class AbstractAppModule extends AbstractModule
 {
-    /**
-     * @var AbstractAppMeta
-     */
+    /** @var AbstractAppMeta */
     protected $appMeta;
 
     final public function __construct(AbstractAppMeta $appMeta, AbstractModule $module)

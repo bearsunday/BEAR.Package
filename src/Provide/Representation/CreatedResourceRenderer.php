@@ -9,22 +9,27 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
-use Exception;
+use Throwable;
+
 use function is_string;
+use function parse_str;
+use function parse_url;
+use function sprintf;
+
+use const PHP_URL_HOST;
+use const PHP_URL_PATH;
+use const PHP_URL_QUERY;
+use const PHP_URL_SCHEME;
 
 /**
  * 201 CreatedResource renderer
  */
 class CreatedResourceRenderer implements RenderInterface
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $router;
 
-    /**
-     * @var ResourceInterface
-     */
+    /** @var ResourceInterface */
     private $resource;
 
     public function __construct(RouterInterface $router, ResourceInterface $resource)
@@ -43,20 +48,20 @@ class CreatedResourceRenderer implements RenderInterface
         $locationUri = sprintf('%s://%s%s', $urlSchema, $urlHost, $ro->headers['Location']);
         try {
             $locatedResource = $this->resource->uri($locationUri)();
-            /* @var $locatedResource ResourceObject */
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $ro->code = 500;
             $ro->view = '';
 
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
+
         $this->updateHeaders($ro);
         $ro->view = $locatedResource->toString();
 
         return $ro->view;
     }
 
-    private function getReverseMatchedLink(string $uri) : string
+    private function getReverseMatchedLink(string $uri): string
     {
         $routeName = (string) parse_url($uri, PHP_URL_PATH);
         $urlQuery = (string) parse_url($uri, PHP_URL_QUERY);
@@ -64,6 +69,7 @@ class CreatedResourceRenderer implements RenderInterface
         if ($value === []) {
             return $uri;
         }
+
         /** @var array<string, mixed> $value */
         $reverseUri = $this->router->generate($routeName, $value);
         if (is_string($reverseUri)) {
@@ -73,7 +79,7 @@ class CreatedResourceRenderer implements RenderInterface
         return $uri;
     }
 
-    private function updateHeaders(ResourceObject $ro) : void
+    private function updateHeaders(ResourceObject $ro): void
     {
         $ro->headers['content-type'] = 'application/hal+json';
         if (isset($ro->headers['Location'])) {

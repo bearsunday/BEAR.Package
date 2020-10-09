@@ -8,11 +8,11 @@ use BEAR\Resource\ResourceObject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
+use function assert;
+
 class CreatedResourceInterceptor implements MethodInterceptor
 {
-    /**
-     * @var CreatedResourceRenderer
-     */
+    /** @var CreatedResourceRenderer */
     private $renderer;
 
     public function __construct(CreatedResourceRenderer $renderer)
@@ -25,12 +25,13 @@ class CreatedResourceInterceptor implements MethodInterceptor
      */
     public function invoke(MethodInvocation $invocation)
     {
-        /** @var ResourceObject $ro */
         $ro = $invocation->proceed();
+        assert($ro instanceof ResourceObject);
         $isCreated = $ro->code === 201 && isset($ro->headers['Location']);
         if (! $isCreated) {
             return $ro;
         }
+
         $ro->setRenderer($this->renderer);
 
         return $ro;

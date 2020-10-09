@@ -13,30 +13,28 @@ use LogicException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
+use function assert;
+
 class ErrorHandlerTest extends TestCase
 {
-    /**
-     * @var ErrorHandler
-     */
+    /** @var ErrorHandler */
     private $handler;
 
-    /**
-     * @var FakeHttpResponder
-     */
+    /** @var FakeHttpResponder */
     private $responder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->responder = new FakeHttpResponder(new Header, new ConditionalResponse);
-        $this->handler = new ErrorHandler($this->responder, new ErrorLogger(new NullLogger, new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
+        $this->responder = new FakeHttpResponder(new Header(), new ConditionalResponse());
+        $this->handler = new ErrorHandler($this->responder, new ErrorLogger(new NullLogger(), new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
     }
 
-    public function testHandle() : ErrorHandler
+    public function testHandle(): ErrorHandler
     {
         $e = new LogicException('msg');
-        $request = new RouterMatch;
-        list($request->method, $request->path, $request->query) = ['get', '/', []];
+        $request = new RouterMatch();
+        [$request->method, $request->path, $request->query] = ['get', '/', []];
         $handler = $this->handler->handle($e, $request);
         $this->assertInstanceOf(ErrorHandler::class, $handler);
         assert($handler instanceof ErrorHandler);
@@ -47,7 +45,7 @@ class ErrorHandlerTest extends TestCase
     /**
      * @depends testHandle
      */
-    public function testTransfer(ErrorHandler $handler) : void
+    public function testTransfer(ErrorHandler $handler): void
     {
         $handler->transfer();
         $this->assertSame(500, FakeHttpResponder::$code);

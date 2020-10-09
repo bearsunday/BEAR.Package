@@ -13,36 +13,41 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 use Exception;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Throwable;
+
+use function basename;
+use function file_exists;
+use function file_put_contents;
+use function http_build_query;
+use function parse_str;
+use function parse_url;
+use function strtoupper;
+use function unlink;
+
+use const PHP_URL_PATH;
+use const PHP_URL_QUERY;
 
 class CliRouter implements RouterInterface
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     private $router;
 
-    /**
-     * @var Stdio
-     */
+    /** @var Stdio */
     private $stdIo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $stdIn = '';
 
-    /**
-     * @var null|Exception
-     */
+    /** @var Throwable|null */
     private $terminateException;
 
     /**
      * @Named("original")
      */
-    public function __construct(RouterInterface $router, Stdio $stdIo = null)
+    public function __construct(RouterInterface $router, ?Stdio $stdIo = null)
     {
         $this->router = $router;
-        $this->stdIo = $stdIo ?: (new CliFactory)->newStdio();
+        $this->stdIo = $stdIo ?: (new CliFactory())->newStdio();
     }
 
     /**
@@ -55,10 +60,10 @@ class CliRouter implements RouterInterface
 
     public function __wakeup()
     {
-        $this->stdIo = (new CliFactory)->newStdio();
+        $this->stdIo = (new CliFactory())->newStdio();
     }
 
-    public function setTerminateException(Exception $e) : void
+    public function setTerminateException(Throwable $e): void
     {
         $this->terminateException = $e;
     }
@@ -67,7 +72,7 @@ class CliRouter implements RouterInterface
      * @Inject
      * @StdIn
      */
-    public function setStdIn(string $stdIn) : void
+    public function setStdIn(string $stdIn): void
     {
         $this->stdIn = $stdIn;
     }
@@ -110,37 +115,40 @@ class CliRouter implements RouterInterface
      *                array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string}
      *                }
      */
-    private function addQuery(string $method, array $query, array $globals, array $server) : array
+    private function addQuery(string $method, array $query, array $globals, array $server): array
     {
         if ($method === 'get') {
             $globals['_GET'] = $query;
 
             return [$globals, $server];
         }
+
         if ($method === 'post') {
             $globals['_POST'] = $query;
 
             return [$globals, $server];
         }
+
         $server = $this->getStdIn($method, $query, $server);
 
         return [$globals, $server];
     }
 
-    private function error(string $command) : void
+    private function error(string $command): void
     {
-        $help = new CliRouterHelp(new OptionFactory);
+        $help = new CliRouterHelp(new OptionFactory());
         $this->stdIo->outln($help->getHelp($command));
     }
 
     /**
      * @SuppressWarnings(PHPMD)
      */
-    private function terminate(int $status) : void
+    private function terminate(int $status): void
     {
         if ($this->terminateException instanceof Exception) {
             throw $this->terminateException;
         }
+
         // @codeCoverageIgnoreStart
         exit($status);
         // @codeCoverageIgnoreEnd
@@ -154,7 +162,7 @@ class CliRouter implements RouterInterface
      *
      * @return array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string}
      */
-    private function getStdIn(string $method, array $query, array $server) : array
+    private function getStdIn(string $method, array $query, array $server): array
     {
         if ($method === 'put' || $method === 'patch' || $method === 'delete') {
             $server[HttpMethodParams::CONTENT_TYPE] = HttpMethodParams::FORM_URL_ENCODE;
@@ -169,7 +177,7 @@ class CliRouter implements RouterInterface
     /**
      * @param array<int, string> $argv
      */
-    private function validateArgs(int $argc, array $argv) : void
+    private function validateArgs(int $argc, array $argv): void
     {
         if ($argc < 3) {
             $this->error(basename($argv[0]));
@@ -188,7 +196,7 @@ class CliRouter implements RouterInterface
      *                array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string}
      *                }
      */
-    private function parseServer(array $server) : array
+    private function parseServer(array $server): array
     {
         /** @var array{argv: array<string>} $server */
         [, $method, $uri] = $server['argv'];
@@ -198,9 +206,10 @@ class CliRouter implements RouterInterface
         if ($urlQuery) {
             parse_str($urlQuery, $query);
         }
+
         $server = [
             'REQUEST_METHOD' => strtoupper($method),
-            'REQUEST_URI' => $urlPath
+            'REQUEST_URI' => $urlPath,
         ];
 
         /** @var array<string, array|string> $query */

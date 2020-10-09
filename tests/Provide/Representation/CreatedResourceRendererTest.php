@@ -12,24 +12,20 @@ use PHPUnit\Framework\TestCase;
 
 class CreatedResourceRendererTest extends TestCase
 {
-    /**
-     * @var CreatedResourceRenderer
-     */
+    /** @var CreatedResourceRenderer */
     private $renderer;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $ro;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
         $this->ro = $resource->post->uri('app://self/post')();
-        $this->renderer = new CreatedResourceRenderer(new FakeRouter, $resource);
+        $this->renderer = new CreatedResourceRenderer(new FakeRouter(), $resource);
     }
 
-    public function testRender() : ResourceObject
+    public function testRender(): ResourceObject
     {
         $view = $this->renderer->render($this->ro);
         $expected = '{
@@ -60,7 +56,7 @@ class CreatedResourceRendererTest extends TestCase
     /**
      * @depends testRender
      */
-    public function testReverseRoutedHeader(ResourceObject $ro) : void
+    public function testReverseRoutedHeader(ResourceObject $ro): void
     {
         $this->assertSame('/task/10', $ro->headers['Location']);
     }
