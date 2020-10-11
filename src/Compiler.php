@@ -354,9 +354,9 @@ require __DIR__ . '/vendor/autoload.php';
                 continue;
             }
 
-            assert(class_exists($class, false) || interface_exists($class) || trait_exists($class));
-            $filePath = (string) (new ReflectionClass($class))->getFileName();
-            if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
+            /** @var class-string $class */
+            $filePath = (string) (new ReflectionClass($class))->getFileName(); // @phpstan-ignore-line
+            if (! $this->isNotCompileFile($filePath)) {
                 continue; // @codeCoverageIgnore
             }
 
@@ -364,6 +364,11 @@ require __DIR__ . '/vendor/autoload.php';
         }
 
         return $paths;
+    }
+
+    private function isNotCompileFile(string $filePath): bool
+    {
+        return file_exists($filePath) || is_int(strpos($filePath, 'phar'));
     }
 
     private function isNotAutoloadble(string $class): bool
