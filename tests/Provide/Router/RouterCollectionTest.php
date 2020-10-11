@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\FakeErrorRouter;
 use BEAR\Package\FakeWebRouter;
 use BEAR\Sunday\Provide\Router\WebRouter;
 use LogicException;
@@ -74,5 +75,15 @@ class RouterCollectionTest extends TestCase
         }
 
         $this->assertFalse($uri);
+    }
+
+    public function testRouterError(): void
+    {
+        $globals = [];
+        $server = [];
+        $routerCollection = new RouterCollection([new FakeErrorRouter()]);
+        $matchUri = (string) $routerCollection->match($globals, $server);
+        $expected = 'get page://self/__route_not_found';
+        $this->assertSame($expected, $matchUri);
     }
 }
