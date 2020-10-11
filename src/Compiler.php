@@ -34,8 +34,8 @@ use const PHP_EOL;
 
 final class Compiler
 {
-    /** @var list<string> */
-    private $classes = [];
+    /** @var ArrayObject<int, string> */
+    private $classes;
 
     /** @var InjectorInterface */
     private $injector;
@@ -83,6 +83,7 @@ final class Compiler
         $overWritten = new ArrayObject();
         /** @var ArrayObject<int, string> $classes */
         $classes = new ArrayObject();
+        $this->classes = $classes;
         $filePutContents = new FilePutContents();
         $this->dumpAutoload = new CompileAutoload($this->injector, $filePutContents, $this->appMeta, $overWritten, $classes, $appDir, $context);
         $this->compilePreload = new CompilePreload($this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
@@ -139,6 +140,7 @@ final class Compiler
             function (string $class) use ($loader): void {
                 $loader->loadClass($class);
                 if ($class !== NullPage::class) {
+                    /** @psalm-suppress NullArgument */
                     $this->classes[] = $class;
                 }
             }

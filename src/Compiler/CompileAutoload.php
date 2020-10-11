@@ -126,7 +126,6 @@ class CompileAutoload
             }
 
             $paths[] = $this->getRelativePath($this->appDir, $filePath);
-            $paths[] = $this->getRelativePath($this->appDir, $filePath);
         }
 
         return $paths;

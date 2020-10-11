@@ -58,11 +58,6 @@ class CompilerTest extends TestCase
         (new Compiler('FakeVendor\HelloWorld', 'app', '__invalid__'))->compile();
     }
 
-    /**
-     * @covers \BEAR\Package\Compiler::compile()
-     * @covers \BEAR\Package\Compiler::getInstance()
-     * @covers \BEAR\Package\Compiler::getFileInfo()
-     */
     public function testUnbound(): void
     {
         $compiler = new Compiler('FakeVendor\HelloWorld', 'unbound-app', __DIR__ . '/Fake/fake-app');

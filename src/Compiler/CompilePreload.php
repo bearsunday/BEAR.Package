@@ -80,13 +80,13 @@ require __DIR__ . '/vendor/autoload.php';
         }
     }
 
-    private function getRelativePath(string $rootDir, string $file): string
+    private function getRelativePath(string $rootDir, string $path): string
     {
         $dir = (string) realpath($rootDir);
-        if (strpos($file, $dir) !== false) {
-            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
+        if (strpos($path, $dir) !== false) {
+            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $path);
         }
 
-        return $file;
+        return $path;
     }
 }
