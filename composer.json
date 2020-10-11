@@ -61,7 +61,8 @@
             ]
         },
         "files": [
-            "tests-files/hash.php"
+            "tests-files/hash.php",
+            "tests-files/deleteFiles.php"
         ]
     },
     "bin": [
