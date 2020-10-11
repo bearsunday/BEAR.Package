@@ -8,11 +8,8 @@ use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 
-use function preg_quote;
-use function preg_replace;
 use function realpath;
 use function sprintf;
-use function strpos;
 
 final class CompilePreload
 {
@@ -53,7 +50,7 @@ final class CompilePreload
         foreach ($paths as $path) {
             $requiredOnceFile .= sprintf(
                 "require_once %s';\n",
-                $this->getRelativePath($appMeta->appDir, $path)
+                $path
             );
         }
 
@@ -78,15 +75,5 @@ require __DIR__ . '/vendor/autoload.php';
         foreach ($resMetas as $resMeta) {
             ($this->newInstance)($resMeta->class);
         }
-    }
-
-    private function getRelativePath(string $rootDir, string $path): string
-    {
-        $dir = (string) realpath($rootDir);
-        if (strpos($path, $dir) !== false) {
-            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $path);
-        }
-
-        return $path;
     }
 }
