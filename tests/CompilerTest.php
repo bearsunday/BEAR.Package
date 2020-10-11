@@ -49,4 +49,16 @@ class CompilerTest extends TestCase
         $this->expectException(RuntimeException::class);
         (new Compiler('FakeVendor\HelloWorld', 'app', '__invalid__'))->compile();
     }
+
+    /**
+     * @covers \BEAR\Package\Compiler::compile()
+     * @covers \BEAR\Package\Compiler::getInstance()
+     * @covers \BEAR\Package\Compiler::getFileInfo()
+     */
+    public function testUnbound(): void
+    {
+        $compiler = new Compiler('FakeVendor\HelloWorld', 'unbound-app', __DIR__ . '/Fake/fake-app');
+        $code = $compiler->compile();
+        $this->assertSame(1, $code);
+    }
 }
