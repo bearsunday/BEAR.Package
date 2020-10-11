@@ -8,13 +8,15 @@ use PHPUnit\Framework\TestCase;
 use Ray\Compiler\ScriptInjector;
 use RuntimeException;
 
+use function error_log;
 use function unlink;
 
 class CompilerTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->setOutputCallback(static function () {
+        $this->setOutputCallback(static function (string $msg) {
+            error_log($msg);
         });
     }
 
@@ -56,11 +58,6 @@ class CompilerTest extends TestCase
         (new Compiler('FakeVendor\HelloWorld', 'app', '__invalid__'))->compile();
     }
 
-    /**
-     * @covers \BEAR\Package\Compiler::compile()
-     * @covers \BEAR\Package\Compiler::getInstance()
-     * @covers \BEAR\Package\Compiler::getFileInfo()
-     */
     public function testUnbound(): void
     {
         $compiler = new Compiler('FakeVendor\HelloWorld', 'unbound-app', __DIR__ . '/Fake/fake-app');
