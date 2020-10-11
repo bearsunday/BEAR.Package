@@ -24,7 +24,7 @@ final class Injector
     /**
      * Serialized injector instances
      *
-     * @var array<InjectorInterface>
+     * @var array<string, InjectorInterface>
      */
     private static $instances;
 
