@@ -1,0 +1,15 @@
+[11-Oct-2020 04:46:56 UTC] BEAR\Package\Exception\RouterException in /Users/akihito/git/BEAR.Package/src/Provide/Router/RouterCollection.php:39
+Stack trace:
+#0 /Users/akihito/git/BEAR.Package/tests/Provide/Router/RouterCollectionTest.php(91): BEAR\Package\Provide\Router\RouterCollection->match(Array, Array)
+#1 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(1415): BEAR\Package\Provide\Router\RouterCollectionTest->testRouterError()
+#2 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(1035): PHPUnit\Framework\TestCase->runTest()
+#3 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestResult.php(691): PHPUnit\Framework\TestCase->runBare()
+#4 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestCase.php(763): PHPUnit\Framework\TestResult->run(Object(BEAR\Package\Provide\Router\RouterCollectionTest))
+#5 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(597): PHPUnit\Framework\TestCase->run(Object(PHPUnit\Framework\TestResult))
+#6 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(597): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#7 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/Framework/TestSuite.php(597): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#8 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(627): PHPUnit\Framework\TestSuite->run(Object(PHPUnit\Framework\TestResult))
+#9 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/Command.php(204): PHPUnit\TextUI\TestRunner->doRun(Object(PHPUnit\Framework\TestSuite), Array, Array, true)
+#10 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/src/TextUI/Command.php(163): PHPUnit\TextUI\Command->run(Array, true)
+#11 /Users/akihito/git/BEAR.Package/vendor/phpunit/phpunit/phpunit(61): PHPUnit\TextUI\Command::main()
+#12 {main}

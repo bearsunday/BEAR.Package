@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ray\Compiler;
+namespace BEAR\Package;
 
 use function array_filter;
 use function glob;
