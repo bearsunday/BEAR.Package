@@ -12,6 +12,12 @@ use function unlink;
 
 class CompilerTest extends TestCase
 {
+    public function setUp(): void
+    {
+        $this->setOutputCallback(static function () {
+        });
+    }
+
     public function testInvoke(): void
     {
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
