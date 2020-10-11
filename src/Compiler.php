@@ -6,13 +6,12 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Compiler\CompileDiScripts;
+use BEAR\Package\Compiler\ScanClass;
 use BEAR\Package\Provide\Error\NullPage;
-use BEAR\Resource\Exception\ParameterException;
-use BEAR\Resource\NamedParameterInterface;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Composer\Autoload\ClassLoader;
-use Doctrine\Common\Annotations\Reader;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
@@ -30,7 +29,6 @@ use function file_put_contents;
 use function get_class;
 use function in_array;
 use function interface_exists;
-use function is_callable;
 use function is_float;
 use function is_int;
 use function memory_get_peak_usage;
@@ -76,6 +74,12 @@ final class Compiler
     /** @var list<string> */
     private $overwritten = [];
 
+    /** @var ScanClass */
+    private $compilerScanClass;
+
+    /** @var CompileDiScripts */
+    private $compilerDiScripts;
+
     /**
      * @param string $appName application name "MyVendor|MyProject"
      * @param string $context application context "prod-app"
@@ -90,6 +94,8 @@ final class Compiler
         $this->appMeta = new Meta($appName, $context, $appDir);
         /** @psalm-suppress MixedAssignment */
         $this->injector = Injector::getInstance($appName, $context, $appDir);
+        $this->compilerScanClass = new ScanClass();
+        $this->compilerDiScripts = new CompileDiScripts($this, $this->compilerScanClass);
     }
 
     /**
@@ -138,7 +144,7 @@ final class Compiler
         return 0;
     }
 
-    public function registerLoader(string $appDir): void
+    private function registerLoader(string $appDir): void
     {
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
@@ -158,27 +164,12 @@ final class Compiler
         );
     }
 
-    public function compileDiScripts(AbstractAppMeta $appMeta): void
+    private function compileDiScripts(AbstractAppMeta $appMeta): void
     {
-        $reader = $this->injector->getInstance(Reader::class);
-        assert($reader instanceof Reader);
-        $namedParams = $this->injector->getInstance(NamedParameterInterface::class);
-        assert($namedParams instanceof NamedParameterInterface);
-        // create DI factory class and AOP compiled class for all resources and save $app cache.
-        $app = $this->injector->getInstance(AppInterface::class);
-        assert($app instanceof AppInterface);
-
-        // check resource injection and create annotation cache
-        $metas = $appMeta->getResourceListGenerator();
-        /** @var array{0: string, 1:string} $meta */
-        foreach ($metas as $meta) {
-            [$className] = $meta;
-            assert(class_exists($className));
-            $this->scanClass($reader, $namedParams, $className);
-        }
+        ($this->compilerDiScripts)($appMeta);
     }
 
-    public function compileSrc(AbstractModule $module): AbstractModule
+    private function compileSrc(AbstractModule $module): AbstractModule
     {
         $container = $module->getContainer()->getContainer();
         $dependencies = array_keys($container);
@@ -277,67 +268,6 @@ require __DIR__ . '/vendor/autoload.php';
         $ro->uri = new Uri('app://self/');
         /** @psalm-suppress MixedMethodCall */
         $app->resource->get->object($ro)();
-    }
-
-    /**
-     * Save annotation and method meta information
-     *
-     * @param class-string<T> $className
-     *
-     * @template T
-     */
-    private function scanClass(Reader $reader, NamedParameterInterface $namedParams, string $className): void
-    {
-        $class = new ReflectionClass($className);
-        $instance = $class->newInstanceWithoutConstructor();
-        if (! $instance instanceof $className) {
-            return; // @codeCoverageIgnore
-        }
-
-        $reader->getClassAnnotations($class);
-        $methods = $class->getMethods();
-        $log = sprintf('M %s:', $className);
-        foreach ($methods as $method) {
-            $methodName = $method->getName();
-            if ($this->isMagicMethod($methodName)) {
-                continue;
-            }
-
-            if (substr($methodName, 0, 2) === 'on') {
-                $log .= sprintf(' %s', $methodName);
-                $this->saveNamedParam($namedParams, $instance, $methodName);
-            }
-
-            // method annotation
-            $reader->getMethodAnnotations($method);
-            $log .= sprintf('@ %s', $methodName);
-        }
-
-//        echo $log . PHP_EOL;
-    }
-
-    private function isMagicMethod(string $method): bool
-    {
-        return in_array($method, ['__sleep', '__wakeup', 'offsetGet', 'offsetSet', 'offsetExists', 'offsetUnset', 'count', 'ksort', 'asort', 'jsonSerialize'], true);
-    }
-
-    private function saveNamedParam(NamedParameterInterface $namedParameter, object $instance, string $method): void
-    {
-        // named parameter
-        if (! in_array($method, ['onGet', 'onPost', 'onPut', 'onPatch', 'onDelete', 'onHead'], true)) {
-            return;  // @codeCoverageIgnore
-        }
-
-        $callable = [$instance, $method];
-        if (! is_callable($callable)) {
-            return;  // @codeCoverageIgnore
-        }
-
-        try {
-            $namedParameter->getParameters($callable, []);
-        } catch (ParameterException $e) {
-            return;
-        }
     }
 
     /**
@@ -455,5 +385,10 @@ require __DIR__ . '/vendor/autoload.php';
         $this->putFileContents($dotFile, (new ObjectGrapher())($module));
 
         return $dotFile;
+    }
+
+    public function getInjector(): InjectorInterface
+    {
+        return $this->injector;
     }
 }
