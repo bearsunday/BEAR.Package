@@ -69,26 +69,13 @@
         "bin/bear.compile.php"
     ],
     "scripts": {
-        "coverage": [
-            "phpunit -v --coverage-clover ./build/logs/clover.xml --coverage-text --coverage-html=build/coverage"
-        ],
-        "cs": [
-            "phpcs --standard=./phpcs.xml src"
-        ],
-        "cs-fix": [
-            "phpcbf src"
-        ],
-        "metrics": [
-            "phpmetrics --report-html=build/metrics/ --extensions=php src,composer.json,composer.lock"
-        ],
-        "test": [
-            "phpunit"
-        ],
-        "tests": [
-            "@cs",
-            "phpstan analyse -c phpstan.neon",
-            "psalm --show-info=false",
-            "@test"
-        ]
-    }
+        "test": ["phpunit"],
+        "tests": ["@cs", "@sa", "@test"],
+        "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
+        "pcov": ["php -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
+        "cs": ["phpcs"],
+        "cs-fix": ["phpcbf"],
+        "sa": ["phpstan analyse -c phpstan.neon", "psalm --show-info=true"],
+        "metrics": ["phpmetrics --report-html=build/metrics/ --extensions=php src,composer.json,composer.lock"]
+        }
 }
