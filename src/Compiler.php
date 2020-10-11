@@ -94,6 +94,8 @@ final class Compiler
 
     /**
      * Compile application
+     *
+     * @return 0|1 exit code
      */
     public function compile(): int
     {
