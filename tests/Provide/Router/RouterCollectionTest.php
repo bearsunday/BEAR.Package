@@ -79,8 +79,14 @@ class RouterCollectionTest extends TestCase
 
     public function testRouterError(): void
     {
-        $globals = [];
-        $server = [];
+        $globals = [
+            '_GET' => [],
+            '_POST' => [],
+        ];
+        $server = [
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => 'http://localhost/',
+        ];
         $routerCollection = new RouterCollection([new FakeErrorRouter()]);
         $matchUri = (string) $routerCollection->match($globals, $server);
         $expected = 'get page://self/__route_not_found';
