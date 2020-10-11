@@ -14,10 +14,7 @@ use function is_callable;
 use function sprintf;
 use function substr;
 
-/**
- * Compiler Component
- */
-final class ScanClass
+final class CompileClassMetaInfo
 {
     /**
      * Save annotation and method meta information
@@ -52,8 +49,6 @@ final class ScanClass
             $reader->getMethodAnnotations($method);
             $log .= sprintf('@ %s', $methodName);
         }
-
-//        echo $log . PHP_EOL;
     }
 
     private function isMagicMethod(string $method): bool

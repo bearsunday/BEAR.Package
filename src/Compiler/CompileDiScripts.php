@@ -5,39 +5,36 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Compiler;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;
+use Ray\Di\InjectorInterface;
 
 use function assert;
 use function class_exists;
 
-/**
- * Compiler Component
- */
 final class CompileDiScripts
 {
-    /** @var Compiler */
-    private $compiler;
-
-    /** @var ScanClass */
+    /** @var CompileClassMetaInfo */
     private $compilerScanClass;
 
-    public function __construct(Compiler $compiler, ScanClass $compilerScanClass)
+    /** @var InjectorInterface */
+    private $injector;
+
+    public function __construct(CompileClassMetaInfo $compilerScanClass, InjectorInterface $injector)
     {
-        $this->compiler = $compiler;
         $this->compilerScanClass = $compilerScanClass;
+        $this->injector = $injector;
     }
 
     public function __invoke(AbstractAppMeta $appMeta): void
     {
-        $reader = $this->compiler->getInjector()->getInstance(Reader::class);
+        $reader = $this->injector->getInstance(Reader::class);
         assert($reader instanceof Reader);
-        $namedParams = $this->compiler->getInjector()->getInstance(NamedParameterInterface::class);
+        $namedParams = $this->injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
         // create DI factory class and AOP compiled class for all resources and save $app cache.
-        $app = $this->compiler->getInjector()->getInstance(AppInterface::class);
+        $app = $this->injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);
 
         // check resource injection and create annotation cache
