@@ -356,7 +356,7 @@ require __DIR__ . '/vendor/autoload.php';
 
             /** @var class-string $class */
             $filePath = (string) (new ReflectionClass($class))->getFileName(); // @phpstan-ignore-line
-            if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
+            if (! $this->isNotCompileFile($filePath)) {
                 continue; // @codeCoverageIgnore
             }
 
@@ -364,6 +364,11 @@ require __DIR__ . '/vendor/autoload.php';
         }
 
         return $paths;
+    }
+
+    private function isNotCompileFile(string $filePath): bool
+    {
+        return file_exists($filePath) || is_int(strpos($filePath, 'phar'));
     }
 
     private function isNotAutoloadble(string $class): bool
