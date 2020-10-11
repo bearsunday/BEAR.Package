@@ -102,7 +102,7 @@ final class Compiler
         $this->compileSrc($module);
         echo PHP_EOL;
         $this->compileDiScripts($this->appMeta);
-        $dot = $this->compileObjectGraphDotFile($module);
+        $dot = $this->failed ? '' : $this->compileObjectGraphDotFile($module);
         $start = $_SERVER['REQUEST_TIME_FLOAT'];
         assert(is_float($start));
         $time = number_format(microtime(true) - $start, 2);
@@ -111,7 +111,7 @@ final class Compiler
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", count($this->compiled), count($this->failed));
         printf("preload.php: %s\n", $this->getFileInfo($preload));
-        printf("module.dot: %s\n", $this->getFileInfo($dot));
+        printf("module.dot: %s\n", $dot ? $this->getFileInfo($dot) : 'n/a');
 
         foreach ($this->failed as $depedencyIndex => $error) {
             printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);

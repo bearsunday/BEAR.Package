@@ -49,4 +49,18 @@ class CompilerTest extends TestCase
         $this->expectException(RuntimeException::class);
         (new Compiler('FakeVendor\HelloWorld', 'app', '__invalid__'))->compile();
     }
+
+    /**
+     * @covers \BEAR\Package\Compiler::compile()
+     * @covers \BEAR\Package\Compiler::getInstance()
+     * @covers \BEAR\Package\Compiler::getFileInfo()
+     */
+    public function testUnbound(): void
+    {
+        $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
+        @unlink($compiledFile1);
+        $compiler = new Compiler('FakeVendor\HelloWorld', 'unbound-app', __DIR__ . '/Fake/fake-app');
+        $compiler->compile();
+        $this->assertFileExists($compiledFile1);
+    }
 }
