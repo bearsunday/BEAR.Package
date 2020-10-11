@@ -354,8 +354,8 @@ require __DIR__ . '/vendor/autoload.php';
                 continue;
             }
 
-            assert(class_exists($class, false) || interface_exists($class) || trait_exists($class));
-            $filePath = (string) (new ReflectionClass($class))->getFileName();
+            /** @var class-string $class */
+            $filePath = (string) (new ReflectionClass($class))->getFileName(); // @phpstan-ignore-line
             if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
                 continue; // @codeCoverageIgnore
             }
