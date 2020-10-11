@@ -350,12 +350,11 @@ require __DIR__ . '/vendor/autoload.php';
         $paths = [];
         foreach ($classes as $class) {
             // could be phpdoc tag by annotation loader
-            $isAutoloadFailed = ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
-            if ($isAutoloadFailed) {
+            if ($this->isNotAutoloadble($class)) {
                 continue;
             }
 
-            assert(class_exists($class) || interface_exists($class) || trait_exists($class));
+            assert(class_exists($class, false) || interface_exists($class) || trait_exists($class));
             $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! file_exists($filePath) || is_int(strpos($filePath, 'phar'))) {
                 continue; // @codeCoverageIgnore
@@ -367,9 +366,15 @@ require __DIR__ . '/vendor/autoload.php';
         return $paths;
     }
 
+    private function isNotAutoloadble(string $class): bool
+    {
+        return ! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false);
+    }
+
     private function loadResources(string $appName, string $context, string $appDir): void
     {
         $meta = new Meta($appName, $context, $appDir);
+
         $resMetas = $meta->getGenerator('*');
         foreach ($resMetas as $resMeta) {
             $this->getInstance($resMeta->class);
