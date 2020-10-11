@@ -6,7 +6,6 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
-use BEAR\Package\Exception\InvalidModuleException;
 use BEAR\Package\Module\AppMetaModule;
 use BEAR\Package\Module\CacheNamespaceModule;
 use Ray\Di\AbstractModule;
@@ -29,25 +28,28 @@ class Module
         $contextsArray = array_reverse(explode('-', $context));
         $module = new AssistedModule();
         foreach ($contextsArray as $contextItem) {
-            $class = $appMeta->name . '\Module\\' . ucwords($contextItem) . 'Module';
-            if (! class_exists($class)) {
-                $class = 'BEAR\Package\Context\\' . ucwords($contextItem) . 'Module';
-            }
-
-            if (! is_a($class, AbstractModule::class, true)) {
-                throw new InvalidContextException($contextItem);
-            }
-
-            /** @psalm-suppress UnsafeInstantiation */
-            $module = is_subclass_of($class, AbstractAppModule::class) ? new $class($appMeta, $module) : new $class($module);
-        }
-
-        if (! $module instanceof AbstractModule) {
-            throw new InvalidModuleException(); // @codeCoverageIgnore
+            $module = $this->installContextModule($appMeta, $contextItem, $module);
         }
 
         $module->override(new AppMetaModule($appMeta));
         $module->override(new CacheNamespaceModule($cacheNamespace));
+
+        return $module;
+    }
+
+    private function installContextModule(AbstractAppMeta $appMeta, string $contextItem, AbstractModule $module): AbstractModule
+    {
+        $class = $appMeta->name . '\Module\\' . ucwords($contextItem) . 'Module';
+        if (! class_exists($class)) {
+            $class = 'BEAR\Package\Context\\' . ucwords($contextItem) . 'Module';
+        }
+
+        if (! is_a($class, AbstractModule::class, true)) {
+            throw new InvalidContextException($contextItem);
+        }
+
+        /** @psalm-suppress UnsafeInstantiation */
+        $module = is_subclass_of($class, AbstractAppModule::class) ? new $class($appMeta, $module) : new $class($module);
 
         return $module;
     }
