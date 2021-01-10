@@ -160,6 +160,8 @@ require __DIR__ . '/vendor/autoload.php';
     /**
      * @psalm-suppress MixedFunctionCall
      * @psalm-suppress NoInterfaceProperties
+     * @psalm-suppress MixedMethodCall
+     * @psalm-suppress MixedPropertyFetch
      */
     public function invokeTypicalRequest(): void
     {
@@ -168,7 +170,6 @@ require __DIR__ . '/vendor/autoload.php';
         assert(property_exists($app, 'resource'));
         $ro = new NullPage();
         $ro->uri = new Uri('app://self/');
-        /** @psalm-suppress MixedMethodCall */
         $app->resource->get->object($ro)();
     }
 
