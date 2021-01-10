@@ -11,7 +11,7 @@ require dirname(__DIR__, 2) . '/vendor/autoload.php';
 //require __DIR__ . '/benchmark.php';
 
 $opt = getopt('c:n:');
-$context = isset($opt['c']) && is_string($opt['c']) ? $opt['c'] : 'prod-app';
+$context = isset($opt['c']) && is_string($opt['c']) ? $opt['c'] : 'prod-app'; // @phpstan-ignore-line
 $appDir = dirname(__DIR__) . '/Fake/fake-app';
 $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
 $app = $injector->getInstance(AppInterface::class);
