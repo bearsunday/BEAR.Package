@@ -26,7 +26,6 @@
         "bear/resource": "1.x-dev",
         "bear/streamer": "^1.0.1",
         "bear/sunday": "1.x-dev",
-        "fzaninotto/faker": "1.9.x-dev",
         "monolog/monolog": "^1.25 || ^2.0",
         "ray/di": "^2.x-dev",
         "ray/aop": "^2.x-dev",
