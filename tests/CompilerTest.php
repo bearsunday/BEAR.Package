@@ -48,7 +48,7 @@ class CompilerTest extends TestCase
         $compiler->compile();
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
-        $this->assertFileNotExists($compiledFile2); // because cached
+        $this->assertFileDoesNotExist($compiledFile2); // because cached
         $this->assertFileExists($compiledFile3);
     }
 
