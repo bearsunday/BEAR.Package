@@ -49,6 +49,8 @@ final class CompileClassMetaInfo
             $reader->getMethodAnnotations($method);
             $log .= sprintf('@ %s', $methodName);
         }
+
+        unset($log); // break here to see the $log
     }
 
     private function isMagicMethod(string $method): bool
