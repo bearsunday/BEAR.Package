@@ -17,6 +17,7 @@
     <!-- Directories to be checked -->
     <file>src</file>
     <file>tests</file>
+    <exclude-pattern>*/src/Annotation/*</exclude-pattern>
     <exclude-pattern>*/tests/tmp/*</exclude-pattern>
 
     <!-- PSR12 Coding Standard -->
