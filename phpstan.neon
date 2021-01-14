@@ -7,3 +7,4 @@ parameters:
     - tests/hash.php
     - tests/tmp/*
     - tests/Fake/*
+    - tests/script/*

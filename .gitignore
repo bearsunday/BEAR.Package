@@ -9,3 +9,5 @@
 /tests/Fake/fake-app/preload.php
 /tests/Fake/fake-app/var/log/
 /tests/Fake/fake-app/var/tmp/
+/vendor-bin/**/vendor
+/demo/var/tmp
