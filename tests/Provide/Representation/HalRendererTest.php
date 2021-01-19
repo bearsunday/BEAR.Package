@@ -257,9 +257,11 @@ class HalRendererTest extends TestCase
         $ro = $this->resource->post->uri('app://self/post?uri=__INVALID_*+')();
 
         $errNo = $errStr = '';
-        set_error_handler(static function (int $no, string $str) use (&$errNo, &$errStr) {
+        set_error_handler(static function (int $no, string $str) use (&$errNo, &$errStr): bool {
             $errNo = $no;
             $errStr = $str;
+
+            return true;
         });
         assert($ro instanceof ResourceObject);
         $ro->__toString();

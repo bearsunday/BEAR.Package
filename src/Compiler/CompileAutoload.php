@@ -120,7 +120,7 @@ class CompileAutoload
             }
 
             /** @var class-string $class */
-            $filePath = (string) (new ReflectionClass($class))->getFileName(); // @phpstan-ignore-line
+            $filePath = (string) (new ReflectionClass($class))->getFileName();
             if (! $this->isNotCompileFile($filePath)) {
                 continue; // @codeCoverageIgnore
             }
