@@ -21,6 +21,7 @@ class RouterCollectionProvider implements ProviderInterface
      * @Inject
      * @Named("router=primary_router")
      */
+    #[Inject, Named('router=primary_router')]
     public function __construct(RouterInterface $router, WebRouterInterface $webRouter)
     {
         $this->primaryRouter = $router;
