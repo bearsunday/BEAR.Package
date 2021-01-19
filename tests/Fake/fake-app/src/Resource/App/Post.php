@@ -17,6 +17,8 @@ class Post extends ResourceObject
      * @Link(rel="ht:comment", href="/comments/{?id}")
      * @Link(rel="ht:category", href="/category/{?id}")
      */
+    #[Link(rel: "ht:comment", href: "/comments/{?id}")]
+    #[Link(rel: "ht:category", href: "/category/{?id}")]
     public function onGet($id = 10)
     {
         $this->body = [
@@ -33,6 +35,7 @@ class Post extends ResourceObject
     /**
      * @ReturnCreatedResource
      */
+    #[ReturnCreatedResource]
     public function onPost($code = 201, $uri = '/post?id=10')
     {
         $this->code = $code;

@@ -12,6 +12,7 @@ class Emb extends ResourceObject
     /**
      * @Embed(rel="user", src="/user{?id}")
      */
+    #[Embed(rel: "user", src: "/user{?id}")]
     public function onGet($id)
     {
         return $this;

@@ -13,6 +13,8 @@ class User extends ResourceObject
      * @Link(rel="friend", href="/friend?id={friend_id}")
      * @Link(rel="org", href="/org?id={org_id}")
      */
+    #[Link(rel: "friend", href: "/friend?id={friend_id}")]
+    #[Link(rel: "org", href: "/org?id={org_id}")]
     public function onGet($id, $type = 'defaultType')
     {
         unset($type);
@@ -28,6 +30,7 @@ class User extends ResourceObject
     /**
      * @Link(rel="friend", href="/friend?id={friend_id}")
      */
+    #[Link(rel: "friend", href: "/friend?id={friend_id}")]
     public function onPost($id)
     {
         $this['id'] = $id;
