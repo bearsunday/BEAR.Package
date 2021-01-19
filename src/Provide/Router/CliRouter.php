@@ -72,6 +72,7 @@ class CliRouter implements RouterInterface
      * @Inject
      * @StdIn
      */
+    #[Inject, StdIn]
     public function setStdIn(string $stdIn): void
     {
         $this->stdIn = $stdIn;
