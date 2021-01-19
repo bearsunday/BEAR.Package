@@ -44,7 +44,7 @@ class CliRouter implements RouterInterface
     /**
      * @Named("original")
      */
-    #[Named(('original'))]
+    #[Named('original')]
     public function __construct(RouterInterface $router, ?Stdio $stdIo = null)
     {
         $this->router = $router;
