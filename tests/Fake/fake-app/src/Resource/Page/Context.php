@@ -15,6 +15,7 @@ class Context extends ResourceObject
     /**
      * @Named("a=usr_db,b=job_db")
      */
+    #[Named('a=usr_db,b=job_db')]
     public function __construct($a, $b)
     {
         $this->a = $a;

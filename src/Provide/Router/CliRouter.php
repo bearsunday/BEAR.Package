@@ -44,6 +44,7 @@ class CliRouter implements RouterInterface
     /**
      * @Named("original")
      */
+    #[Named('original')]
     public function __construct(RouterInterface $router, ?Stdio $stdIo = null)
     {
         $this->router = $router;
@@ -72,6 +73,7 @@ class CliRouter implements RouterInterface
      * @Inject
      * @StdIn
      */
+    #[Inject, StdIn]
     public function setStdIn(string $stdIn): void
     {
         $this->stdIn = $stdIn;
