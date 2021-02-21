@@ -139,8 +139,8 @@ class CompileAutoload
         $requiredFile = '';
         foreach ($paths as $path) {
             $requiredFile .= sprintf(
-                "require %s';\n",
-                $this->getRelativePath($appDir, $path)
+                "require %s;\n",
+                $path
             );
         }
 

@@ -32,6 +32,7 @@ use function spl_autoload_functions;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
 
+use function strpos;
 use const PHP_EOL;
 
 final class Compiler
@@ -73,6 +74,8 @@ final class Compiler
      */
     public function __construct(string $appName, string $context, string $appDir)
     {
+        $classes = new ArrayObject();
+        $this->classes = $classes;
         $this->registerLoader($appDir);
         $this->hookNullObjectClass($appDir);
         $this->context = $context;
@@ -84,10 +87,8 @@ final class Compiler
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
         /** @var ArrayObject<int, string> $classes */
-        $classes = new ArrayObject();
-        $this->classes = $classes;
         $filePutContents = new FilePutContents($overWritten);
-        $this->dumpAutoload = new CompileAutoload($this->injector, $filePutContents, $this->appMeta, $overWritten, $classes, $appDir, $context);
+        $this->dumpAutoload = new CompileAutoload($this->injector, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
         $this->compilePreload = new CompilePreload($this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $appDir);
         $this->compileDependencies = new CompileDependencies($this->newInstance);
@@ -142,7 +143,7 @@ final class Compiler
             /** @var class-string $class */
             function (string $class) use ($loader): void {
                 $loader->loadClass($class);
-                if ($class !== NullPage::class) {
+                if ($class !== NullPage::class && ! is_int(strpos($class, 'BEAR\Package\Compiler'))) {
                     /** @psalm-suppress NullArgument */
                     $this->classes[] = $class;
                 }
