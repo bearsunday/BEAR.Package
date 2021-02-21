@@ -28,8 +28,10 @@ use function microtime;
 use function number_format;
 use function printf;
 use function realpath;
+use function spl_autoload_functions;
 use function spl_autoload_register;
 
+use function spl_autoload_unregister;
 use const PHP_EOL;
 
 final class Compiler
@@ -128,6 +130,7 @@ final class Compiler
 
     private function registerLoader(string $appDir): void
     {
+        $this->unregisterComposerLoader();
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
             throw new RuntimeException('no loader');
@@ -152,6 +155,14 @@ final class Compiler
         $compileScript = realpath($appDir) . '/.compile.php';
         if (file_exists($compileScript)) {
             require $compileScript;
+        }
+    }
+
+    private function unregisterComposerLoader(): void
+    {
+        $autoload = spl_autoload_functions();
+        if (isset($autoload[0])) {
+            spl_autoload_unregister($autoload[0]);
         }
     }
 }
