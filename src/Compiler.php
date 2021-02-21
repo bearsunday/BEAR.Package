@@ -23,6 +23,7 @@ use function assert;
 use function count;
 use function file_exists;
 use function is_float;
+use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
@@ -31,8 +32,8 @@ use function realpath;
 use function spl_autoload_functions;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
-
 use function strpos;
+
 use const PHP_EOL;
 
 final class Compiler
