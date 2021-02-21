@@ -49,7 +49,7 @@ final class CompilePreload
         $requiredOnceFile = '';
         foreach ($paths as $path) {
             $requiredOnceFile .= sprintf(
-                "require_once %s';\n",
+                "require_once %s;\n",
                 $path
             );
         }

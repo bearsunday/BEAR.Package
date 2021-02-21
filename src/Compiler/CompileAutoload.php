@@ -152,6 +152,7 @@ class CompileAutoload
 require __DIR__ . '/vendor/autoload.php';
 ", $this->context, $requiredFile);
         $fileName = realpath($appDir) . '/autoload.php';
+
         ($this->filePutContents)($fileName, $autoloadFile);
 
         return $fileName;
@@ -187,9 +188,9 @@ require __DIR__ . '/vendor/autoload.php';
     {
         $dir = (string) realpath($rootDir);
         if (strpos($file, $dir) !== false) {
-            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
+            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file) . "'";
         }
 
-        return $file;
+        return sprintf("'%s'", $file);
     }
 }

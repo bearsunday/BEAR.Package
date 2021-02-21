@@ -30,8 +30,8 @@ use function printf;
 use function realpath;
 use function spl_autoload_functions;
 use function spl_autoload_register;
-
 use function spl_autoload_unregister;
+
 use const PHP_EOL;
 
 final class Compiler
