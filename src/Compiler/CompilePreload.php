@@ -27,21 +27,25 @@ final class CompilePreload
 
     /** @var string */
     private $context;
+    private $fakeRun;
 
     /**
      * @param ArrayObject<int, string> $classes
      */
-    public function __construct(NewInstance $newInstance, CompileAutoload $dumpAutoload, FilePutContents $filePutContents, ArrayObject $classes, string $context)
+    public function __construct(FakeRun $fakeRun, NewInstance $newInstance, CompileAutoload $dumpAutoload, FilePutContents $filePutContents, ArrayObject $classes, string $context)
     {
+        $this->fakeRun = $fakeRun;
         $this->newInstance = $newInstance;
         $this->dumpAutoload = $dumpAutoload;
         $this->classes = $classes;
         $this->filePutContents = $filePutContents;
         $this->context = $context;
+        $this->fakeRun = $fakeRun;
     }
 
     public function __invoke(AbstractAppMeta $appMeta, string $context): string
     {
+        ($this->fakeRun)();
         $this->loadResources($appMeta->name, $context, $appMeta->appDir);
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
@@ -49,7 +53,7 @@ final class CompilePreload
         $requiredOnceFile = '';
         foreach ($paths as $path) {
             $requiredOnceFile .= sprintf(
-                "require_once %s;\n",
+                "opcache_compile_file(%s);\n",
                 $path
             );
         }
@@ -58,7 +62,7 @@ final class CompilePreload
 
 // %s preload
 
-require __DIR__ . '/vendor/autoload.php';
+opcache_compile_file( __DIR__ . '/vendor/autoload.php');
 
 %s", $this->context, $requiredOnceFile);
         $fileName = realpath($appMeta->appDir) . '/preload.php';

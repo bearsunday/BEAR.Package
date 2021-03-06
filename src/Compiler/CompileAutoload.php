@@ -6,9 +6,6 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Provide\Error\NullPage;
-use BEAR\Resource\Uri;
-use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Di\InjectorInterface;
 use ReflectionClass;
 
@@ -25,13 +22,10 @@ use function number_format;
 use function preg_quote;
 use function preg_replace;
 use function printf;
-use function property_exists;
 use function realpath;
 use function sprintf;
 use function strpos;
 use function trait_exists;
-
-use const PHP_EOL;
 
 class CompileAutoload
 {
@@ -56,18 +50,22 @@ class CompileAutoload
     /** @var FilePutContents */
     private $filePutContents;
 
+    /** @var FakeRun */
+    private $fakeRun;
+
     /**
      * @param ArrayObject<int, string> $overwritten
      * @param ArrayObject<int, string> $classes
      */
     public function __construct(
+        FakeRun $fakeRun,
         InjectorInterface $injector,
         FilePutContents $filePutContents,
         Meta $appMeta,
         ArrayObject $overwritten,
         ArrayObject $classes,
         string $appDir,
-        string $context
+        string $context,
     ) {
         $this->appDir = $appDir;
         $this->context = $context;
@@ -76,6 +74,7 @@ class CompileAutoload
         $this->classes = $classes;
         $this->injector = $injector;
         $this->filePutContents = $filePutContents;
+        $this->fakeRun = $fakeRun;
     }
 
     public function getFileInfo(string $filename): string
@@ -89,8 +88,7 @@ class CompileAutoload
 
     public function __invoke(): int
     {
-        echo PHP_EOL;
-        $this->invokeTypicalRequest();
+        ($this->fakeRun)($this->injector, $this->context, $this->appMeta);
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
         $paths = $this->getPaths($classes);
@@ -156,22 +154,6 @@ require __DIR__ . '/vendor/autoload.php';
         ($this->filePutContents)($fileName, $autoloadFile);
 
         return $fileName;
-    }
-
-    /**
-     * @psalm-suppress MixedFunctionCall
-     * @psalm-suppress NoInterfaceProperties
-     * @psalm-suppress MixedMethodCall
-     * @psalm-suppress MixedPropertyFetch
-     */
-    public function invokeTypicalRequest(): void
-    {
-        $app = $this->injector->getInstance(AppInterface::class);
-        assert($app instanceof AppInterface);
-        assert(property_exists($app, 'resource'));
-        $ro = new NullPage();
-        $ro->uri = new Uri('app://self/');
-        $app->resource->get->object($ro)();
     }
 
     private function isNotAutoloadble(string $class): bool
