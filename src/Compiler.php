@@ -93,7 +93,7 @@ final class Compiler
         /** @var ArrayObject<int, string> $classes */
         $filePutContents = new FilePutContents($overWritten);
         $fakeRun = new FakeRun($this->injector, $context, $this->appMeta);
-        $this->dumpAutoload = new CompileAutoload($fakeRun, $this->injector, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
+        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
         $this->compilePreload = new CompilePreload($fakeRun, $this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $appDir);
         $this->compileDependencies = new CompileDependencies($this->newInstance);

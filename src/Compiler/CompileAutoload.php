@@ -6,7 +6,6 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\Meta;
-use Ray\Di\InjectorInterface;
 use ReflectionClass;
 
 use function assert;
@@ -44,9 +43,6 @@ class CompileAutoload
     /** @var ArrayObject<int, string> */
     private $classes;
 
-    /** @var InjectorInterface */
-    private $injector;
-
     /** @var FilePutContents */
     private $filePutContents;
 
@@ -59,7 +55,6 @@ class CompileAutoload
      */
     public function __construct(
         FakeRun $fakeRun,
-        InjectorInterface $injector,
         FilePutContents $filePutContents,
         Meta $appMeta,
         ArrayObject $overwritten,
@@ -72,7 +67,6 @@ class CompileAutoload
         $this->appMeta = $appMeta;
         $this->overwritten = $overwritten;
         $this->classes = $classes;
-        $this->injector = $injector;
         $this->filePutContents = $filePutContents;
         $this->fakeRun = $fakeRun;
     }
@@ -88,7 +82,7 @@ class CompileAutoload
 
     public function __invoke(): int
     {
-        ($this->fakeRun)($this->injector, $this->context, $this->appMeta);
+        ($this->fakeRun)();
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
         $paths = $this->getPaths($classes);
