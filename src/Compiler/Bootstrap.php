@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use BEAR\Package\Compiler\Module\App;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -30,7 +31,7 @@ final class Bootstrap
     {
         $tmpDir = dirname(__DIR__, 2) . '/tests/tmp';
         $app = Injector::getInstance('BEAR\Package\Compiler', $context, $tmpDir)->getInstance(AppInterface::class);
-        assert($app instanceof AppInterface);
+        assert($app instanceof App);
         if ($app->httpCache->isNotModified($server)) {
             $app->httpCache->transfer();
 
@@ -39,6 +40,7 @@ final class Bootstrap
 
         $request = $app->router->match($globals, $server);
         try {
+            /** @psalm-suppress all */
             $response = $app->resource->{$request->method}->uri($request->path)($request->query);
             assert($response instanceof ResourceObject);
             $response->transfer($app->responder, $server);

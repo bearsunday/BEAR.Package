@@ -8,7 +8,7 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\QueryRepository\EtagSetter;
 use BEAR\QueryRepository\HttpCache;
-use BEAR\Resource\ResourceObject;
+use BEAR\Resource\TransferInterface;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
@@ -18,6 +18,8 @@ use Ray\Di\InjectorInterface;
 
 use function assert;
 use function class_exists;
+use function is_callable;
+use function is_object;
 use function property_exists;
 
 class FakeRun
@@ -47,20 +49,27 @@ class FakeRun
     public function __invoke(): void
     {
         $appBootstrap = $this->appMeta->name . '\Bootstrap';
-        $bootstrap = class_exists($appBootstrap) ? $appBootstrap : Bootstrap::class;
+        $bootstrapClass = class_exists($appBootstrap) ? $appBootstrap : Bootstrap::class;
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        (new $bootstrap())($this->context, $GLOBALS, $_SERVER); // 200 OK
+        $bootstrap = new $bootstrapClass();
+        assert(is_callable($bootstrap));
+        /** @psalm-suppress PossiblyUndefinedVariable */
+        ($bootstrap)($this->context, $GLOBALS, $_SERVER); // 200 OK
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
-        (new $bootstrap())($this->context, $GLOBALS, $_SERVER); // 405 MethodNotAllowedException
+        $bootstrap = new $bootstrapClass();
+        assert(is_callable($bootstrap));
         $app = $this->injector->getInstance(AppInterface::class);
+        assert(is_object($app));
         assert(property_exists($app, 'resource'));
         assert(property_exists($app, 'responder'));
         $ro = $this->injector->getInstance(NullPage::class);
+        assert($ro instanceof NullPage);
         $ro->uri = new Uri('app://self/');
+        /** @var NullPage $ro */
         $ro = $app->resource->get->object($ro)(['required' => 'string']);
-        assert($ro instanceof ResourceObject);
+        assert($app->responder instanceof TransferInterface);
         $ro->transfer($app->responder, []);
         class_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);

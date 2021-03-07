@@ -78,6 +78,7 @@ final class Compiler
      */
     public function __construct(string $appName, string $context, string $appDir)
     {
+        /** @var ArrayObject<int, string> $classes */
         $classes = new ArrayObject();
         $this->classes = $classes;
         $this->registerLoader($appDir);
