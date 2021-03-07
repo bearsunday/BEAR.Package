@@ -60,7 +60,7 @@ class CompileAutoload
         ArrayObject $overwritten,
         ArrayObject $classes,
         string $appDir,
-        string $context,
+        string $context
     ) {
         $this->appDir = $appDir;
         $this->context = $context;
