@@ -27,6 +27,8 @@ final class CompilePreload
 
     /** @var string */
     private $context;
+
+    /** @var FakeRun */
     private $fakeRun;
 
     /**
