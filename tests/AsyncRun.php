@@ -44,6 +44,7 @@ final class AsyncRun
             do {
                 foreach ($procs as $p) {
                     $status = proc_get_status($p);
+                    // @phpstan-ignore-next-line
                     if (! $status) {
                         throw new RuntimeException(); // @codeCoverageIgnore
                     }
