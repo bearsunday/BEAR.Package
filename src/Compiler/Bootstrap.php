@@ -4,18 +4,30 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
+use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use BEAR\Sunday\Extension\Router\RouterInterface;
+use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
+use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Throwable;
-
-use function dirname;
 
 /**
  * @psalm-import-type Globals from \BEAR\Sunday\Extension\Router\RouterInterface
  * @psalm-import-type Server from \BEAR\Sunday\Extension\Router\RouterInterface
  */
+
 final class Bootstrap
 {
+    /** @var string */
+    private $appDir;
+
+    public function __construct(AbstractAppMeta $meta)
+    {
+        $this->appDir = $meta->appDir;
+    }
+
     /**
      * @psalm-param Globals $globals
      * @psalm-param Server  $server
@@ -26,16 +38,17 @@ final class Bootstrap
      */
     public function __invoke(string $appName, string $context, array $globals, array $server): int
     {
-        $tmpDir = dirname(__DIR__, 2) . '/tests/tmp';
-        $app = Injector::getInstance($appName, $context, $tmpDir)->getInstance(AppInterface::class);
-        $app->httpCache->isNotModified($server);
-
-        $request = $app->router->match($globals, $server);
+        $injector =  Injector::getInstance($appName, $context, $this->appDir);
+        $app = $injector->getInstance(AppInterface::class);
+        $injector->getInstance(HttpCacheInterface::class);
+        $router = $injector->getInstance(RouterInterface::class);
+        $request = $router->match($globals, $server);
         try {
             /** @psalm-suppress all */
-            $app->resource->{$request->method}->uri($request->path)($request->query);
+            $resource = $injector->getInstance(ResourceInterface::class);
+            $resource->{$request->method}->uri($request->path)($request->query);
         } catch (Throwable $e) {
-            $app->throwableHandler->handle($e, $request)->transfer();
+            $injector->getInstance(TransferInterface::class);
 
             return 1;
         }

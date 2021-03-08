@@ -49,17 +49,14 @@ class FakeRun
     public function __invoke(): void
     {
         $appBootstrap = $this->appMeta->name . '\Bootstrap';
-        $bootstrapClass = class_exists($appBootstrap) ? $appBootstrap : Bootstrap::class;
+        $bootstrap = class_exists($appBootstrap) ? new $appBootstrap() : new Bootstrap($this->appMeta);
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $bootstrap = new $bootstrapClass();
         assert(is_callable($bootstrap));
         /** @psalm-suppress PossiblyUndefinedVariable */
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // 200 OK
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
-        $bootstrap = new $bootstrapClass();
-        assert(is_callable($bootstrap));
         $app = $this->injector->getInstance(AppInterface::class);
         assert(is_object($app));
         assert(property_exists($app, 'resource'));
