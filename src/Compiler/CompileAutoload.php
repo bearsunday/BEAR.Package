@@ -6,10 +6,6 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Provide\Error\NullPage;
-use BEAR\Resource\Uri;
-use BEAR\Sunday\Extension\Application\AppInterface;
-use Ray\Di\InjectorInterface;
 use ReflectionClass;
 
 use function assert;
@@ -25,13 +21,10 @@ use function number_format;
 use function preg_quote;
 use function preg_replace;
 use function printf;
-use function property_exists;
 use function realpath;
 use function sprintf;
 use function strpos;
 use function trait_exists;
-
-use const PHP_EOL;
 
 class CompileAutoload
 {
@@ -50,18 +43,18 @@ class CompileAutoload
     /** @var ArrayObject<int, string> */
     private $classes;
 
-    /** @var InjectorInterface */
-    private $injector;
-
     /** @var FilePutContents */
     private $filePutContents;
+
+    /** @var FakeRun */
+    private $fakeRun;
 
     /**
      * @param ArrayObject<int, string> $overwritten
      * @param ArrayObject<int, string> $classes
      */
     public function __construct(
-        InjectorInterface $injector,
+        FakeRun $fakeRun,
         FilePutContents $filePutContents,
         Meta $appMeta,
         ArrayObject $overwritten,
@@ -74,8 +67,8 @@ class CompileAutoload
         $this->appMeta = $appMeta;
         $this->overwritten = $overwritten;
         $this->classes = $classes;
-        $this->injector = $injector;
         $this->filePutContents = $filePutContents;
+        $this->fakeRun = $fakeRun;
     }
 
     public function getFileInfo(string $filename): string
@@ -89,8 +82,7 @@ class CompileAutoload
 
     public function __invoke(): int
     {
-        echo PHP_EOL;
-        $this->invokeTypicalRequest();
+        ($this->fakeRun)();
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
         $paths = $this->getPaths($classes);
@@ -139,8 +131,8 @@ class CompileAutoload
         $requiredFile = '';
         foreach ($paths as $path) {
             $requiredFile .= sprintf(
-                "require %s';\n",
-                $this->getRelativePath($appDir, $path)
+                "require %s;\n",
+                $path
             );
         }
 
@@ -152,25 +144,10 @@ class CompileAutoload
 require __DIR__ . '/vendor/autoload.php';
 ", $this->context, $requiredFile);
         $fileName = realpath($appDir) . '/autoload.php';
+
         ($this->filePutContents)($fileName, $autoloadFile);
 
         return $fileName;
-    }
-
-    /**
-     * @psalm-suppress MixedFunctionCall
-     * @psalm-suppress NoInterfaceProperties
-     * @psalm-suppress MixedMethodCall
-     * @psalm-suppress MixedPropertyFetch
-     */
-    public function invokeTypicalRequest(): void
-    {
-        $app = $this->injector->getInstance(AppInterface::class);
-        assert($app instanceof AppInterface);
-        assert(property_exists($app, 'resource'));
-        $ro = new NullPage();
-        $ro->uri = new Uri('app://self/');
-        $app->resource->get->object($ro)();
     }
 
     private function isNotAutoloadble(string $class): bool
@@ -187,9 +164,9 @@ require __DIR__ . '/vendor/autoload.php';
     {
         $dir = (string) realpath($rootDir);
         if (strpos($file, $dir) !== false) {
-            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file);
+            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file) . "'";
         }
 
-        return $file;
+        return sprintf("'%s'", $file);
     }
 }

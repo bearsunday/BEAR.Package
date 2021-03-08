@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^7.3 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
         "ext-zend-opcache": "*",
@@ -18,7 +18,7 @@
         "bear/app-meta": "^1.6.2",
         "bear/query-repository": "^1.6.10",
         "bear/resource": "^1.15.1",
-        "bear/streamer": "^1.2.1",
+        "bear/streamer": "^1.2.2",
         "bear/sunday": "^1.5.3",
         "monolog/monolog": "^1.25 || ^2.0",
         "ray/aop": "^2.10",
@@ -67,7 +67,7 @@
     "scripts": {
         "post-install-cmd": ["@composer bin all install --ansi"],
         "post-update-cmd": ["@composer bin all update --ansi"],
-        "test": ["./vendor/bin/phpunit"],
+        "test": ["./vendor/bin/phpunit -c ./phpunit.xml.dist"],
         "tests": ["@cs", "@sa", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "pcov": ["php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml"],
