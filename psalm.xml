@@ -11,6 +11,7 @@ https://getpsalm.org/schema/config "
         <directory name="src"/>
         <ignoreFiles>
             <directory name="vendor"/>
+            <file name="src/Compiler/Bootstrap.php"/>
         </ignoreFiles>
     </projectFiles>
 </psalm>
