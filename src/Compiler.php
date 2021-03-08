@@ -15,7 +15,6 @@ use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Compiler\NewInstance;
-use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Provide\Error\NullPage;
 use Composer\Autoload\ClassLoader;
 use Ray\Di\InjectorInterface;
@@ -29,7 +28,6 @@ use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
-use function ob_clean;
 use function printf;
 use function realpath;
 use function spl_autoload_functions;
@@ -107,17 +105,9 @@ final class Compiler
      */
     public function compile(): int
     {
-        try {
-            $preload = ($this->compilePreload)($this->appMeta, $this->context);
-            $module = (new Module())($this->appMeta, $this->context);
-            ($this->compileDependencies)($module);
-        } catch (InvalidContextException $e) {
-            printf("Invalid context %s\n", $e->getMessage());
-            ob_clean();
-
-            return 1;
-        }
-
+        $preload = ($this->compilePreload)($this->appMeta, $this->context);
+        $module = (new Module())($this->appMeta, $this->context);
+        ($this->compileDependencies)($module);
         echo PHP_EOL;
         ($this->compilerDiScripts)($this->appMeta);
         $failed = $this->newInstance->getFailed();

@@ -56,7 +56,7 @@ class FakeRun
         $bootstrap = new $bootstrapClass();
         assert(is_callable($bootstrap));
         /** @psalm-suppress PossiblyUndefinedVariable */
-        ($bootstrap)($this->context, $GLOBALS, $_SERVER); // 200 OK
+        ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // 200 OK
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $bootstrap = new $bootstrapClass();
         assert(is_callable($bootstrap));

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
-use BEAR\Package\Compiler\Module\App;
 use BEAR\Package\Injector;
-use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Throwable;
 
-use function assert;
 use function dirname;
 
 /**
@@ -27,29 +24,23 @@ final class Bootstrap
      *
      * @return 0|1
      */
-    public function __invoke(string $context, array $globals, array $server): int
+    public function __invoke(string $appName, string $context, array $globals, array $server): int
     {
         $tmpDir = dirname(__DIR__, 2) . '/tests/tmp';
-        $app = Injector::getInstance('BEAR\Package\Compiler', $context, $tmpDir)->getInstance(AppInterface::class);
-        assert($app instanceof App);
-        if ($app->httpCache->isNotModified($server)) {
-            $app->httpCache->transfer();
-
-            return 0;
-        }
+        $app = Injector::getInstance($appName, $context, $tmpDir)->getInstance(AppInterface::class);
+        $app->httpCache->isNotModified($server);
 
         $request = $app->router->match($globals, $server);
         try {
             /** @psalm-suppress all */
-            $response = $app->resource->{$request->method}->uri($request->path)($request->query);
-            assert($response instanceof ResourceObject);
-            $response->transfer($app->responder, $server);
-
-            return 0;
+            $app->resource->{$request->method}->uri($request->path)($request->query);
         } catch (Throwable $e) {
             $app->throwableHandler->handle($e, $request)->transfer();
 
             return 1;
         }
+
+        return 0;
+        // @codeCoverageIgnoreStart
     }
 }
