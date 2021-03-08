@@ -40,7 +40,7 @@ final class Bootstrap
             return 1;
         }
 
-        return 0;
         // @codeCoverageIgnoreStart
+        return 0;
     }
 }
