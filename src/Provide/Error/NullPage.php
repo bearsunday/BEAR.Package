@@ -12,6 +12,9 @@ use BEAR\Resource\ResourceObject;
  */
 class NullPage extends ResourceObject
 {
+    /** @var int */
+    public $code = 201; // for no template in HTML
+
     public function onGet(string $required, int $optional = 0): ResourceObject
     {
         return $this;
