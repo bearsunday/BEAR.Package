@@ -78,6 +78,6 @@
         "metrics": ["./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"],
-        "compile": "php ./bin/bear.compile.php -n FakeVendor\\\\HelloWorld -c prod-app -d ./tests/Fake/fake-app"
+        "compile": "./bin/bear.compile FakeVendor\\\\HelloWorld prod-app ./tests/Fake/fake-app"
     }
 }
