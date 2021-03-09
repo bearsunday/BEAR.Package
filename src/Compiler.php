@@ -156,6 +156,8 @@ final class Compiler
                     $this->classes[] = $class;
                 }
             }
+            ,true
+            ,true
         );
     }
 
