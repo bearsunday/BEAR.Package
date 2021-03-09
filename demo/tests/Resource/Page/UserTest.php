@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace MyVendor\MyProjecct\Resource\Page;
 
 use BEAR\Package\Bootstrap;
+use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use MyVendor\MyProject\Resource\Page\User;
 use PHPUnit\Framework\TestCase;
+use function dirname;
+
 
 class UserTest extends TestCase
 {
@@ -19,7 +22,8 @@ class UserTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resource = (new Bootstrap)->getApp('MyVendor\MyProject', 'app')->resource;
+        $injector = Injector::getInstance('MyVendor\MyProject', 'app', dirname(__DIR__, 3));
+        $this->resource = $injector->getInstance(ResourceInterface::class);
     }
 
     public function testGet()
