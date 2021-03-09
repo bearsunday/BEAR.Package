@@ -49,7 +49,7 @@ class FakeRun
     public function __invoke(): void
     {
         $appBootstrap = $this->appMeta->name . '\Bootstrap';
-        $bootstrap = class_exists($appBootstrap) ? new $appBootstrap() : new Bootstrap($this->appMeta);
+        $bootstrap = new Bootstrap($this->appMeta);
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
