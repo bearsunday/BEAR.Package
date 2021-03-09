@@ -62,3 +62,6 @@ jobs:
 
       - name: Run Demo
         run: php demo/bin/run.php
+
+      - name: Run Demo Test
+        run: ./vendor/bin/phpunit -c demo/phpunit.xml.dist
