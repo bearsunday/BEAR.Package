@@ -29,8 +29,12 @@ init:
     [, $appName, $context, $appDir] = $argv;
     $dir = realpath($appDir);
     require $dir . '/vendor/autoload.php';
-run:
+clean:
     $meta = new Meta($appName, $context);
+    foreach (new RecursiveIteratorIterator(new \RecursiveDirectoryIterator($meta->tmpDir, \FilesystemIterator::SKIP_DOTS),RecursiveIteratorIterator::CHILD_FIRST) as $file) {
+        $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
+    }
+run:
     $compile = sprintf("php %s/bear.compile.php '-n%s' -c%s '-d%s'", __DIR__, $appName, $context, $meta->appDir);
     passthru($compile, $return1); // cache write - dump DI/AOP script and preload.php
     passthru($compile . ' -o', $return2); // cache read - dump autoload.php
