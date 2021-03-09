@@ -1,10 +1,7 @@
 <phpunit bootstrap="tests/bootstrap.php">
     <testsuites>
-        <testsuite>
+        <testsuite name="BEAR.Package demo test suite">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-            <directory suffix=".php">src</directory>
-    </filter>
 </phpunit>

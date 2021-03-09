@@ -11,3 +11,5 @@
 /tests/Fake/fake-app/var/tmp/
 /vendor-bin/**/vendor
 /demo/var/tmp
+/demo/vendor
+demo/.phpunit.result.cache
