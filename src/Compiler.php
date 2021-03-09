@@ -74,12 +74,12 @@ final class Compiler
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
      */
-    public function __construct(string $appName, string $context, string $appDir)
+    public function __construct(string $appName, string $context, string $appDir, bool $prepend = true)
     {
         /** @var ArrayObject<int, string> $classes */
         $classes = new ArrayObject();
         $this->classes = $classes;
-        $this->registerLoader($appDir);
+        $this->registerLoader($appDir, $prepend);
         $this->hookNullObjectClass($appDir);
         $this->context = $context;
         $this->appMeta = new Meta($appName, $context, $appDir);
@@ -133,7 +133,7 @@ final class Compiler
         return ($this->dumpAutoload)();
     }
 
-    private function registerLoader(string $appDir): void
+    private function registerLoader(string $appDir, bool $prepend = true): void
     {
         $this->unregisterComposerLoader();
         $loaderFile = $appDir . '/vendor/autoload.php';
@@ -155,9 +155,9 @@ final class Compiler
                     /** @psalm-suppress NullArgument */
                     $this->classes[] = $class;
                 }
-            },
-            true,
-            true
+            }
+            ,true
+            ,$prepend
         );
     }
 
