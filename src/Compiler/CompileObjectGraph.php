@@ -32,6 +32,7 @@ final class CompileObjectGraph
         $svgFile = str_replace('.dot', '.svg', $dotFile);
         $cmd = "dot -Tsvg {$dotFile} -o {$svgFile}";
         passthru($cmd, $status);
+        // @codeCoverageIgnoreStart
         if ($status === 0) {
             return $svgFile;
         }
