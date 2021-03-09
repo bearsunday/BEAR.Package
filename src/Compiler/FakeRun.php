@@ -19,6 +19,8 @@ use Ray\Di\InjectorInterface;
 use function assert;
 use function class_exists;
 use function is_object;
+use function ob_end_clean;
+use function ob_start;
 use function property_exists;
 
 class FakeRun
@@ -64,7 +66,9 @@ class FakeRun
         /** @var NullPage $ro */
         $ro = $app->resource->get->object($ro)(['required' => 'string']);
         assert($app->responder instanceof TransferInterface);
+        ob_start();
         $ro->transfer($app->responder, []);
+        ob_end_clean();
         class_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);
         class_exists(HttpResponder::class);
