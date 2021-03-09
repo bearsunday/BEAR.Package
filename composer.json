@@ -17,7 +17,7 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6.2",
         "bear/query-repository": "^1.6.10",
-        "bear/resource": "^1.15.1",
+        "bear/resource": "^1.15.3",
         "bear/streamer": "^1.2.1",
         "bear/sunday": "^1.5.3",
         "monolog/monolog": "^1.25 || ^2.0",
