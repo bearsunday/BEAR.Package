@@ -111,7 +111,7 @@ final class Compiler
         echo PHP_EOL;
         ($this->compilerDiScripts)($this->appMeta);
         $failed = $this->newInstance->getFailed();
-        $dot = $failed ? '' : ($this->compilerObjectGraph)($module);
+        $dot = ($this->compilerObjectGraph)($module);
         $start = $_SERVER['REQUEST_TIME_FLOAT'];
         assert(is_float($start));
         $time = number_format(microtime(true) - $start, 2);
