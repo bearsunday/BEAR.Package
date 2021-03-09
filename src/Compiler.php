@@ -12,6 +12,7 @@ use BEAR\Package\Compiler\CompileDependencies;
 use BEAR\Package\Compiler\CompileDiScripts;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
+use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Compiler\NewInstance;
 use BEAR\Package\Provide\Error\NullPage;
@@ -23,12 +24,16 @@ use function assert;
 use function count;
 use function file_exists;
 use function is_float;
+use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
 use function printf;
 use function realpath;
+use function spl_autoload_functions;
 use function spl_autoload_register;
+use function spl_autoload_unregister;
+use function strpos;
 
 use const PHP_EOL;
 
@@ -71,6 +76,9 @@ final class Compiler
      */
     public function __construct(string $appName, string $context, string $appDir)
     {
+        /** @var ArrayObject<int, string> $classes */
+        $classes = new ArrayObject();
+        $this->classes = $classes;
         $this->registerLoader($appDir);
         $this->hookNullObjectClass($appDir);
         $this->context = $context;
@@ -82,11 +90,10 @@ final class Compiler
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
         /** @var ArrayObject<int, string> $classes */
-        $classes = new ArrayObject();
-        $this->classes = $classes;
         $filePutContents = new FilePutContents($overWritten);
-        $this->dumpAutoload = new CompileAutoload($this->injector, $filePutContents, $this->appMeta, $overWritten, $classes, $appDir, $context);
-        $this->compilePreload = new CompilePreload($this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
+        $fakeRun = new FakeRun($this->injector, $context, $this->appMeta);
+        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
+        $this->compilePreload = new CompilePreload($fakeRun, $this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $appDir);
         $this->compileDependencies = new CompileDependencies($this->newInstance);
     }
@@ -128,6 +135,7 @@ final class Compiler
 
     private function registerLoader(string $appDir): void
     {
+        $this->unregisterComposerLoader();
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
             throw new RuntimeException('no loader');
@@ -139,7 +147,11 @@ final class Compiler
             /** @var class-string $class */
             function (string $class) use ($loader): void {
                 $loader->loadClass($class);
-                if ($class !== NullPage::class) {
+                if (
+                    $class !== NullPage::class
+                    && ! is_int(strpos($class, 'BEAR\Package\Compiler'))
+                    && ! is_int(strpos($class, NullPage::class))
+                ) {
                     /** @psalm-suppress NullArgument */
                     $this->classes[] = $class;
                 }
@@ -152,6 +164,14 @@ final class Compiler
         $compileScript = realpath($appDir) . '/.compile.php';
         if (file_exists($compileScript)) {
             require $compileScript;
+        }
+    }
+
+    private function unregisterComposerLoader(): void
+    {
+        $autoload = spl_autoload_functions();
+        if (isset($autoload[0])) {
+            spl_autoload_unregister($autoload[0]);
         }
     }
 }

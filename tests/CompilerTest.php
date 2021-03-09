@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use BEAR\Package\Exception\InvalidContextException;
 use PHPUnit\Framework\TestCase;
 use Ray\Compiler\ScriptInjector;
 use RuntimeException;
@@ -29,7 +30,8 @@ class CompilerTest extends TestCase
         @unlink($compiledFile2);
         @unlink($compiledFile3);
         $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app');
-        $compiler->compile();
+        $status = $compiler->compile();
+        $this->assertSame(0, $status);
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile2);
@@ -60,8 +62,15 @@ class CompilerTest extends TestCase
 
     public function testUnbound(): void
     {
-        $compiler = new Compiler('FakeVendor\HelloWorld', 'unbound-app', __DIR__ . '/Fake/fake-app');
+        $compiler = new Compiler('FakeVendor\HelloWorld', 'cli-unbound-app', __DIR__ . '/Fake/fake-app');
         $code = $compiler->compile();
         $this->assertSame(1, $code);
+    }
+
+    public function testInvalidConetxt(): void
+    {
+        $this->expectException(InvalidContextException::class);
+        $compiler = new Compiler('FakeVendor\HelloWorld', 'cli-invalid-app', __DIR__ . '/Fake/fake-app');
+        $compiler->compile();
     }
 }
