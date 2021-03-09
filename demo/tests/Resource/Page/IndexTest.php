@@ -16,7 +16,7 @@ class IndexTest extends TestCase
      */
     private $resource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->resource = (new Bootstrap)->getApp('MyVendor\MyProject', 'app')->resource;
