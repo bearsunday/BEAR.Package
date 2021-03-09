@@ -77,6 +77,7 @@
         "sa": ["./vendor/bin/phpstan analyse -c phpstan.neon", "psalm --show-info=true"],
         "metrics": ["./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],
-        "build": ["@cs", "@sa", "@pcov", "@metrics"]
+        "build": ["@cs", "@sa", "@pcov", "@metrics"],
+        "compile": "php ./bin/bear.compile.php -n FakeVendor\\\\HelloWorld -c prod-app -d ./tests/Fake/fake-app"
     }
 }
