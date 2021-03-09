@@ -94,7 +94,7 @@ final class Compiler
         $fakeRun = new FakeRun($this->injector, $context, $this->appMeta);
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
         $this->compilePreload = new CompilePreload($fakeRun, $this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
-        $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $appDir);
+        $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
         $this->compileDependencies = new CompileDependencies($this->newInstance);
     }
 
@@ -119,8 +119,8 @@ final class Compiler
         echo PHP_EOL;
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", $this->newInstance->getCompiled(), count($this->newInstance->getFailed()));
-        printf("preload.php: %s\n", $this->dumpAutoload->getFileInfo($preload));
-        printf("module.dot: %s\n", $dot ? $this->dumpAutoload->getFileInfo($dot) : 'n/a');
+        printf("Preload compile: %s\n", $this->dumpAutoload->getFileInfo($preload));
+        printf("Object graph diagram: %s\n", $dot ? realpath($this->dumpAutoload->getFileInfo($dot)) : 'n/a');
         foreach ($this->newInstance->getFailed() as $depedencyIndex => $error) {
             printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
         }
