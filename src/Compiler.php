@@ -155,9 +155,9 @@ final class Compiler
                     /** @psalm-suppress NullArgument */
                     $this->classes[] = $class;
                 }
-            }
-            ,true
-            ,true
+            },
+            true,
+            true
         );
     }
 
