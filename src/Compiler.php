@@ -35,6 +35,7 @@ use function spl_autoload_register;
 use function spl_autoload_unregister;
 use function strpos;
 
+use function var_dump;
 use const PHP_EOL;
 
 final class Compiler
@@ -120,7 +121,7 @@ final class Compiler
         printf("Compilation (1/2) took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Success: %d Failed: %d\n", $this->newInstance->getCompiled(), count($this->newInstance->getFailed()));
         printf("Preload compile: %s\n", $this->dumpAutoload->getFileInfo($preload));
-        printf("Object graph diagram: %s\n", $dot ? realpath($this->dumpAutoload->getFileInfo($dot)) : 'n/a');
+        printf("Object graph diagram: %s\n", realpath($dot));
         foreach ($this->newInstance->getFailed() as $depedencyIndex => $error) {
             printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
         }
