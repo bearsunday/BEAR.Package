@@ -32,6 +32,7 @@ final class CompileObjectGraph
         $svgFile = str_replace('.dot', '.svg', $dotFile);
         $cmd = "dot -Tsvg {$dotFile} -o {$svgFile}";
         passthru('which dotsrc/Compiler/FakeRun.php 2>/dev/null', $status);
+        // @codeCoverageIgnoreStart
         if ($status === 0) {
             passthru($cmd, $status);
 
@@ -39,5 +40,6 @@ final class CompileObjectGraph
         }
 
         return $dotFile;
+        // @codeCoverageIgnoreEnd
     }
 }
