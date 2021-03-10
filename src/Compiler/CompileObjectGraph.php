@@ -7,14 +7,9 @@ namespace BEAR\Package\Compiler;
 use Ray\Di\AbstractModule;
 use Ray\ObjectGrapher\ObjectGrapher;
 
-use function exec;
-use function ob_clean;
 use function passthru;
-use function shell_exec;
 use function sprintf;
 use function str_replace;
-use function system;
-use function var_dump;
 
 final class CompileObjectGraph
 {
@@ -36,11 +31,13 @@ final class CompileObjectGraph
         ($this->filePutContents)($dotFile, (new ObjectGrapher())($module));
         $svgFile = str_replace('.dot', '.svg', $dotFile);
         $cmd = "dot -Tsvg {$dotFile} -o {$svgFile}";
-        passthru("which dot 2>/dev/null", $status);
+        passthru('which dotsrc/Compiler/FakeRun.php 2>/dev/null', $status);
         if ($status === 0) {
             passthru($cmd, $status);
+
             return $svgFile;
         }
+
         return $dotFile;
     }
 }

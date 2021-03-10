@@ -35,7 +35,6 @@ use function spl_autoload_register;
 use function spl_autoload_unregister;
 use function strpos;
 
-use function var_dump;
 use const PHP_EOL;
 
 final class Compiler
