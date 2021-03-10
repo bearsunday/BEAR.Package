@@ -31,12 +31,15 @@ final class CompileObjectGraph
         ($this->filePutContents)($dotFile, (new ObjectGrapher())($module));
         $svgFile = str_replace('.dot', '.svg', $dotFile);
         $cmd = "dot -Tsvg {$dotFile} -o {$svgFile}";
-        passthru($cmd, $status);
+        passthru('which dotsrc/Compiler/FakeRun.php 2>/dev/null', $status);
         // @codeCoverageIgnoreStart
         if ($status === 0) {
+            passthru($cmd, $status);
+
             return $svgFile;
         }
 
         return $dotFile;
+        // @codeCoverageIgnoreEnd
     }
 }

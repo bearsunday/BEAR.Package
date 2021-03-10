@@ -18,7 +18,6 @@ use Ray\Di\InjectorInterface;
 
 use function assert;
 use function class_exists;
-use function is_callable;
 use function is_object;
 use function ob_end_clean;
 use function ob_start;
@@ -55,8 +54,7 @@ class FakeRun
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        assert(is_callable($bootstrap));
-        /** @psalm-suppress PossiblyUndefinedVariable */
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // 200 OK
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);
