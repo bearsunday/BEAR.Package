@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
-use BEAR\AppMeta\AppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Context\CliModule;
+use BEAR\Package\Module\AppMetaModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use FakeVendor\HelloWorld\Module\App;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Module\ProdModule;
 use PHPUnit\Framework\TestCase;
@@ -18,10 +18,10 @@ use function unserialize;
 
 class NewAppTest extends TestCase
 {
-    public function testGetInstanceByHand(): App
+    public function testGetInstanceByHand(): AppInterface
     {
-        $app = (new Injector(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule()))), __DIR__ . '/tmp'))->getInstance(AppInterface::class);
-        $this->assertInstanceOf(App::class, $app);
+        $app = (new Injector(new AppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule()))), __DIR__ . '/tmp'))->getInstance(AppInterface::class);
+        $this->assertInstanceOf(AppInterface::class, $app);
 
         return $app;
     }
@@ -29,8 +29,8 @@ class NewAppTest extends TestCase
     /**
      * @depends testGetInstanceByHand
      */
-    public function testSerializable(App $app): void
+    public function testSerializable(AppInterface $app): void
     {
-        $this->assertInstanceOf(App::class, unserialize(serialize($app)));
+        $this->assertInstanceOf(AppInterface::class, unserialize(serialize($app)));
     }
 }
