@@ -31,7 +31,7 @@ class Module
             $module = $this->installContextModule($appMeta, $contextItem, $module);
         }
 
-        $module->install(new AppMetaModule($appMeta));
+        $module->override(new AppMetaModule($appMeta));
         $module->override(new CacheNamespaceModule($cacheNamespace));
 
         return $module;
