@@ -89,7 +89,6 @@ final class Compiler
         $this->newInstance = new NewInstance($this->injector);
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
-        /** @var ArrayObject<int, string> $classes */
         $filePutContents = new FilePutContents($overWritten);
         $fakeRun = new FakeRun($this->injector, $context, $this->appMeta);
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
@@ -144,7 +143,6 @@ final class Compiler
         $loader = require $loaderFile;
         assert($loader instanceof ClassLoader);
         spl_autoload_register(
-            /** @var class-string $class */
             function (string $class) use ($loader): void {
                 $loader->loadClass($class);
                 if (

@@ -14,8 +14,8 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Throwable;
 
 /**
- * @psalm-import-type Globals from \BEAR\Sunday\Extension\Router\RouterInterface
- * @psalm-import-type Server from \BEAR\Sunday\Extension\Router\RouterInterface
+ * @psalm-import-type Globals from RouterInterface
+ * @psalm-import-type Server from RouterInterface
  */
 
 final class Bootstrap
@@ -39,7 +39,7 @@ final class Bootstrap
     public function __invoke(string $appName, string $context, array $globals, array $server): int
     {
         $injector =  Injector::getInstance($appName, $context, $this->appDir);
-        $app = $injector->getInstance(AppInterface::class);
+        $injector->getInstance(AppInterface::class);
         $injector->getInstance(HttpCacheInterface::class);
         $router = $injector->getInstance(RouterInterface::class);
         $request = $router->match($globals, $server);

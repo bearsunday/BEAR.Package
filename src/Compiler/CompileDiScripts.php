@@ -39,7 +39,6 @@ final class CompileDiScripts
 
         // check resource injection and create annotation cache
         $metas = $appMeta->getResourceListGenerator();
-        /** @var array{0: string, 1:string} $meta */
         foreach ($metas as $meta) {
             [$className] = $meta;
             assert(class_exists($className));
