@@ -17,7 +17,7 @@
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6.2",
         "bear/query-repository": "^1.6.10",
-        "bear/resource": "^1.15.3",
+        "bear/resource": "1.x-dev",
         "bear/streamer": "^1.2.2",
         "bear/sunday": "^1.5.3",
         "monolog/monolog": "^1.25 || ^2.0",
@@ -25,10 +25,13 @@
         "ray/di": "^2.11.1",
         "ray/object-visual-grapher": "^1.0",
         "psr/log": "^1.1",
-        "doctrine/cache": "^1.10",
+        "doctrine/cache": "^1.10 || ^2.0",
         "doctrine/annotations": "^1.11",
         "composer/composer": "^1.10",
-        "koriym/http-constants": "^1.1"
+        "koriym/http-constants": "^1.1",
+        "psr/cache": "^1.0",
+        "ray/psr-cache-module": "1.x-dev",
+        "symfony/cache": "^5.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -73,7 +76,7 @@
         "pcov": ["php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml"],
         "cs": ["./vendor/bin/phpcs"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
-        "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
+        "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php tests/Fake/fake-app/var/tmp/*"],
         "sa": ["./vendor/bin/phpstan analyse -c phpstan.neon", "psalm --show-info=true"],
         "metrics": ["./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],

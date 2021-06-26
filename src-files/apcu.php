@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-if (! function_exists('apcu_store')) {
+if (! function_exists('apcu_fetch')) {
+    ini_set('apcu.enable', '1');
+
     function apcu_cache_info($limited = false)
     {
     }

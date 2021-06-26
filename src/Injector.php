@@ -8,16 +8,18 @@ use BEAR\AppMeta\Meta;
 use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\PhpFileCache;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
+use Ray\PsrCacheModule\LocalCacheProvider;
+use Symfony\Component\Cache\Adapter\DoctrineAdapter;
 
 use function assert;
 use function is_bool;
 use function is_dir;
 use function mkdir;
+use function str_replace;
 
 final class Injector
 {
@@ -37,26 +39,23 @@ final class Injector
 
     public static function getInstance(string $appName, string $context, string $appDir, ?CacheProvider $cache = null): InjectorInterface
     {
-        $injectorId = $appName . $context;
+        $injectorId = str_replace('\\', '_', $appName) . $context;
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
 
         $meta = new Meta($appName, $context, $appDir);
-        $cache = $cache ?? new PhpFileCache($meta->tmpDir . '/injector');
-        $cache->setNamespace($injectorId);
-        /** @var ?InjectorInterface $cachedInjector */
-        $cachedInjector = $cache->fetch(InjectorInterface::class);
-        if ($cachedInjector instanceof InjectorInterface) {
-            return $cachedInjector;
-        }
+        $scriptDir = $meta->tmpDir . '/di';
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
+        $cache = $cache ? new DoctrineAdapter($cache, $injectorId) : (new LocalCacheProvider($meta->tmpDir . '/cache', $injectorId))->get();
+        /** @var InjectorInterface $injector */
+        $injector = $cache->get($injectorId, static function () use ($meta, $context): InjectorInterface {
+            $injector = self::factory($meta, $context);
+            $injector->getInstance(AppInterface::class);
 
-        $injector = self::factory($meta, $context);
-        $injector->getInstance(AppInterface::class);
-        if ($injector instanceof ScriptInjector) {
-            $cache->save(InjectorInterface::class, $injector);
-        }
-
+            return $injector;
+        });
         self::$instances[$injectorId] = $injector;
 
         return $injector;

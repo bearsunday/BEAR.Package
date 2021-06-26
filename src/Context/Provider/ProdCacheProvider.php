@@ -33,6 +33,7 @@ class ProdCacheProvider implements ProviderInterface
      */
     public function get(): CacheProvider
     {
+        /** @psalm-suppress DeprecatedClass */
         $cache = new PhpFileCache($this->cacheDir);
         $cache->setNamespace($this->namespace);
 

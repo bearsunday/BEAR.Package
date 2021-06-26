@@ -12,7 +12,7 @@ use BEAR\RepositoryModule\Annotation\Storage;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
@@ -20,6 +20,8 @@ use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+use Ray\PsrCacheModule\Annotation\Local;
+use Ray\PsrCacheModule\Psr6ApcuModule;
 
 use function microtime;
 
@@ -33,6 +35,7 @@ class ProdModule extends AbstractModule
      */
     protected function configure(): void
     {
+        $this->install(new Psr6ApcuModule());
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
@@ -46,8 +49,8 @@ class ProdModule extends AbstractModule
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
         $this->bind(Cache::class)->annotatedWith('annotation_cache')->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
         $this->bind(Reader::class)->toConstructor(
-            CachedReader::class,
-            'reader=annotation_reader'
+            PsrCachedReader::class,
+            ['reader' => 'annotation_reader', 'cache' => Local::class]
         );
         $this->install(new DiCompileModule(true));
     }
