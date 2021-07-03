@@ -7,7 +7,6 @@ namespace BEAR\Package;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Context\CliModule;
 use BEAR\Package\Module\AppMetaModule as PackageAppMetaModule;
-use BEAR\Package\Module\AppMetaModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Module\ProdModule;
@@ -22,7 +21,7 @@ class NewAppTest extends TestCase
     public function testGetInstanceByHand(): AppInterface
     {
         $app = (new Injector(new PackageAppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule()))), __DIR__ . '/tmp'))->getInstance(AppInterface::class);
-        $this->assertInstanceOf(App::class, $app);
+        $this->assertInstanceOf(AppInterface::class, $app);
 
         return $app;
     }

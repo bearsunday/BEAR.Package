@@ -7,7 +7,7 @@ namespace BEAR\Package;
 use BEAR\Package\Module\AppMetaModule as AppMetaModuleInModule;
 
 /**
- * @deprecated use BEAR\Package\Module\AppMetaModule instead
+ * @deprecated
  */
 class AppMetaModule extends AppMetaModuleInModule
 {
