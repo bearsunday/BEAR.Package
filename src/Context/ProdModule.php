@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Context;
 
+use BEAR\Package\Context\Prod\CachedNamedParamMetas;
 use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\RepositoryModule\Annotation\Storage;
+use BEAR\Resource\NamedParamMetas;
+use BEAR\Resource\NamedParamMetasInterface;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -21,6 +24,7 @@ use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 use Ray\PsrCacheModule\Annotation\Local;
+use Ray\PsrCacheModule\Annotation\Shared;
 use Ray\PsrCacheModule\Psr6ApcuModule;
 
 use function microtime;
@@ -52,6 +56,11 @@ class ProdModule extends AbstractModule
             PsrCachedReader::class,
             ['reader' => 'annotation_reader', 'cache' => Local::class]
         );
+        $this->bind(NamedParamMetasInterface::class)->toConstructor(CachedNamedParamMetas::class, [
+            'cache' => Shared::class,
+            'metas' => 'origin',
+        ]);
+        $this->bind(NamedParamMetasInterface::class)->annotatedWith('origin')->to(NamedParamMetas::class);
         $this->install(new DiCompileModule(true));
     }
 
