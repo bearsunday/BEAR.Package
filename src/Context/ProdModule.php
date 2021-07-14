@@ -4,28 +4,27 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Context;
 
-use BEAR\Package\Context\Provider\ProdCacheProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
-use BEAR\RepositoryModule\Annotation\Storage;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\CacheProvider;
+use Koriym\Attributes\AttributeReader;
+use Koriym\Attributes\DualReader;
 use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-
-use function microtime;
+use Ray\PsrCacheModule\Annotation\Shared;
+use Ray\PsrCacheModule\Psr6ApcuModule;
 
 /**
  * @codeCoverageIgnore
  */
+
 class ProdModule extends AbstractModule
 {
     /**
@@ -36,20 +35,23 @@ class ProdModule extends AbstractModule
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
-        // prod cache namespace (override in AppInjector)
-        $this->bind()->annotatedWith('cache_namespace')->toInstance(microtime());
-        // generic cache for user
-        $this->bind(Cache::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
-        // query repository (shared-server) cache
-        $this->bind(CacheProvider::class)->annotatedWith(Storage::class)->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
-        // prod annotation reader
-        $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
-        $this->bind(Cache::class)->annotatedWith('annotation_cache')->toProvider(ProdCacheProvider::class)->in(Scope::SINGLETON);
-        $this->bind(Reader::class)->toConstructor(
-            CachedReader::class,
-            'reader=annotation_reader'
-        );
+        $this->installCacheModule();
         $this->install(new DiCompileModule(true));
+    }
+
+    private function installCacheModule(): void
+    {
+        $this->install(new Psr6ApcuModule());
+        $this->bind(Reader::class)->toConstructor(
+            PsrCachedReader::class,
+            ['reader' => 'dual_reader', 'cache' => Shared::class]
+        )->in(Scope::SINGLETON);
+        $this->bind(Reader::class)->annotatedWith('dual_reader')->toConstructor(
+            DualReader::class,
+            ['annotationReader' => 'annotation_reader', 'attributeReader' => 'attribute_reader']
+        );
+        $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
+        $this->bind(Reader::class)->annotatedWith('attribute_reader')->to(AttributeReader::class);
     }
 
     /**
