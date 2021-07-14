@@ -11,9 +11,9 @@ use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
-use Ray\PsrCacheModule\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\CacheInterface;
 
 use function assert;
