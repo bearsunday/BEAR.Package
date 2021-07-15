@@ -1,6 +1,5 @@
 # BEAR.Package
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.Package/?branch=1.x)
 [![codecov](https://codecov.io/gh/bearsunday/BEAR.Package/branch/1.x/graph/badge.svg?token=eh3c9AF4Mr)](https://codecov.io/gh/koriym/BEAR.Package)
 [![Type Coverage](https://shepherd.dev/github/bearsunday/BEAR.Package/coverage.svg)](https://shepherd.dev/github/bearsunday/BEAR.Package)
 ![Continuous Integration](https://github.com/bearsunday/BEAR.Package/workflows/Continuous%20Integration/badge.svg)
@@ -13,7 +12,6 @@ BEAR.Package is a [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday) resou
  * Modules
     * PackageModule 
     * DiCompileModule
-    * CacheNamespaceModule
     * Context
       * ProdModule
       * ApiModule
