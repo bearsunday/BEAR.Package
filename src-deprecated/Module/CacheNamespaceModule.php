@@ -6,6 +6,9 @@ namespace BEAR\Package\Module;
 
 use Ray\Di\AbstractModule;
 
+/**
+ * @deprecated
+ */
 class CacheNamespaceModule extends AbstractModule
 {
     /** @var string */
