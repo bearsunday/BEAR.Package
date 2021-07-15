@@ -16,7 +16,7 @@
         "ext-zend-opcache": "*",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6.2",
-        "bear/query-repository": "^1.6.10",
+        "bear/query-repository": "^1.7",
         "bear/resource": "^1.15.6",
         "bear/streamer": "^1.2.2",
         "bear/sunday": "^1.5.5",
