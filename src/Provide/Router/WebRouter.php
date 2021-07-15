@@ -43,7 +43,6 @@ class WebRouter implements RouterInterface, WebRouterInterface
         assert(isset($server['REQUEST_METHOD']));
         $requestUri = $server['REQUEST_URI'];
         $request = new RouterMatch();
-        /** @var array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, REQUEST_METHOD: string} $server */
         [$request->method, $request->query] = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
         $request->path = $this->schemeHost . parse_url($requestUri, 5); // 5 = PHP_URL_PATH
 
