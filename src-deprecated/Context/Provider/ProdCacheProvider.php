@@ -10,6 +10,9 @@ use Doctrine\Common\Cache\PhpFileCache;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
+/**
+ * @deprecated
+ */
 class ProdCacheProvider implements ProviderInterface
 {
     /** @var string */

@@ -26,7 +26,7 @@ class MonologProvider implements ProviderInterface
     public function get(): Logger
     {
         $format = "[%datetime%] %level_name%: %message% %context%\n";
-        $stream = new StreamHandler($this->appMeta->logDir . '/app.log', Logger::DEBUG);
+        $stream = new StreamHandler($this->appMeta->logDir . '/app.log');
         $stream->setFormatter(new LineFormatter($format));
 
         return new Logger($this->appMeta->name, [$stream]);
