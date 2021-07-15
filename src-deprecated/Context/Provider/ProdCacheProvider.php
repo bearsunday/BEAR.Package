@@ -25,7 +25,7 @@ class ProdCacheProvider implements ProviderInterface
      * @Named("namespace=cache_namespace")
      */
     #[Named('namespace=cache_namespace')]
-    public function __construct(AbstractAppMeta $appMeta, string $namespace)
+    public function __construct(AbstractAppMeta $appMeta, string $namespace = '')
     {
         $this->cacheDir = $appMeta->tmpDir . '/cache';
         $this->namespace = $namespace;

@@ -7,7 +7,6 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Module\AppMetaModule;
-use BEAR\Package\Module\CacheNamespaceModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\AssistedModule;
 
@@ -32,7 +31,6 @@ class Module
         }
 
         $module->override(new AppMetaModule($appMeta));
-        $module->override(new CacheNamespaceModule($cacheNamespace));
 
         return $module;
     }
