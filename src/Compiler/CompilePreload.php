@@ -55,7 +55,7 @@ final class CompilePreload
         $requiredOnceFile = '';
         foreach ($paths as $path) {
             $requiredOnceFile .= sprintf(
-                "opcache_compile_file(%s);\n",
+                "require %s;\n",
                 $path
             );
         }
@@ -63,8 +63,7 @@ final class CompilePreload
         $preloadFile = sprintf("<?php
 
 // %s preload
-
-opcache_compile_file( __DIR__ . '/vendor/autoload.php');
+require __DIR__ . '/vendor/autoload.php';
 
 %s", $this->context, $requiredOnceFile);
         $fileName = realpath($appMeta->appDir) . '/preload.php';
