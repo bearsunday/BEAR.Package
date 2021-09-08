@@ -11,7 +11,7 @@ use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\Annotation\Shared;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 
-final class Psr6NullCacheModule extends AbstractModule
+final class Psr6NullModule extends AbstractModule
 {
     protected function configure(): void
     {
