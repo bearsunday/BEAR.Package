@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Injector\BindingsUpdate;
 use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
@@ -47,13 +48,16 @@ final class Injector
 
         $meta = new Meta($appName, $context, $appDir);
         $cache = $cache ?? new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
-        $injector = $cache->get($injectorId, static function () use ($meta, $context): InjectorInterface {
+        [$injector, $bindingsUpdate] = $cache->getItem($injectorId)->get();
+        if (! $injector instanceof InjectorInterface || ($injector instanceof RayInjector && $bindingsUpdate->isUpdated($meta))) {
             $injector = self::factory($meta, $context);
             $injector->getInstance(AppInterface::class);
-
-            return $injector;
-        });
+            $item = $cache->getItem($injectorId);
+            $item->set([$injector, new BindingsUpdate($meta)]);
+            $cache->save($item);
+        }
         assert($injector instanceof InjectorInterface);
+
         self::$instances[$injectorId] = $injector;
 
         return $injector;

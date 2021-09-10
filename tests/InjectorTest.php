@@ -7,6 +7,7 @@ namespace BEAR\Package;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\TestCase;
+use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
 use function array_fill;
@@ -17,6 +18,7 @@ use function microtime;
 use function passthru;
 use function spl_object_hash;
 use function sprintf;
+use function touch;
 
 use const E_ALL;
 
@@ -30,7 +32,7 @@ class InjectorTest extends TestCase
     public function testRayInjector(): InjectorInterface
     {
         $injector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
-        $this->assertInstanceOf(\Ray\Di\Injector::class, $injector);
+        $this->assertInstanceOf(RayInjector::class, $injector);
 
         return $injector;
     }
@@ -38,7 +40,7 @@ class InjectorTest extends TestCase
     /**
      * @depends testRayInjector
      */
-    public function testRayInjectorAsSingleton(\Ray\Di\Injector $injector): void
+    public function testRayInjectorAsSingleton(RayInjector $injector): void
     {
         $singletonInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
         $this->assertSame(spl_object_hash($injector), spl_object_hash($singletonInjector));
@@ -91,6 +93,17 @@ class InjectorTest extends TestCase
         // no error should be recorded
         $this->assertSame('', file_get_contents($errorLog));
         $this->assertSame(0, $exitCode);
+    }
+
+    public function testBindingsModified(): void
+    {
+        $appDir = __DIR__ . '/Fake/fake-app';
+        $context = 'app';
+        $exitCode = $this->runOnce($context);
+        $this->assertSame(0, $exitCode);
+        touch(__DIR__ . '/Fake/fake-app/src/Module/AppModule.php');
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
+        $this->assertInstanceOf(RayInjector::class, $injector);
     }
 
     private function runOnce(string $context): int
