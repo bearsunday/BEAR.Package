@@ -10,6 +10,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
+use SplFileInfo;
 
 use function array_combine;
 use function array_map;
@@ -20,28 +21,27 @@ use function sprintf;
 
 final class BindingsUpdate
 {
-    /** @var string */
-    private $latestFile;
-
     /** @var int */
     private $updateTime;
 
     public function __construct(AbstractAppMeta $meta)
     {
         $files = $this->sortFiles($meta);
-        $this->latestFile = key($files);
-        $this->updateTime = $files[key($files)];
+        $this->updateTime = (int) $files[key($files)];
     }
 
-    public function isUpdated($meta): bool
+    public function isUpdated(AbstractAppMeta $meta): bool
     {
         $files = $this->sortFiles($meta);
-        $updateTime = $files[key($files)];
+        $updateTime = (int) $files[key($files)];
 
         return $updateTime !== $this->updateTime;
     }
 
-    public function sortFiles($meta): array
+    /**
+     * @return array<string, false|int>
+     */
+    public function sortFiles(AbstractAppMeta $meta): array
     {
         $modulePath = sprintf('%s/%s', $meta->appDir, 'src/Module');
         $varPath = sprintf('%s/%s', $meta->appDir, 'var');
@@ -55,6 +55,9 @@ final class BindingsUpdate
         return $files;
     }
 
+    /**
+     * @return list<string>
+     */
     private function getFiles(string $path): array
     {
         $iterator = new RegexIterator(
@@ -70,9 +73,10 @@ final class BindingsUpdate
         );
 
         $files = [];
-        foreach ($iterator as $fileName => $class) {
-            if ($class->isFile()) {
-                $files[] = $fileName;
+        /** @var SplFileInfo $fileInfo */
+        foreach ($iterator as $fileName => $fileInfo) {
+            if ($fileInfo->isFile()) {
+                $files[] = (string) $fileName;
             }
         }
 

@@ -12,6 +12,7 @@ use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -48,15 +49,17 @@ final class Injector
 
         $meta = new Meta($appName, $context, $appDir);
         $cache = $cache ?? new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
+        assert($cache instanceof AdapterInterface);
+        /** @psalm-suppress all */
         [$injector, $bindingsUpdate] = $cache->getItem($injectorId)->get();
-        if (! $injector instanceof InjectorInterface || ($injector instanceof RayInjector && $bindingsUpdate->isUpdated($meta))) {
+        if (! $injector instanceof InjectorInterface || ($injector instanceof RayInjector && $bindingsUpdate instanceof BindingsUpdate && $bindingsUpdate->isUpdated($meta))) {
             $injector = self::factory($meta, $context);
             $injector->getInstance(AppInterface::class);
+            assert($cache instanceof AdapterInterface);
             $item = $cache->getItem($injectorId);
             $item->set([$injector, new BindingsUpdate($meta)]);
             $cache->save($item);
         }
-        assert($injector instanceof InjectorInterface);
 
         self::$instances[$injectorId] = $injector;
 
