@@ -9,7 +9,7 @@ use BEAR\Resource\ResourceInterface;
 /* @var \Composer\Autoload\ClassLoader $loader */
 $loader = require dirname(__DIR__, 2) . '/vendor/autoload.php';
 $loader->addPsr4('MyVendor\\MyProject\\', dirname(__DIR__) . '/src');
-$page = Injector::getInstance('MyVendor\MyProject', 'prod-app', dirname(__DIR__, 3))->getInstance(ResourceInterface::class)->get->uri('page://self/api/user')(['id' => 1]);
+$page = Injector::getInstance('MyVendor\MyProject', 'prod-app', dirname(__DIR__, 2))->getInstance(ResourceInterface::class)->get->uri('page://self/api/user')(['id' => 1]);
 
 echo $page->code . PHP_EOL;
 echo (string) $page;
