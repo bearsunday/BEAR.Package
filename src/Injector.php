@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Injector\BindingsUpdate;
+use BEAR\Package\Injector\FileUpdate;
 use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
@@ -52,12 +52,12 @@ final class Injector
         assert($cache instanceof AdapterInterface);
         /** @psalm-suppress all */
         [$injector, $bindingsUpdate] = $cache->getItem($injectorId)->get();
-        if (! $injector instanceof InjectorInterface || ($injector instanceof RayInjector && $bindingsUpdate instanceof BindingsUpdate && $bindingsUpdate->isUpdated($meta))) {
+        if (! $injector instanceof InjectorInterface || ($injector instanceof RayInjector && $bindingsUpdate instanceof FileUpdate && $bindingsUpdate->isUpdated($meta))) {
             $injector = self::factory($meta, $context);
             $injector->getInstance(AppInterface::class);
             assert($cache instanceof AdapterInterface);
             $item = $cache->getItem($injectorId);
-            $item->set([$injector, new BindingsUpdate($meta)]);
+            $item->set([$injector, new FileUpdate($meta)]);
             $cache->save($item);
         }
 

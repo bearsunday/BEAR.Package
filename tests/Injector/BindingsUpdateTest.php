@@ -15,7 +15,7 @@ class BindingsUpdateTest extends TestCase
     public function testBindingUpdated(): void
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app');
-        $bindingsUpdate = new BindingsUpdate($meta);
+        $bindingsUpdate = new FileUpdate($meta);
         $isUpdated = $bindingsUpdate->isUpdated($meta);
         $this->assertFalse($isUpdated);
 

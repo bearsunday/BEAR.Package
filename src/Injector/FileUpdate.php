@@ -18,13 +18,24 @@ use function max;
 use function preg_quote;
 use function sprintf;
 
-final class BindingsUpdate
+final class FileUpdate
 {
     /** @var int */
     private $updateTime;
 
+    /** @var string */
+    private $srcRegex;
+
+    /** @var string */
+    private $varRegex;
+
     public function __construct(AbstractAppMeta $meta)
     {
+        $basePath = preg_quote($meta->appDir . '/', '/');
+        $srcPath = $basePath . 'src\/';
+        $varPath = $basePath . 'var\/';
+        $this->srcRegex = sprintf('/^(?!.*(%s)).*?$/', $srcPath . 'Resource');
+        $this->varRegex = sprintf('/^(?!.*(%s|%s|%s|%s)).*?$/', $varPath . 'tmp', $varPath . 'log', $varPath . 'templates', $varPath . 'phinx');
         $this->updateTime = $this->getLatestUpdateTime($meta);
     }
 
@@ -35,17 +46,13 @@ final class BindingsUpdate
 
     public function getLatestUpdateTime(AbstractAppMeta $meta): int
     {
-        $basePath = preg_quote($meta->appDir . '/', '/');
-        $srcPath = $basePath . 'src\/';
-        $varPath = $basePath . 'var\/';
-        $srcRegex =  sprintf('/^(?!.*(%s)).*?$/', $srcPath . 'Resource');
-        $srcFiles = $this->getFiles($meta->appDir . '/src', $srcRegex);
-        $varRegex =  sprintf('/^(?!.*(%s|%s|%s|%s)).*?$/', $varPath . 'tmp', $varPath . 'log', $varPath . 'templates', $varPath . 'phinx');
-        $varFiles = $this->getFiles($meta->appDir . '/var', $varRegex);
-        $envFiles = glob($meta->appDir . '/.env*');
+        $srcFiles = $this->getFiles($meta->appDir . '/src', $this->srcRegex);
+        $varFiles = $this->getFiles($meta->appDir . '/var', $this->varRegex);
+        $envFiles = (array) glob($meta->appDir . '/.env*');
         $scanFiles = $srcFiles + $varFiles + $envFiles;
 
-        return max(array_map('filemtime', $scanFiles));
+        /** @psalm-suppress all -- ignore filemtime could return false */
+        return (int) max(array_map('filemtime', $scanFiles));
     }
 
     /**
