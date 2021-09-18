@@ -10,17 +10,17 @@ use PHPUnit\Framework\TestCase;
 use function dirname;
 use function touch;
 
-class BindingsUpdateTest extends TestCase
+class FileUpdateTest extends TestCase
 {
     public function testBindingUpdated(): void
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app');
         $bindingsUpdate = new FileUpdate($meta);
-        $isUpdated = $bindingsUpdate->isUpdated($meta);
-        $this->assertFalse($isUpdated);
+        $isUpdated = $bindingsUpdate->isNotUpdated($meta);
+        $this->assertTrue($isUpdated);
 
         touch(dirname(__DIR__) . '/Fake/fake-app/src/Module/AppModule.php');
-        $isUpdated = $bindingsUpdate->isUpdated($meta);
-        $this->assertTrue($isUpdated);
+        $isUpdated = $bindingsUpdate->isNotUpdated($meta);
+        $this->assertFalse($isUpdated);
     }
 }

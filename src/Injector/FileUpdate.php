@@ -39,9 +39,9 @@ final class FileUpdate
         $this->updateTime = $this->getLatestUpdateTime($meta);
     }
 
-    public function isUpdated(AbstractAppMeta $meta): bool
+    public function isNotUpdated(AbstractAppMeta $meta): bool
     {
-        return $this->getLatestUpdateTime($meta) !== $this->updateTime;
+        return $this->getLatestUpdateTime($meta) === $this->updateTime;
     }
 
     public function getLatestUpdateTime(AbstractAppMeta $meta): int

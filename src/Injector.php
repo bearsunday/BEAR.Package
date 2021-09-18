@@ -51,14 +51,11 @@ final class Injector
         $cache = $cache ?? new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
         assert($cache instanceof AdapterInterface);
         /** @psalm-suppress all */
-        [$injector, $bindingsUpdate] = $cache->getItem($injectorId)->get();
-        if (! $injector instanceof InjectorInterface || ($injector instanceof RayInjector && $bindingsUpdate instanceof FileUpdate && $bindingsUpdate->isUpdated($meta))) {
+        [$injector, $fileUpdate] = $cache->getItem($injectorId)->get();
+        $isCacheableInjector = $injector instanceof ScriptInjector || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
+        if (! $isCacheableInjector) {
             $injector = self::factory($meta, $context);
-            $injector->getInstance(AppInterface::class);
-            assert($cache instanceof AdapterInterface);
-            $item = $cache->getItem($injectorId);
-            $item->set([$injector, new FileUpdate($meta)]);
-            $cache->save($item);
+            $cache->save($cache->getItem($injectorId)->set([$injector, new FileUpdate($meta)]));
         }
 
         self::$instances[$injectorId] = $injector;
@@ -71,15 +68,17 @@ final class Injector
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $module = (new Module())($meta, $context, '');
-        $rayInjector = new RayInjector($module, $scriptDir);
-        $isProd = $rayInjector->getInstance('', Compile::class);
+        $injector = new RayInjector($module, $scriptDir);
+        $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            return new ScriptInjector($scriptDir, static function () use ($scriptDir, $module) {
+            $injector = new ScriptInjector($scriptDir, static function () use ($scriptDir, $module) {
                 return new ScriptinjectorModule($scriptDir, $module);
             });
         }
 
-        return $rayInjector;
+        $injector->getInstance(AppInterface::class);
+
+        return $injector;
     }
 }
