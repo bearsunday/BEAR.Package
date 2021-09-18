@@ -12,11 +12,10 @@ use RecursiveRegexIterator;
 use RegexIterator;
 use SplFileInfo;
 
-use function array_combine;
 use function array_map;
-use function array_merge;
-use function arsort;
-use function key;
+use function glob;
+use function max;
+use function preg_quote;
 use function sprintf;
 
 final class BindingsUpdate
@@ -26,39 +25,33 @@ final class BindingsUpdate
 
     public function __construct(AbstractAppMeta $meta)
     {
-        $files = $this->sortFiles($meta);
-        $this->updateTime = (int) $files[key($files)];
+        $this->updateTime = $this->getLatestUpdateTime($meta);
     }
 
     public function isUpdated(AbstractAppMeta $meta): bool
     {
-        $files = $this->sortFiles($meta);
-        $updateTime = (int) $files[key($files)];
-
-        return $updateTime !== $this->updateTime;
+        return $this->getLatestUpdateTime($meta) !== $this->updateTime;
     }
 
-    /**
-     * @return array<string, false|int>
-     */
-    public function sortFiles(AbstractAppMeta $meta): array
+    public function getLatestUpdateTime(AbstractAppMeta $meta): int
     {
-        $modulePath = sprintf('%s/%s', $meta->appDir, 'src/Module');
-        $varPath = sprintf('%s/%s', $meta->appDir, 'var');
-        $files = array_merge($this->getFiles($modulePath), $this->getFiles($varPath));
-        $files = array_combine(
-            $files,
-            array_map('filemtime', $files)
-        );
-        arsort($files);
+        $basePath = preg_quote($meta->appDir . '/', '/');
+        $srcPath = $basePath . 'src\/';
+        $varPath = $basePath . 'var\/';
+        $srcRegex =  sprintf('/^(?!.*(%s)).*?$/', $srcPath . 'Resource');
+        $srcFiles = $this->getFiles($meta->appDir . '/src', $srcRegex);
+        $varRegex =  sprintf('/^(?!.*(%s|%s|%s|%s)).*?$/', $varPath . 'tmp', $varPath . 'log', $varPath . 'templates', $varPath . 'phinx');
+        $varFiles = $this->getFiles($meta->appDir . '/var', $varRegex);
+        $envFiles = glob($meta->appDir . '/.env*');
+        $scanFiles = $srcFiles + $varFiles + $envFiles;
 
-        return $files;
+        return max(array_map('filemtime', $scanFiles));
     }
 
     /**
      * @return list<string>
      */
-    private function getFiles(string $path): array
+    private function getFiles(string $path, string $regex): array
     {
         $iterator = new RegexIterator(
             new RecursiveIteratorIterator(
@@ -68,14 +61,14 @@ final class BindingsUpdate
                 ),
                 RecursiveIteratorIterator::LEAVES_ONLY
             ),
-            '/^(?!.*log|tmp).+\.?$/',
+            $regex,
             RecursiveRegexIterator::MATCH
         );
 
         $files = [];
         /** @var SplFileInfo $fileInfo */
         foreach ($iterator as $fileName => $fileInfo) {
-            if ($fileInfo->isFile()) {
+            if ($fileInfo->isFile() && $fileInfo->getFilename()[0] !== '.') {
                 $files[] = (string) $fileName;
             }
         }
