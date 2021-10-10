@@ -7,6 +7,7 @@ namespace BEAR\Package;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\TestCase;
+use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
@@ -104,6 +105,45 @@ class InjectorTest extends TestCase
         touch(__DIR__ . '/Fake/fake-app/src/Module/AppModule.php');
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         $this->assertInstanceOf(RayInjector::class, $injector);
+    }
+
+    public function testGetOverrideInstance(): void
+    {
+        $fakeApp = new class implements AppInterface {
+        };
+        $injector = $this->getInjector($fakeApp);
+        $app = $injector->getInstance(AppInterface::class);
+        $this->assertSame($fakeApp, $app);
+        // cached instance
+        $injector = $this->getInjector($fakeApp);
+        $app = $injector->getInstance(AppInterface::class);
+        $this->assertSame($fakeApp, $app);
+    }
+
+    private function getInjector(AppInterface $fakeApp): InjectorInterface
+    {
+        $injector = Injector::getOverrideInstance(
+            'FakeVendor\HelloWorld',
+            'app',
+            __DIR__ . '/Fake/fake-app',
+            new class ($fakeApp) extends AbstractModule {
+                /** @var AppInterface */
+                private $app;
+
+                public function __construct(AppInterface $app, ?AbstractModule $module = null)
+                {
+                    $this->app = $app;
+                    parent::__construct($module);
+                }
+
+                protected function configure(): void
+                {
+                    $this->bind(AppInterface::class)->toInstance($this->app);
+                }
+            }
+        );
+
+        return $injector;
     }
 
     private function runOnce(string $context): int

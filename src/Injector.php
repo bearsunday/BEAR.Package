@@ -10,6 +10,7 @@ use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\ScriptInjector;
+use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -19,6 +20,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\CacheInterface;
 
 use function assert;
+use function get_class;
 use function is_bool;
 use function is_dir;
 use function mkdir;
@@ -63,11 +65,29 @@ final class Injector
         return $injector;
     }
 
-    private static function factory(Meta $meta, string $context): InjectorInterface
+    public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
+    {
+        $injectorId = $appName . $context . get_class($overrideModule);
+        if (isset(self::$instances[$injectorId])) {
+            return self::$instances[$injectorId];
+        }
+
+        $meta = new Meta($appName, $context, $appDir);
+        $injector = self::factory($meta, $context, $overrideModule);
+        self::$instances[$injectorId] = $injector;
+
+        return $injector;
+    }
+
+    private static function factory(Meta $meta, string $context, ?AbstractModule $overideModule = null): InjectorInterface
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $module = (new Module())($meta, $context, '');
+        if ($overideModule instanceof AbstractModule) {
+            $module->override($overideModule);
+        }
+
         $injector = new RayInjector($module, $scriptDir);
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
