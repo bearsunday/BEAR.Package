@@ -13,3 +13,5 @@
 /demo/var/tmp
 /demo/vendor
 demo/.phpunit.result.cache
+/.phpunit-cache/
+/coverage.xml

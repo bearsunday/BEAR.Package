@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Injector\FileUpdate;
 use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
@@ -12,6 +13,7 @@ use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -49,13 +51,15 @@ final class Injector
 
         $meta = new Meta($appName, $context, $appDir);
         $cache = $cache ?? new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
-        $injector = $cache->get($injectorId, static function () use ($meta, $context): InjectorInterface {
+        assert($cache instanceof AdapterInterface);
+        /** @psalm-suppress all */
+        [$injector, $fileUpdate] = $cache->getItem($injectorId)->get();
+        $isCacheableInjector = $injector instanceof ScriptInjector || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
+        if (! $isCacheableInjector) {
             $injector = self::factory($meta, $context);
-            $injector->getInstance(AppInterface::class);
+            $cache->save($cache->getItem($injectorId)->set([$injector, new FileUpdate($meta)]));
+        }
 
-            return $injector;
-        });
-        assert($injector instanceof InjectorInterface);
         self::$instances[$injectorId] = $injector;
 
         return $injector;
@@ -84,15 +88,17 @@ final class Injector
             $module->override($overideModule);
         }
 
-        $rayInjector = new RayInjector($module, $scriptDir);
-        $isProd = $rayInjector->getInstance('', Compile::class);
+        $injector = new RayInjector($module, $scriptDir);
+        $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            return new ScriptInjector($scriptDir, static function () use ($scriptDir, $module) {
+            $injector = new ScriptInjector($scriptDir, static function () use ($scriptDir, $module) {
                 return new ScriptinjectorModule($scriptDir, $module);
             });
         }
 
-        return $rayInjector;
+        $injector->getInstance(AppInterface::class);
+
+        return $injector;
     }
 }
