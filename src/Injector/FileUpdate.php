@@ -13,6 +13,8 @@ use RegexIterator;
 use SplFileInfo;
 
 use function array_map;
+use function array_merge;
+use function file_exists;
 use function glob;
 use function max;
 use function preg_quote;
@@ -49,7 +51,11 @@ final class FileUpdate
         $srcFiles = $this->getFiles($meta->appDir . '/src', $this->srcRegex);
         $varFiles = $this->getFiles($meta->appDir . '/var', $this->varRegex);
         $envFiles = (array) glob($meta->appDir . '/.env*');
-        $scanFiles = $srcFiles + $varFiles + $envFiles;
+        $scanFiles = array_merge($srcFiles, $varFiles, $envFiles);
+        $composerLock = $meta->appDir . '/composer.lock';
+        if (file_exists($composerLock)) {
+            $scanFiles[] = $composerLock;
+        }
 
         /** @psalm-suppress all -- ignore filemtime could return false */
         return (int) max(array_map('filemtime', $scanFiles));
