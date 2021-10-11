@@ -20,7 +20,6 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\CacheInterface;
 
 use function assert;
-use function get_class;
 use function is_bool;
 use function is_dir;
 use function mkdir;
@@ -34,6 +33,9 @@ final class Injector
      * @var array<string, InjectorInterface>
      */
     private static $instances;
+
+    /** @var array<string, AbstractModule> */
+    private static $modules;
 
     /**
      * @codeCoverageIgnore
@@ -67,23 +69,19 @@ final class Injector
 
     public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
     {
-        $injectorId = $appName . $context . get_class($overrideModule);
-        if (isset(self::$instances[$injectorId])) {
-            return self::$instances[$injectorId];
-        }
-
-        $meta = new Meta($appName, $context, $appDir);
-        $injector = self::factory($meta, $context, $overrideModule);
-        self::$instances[$injectorId] = $injector;
-
-        return $injector;
+        return self::factory(new Meta($appName, $context, $appDir), $context, $overrideModule);
     }
 
     private static function factory(Meta $meta, string $context, ?AbstractModule $overideModule = null): InjectorInterface
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
-        $module = (new Module())($meta, $context, '');
+        $moduleId = $meta->appDir . $context;
+        if (! isset(self::$modules[$moduleId])) {
+            self::$modules[$moduleId] = (new Module())($meta, $context);
+        }
+
+        $module = self::$modules[$moduleId];
         if ($overideModule instanceof AbstractModule) {
             $module->override($overideModule);
         }
