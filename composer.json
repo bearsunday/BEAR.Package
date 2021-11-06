@@ -13,7 +13,6 @@
         "php": "^7.3 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-zend-opcache": "*",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6.2",
         "bear/query-repository": "^1.7",
