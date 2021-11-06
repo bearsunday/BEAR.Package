@@ -7,6 +7,7 @@ namespace BEAR\Package\Context;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
+use BEAR\QueryRepository\ProdQueryRepositoryModule;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -41,6 +42,7 @@ class ProdModule extends AbstractModule
 
     private function installCacheModule(): void
     {
+        $this->install(new ProdQueryRepositoryModule());
         $this->install(new Psr6ApcuModule());
         $this->bind(Reader::class)->toConstructor(
             PsrCachedReader::class,
