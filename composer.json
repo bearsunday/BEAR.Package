@@ -26,7 +26,6 @@
         "psr/log": "^1.1",
         "doctrine/cache": "^1.10 || ^2.0",
         "doctrine/annotations": "^1.11",
-        "composer/composer": "^1.10",
         "koriym/http-constants": "^1.1",
         "ray/psr-cache-module": "^1.1.1",
         "symfony/cache": "^5.3",
