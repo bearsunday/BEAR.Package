@@ -8,6 +8,7 @@ use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\QueryRepository\ProdQueryRepositoryModule;
+use BEAR\RepositoryModule\Annotation\EtagPool;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -15,17 +16,18 @@ use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Koriym\Attributes\AttributeReader;
 use Koriym\Attributes\DualReader;
+use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-use Ray\PsrCacheModule\Annotation\Shared;
+use Ray\PsrCacheModule\Annotation\Local;
+use Ray\PsrCacheModule\LocalCacheProvider;
 use Ray\PsrCacheModule\Psr6ApcuModule;
 
 /**
  * @codeCoverageIgnore
  */
-
 class ProdModule extends AbstractModule
 {
     /**
@@ -44,9 +46,10 @@ class ProdModule extends AbstractModule
     {
         $this->install(new ProdQueryRepositoryModule());
         $this->install(new Psr6ApcuModule());
+        $this->bind(CacheItemInterface::class)->annotatedWith(EtagPool::class)->toProvider(LocalCacheProvider::class);
         $this->bind(Reader::class)->toConstructor(
             PsrCachedReader::class,
-            ['reader' => 'dual_reader', 'cache' => Shared::class]
+            ['reader' => 'dual_reader', 'cache' => Local::class]
         )->in(Scope::SINGLETON);
         $this->bind(Reader::class)->annotatedWith('dual_reader')->toConstructor(
             DualReader::class,

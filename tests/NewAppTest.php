@@ -11,7 +11,11 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Module\ProdModule;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
+use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
+use Ray\PsrCacheModule\Annotation\Shared;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 use function serialize;
 use function unserialize;
@@ -20,7 +24,14 @@ class NewAppTest extends TestCase
 {
     public function testGetInstanceByHand(): AppInterface
     {
-        $app = (new Injector(new AppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule()))), __DIR__ . '/tmp'))->getInstance(AppInterface::class);
+        $module = new AppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule())));
+        $module->override(new class extends AbstractModule{
+            protected function configure()
+            {
+                $this->bind(CacheItemPoolInterface::class)->annotatedWith(Shared::class)->to(FilesystemAdapter::class);
+            }
+        });
+        $app = (new Injector($module, __DIR__ . '/tmp'))->getInstance(AppInterface::class);
         $this->assertInstanceOf(AppInterface::class, $app);
 
         return $app;
