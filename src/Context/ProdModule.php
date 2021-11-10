@@ -19,13 +19,12 @@ use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-use Ray\PsrCacheModule\Annotation\Shared;
+use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\Psr6ApcuModule;
 
 /**
  * @codeCoverageIgnore
  */
-
 class ProdModule extends AbstractModule
 {
     /**
@@ -46,7 +45,7 @@ class ProdModule extends AbstractModule
         $this->install(new Psr6ApcuModule());
         $this->bind(Reader::class)->toConstructor(
             PsrCachedReader::class,
-            ['reader' => 'dual_reader', 'cache' => Shared::class]
+            ['reader' => 'dual_reader', 'cache' => Local::class]
         )->in(Scope::SINGLETON);
         $this->bind(Reader::class)->annotatedWith('dual_reader')->toConstructor(
             DualReader::class,
