@@ -36,6 +36,7 @@ namespace {
 
         function apcu_store($key, $var, $ttl = 0)
         {
+            return [];
         }
 
         function apcu_fetch($key, &$success = null)
