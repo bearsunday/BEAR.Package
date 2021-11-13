@@ -15,7 +15,7 @@ use Ray\Di\Di\Inject;
 
 class App extends AbstractApp
 {
-    public static $counfOfNew = 0;
+    public static $countOfNewInstance = 0;
 
     public $throwableHandler;
 
@@ -31,6 +31,6 @@ class App extends AbstractApp
     public function __construct(HttpCacheInterface $httpCache, RouterInterface $router, TransferInterface $responder, ResourceInterface $resource, ErrorInterface $error)
     {
         parent::__construct($httpCache, $router, $responder, $resource, $error);
-        self::$counfOfNew++;
+        self::$countOfNewInstance++;
     }
 }
