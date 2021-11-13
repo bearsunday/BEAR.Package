@@ -18,7 +18,6 @@ use Ray\Di\InjectorInterface;
 
 use function assert;
 use function class_exists;
-use function is_object;
 use function ob_end_clean;
 use function ob_start;
 use function property_exists;
@@ -57,11 +56,9 @@ class FakeRun
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // 200 OK
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);
-        assert(is_object($app));
         assert(property_exists($app, 'resource'));
         assert(property_exists($app, 'responder'));
         $ro = $this->injector->getInstance(NullPage::class);
-        assert($ro instanceof NullPage);
         $ro->uri = new Uri('app://self/');
         /** @var NullPage $ro */
         $ro = $app->resource->get->object($ro)(['required' => 'string']);

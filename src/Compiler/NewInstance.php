@@ -32,6 +32,9 @@ final class NewInstance
         $this->injector = $injector;
     }
 
+    /**
+     * @param ''|class-string $interface
+     */
     public function __invoke(string $interface, string $name = ''): void
     {
         $dependencyIndex = $interface . '-' . $name;
