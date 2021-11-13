@@ -31,6 +31,7 @@ final class CompileDependencies
         foreach ($dependencies as $dependencyIndex) {
             $pos = strpos((string) $dependencyIndex, '-');
             assert(is_int($pos));
+            /** @var ''|class-string $interface */
             $interface = substr((string) $dependencyIndex, 0, $pos);
             $name = substr((string) $dependencyIndex, $pos + 1);
             ($this->newInstance)($interface, $name);

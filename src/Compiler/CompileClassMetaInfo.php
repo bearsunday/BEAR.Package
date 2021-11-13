@@ -21,7 +21,7 @@ final class CompileClassMetaInfo
      *
      * @param class-string<T> $className
      *
-     * @template T
+     * @template T of object
      */
     public function __invoke(Reader $reader, NamedParameterInterface $namedParams, string $className): void
     {
