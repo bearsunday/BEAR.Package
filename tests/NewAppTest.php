@@ -44,6 +44,6 @@ class NewAppTest extends TestCase
      */
     public function testSerializable(AppInterface $app): void
     {
-        $this->assertInstanceOf(AppInterface::class, unserialize(serialize($app)));
+        $this->assertInstanceOf(AppInterface::class, unserialize(serialize(unserialize(serialize($app)))));
     }
 }
