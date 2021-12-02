@@ -22,7 +22,7 @@ class Module
     /**
      * Return module from $appMeta and $context
      */
-    public function __invoke(AbstractAppMeta $appMeta, string $context, string $cacheNamespace = ''): AbstractModule
+    public function __invoke(AbstractAppMeta $appMeta, string $context): AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $context));
         $module = new AssistedModule();
