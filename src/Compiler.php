@@ -73,6 +73,8 @@ final class Compiler
      * @param string $appName application name "MyVendor|MyProject"
      * @param string $context application context "prod-app"
      * @param string $appDir  application path
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(string $appName, string $context, string $appDir, bool $prepend = true)
     {
@@ -132,6 +134,9 @@ final class Compiler
         return ($this->dumpAutoload)();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     private function registerLoader(string $appDir, bool $prepend = true): void
     {
         $this->unregisterComposerLoader();

@@ -21,6 +21,8 @@ class NullPage extends ResourceObject
 
     public function onGet(string $required, int $optional = 0): ResourceObject
     {
+        unset($required, $optional);
+
         return $this;
     }
 }
