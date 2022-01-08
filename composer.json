@@ -81,5 +81,10 @@
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"],
         "compile": "./bin/bear.compile FakeVendor\\\\HelloWorld prod-app ./tests/Fake/fake-app"
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
     }
 }
