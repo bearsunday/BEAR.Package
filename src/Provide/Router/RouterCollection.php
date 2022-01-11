@@ -67,10 +67,6 @@ class RouterCollection implements RouterInterface
 
     private function routeNotFound(): RouterMatch
     {
-        $routeMatch = new RouterMatch();
-        $routeMatch->method = 'get';
-        $routeMatch->path = self::ROUTE_NOT_FOUND;
-
-        return $routeMatch;
+        return new RouterMatch('get', self::ROUTE_NOT_FOUND, []);
     }
 }

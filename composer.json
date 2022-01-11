@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
         "aura/cli": "^2.2",
@@ -18,7 +18,7 @@
         "bear/query-repository": "^1.8.1",
         "bear/resource": "^1.16.2",
         "bear/streamer": "^1.2.2",
-        "bear/sunday": "^1.5.5",
+        "bear/sunday": "^1.6",
         "monolog/monolog": "^1.25 || ^2.0",
         "ray/aop": "^2.10",
         "ray/di": "^2.13",
@@ -76,10 +76,15 @@
         "cs": ["./vendor/bin/phpcs"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
-        "sa": [ "psalm --show-info=true", "./vendor/bin/phpstan analyse -c phpstan.neon"],
+        "sa": ["psalm --show-info=true", "./vendor/bin/phpstan analyse --no-ansi --no-progress -c phpstan.neon"],
         "metrics": ["./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"],
         "compile": "./bin/bear.compile FakeVendor\\\\HelloWorld prod-app ./tests/Fake/fake-app"
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
     }
 }

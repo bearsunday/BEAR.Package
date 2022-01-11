@@ -8,9 +8,12 @@ use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 
-use function assert;
 use function parse_url;
 
+/**
+ * @psalm-import-type Globals from RouterInterface
+ * @psalm-import-type Server from RouterInterface
+ */
 class WebRouter implements RouterInterface, WebRouterInterface
 {
     /** @var string */
@@ -36,17 +39,19 @@ class WebRouter implements RouterInterface, WebRouterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param Globals $globals
+     * @param Server  $server
      */
     public function match(array $globals, array $server)
     {
-        assert(isset($server['REQUEST_URI']));
-        assert(isset($server['REQUEST_METHOD']));
         $requestUri = $server['REQUEST_URI'];
-        $request = new RouterMatch();
-        [$request->method, $request->query] = $this->httpMethodParams->get($server, $globals['_GET'], $globals['_POST']);
-        $request->path = $this->schemeHost . parse_url($requestUri, 5); // 5 = PHP_URL_PATH
+        $get = $globals['_GET'];
+        $post = $globals['_POST'];
+        [$method, $query] = $this->httpMethodParams->get($server, $get, $post);
+        $path = $this->schemeHost . parse_url($requestUri, 5); // 5 = PHP_URL_PATH
 
-        return $request;
+        return new RouterMatch($method, $path, $query);
     }
 
     /**

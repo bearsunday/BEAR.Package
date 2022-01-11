@@ -83,7 +83,7 @@ class CliRouterTest extends TestCase
             file_put_contents($this->stdInFile, $stdin);
         }
 
-        $request = $this->router->match($globals, $server);
+        $request = $this->router->match($globals, $server); // @phpstan-ignore-line
         $this->assertSame($argv2, $request->method);
         $this->assertSame('page://self/', $request->path);
         $this->assertSame(['name' => 'bear'], $request->query);
@@ -103,7 +103,7 @@ class CliRouterTest extends TestCase
             '_GET' => [],
             '_POST' => [],
         ];
-        $request = $this->router->match($globals, $server);
+        $request = $this->router->match($globals, $server); // @phpstan-ignore-line
         $this->assertSame('options', $request->method);
         $this->assertSame('page://self/', $request->path);
     }
@@ -129,7 +129,7 @@ class CliRouterTest extends TestCase
             '_GET' => [],
             '_POST' => [],
         ];
-        $this->router->match($globals, $server);
+        $this->router->match($globals, $server); // @phpstan-ignore-line
     }
 
     public function testStdInCleanup(): void
@@ -153,7 +153,7 @@ class CliRouterTest extends TestCase
                 '_GET' => [],
                 '_POST' => [],
             ],
-            [
+            [ // @phpstan-ignore-line
                 'argc' => 1,
                 'argv' => ['page.php'],
             ]

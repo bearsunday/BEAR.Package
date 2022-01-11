@@ -15,6 +15,7 @@ use SplFileInfo;
 use function array_map;
 use function array_merge;
 use function file_exists;
+use function filemtime;
 use function glob;
 use function max;
 use function preg_quote;
@@ -58,7 +59,15 @@ final class FileUpdate
         }
 
         /** @psalm-suppress all -- ignore filemtime could return false */
-        return (int) max(array_map('filemtime', $scanFiles));
+        return (int) max(array_map([$this, 'filemtime'], $scanFiles));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function filemtime(string $filename): string
+    {
+        return (string) filemtime($filename);
     }
 
     /**
@@ -79,10 +88,10 @@ final class FileUpdate
         );
 
         $files = [];
-        /** @var SplFileInfo $fileInfo */
+        /** @var RegexIterator<string, SplFileInfo> $iterator */
         foreach ($iterator as $fileName => $fileInfo) {
             if ($fileInfo->isFile() && $fileInfo->getFilename()[0] !== '.') {
-                $files[] = (string) $fileName;
+                $files[] = $fileName;
             }
         }
 

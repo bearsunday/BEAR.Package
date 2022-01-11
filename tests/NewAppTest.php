@@ -17,6 +17,7 @@ use Ray\Di\Injector;
 use Ray\PsrCacheModule\Annotation\Shared;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
+use function assert;
 use function serialize;
 use function unserialize;
 
@@ -33,6 +34,7 @@ class NewAppTest extends TestCase
         });
         $app = (new Injector($module, __DIR__ . '/tmp'))->getInstance(AppInterface::class);
         $this->assertInstanceOf(AppInterface::class, $app);
+        assert($app instanceof AppInterface);
 
         return $app;
     }
