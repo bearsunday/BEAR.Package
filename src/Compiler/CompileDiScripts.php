@@ -51,7 +51,7 @@ final class CompileDiScripts
      *
      * @param class-string<T> $className
      *
-     * @template T
+     * @template T of object
      */
     private function scanClass(Reader $reader, NamedParameterInterface $namedParams, string $className): void
     {

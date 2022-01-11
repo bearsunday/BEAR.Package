@@ -53,18 +53,18 @@ class FakeRun
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         /** @psalm-suppress MixedArgumentTypeCoercion */
-        ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // 200 OK
+        ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);
-        assert(property_exists($app, 'resource'));
-        assert(property_exists($app, 'responder'));
+        assert(property_exists($app, 'resource')); // @phpstan-ignore-line
+        assert(property_exists($app, 'responder')); // @phpstan-ignore-line
         $ro = $this->injector->getInstance(NullPage::class);
-        $ro->uri = new Uri('app://self/');
+        $ro->uri = new Uri('app://self/'); // @phpstan-ignore-line
         /** @var NullPage $ro */
-        $ro = $app->resource->get->object($ro)(['required' => 'string']);
-        assert($app->responder instanceof TransferInterface);
+        $ro = $app->resource->get->object($ro)(['required' => 'string']); // @phpstan-ignore-line
+        assert($app->responder instanceof TransferInterface); // @phpstan-ignore-line
         ob_start();
-        $ro->transfer($app->responder, []);
+        $ro->transfer($app->responder, []); // @phpstan-ignore-line
         ob_end_clean();
         class_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);

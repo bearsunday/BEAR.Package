@@ -55,7 +55,7 @@ final class Injector
         $cache ??= new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
         assert($cache instanceof AdapterInterface);
         /** @psalm-suppress all */
-        [$injector, $fileUpdate] = $cache->getItem($injectorId)->get();
+        [$injector, $fileUpdate] = $cache->getItem($injectorId)->get(); // @phpstan-ignore-line
         $isCacheableInjector = $injector instanceof ScriptInjector || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
         if (! $isCacheableInjector) {
             $injector = self::factory($meta, $context);

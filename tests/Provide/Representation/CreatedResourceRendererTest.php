@@ -7,21 +7,26 @@ namespace BEAR\Package\Provide\Representation;
 use BEAR\Package\AppInjector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
-use FakeVendor\HelloWorld\Resource\App\User;
+use FakeVendor\HelloWorld\Resource\App\Post;
 use PHPUnit\Framework\TestCase;
+
+use function assert;
 
 class CreatedResourceRendererTest extends TestCase
 {
     /** @var CreatedResourceRenderer */
     private $renderer;
 
-    /** @var User */
+    /** @var Post */
     private $ro;
 
     protected function setUp(): void
     {
         $resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
-        $this->ro = $resource->post->uri('app://self/post')();
+        assert($resource instanceof ResourceInterface);
+        $post = $resource->post->uri('app://self/post')();
+        assert($post instanceof Post);
+        $this->ro = $post;
         $this->renderer = new CreatedResourceRenderer(new FakeRouter(), $resource);
     }
 

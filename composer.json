@@ -76,7 +76,7 @@
         "cs": ["./vendor/bin/phpcs"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
-        "sa": [ "psalm --show-info=true", "./vendor/bin/phpstan analyse -c phpstan.neon"],
+        "sa": ["psalm --show-info=true", "./vendor/bin/phpstan analyse --no-ansi --no-progress -c phpstan.neon"],
         "metrics": ["./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"],
