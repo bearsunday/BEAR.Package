@@ -12,6 +12,8 @@ use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Throwable;
 
+use function assert;
+
 /**
  * @psalm-import-type Globals from RouterInterface
  * @psalm-import-type Server from RouterInterface
@@ -28,10 +30,8 @@ final class Bootstrap
     }
 
     /**
-     * @psalm-param Globals $globals
-     * @psalm-param Server  $server
-     * @phpstan-param array<string, mixed> $globals
-     * @phpstan-param array<string, mixed> $server
+     * @param Globals $globals
+     * @param Server  $server
      *
      * @return 0|1
      */
@@ -40,6 +40,7 @@ final class Bootstrap
         $injector =  Injector::getInstance($appName, $context, $this->appDir);
         $injector->getInstance(HttpCacheInterface::class);
         $router = $injector->getInstance(RouterInterface::class);
+        assert($router instanceof RouterInterface);
         $request = $router->match($globals, $server);
         try {
             /** @psalm-suppress all */

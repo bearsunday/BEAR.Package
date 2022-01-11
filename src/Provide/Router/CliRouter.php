@@ -27,6 +27,19 @@ use function unlink;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
+/**
+ * @psalm-import-type Globals from RouterInterface
+ * @psalm-import-type Server from RouterInterface
+ * @psalm-type CliServer = array{
+ *     argc: int,
+ *     argv: array<int, string>,
+ *     REQUEST_URI: string,
+ *     REQUEST_METHOD: string,
+ *     CONTENT_TYPE?: string,
+ *     HTTP_CONTENT_TYPE?: string,
+ *     HTTP_RAW_POST_DATA?: string
+ * }
+ */
 class CliRouter implements RouterInterface
 {
     /** @var RouterInterface */
@@ -82,17 +95,17 @@ class CliRouter implements RouterInterface
     /**
      * {@inheritdoc}
      *
-     * @param array{_GET: array<string, string|array>, _POST: array<string, string|array>}                                               $globals
-     * @param array{argc: int, argv: array<int, string>, CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string} $server
-     *
-     * @psalm-suppress ImplementedParamTypeMismatch
+     * @param Globals $globals
+     * @param Server  $server
      */
     public function match(array $globals, array $server)
     {
+        /** @var CliServer $server */
         $this->validateArgs($server['argc'], $server['argv']);
         // covert console $_SERVER to web $_SERVER $GLOBALS
         [$method, $query, $server] = $this->parseServer($server);
-        [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server);
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server); // @phpstan-ignore-line
 
         return $this->router->match($webGlobals, $webServer);
     }
@@ -108,14 +121,11 @@ class CliRouter implements RouterInterface
     /**
      * Set user input query to $globals or &$server
      *
-     * @param array<string, array|string>                                                                                                        $query
-     * @param array{_GET: array<string, string|array>, _POST: array<string, string|array>}                                                       $globals
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string} $server
+     * @param array<string, array<string, mixed>> $query
+     * @param Globals                             $globals
+     * @param Server                              $server
      *
-     * @return array{
-     *                array{_GET: array<string, string|array>, _POST: array<string, string|array>},
-     *                array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string}
-     *                }
+     * @return array{0:Globals, 1:Server}
      */
     private function addQuery(string $method, array $query, array $globals, array $server): array
     {
@@ -159,10 +169,10 @@ class CliRouter implements RouterInterface
     /**
      * Return StdIn in PUT, PATCH or DELETE
      *
-     * @param array<string, mixed>                                                                                                               $query
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string} $server
+     * @param  array<string, array<string, mixed>|string> $query
+     * @param Server                                     $server
      *
-     * @return array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string}
+     * @return Server
      */
     private function getStdIn(string $method, array $query, array $server): array
     {
@@ -190,13 +200,9 @@ class CliRouter implements RouterInterface
     /**
      * Return $method, $query, $server from $server
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, argv: array<int, string>} $server
+     * @param Server $server
      *
-     * @return array{
-     *                string,
-     *                array<string, string|array>,
-     *                array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, HTTP_RAW_POST_DATA?: string, REQUEST_METHOD: string, REQUEST_URI: string}
-     *                }
+     * @return array{string, array<string, mixed>, Server}
      */
     private function parseServer(array $server): array
     {
@@ -214,7 +220,7 @@ class CliRouter implements RouterInterface
             'REQUEST_URI' => $urlPath,
         ];
 
-        /** @var array<string, array|string> $query */
+        /** @var array<string, array<mixed>|string> $query */
         return [$method, $query, $server];
     }
 }
