@@ -62,6 +62,9 @@ final class FileUpdate
         return (int) max(array_map([$this, 'filemtime'], $scanFiles));
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private function filemtime(string $filename): string
     {
         return (string) filemtime($filename);
