@@ -52,7 +52,7 @@ final class Injector
         }
 
         $meta = new Meta($appName, $context, $appDir);
-        $cache = $cache ?? new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
+        $cache ??= new ChainAdapter([new ApcuAdapter($injectorId), new FilesystemAdapter($injectorId, 0, $meta->tmpDir . '/injector')]);
         assert($cache instanceof AdapterInterface);
         /** @psalm-suppress all */
         [$injector, $fileUpdate] = $cache->getItem($injectorId)->get();
