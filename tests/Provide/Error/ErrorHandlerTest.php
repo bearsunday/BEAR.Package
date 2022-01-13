@@ -17,11 +17,8 @@ use function assert;
 
 class ErrorHandlerTest extends TestCase
 {
-    /** @var ErrorHandler */
-    private $handler;
-
-    /** @var FakeHttpResponder */
-    private $responder;
+    private ErrorHandler $handler;
+    private FakeHttpResponder $responder;
 
     protected function setUp(): void
     {

@@ -14,8 +14,7 @@ use function is_bool;
 
 class RouterCollectionTest extends TestCase
 {
-    /** @var RouterCollection */
-    private $routerCollection;
+    private RouterCollection $routerCollection;
 
     protected function setUp(): void
     {

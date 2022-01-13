@@ -14,11 +14,8 @@ use function assert;
 
 class CreatedResourceRendererTest extends TestCase
 {
-    /** @var CreatedResourceRenderer */
-    private $renderer;
-
-    /** @var Post */
-    private $ro;
+    private CreatedResourceRenderer $renderer;
+    private Post $ro;
 
     protected function setUp(): void
     {

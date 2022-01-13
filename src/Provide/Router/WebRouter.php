@@ -16,11 +16,8 @@ use function parse_url;
  */
 class WebRouter implements RouterInterface, WebRouterInterface
 {
-    /** @var string */
-    private $schemeHost;
-
-    /** @var HttpMethodParamsInterface */
-    private $httpMethodParams;
+    private string $schemeHost;
+    private HttpMethodParamsInterface $httpMethodParams;
 
     /**
      * @DefaultSchemeHost("schemeHost")

@@ -11,11 +11,8 @@ use Ray\Di\ProviderInterface;
 
 class RouterCollectionProvider implements ProviderInterface
 {
-    /** @var RouterInterface */
-    private $primaryRouter;
-
-    /** @var WebRouterInterface */
-    private $webRouter;
+    private RouterInterface $primaryRouter;
+    private WebRouterInterface $webRouter;
 
     /**
      * @Inject

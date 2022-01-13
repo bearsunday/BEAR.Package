@@ -16,8 +16,7 @@ use const DATE_RFC2822;
 
 final class ExceptionAsString
 {
-    /** @var string */
-    private $string;
+    private string $string;
 
     public function __construct(Throwable $e, Request $request)
     {

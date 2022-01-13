@@ -28,26 +28,17 @@ use function trait_exists;
 
 class CompileAutoload
 {
-    /** @var string */
-    private $appDir;
-
-    /** @var string */
-    private $context;
-
-    /** @var Meta */
-    private $appMeta;
+    private string $appDir;
+    private string $context;
+    private Meta $appMeta;
 
     /** @var ArrayObject<int, string> */
-    private $overwritten;
+    private ArrayObject $overwritten;
 
     /** @var ArrayObject<int, string> */
-    private $classes;
-
-    /** @var FilePutContents */
-    private $filePutContents;
-
-    /** @var FakeRun */
-    private $fakeRun;
+    private ArrayObject $classes;
+    private FilePutContents $filePutContents;
+    private FakeRun $fakeRun;
 
     /**
      * @param ArrayObject<int, string> $overwritten

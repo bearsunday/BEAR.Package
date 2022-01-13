@@ -21,8 +21,7 @@ use function assert;
 
 final class Bootstrap
 {
-    /** @var string */
-    private $appDir;
+    private string $appDir;
 
     public function __construct(AbstractAppMeta $meta)
     {

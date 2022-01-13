@@ -15,11 +15,8 @@ use function class_exists;
 
 final class CompileDiScripts
 {
-    /** @var CompileClassMetaInfo */
-    private $compilerScanClass;
-
-    /** @var InjectorInterface */
-    private $injector;
+    private CompileClassMetaInfo $compilerScanClass;
+    private InjectorInterface $injector;
 
     public function __construct(CompileClassMetaInfo $compilerScanClass, InjectorInterface $injector)
     {

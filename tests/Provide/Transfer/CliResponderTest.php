@@ -16,8 +16,7 @@ use function ob_start;
 
 class CliResponderTest extends TestCase
 {
-    /** @var CliResponder */
-    private $responder;
+    private CliResponder $responder;
 
     protected function setUp(): void
     {

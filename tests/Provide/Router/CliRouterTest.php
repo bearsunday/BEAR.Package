@@ -17,11 +17,8 @@ use function unserialize;
 
 class CliRouterTest extends TestCase
 {
-    /** @var CliRouter */
-    private $router;
-
-    /** @var string */
-    private $stdInFile;
+    private CliRouter $router;
+    private string $stdInFile;
 
     protected function setUp(): void
     {

@@ -42,17 +42,10 @@ use const PHP_URL_QUERY;
  */
 class CliRouter implements RouterInterface
 {
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var Stdio */
-    private $stdIo;
-
-    /** @var string */
-    private $stdIn = '';
-
-    /** @var Throwable|null */
-    private $terminateException;
+    private RouterInterface $router;
+    private Stdio $stdIo;
+    private string $stdIn = '';
+    private ?Throwable $terminateException = null;
 
     /**
      * @Named("original")

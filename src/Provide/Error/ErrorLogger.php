@@ -15,11 +15,8 @@ use function sprintf;
 
 final class ErrorLogger
 {
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var AbstractAppMeta */
-    private $appMeta;
+    private LoggerInterface $logger;
+    private AbstractAppMeta $appMeta;
 
     public function __construct(LoggerInterface $logger, AbstractAppMeta $appMeta)
     {

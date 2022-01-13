@@ -13,23 +13,14 @@ use function sprintf;
 
 final class CompilePreload
 {
-    /** @var NewInstance */
-    private $newInstance;
-
-    /** @var CompileAutoload */
-    private $dumpAutoload;
+    private NewInstance $newInstance;
+    private CompileAutoload $dumpAutoload;
 
     /** @var ArrayObject<int, string> */
-    private $classes;
-
-    /** @var FilePutContents */
-    private $filePutContents;
-
-    /** @var string */
-    private $context;
-
-    /** @var FakeRun */
-    private $fakeRun;
+    private ArrayObject $classes;
+    private FilePutContents $filePutContents;
+    private string $context;
+    private FakeRun $fakeRun;
 
     /**
      * @param ArrayObject<int, string> $classes

@@ -15,8 +15,7 @@ use function substr;
 
 final class CompileDependencies
 {
-    /** @var NewInstance */
-    private $newInstance;
+    private NewInstance $newInstance;
 
     public function __construct(NewInstance $newInstance)
     {
