@@ -11,7 +11,11 @@ use function file_put_contents;
 
 class FilePutContents
 {
-    /** @var ArrayObject<int, string> */
+    /**
+     * For debugging
+     *
+     * @var ArrayObject<int, string>
+     */
     private ArrayObject $overwritten;
 
     /**
