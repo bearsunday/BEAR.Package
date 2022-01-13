@@ -19,13 +19,12 @@ use const PHP_EOL;
 final class NewInstance
 {
     /** @var list<string> */
-    private $compiled = [];
+    private array $compiled = [];
 
     /** @var array<string, string> */
-    private $failed = [];
+    private array $failed = [];
 
-    /** @var InjectorInterface */
-    private $injector;
+    private \Ray\Di\InjectorInterface $injector;
 
     public function __construct(InjectorInterface $injector)
     {

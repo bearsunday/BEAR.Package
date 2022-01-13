@@ -12,7 +12,7 @@ use function file_put_contents;
 class FilePutContents
 {
     /** @var ArrayObject<int, string> */
-    private $overwritten;
+    private \ArrayObject $overwritten;
 
     /**
      * @param ArrayObject<int, string> $overwritten

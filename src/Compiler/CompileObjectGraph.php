@@ -13,11 +13,9 @@ use function str_replace;
 
 final class CompileObjectGraph
 {
-    /** @var FilePutContents */
-    private $filePutContents;
+    private \BEAR\Package\Compiler\FilePutContents $filePutContents;
 
-    /** @var string */
-    private $dotDir;
+    private string $dotDir;
 
     public function __construct(FilePutContents $filePutContents, string $dotDir)
     {

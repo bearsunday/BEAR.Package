@@ -32,10 +32,10 @@ final class Injector
      *
      * @var array<string, InjectorInterface>
      */
-    private static $instances;
+    private static array $instances;
 
     /** @var array<string, AbstractModule> */
-    private static $modules;
+    private static array $modules;
 
     /**
      * @codeCoverageIgnore
@@ -90,9 +90,7 @@ final class Injector
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            $injector = new ScriptInjector($scriptDir, static function () use ($scriptDir, $module) {
-                return new ScriptinjectorModule($scriptDir, $module);
-            });
+            $injector = new ScriptInjector($scriptDir, static fn() => new ScriptinjectorModule($scriptDir, $module));
         }
 
         $injector->getInstance(AppInterface::class);

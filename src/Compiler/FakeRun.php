@@ -24,14 +24,11 @@ use function property_exists;
 
 class FakeRun
 {
-    /** @var InjectorInterface */
-    private $injector;
+    private \Ray\Di\InjectorInterface $injector;
 
-    /** @var string */
-    private $context;
+    private string $context;
 
-    /** @var AbstractAppMeta  */
-    private $appMeta;
+    private \BEAR\AppMeta\AbstractAppMeta $appMeta;
 
     public function __construct(InjectorInterface $injector, string $context, AbstractAppMeta $appMeta)
     {

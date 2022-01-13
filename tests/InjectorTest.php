@@ -127,8 +127,7 @@ class InjectorTest extends TestCase
             'app',
             __DIR__ . '/Fake/fake-app',
             new class ($fakeApp) extends AbstractModule {
-                /** @var AppInterface */
-                private $app;
+                private \BEAR\Sunday\Extension\Application\AppInterface $app;
 
                 public function __construct(AppInterface $app, ?AbstractModule $module = null)
                 {

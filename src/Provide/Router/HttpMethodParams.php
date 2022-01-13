@@ -30,8 +30,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     public const APPLICATION_JSON = 'application/json';
 
-    /** @var string */
-    private $stdIn = 'php://input';
+    private string $stdIn = 'php://input';
 
     /**
      * @param string $stdIn

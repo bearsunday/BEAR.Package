@@ -16,11 +16,9 @@ use function parse_url;
  */
 class WebRouter implements RouterInterface, WebRouterInterface
 {
-    /** @var string */
-    private $schemeHost;
+    private string $schemeHost;
 
-    /** @var HttpMethodParamsInterface */
-    private $httpMethodParams;
+    private \BEAR\Package\Provide\Router\HttpMethodParamsInterface $httpMethodParams;
 
     /**
      * @DefaultSchemeHost("schemeHost")

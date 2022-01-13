@@ -15,8 +15,7 @@ use function class_exists;
 
 class AppMetaModule extends AbstractModule
 {
-    /** @var AbstractAppMeta */
-    private $appMeta;
+    private \BEAR\AppMeta\AbstractAppMeta $appMeta;
 
     public function __construct(AbstractAppMeta $appMeta, ?AbstractModule $module = null)
     {

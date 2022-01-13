@@ -14,11 +14,9 @@ use function assert;
 
 class CreatedResourceRendererTest extends TestCase
 {
-    /** @var CreatedResourceRenderer */
-    private $renderer;
+    private \BEAR\Package\Provide\Representation\CreatedResourceRenderer $renderer;
 
-    /** @var Post */
-    private $ro;
+    private \FakeVendor\HelloWorld\Resource\App\Post $ro;
 
     protected function setUp(): void
     {

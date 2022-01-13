@@ -16,8 +16,7 @@ use const PHP_URL_QUERY;
 
 final class RouterReverseLink implements ReverseLinkInterface
 {
-    /** @var RouterInterface */
-    private $router;
+    private \BEAR\Sunday\Extension\Router\RouterInterface $router;
 
     public function __construct(RouterInterface $router)
     {

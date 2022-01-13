@@ -26,11 +26,9 @@ use const PHP_URL_SCHEME;
  */
 class CreatedResourceRenderer implements RenderInterface
 {
-    /** @var RouterInterface */
-    private $router;
+    private \BEAR\Sunday\Extension\Router\RouterInterface $router;
 
-    /** @var ResourceInterface */
-    private $resource;
+    private \BEAR\Resource\ResourceInterface $resource;
 
     public function __construct(RouterInterface $router, ResourceInterface $resource)
     {

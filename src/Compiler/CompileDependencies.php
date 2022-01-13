@@ -15,8 +15,7 @@ use function substr;
 
 final class CompileDependencies
 {
-    /** @var NewInstance */
-    private $newInstance;
+    private \BEAR\Package\Compiler\NewInstance $newInstance;
 
     public function __construct(NewInstance $newInstance)
     {

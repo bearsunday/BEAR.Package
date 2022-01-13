@@ -40,34 +40,25 @@ use const PHP_EOL;
 final class Compiler
 {
     /** @var ArrayObject<int, string> */
-    private $classes;
+    private \ArrayObject $classes;
 
-    /** @var InjectorInterface */
-    private $injector;
+    private \Ray\Di\InjectorInterface $injector;
 
-    /** @var string */
-    private $context;
+    private string $context;
 
-    /** @var Meta */
-    private $appMeta;
+    private \BEAR\AppMeta\Meta $appMeta;
 
-    /** @var CompileDiScripts */
-    private $compilerDiScripts;
+    private \BEAR\Package\Compiler\CompileDiScripts $compilerDiScripts;
 
-    /** @var NewInstance */
-    private $newInstance;
+    private \BEAR\Package\Compiler\NewInstance $newInstance;
 
-    /** @var CompileAutoload */
-    private $dumpAutoload;
+    private \BEAR\Package\Compiler\CompileAutoload $dumpAutoload;
 
-    /** @var CompilePreload */
-    private $compilePreload;
+    private \BEAR\Package\Compiler\CompilePreload $compilePreload;
 
-    /** @var CompileObjectGraph */
-    private $compilerObjectGraph;
+    private \BEAR\Package\Compiler\CompileObjectGraph $compilerObjectGraph;
 
-    /** @var CompileDependencies */
-    private $compileDependencies;
+    private \BEAR\Package\Compiler\CompileDependencies $compileDependencies;
 
     /**
      * @param string $appName application name "MyVendor|MyProject"
@@ -153,7 +144,7 @@ final class Compiler
                 $loader->loadClass($class);
                 if (
                     $class !== NullPage::class
-                    && ! is_int(strpos($class, 'BEAR\Package\Compiler'))
+                    && ! is_int(strpos($class, \BEAR\Package\Compiler::class))
                     && ! is_int(strpos($class, NullPage::class))
                 ) {
                     /** @psalm-suppress NullArgument */

@@ -18,8 +18,7 @@ use function unlink;
 
 final class LogRef
 {
-    /** @var string */
-    private $ref;
+    private string $ref;
 
     public function __construct(Throwable $e)
     {

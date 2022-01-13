@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class WebRouterTest extends TestCase
 {
-    /** @var WebRouter */
-    private $router;
+    private \BEAR\Package\Provide\Router\WebRouter $router;
 
     protected function setUp(): void
     {

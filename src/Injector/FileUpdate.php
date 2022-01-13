@@ -23,14 +23,11 @@ use function sprintf;
 
 final class FileUpdate
 {
-    /** @var int */
-    private $updateTime;
+    private int $updateTime;
 
-    /** @var string */
-    private $srcRegex;
+    private string $srcRegex;
 
-    /** @var string */
-    private $varRegex;
+    private string $varRegex;
 
     public function __construct(AbstractAppMeta $meta)
     {
@@ -52,7 +49,7 @@ final class FileUpdate
         $srcFiles = $this->getFiles($meta->appDir . '/src', $this->srcRegex);
         $varFiles = $this->getFiles($meta->appDir . '/var', $this->varRegex);
         $envFiles = (array) glob($meta->appDir . '/.env*');
-        $scanFiles = array_merge($srcFiles, $varFiles, $envFiles);
+        $scanFiles = [...$srcFiles, ...$varFiles, ...$envFiles];
         $composerLock = $meta->appDir . '/composer.lock';
         if (file_exists($composerLock)) {
             $scanFiles[] = $composerLock;
