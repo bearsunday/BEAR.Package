@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DevVndErrorPageTest extends TestCase
 {
-    private \BEAR\Package\Provide\Error\DevVndErrorPage $page;
+    private DevVndErrorPage $page;
 
     protected function setUp(): void
     {

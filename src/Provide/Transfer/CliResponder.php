@@ -15,9 +15,8 @@ use const PHP_EOL;
 
 final class CliResponder implements TransferInterface
 {
-    private \BEAR\Sunday\Provide\Transfer\HeaderInterface $header;
-
-    private \BEAR\Sunday\Provide\Transfer\ConditionalResponseInterface $condResponse;
+    private HeaderInterface $header;
+    private ConditionalResponseInterface $condResponse;
 
     public function __construct(HeaderInterface $header, ConditionalResponseInterface $condResponse)
     {

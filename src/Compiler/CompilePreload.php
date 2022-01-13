@@ -13,18 +13,14 @@ use function sprintf;
 
 final class CompilePreload
 {
-    private \BEAR\Package\Compiler\NewInstance $newInstance;
-
-    private \BEAR\Package\Compiler\CompileAutoload $dumpAutoload;
+    private NewInstance $newInstance;
+    private CompileAutoload $dumpAutoload;
 
     /** @var ArrayObject<int, string> */
-    private \ArrayObject $classes;
-
-    private \BEAR\Package\Compiler\FilePutContents $filePutContents;
-
+    private ArrayObject $classes;
+    private FilePutContents $filePutContents;
     private string $context;
-
-    private \BEAR\Package\Compiler\FakeRun $fakeRun;
+    private FakeRun $fakeRun;
 
     /**
      * @param ArrayObject<int, string> $classes

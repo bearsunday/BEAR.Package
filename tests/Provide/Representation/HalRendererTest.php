@@ -21,7 +21,7 @@ use function set_error_handler;
 
 class HalRendererTest extends TestCase
 {
-    private \BEAR\Resource\ResourceInterface $resource;
+    private ResourceInterface $resource;
 
     protected function setUp(): void
     {

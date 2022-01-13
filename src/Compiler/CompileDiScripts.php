@@ -15,9 +15,8 @@ use function class_exists;
 
 final class CompileDiScripts
 {
-    private \BEAR\Package\Compiler\CompileClassMetaInfo $compilerScanClass;
-
-    private \Ray\Di\InjectorInterface $injector;
+    private CompileClassMetaInfo $compilerScanClass;
+    private InjectorInterface $injector;
 
     public function __construct(CompileClassMetaInfo $compilerScanClass, InjectorInterface $injector)
     {

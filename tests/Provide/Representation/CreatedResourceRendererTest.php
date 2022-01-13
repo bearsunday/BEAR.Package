@@ -14,9 +14,8 @@ use function assert;
 
 class CreatedResourceRendererTest extends TestCase
 {
-    private \BEAR\Package\Provide\Representation\CreatedResourceRenderer $renderer;
-
-    private \FakeVendor\HelloWorld\Resource\App\Post $ro;
+    private CreatedResourceRenderer $renderer;
+    private Post $ro;
 
     protected function setUp(): void
     {

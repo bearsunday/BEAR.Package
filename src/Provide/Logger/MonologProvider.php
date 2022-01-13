@@ -12,7 +12,7 @@ use Ray\Di\ProviderInterface;
 
 class MonologProvider implements ProviderInterface
 {
-    private \BEAR\AppMeta\AbstractAppMeta $appMeta;
+    private AbstractAppMeta $appMeta;
 
     public function __construct(AbstractAppMeta $appMeta)
     {

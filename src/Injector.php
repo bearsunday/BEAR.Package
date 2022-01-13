@@ -90,7 +90,7 @@ final class Injector
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            $injector = new ScriptInjector($scriptDir, static fn() => new ScriptinjectorModule($scriptDir, $module));
+            $injector = new ScriptInjector($scriptDir, static fn () => new ScriptinjectorModule($scriptDir, $module));
         }
 
         $injector->getInstance(AppInterface::class);

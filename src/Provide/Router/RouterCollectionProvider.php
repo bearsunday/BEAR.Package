@@ -11,9 +11,8 @@ use Ray\Di\ProviderInterface;
 
 class RouterCollectionProvider implements ProviderInterface
 {
-    private \BEAR\Sunday\Extension\Router\RouterInterface $primaryRouter;
-
-    private \BEAR\Package\Provide\Router\WebRouterInterface $webRouter;
+    private RouterInterface $primaryRouter;
+    private WebRouterInterface $webRouter;
 
     /**
      * @Inject

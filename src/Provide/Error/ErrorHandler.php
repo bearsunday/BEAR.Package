@@ -17,13 +17,10 @@ use Exception;
  */
 final class ErrorHandler implements ErrorInterface
 {
-    private ?\BEAR\Resource\ResourceObject $errorPage = null;
-
-    private \BEAR\Sunday\Extension\Transfer\TransferInterface $responder;
-
-    private \BEAR\Package\Provide\Error\ErrorLogger $logger;
-
-    private \BEAR\Package\Provide\Error\ErrorPageFactoryInterface $factory;
+    private ?ResourceObject $errorPage = null;
+    private TransferInterface $responder;
+    private ErrorLogger $logger;
+    private ErrorPageFactoryInterface $factory;
 
     public function __construct(TransferInterface $responder, ErrorLogger $logger, ErrorPageFactoryInterface $factory)
     {

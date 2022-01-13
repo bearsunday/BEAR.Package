@@ -23,8 +23,7 @@ final class NewInstance
 
     /** @var array<string, string> */
     private array $failed = [];
-
-    private \Ray\Di\InjectorInterface $injector;
+    private InjectorInterface $injector;
 
     public function __construct(InjectorInterface $injector)
     {

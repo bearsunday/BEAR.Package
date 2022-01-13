@@ -40,25 +40,16 @@ use const PHP_EOL;
 final class Compiler
 {
     /** @var ArrayObject<int, string> */
-    private \ArrayObject $classes;
-
-    private \Ray\Di\InjectorInterface $injector;
-
+    private ArrayObject $classes;
+    private InjectorInterface $injector;
     private string $context;
-
-    private \BEAR\AppMeta\Meta $appMeta;
-
-    private \BEAR\Package\Compiler\CompileDiScripts $compilerDiScripts;
-
-    private \BEAR\Package\Compiler\NewInstance $newInstance;
-
-    private \BEAR\Package\Compiler\CompileAutoload $dumpAutoload;
-
-    private \BEAR\Package\Compiler\CompilePreload $compilePreload;
-
-    private \BEAR\Package\Compiler\CompileObjectGraph $compilerObjectGraph;
-
-    private \BEAR\Package\Compiler\CompileDependencies $compileDependencies;
+    private Meta $appMeta;
+    private CompileDiScripts $compilerDiScripts;
+    private NewInstance $newInstance;
+    private CompileAutoload $dumpAutoload;
+    private CompilePreload $compilePreload;
+    private CompileObjectGraph $compilerObjectGraph;
+    private CompileDependencies $compileDependencies;
 
     /**
      * @param string $appName application name "MyVendor|MyProject"
@@ -144,7 +135,7 @@ final class Compiler
                 $loader->loadClass($class);
                 if (
                     $class !== NullPage::class
-                    && ! is_int(strpos($class, \BEAR\Package\Compiler::class))
+                    && ! is_int(strpos($class, Compiler::class))
                     && ! is_int(strpos($class, NullPage::class))
                 ) {
                     /** @psalm-suppress NullArgument */

@@ -29,20 +29,16 @@ use function trait_exists;
 class CompileAutoload
 {
     private string $appDir;
-
     private string $context;
-
-    private \BEAR\AppMeta\Meta $appMeta;
-
-    /** @var ArrayObject<int, string> */
-    private \ArrayObject $overwritten;
+    private Meta $appMeta;
 
     /** @var ArrayObject<int, string> */
-    private \ArrayObject $classes;
+    private ArrayObject $overwritten;
 
-    private \BEAR\Package\Compiler\FilePutContents $filePutContents;
-
-    private \BEAR\Package\Compiler\FakeRun $fakeRun;
+    /** @var ArrayObject<int, string> */
+    private ArrayObject $classes;
+    private FilePutContents $filePutContents;
+    private FakeRun $fakeRun;
 
     /**
      * @param ArrayObject<int, string> $overwritten

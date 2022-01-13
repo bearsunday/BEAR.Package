@@ -17,8 +17,7 @@ use function unserialize;
 
 class CliRouterTest extends TestCase
 {
-    private \BEAR\Package\Provide\Router\CliRouter $router;
-
+    private CliRouter $router;
     private string $stdInFile;
 
     protected function setUp(): void

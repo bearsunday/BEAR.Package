@@ -13,7 +13,6 @@ use RegexIterator;
 use SplFileInfo;
 
 use function array_map;
-use function array_merge;
 use function file_exists;
 use function filemtime;
 use function glob;
@@ -24,9 +23,7 @@ use function sprintf;
 final class FileUpdate
 {
     private int $updateTime;
-
     private string $srcRegex;
-
     private string $varRegex;
 
     public function __construct(AbstractAppMeta $meta)

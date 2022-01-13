@@ -12,7 +12,7 @@ use function assert;
 
 class CreatedResourceInterceptor implements MethodInterceptor
 {
-    private \BEAR\Package\Provide\Representation\CreatedResourceRenderer $renderer;
+    private CreatedResourceRenderer $renderer;
 
     public function __construct(CreatedResourceRenderer $renderer)
     {

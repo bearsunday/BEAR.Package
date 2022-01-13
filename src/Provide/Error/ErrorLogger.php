@@ -15,9 +15,8 @@ use function sprintf;
 
 final class ErrorLogger
 {
-    private \Psr\Log\LoggerInterface $logger;
-
-    private \BEAR\AppMeta\AbstractAppMeta $appMeta;
+    private LoggerInterface $logger;
+    private AbstractAppMeta $appMeta;
 
     public function __construct(LoggerInterface $logger, AbstractAppMeta $appMeta)
     {

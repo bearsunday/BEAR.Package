@@ -14,7 +14,7 @@ use function is_bool;
 
 class RouterCollectionTest extends TestCase
 {
-    private \BEAR\Package\Provide\Router\RouterCollection $routerCollection;
+    private RouterCollection $routerCollection;
 
     protected function setUp(): void
     {
