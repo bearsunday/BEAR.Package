@@ -9,6 +9,7 @@ use ReflectionClass;
 use function assert;
 use function class_exists;
 use function dirname;
+use function is_dir;
 use function sprintf;
 
 final class ImportApp
@@ -23,8 +24,11 @@ final class ImportApp
         $this->host = $host;
         $this->appName = $appName;
         $this->context = $context;
+        /** @var class-string $appModuleClass */
         $appModuleClass = sprintf('%s\\Module\\AppModule', $this->appName);
-        assert(class_exists($appModuleClass));
-        $this->appDir = dirname((new ReflectionClass($appModuleClass))->getFileName(), 3);
+        $appModuleClassName = (string) (new ReflectionClass($appModuleClass))->getFileName();
+        $appDir = dirname($appModuleClassName, 3);
+        assert(is_dir($appDir));
+        $this->appDir = $appDir;
     }
 }
