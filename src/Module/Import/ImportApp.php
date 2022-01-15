@@ -7,7 +7,6 @@ namespace BEAR\Package\Module\Import;
 use ReflectionClass;
 
 use function assert;
-use function class_exists;
 use function dirname;
 use function is_dir;
 use function sprintf;

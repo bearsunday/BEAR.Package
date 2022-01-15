@@ -12,7 +12,7 @@ use Import\HelloWorld\Resource\Page\Index as ImportIndex;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Injector;
 
-use function assert as assertAlias;
+use function assert;
 
 class ImportAppModuleTest extends TestCase
 {
