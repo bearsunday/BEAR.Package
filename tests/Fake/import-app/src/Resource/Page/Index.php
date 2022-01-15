@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FakeVendor\HelloWorld\Resource\Page;
+namespace Import\HelloWorld\Resource\Page;
 
 use BEAR\Resource\ResourceObject;
 
@@ -10,10 +10,12 @@ class Index extends ResourceObject
 {
     /** @var array{greeting: string} */
     public $body;
-    public function onGet($name = 'BEAR.Sunday')
+
+    /** @return static */
+    public function onGet(string $name = 'World'): ResourceObject
     {
         $this->body = [
-            'greeting' => 'Hello ' . $name
+            'greeting' => 'Konichiwa ' . $name,
         ];
 
         return $this;
