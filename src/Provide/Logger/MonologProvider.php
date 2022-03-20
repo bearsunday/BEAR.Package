@@ -10,6 +10,9 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Ray\Di\ProviderInterface;
 
+/**
+ * @implements ProviderInterface<Logger>
+ */
 class MonologProvider implements ProviderInterface
 {
     private AbstractAppMeta $appMeta;

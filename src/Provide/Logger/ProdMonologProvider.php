@@ -9,6 +9,9 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use Ray\Di\ProviderInterface;
 
+/**
+ * @implements ProviderInterface<Logger>
+ */
 class ProdMonologProvider implements ProviderInterface
 {
     private AbstractAppMeta $appMeta;
