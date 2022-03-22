@@ -11,6 +11,9 @@ use BEAR\Resource\SchemeCollectionInterface;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
+/**
+ * @implements ProviderInterface<SchemeCollectionInterface>
+ */
 final class ImportSchemeCollectionProvider implements ProviderInterface
 {
     /** @var ImportApp[] */
