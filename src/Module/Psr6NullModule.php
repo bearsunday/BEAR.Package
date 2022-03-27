@@ -11,6 +11,14 @@ use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\Annotation\Shared;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 
+/**
+ * Provides CacheItemPoolInterface and derived bindings
+ *
+ * The following bindings are provided:
+ *
+ * CacheItemPoolInterface:Ray\PsrCacheModule\Annotation\Local
+ * CacheItemPoolInterface:Ray\PsrCacheModule\Annotation\Shared
+ */
 final class Psr6NullModule extends AbstractModule
 {
     protected function configure(): void

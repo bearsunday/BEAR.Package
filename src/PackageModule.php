@@ -15,6 +15,9 @@ use BEAR\Sunday\Module\SundayModule;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 
+/**
+ * Provides framework base bindings
+ */
 class PackageModule extends AbstractModule
 {
     /**

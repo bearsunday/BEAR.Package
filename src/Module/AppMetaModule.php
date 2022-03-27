@@ -13,6 +13,15 @@ use Ray\Di\Scope;
 use function assert;
 use function class_exists;
 
+/**
+ * Provides AbstractAppMeta and derived bindings
+ *
+ * The following bindings are provided:
+ *
+ * AbstractAppMeta
+ * AppInterface
+ * :AppName
+ */
 class AppMetaModule extends AbstractModule
 {
     private AbstractAppMeta $appMeta;

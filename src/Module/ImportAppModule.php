@@ -11,6 +11,15 @@ use BEAR\Resource\SchemeCollectionInterface;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\NotFound;
 
+/**
+ * Provides SchemeCollectionInterface and derived bindings
+ *
+ * The following bindings are provided:
+ *
+ * SchemeCollectionInterface
+ * SchemeCollectionInterface:original
+ * :ImportAppConfig
+ */
 final class ImportAppModule extends AbstractModule
 {
     /**
