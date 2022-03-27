@@ -8,6 +8,9 @@ use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
 
+/**
+ * Provides InjectorInterface
+ */
 class ScriptinjectorModule extends AbstractModule
 {
     private string $scriptDir;
