@@ -23,7 +23,7 @@
         "ray/aop": "^2.10",
         "ray/di": "^2.13",
         "ray/object-visual-grapher": "^1.0",
-        "psr/log": "^1.1",
+        "psr/log": "^1.1 || ^2.0 || ^3.0",
         "doctrine/cache": "^1.10 || ^2.0",
         "doctrine/annotations": "^1.11",
         "koriym/http-constants": "^1.1",
