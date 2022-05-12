@@ -110,7 +110,6 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-interaction --no-progress --prefer-dist
-          composer require --dev maglnet/composer-require-checker ^3.0
 
       - name: Run composer-require-checker
         run: ./vendor/bin/composer-require-checker check --config-file=./php-require-checker.config.json ./composer.json
