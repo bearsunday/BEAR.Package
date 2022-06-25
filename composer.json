@@ -15,7 +15,7 @@
         "ext-json": "*",
         "aura/cli": "^2.2",
         "bear/app-meta": "^1.6.2",
-        "bear/query-repository": "^1.8.1",
+        "bear/query-repository": "^1.8.4",
         "bear/resource": "^1.16.2",
         "bear/streamer": "^1.2.2",
         "bear/sunday": "^1.6",
