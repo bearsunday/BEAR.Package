@@ -31,9 +31,6 @@ final class PackageInjector
      */
     private static array $instances;
 
-    /** @var array<string, AbstractModule> */
-    private static array $modules;
-
     /**
      * @codeCoverageIgnore
      */
@@ -66,12 +63,8 @@ final class PackageInjector
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
-        $moduleId = $meta->appDir . $context;
-        if (! isset(self::$modules[$moduleId])) {
-            self::$modules[$moduleId] = (new Module())($meta, $context);
-        }
+        $module = (new Module())($meta, $context);
 
-        $module = self::$modules[$moduleId];
         if ($overideModule instanceof AbstractModule) {
             $module->override($overideModule);
         }

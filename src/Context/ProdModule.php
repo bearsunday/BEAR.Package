@@ -46,6 +46,7 @@ class ProdModule extends AbstractModule
     {
         $this->install(new ProdQueryRepositoryModule());
         $this->install(new Psr6ApcuModule());
+        /** @psalm-suppress DeprecatedClass */
         $this->bind(CacheItemInterface::class)->annotatedWith(EtagPool::class)->toProvider(LocalCacheProvider::class);
         $this->bind(Reader::class)->toConstructor(
             PsrCachedReader::class,
