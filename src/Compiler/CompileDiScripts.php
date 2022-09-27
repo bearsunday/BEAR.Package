@@ -11,7 +11,6 @@ use Doctrine\Common\Annotations\Reader;
 use Ray\Di\InjectorInterface;
 
 use function assert;
-use function class_exists;
 
 final class CompileDiScripts
 {
@@ -38,7 +37,6 @@ final class CompileDiScripts
         $metas = $appMeta->getResourceListGenerator();
         foreach ($metas as $meta) {
             [$className] = $meta;
-            assert(class_exists($className));
             $this->scanClass($reader, $namedParams, $className);
         }
     }

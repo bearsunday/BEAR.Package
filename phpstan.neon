@@ -8,3 +8,4 @@ parameters:
     - tests/tmp/*
     - tests/Fake/*
     - tests/script/*
+    - tests/Injector/Fake/fake-app/var/tmp/*

@@ -51,15 +51,15 @@ class FakeRun
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);
-        assert(property_exists($app, 'resource')); // @phpstan-ignore-line
-        assert(property_exists($app, 'responder')); // @phpstan-ignore-line
+        assert(property_exists($app, 'resource'));
+        assert(property_exists($app, 'responder'));
         $ro = $this->injector->getInstance(NullPage::class);
-        $ro->uri = new Uri('app://self/'); // @phpstan-ignore-line
+        $ro->uri = new Uri('app://self/');
         /** @var NullPage $ro */
-        $ro = $app->resource->get->object($ro)(['required' => 'string']); // @phpstan-ignore-line
-        assert($app->responder instanceof TransferInterface); // @phpstan-ignore-line
+        $ro = $app->resource->get->object($ro)(['required' => 'string']);
+        assert($app->responder instanceof TransferInterface);
         ob_start();
-        $ro->transfer($app->responder, []); // @phpstan-ignore-line
+        $ro->transfer($app->responder, []);
         ob_end_clean();
         class_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);
