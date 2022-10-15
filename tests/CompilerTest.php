@@ -17,6 +17,7 @@ class CompilerTest extends TestCase
     public function setUp(): void
     {
         $this->setOutputCallback(static function (string $msg) {
+            /** @noinspection ForgottenDebugOutputInspection */
             error_log($msg);
         });
     }
