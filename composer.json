@@ -49,10 +49,7 @@
                 "src/",
                 "src-deprecated"
             ]
-        },
-        "files": [
-            "src-files/apcu.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
