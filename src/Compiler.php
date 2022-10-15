@@ -23,7 +23,6 @@ use RuntimeException;
 use function assert;
 use function count;
 use function file_exists;
-use function is_float;
 use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
@@ -95,8 +94,7 @@ final class Compiler
         ($this->compilerDiScripts)($this->appMeta);
         $failed = $this->newInstance->getFailed();
         $dot = $failed ? '' : ($this->compilerObjectGraph)($module);
-        $start = $_SERVER['REQUEST_TIME_FLOAT'];
-        assert(is_float($start));
+        $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
         echo PHP_EOL;

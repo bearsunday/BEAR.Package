@@ -78,7 +78,7 @@ class CompileAutoload
         $classes = (array) $this->classes;
         $paths = $this->getPaths($classes);
         $autolaod = $this->saveAutoloadFile($this->appMeta->appDir, $paths);
-        $start = $_SERVER['REQUEST_TIME_FLOAT'];
+        $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
         assert(is_float($start));
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
