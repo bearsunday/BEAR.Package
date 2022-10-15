@@ -6,7 +6,6 @@ namespace BEAR\Package;
 
 use BEAR\Package\Exception\InvalidContextException;
 use PHPUnit\Framework\TestCase;
-use Ray\Compiler\ScriptInjector;
 use RuntimeException;
 
 use function error_log;
