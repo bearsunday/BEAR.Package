@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\LazyModule;
 use BEAR\Package\Module;
-use BEAR\Package\Module\ScriptinjectorModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
+use Ray\Compiler\CompileInjector;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
@@ -73,7 +74,7 @@ final class PackageInjector
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            $injector = new ScriptInjector($scriptDir, static fn () => new ScriptinjectorModule($scriptDir, $module));
+            $injector = new CompileInjector($scriptDir, new LazyModule($meta, $context, $scriptDir));
         }
 
         $injector->getInstance(AppInterface::class);
