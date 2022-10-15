@@ -23,7 +23,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\LocalCacheProvider;
-use Ray\PsrCacheModule\Psr6ApcuModule;
+use Ray\PsrCacheModule\Psr6LocalCacheModule;
 
 /**
  * @codeCoverageIgnore
@@ -45,7 +45,7 @@ class ProdModule extends AbstractModule
     private function installCacheModule(): void
     {
         $this->install(new ProdQueryRepositoryModule());
-        $this->install(new Psr6ApcuModule());
+        $this->install(new Psr6LocalCacheModule());
         /** @psalm-suppress DeprecatedClass */
         $this->bind(CacheItemInterface::class)->annotatedWith(EtagPool::class)->toProvider(LocalCacheProvider::class);
         $this->bind(Reader::class)->toConstructor(

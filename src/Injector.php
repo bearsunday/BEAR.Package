@@ -9,7 +9,6 @@ use BEAR\Package\Injector\PackageInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
-use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -31,7 +30,7 @@ final class Injector
     {
         $meta = new Meta($appName, $context, $appDir);
         $cacheNamespace = str_replace('/', '_', $appDir) . $context;
-        $cache ??= new ChainAdapter([new ApcuAdapter($cacheNamespace), new FilesystemAdapter('', 0, $meta->tmpDir . '/injector')]);
+        $cache ??= ApcuAdapter::isSupported() ? new ApcuAdapter($cacheNamespace) : new FilesystemAdapter('', 0, $meta->tmpDir . '/injector');
 
         return PackageInjector::getInstance($meta, $context, $cache);
     }
