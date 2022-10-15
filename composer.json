@@ -84,12 +84,11 @@
         "cs": ["./vendor/bin/phpcs"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
-        "sa": ["psalm --show-info=true", "./vendor/bin/phpstan analyse --no-ansi --no-progress -c phpstan.neon"],
+        "sa": ["psalm --show-info=true", "./vendor/bin/phpstan analyse --no-ansi --no-progress -c phpstan.neon --memory-limit=-1"],
         "metrics": ["./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd --exclude src/Annotation src text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"],
         "compile": "./bin/bear.compile FakeVendor\\\\HelloWorld prod-app ./tests/Fake/fake-app",
-        "sa": ["psalm --show-info=true", "./vendor/bin/phpstan analyse --no-ansi --no-progress -c phpstan.neon --memory-limit=-1"],
         "baseline": "phpstan analyse -configuration -c phpstan.neon --generate-baseline  --memory-limit=-1 ;psalm --set-baseline=psalm-baseline.xml"
     },
     "config": {
