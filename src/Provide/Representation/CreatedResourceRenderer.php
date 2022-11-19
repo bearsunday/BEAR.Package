@@ -26,13 +26,10 @@ use const PHP_URL_SCHEME;
  */
 class CreatedResourceRenderer implements RenderInterface
 {
-    private RouterInterface $router;
-    private ResourceInterface $resource;
-
-    public function __construct(RouterInterface $router, ResourceInterface $resource)
-    {
-        $this->router = $router;
-        $this->resource = $resource;
+    public function __construct(
+        private RouterInterface $router,
+        private ResourceInterface $resource,
+    ) {
     }
 
     /**
@@ -79,8 +76,10 @@ class CreatedResourceRenderer implements RenderInterface
     private function updateHeaders(ResourceObject $ro): void
     {
         $ro->headers['content-type'] = 'application/hal+json';
-        if (isset($ro->headers['Location'])) {
-            $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
+        if (! isset($ro->headers['Location'])) {
+            return;
         }
+
+        $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
     }
 }

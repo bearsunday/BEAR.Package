@@ -8,7 +8,6 @@ use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use Throwable;
 
 use function date;
-use function get_class;
 use function print_r;
 use function sprintf;
 
@@ -22,11 +21,11 @@ final class ExceptionAsString
     {
         $eSummery = sprintf(
             "%s(%s)\n in file %s on line %s\n\n%s",
-            get_class($e),
+            $e::class,
             $e->getMessage(),
             $e->getFile(),
             $e->getLine(),
-            $e->getTraceAsString()
+            $e->getTraceAsString(),
         );
 
         /** @var array<string, string> $_SERVER */ //phpcs:ignore SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.NoAssignment
@@ -38,9 +37,7 @@ final class ExceptionAsString
         return $this->string;
     }
 
-    /**
-     * @param array<string, mixed> $server
-     */
+    /** @param array<string, mixed> $server */
     private function getPhpVariables(array $server): string
     {
         return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true)); // @codeCoverageIgnore

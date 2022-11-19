@@ -25,9 +25,7 @@ use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\LocalCacheProvider;
 use Ray\PsrCacheModule\Psr6LocalCacheModule;
 
-/**
- * @codeCoverageIgnore
- */
+/** @codeCoverageIgnore */
 class ProdModule extends AbstractModule
 {
     /**
@@ -50,11 +48,11 @@ class ProdModule extends AbstractModule
         $this->bind(CacheItemInterface::class)->annotatedWith(EtagPool::class)->toProvider(LocalCacheProvider::class);
         $this->bind(Reader::class)->toConstructor(
             PsrCachedReader::class,
-            ['reader' => 'dual_reader', 'cache' => Local::class]
+            ['reader' => 'dual_reader', 'cache' => Local::class],
         )->in(Scope::SINGLETON);
         $this->bind(Reader::class)->annotatedWith('dual_reader')->toConstructor(
             DualReader::class,
-            ['annotationReader' => 'annotation_reader', 'attributeReader' => 'attribute_reader']
+            ['annotationReader' => 'annotation_reader', 'attributeReader' => 'attribute_reader'],
         );
         $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
         $this->bind(Reader::class)->annotatedWith('attribute_reader')->to(AttributeReader::class);

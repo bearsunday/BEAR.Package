@@ -28,38 +28,19 @@ use function trait_exists;
 
 class CompileAutoload
 {
-    private string $appDir;
-    private string $context;
-    private Meta $appMeta;
-
-    /** @var ArrayObject<int, string> */
-    private ArrayObject $overwritten;
-
-    /** @var ArrayObject<int, string> */
-    private ArrayObject $classes;
-    private FilePutContents $filePutContents;
-    private FakeRun $fakeRun;
-
     /**
      * @param ArrayObject<int, string> $overwritten
      * @param ArrayObject<int, string> $classes
      */
     public function __construct(
-        FakeRun $fakeRun,
-        FilePutContents $filePutContents,
-        Meta $appMeta,
-        ArrayObject $overwritten,
-        ArrayObject $classes,
-        string $appDir,
-        string $context
+        private FakeRun $fakeRun,
+        private FilePutContents $filePutContents,
+        private Meta $appMeta,
+        private ArrayObject $overwritten,
+        private ArrayObject $classes,
+        private string $appDir,
+        private string $context,
     ) {
-        $this->appDir = $appDir;
-        $this->context = $context;
-        $this->appMeta = $appMeta;
-        $this->overwritten = $overwritten;
-        $this->classes = $classes;
-        $this->filePutContents = $filePutContents;
-        $this->fakeRun = $fakeRun;
     }
 
     public function getFileInfo(string $filename): string
@@ -114,16 +95,14 @@ class CompileAutoload
         return $paths;
     }
 
-    /**
-     * @param array<string> $paths
-     */
+    /** @param array<string> $paths */
     public function saveAutoloadFile(string $appDir, array $paths): string
     {
         $requiredFile = '';
         foreach ($paths as $path) {
             $requiredFile .= sprintf(
                 "require %s;\n",
-                $path
+                $path,
             );
         }
 

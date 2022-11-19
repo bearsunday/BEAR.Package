@@ -11,25 +11,19 @@ use BEAR\Resource\SchemeCollectionInterface;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
-/**
- * @implements ProviderInterface<SchemeCollectionInterface>
- */
+/** @implements ProviderInterface<SchemeCollectionInterface> */
 final class ImportSchemeCollectionProvider implements ProviderInterface
 {
-    /** @var ImportApp[] */
-    private array $importAppConfig;
-    private SchemeCollectionInterface $schemeCollection;
-
     /**
      * @param ImportApp[] $importAppConfig
      *
      * @Named("importAppConfig=BEAR\Resource\Annotation\ImportAppConfig,schemeCollection=original")
      */
     #[Named('importAppConfig=BEAR\Resource\Annotation\ImportAppConfig,schemeCollection=original')]
-    public function __construct(array $importAppConfig, SchemeCollectionInterface $schemeCollection)
-    {
-        $this->importAppConfig = $importAppConfig;
-        $this->schemeCollection = $schemeCollection;
+    public function __construct(
+        private array $importAppConfig,
+        private SchemeCollectionInterface $schemeCollection,
+    ) {
     }
 
     /**

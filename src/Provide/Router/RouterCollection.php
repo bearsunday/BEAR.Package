@@ -16,15 +16,10 @@ class RouterCollection implements RouterInterface
 {
     private const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
 
-    /** @var RouterInterface[] */
-    private array $routers;
-
-    /**
-     * @param RouterInterface[] $routers
-     */
-    public function __construct(array $routers)
-    {
-        $this->routers = $routers;
+    /** @param RouterInterface[] $routers */
+    public function __construct(
+        private array $routers,
+    ) {
     }
 
     /**
@@ -37,6 +32,7 @@ class RouterCollection implements RouterInterface
                 $match = $route->match($globals, $server);
             } catch (Throwable $e) {
                 $e = new RouterException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
+                /** @noinspection ForgottenDebugOutputInspection */
                 error_log((string) $e);
 
                 return $this->routeNotFound();

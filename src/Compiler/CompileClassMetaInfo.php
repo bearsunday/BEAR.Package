@@ -72,7 +72,7 @@ final class CompileClassMetaInfo
 
         try {
             $namedParameter->getParameters($callable, []);
-        } catch (ParameterException $e) {
+        } catch (ParameterException) {
             return;
         }
     }

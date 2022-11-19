@@ -9,7 +9,6 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 use Throwable;
 
 use function file_put_contents;
-use function get_class;
 use function is_link;
 use function is_writable;
 use function sprintf;
@@ -23,7 +22,7 @@ final class LogRef
     public function __construct(Throwable $e)
     {
         // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        $this->ref = hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
+        $this->ref = hash('crc32b', $e::class . $e->getMessage() . $e->getFile() . $e->getLine());
     }
 
     public function __toString(): string

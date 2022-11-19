@@ -12,7 +12,7 @@ abstract class AbstractAppModule extends AbstractModule
     /** @var AbstractAppMeta */
     protected $appMeta;
 
-    final public function __construct(AbstractAppMeta $appMeta, ?AbstractModule $module = null)
+    final public function __construct(AbstractAppMeta $appMeta, AbstractModule|null $module = null)
     {
         $this->appMeta = $appMeta;
         parent::__construct($module);

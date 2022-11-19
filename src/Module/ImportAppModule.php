@@ -29,9 +29,7 @@ final class ImportAppModule extends AbstractModule
      */
     private array $importApps = [];
 
-    /**
-     * @param array<ImportApp> $importApps
-     */
+    /** @param array<ImportApp> $importApps */
     public function __construct(array $importApps)
     {
         foreach ($importApps as $importApp) {

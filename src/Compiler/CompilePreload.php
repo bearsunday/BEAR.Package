@@ -13,26 +13,15 @@ use function sprintf;
 
 final class CompilePreload
 {
-    private NewInstance $newInstance;
-    private CompileAutoload $dumpAutoload;
-
-    /** @var ArrayObject<int, string> */
-    private ArrayObject $classes;
-    private FilePutContents $filePutContents;
-    private string $context;
-    private FakeRun $fakeRun;
-
-    /**
-     * @param ArrayObject<int, string> $classes
-     */
-    public function __construct(FakeRun $fakeRun, NewInstance $newInstance, CompileAutoload $dumpAutoload, FilePutContents $filePutContents, ArrayObject $classes, string $context)
-    {
-        $this->fakeRun = $fakeRun;
-        $this->newInstance = $newInstance;
-        $this->dumpAutoload = $dumpAutoload;
-        $this->classes = $classes;
-        $this->filePutContents = $filePutContents;
-        $this->context = $context;
+    /** @param ArrayObject<int, string> $classes */
+    public function __construct(
+        private FakeRun $fakeRun,
+        private NewInstance $newInstance,
+        private CompileAutoload $dumpAutoload,
+        private FilePutContents $filePutContents,
+        private ArrayObject $classes,
+        private string $context,
+    ) {
         $this->fakeRun = $fakeRun;
     }
 
@@ -47,7 +36,7 @@ final class CompilePreload
         foreach ($paths as $path) {
             $requiredOnceFile .= sprintf(
                 "require %s;\n",
-                $path
+                $path,
             );
         }
 

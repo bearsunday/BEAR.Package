@@ -9,23 +9,21 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
-/**
- * @implements ProviderInterface<RouterCollection>
- */
+/** @implements ProviderInterface<RouterCollection> */
 class RouterCollectionProvider implements ProviderInterface
 {
     private RouterInterface $primaryRouter;
-    private WebRouterInterface $webRouter;
 
     /**
      * @Inject
      * @Named("router=primary_router")
      */
     #[Inject, Named('router=primary_router')]
-    public function __construct(RouterInterface $router, WebRouterInterface $webRouter)
-    {
+    public function __construct(
+        RouterInterface $router,
+        private WebRouterInterface $webRouter,
+    ) {
         $this->primaryRouter = $router;
-        $this->webRouter = $webRouter;
     }
 
     /**

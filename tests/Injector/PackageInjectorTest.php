@@ -28,13 +28,11 @@ class PackageInjectorTest extends TestCase
         $this->assertInstanceOf(FakeDep::class, $page->foo);
     }
 
-    /**
-     * @depends testOriginalBind
-     */
+    /** @depends testOriginalBind */
     public function testGetOverrideInstance(): void
     {
         $injector = Injector::getOverrideInstance('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', new class extends AbstractModule{
-            protected function configure()
+            protected function configure(): void
             {
                 $this->bind(FakeDepInterface::class)->to(FakeDep2::class);
             }

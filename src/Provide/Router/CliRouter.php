@@ -42,18 +42,16 @@ use const PHP_URL_QUERY;
  */
 class CliRouter implements RouterInterface
 {
-    private RouterInterface $router;
     private Stdio $stdIo;
     private string $stdIn = '';
-    private ?Throwable $terminateException = null;
+    private Throwable|null $terminateException = null;
 
-    /**
-     * @Named("original")
-     */
+    /** @Named("original") */
     #[Named('original')]
-    public function __construct(RouterInterface $router, ?Stdio $stdIo = null)
-    {
-        $this->router = $router;
+    public function __construct(
+        private RouterInterface $router,
+        Stdio|null $stdIo = null,
+    ) {
         $this->stdIo = $stdIo ?: (new CliFactory())->newStdio();
     }
 
@@ -65,7 +63,7 @@ class CliRouter implements RouterInterface
         file_exists($this->stdIn) && unlink($this->stdIn);
     }
 
-    public function __wakeup()
+    public function __wakeup(): void
     {
         $this->stdIo = (new CliFactory())->newStdio();
     }
@@ -145,9 +143,7 @@ class CliRouter implements RouterInterface
         $this->stdIo->outln($help->getHelp($command));
     }
 
-    /**
-     * @SuppressWarnings(PHPMD)
-     */
+    /** @SuppressWarnings(PHPMD) */
     private function terminate(int $status): void
     {
         if ($this->terminateException instanceof Exception) {
@@ -179,15 +175,15 @@ class CliRouter implements RouterInterface
         return $server;
     }
 
-    /**
-     * @param array<int, string> $argv
-     */
+    /** @param array<int, string> $argv */
     private function validateArgs(int $argc, array $argv): void
     {
-        if ($argc < 3) {
-            $this->error(basename($argv[0]));
-            $this->terminate(Status::USAGE);
+        if ($argc >= 3) {
+            return;
         }
+
+        $this->error(basename($argv[0]));
+        $this->terminate(Status::USAGE);
     }
 
     /**

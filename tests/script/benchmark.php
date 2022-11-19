@@ -11,8 +11,8 @@ register_shutdown_function(
             number_format(memory_get_peak_usage()),
             (microtime(true) - $time) * 1000,
             count(get_declared_classes()),
-            count(get_included_files())
+            count(get_included_files()),
         );
         file_put_contents(__DIR__ . '/include_files.txt', print_r(get_included_files(), true));
-    }
+    },
 );

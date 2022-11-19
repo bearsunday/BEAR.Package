@@ -24,11 +24,8 @@ use function class_exists;
  */
 class AppMetaModule extends AbstractModule
 {
-    private AbstractAppMeta $appMeta;
-
-    public function __construct(AbstractAppMeta $appMeta, ?AbstractModule $module = null)
+    public function __construct(private AbstractAppMeta $appMeta, AbstractModule|null $module = null)
     {
-        $this->appMeta = $appMeta;
         parent::__construct($module);
     }
 

@@ -13,11 +13,10 @@ use Ray\Di\InjectorInterface;
  */
 class ScriptinjectorModule extends AbstractModule
 {
-    private string $scriptDir;
-
-    public function __construct(string $scriptDir, ?AbstractModule $module = null)
-    {
-        $this->scriptDir = $scriptDir;
+    public function __construct(
+        private string $scriptDir,
+        AbstractModule|null $module = null,
+    ) {
         parent::__construct($module);
     }
 

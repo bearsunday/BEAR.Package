@@ -16,17 +16,12 @@ use function parse_url;
  */
 class WebRouter implements RouterInterface, WebRouterInterface
 {
-    private string $schemeHost;
-    private HttpMethodParamsInterface $httpMethodParams;
-
-    /**
-     * @DefaultSchemeHost("schemeHost")
-     */
+    /** @DefaultSchemeHost("schemeHost") */
     #[DefaultSchemeHost('schemeHost')]
-    public function __construct(string $schemeHost, HttpMethodParamsInterface $httpMethodParams)
-    {
-        $this->schemeHost = $schemeHost;
-        $this->httpMethodParams = $httpMethodParams;
+    public function __construct(
+        private string $schemeHost,
+        private HttpMethodParamsInterface $httpMethodParams,
+    ) {
     }
 
     /**

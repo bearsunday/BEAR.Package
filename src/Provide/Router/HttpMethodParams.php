@@ -35,7 +35,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @StdIn
      */
     #[Inject(optional: true), StdIn]
-    public function setStdIn($stdIn): void
+    public function setStdIn(string $stdIn): void
     {
         $this->stdIn = $stdIn;
     }
@@ -155,9 +155,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $content;
     }
 
-    /**
-     * @param array{HTTP_RAW_POST_DATA?: string} $server
-     */
+    /** @param array{HTTP_RAW_POST_DATA?: string} $server */
     private function getRawBody(array $server): string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));

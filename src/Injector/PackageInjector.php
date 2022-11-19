@@ -32,14 +32,12 @@ final class PackageInjector
      */
     private static array $instances;
 
-    /**
-     * @codeCoverageIgnore
-     */
+    /** @codeCoverageIgnore */
     private function __construct()
     {
     }
 
-    public static function getInstance(AbstractAppMeta $meta, string $context, ?CacheInterface $cache): InjectorInterface
+    public static function getInstance(AbstractAppMeta $meta, string $context, CacheInterface|null $cache): InjectorInterface
     {
         $injectorId = str_replace('\\', '_', $meta->name) . $context;
         if (isset(self::$instances[$injectorId])) {
@@ -60,7 +58,7 @@ final class PackageInjector
         return $injector;
     }
 
-    public static function factory(AbstractAppMeta $meta, string $context, ?AbstractModule $overideModule = null): InjectorInterface
+    public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overideModule = null): InjectorInterface
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);

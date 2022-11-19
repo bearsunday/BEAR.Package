@@ -18,9 +18,7 @@ class FilePutContents
      */
     private ArrayObject $overwritten; // @phpstan-ignore-line
 
-    /**
-     * @param ArrayObject<int, string> $overwritten
-     */
+    /** @param ArrayObject<int, string> $overwritten */
     public function __construct(ArrayObject $overwritten)
     {
         $this->overwritten = $overwritten;

@@ -10,8 +10,6 @@ use Throwable;
 
 interface ErrorPageFactoryInterface
 {
-    /**
-     * @return ResourceObject
-     */
+    /** @return ResourceObject */
     public function newInstance(Throwable $e, RouterMatch $request);
 }
