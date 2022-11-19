@@ -27,7 +27,7 @@ use function str_contains;
 use function strpos;
 use function trait_exists;
 
-class CompileAutoload
+final class CompileAutoload
 {
     /**
      * @param ArrayObject<int, string> $overwritten
