@@ -46,10 +46,8 @@ class CliRouter implements RouterInterface
     private string $stdIn = '';
     private Throwable|null $terminateException = null;
 
-    /** @Named("original") */
-    #[Named('original')]
     public function __construct(
-        private RouterInterface $router,
+        #[Named('original')] private RouterInterface $router,
         Stdio|null $stdIo = null,
     ) {
         $this->stdIo = $stdIo ?: (new CliFactory())->newStdio();
