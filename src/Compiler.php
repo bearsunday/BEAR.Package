@@ -147,7 +147,9 @@ final class Compiler
     {
         $compileScript = realpath($appDir) . '/.compile.php';
         if (! file_exists($compileScript)) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         require $compileScript;
@@ -157,7 +159,9 @@ final class Compiler
     {
         $autoload = spl_autoload_functions();
         if (! isset($autoload[0])) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         spl_autoload_unregister($autoload[0]);

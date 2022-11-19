@@ -81,7 +81,9 @@ final class FileUpdate
         /** @var RegexIterator<string, SplFileInfo> $iterator */
         foreach ($iterator as $fileName => $fileInfo) { // @phpstan-ignore-line
             if (! $fileInfo->isFile() || $fileInfo->getFilename()[0] === '.') {
+                // @codeCoverageIgnoreStart
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             $files[] = $fileName;

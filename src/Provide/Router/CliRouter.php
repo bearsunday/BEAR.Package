@@ -179,7 +179,10 @@ class CliRouter implements RouterInterface
 
         $this->error(basename($argv[0]));
         $this->terminate(Status::USAGE);
+        // @codeCoverageIgnoreStart
     }
+
+    // @codeCoverageIgnoreEnd
 
     /**
      * Return $method, $query, $server from $server

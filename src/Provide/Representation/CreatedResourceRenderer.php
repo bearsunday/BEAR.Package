@@ -77,7 +77,9 @@ class CreatedResourceRenderer implements RenderInterface
     {
         $ro->headers['content-type'] = 'application/hal+json';
         if (! isset($ro->headers['Location'])) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
