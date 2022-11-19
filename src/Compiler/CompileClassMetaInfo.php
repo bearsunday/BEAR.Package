@@ -12,7 +12,7 @@ use ReflectionClass;
 use function in_array;
 use function is_callable;
 use function sprintf;
-use function substr;
+use function str_starts_with;
 
 final class CompileClassMetaInfo
 {
@@ -40,7 +40,7 @@ final class CompileClassMetaInfo
                 continue;
             }
 
-            if (substr($methodName, 0, 2) === 'on') {
+            if (str_starts_with($methodName, 'on')) {
                 $log .= sprintf(' %s', $methodName);
                 $this->saveNamedParam($namedParams, $instance, $methodName);
             }

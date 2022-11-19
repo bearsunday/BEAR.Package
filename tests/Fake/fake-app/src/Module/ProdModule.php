@@ -14,7 +14,7 @@ class ProdModule extends AbstractModule
      */
     protected function configure()
     {
-        AppModule::$modules[] = get_class($this);
+        AppModule::$modules[] = $this::class;
         $this->install(new PackageProdModule());
     }
 }

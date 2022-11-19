@@ -9,17 +9,10 @@ use Ray\Di\Di\Named;
 
 class Context extends ResourceObject
 {
-    private $a;
-    private $b;
-
-    /**
-     * @Named("a=usr_db,b=job_db")
-     */
-    #[Named('a=usr_db,b=job_db')]
-    public function __construct($a, $b)
-    {
-        $this->a = $a;
-        $this->b = $b;
+    public function __construct(
+        #[Named('usr_db')] private $a,
+        #[Named('job_db')] private $b
+    ){
     }
 
     public function onGet() : ResourceObject

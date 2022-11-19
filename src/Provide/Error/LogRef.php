@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Stringable;
 use Throwable;
 
 use function file_put_contents;
@@ -15,7 +16,7 @@ use function sprintf;
 use function symlink;
 use function unlink;
 
-final class LogRef
+final class LogRef implements Stringable
 {
     private string $ref;
 

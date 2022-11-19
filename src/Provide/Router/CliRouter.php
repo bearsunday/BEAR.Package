@@ -73,12 +73,9 @@ class CliRouter implements RouterInterface
         $this->terminateException = $e;
     }
 
-    /**
-     * @Inject
-     * @StdIn
-     */
     #[Inject, StdIn]
-    public function setStdIn(string $stdIn): void
+    public function setStdIn(#[StdIn]
+    string $stdIn,): void
     {
         $this->stdIn = $stdIn;
     }

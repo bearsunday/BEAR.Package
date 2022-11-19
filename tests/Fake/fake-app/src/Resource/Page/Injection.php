@@ -11,9 +11,9 @@ use FooName\FooInterface;
 
 class Injection extends ResourceObject
 {
-    public FakeDepInterface $foo;
-    public function __construct(FakeDepInterface $foo)
+    public function __construct(
+        public FakeDepInterface $foo
+    )
     {
-        $this->foo = $foo;
     }
 }

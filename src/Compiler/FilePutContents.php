@@ -11,17 +11,13 @@ use function file_put_contents;
 
 class FilePutContents
 {
-    /**
-     * For debugging
-     *
-     * @var ArrayObject<int, string>
-     */
-    private ArrayObject $overwritten; // @phpstan-ignore-line
-
     /** @param ArrayObject<int, string> $overwritten */
-    public function __construct(ArrayObject $overwritten)
-    {
-        $this->overwritten = $overwritten;
+    public function __construct(
+        /**
+         * For debugging
+         */
+        private ArrayObject $overwritten,  // @phpstan-ignore-line
+    ) {
     }
 
     public function __invoke(string $fileName, string $content): void

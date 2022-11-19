@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
+use Stringable;
 use Throwable;
 
 use function date;
@@ -13,7 +14,7 @@ use function sprintf;
 
 use const DATE_RFC2822;
 
-final class ExceptionAsString
+final class ExceptionAsString implements Stringable
 {
     private string $string;
 

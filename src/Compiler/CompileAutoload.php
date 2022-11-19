@@ -23,6 +23,7 @@ use function preg_replace;
 use function printf;
 use function realpath;
 use function sprintf;
+use function str_contains;
 use function strpos;
 use function trait_exists;
 
@@ -133,7 +134,7 @@ require __DIR__ . '/vendor/autoload.php';
     private function getRelativePath(string $rootDir, string $file): string
     {
         $dir = (string) realpath($rootDir);
-        if (strpos($file, $dir) !== false) {
+        if (str_contains($file, $dir)) {
             return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file) . "'";
         }
 

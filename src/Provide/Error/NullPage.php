@@ -14,11 +14,6 @@ use Ray\Di\Di\Inject;
 #[Cacheable]
 class NullPage extends ResourceObject
 {
-    /**
-     * @return self
-     *
-     * @Inject(optional=true)
-     */
     #[Inject(optional: true)]
     public function setRenderer(RenderInterface $renderer): self
     {

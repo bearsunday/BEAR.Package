@@ -12,18 +12,15 @@ use Ray\Di\ProviderInterface;
 /** @implements ProviderInterface<RouterCollection> */
 class RouterCollectionProvider implements ProviderInterface
 {
-    private RouterInterface $primaryRouter;
-
     /**
      * @Inject
      * @Named("router=primary_router")
      */
     #[Inject, Named('router=primary_router')]
     public function __construct(
-        RouterInterface $router,
+        private RouterInterface $primaryRouter,
         private WebRouterInterface $webRouter,
     ) {
-        $this->primaryRouter = $router;
     }
 
     /**

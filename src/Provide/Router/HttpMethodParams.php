@@ -15,7 +15,7 @@ use function json_last_error;
 use function json_last_error_msg;
 use function parse_str;
 use function rtrim;
-use function strpos;
+use function str_contains;
 use function strtolower;
 
 use const JSON_ERROR_NONE;
@@ -28,14 +28,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     public const APPLICATION_JSON = 'application/json';
     private string $stdIn = 'php://input';
 
-    /**
-     * @param string $stdIn
-     *
-     * @Inject(optional=true)
-     * @StdIn
-     */
     #[Inject(optional: true), StdIn]
-    public function setStdIn(string $stdIn): void
+    public function setStdIn(#[StdIn] string $stdIn): void
     {
         $this->stdIn = $stdIn;
     }
@@ -132,7 +126,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     private function phpInput(array $server): array
     {
         $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
-        $isFormUrlEncoded = strpos($contentType, self::FORM_URL_ENCODE) !== false;
+        $isFormUrlEncoded = str_contains($contentType, self::FORM_URL_ENCODE);
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
 
@@ -140,7 +134,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return $put;
         }
 
-        $isApplicationJson = strpos($contentType, self::APPLICATION_JSON) !== false;
+        $isApplicationJson = str_contains($contentType, self::APPLICATION_JSON);
         if (! $isApplicationJson) {
             return [];
         }

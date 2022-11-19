@@ -6,6 +6,7 @@ namespace BEAR\Package\Module;
 
 use BEAR\Package\Injector;
 use BEAR\Package\Module\Import\ImportApp;
+use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\AppAdapter;
 use BEAR\Resource\SchemeCollectionInterface;
 use Ray\Di\Di\Named;
@@ -14,15 +15,11 @@ use Ray\Di\ProviderInterface;
 /** @implements ProviderInterface<SchemeCollectionInterface> */
 final class ImportSchemeCollectionProvider implements ProviderInterface
 {
-    /**
-     * @param ImportApp[] $importAppConfig
-     *
-     * @Named("importAppConfig=BEAR\Resource\Annotation\ImportAppConfig,schemeCollection=original")
-     */
+    /** @param ImportApp[] $importAppConfig */
     #[Named('importAppConfig=BEAR\Resource\Annotation\ImportAppConfig,schemeCollection=original')]
     public function __construct(
-        private array $importAppConfig,
-        private SchemeCollectionInterface $schemeCollection,
+        #[Named(ImportAppConfig::class)] private array $importAppConfig,
+        #[Named('original')] private SchemeCollectionInterface $schemeCollection,
     ) {
     }
 
