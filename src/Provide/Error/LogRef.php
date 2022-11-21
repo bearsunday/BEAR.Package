@@ -6,24 +6,24 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Stringable;
 use Throwable;
 
 use function file_put_contents;
-use function get_class;
 use function is_link;
 use function is_writable;
 use function sprintf;
 use function symlink;
 use function unlink;
 
-final class LogRef
+final class LogRef implements Stringable
 {
     private string $ref;
 
     public function __construct(Throwable $e)
     {
         // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        $this->ref = hash('crc32b', get_class($e) . $e->getMessage() . $e->getFile() . $e->getLine());
+        $this->ref = hash('crc32b', $e::class . $e->getMessage() . $e->getFile() . $e->getLine());
     }
 
     public function __toString(): string

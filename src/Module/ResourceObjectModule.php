@@ -13,15 +13,10 @@ use Ray\Di\AbstractModule;
  */
 class ResourceObjectModule extends AbstractModule
 {
-    /** @var Generator<array{0: class-string, 1: string}> */
-    private $resourceObjects;
-
-    /**
-     * @param Generator<array{0: class-string, 1: string}> $resourceObjects
-     */
-    public function __construct(Generator $resourceObjects)
-    {
-        $this->resourceObjects = $resourceObjects;
+    /** @param Generator<array{0: class-string, 1: string}> $resourceObjects */
+    public function __construct(
+        private Generator $resourceObjects,
+    ) {
         parent::__construct();
     }
 

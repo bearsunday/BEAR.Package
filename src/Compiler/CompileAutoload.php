@@ -23,43 +23,25 @@ use function preg_replace;
 use function printf;
 use function realpath;
 use function sprintf;
+use function str_contains;
 use function strpos;
 use function trait_exists;
 
-class CompileAutoload
+final class CompileAutoload
 {
-    private string $appDir;
-    private string $context;
-    private Meta $appMeta;
-
-    /** @var ArrayObject<int, string> */
-    private ArrayObject $overwritten;
-
-    /** @var ArrayObject<int, string> */
-    private ArrayObject $classes;
-    private FilePutContents $filePutContents;
-    private FakeRun $fakeRun;
-
     /**
      * @param ArrayObject<int, string> $overwritten
      * @param ArrayObject<int, string> $classes
      */
     public function __construct(
-        FakeRun $fakeRun,
-        FilePutContents $filePutContents,
-        Meta $appMeta,
-        ArrayObject $overwritten,
-        ArrayObject $classes,
-        string $appDir,
-        string $context
+        private FakeRun $fakeRun,
+        private FilePutContents $filePutContents,
+        private Meta $appMeta,
+        private ArrayObject $overwritten,
+        private ArrayObject $classes,
+        private string $appDir,
+        private string $context,
     ) {
-        $this->appDir = $appDir;
-        $this->context = $context;
-        $this->appMeta = $appMeta;
-        $this->overwritten = $overwritten;
-        $this->classes = $classes;
-        $this->filePutContents = $filePutContents;
-        $this->fakeRun = $fakeRun;
     }
 
     public function getFileInfo(string $filename): string
@@ -114,16 +96,14 @@ class CompileAutoload
         return $paths;
     }
 
-    /**
-     * @param array<string> $paths
-     */
+    /** @param array<string> $paths */
     public function saveAutoloadFile(string $appDir, array $paths): string
     {
         $requiredFile = '';
         foreach ($paths as $path) {
             $requiredFile .= sprintf(
                 "require %s;\n",
-                $path
+                $path,
             );
         }
 
@@ -154,7 +134,7 @@ require __DIR__ . '/vendor/autoload.php';
     private function getRelativePath(string $rootDir, string $file): string
     {
         $dir = (string) realpath($rootDir);
-        if (strpos($file, $dir) !== false) {
+        if (str_contains($file, $dir)) {
             return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file) . "'";
         }
 

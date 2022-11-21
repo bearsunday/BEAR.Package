@@ -38,18 +38,14 @@ class InjectorTest extends TestCase
         return $injector;
     }
 
-    /**
-     * @depends testRayInjector
-     */
+    /** @depends testRayInjector */
     public function testRayInjectorAsSingleton(RayInjector $injector): void
     {
         $singletonInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
         $this->assertSame(spl_object_hash($injector), spl_object_hash($singletonInjector));
     }
 
-    /**
-     * @return array<array{0: string, 1:int}>
-     */
+    /** @return array<array{0: string, 1:int}> */
     public function countOfNewProvider(): array
     {
         return [
@@ -58,9 +54,7 @@ class InjectorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider countOfNewProvider
-     */
+    /** @dataProvider countOfNewProvider */
     public function testCachedGetInstance(string $context, int $countOfNew): void
     {
         $appDir = __DIR__ . '/Fake/fake-app';
@@ -80,9 +74,7 @@ class InjectorTest extends TestCase
         $this->assertSame($count, App::$countOfNewInstance);
     }
 
-    /**
-     * @dataProvider countOfNewProvider
-     */
+    /** @dataProvider countOfNewProvider */
     public function testRaceConditionBoot(string $context): void
     {
         $cn = microtime();
@@ -122,16 +114,13 @@ class InjectorTest extends TestCase
 
     private function getInjector(AppInterface $fakeApp): InjectorInterface
     {
-        $injector = Injector::getOverrideInstance(
+        return Injector::getOverrideInstance(
             'FakeVendor\HelloWorld',
             'app',
             __DIR__ . '/Fake/fake-app',
             new class ($fakeApp) extends AbstractModule {
-                private AppInterface $app;
-
-                public function __construct(AppInterface $app, ?AbstractModule $module = null)
+                public function __construct(private AppInterface $app, AbstractModule|null $module = null)
                 {
-                    $this->app = $app;
                     parent::__construct($module);
                 }
 
@@ -139,10 +128,8 @@ class InjectorTest extends TestCase
                 {
                     $this->bind(AppInterface::class)->toInstance($this->app);
                 }
-            }
+            },
         );
-
-        return $injector;
     }
 
     private function runOnce(string $context): int

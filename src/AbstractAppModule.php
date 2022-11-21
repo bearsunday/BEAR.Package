@@ -9,12 +9,10 @@ use Ray\Di\AbstractModule;
 
 abstract class AbstractAppModule extends AbstractModule
 {
-    /** @var AbstractAppMeta */
-    protected $appMeta;
-
-    final public function __construct(AbstractAppMeta $appMeta, ?AbstractModule $module = null)
-    {
-        $this->appMeta = $appMeta;
+    final public function __construct(
+        protected AbstractAppMeta $appMeta,
+        AbstractModule|null $module = null,
+    ) {
         parent::__construct($module);
     }
 }

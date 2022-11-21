@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-use Rector\Core\Configuration\Option;
+use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
+use Rector\Config\RectorConfig;
+use Rector\Ray\AnnotationBinding\Rector\ClassMethod\AnnotationBindingRector;
 use Rector\Set\ValueObject\LevelSetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    // get parameters
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PHPSTAN_FOR_RECTOR_PATH, [
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->paths([
         __DIR__ . '/src',
-        __DIR__ . '/tests'
+        __DIR__ . '/tests/*/*Test.php',
+        __DIR__ . '/tests-files',
     ]);
 
-    // Define what rule sets will be applied
-    $containerConfigurator->import(LevelSetList::UP_TO_PHP_74);
-
-    // get services (needed for register a single rule)
-    // $services = $containerConfigurator->services();
-
     // register a single rule
-    // $services->set(TypedPropertyRector::class);
+    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
+    $rectorConfig->rule(AnnotationBindingRector::class);
+
+    // define sets of rules
+        $rectorConfig->sets([
+            LevelSetList::UP_TO_PHP_80
+        ]);
 };

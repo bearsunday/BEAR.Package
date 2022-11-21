@@ -27,7 +27,7 @@ class NewAppTest extends TestCase
     {
         $module = new AppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule())));
         $module->override(new class extends AbstractModule{
-            protected function configure()
+            protected function configure(): void
             {
                 $this->bind(CacheItemPoolInterface::class)->annotatedWith(Shared::class)->to(FilesystemAdapter::class);
             }
@@ -39,9 +39,7 @@ class NewAppTest extends TestCase
         return $app;
     }
 
-    /**
-     * @depends testGetInstanceByHand
-     */
+    /** @depends testGetInstanceByHand */
     public function testSerializable(AppInterface $app): void
     {
         $this->assertInstanceOf(AppInterface::class, unserialize(serialize(unserialize(serialize($app)))));

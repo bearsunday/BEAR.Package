@@ -12,20 +12,11 @@ use Ray\Di\AbstractModule;
 
 class LazyModule implements LazyModuleInterface
 {
-    /** @var AbstractAppMeta */
-    private $appMeta;
-
-    /** @var string */
-    private $context;
-
-    /** @var string */
-    private $scriptDir;
-
-    public function __construct(AbstractAppMeta $appMeta, string $context, string $scriptDir)
-    {
-        $this->appMeta = $appMeta;
-        $this->context = $context;
-        $this->scriptDir = $scriptDir;
+    public function __construct(
+        private AbstractAppMeta $appMeta,
+        private string $context,
+        private string $scriptDir,
+    ) {
     }
 
     public function __invoke(): AbstractModule

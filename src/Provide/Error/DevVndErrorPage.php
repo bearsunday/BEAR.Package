@@ -8,7 +8,6 @@ use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use Throwable;
 
-use function get_class;
 use function json_encode;
 use function sprintf;
 
@@ -33,24 +32,20 @@ final class DevVndErrorPage extends ResourceObject
         return $this->view;
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private function getHeader(): array
     {
         return ['content-type' => 'application/vnd.error+json'];
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private function getResponseBody(Throwable $e, RouterMatch $request, Status $status): array
     {
         return [
             'message' => $status->text,
             'logref' => (string) new LogRef($e),
             'request' => (string) $request,
-            'exceptions' => sprintf('%s(%s)', get_class($e), $e->getMessage()),
+            'exceptions' => sprintf('%s(%s)', $e::class, $e->getMessage()),
             'file' => sprintf('%s(%s)', $e->getFile(), $e->getLine()),
         ];
     }

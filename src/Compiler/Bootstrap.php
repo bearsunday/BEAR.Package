@@ -45,7 +45,7 @@ final class Bootstrap
             /** @psalm-suppress all */
             $resource = $injector->getInstance(ResourceInterface::class);
             $resource->{$request->method}->uri($request->path)($request->query);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $injector->getInstance(TransferInterface::class);
 
             return 1;

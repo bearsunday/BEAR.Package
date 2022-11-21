@@ -14,19 +14,15 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 use function str_replace;
 
-/**
- * @see PackageInjector
- */
+/** @see PackageInjector */
 final class Injector
 {
-    /**
-     * @codeCoverageIgnore
-     */
+    /** @codeCoverageIgnore */
     private function __construct()
     {
     }
 
-    public static function getInstance(string $appName, string $context, string $appDir, ?CacheInterface $cache = null): InjectorInterface
+    public static function getInstance(string $appName, string $context, string $appDir, CacheInterface|null $cache = null): InjectorInterface
     {
         $meta = new Meta($appName, $context, $appDir);
         $cacheNamespace = str_replace('/', '_', $appDir) . $context;

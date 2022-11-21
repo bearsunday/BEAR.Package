@@ -13,13 +13,10 @@ use function str_replace;
 
 final class CompileObjectGraph
 {
-    private FilePutContents $filePutContents;
-    private string $dotDir;
-
-    public function __construct(FilePutContents $filePutContents, string $dotDir)
-    {
-        $this->filePutContents = $filePutContents;
-        $this->dotDir = $dotDir;
+    public function __construct(
+        private FilePutContents $filePutContents,
+        private string $dotDir,
+    ) {
     }
 
     public function __invoke(AbstractModule $module): string

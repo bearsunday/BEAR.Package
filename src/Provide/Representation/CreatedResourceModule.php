@@ -18,7 +18,7 @@ class CreatedResourceModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith(ReturnCreatedResource::class),
-            [CreatedResourceInterceptor::class]
+            [CreatedResourceInterceptor::class],
         );
     }
 }

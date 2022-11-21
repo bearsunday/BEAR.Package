@@ -53,10 +53,6 @@ class CliRouterTest extends TestCase
     }
 
     /**
-     * @dataProvider argvProvider
-     */
-
-    /**
      * @param array<string, string> $get
      * @param array<string, string> $post
      *
@@ -153,7 +149,7 @@ class CliRouterTest extends TestCase
             [ // @phpstan-ignore-line
                 'argc' => 1,
                 'argv' => ['page.php'],
-            ]
+            ],
         );
     }
 }

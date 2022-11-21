@@ -8,9 +8,7 @@ use Aura\Cli\Help;
 
 class CliRouterHelp extends Help
 {
-    /**
-     * @return null
-     */
+    /** @return null */
     protected function init()
     {
         $this->setSummary('CLI Router');

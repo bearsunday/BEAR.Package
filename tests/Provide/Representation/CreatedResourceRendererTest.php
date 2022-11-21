@@ -55,9 +55,7 @@ class CreatedResourceRendererTest extends TestCase
         return $this->ro;
     }
 
-    /**
-     * @depends testRender
-     */
+    /** @depends testRender */
     public function testReverseRoutedHeader(ResourceObject $ro): void
     {
         $this->assertSame('/task/10', $ro->headers['Location']);

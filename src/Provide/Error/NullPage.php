@@ -10,19 +10,11 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceObject;
 use Ray\Di\Di\Inject;
 
-/**
- * @Cacheable
- */
 #[Cacheable]
 class NullPage extends ResourceObject
 {
-    /**
-     * @return self
-     *
-     * @Inject(optional=true)
-     */
     #[Inject(optional: true)]
-    public function setRenderer(RenderInterface $renderer)
+    public function setRenderer(RenderInterface $renderer): self
     {
         unset($renderer);
         $this->renderer = new NullRenderer();

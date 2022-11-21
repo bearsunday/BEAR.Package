@@ -56,37 +56,37 @@ final class FileUpdate
         return (int) max(array_map([$this, 'filemtime'], $scanFiles));
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     */
+    /** @SuppressWarnings(PHPMD.UnusedPrivateMethod) */
     private function filemtime(string $filename): string
     {
         return (string) filemtime($filename);
     }
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     private function getFiles(string $path, string $regex): array
     {
         $iterator = new RegexIterator(
             new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator(
                     $path,
-                    FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::SKIP_DOTS
+                    FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::SKIP_DOTS,
                 ),
-                RecursiveIteratorIterator::LEAVES_ONLY
+                RecursiveIteratorIterator::LEAVES_ONLY,
             ),
             $regex,
-            RecursiveRegexIterator::MATCH
+            RecursiveRegexIterator::MATCH,
         );
 
         $files = [];
         /** @var RegexIterator<string, SplFileInfo> $iterator */
         foreach ($iterator as $fileName => $fileInfo) { // @phpstan-ignore-line
-            if ($fileInfo->isFile() && $fileInfo->getFilename()[0] !== '.') {
-                $files[] = $fileName;
+            if (! $fileInfo->isFile() || $fileInfo->getFilename()[0] === '.') {
+                // @codeCoverageIgnoreStart
+                continue;
+                // @codeCoverageIgnoreEnd
             }
+
+            $files[] = $fileName;
         }
 
         return $files;

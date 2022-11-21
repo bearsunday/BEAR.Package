@@ -15,11 +15,9 @@ use function substr;
 
 final class CompileDependencies
 {
-    private NewInstance $newInstance;
-
-    public function __construct(NewInstance $newInstance)
-    {
-        $this->newInstance = $newInstance;
+    public function __construct(
+        private NewInstance $newInstance,
+    ) {
     }
 
     public function __invoke(AbstractModule $module): AbstractModule

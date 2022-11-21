@@ -32,17 +32,13 @@ final class ProdVndErrorPage extends ResourceObject
         return $this->view;
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private function getHeader(int $code): array
     {
         return ['content-type' => $code >= 500 ? 'application/vnd.error+json' : 'application/json'];
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private function getResponseBody(Throwable $e, Status $status): array
     {
         $body = ['message' => $status->text];

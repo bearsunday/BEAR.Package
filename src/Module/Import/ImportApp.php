@@ -13,16 +13,13 @@ use function sprintf;
 
 final class ImportApp
 {
-    public string $host;
-    public string $appName;
-    public string $context;
     public string $appDir;
 
-    public function __construct(string $host, string $appName, string $context)
-    {
-        $this->host = $host;
-        $this->appName = $appName;
-        $this->context = $context;
+    public function __construct(
+        public string $host,
+        public string $appName,
+        public string $context,
+    ) {
         /** @var class-string $appModuleClass */
         $appModuleClass = sprintf('%s\\Module\\AppModule', $this->appName);
         $appModuleClassName = (string) (new ReflectionClass($appModuleClass))->getFileName();

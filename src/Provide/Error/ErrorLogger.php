@@ -10,25 +10,21 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-use function get_class;
 use function sprintf;
 
 final class ErrorLogger
 {
-    private LoggerInterface $logger;
-    private AbstractAppMeta $appMeta;
-
-    public function __construct(LoggerInterface $logger, AbstractAppMeta $appMeta)
-    {
-        $this->logger = $logger;
-        $this->appMeta = $appMeta;
+    public function __construct(
+        private LoggerInterface $logger,
+        private AbstractAppMeta $appMeta,
+    ) {
     }
 
     public function __invoke(Throwable $e, RouterMatch $request): string
     {
         $level = $e->getCode() >= 500 ? Logger::ERROR : Logger::DEBUG;
         $logRef = new LogRef($e);
-        $message = sprintf('req:"%s" code:%s e:%s(%s) logref:%s', (string) $request, $e->getCode(), get_class($e), $e->getMessage(), (string) $logRef);
+        $message = sprintf('req:"%s" code:%s e:%s(%s) logref:%s', (string) $request, $e->getCode(), $e::class, $e->getMessage(), (string) $logRef);
         $this->logger->log($level, $message);
         $logRef->log($e, $request, $this->appMeta);
 

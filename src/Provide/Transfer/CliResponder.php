@@ -15,13 +15,10 @@ use const PHP_EOL;
 
 final class CliResponder implements TransferInterface
 {
-    private HeaderInterface $header;
-    private ConditionalResponseInterface $condResponse;
-
-    public function __construct(HeaderInterface $header, ConditionalResponseInterface $condResponse)
-    {
-        $this->header = $header;
-        $this->condResponse = $condResponse;
+    public function __construct(
+        private HeaderInterface $header,
+        private ConditionalResponseInterface $condResponse,
+    ) {
     }
 
     /**
@@ -50,9 +47,7 @@ final class CliResponder implements TransferInterface
         echo $ob;
     }
 
-    /**
-     * @param array<string, string> $server
-     */
+    /** @param array<string, string> $server */
     private function getOutput(ResourceObject $ro, array $server): Output
     {
         $ro->toString(); // set headers as well

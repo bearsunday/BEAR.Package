@@ -12,7 +12,7 @@ use Ray\Di\Di\Qualifier;
  * @Target("METHOD")
  * @Qualifier
  */
-#[Attribute(Attribute::TARGET_METHOD), Qualifier]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER), Qualifier]
 final class StdIn
 {
 }

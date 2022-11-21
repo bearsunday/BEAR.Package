@@ -10,13 +10,11 @@ use FakeVendor\HelloWorld\FakeDepInterface;
 
 class Dep extends ResourceObject
 {
-    public $depInterface;
-    public $dep;
-
-    public function __construct(FakeDepInterface $depInterface, FakeDep $dep)
+    public function __construct(
+        public FakeDepInterface $depInterface,
+        public FakeDep $dep
+    )
     {
-        $this->depInterface = $depInterface;
-        $this->dep = $dep;
     }
 
     public function onGet() : ResourceObject

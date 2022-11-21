@@ -18,9 +18,7 @@ use const STDOUT;
 
 final class AsyncRun
 {
-    /**
-     * @param array<string> $cmds
-     */
+    /** @param array<string> $cmds */
     public function __invoke(array $cmds, string $errorLog): int
     {
         $times = count($cmds);
@@ -31,7 +29,7 @@ final class AsyncRun
                 $proc = proc_open(
                     $cmd,
                     [STDIN, STDOUT, ['file', $errorLog, 'a']],
-                    $pipes
+                    $pipes,
                 );
                 if (! is_resource($proc)) {
                     throw new RuntimeException();

@@ -41,7 +41,6 @@ final class Compiler
     /** @var ArrayObject<int, string> */
     private ArrayObject $classes;
     private InjectorInterface $injector;
-    private string $context;
     private Meta $appMeta;
     private CompileDiScripts $compilerDiScripts;
     private NewInstance $newInstance;
@@ -57,14 +56,13 @@ final class Compiler
      *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function __construct(string $appName, string $context, string $appDir, bool $prepend = true)
+    public function __construct(string $appName, private string $context, string $appDir, bool $prepend = true)
     {
         /** @var ArrayObject<int, string> $classes */
         $classes = new ArrayObject();
         $this->classes = $classes;
         $this->registerLoader($appDir, $prepend);
         $this->hookNullObjectClass($appDir);
-        $this->context = $context;
         $this->appMeta = new Meta($appName, $context, $appDir);
         /** @psalm-suppress MixedAssignment (?) */
         $this->injector = Injector::getInstance($appName, $context, $appDir);
@@ -114,9 +112,7 @@ final class Compiler
         return ($this->dumpAutoload)();
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
+    /** @SuppressWarnings(PHPMD.BooleanArgumentFlag) */
     private function registerLoader(string $appDir, bool $prepend = true): void
     {
         $this->unregisterComposerLoader();
@@ -132,32 +128,42 @@ final class Compiler
             function (string $class) use ($loader): void {
                 $loader->loadClass($class);
                 if (
-                    $class !== NullPage::class
-                    && ! is_int(strpos($class, Compiler::class))
-                    && ! is_int(strpos($class, NullPage::class))
+                    $class === NullPage::class
+                    || is_int(strpos($class, Compiler::class))
+                    || is_int(strpos($class, NullPage::class))
                 ) {
-                    /** @psalm-suppress NullArgument */
-                    $this->classes[] = $class;
+                    return;
                 }
+
+                /** @psalm-suppress NullArgument */
+                $this->classes[] = $class;
             },
             true,
-            $prepend
+            $prepend,
         );
     }
 
     private function hookNullObjectClass(string $appDir): void
     {
         $compileScript = realpath($appDir) . '/.compile.php';
-        if (file_exists($compileScript)) {
-            require $compileScript;
+        if (! file_exists($compileScript)) {
+            // @codeCoverageIgnoreStart
+            return;
+            // @codeCoverageIgnoreEnd
         }
+
+        require $compileScript;
     }
 
     private function unregisterComposerLoader(): void
     {
         $autoload = spl_autoload_functions();
-        if (isset($autoload[0])) {
-            spl_autoload_unregister($autoload[0]);
+        if (! isset($autoload[0])) {
+            // @codeCoverageIgnoreStart
+            return;
+            // @codeCoverageIgnoreEnd
         }
+
+        spl_autoload_unregister($autoload[0]);
     }
 }

@@ -17,16 +17,13 @@ use Exception;
  */
 final class ErrorHandler implements ErrorInterface
 {
-    private ?ResourceObject $errorPage = null;
-    private TransferInterface $responder;
-    private ErrorLogger $logger;
-    private ErrorPageFactoryInterface $factory;
+    private ResourceObject|null $errorPage = null;
 
-    public function __construct(TransferInterface $responder, ErrorLogger $logger, ErrorPageFactoryInterface $factory)
-    {
-        $this->responder = $responder;
-        $this->logger = $logger;
-        $this->factory = $factory;
+    public function __construct(
+        private TransferInterface $responder,
+        private ErrorLogger $logger,
+        private ErrorPageFactoryInterface $factory,
+    ) {
     }
 
     /**

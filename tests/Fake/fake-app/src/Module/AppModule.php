@@ -23,7 +23,7 @@ class AppModule extends AbstractModule
      */
     protected function configure()
     {
-        self::$modules[] = get_class($this);
+        self::$modules[] = $this::class;
         $this->bind(FakeDepInterface::class)->to(FakeDep::class);
         $this->install(new PackageModule());
         $this->install(new ContextModule());

@@ -14,13 +14,10 @@ use function assert;
 
 final class CompileDiScripts
 {
-    private CompileClassMetaInfo $compilerScanClass;
-    private InjectorInterface $injector;
-
-    public function __construct(CompileClassMetaInfo $compilerScanClass, InjectorInterface $injector)
-    {
-        $this->compilerScanClass = $compilerScanClass;
-        $this->injector = $injector;
+    public function __construct(
+        private CompileClassMetaInfo $compilerScanClass,
+        private InjectorInterface $injector,
+    ) {
     }
 
     public function __invoke(AbstractAppMeta $appMeta): void

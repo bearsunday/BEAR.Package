@@ -32,9 +32,6 @@ class Post extends ResourceObject
         return $this;
     }
 
-    /**
-     * @ReturnCreatedResource
-     */
     #[ReturnCreatedResource]
     public function onPost($code = 201, $uri = '/post?id=10')
     {
