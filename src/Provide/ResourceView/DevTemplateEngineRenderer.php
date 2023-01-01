@@ -211,8 +211,8 @@ class DevTemplateEngineRenderer implements TemplateEngineRendererInterface
         $bootstrapJs = '<link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/united/bootstrap.min.css" rel="stylesheet">';
         $toolLoad = <<<EOT
 <!-- BEAR.Sunday dev tool load -->
-<script src="//www.google.com/jsapi"></script>
-<script>if (typeof jQuery == "undefined") {google.load("jquery", "1.7.1");}</script>{$bootstrapCss}{$tabJs}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+{$bootstrapCss}{$tabJs}
 
 <!-- /BEAR.Sunday dev tool load -->
 EOT;
