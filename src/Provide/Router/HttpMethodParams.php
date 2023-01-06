@@ -53,7 +53,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
      * @param array<string, mixed>                        $post
      *
      * @return array{0: string, 1: array<string, mixed>}
@@ -71,7 +71,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
      * @param array{_method?: string}                     $params
      *
      * @return array{0: string, 1: array<string, mixed>}
@@ -99,7 +99,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request parameters
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server
      * @param array<string, mixed>                                     $post
      *
      * @return array<string, mixed>
@@ -121,7 +121,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request query by media-type
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server $_SERVER
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server $_SERVER
      *
      * @return array<string, mixed>
      */
@@ -151,7 +151,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $content;
     }
 
-    /** @param array{HTTP_RAW_POST_DATA?: string} $server */
+    /** @param array{HTTP_RAW_POST_DATA?: string, ...} $server */
     private function getRawBody(array $server): string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));

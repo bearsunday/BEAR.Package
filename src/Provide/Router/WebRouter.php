@@ -24,7 +24,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, REQUEST_METHOD: string, REQUEST_URI: string } $server
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, REQUEST_METHOD: string, REQUEST_URI: string, ...} $server
      * @param array{_GET: array<string|array>, _POST: array<string|array>}                              $globals
      */
 
