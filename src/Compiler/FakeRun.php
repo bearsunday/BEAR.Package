@@ -45,7 +45,7 @@ class FakeRun
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['argc'] = 3;
         $_SERVER['argv'] = ['', 'get', 'page:://self/'];
-        /** @psalm-suppress ArgumentTypeCoercion */
+        /** @psalm-suppress ArgumentTypeCoercion, InvalidArgument */
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);

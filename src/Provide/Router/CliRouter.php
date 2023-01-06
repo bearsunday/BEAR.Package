@@ -91,6 +91,7 @@ class CliRouter implements RouterInterface
         /** @var CliServer $server */
         $this->validateArgs($server['argc'], $server['argv']);
         // covert console $_SERVER to web $_SERVER $GLOBALS
+        /** @psalm-suppress InvalidArgument */
         [$method, $query, $server] = $this->parseServer($server);
         /** @psalm-suppress MixedArgumentTypeCoercion */
         [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server); // @phpstan-ignore-line
