@@ -58,6 +58,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function unsafeMethod(string $method, array $server, array $post): array
     {
         /** @var array{_method?: string} $params */
@@ -76,6 +77,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getOverrideMethod(string $method, array $server, array $params): array
     {
         // must be a POST to do an override
@@ -104,6 +106,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array<string, mixed>
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getParams(string $method, array $server, array $post): array
     {
         // post data exists
@@ -125,6 +128,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @return array<string, mixed>
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function phpInput(array $server): array
     {
         $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
@@ -152,6 +156,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /** @param array{HTTP_RAW_POST_DATA?: string, ...} $server */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getRawBody(array $server): string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));

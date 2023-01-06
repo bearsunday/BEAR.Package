@@ -19,5 +19,6 @@ interface HttpMethodParamsInterface
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     public function get(array $server, array $get, array $post);
 }
