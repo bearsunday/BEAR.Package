@@ -71,10 +71,10 @@ class CliRouter implements RouterInterface
         $this->terminateException = $e;
     }
 
-    #[Inject, StdIn]
-    public function setStdIn(#[StdIn]
-    string $stdIn,): void
-    {
+    #[Inject]
+    public function setStdIn(
+        #[StdIn] string $stdIn,
+    ): void {
         $this->stdIn = $stdIn;
     }
 

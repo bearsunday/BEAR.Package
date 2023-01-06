@@ -28,9 +28,10 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     public const APPLICATION_JSON = 'application/json';
     private string $stdIn = 'php://input';
 
-    #[Inject(optional: true), StdIn]
-    public function setStdIn(#[StdIn] string $stdIn): void
-    {
+    #[Inject(optional: true)]
+    public function setStdIn(
+        #[StdIn] string $stdIn,
+    ): void {
         $this->stdIn = $stdIn;
     }
 
