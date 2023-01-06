@@ -18,8 +18,10 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     /** @param ImportApp[] $importAppConfig */
     #[Named('importAppConfig=BEAR\Resource\Annotation\ImportAppConfig,schemeCollection=original')]
     public function __construct(
-        #[Named(ImportAppConfig::class)] private array $importAppConfig,
-        #[Named('original')] private SchemeCollectionInterface $schemeCollection,
+        #[Named(ImportAppConfig::class)]
+        private array $importAppConfig,
+        #[Named('original')]
+        private SchemeCollectionInterface $schemeCollection,
     ) {
     }
 

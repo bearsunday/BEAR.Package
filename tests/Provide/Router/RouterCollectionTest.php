@@ -21,6 +21,7 @@ class RouterCollectionTest extends TestCase
         $webRouter = new WebRouter('page://self');
         $fakeRouter = new FakeWebRouter('page://self', new HttpMethodParams());
         $this->routerCollection = (new RouterCollectionProvider($webRouter, $fakeRouter))->get();
+
         parent::setUp();
     }
 

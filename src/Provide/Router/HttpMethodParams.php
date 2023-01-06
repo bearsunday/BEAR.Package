@@ -30,7 +30,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     #[Inject(optional: true)]
     public function setStdIn(
-        #[StdIn] string $stdIn,
+        #[StdIn]
+        string $stdIn,
     ): void {
         $this->stdIn = $stdIn;
     }

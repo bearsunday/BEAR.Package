@@ -17,7 +17,8 @@ use function parse_url;
 class WebRouter implements RouterInterface, WebRouterInterface
 {
     public function __construct(
-        #[DefaultSchemeHost] private string $schemeHost,
+        #[DefaultSchemeHost]
+        private string $schemeHost,
         private HttpMethodParamsInterface $httpMethodParams,
     ) {
     }

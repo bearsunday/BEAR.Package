@@ -12,7 +12,8 @@ use Ray\Di\ProviderInterface;
 class RouterCollectionProvider implements ProviderInterface
 {
     public function __construct(
-        #[Named('primary_router')] private RouterInterface $primaryRouter,
+        #[Named('primary_router')]
+        private RouterInterface $primaryRouter,
         private WebRouterInterface $webRouter,
     ) {
     }

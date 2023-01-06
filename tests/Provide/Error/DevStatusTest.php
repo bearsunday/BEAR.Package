@@ -15,6 +15,7 @@ class DevStatusTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $request = new RouterMatch();
         [$request->method, $request->path, $request->query] = ['get', '/', []];
     }

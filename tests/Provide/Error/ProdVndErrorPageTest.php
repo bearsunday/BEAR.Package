@@ -15,6 +15,7 @@ class ProdVndErrorPageTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $e = new LogicException('bear');
         $request = new RouterMatch();
         [$request->method, $request->path, $request->query] = ['get', '/', []];
