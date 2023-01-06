@@ -33,6 +33,7 @@ class AppModule extends AbstractModule
             [NullInterceptor::class]
         );
         $this->bind(FakeFoo::class);
+        $this->bind(FakeDep::class);
         $this->bind(Auth::class)->toProvider(AuthProvider::class);
     }
 }
