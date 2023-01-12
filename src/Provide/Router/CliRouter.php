@@ -47,7 +47,8 @@ class CliRouter implements RouterInterface
     private Throwable|null $terminateException = null;
 
     public function __construct(
-        #[Named('original')] private RouterInterface $router,
+        #[Named('original')]
+        private RouterInterface $router,
         Stdio|null $stdIo = null,
     ) {
         $this->stdIo = $stdIo ?: (new CliFactory())->newStdio();
@@ -71,10 +72,11 @@ class CliRouter implements RouterInterface
         $this->terminateException = $e;
     }
 
-    #[Inject, StdIn]
-    public function setStdIn(#[StdIn]
-    string $stdIn,): void
-    {
+    #[Inject]
+    public function setStdIn(
+        #[StdIn]
+        string $stdIn,
+    ): void {
         $this->stdIn = $stdIn;
     }
 
@@ -89,6 +91,7 @@ class CliRouter implements RouterInterface
         /** @var CliServer $server */
         $this->validateArgs($server['argc'], $server['argv']);
         // covert console $_SERVER to web $_SERVER $GLOBALS
+        /** @psalm-suppress InvalidArgument */
         [$method, $query, $server] = $this->parseServer($server);
         /** @psalm-suppress MixedArgumentTypeCoercion */
         [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server); // @phpstan-ignore-line

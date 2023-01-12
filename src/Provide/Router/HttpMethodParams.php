@@ -28,9 +28,11 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     public const APPLICATION_JSON = 'application/json';
     private string $stdIn = 'php://input';
 
-    #[Inject(optional: true), StdIn]
-    public function setStdIn(#[StdIn] string $stdIn): void
-    {
+    #[Inject(optional: true)]
+    public function setStdIn(
+        #[StdIn]
+        string $stdIn,
+    ): void {
         $this->stdIn = $stdIn;
     }
 
@@ -51,11 +53,12 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
      * @param array<string, mixed>                        $post
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function unsafeMethod(string $method, array $server, array $post): array
     {
         /** @var array{_method?: string} $params */
@@ -69,11 +72,12 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string} $server
+     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
      * @param array{_method?: string}                     $params
      *
      * @return array{0: string, 1: array<string, mixed>}
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getOverrideMethod(string $method, array $server, array $params): array
     {
         // must be a POST to do an override
@@ -97,11 +101,12 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request parameters
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server
      * @param array<string, mixed>                                     $post
      *
      * @return array<string, mixed>
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getParams(string $method, array $server, array $post): array
     {
         // post data exists
@@ -119,10 +124,11 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request query by media-type
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string} $server $_SERVER
+     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server $_SERVER
      *
      * @return array<string, mixed>
      */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function phpInput(array $server): array
     {
         $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
@@ -149,7 +155,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         return $content;
     }
 
-    /** @param array{HTTP_RAW_POST_DATA?: string} $server */
+    /** @param array{HTTP_RAW_POST_DATA?: string, ...} $server */
+    // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getRawBody(array $server): string
     {
         return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));

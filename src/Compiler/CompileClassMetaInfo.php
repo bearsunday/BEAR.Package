@@ -27,9 +27,6 @@ final class CompileClassMetaInfo
     {
         $class = new ReflectionClass($className);
         $instance = $class->newInstanceWithoutConstructor();
-        if (! $instance instanceof $className) {
-            return; // @codeCoverageIgnore
-        }
 
         $reader->getClassAnnotations($class);
         $methods = $class->getMethods();

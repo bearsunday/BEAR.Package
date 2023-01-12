@@ -21,6 +21,7 @@ class CliResponderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->responder = new CliResponder(new Header(), new ConditionalResponse());
     }
 

@@ -23,6 +23,7 @@ class ErrorHandlerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->responder = new FakeHttpResponder(new Header(), new ConditionalResponse());
         $this->handler = new ErrorHandler($this->responder, new ErrorLogger(new NullLogger(), new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
     }

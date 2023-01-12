@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\Package\Provide\Error\NullPage;
+use BEAR\Resource\ResourceObject;
 use Generator;
 use Ray\Di\AbstractModule;
 
@@ -13,7 +14,7 @@ use Ray\Di\AbstractModule;
  */
 class ResourceObjectModule extends AbstractModule
 {
-    /** @param Generator<array{0: class-string, 1: string}> $resourceObjects */
+    /** @param Generator<array{0: class-string<ResourceObject>, 1: string}> $resourceObjects */
     public function __construct(
         private Generator $resourceObjects,
     ) {
@@ -22,10 +23,15 @@ class ResourceObjectModule extends AbstractModule
 
     protected function configure(): void
     {
-        foreach ($this->resourceObjects as [$class]) {
-            $this->bind($class);
-        }
-
+        $this->install(new \BEAR\Resource\Module\ResourceObjectModule($this->getResourceObjects()));
         $this->bind(NullPage::class);
+    }
+
+    /** @return Generator<class-string<ResourceObject>> */
+    private function getResourceObjects(): Generator
+    {
+        foreach ($this->resourceObjects as [$class]) {
+            yield $class;
+        }
     }
 }
