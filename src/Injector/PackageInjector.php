@@ -22,6 +22,9 @@ use function is_bool;
 use function is_dir;
 use function mkdir;
 use function str_replace;
+use function trigger_error;
+
+use const E_USER_WARNING;
 
 final class PackageInjector
 {
@@ -51,6 +54,10 @@ final class PackageInjector
         if (! $isCacheableInjector) {
             $injector = self::factory($meta, $context);
             $cache->save($cache->getItem($injectorId)->set([$injector, new FileUpdate($meta)]));
+            // Check the cache
+            if ($cache->getItem($injectorId)->get() === null) {
+                trigger_error('Failed to verify the injector cache. See https://github.com/bearsunday/BEAR.Package/issues/418', E_USER_WARNING);
+            }
         }
 
         self::$instances[$injectorId] = $injector;
