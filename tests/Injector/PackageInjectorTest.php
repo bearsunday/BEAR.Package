@@ -52,13 +52,13 @@ class PackageInjectorTest extends TestCase
         $this->assertInstanceOf(FakeDep2::class, $page->foo);
     }
 
-    public function testWithNullCacheWarning(): void
+    public function testUnserializableRootObject(): void
     {
         set_error_handler(static function (int $errno, string $errstr): void {
             throw new Exception($errstr, $errno);
         }, E_USER_WARNING);
         $this->expectExceptionMessage('Failed to verify the injector cache.');
-        $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'app', new NullAdapter());
+        $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'bad-app', new NullAdapter());
         $this->assertInstanceOf(InjectorInterface::class, $injector);
         restore_error_handler();
     }
