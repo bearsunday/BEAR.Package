@@ -8,8 +8,7 @@ use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector\PackageInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
-use Symfony\Component\Cache\Adapter\ApcuAdapter;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Ray\PsrCacheModule\LocalCacheProvider;
 use Symfony\Contracts\Cache\CacheInterface;
 
 use function str_replace;
@@ -26,7 +25,7 @@ final class Injector
     {
         $meta = new Meta($appName, $context, $appDir);
         $cacheNamespace = str_replace('/', '_', $appDir) . $context;
-        $cache ??= ApcuAdapter::isSupported() ? new ApcuAdapter($cacheNamespace) : new FilesystemAdapter('', 0, $meta->tmpDir . '/injector');
+        $cache ??= (new LocalCacheProvider($meta->tmpDir . '/injector', $cacheNamespace))->get();
 
         return PackageInjector::getInstance($meta, $context, $cache);
     }

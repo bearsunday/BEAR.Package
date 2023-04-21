@@ -35,14 +35,18 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
+    /** @depends testInvoke */
     public function testInvokeAgain(): void
     {
+        $compiled = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/compiled';
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
         $compiledFile3 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
-        @unlink($compiledFile1);
-        @unlink($compiledFile3);
+        @unlink($compiled);
+        unlink($compiledFile1);
+        unlink($compiledFile3);
         $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app', false);
-        $compiler->compile();
+        $status = $compiler->compile();
+        $this->assertSame(0, $status);
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);

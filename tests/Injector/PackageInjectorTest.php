@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Injector;
 
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
+use Exception;
 use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\FakeDep2;
 use FakeVendor\HelloWorld\FakeDepInterface;
 use FakeVendor\HelloWorld\Resource\Page\Injection;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
+use Ray\Di\InjectorInterface;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 
 use function assert;
 use function dirname;
+use function restore_error_handler;
+use function set_error_handler;
+
+use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
 {
@@ -42,5 +50,16 @@ class PackageInjectorTest extends TestCase
         $page = $resource->newInstance('page://self/injection');
         assert($page instanceof Injection);
         $this->assertInstanceOf(FakeDep2::class, $page->foo);
+    }
+
+    public function testUnserializableRootObject(): void
+    {
+        set_error_handler(static function (int $errno, string $errstr): void {
+            throw new Exception($errstr, $errno);
+        }, E_USER_WARNING);
+        $this->expectExceptionMessage('Failed to verify the injector cache.');
+        $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'bad-app', new NullAdapter());
+        $this->assertInstanceOf(InjectorInterface::class, $injector);
+        restore_error_handler();
     }
 }
