@@ -19,6 +19,16 @@ class HttpMethodParamsTest extends TestCase
         $this->assertSame(['id' => '1'], $params);
     }
 
+    public function testHead(): void
+    {
+        $server = ['REQUEST_METHOD' => 'HEAD'];
+        $get = ['id' => '1'];
+        $post = [];
+        [$method, $params] = (new HttpMethodParams())->get($server, $get, $post);
+        $this->assertSame('head', $method);
+        $this->assertSame(['id' => '1'], $params);
+    }
+
     public function testPost(): void
     {
         $server = ['REQUEST_METHOD' => 'POST'];

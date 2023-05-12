@@ -44,9 +44,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         // set the original value
         $method = strtolower($server['REQUEST_METHOD']);
 
-        // early return on GET
-        if ($method === 'get') {
-            return ['get', $get];
+        // early return on GET or HEAD
+        if ($method === 'get' || $method === 'head') {
+            return [$method, $get];
         }
 
         return $this->unsafeMethod($method, $server, $post);
