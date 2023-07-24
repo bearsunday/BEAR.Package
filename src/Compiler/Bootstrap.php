@@ -53,5 +53,6 @@ final class Bootstrap
 
         // @codeCoverageIgnoreStart
         return 0;
+        // @codeCoverageIgnoreEnd
     }
 }
