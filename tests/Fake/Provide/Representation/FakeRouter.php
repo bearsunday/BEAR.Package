@@ -22,6 +22,10 @@ class FakeRouter implements RouterInterface
     {
         unset($name);
 
-        return '/task/' . $data['id'];
+        if (isset($data['id'])) {
+            return '/task/' . $data['id'];
+        }
+
+        return '/task';
     }
 }
