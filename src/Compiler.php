@@ -17,7 +17,6 @@ use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Compiler\NewInstance;
 use BEAR\Package\Provide\Error\NullPage;
 use Composer\Autoload\ClassLoader;
-use Ray\Di\InjectorInterface;
 use RuntimeException;
 
 use function assert;
@@ -40,7 +39,6 @@ final class Compiler
 {
     /** @var ArrayObject<int, string> */
     private ArrayObject $classes;
-    private InjectorInterface $injector;
     private Meta $appMeta;
     private CompileDiScripts $compilerDiScripts;
     private NewInstance $newInstance;
@@ -65,13 +63,13 @@ final class Compiler
         $this->hookNullObjectClass($appDir);
         $this->appMeta = new Meta($appName, $context, $appDir);
         /** @psalm-suppress MixedAssignment (?) */
-        $this->injector = Injector::getInstance($appName, $context, $appDir);
-        $this->compilerDiScripts = new CompileDiScripts(new CompileClassMetaInfo(), $this->injector);
-        $this->newInstance = new NewInstance($this->injector);
+        $injector = Injector::getInstance($appName, $context, $appDir);
+        $this->compilerDiScripts = new CompileDiScripts(new CompileClassMetaInfo(), $injector);
+        $this->newInstance = new NewInstance($injector);
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
         $filePutContents = new FilePutContents($overWritten);
-        $fakeRun = new FakeRun($this->injector, $context, $this->appMeta);
+        $fakeRun = new FakeRun($injector, $context, $this->appMeta);
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
         $this->compilePreload = new CompilePreload($fakeRun, $this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
