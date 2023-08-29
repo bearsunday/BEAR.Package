@@ -55,7 +55,7 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function __destruct()
     {
@@ -81,7 +81,7 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @param Globals $globals
      * @param Server  $server
@@ -100,7 +100,7 @@ class CliRouter implements RouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generate($name, $data)
     {

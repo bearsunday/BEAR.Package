@@ -37,7 +37,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function get(array $server, array $get, array $post)
     {

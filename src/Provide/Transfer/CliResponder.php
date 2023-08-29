@@ -22,7 +22,7 @@ final class CliResponder implements TransferInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function __invoke(ResourceObject $ro, array $server): void
     {

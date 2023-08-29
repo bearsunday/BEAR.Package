@@ -10,7 +10,7 @@ use Ray\Di\AbstractModule;
 class CreatedResourceModule extends AbstractModule
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure(): void
     {

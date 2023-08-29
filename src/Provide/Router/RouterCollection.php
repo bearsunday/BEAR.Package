@@ -23,7 +23,7 @@ class RouterCollection implements RouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function match(array $globals, array $server)
     {
@@ -47,7 +47,7 @@ class RouterCollection implements RouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generate($name, $data)
     {

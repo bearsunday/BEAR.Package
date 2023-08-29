@@ -41,7 +41,7 @@ final class ImportAppModule extends AbstractModule
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @throws NotFound
      */
