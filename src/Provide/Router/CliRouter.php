@@ -11,7 +11,6 @@ use Aura\Cli\Stdio;
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Exception;
-use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Throwable;
 
@@ -43,13 +42,14 @@ use const PHP_URL_QUERY;
 class CliRouter implements RouterInterface
 {
     private Stdio $stdIo;
-    private string $stdIn = '';
     private Throwable|null $terminateException = null;
 
     public function __construct(
         #[Named('original')]
         private RouterInterface $router,
         Stdio|null $stdIo = null,
+        #[StdIn]
+        private string $stdIn = '',
     ) {
         $this->stdIo = $stdIo ?: (new CliFactory())->newStdio();
     }
@@ -72,9 +72,12 @@ class CliRouter implements RouterInterface
         $this->terminateException = $e;
     }
 
-    #[Inject]
+    /**
+     * @psalm-api
+     * @deprecated Use constructor injection
+     * @codeCoverageIgnore
+     */
     public function setStdIn(
-        #[StdIn]
         string $stdIn,
     ): void {
         $this->stdIn = $stdIn;

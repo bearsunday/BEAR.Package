@@ -27,8 +27,7 @@ class CliRouterTest extends TestCase
         $stdIo = (new CliFactory())->newStdio('php://stdin', $stdOut);
         $httpMethodParams = new HttpMethodParams();
         $httpMethodParams->setStdIn($this->stdInFile);
-        $this->router = new CliRouter(new WebRouter('page://self', $httpMethodParams), $stdIo);
-        $this->router->setStdIn($this->stdInFile);
+        $this->router = new CliRouter(new WebRouter('page://self', $httpMethodParams), $stdIo, $this->stdInFile);
     }
 
     protected function tearDown(): void

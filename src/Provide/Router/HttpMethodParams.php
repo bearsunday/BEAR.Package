@@ -6,7 +6,6 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Package\Exception\InvalidRequestJsonException;
-use Ray\Di\Di\Inject;
 
 use function file_get_contents;
 use function in_array;
@@ -26,13 +25,19 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     public const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
     public const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
     public const APPLICATION_JSON = 'application/json';
-    private string $stdIn = 'php://input';
 
-    #[Inject(optional: true)]
-    public function setStdIn(
+    public function __construct(
         #[StdIn]
-        string $stdIn,
-    ): void {
+        private string $stdIn = 'php://input',
+    ) {
+    }
+
+    /**
+     * @psalm-api
+     * @deprecated Use constructor injection
+     */
+    public function setStdIn(string $stdIn): void
+    {
         $this->stdIn = $stdIn;
     }
 

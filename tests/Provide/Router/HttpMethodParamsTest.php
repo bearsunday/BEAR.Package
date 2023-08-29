@@ -44,8 +44,7 @@ class HttpMethodParamsTest extends TestCase
         $server = ['REQUEST_METHOD' => 'PUT', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
         $post = ['name' => 'sunday'];
-        $httpMethodParam = new HttpMethodParams();
-        $httpMethodParam->setStdIn(__DIR__ . '/query.txt');
+        $httpMethodParam = new HttpMethodParams(__DIR__ . '/query.txt');
         [$method, $params] = $httpMethodParam->get($server, $get, $post);
         $this->assertSame('put', $method);
         $this->assertSame(['name' => 'kuma'], $params);
@@ -56,8 +55,7 @@ class HttpMethodParamsTest extends TestCase
         $server = ['REQUEST_METHOD' => 'PATCH', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
         $post = ['name' => 'sunday'];
-        $httpMethodParam = new HttpMethodParams();
-        $httpMethodParam->setStdIn(__DIR__ . '/query.txt');
+        $httpMethodParam = new HttpMethodParams(__DIR__ . '/query.txt');
         [$method, $params] = $httpMethodParam->get($server, $get, $post);
         $this->assertSame(['name' => 'kuma'], $params);
     }
@@ -67,8 +65,7 @@ class HttpMethodParamsTest extends TestCase
         $server = ['REQUEST_METHOD' => 'DELETE', HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE];
         $get = ['name' => 'bear'];
         $post = ['name' => 'sunday'];
-        $httpMethodParam = new HttpMethodParams();
-        $httpMethodParam->setStdIn(__DIR__ . '/query.txt');
+        $httpMethodParam = new HttpMethodParams(__DIR__ . '/query.txt');
         [$method, $params] = $httpMethodParam->get($server, $get, $post);
         $this->assertSame('delete', $method);
         $this->assertSame(['name' => 'kuma'], $params);
