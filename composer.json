@@ -18,7 +18,7 @@
         "bear/resource": "^1.20",
         "bear/streamer": "^1.2.2",
         "bear/sunday": "^1.6.1",
-        "monolog/monolog": "^1.25 || ^2.0",
+        "monolog/monolog": "^1.25 || ^2.0 || ^3.0",
         "ray/aop": "^2.13.1",
         "ray/di": "^2.15.1",
         "ray/object-visual-grapher": "^1.0",
