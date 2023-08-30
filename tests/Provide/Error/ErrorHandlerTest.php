@@ -39,7 +39,7 @@ class ErrorHandlerTest extends TestCase
         $handler = $this->handler->handle($e, $request);
         $this->assertSame('error', $this->logger->called);
         assert($handler instanceof ErrorHandler);
-        $handler->transfer();
+        $this->handler->transfer();
 
         return $handler;
     }
