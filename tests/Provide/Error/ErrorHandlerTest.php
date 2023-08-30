@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\AppMeta\AppMeta;
+use BEAR\Package\FakeLogger;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponse;
 use BEAR\Sunday\Provide\Transfer\Header;
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
+use RuntimeException;
 
 use function assert;
 
@@ -19,23 +20,26 @@ class ErrorHandlerTest extends TestCase
 {
     private ErrorHandler $handler;
     private FakeHttpResponder $responder;
+    private FakeLogger $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->responder = new FakeHttpResponder(new Header(), new ConditionalResponse());
-        $this->handler = new ErrorHandler($this->responder, new ErrorLogger(new NullLogger(), new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
+        $this->logger = new FakeLogger();
+        $this->handler = new ErrorHandler($this->responder, new ErrorLogger($this->logger, new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
     }
 
-    public function testHandle(): ErrorHandler
+    public function testHandleError(): ErrorHandler
     {
-        $e = new LogicException('msg');
+        $e = new LogicException('msg', 500);
         $request = new RouterMatch();
         [$request->method, $request->path, $request->query] = ['get', '/', []];
         $handler = $this->handler->handle($e, $request);
-        $this->assertInstanceOf(ErrorHandler::class, $handler);
+        $this->assertSame('error', $this->logger->called);
         assert($handler instanceof ErrorHandler);
+        $handler->transfer();
 
         return $handler;
     }
@@ -51,5 +55,13 @@ class ErrorHandlerTest extends TestCase
     "logref": "{logref}"
 }
 ', FakeHttpResponder::$content);
+    }
+
+    public function testHandleDebug(): void
+    {
+        $e = new RuntimeException('msg', 0);
+        $request = new RouterMatch();
+        $this->handler->handle($e, $request);
+        $this->assertSame('debug', $this->logger->called);
     }
 }
