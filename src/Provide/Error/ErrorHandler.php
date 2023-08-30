@@ -31,7 +31,7 @@ final class ErrorHandler implements ErrorInterface
      */
     public function handle(Exception $e, Request $request) // phpcs:ignore SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
     {
-        $this->logger->__invoke($e, $request);
+        ($this->logger)($e, $request);
         $this->errorPage = $this->factory->newInstance($e, $request);
 
         return $this;
@@ -42,6 +42,6 @@ final class ErrorHandler implements ErrorInterface
      */
     public function transfer(): void
     {
-        $this->responder->__invoke($this->errorPage ?? new NullPage(), []);
+        ($this->responder)($this->errorPage ?? new NullPage(), []);
     }
 }
