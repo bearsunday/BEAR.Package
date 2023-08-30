@@ -54,9 +54,6 @@ class CliRouter implements RouterInterface
         $this->stdIo = $stdIo ?: (new CliFactory())->newStdio();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __destruct()
     {
         file_exists($this->stdIn) && unlink($this->stdIn);
