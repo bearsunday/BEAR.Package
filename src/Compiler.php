@@ -98,8 +98,8 @@ final class Compiler
         printf("Success: %d Failed: %d\n", $this->newInstance->getCompiled(), count($this->newInstance->getFailed()));
         printf("Preload compile: %s\n", $this->dumpAutoload->getFileInfo($preload));
         printf("Object graph diagram: %s\n", realpath($dot));
-        foreach ($this->newInstance->getFailed() as $depedencyIndex => $error) {
-            printf("UNBOUND: %s for %s \n", $error, $depedencyIndex);
+        foreach ($this->newInstance->getFailed() as $dependencyIndex => $error) {
+            printf("UNBOUND: %s for %s \n", $error, $dependencyIndex);
         }
 
         return $failed ? 1 : 0;

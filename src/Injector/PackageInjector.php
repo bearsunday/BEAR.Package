@@ -65,14 +65,14 @@ final class PackageInjector
         return $injector;
     }
 
-    public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overideModule = null): InjectorInterface
+    public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $module = (new Module())($meta, $context);
 
-        if ($overideModule instanceof AbstractModule) {
-            $module->override($overideModule);
+        if ($overrideModule instanceof AbstractModule) {
+            $module->override($overrideModule);
         }
 
         $injector = new RayInjector($module, $scriptDir);

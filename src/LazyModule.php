@@ -6,7 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Module\ResourceObjectModule;
-use BEAR\Package\Module\ScriptinjectorModule;
+use BEAR\Package\Module\ScriptInjectorModule;
 use Ray\Compiler\LazyModuleInterface;
 use Ray\Di\AbstractModule;
 
@@ -21,7 +21,7 @@ class LazyModule implements LazyModuleInterface
 
     public function __invoke(): AbstractModule
     {
-        $module = new ScriptinjectorModule($this->scriptDir, (new Module())($this->appMeta, $this->context));
+        $module = new ScriptInjectorModule($this->scriptDir, (new Module())($this->appMeta, $this->context));
         $module->install(new ResourceObjectModule($this->appMeta->getResourceListGenerator()));
 
         return $module;
