@@ -19,7 +19,7 @@ class RouterCollectionProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function get(): RouterCollection
     {

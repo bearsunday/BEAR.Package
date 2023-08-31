@@ -29,7 +29,7 @@ use Ray\PsrCacheModule\Psr6LocalCacheModule;
 class ProdModule extends AbstractModule
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure(): void
     {

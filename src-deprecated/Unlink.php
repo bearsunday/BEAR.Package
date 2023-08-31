@@ -40,7 +40,7 @@ final class Unlink
             return true;
         }
         self::$unlinkedPath[] = $path;
-        $this->__invoke($path);
+        ($this)($path);
 
         return false;
     }

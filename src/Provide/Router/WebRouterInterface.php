@@ -13,7 +13,7 @@ use BEAR\Sunday\Extension\Router\RouterInterface;
 interface WebRouterInterface extends RouterInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @param Globals $globals
      * @param Server  $server

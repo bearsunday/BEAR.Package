@@ -11,7 +11,7 @@ use Ray\Di\InjectorInterface;
 /**
  * Provides InjectorInterface
  */
-class ScriptinjectorModule extends AbstractModule
+class ScriptInjectorModule extends AbstractModule
 {
     public function __construct(
         private string $scriptDir,
@@ -21,7 +21,7 @@ class ScriptinjectorModule extends AbstractModule
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure(): void
     {

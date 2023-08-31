@@ -19,7 +19,7 @@ class MonologProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function get(): Logger
     {

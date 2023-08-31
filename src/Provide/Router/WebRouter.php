@@ -29,7 +29,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
      */
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @param Globals $globals
      * @param Server  $server
@@ -46,7 +46,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function generate($name, $data)
     {

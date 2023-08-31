@@ -32,7 +32,7 @@ class HalRendererTest extends TestCase
 
     public function testRender(): void
     {
-        $ro = $this->resource->get->uri('app://self/user')->withQuery(['id' => 1, 'type' => 'type_a'])->eager->request();
+        $ro = $this->resource->get('app://self/user', ['id' => 1, 'type' => 'type_a']);
         $result = (string) $ro;
         $expect = '{
     "id": 1,
@@ -56,7 +56,7 @@ class HalRendererTest extends TestCase
 
     public function testRenderPost(): void
     {
-        $ro = $this->resource->post->uri('app://self/user')->withQuery(['id' => 1])->eager->request();
+        $ro = $this->resource->post('app://self/user', ['id' => 1]);
         $result = (string) $ro;
         $expect = '{
     "id": 1,
@@ -76,7 +76,7 @@ class HalRendererTest extends TestCase
 
     public function testRenderEmbed(): void
     {
-        $ro = $this->resource->get->uri('app://self/emb?id=1')->eager->request();
+        $ro = $this->resource->get('app://self/emb?id=1');
         $result = (string) $ro;
         $expect = '{
     "_embedded": {
@@ -109,7 +109,7 @@ class HalRendererTest extends TestCase
 
     public function testNoEmbededLinksWhenSchemaIsDifferent(): void
     {
-        $ro = $this->resource->get->uri('page://self/emb')->eager->request();
+        $ro = $this->resource->get('page://self/emb');
         $result = (string) $ro;
         $expect = '{
     "_embedded": {
@@ -131,7 +131,7 @@ class HalRendererTest extends TestCase
 
     public function testRenderScalar(): void
     {
-        $ro = $this->resource->get->uri('app://self/scalar')->eager->request();
+        $ro = $this->resource->get('app://self/scalar');
         $result = (string) $ro;
         $expect = '{
     "value": "ak",
@@ -147,7 +147,7 @@ class HalRendererTest extends TestCase
 
     public function testOptions(): void
     {
-        $ro = $this->resource->options->uri('app://self/scalar')->eager->request();
+        $ro = $this->resource->options('app://self/scalar');
         $result = (string) $ro;
         $expect = '{
     "GET": []
@@ -201,7 +201,7 @@ class HalRendererTest extends TestCase
 
     public function test201Created(): void
     {
-        $ro = $this->resource->post->uri('app://self/post')->eager->request();
+        $ro = $this->resource->post('app://self/post');
         /** @var ResourceObject $ro */
         $result = (string) $ro;
         $expect = '{
@@ -230,7 +230,7 @@ class HalRendererTest extends TestCase
 
     public function test201CreatedWithNoQuery(): void
     {
-        $ro = $this->resource->post->uri('app://self/post?uri=/post')->eager->request();
+        $ro = $this->resource->post('app://self/post?uri=/post');
         assert($ro instanceof ResourceObject);
         $result = (string) $ro;
         $this->assertSame(201, $ro->code);
@@ -255,7 +255,7 @@ class HalRendererTest extends TestCase
 
     public function testCreatedResourceInvaliUri(): void
     {
-        $ro = $this->resource->post->uri('app://self/post?uri=__INVALID_*+')();
+        $ro = $this->resource->post('app://self/post?uri=__INVALID_*+');
 
         $errNo = $errStr = '';
         set_error_handler(static function (int $no, string $str) use (&$errNo, &$errStr): bool {
@@ -278,7 +278,7 @@ class HalRendererTest extends TestCase
 
     public function testLinksAlreadyExists(): void
     {
-        $ro = $this->resource->get->uri('app://self/hal')->eager->request();
+        $ro = $this->resource->get('app://self/hal');
         $result = (string) $ro;
         $expect = '{
     "message": "Welcome",

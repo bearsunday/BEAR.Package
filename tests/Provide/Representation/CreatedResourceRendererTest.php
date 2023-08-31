@@ -21,7 +21,7 @@ class CreatedResourceRendererTest extends TestCase
     {
         $resource = (new AppInjector('FakeVendor\HelloWorld', 'hal-app'))->getInstance(ResourceInterface::class);
         assert($resource instanceof ResourceInterface);
-        $post = $resource->post->uri('app://self/post')();
+        $post = $resource->post('app://self/post');
         assert($post instanceof Post);
         $this->ro = $post;
         $this->renderer = new CreatedResourceRenderer(new FakeRouter(), $resource);

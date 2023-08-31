@@ -11,7 +11,7 @@ use Ray\Di\Scope;
 class PsrLoggerModule extends AbstractModule
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
