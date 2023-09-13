@@ -7,6 +7,7 @@ namespace BEAR\Package\Compiler;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector\PackageInjector;
+use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;
@@ -101,7 +102,11 @@ final class CompileApp
             return;  // @codeCoverageIgnore
         }
 
-        $namedParameter->getParameters($callable, []);
+        try {
+            $namedParameter->getParameters($callable, []);
+        } catch (ParameterException) {
+            return; // It's OK. The goal is to obtain meta-information.
+        }
     }
 
     /** @param list<string> $extraContexts */
