@@ -16,6 +16,7 @@
 
     <!-- Directories to be checked -->
     <file>src</file>
+    <file>src-cache</file>
     <file>tests</file>
     <exclude-pattern>*/tests/tmp/*</exclude-pattern>
 

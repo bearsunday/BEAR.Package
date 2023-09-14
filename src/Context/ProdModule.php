@@ -9,6 +9,7 @@ use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\QueryRepository\ProdQueryRepositoryModule;
 use BEAR\RepositoryModule\Annotation\EtagPool;
+use BEAR\Resource\NamedParamMetasInterface;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -21,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+use Ray\ProxyCache\ProxyCacheModule;
 use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\LocalCacheProvider;
 use Ray\PsrCacheModule\Psr6LocalCacheModule;
@@ -37,6 +39,7 @@ class ProdModule extends AbstractModule
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         $this->installCacheModule();
+        $this->install(new ProxyCacheModule([NamedParamMetasInterface::class]));
         $this->install(new DiCompileModule(true));
     }
 
