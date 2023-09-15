@@ -20,7 +20,7 @@
         "bear/sunday": "^1.6.1",
         "monolog/monolog": "^1.25 || ^2.0 || ^3.0",
         "ray/aop": "^2.13.1",
-        "ray/di": "dev-re-bind as 2.16",
+        "ray/di": "^2.15.1",
         "ray/object-visual-grapher": "^1.0",
         "psr/log": "^1.1 || ^2.0 || ^3.0",
         "doctrine/cache": "^1.10 || ^2.0",
