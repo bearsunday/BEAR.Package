@@ -107,6 +107,7 @@ final class CompileApp
         } catch (ParameterException) {
             // @codeCoverageIgnoreStart
             return; // It is OK to ignore exceptions. The objective is to obtain meta-information.
+
             // @codeCoverageIgnoreEnd
         }
     }
