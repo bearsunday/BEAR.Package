@@ -55,9 +55,9 @@ final class CompileApp
         $meta = $injector->getInstance(AbstractAppMeta::class);
         // check resource injection and create annotation cache
         $resources = $meta->getResourceListGenerator();
-        foreach ($resources as $resourc) {
+        foreach ($resources as $resource) {
             $this->logs['class']++;
-            [$className] = $resourc;
+            [$className] = $resource;
             $this->saveMeta($namedParams, new ReflectionClass($className));
         }
 
