@@ -105,7 +105,9 @@ final class CompileApp
         try {
             $namedParameter->getParameters($callable, []);
         } catch (ParameterException) {
-            return; // It's OK. The goal is to obtain meta-information.
+            // @codeCoverageIgnoreStart
+            return; // It is OK to ignore exceptions. The objective is to obtain meta-information.
+            // @codeCoverageIgnoreEnd
         }
     }
 
