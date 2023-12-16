@@ -7,6 +7,6 @@ on:
 
 jobs:
   cs:
-    uses: ray-di/.github/.github/workflows/coding-standards.yml@v1
+    uses: ray-di/.github/.github/workflows/coding-standards.yml@v2
     with:
       php_version: 8.1
