@@ -52,6 +52,6 @@ final class CliResponder implements TransferInterface
     {
         $ro->toString(); // set headers as well
 
-        return new Output($ro->code, ($this->header)($ro, $server), $ro->view ?: $ro->toString());
+        return new Output($ro->code, ($this->header)($ro, $server), (string) $ro->view ?: $ro->toString());
     }
 }

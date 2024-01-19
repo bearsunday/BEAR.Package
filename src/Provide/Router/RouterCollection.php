@@ -53,7 +53,7 @@ class RouterCollection implements RouterInterface
     {
         foreach ($this->routers as $route) {
             $uri = $route->generate($name, $data);
-            if ($uri) {
+            if ($uri !== false) {
                 return $uri;
             }
         }
