@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Context;
 
+use BEAR\Package\Provide\Cache\CacheDirProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
@@ -21,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
+use Ray\PsrCacheModule\Annotation\CacheDir;
 use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\LocalCacheProvider;
 use Ray\PsrCacheModule\Psr6LocalCacheModule;
@@ -43,6 +45,7 @@ class ProdModule extends AbstractModule
     private function installCacheModule(): void
     {
         $this->install(new ProdQueryRepositoryModule());
+        $this->bind('')->annotatedWith(CacheDir::class)->toProvider(CacheDirProvider::class);
         $this->install(new Psr6LocalCacheModule());
         /** @psalm-suppress DeprecatedClass */
         $this->bind(CacheItemInterface::class)->annotatedWith(EtagPool::class)->toProvider(LocalCacheProvider::class);

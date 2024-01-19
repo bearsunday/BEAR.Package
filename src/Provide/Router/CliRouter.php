@@ -198,10 +198,10 @@ class CliRouter implements RouterInterface
     {
         /** @var array{argv: array<string>} $server */
         [, $method, $uri] = $server['argv'];
-        $urlQuery = parse_url($uri, PHP_URL_QUERY);
+        $urlQuery = (string) parse_url($uri, PHP_URL_QUERY);
         $urlPath = (string) parse_url($uri, PHP_URL_PATH);
         $query = [];
-        if ($urlQuery) {
+        if ((bool) $urlQuery) {
             parse_str($urlQuery, $query);
         }
 

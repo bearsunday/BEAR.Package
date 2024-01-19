@@ -6,6 +6,7 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use FilesystemIterator;
+use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
@@ -78,8 +79,8 @@ final class FileUpdate
         );
 
         $files = [];
-        /** @var RegexIterator<string, SplFileInfo, RecursiveIteratorIterator> $iterator */
-        foreach ($iterator as $fileName => $fileInfo) { // @phpstan-ignore-line
+        /** @var Iterator<string, SplFileInfo> $iterator */
+        foreach ($iterator as $fileName => $fileInfo) {
             if (! $fileInfo->isFile() || $fileInfo->getFilename()[0] === '.') {
                 // @codeCoverageIgnoreStart
                 continue;

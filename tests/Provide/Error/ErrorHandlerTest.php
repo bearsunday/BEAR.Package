@@ -44,7 +44,7 @@ class ErrorHandlerTest extends TestCase
         return $handler;
     }
 
-    /** @depends testHandle */
+    /** @depends testHandleError */
     public function testTransfer(ErrorHandler $handler): void
     {
         $handler->transfer();
