@@ -1,0 +1,10 @@
+{
+    "require": {
+        "bear/package": "^1.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "FakeVendor\\Compile\\": "src"
+        }
+    }
+}

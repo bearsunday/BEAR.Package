@@ -51,10 +51,13 @@
                 "tests/Fake/"
             ],
             "FakeVendor\\HelloWorld\\": [
-                "tests/Fake/fake-app/src/"
+                "tests/Fake/fake-app/src"
             ],
             "Import\\HelloWorld\\": [
                 "tests/Fake/import-app/src"
+            ],
+            "FakeVendor\\MinApp\\": [
+                "tests/Fake/fake-min-app/src"
             ]
         },
         "files": [
