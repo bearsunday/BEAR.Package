@@ -6,7 +6,6 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use FilesystemIterator;
-use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
