@@ -13,6 +13,7 @@ use RegexIterator;
 use SplFileInfo;
 
 use function array_map;
+use function assert;
 use function file_exists;
 use function filemtime;
 use function glob;
@@ -62,7 +63,7 @@ final class FileUpdate
         return (string) filemtime($filename);
     }
 
-    /** @return list<string> */
+    /** @return list<RecursiveDirectoryIterator> */
     private function getFiles(string $path, string $regex): array
     {
         $iterator = new RegexIterator(
@@ -78,8 +79,8 @@ final class FileUpdate
         );
 
         $files = [];
-        /** @var RegexIterator<string, SplFileInfo, RecursiveIteratorIterator> $iterator */
-        foreach ($iterator as $fileName => $fileInfo) { // @phpstan-ignore-line
+        foreach ($iterator as $fileName => $fileInfo) {
+            assert($fileInfo instanceof SplFileInfo);
             if (! $fileInfo->isFile() || $fileInfo->getFilename()[0] === '.') {
                 // @codeCoverageIgnoreStart
                 continue;
@@ -89,6 +90,6 @@ final class FileUpdate
             $files[] = $fileName;
         }
 
-        return $files;
+        return $files; // @phpstan-ignore-line
     }
 }

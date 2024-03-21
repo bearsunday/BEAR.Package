@@ -18,6 +18,7 @@ use function basename;
 use function file_exists;
 use function file_put_contents;
 use function http_build_query;
+use function is_string;
 use function parse_str;
 use function parse_url;
 use function strtoupper;
@@ -201,7 +202,7 @@ class CliRouter implements RouterInterface
         $urlQuery = parse_url($uri, PHP_URL_QUERY);
         $urlPath = (string) parse_url($uri, PHP_URL_PATH);
         $query = [];
-        if ($urlQuery) {
+        if (is_string($urlQuery) && $urlQuery !== '') {
             parse_str($urlQuery, $query);
         }
 
