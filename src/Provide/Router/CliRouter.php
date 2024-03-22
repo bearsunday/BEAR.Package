@@ -18,7 +18,6 @@ use function basename;
 use function file_exists;
 use function file_put_contents;
 use function http_build_query;
-use function is_string;
 use function parse_str;
 use function parse_url;
 use function strtoupper;
