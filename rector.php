@@ -14,12 +14,8 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/tests-files',
     ]);
 
-    // register a single rule
-    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
-    $rectorConfig->rule(AnnotationBindingRector::class);
-
     // define sets of rules
-        $rectorConfig->sets([
-            LevelSetList::UP_TO_PHP_80
-        ]);
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_81
+    ]);
 };
