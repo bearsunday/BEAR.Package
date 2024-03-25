@@ -11,6 +11,7 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 use Throwable;
 
 use function error_log;
+use function is_string;
 
 class RouterCollection implements RouterInterface
 {
@@ -53,7 +54,7 @@ class RouterCollection implements RouterInterface
     {
         foreach ($this->routers as $route) {
             $uri = $route->generate($name, $data);
-            if ($uri !== false) {
+            if (is_string($uri)) {
                 return $uri;
             }
         }
