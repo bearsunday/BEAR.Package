@@ -11,7 +11,6 @@ use BEAR\Resource\HalRenderer;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
-use Doctrine\Common\Annotations\AnnotationReader;
 use FakeVendor\HelloWorld\Resource\App\Task;
 use PHPUnit\Framework\TestCase;
 
@@ -158,7 +157,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererNoParam(): void
     {
-        $halRenderer = new HalRenderer(new AnnotationReader(), new HalLinker(new RouterReverseLinker(new FakeRouter())));
+        $halRenderer = new HalRenderer(new HalLinker(new RouterReverseLinker(new FakeRouter())));
         $ro = new Task();
         $ro->onPost();
         $ro->uri = new Uri('app://self/task');
@@ -178,7 +177,7 @@ class HalRendererTest extends TestCase
 
     public function testHalRendererWithParam(): void
     {
-        $halRenderer = new HalRenderer(new AnnotationReader(), new HalLinker(new RouterReverseLinker(new FakeRouter())));
+        $halRenderer = new HalRenderer(new HalLinker(new RouterReverseLinker(new FakeRouter())));
         $ro = new Task();
         $ro->uri = new Uri('app://self/task?id=1');
         $ro->uri->method = 'post';
