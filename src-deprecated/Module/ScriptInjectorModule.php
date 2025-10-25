@@ -10,6 +10,8 @@ use Ray\Di\InjectorInterface;
 
 /**
  * Provides InjectorInterface
+ *
+ * @deprecated Use CompiledInjector instead
  */
 class ScriptInjectorModule extends AbstractModule
 {
