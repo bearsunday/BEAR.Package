@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compile;
+namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;

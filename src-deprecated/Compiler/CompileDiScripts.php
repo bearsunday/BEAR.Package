@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compile;
+namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;

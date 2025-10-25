@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compile;
+namespace BEAR\Package\Compiler;
 
-use BEAR\Package\Compile\NewInstance;
 use Ray\Di\AbstractModule;
 use function array_keys;
 use function assert;
