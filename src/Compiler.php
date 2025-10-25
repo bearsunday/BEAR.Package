@@ -85,7 +85,9 @@ final class Compiler
     {
         $preload = ($this->compilePreload)($this->appMeta, $this->context);
         $module = (new Module())($this->appMeta, $this->context);
-        ($this->compileDependencies)($module);
+        $compiler = new \Ray\Compiler\Compiler();
+        $scriptDir = realpath($this->appMeta->appDir) . '/var/di/' . $this->context;
+        $compiler->compile($module, $scriptDir);
         echo PHP_EOL;
         ($this->compilerDiScripts)($this->appMeta);
         $failed = $this->newInstance->getFailed();
