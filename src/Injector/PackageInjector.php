@@ -6,6 +6,7 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Module;
+use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
@@ -85,6 +86,8 @@ final class PackageInjector
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
+            // Bind ResouceObject
+            $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
             $compiler = new Compiler();
             $compiler->compile($module, $scriptDir);
             $injector = new CompiledInjector($scriptDir);

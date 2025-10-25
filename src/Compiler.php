@@ -7,9 +7,6 @@ namespace BEAR\Package;
 use ArrayObject;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\CompileAutoload;
-use BEAR\Package\Compiler\CompileClassMetaInfo;
-use BEAR\Package\Compiler\CompileDependencies;
-use BEAR\Package\Compiler\CompileDiScripts;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
@@ -40,12 +37,10 @@ final class Compiler
     /** @var ArrayObject<int, string> */
     private ArrayObject $classes;
     private Meta $appMeta;
-    private CompileDiScripts $compilerDiScripts;
     private NewInstance $newInstance;
     private CompileAutoload $dumpAutoload;
     private CompilePreload $compilePreload;
     private CompileObjectGraph $compilerObjectGraph;
-    private CompileDependencies $compileDependencies;
 
     /**
      * @param string $appName application name "MyVendor|MyProject"
@@ -64,7 +59,6 @@ final class Compiler
         $this->appMeta = new Meta($appName, $context, $appDir);
         /** @psalm-suppress MixedAssignment (?) */
         $injector = Injector::getInstance($appName, $context, $appDir);
-        $this->compilerDiScripts = new CompileDiScripts(new CompileClassMetaInfo(), $injector);
         $this->newInstance = new NewInstance($injector);
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
@@ -73,7 +67,6 @@ final class Compiler
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
         $this->compilePreload = new CompilePreload($fakeRun, $this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
-        $this->compileDependencies = new CompileDependencies($this->newInstance);
     }
 
     /**
@@ -89,7 +82,6 @@ final class Compiler
         $scriptDir = realpath($this->appMeta->appDir) . '/var/di/' . $this->context;
         $compiler->compile($module, $scriptDir);
         echo PHP_EOL;
-        ($this->compilerDiScripts)($this->appMeta);
         $failed = $this->newInstance->getFailed();
         $dot = $failed ? '' : ($this->compilerObjectGraph)($module);
         $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
