@@ -7,6 +7,7 @@ namespace BEAR\Package\Compiler;
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Injector;
 
 use function realpath;
 use function sprintf;
@@ -16,7 +17,6 @@ final class CompilePreload
     /** @param ArrayObject<int, string> $classes */
     public function __construct(
         private FakeRun $fakeRun,
-        private NewInstance $newInstance,
         private CompileAutoload $dumpAutoload,
         private FilePutContents $filePutContents,
         private ArrayObject $classes,
@@ -55,10 +55,11 @@ require __DIR__ . '/vendor/autoload.php';
     public function loadResources(string $appName, string $context, string $appDir): void
     {
         $meta = new Meta($appName, $context, $appDir);
+        $injector = Injector::getInstance($appName, $context, $appDir);
 
         $resMetas = $meta->getGenerator('*');
         foreach ($resMetas as $resMeta) {
-            ($this->newInstance)($resMeta->class);
+            $injector->getInstance($resMeta->class);
         }
     }
 }

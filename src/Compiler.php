@@ -6,12 +6,12 @@ namespace BEAR\Package;
 
 use ArrayObject;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Compile\NewInstance;
 use BEAR\Package\Compiler\CompileAutoload;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
-use BEAR\Package\Compiler\NewInstance;
 use BEAR\Package\Provide\Error\NullPage;
 use Composer\Autoload\ClassLoader;
 use RuntimeException;
@@ -65,7 +65,7 @@ final class Compiler
         $filePutContents = new FilePutContents($overWritten);
         $fakeRun = new FakeRun($injector, $context, $this->appMeta);
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
-        $this->compilePreload = new CompilePreload($fakeRun, $this->newInstance, $this->dumpAutoload, $filePutContents, $classes, $context);
+        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $classes, $context);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
     }
 

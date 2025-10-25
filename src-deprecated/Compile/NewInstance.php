@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compiler;
+namespace BEAR\Package\Compile;
 
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
@@ -17,6 +17,7 @@ use function sprintf;
 
 use const PHP_EOL;
 
+/** @deprecated No longer used with Ray.Compiler */
 final class NewInstance
 {
     /** @var list<string> */
