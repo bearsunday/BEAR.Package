@@ -5,11 +5,14 @@
 /.phpunit.result.cache
 /.phpcs-cache
 /tests/tmp/
+/tests/stdout.log
 /tests/Fake/fake-app/autoload.php
 /tests/Fake/fake-app/module.dot
 /tests/Fake/fake-app/preload.php
 /tests/Fake/fake-app/var/log/
 /tests/Fake/fake-app/var/tmp/
+/tests/Fake/fake-app/var/di/
+/tests/Fake/import-app/var/tmp/
 /vendor-bin/**/vendor
 /demo/var/tmp
 /demo/vendor
