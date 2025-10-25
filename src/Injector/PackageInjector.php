@@ -82,12 +82,13 @@ final class PackageInjector
             $module->override($overrideModule);
         }
 
+        // Bind ResourceObject
+        $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
+
         $injector = new RayInjector($module, $scriptDir);
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            // Bind ResouceObject
-            $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
             $compiler = new Compiler();
             $compiler->compile($module, $scriptDir);
             $injector = new CompiledInjector($scriptDir);
