@@ -9,3 +9,5 @@ parameters:
     - tests/Fake/*
     - tests/script/*
     - tests/Injector/Fake/fake-app/var/tmp/*
+  ignoreErrors:
+    - '#Parameter \#1 \$scriptDir of class Ray\\Compiler\\ScriptInjector constructor expects non-empty-string, string given#'
