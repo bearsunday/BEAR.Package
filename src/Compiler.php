@@ -8,12 +8,15 @@ use ArrayObject;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compile\NewInstance;
 use BEAR\Package\Compiler\CompileAutoload;
+use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Provide\Error\NullPage;
+use BEAR\Resource\NamedParameterInterface;
 use Composer\Autoload\ClassLoader;
+use Doctrine\Common\Annotations\Reader;
 use RuntimeException;
 
 use function assert;
@@ -81,6 +84,10 @@ final class Compiler
         $compiler = new \Ray\Compiler\Compiler();
         $scriptDir = realpath($this->appMeta->appDir) . '/var/di/' . $this->context;
         $compiler->compile($module, $scriptDir);
+
+        // Compile class meta info (annotations and named parameters)
+        $this->compileClassMetaInfo();
+
         echo PHP_EOL;
         $failed = $this->newInstance->getFailed();
         $dot = $failed ? '' : ($this->compilerObjectGraph)($module);
@@ -102,6 +109,22 @@ final class Compiler
     public function dumpAutoload(): int
     {
         return ($this->dumpAutoload)();
+    }
+
+    private function compileClassMetaInfo(): void
+    {
+        $injector = Injector::getInstance($this->appMeta->name, $this->context, $this->appMeta->appDir);
+        $reader = $injector->getInstance(Reader::class);
+        assert($reader instanceof Reader);
+        $namedParams = $injector->getInstance(NamedParameterInterface::class);
+        assert($namedParams instanceof NamedParameterInterface);
+
+        $compileClassMetaInfo = new CompileClassMetaInfo();
+        $resources = $this->appMeta->getResourceListGenerator();
+        foreach ($resources as $resource) {
+            [$className] = $resource;
+            $compileClassMetaInfo($reader, $namedParams, $className);
+        }
     }
 
     /** @SuppressWarnings(PHPMD.BooleanArgumentFlag) */
