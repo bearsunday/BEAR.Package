@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compiler;
+namespace BEAR\Package\Compile;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\InjectorInterface;
-
 use function assert;
 
+/** @deprecated Use CompiledInjector instead */
 final class CompileDiScripts
 {
     public function __construct(

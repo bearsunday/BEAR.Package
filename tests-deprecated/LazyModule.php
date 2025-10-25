@@ -10,6 +10,7 @@ use BEAR\Package\Module\ScriptInjectorModule;
 use Ray\Compiler\LazyModuleInterface;
 use Ray\Di\AbstractModule;
 
+/** @deprecated Use CompiledInjector instead */
 class LazyModule implements LazyModuleInterface
 {
     public function __construct(

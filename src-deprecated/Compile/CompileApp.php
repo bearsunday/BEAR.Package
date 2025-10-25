@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compiler;
+namespace BEAR\Package\Compile;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
@@ -14,7 +14,6 @@ use Doctrine\Common\Annotations\Reader;
 use Ray\Compiler\CompileInjector;
 use Ray\PsrCacheModule\LocalCacheProvider;
 use ReflectionClass;
-
 use function assert;
 use function in_array;
 use function is_callable;
@@ -22,6 +21,7 @@ use function microtime;
 use function sprintf;
 use function str_starts_with;
 
+/** @deprecated User CompiledInjector instead */
 final class CompileApp
 {
     /** @var array{class: int, method: int, time: float} */
