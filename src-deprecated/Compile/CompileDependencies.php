@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compile;
 
-use BEAR\Package\Compiler\NewInstance;
+use BEAR\Package\Compile\NewInstance;
 use Ray\Di\AbstractModule;
 use function array_keys;
 use function assert;
