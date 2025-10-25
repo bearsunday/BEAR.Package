@@ -14,6 +14,7 @@ use function parse_url;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
+/** @deprecated */
 final class RouterReverseLink implements ReverseLinkInterface
 {
     public function __construct(
