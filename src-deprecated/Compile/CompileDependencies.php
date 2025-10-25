@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compile;
 
-use;
-use;
 use BEAR\Package\Compiler\NewInstance;
 use Ray\Di\AbstractModule;
 use function array_keys;
