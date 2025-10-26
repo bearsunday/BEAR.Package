@@ -3125,16 +3125,16 @@
         },
         {
             "name": "ray/compiler",
-            "version": "1.11.0",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ray-di/Ray.Compiler.git",
-                "reference": "9d141a73a804b274190bc16e91ceae0ededdcf0e"
+                "reference": "c265c66efdc98a6932002080c1a98ce13ab11818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ray-di/Ray.Compiler/zipball/9d141a73a804b274190bc16e91ceae0ededdcf0e",
-                "reference": "9d141a73a804b274190bc16e91ceae0ededdcf0e",
+                "url": "https://api.github.com/repos/ray-di/Ray.Compiler/zipball/c265c66efdc98a6932002080c1a98ce13ab11818",
+                "reference": "c265c66efdc98a6932002080c1a98ce13ab11818",
                 "shasum": ""
             },
             "require": {
@@ -3146,7 +3146,8 @@
                 "koriym/printo": "^1.0",
                 "php": "^7.2 || ^8.0",
                 "ray/aop": "^2.14",
-                "ray/di": "^2.18"
+                "ray/di": "^2.18",
+                "symfony/polyfill-php83": "^1.33"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.4",
@@ -3190,9 +3191,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ray-di/Ray.Compiler/issues",
-                "source": "https://github.com/ray-di/Ray.Compiler/tree/1.11.0"
+                "source": "https://github.com/ray-di/Ray.Compiler/tree/1.12.0"
             },
-            "time": "2025-02-04T01:21:18+00:00"
+            "time": "2025-10-25T18:30:21+00:00"
         },
         {
             "name": "ray/di",
@@ -4441,6 +4442,86 @@
                 }
             ],
             "time": "2024-12-23T08:48:59+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php83",
+            "version": "v1.33.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php83.git",
+                "reference": "17f6f9a6b1735c0f163024d959f700cfbc5155e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php83/zipball/17f6f9a6b1735c0f163024d959f700cfbc5155e5",
+                "reference": "17f6f9a6b1735c0f163024d959f700cfbc5155e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php83\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php83/tree/v1.33.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-07-08T02:45:35+00:00"
         },
         {
             "name": "symfony/polyfill-php84",
