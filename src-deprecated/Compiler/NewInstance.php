@@ -17,6 +17,7 @@ use function sprintf;
 
 use const PHP_EOL;
 
+/** @deprecated No longer used with Ray.Compiler */
 final class NewInstance
 {
     /** @var list<string> */

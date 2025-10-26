@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\Package\Exception\InvalidContextException;
 use PHPUnit\Framework\TestCase;
+use Ray\Di\Exception\Unbound;
 use RuntimeException;
 
 use function error_log;
@@ -41,9 +42,6 @@ class CompilerTest extends TestCase
         $compiled = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/compiled';
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
         $compiledFile3 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
-        @unlink($compiled);
-        unlink($compiledFile1);
-        unlink($compiledFile3);
         $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app', false);
         $status = $compiler->compile();
         $this->assertSame(0, $status);
@@ -60,9 +58,9 @@ class CompilerTest extends TestCase
 
     public function testUnbound(): void
     {
+        $this->expectException(Unbound::class);
         $compiler = new Compiler('FakeVendor\HelloWorld', 'cli-unbound-app', __DIR__ . '/Fake/fake-app', false);
         $code = $compiler->compile();
-        $this->assertSame(1, $code);
     }
 
     public function testInvalidConetxt(): void

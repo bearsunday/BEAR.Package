@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\LazyModule;
 use BEAR\Package\Module;
+use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
-use Ray\Compiler\CompileInjector;
+use Ray\Compiler\CompiledInjector;
+use Ray\Compiler\Compiler;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
@@ -81,11 +82,16 @@ final class PackageInjector
             $module->override($overrideModule);
         }
 
+        // Bind ResourceObject
+        $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
+
         $injector = new RayInjector($module, $scriptDir);
         $isProd = $injector->getInstance('', Compile::class);
         assert(is_bool($isProd));
         if ($isProd) {
-            $injector = new CompileInjector($scriptDir, new LazyModule($meta, $context, $scriptDir));
+            $compiler = new Compiler();
+            $compiler->compile($module, $scriptDir);
+            $injector = new CompiledInjector($scriptDir);
         }
 
         $injector->getInstance(AppInterface::class);

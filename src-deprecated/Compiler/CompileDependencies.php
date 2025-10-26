@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use Ray\Di\AbstractModule;
-
 use function array_keys;
 use function assert;
 use function is_int;
@@ -13,6 +12,7 @@ use function sort;
 use function strpos;
 use function substr;
 
+/** @deprecated Use CompiledInjector */
 final class CompileDependencies
 {
     public function __construct(
