@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BEAR\Package\Compiler;
+namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Module\ScriptInjectorModule;
 use Ray\Compiler\LazyModuleInterface;
