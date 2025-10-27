@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Error\ErrorInterface;
+use Override;
 use Ray\Di\AbstractModule;
 
-class VndErrorModule extends AbstractModule
+final class VndErrorModule extends AbstractModule
 {
+    #[Override]
     protected function configure(): void
     {
         $this->bind(ErrorLogger::class);

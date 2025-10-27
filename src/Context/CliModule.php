@@ -11,17 +11,19 @@ use BEAR\QueryRepository\CliHttpCache;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
+use Override;
 use Ray\Di\AbstractModule;
 
 use function crc32;
 use function sys_get_temp_dir;
 use function tempnam;
 
-class CliModule extends AbstractModule
+final class CliModule extends AbstractModule
 {
     /**
      * {@inheritDoc}
      */
+    #[Override]
     protected function configure(): void
     {
         $this->rename(RouterInterface::class, 'original');

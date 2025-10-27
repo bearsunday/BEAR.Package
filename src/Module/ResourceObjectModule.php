@@ -7,12 +7,13 @@ namespace BEAR\Package\Module;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\ResourceObject;
 use Generator;
+use Override;
 use Ray\Di\AbstractModule;
 
 /**
  * Bind all resource object
  */
-class ResourceObjectModule extends AbstractModule
+final class ResourceObjectModule extends AbstractModule
 {
     /** @param Generator<array{0: class-string<ResourceObject>, 1: string}> $resourceObjects */
     public function __construct(
@@ -21,6 +22,7 @@ class ResourceObjectModule extends AbstractModule
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this->install(new \BEAR\Resource\Module\ResourceObjectModule($this->getResourceObjects()));

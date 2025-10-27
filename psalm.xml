@@ -16,16 +16,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <ClassMustBeFinal errorLevel="suppress" />
-        <MissingOverrideAttribute errorLevel="suppress" />
         <DeprecatedClass errorLevel="suppress" />
-        <ArgumentTypeCoercion errorLevel="suppress" />
-        <PossiblyFalseOperand errorLevel="suppress" />
-        <PossiblyFalseArgument errorLevel="suppress" />
-        <PossiblyNullOperand errorLevel="suppress" />
-        <InvalidOperand errorLevel="suppress" />
-        <MixedAssignment errorLevel="suppress" />
-        <MixedArrayAccess errorLevel="suppress" />
-        <InvalidArgument errorLevel="suppress" />
     </issueHandlers>
 </psalm>

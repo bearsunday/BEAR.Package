@@ -6,6 +6,7 @@ namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
+use BEAR\Package\Types;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
@@ -17,6 +18,9 @@ use function assert;
 /**
  * @psalm-import-type Globals from RouterInterface
  * @psalm-import-type Server from RouterInterface
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type AppDir from Types
  */
 
 final class Bootstrap
@@ -29,6 +33,8 @@ final class Bootstrap
     }
 
     /**
+     * @param AppName $appName
+     * @param Context $context
      * @param Globals $globals
      * @param Server  $server
      *
@@ -36,6 +42,7 @@ final class Bootstrap
      */
     public function __invoke(string $appName, string $context, array $globals, array $server): int
     {
+        assert($this->appDir !== '');
         $injector =  Injector::getInstance($appName, $context, $this->appDir);
         $injector->getInstance(HttpCacheInterface::class);
         $router = $injector->getInstance(RouterInterface::class);

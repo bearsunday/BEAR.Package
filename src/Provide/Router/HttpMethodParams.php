@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Package\Exception\InvalidRequestJsonException;
+use Override;
 
 use function file_get_contents;
 use function in_array;
@@ -44,6 +45,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function get(array $server, array $get, array $post)
     {
         // set the original value

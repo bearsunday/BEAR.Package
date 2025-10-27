@@ -6,13 +6,15 @@ namespace BEAR\Package\Context;
 
 use BEAR\Resource\Annotation\ContextScheme;
 use BEAR\Sunday\Annotation\DefaultSchemeHost;
+use Override;
 use Ray\Di\AbstractModule;
 
-class ApiModule extends AbstractModule
+final class ApiModule extends AbstractModule
 {
     /**
      * {@inheritDoc}
      */
+    #[Override]
     protected function configure(): void
     {
         $this->bind()->annotatedWith(DefaultSchemeHost::class)->toInstance('app://self');

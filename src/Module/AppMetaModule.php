@@ -7,6 +7,7 @@ namespace BEAR\Package\Module;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Override;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 
@@ -21,6 +22,8 @@ use function class_exists;
  * AbstractAppMeta
  * AppInterface
  * :AppName
+ *
+ * @psalm-suppress ClassMustBeFinal
  */
 class AppMetaModule extends AbstractModule
 {
@@ -32,6 +35,7 @@ class AppMetaModule extends AbstractModule
     /**
      * {@inheritDoc}
      */
+    #[Override]
     protected function configure(): void
     {
         $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);

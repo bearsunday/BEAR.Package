@@ -33,6 +33,14 @@ use function strpos;
 
 use const PHP_EOL;
 
+/**
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type AppDir from Types
+ * @psalm-import-type ClassList from Types
+ * @psalm-import-type OverwrittenFiles from Types
+ */
+
 final class Compiler
 {
     /** @var ArrayObject<int, string> */
@@ -43,9 +51,9 @@ final class Compiler
     private CompileObjectGraph $compilerObjectGraph;
 
     /**
-     * @param string $appName application name "MyVendor|MyProject"
-     * @param string $context application context "prod-app"
-     * @param string $appDir  application path
+     * @param AppName $appName application name "MyVendor|MyProject"
+     * @param Context $context application context "prod-app"
+     * @param AppDir  $appDir  application path
      *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -78,7 +86,9 @@ final class Compiler
         $preload = ($this->compilePreload)($this->appMeta, $this->context);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $scriptDir = realpath($this->appMeta->appDir) . '/var/di/' . $this->context;
+        $appDirRealpath = realpath($this->appMeta->appDir);
+        assert($appDirRealpath !== false);
+        $scriptDir = $appDirRealpath . '/var/di/' . $this->context;
         $compiler->compile($module, $scriptDir);
 
         // Compile class meta info (annotations and named parameters)
@@ -86,14 +96,16 @@ final class Compiler
 
         echo PHP_EOL;
         $dot = ($this->compilerObjectGraph)($module);
-        $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
+        $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0;
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
         echo PHP_EOL;
         printf("Compilation took %f seconds and used %fMB of memory\n", $time, $memory);
         printf("Compiled: %d resource classes\n", $compiled);
         printf("Preload compile: %s\n", $this->dumpAutoload->getFileInfo($preload));
-        printf("Object graph diagram: %s\n", realpath($dot));
+        $dotRealpath = realpath($dot);
+        assert($dotRealpath !== false);
+        printf("Object graph diagram: %s\n", $dotRealpath);
 
         return 0;
     }
@@ -156,7 +168,9 @@ final class Compiler
 
     private function hookNullObjectClass(string $appDir): void
     {
-        $compileScript = realpath($appDir) . '/.compile.php';
+        $appDirRealpath = realpath($appDir);
+        assert($appDirRealpath !== false);
+        $compileScript = $appDirRealpath . '/.compile.php';
         if (! file_exists($compileScript)) {
             // @codeCoverageIgnoreStart
             return;

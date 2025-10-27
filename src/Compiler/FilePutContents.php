@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
+use BEAR\Package\Types;
 
 use function file_exists;
 use function file_put_contents;
 
-class FilePutContents
+/** @psalm-import-type OverwrittenFiles from Types */
+final class FilePutContents
 {
-    /** @param ArrayObject<int, string> $overwritten */
+    /** @param OverwrittenFiles $overwritten For debugging */
     public function __construct(
-        /**
-         * For debugging
-         */
         private ArrayObject $overwritten,  // @phpstan-ignore-line
     ) {
     }

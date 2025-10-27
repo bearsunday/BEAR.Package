@@ -55,15 +55,18 @@ final class FileUpdate
     {
         $srcFiles = $this->getFiles($meta->appDir . DIRECTORY_SEPARATOR . 'src', $this->srcRegex);
         $varFiles = $this->getFiles($meta->appDir . DIRECTORY_SEPARATOR . 'var', $this->varRegex);
-        $envFiles = (array) glob($meta->appDir . DIRECTORY_SEPARATOR . '.env*');
+        $envFilesResult = glob($meta->appDir . DIRECTORY_SEPARATOR . '.env*');
+        $envFiles = $envFilesResult === false ? [] : $envFilesResult;
         $scanFiles = [...$srcFiles, ...$varFiles, ...$envFiles];
         $composerLock = $meta->appDir . DIRECTORY_SEPARATOR . 'composer.lock';
         if (file_exists($composerLock)) {
             $scanFiles[] = $composerLock;
         }
 
-        /** @psalm-suppress all -- ignore filemtime could return false */
-        return (int) max(array_map([$this, 'filemtime'], $scanFiles));
+        $fileTimes = array_map([$this, 'filemtime'], $scanFiles);
+        assert($fileTimes !== []);
+
+        return (int) max($fileTimes);
     }
 
     /** @SuppressWarnings(PHPMD.UnusedPrivateMethod) */

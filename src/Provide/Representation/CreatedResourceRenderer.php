@@ -9,6 +9,7 @@ use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use Override;
 use Throwable;
 
 use function is_string;
@@ -24,7 +25,7 @@ use const PHP_URL_SCHEME;
 /**
  * 201 CreatedResource renderer
  */
-class CreatedResourceRenderer implements RenderInterface
+final class CreatedResourceRenderer implements RenderInterface
 {
     public function __construct(
         private RouterInterface $router,
@@ -35,6 +36,7 @@ class CreatedResourceRenderer implements RenderInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function render(ResourceObject $ro)
     {
         $urlSchema = (string) parse_url((string) $ro->uri, PHP_URL_SCHEME);

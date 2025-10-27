@@ -61,12 +61,14 @@ class InjectorTest extends TestCase
         $exitCode = $this->runOnce($context);
         $this->assertSame(0, $exitCode);
         App::$countOfNewInstance = 0;
+        assert($context !== '');
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         $app = $injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);
         $this->assertInstanceOf(AppInterface::class, $app);
         $count = App::$countOfNewInstance;
         // 2nd injector; AppInterface object should be stored as a singleton.
+        assert($context !== '');
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         $app = $injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);

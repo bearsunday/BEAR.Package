@@ -7,12 +7,17 @@ namespace BEAR\Package\Provide\Router;
 use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Override;
 
+use function assert;
 use function parse_url;
+
+use const PHP_URL_PATH;
 
 /**
  * @psalm-import-type Globals from RouterInterface
  * @psalm-import-type Server from RouterInterface
+ * @psalm-suppress ClassMustBeFinal
  */
 class WebRouter implements RouterInterface, WebRouterInterface
 {
@@ -34,13 +39,16 @@ class WebRouter implements RouterInterface, WebRouterInterface
      * @param Globals $globals
      * @param Server  $server
      */
+    #[Override]
     public function match(array $globals, array $server)
     {
         $requestUri = $server['REQUEST_URI'];
         $get = $globals['_GET'];
         $post = $globals['_POST'];
         [$method, $query] = $this->httpMethodParams->get($server, $get, $post);
-        $path = $this->schemeHost . parse_url($requestUri, 5); // 5 = PHP_URL_PATH
+        $parsedPath = parse_url($requestUri, PHP_URL_PATH);
+        assert($parsedPath !== null && $parsedPath !== false);
+        $path = $this->schemeHost . $parsedPath;
 
         return new RouterMatch($method, $path, $query);
     }
@@ -48,6 +56,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function generate($name, $data)
     {
         return false;

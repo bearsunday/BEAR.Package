@@ -7,6 +7,7 @@ namespace BEAR\Package\Injector;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
+use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
@@ -27,6 +28,7 @@ use function trigger_error;
 
 use const E_USER_WARNING;
 
+/** @psalm-import-type Context from Types */
 final class PackageInjector
 {
     /**
@@ -44,6 +46,8 @@ final class PackageInjector
     /**
      * Returns an instance of InjectorInterface based on the given parameters
      *
+     * @param Context $context
+     *
      * - Injector instances are cached in memory and in the cache adapter.
      * - The injector is re-used in subsequent calls in the same context in the unit test.
      */
@@ -55,7 +59,7 @@ final class PackageInjector
         }
 
         assert($cache instanceof AdapterInterface);
-        /** @psalm-suppress all */
+        /** @psalm-suppress MixedAssignment, MixedArrayAccess */
         [$injector, $fileUpdate] = $cache->getItem($injectorId)->get(); // @phpstan-ignore-line
         $isCacheableInjector = $injector instanceof ScriptInjector || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
         if (! $isCacheableInjector) {
@@ -69,6 +73,8 @@ final class PackageInjector
 
     /**
      * Return an injector instance with the given override module
+     *
+     * @param Context $context
      *
      * This is useful for testing purposes, where you want to override a module with a mock or stub
      */
@@ -94,11 +100,13 @@ final class PackageInjector
             $injector = new CompiledInjector($scriptDir);
         }
 
+        /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
 
         return $injector;
     }
 
+    /** @param Context $context */
     private static function getInjector(AbstractAppMeta $meta, string $context, AdapterInterface $cache, string $injectorId): InjectorInterface
     {
         $injector = self::factory($meta, $context);

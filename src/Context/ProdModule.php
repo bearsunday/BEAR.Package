@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Koriym\Attributes\AttributeReader;
 use Koriym\Attributes\DualReader;
+use Override;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
 use Ray\Compiler\DiCompileModule;
@@ -28,11 +29,12 @@ use Ray\PsrCacheModule\LocalCacheProvider;
 use Ray\PsrCacheModule\Psr6LocalCacheModule;
 
 /** @codeCoverageIgnore */
-class ProdModule extends AbstractModule
+final class ProdModule extends AbstractModule
 {
     /**
      * {@inheritDoc}
      */
+    #[Override]
     protected function configure(): void
     {
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);

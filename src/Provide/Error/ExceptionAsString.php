@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Error;
 
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
+use Override;
 use Stringable;
 use Throwable;
 
@@ -33,6 +34,7 @@ final class ExceptionAsString implements Stringable
         $this->string = sprintf("%s\n%s\n\n%s\n%s\n\n", date(DATE_RFC2822), (string) $request, $eSummery, $this->getPhpVariables($_SERVER));
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->string;

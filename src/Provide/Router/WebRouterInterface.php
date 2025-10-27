@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Router;
 
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use Override;
 
 /**
  * @psalm-import-type Globals from RouterInterface
@@ -18,5 +19,6 @@ interface WebRouterInterface extends RouterInterface
      * @param Globals $globals
      * @param Server  $server
      */
+    #[Override]
     public function match(array $globals, array $server);
 }

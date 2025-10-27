@@ -8,11 +8,13 @@ use BEAR\RepositoryModule\Annotation\Cacheable;
 use BEAR\Resource\NullRenderer;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceObject;
+use Override;
 use Ray\Di\Di\Inject;
 
 #[Cacheable]
-class NullPage extends ResourceObject
+final class NullPage extends ResourceObject
 {
+    #[Override]
     #[Inject(optional: true)]
     public function setRenderer(RenderInterface $renderer): self
     {

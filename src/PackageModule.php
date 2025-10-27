@@ -12,17 +12,19 @@ use BEAR\Package\Provide\Router\WebRouterModule;
 use BEAR\QueryRepository\QueryRepositoryModule;
 use BEAR\Streamer\StreamModule;
 use BEAR\Sunday\Module\SundayModule;
+use Override;
 use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 
 /**
  * Provides framework base bindings
  */
-class PackageModule extends AbstractModule
+final class PackageModule extends AbstractModule
 {
     /**
      * {@inheritDoc}
      */
+    #[Override]
     protected function configure(): void
     {
         $this->install(new QueryRepositoryModule());

@@ -11,13 +11,15 @@ use BEAR\Resource\HalRenderer;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ReverseLinkerInterface;
 use BEAR\Resource\ReverseLinkInterface;
+use Override;
 use Ray\Di\AbstractModule;
 
-class HalModule extends AbstractModule
+final class HalModule extends AbstractModule
 {
     /**
      * {@inheritDoc}
      */
+    #[Override]
     protected function configure(): void
     {
         $this->bind(CreatedResourceRenderer::class);

@@ -22,7 +22,7 @@ use function ob_end_clean;
 use function ob_start;
 use function property_exists;
 
-class FakeRun
+final class FakeRun
 {
     public function __construct(
         private InjectorInterface $injector,

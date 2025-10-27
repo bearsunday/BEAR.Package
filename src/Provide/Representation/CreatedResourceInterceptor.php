@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Resource\ResourceObject;
+use Override;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
 use function assert;
 
-class CreatedResourceInterceptor implements MethodInterceptor
+final class CreatedResourceInterceptor implements MethodInterceptor
 {
     public function __construct(
         private CreatedResourceRenderer $renderer,
@@ -20,6 +21,7 @@ class CreatedResourceInterceptor implements MethodInterceptor
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function invoke(MethodInvocation $invocation)
     {
         $ro = $invocation->proceed();

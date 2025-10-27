@@ -8,10 +8,11 @@ use BEAR\AppMeta\AbstractAppMeta;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Override;
 use Ray\Di\ProviderInterface;
 
 /** @implements ProviderInterface<Logger> */
-class MonologProvider implements ProviderInterface
+final class MonologProvider implements ProviderInterface
 {
     public function __construct(
         private AbstractAppMeta $appMeta,
@@ -21,6 +22,7 @@ class MonologProvider implements ProviderInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function get(): Logger
     {
         $format = "[%datetime%] %level_name%: %message% %context%\n";

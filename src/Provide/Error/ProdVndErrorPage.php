@@ -6,8 +6,10 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Override;
 use Throwable;
 
+use function assert;
 use function json_encode;
 
 use const JSON_PRETTY_PRINT;
@@ -25,9 +27,12 @@ final class ProdVndErrorPage extends ResourceObject
         $this->body = $this->getResponseBody($e, $status);
     }
 
+    #[Override]
     public function toString(): string
     {
-        $this->view = json_encode($this->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
+        $jsonEncoded = json_encode($this->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        assert($jsonEncoded !== false);
+        $this->view = $jsonEncoded . PHP_EOL;
 
         return $this->view;
     }
