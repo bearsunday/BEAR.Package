@@ -8,13 +8,24 @@ use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector;
+use BEAR\Package\Types;
 
+use function assert;
 use function realpath;
 use function sprintf;
 
+/**
+ * @psalm-import-type ClassList from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type AppDir from Types
+ */
 final class CompilePreload
 {
-    /** @param ArrayObject<int, string> $classes */
+    /**
+     * @param ClassList $classes
+     * @param Context   $context
+     */
     public function __construct(
         private FakeRun $fakeRun,
         private CompileAutoload $dumpAutoload,
@@ -25,6 +36,7 @@ final class CompilePreload
         $this->fakeRun = $fakeRun;
     }
 
+    /** @param Context $context */
     public function __invoke(AbstractAppMeta $appMeta, string $context): string
     {
         ($this->fakeRun)();
@@ -46,12 +58,19 @@ final class CompilePreload
 require __DIR__ . '/vendor/autoload.php';
 
 %s", $this->context, $requiredOnceFile);
-        $fileName = realpath($appMeta->appDir) . '/preload.php';
+        $appDirRealpath = realpath($appMeta->appDir);
+        assert($appDirRealpath !== false);
+        $fileName = $appDirRealpath . '/preload.php';
         ($this->filePutContents)($fileName, $preloadFile);
 
         return $fileName;
     }
 
+    /**
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
+     */
     public function loadResources(string $appName, string $context, string $appDir): void
     {
         $meta = new Meta($appName, $context, $appDir);

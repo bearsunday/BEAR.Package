@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module;
 
+use Override;
 use Psr\Cache\CacheItemPoolInterface;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
@@ -21,6 +22,7 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
  */
 final class Psr6NullModule extends AbstractModule
 {
+    #[Override]
     protected function configure(): void
     {
         $this->bind(CacheItemPoolInterface::class)->annotatedWith(Local::class)->to(NullAdapter::class)->in(Scope::SINGLETON);

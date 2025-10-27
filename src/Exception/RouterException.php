@@ -6,6 +6,6 @@ namespace BEAR\Package\Exception;
 
 use LogicException;
 
-class RouterException extends LogicException implements ExceptionInterface
+final class RouterException extends LogicException implements ExceptionInterface
 {
 }

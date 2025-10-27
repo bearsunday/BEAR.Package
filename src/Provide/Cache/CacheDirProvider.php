@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Cache;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\DirectoryNotWritableException;
+use Override;
 use Ray\Di\ProviderInterface;
 
 use function is_writable;
@@ -24,6 +25,7 @@ final class CacheDirProvider implements ProviderInterface
     {
     }
 
+    #[Override]
     public function get(): string
     {
         $cacheDir = $this->appMeta->tmpDir . self::CACHE_DIRNAME;

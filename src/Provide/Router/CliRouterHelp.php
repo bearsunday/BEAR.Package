@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\Help;
+use Override;
 
-class CliRouterHelp extends Help
+final class CliRouterHelp extends Help
 {
     /** @return null */
+    #[Override]
     protected function init()
     {
         $this->setSummary('CLI Router');

@@ -9,8 +9,11 @@ use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\AppAdapter;
 use BEAR\Resource\SchemeCollectionInterface;
+use Override;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
+
+use function assert;
 
 /** @implements ProviderInterface<SchemeCollectionInterface> */
 final class ImportSchemeCollectionProvider implements ProviderInterface
@@ -28,9 +31,11 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function get(): SchemeCollectionInterface
     {
         foreach ($this->importAppConfig as $app) {
+            assert($app->appName !== '' && $app->context !== '' && $app->appDir !== '');
             $injector = Injector::getInstance($app->appName, $app->context, $app->appDir);
             $adapter = new AppAdapter($injector, $app->appName);
             $this->schemeCollection

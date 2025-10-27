@@ -11,6 +11,7 @@ use Aura\Cli\Stdio;
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Exception;
+use Override;
 use Ray\Di\Di\Named;
 use Throwable;
 
@@ -39,7 +40,7 @@ use const PHP_URL_QUERY;
  *     HTTP_RAW_POST_DATA?: string
  * }
  */
-class CliRouter implements RouterInterface
+final class CliRouter implements RouterInterface
 {
     private Stdio $stdIo;
     private Throwable|null $terminateException = null;
@@ -86,6 +87,7 @@ class CliRouter implements RouterInterface
      * @param Globals $globals
      * @param Server  $server
      */
+    #[Override]
     public function match(array $globals, array $server)
     {
         /** @var CliServer $server */
@@ -102,6 +104,7 @@ class CliRouter implements RouterInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function generate($name, $data)
     {
         return $this->router->generate($name, $data);

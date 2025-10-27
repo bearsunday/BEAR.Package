@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Resource\ReverseLinkerInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
+use Override;
 
 use function is_string;
 use function parse_url;
@@ -22,6 +23,7 @@ final class RouterReverseLinker implements ReverseLinkerInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function __invoke(string $uri, array $query): string
     {
         $routeName = (string) parse_url($uri, PHP_URL_PATH);

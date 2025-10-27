@@ -6,6 +6,7 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Types;
 use ReflectionClass;
 
 use function assert;
@@ -27,11 +28,20 @@ use function str_contains;
 use function strpos;
 use function trait_exists;
 
+/**
+ * @psalm-import-type ClassList from Types
+ * @psalm-import-type OverwrittenFiles from Types
+ * @psalm-import-type ClassPaths from Types
+ * @psalm-import-type AppDir from Types
+ * @psalm-import-type Context from Types
+ */
 final class CompileAutoload
 {
     /**
-     * @param ArrayObject<int, string> $overwritten
-     * @param ArrayObject<int, string> $classes
+     * @param OverwrittenFiles $overwritten
+     * @param ClassList        $classes
+     * @param AppDir           $appDir
+     * @param Context          $context
      */
     public function __construct(
         private FakeRun $fakeRun,
@@ -71,9 +81,9 @@ final class CompileAutoload
     }
 
     /**
-     * @param array<string> $classes
+     * @param list<string> $classes
      *
-     * @return array<string>
+     * @return ClassPaths
      */
     public function getPaths(array $classes): array
     {
@@ -96,7 +106,10 @@ final class CompileAutoload
         return $paths;
     }
 
-    /** @param array<string> $paths */
+    /**
+     * @param AppDir     $appDir
+     * @param ClassPaths $paths
+     */
     public function saveAutoloadFile(string $appDir, array $paths): string
     {
         $requiredFile = '';
@@ -114,7 +127,9 @@ final class CompileAutoload
 %s
 require __DIR__ . '/vendor/autoload.php';
 ", $this->context, $requiredFile);
-        $fileName = realpath($appDir) . '/autoload.php';
+        $appDirRealpath = realpath($appDir);
+        assert($appDirRealpath !== false);
+        $fileName = $appDirRealpath . '/autoload.php';
 
         ($this->filePutContents)($fileName, $autoloadFile);
 

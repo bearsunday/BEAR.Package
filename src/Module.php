@@ -17,10 +17,13 @@ use function is_a;
 use function is_subclass_of;
 use function ucwords;
 
-class Module
+/** @psalm-import-type Context from Types */
+final class Module
 {
     /**
      * Return module from $appMeta and $context
+     *
+     * @param Context $context
      */
     public function __invoke(AbstractAppMeta $appMeta, string $context): AbstractModule
     {

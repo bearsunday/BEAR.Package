@@ -10,6 +10,7 @@ use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponseInterface;
 use BEAR\Sunday\Provide\Transfer\HeaderInterface;
 use BEAR\Sunday\Provide\Transfer\Output;
+use Override;
 
 use const PHP_EOL;
 
@@ -24,6 +25,7 @@ final class CliResponder implements TransferInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function __invoke(ResourceObject $ro, array $server): void
     {
         /** @var array{HTTP_IF_NONE_MATCH?: string} $server */

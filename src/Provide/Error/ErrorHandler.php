@@ -9,6 +9,7 @@ use BEAR\Sunday\Extension\Error\ErrorInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
 use Exception;
+use Override;
 
 /**
  * vnd.error for BEAR.Package
@@ -29,6 +30,7 @@ final class ErrorHandler implements ErrorInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function handle(Exception $e, Request $request) // phpcs:ignore SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
     {
         ($this->logger)($e, $request);
@@ -40,6 +42,7 @@ final class ErrorHandler implements ErrorInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function transfer(): void
     {
         ($this->responder)($this->errorPage ?? new NullPage(), []);

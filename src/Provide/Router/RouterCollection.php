@@ -8,12 +8,13 @@ use BEAR\Package\Exception\RouterException;
 use BEAR\Sunday\Extension\Router\NullMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
+use Override;
 use Throwable;
 
 use function error_log;
 use function is_string;
 
-class RouterCollection implements RouterInterface
+final class RouterCollection implements RouterInterface
 {
     private const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
 
@@ -26,6 +27,7 @@ class RouterCollection implements RouterInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function match(array $globals, array $server)
     {
         foreach ($this->routers as $route) {
@@ -50,6 +52,7 @@ class RouterCollection implements RouterInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function generate($name, $data)
     {
         foreach ($this->routers as $route) {

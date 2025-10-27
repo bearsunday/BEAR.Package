@@ -13,7 +13,12 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 use function str_replace;
 
-/** @see PackageInjector */
+/**
+ * @see PackageInjector
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type AppDir from Types
+ */
 final class Injector
 {
     /** @codeCoverageIgnore */
@@ -21,6 +26,11 @@ final class Injector
     {
     }
 
+    /**
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
+     */
     public static function getInstance(string $appName, string $context, string $appDir, CacheInterface|null $cache = null): InjectorInterface
     {
         $meta = new Meta($appName, $context, $appDir);
@@ -30,6 +40,11 @@ final class Injector
         return PackageInjector::getInstance($meta, $context, $cache);
     }
 
+    /**
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
+     */
     public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
     {
         return PackageInjector::factory(new Meta($appName, $context, $appDir), $context, $overrideModule);
