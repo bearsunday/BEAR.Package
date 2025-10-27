@@ -25,6 +25,7 @@ final class HalModule extends AbstractModule
         $this->bind(CreatedResourceRenderer::class);
         $this->bind(RenderInterface::class)->to(HalRenderer::class);
         $this->bind(ReverseLinkerInterface::class)->to(RouterReverseLinker::class);
+        /** @psalm-suppress DeprecatedClass */
         $this->bind(ReverseLinkInterface::class)->to(RouterReverseLink::class);
     }
 }

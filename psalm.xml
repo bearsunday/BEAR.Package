@@ -16,6 +16,5 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <DeprecatedClass errorLevel="suppress" />
     </issueHandlers>
 </psalm>
