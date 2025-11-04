@@ -12,11 +12,6 @@ use BEAR\QueryRepository\ProdQueryRepositoryModule;
 use BEAR\RepositoryModule\Annotation\EtagPool;
 use BEAR\Resource\NullOptionsRenderer;
 use BEAR\Resource\RenderInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\PsrCachedReader;
-use Doctrine\Common\Annotations\Reader;
-use Koriym\Attributes\AttributeReader;
-use Koriym\Attributes\DualReader;
 use Override;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
@@ -24,7 +19,6 @@ use Ray\Compiler\DiCompileModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
 use Ray\PsrCacheModule\Annotation\CacheDir;
-use Ray\PsrCacheModule\Annotation\Local;
 use Ray\PsrCacheModule\LocalCacheProvider;
 use Ray\PsrCacheModule\Psr6LocalCacheModule;
 
@@ -51,16 +45,6 @@ final class ProdModule extends AbstractModule
         $this->install(new Psr6LocalCacheModule());
         /** @psalm-suppress DeprecatedClass */
         $this->bind(CacheItemInterface::class)->annotatedWith(EtagPool::class)->toProvider(LocalCacheProvider::class);
-        $this->bind(Reader::class)->toConstructor(
-            PsrCachedReader::class,
-            ['reader' => 'dual_reader', 'cache' => Local::class],
-        )->in(Scope::SINGLETON);
-        $this->bind(Reader::class)->annotatedWith('dual_reader')->toConstructor(
-            DualReader::class,
-            ['annotationReader' => 'annotation_reader', 'attributeReader' => 'attribute_reader'],
-        );
-        $this->bind(Reader::class)->annotatedWith('annotation_reader')->to(AnnotationReader::class);
-        $this->bind(Reader::class)->annotatedWith('attribute_reader')->to(AttributeReader::class);
     }
 
     /**
