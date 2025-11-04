@@ -13,8 +13,14 @@ use function sprintf;
 
 final class ImportApp
 {
+    /** @var non-empty-string */
     public string $appDir;
 
+    /**
+     * @param non-empty-string $host
+     * @param non-empty-string $appName
+     * @param non-empty-string $context
+     */
     public function __construct(
         public string $host,
         public string $appName,
@@ -25,6 +31,7 @@ final class ImportApp
         $appModuleClassName = (string) (new ReflectionClass($appModuleClass))->getFileName();
         $appDir = dirname($appModuleClassName, 3);
         assert(is_dir($appDir));
+        assert($appDir !== '');
         $this->appDir = $appDir;
     }
 }
