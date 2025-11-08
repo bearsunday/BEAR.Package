@@ -15,7 +15,6 @@ use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\NamedParameterInterface;
 use Composer\Autoload\ClassLoader;
-use Doctrine\Common\Annotations\Reader;
 use RuntimeException;
 
 use function assert;
@@ -118,8 +117,6 @@ final class Compiler
     private function compileClassMetaInfo(): int
     {
         $injector = Injector::getInstance($this->appMeta->name, $this->context, $this->appMeta->appDir);
-        $reader = $injector->getInstance(Reader::class);
-        assert($reader instanceof Reader);
         $namedParams = $injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
 
@@ -128,7 +125,7 @@ final class Compiler
         $count = 0;
         foreach ($resources as $resource) {
             [$className] = $resource;
-            $compileClassMetaInfo($reader, $namedParams, $className);
+            $compileClassMetaInfo($namedParams, $className);
             $count++;
         }
 

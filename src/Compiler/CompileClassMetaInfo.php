@@ -6,7 +6,6 @@ namespace BEAR\Package\Compiler;
 
 use BEAR\Resource\Exception\ParameterException;
 use BEAR\Resource\NamedParameterInterface;
-use Doctrine\Common\Annotations\Reader;
 use ReflectionClass;
 
 use function in_array;
@@ -17,18 +16,17 @@ use function str_starts_with;
 final class CompileClassMetaInfo
 {
     /**
-     * Save annotation and method meta information
+     * Save attribute and method meta information
      *
      * @param class-string<T> $className
      *
      * @template T of object
      */
-    public function __invoke(Reader $reader, NamedParameterInterface $namedParams, string $className): void
+    public function __invoke(NamedParameterInterface $namedParams, string $className): void
     {
         $class = new ReflectionClass($className);
         $instance = $class->newInstanceWithoutConstructor();
 
-        $reader->getClassAnnotations($class);
         $methods = $class->getMethods();
         $log = sprintf('M %s:', $className);
         foreach ($methods as $method) {
@@ -42,8 +40,6 @@ final class CompileClassMetaInfo
                 $this->saveNamedParam($namedParams, $instance, $methodName);
             }
 
-            // method annotation
-            $reader->getMethodAnnotations($method);
             $log .= sprintf('@ %s', $methodName);
         }
 

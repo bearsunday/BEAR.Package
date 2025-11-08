@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3dfcfb08d1794d61e9eb3ed416ffd9cc",
+    "content-hash": "49edd744b6926de4a0bf118cd477fab2",
     "packages": [],
     "packages-dev": [
         {
@@ -1267,177 +1267,6 @@
             "time": "2019-12-04T15:06:13+00:00"
         },
         {
-            "name": "doctrine/annotations",
-            "version": "2.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/annotations.git",
-                "reference": "901c2ee5d26eb64ff43c47976e114bf00843acf7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/901c2ee5d26eb64ff43c47976e114bf00843acf7",
-                "reference": "901c2ee5d26eb64ff43c47976e114bf00843acf7",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/lexer": "^2 || ^3",
-                "ext-tokenizer": "*",
-                "php": "^7.2 || ^8.0",
-                "psr/cache": "^1 || ^2 || ^3"
-            },
-            "require-dev": {
-                "doctrine/cache": "^2.0",
-                "doctrine/coding-standard": "^10",
-                "phpstan/phpstan": "^1.10.28",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-                "symfony/cache": "^5.4 || ^6.4 || ^7",
-                "vimeo/psalm": "^4.30 || ^5.14"
-            },
-            "suggest": {
-                "php": "PHP 8.0 or higher comes with attributes, a native replacement for annotations"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Docblock Annotations Parser",
-            "homepage": "https://www.doctrine-project.org/projects/annotations.html",
-            "keywords": [
-                "annotations",
-                "docblock",
-                "parser"
-            ],
-            "support": {
-                "issues": "https://github.com/doctrine/annotations/issues",
-                "source": "https://github.com/doctrine/annotations/tree/2.0.2"
-            },
-            "abandoned": true,
-            "time": "2024-09-05T10:17:24+00:00"
-        },
-        {
-            "name": "doctrine/cache",
-            "version": "2.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/cache.git",
-                "reference": "1ca8f21980e770095a31456042471a57bc4c68fb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/1ca8f21980e770095a31456042471a57bc4c68fb",
-                "reference": "1ca8f21980e770095a31456042471a57bc4c68fb",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~7.1 || ^8.0"
-            },
-            "conflict": {
-                "doctrine/common": ">2.2,<2.4"
-            },
-            "require-dev": {
-                "cache/integration-tests": "dev-master",
-                "doctrine/coding-standard": "^9",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-                "psr/cache": "^1.0 || ^2.0 || ^3.0",
-                "symfony/cache": "^4.4 || ^5.4 || ^6",
-                "symfony/var-exporter": "^4.4 || ^5.4 || ^6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "PHP Doctrine Cache library is a popular cache implementation that supports many different drivers such as redis, memcache, apc, mongodb and others.",
-            "homepage": "https://www.doctrine-project.org/projects/cache.html",
-            "keywords": [
-                "abstraction",
-                "apcu",
-                "cache",
-                "caching",
-                "couchdb",
-                "memcached",
-                "php",
-                "redis",
-                "xcache"
-            ],
-            "support": {
-                "issues": "https://github.com/doctrine/cache/issues",
-                "source": "https://github.com/doctrine/cache/tree/2.2.0"
-            },
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcache",
-                    "type": "tidelift"
-                }
-            ],
-            "abandoned": true,
-            "time": "2022-05-20T20:07:39+00:00"
-        },
-        {
             "name": "doctrine/coding-standard",
             "version": "14.0.0",
             "source": {
@@ -1540,83 +1369,6 @@
                 "source": "https://github.com/doctrine/deprecations/tree/1.1.5"
             },
             "time": "2025-04-07T20:06:18+00:00"
-        },
-        {
-            "name": "doctrine/lexer",
-            "version": "3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/lexer.git",
-                "reference": "31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd",
-                "reference": "31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "doctrine/coding-standard": "^12",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^10.5",
-                "psalm/plugin-phpunit": "^0.18.3",
-                "vimeo/psalm": "^5.21"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Lexer\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.",
-            "homepage": "https://www.doctrine-project.org/projects/lexer.html",
-            "keywords": [
-                "annotations",
-                "docblock",
-                "lexer",
-                "parser",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/doctrine/lexer/issues",
-                "source": "https://github.com/doctrine/lexer/tree/3.0.1"
-            },
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Flexer",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-02-05T11:56:58+00:00"
         },
         {
             "name": "felixfbecker/language-server-protocol",
@@ -1792,222 +1544,6 @@
                 "source": "https://github.com/kelunik/certificate/tree/v1.1.3"
             },
             "time": "2023-02-03T21:26:53+00:00"
-        },
-        {
-            "name": "koriym/attributes",
-            "version": "1.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/Koriym.Attributes.git",
-                "reference": "6a8b270bec6ef98e2c817fc91ffc7bc07c5c734c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Koriym.Attributes/zipball/6a8b270bec6ef98e2c817fc91ffc7bc07c5c734c",
-                "reference": "6a8b270bec6ef98e2c817fc91ffc7bc07c5c734c",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "^1.12 || ^2.0",
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4",
-                "ext-pdo": "*",
-                "phpunit/phpunit": "^8.5.24 || ^9.5"
-            },
-            "suggest": {
-                "koriym/param-reader": "An attribute/annotation reader for parameters"
-            },
-            "type": "library",
-            "extra": {
-                "bamarni-bin": {
-                    "bin-links": true,
-                    "forward-command": true,
-                    "target-directory": "vendor-bin"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Koriym\\Attributes\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
-                }
-            ],
-            "description": "An annotation/attribute reader",
-            "keywords": [
-                "annotation",
-                "attribute"
-            ],
-            "support": {
-                "issues": "https://github.com/koriym/Koriym.Attributes/issues",
-                "source": "https://github.com/koriym/Koriym.Attributes/tree/1.0.7"
-            },
-            "time": "2025-08-08T21:14:03+00:00"
-        },
-        {
-            "name": "koriym/null-object",
-            "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/Koriym.NullObject.git",
-                "reference": "97687d240413a11f482c960391f50cdc4fe9b98b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Koriym.NullObject/zipball/97687d240413a11f482c960391f50cdc4fe9b98b",
-                "reference": "97687d240413a11f482c960391f50cdc4fe9b98b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4",
-                "doctrine/annotations": "^1.14 || ^2.0",
-                "phpunit/phpunit": "^8.5.34 || ^9.6"
-            },
-            "type": "library",
-            "extra": {
-                "bamarni-bin": {
-                    "bin-links": true,
-                    "forward-command": true
-                }
-            },
-            "autoload": {
-                "files": [
-                    "autoload.php"
-                ],
-                "psr-4": {
-                    "Koriym\\NullObject\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
-                }
-            ],
-            "description": "Null object generator",
-            "support": {
-                "issues": "https://github.com/koriym/Koriym.NullObject/issues",
-                "source": "https://github.com/koriym/Koriym.NullObject/tree/1.0.4"
-            },
-            "time": "2023-09-29T06:40:29+00:00"
-        },
-        {
-            "name": "koriym/param-reader",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/Koriym.ParamReader.git",
-                "reference": "e7e8ba3e88da9ee990c5e264d5f2b6b3757af57a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Koriym.ParamReader/zipball/e7e8ba3e88da9ee990c5e264d5f2b6b3757af57a",
-                "reference": "e7e8ba3e88da9ee990c5e264d5f2b6b3757af57a",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "^1.13 || ^2.0",
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4",
-                "phpunit/phpunit": "^8.5.24"
-            },
-            "suggest": {
-                "koriym/attributes": "doctrine/annotation Reader interface in order to read both doctrine/annotation and PHP 8 attributes."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Koriym\\ParamReader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
-                }
-            ],
-            "description": "An annotation/attribute reader for method parameter",
-            "support": {
-                "issues": "https://github.com/koriym/Koriym.ParamReader/issues",
-                "source": "https://github.com/koriym/Koriym.ParamReader/tree/1.1.0"
-            },
-            "time": "2024-05-13T18:14:13+00:00"
-        },
-        {
-            "name": "koriym/printo",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/koriym/print_o.git",
-                "reference": "d969e4cc738a376d479c2125e7d62be88cfa9dbe"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/koriym/print_o/zipball/d969e4cc738a376d479c2125e7d62be88cfa9dbe",
-                "reference": "d969e4cc738a376d479c2125e7d62be88cfa9dbe",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/print_o.php"
-                ],
-                "psr-4": {
-                    "Koriym\\Printo\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com",
-                    "homepage": "https://github.com/koriym"
-                }
-            ],
-            "description": "An object graph visualizer.",
-            "homepage": "https://github.com/koriym/print_o",
-            "keywords": [
-                "debug",
-                "var_dump"
-            ],
-            "support": {
-                "issues": "https://github.com/koriym/print_o/issues",
-                "source": "https://github.com/koriym/print_o/tree/develop"
-            },
-            "time": "2015-02-13T19:04:21+00:00"
         },
         {
             "name": "league/uri",
@@ -2784,55 +2320,6 @@
             "time": "2025-09-30T10:16:31+00:00"
         },
         {
-            "name": "psr/cache",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/cache.git",
-                "reference": "aa5030cfa5405eccfdcb1083ce040c2cb8d253bf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/aa5030cfa5405eccfdcb1083ce040c2cb8d253bf",
-                "reference": "aa5030cfa5405eccfdcb1083ce040c2cb8d253bf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Cache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for caching libraries",
-            "keywords": [
-                "cache",
-                "psr",
-                "psr-6"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/cache/tree/3.0.0"
-            },
-            "time": "2021-02-03T23:26:27+00:00"
-        },
-        {
             "name": "psr/container",
             "version": "2.0.2",
             "source": {
@@ -3042,322 +2529,6 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
-        },
-        {
-            "name": "ray/aop",
-            "version": "2.18.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ray-di/Ray.Aop.git",
-                "reference": "d2460ec0a26b46523da0496b5cef7cfc38a3be68"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ray-di/Ray.Aop/zipball/d2460ec0a26b46523da0496b5cef7cfc38a3be68",
-                "reference": "d2460ec0a26b46523da0496b5cef7cfc38a3be68",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "^1.12 || ^2.0",
-                "ext-hash": "*",
-                "ext-tokenizer": "*",
-                "koriym/attributes": "^1.0.3",
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
-                "nikic/php-parser": "^4.16",
-                "phpunit/phpunit": "^8.5.23 || ^9.5.10"
-            },
-            "suggest": {
-                "ray/di": "A dependency injection framework"
-            },
-            "type": "library",
-            "extra": {
-                "bamarni-bin": {
-                    "bin-links": true,
-                    "forward-command": true
-                }
-            },
-            "autoload": {
-                "files": [
-                    "annotation_loader.php"
-                ],
-                "psr-4": {
-                    "Ray\\Aop\\": [
-                        "src/",
-                        "src-php8"
-                    ],
-                    "Ray\\ServiceLocator\\": [
-                        "sl-src/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
-                }
-            ],
-            "description": "An aspect oriented framework",
-            "keywords": [
-                "aop"
-            ],
-            "support": {
-                "issues": "https://github.com/ray-di/Ray.Aop/issues",
-                "source": "https://github.com/ray-di/Ray.Aop/tree/2.18.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/koriym",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ray/aop",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-02-22T06:42:44+00:00"
-        },
-        {
-            "name": "ray/compiler",
-            "version": "1.12.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ray-di/Ray.Compiler.git",
-                "reference": "320309e9af10ed38dce1089b2cb95b5fea88a9f5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ray-di/Ray.Compiler/zipball/320309e9af10ed38dce1089b2cb95b5fea88a9f5",
-                "reference": "320309e9af10ed38dce1089b2cb95b5fea88a9f5",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "^1.8 || ^2.0",
-                "doctrine/cache": "^1.10 || ^2.1",
-                "koriym/attributes": "^1.0",
-                "koriym/null-object": "^1.0",
-                "koriym/param-reader": "^1.0",
-                "koriym/printo": "^1.0",
-                "php": "^7.2 || ^8.0",
-                "ray/aop": "^2.14",
-                "ray/di": "^2.18",
-                "symfony/polyfill-php83": "^1.33"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4",
-                "ext-pdo": "*",
-                "phpunit/phpunit": "^8.5.41 || ^9.5"
-            },
-            "type": "library",
-            "extra": {
-                "bamarni-bin": {
-                    "bin-links": true,
-                    "forward-command": true
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src-function/prototype.php",
-                    "src-function/singleton.php"
-                ],
-                "psr-4": {
-                    "Ray\\Compiler\\": [
-                        "src",
-                        "src-deprecated"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
-                }
-            ],
-            "description": "A dependency injection compiler for Ray.Di",
-            "keywords": [
-                "codegen",
-                "di",
-                "src"
-            ],
-            "support": {
-                "issues": "https://github.com/ray-di/Ray.Compiler/issues",
-                "source": "https://github.com/ray-di/Ray.Compiler/tree/1.12.1"
-            },
-            "time": "2025-10-27T05:07:07+00:00"
-        },
-        {
-            "name": "ray/di",
-            "version": "2.18.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ray-di/Ray.Di.git",
-                "reference": "a7dc251a099f75d44624957a373bfb64a30d102c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ray-di/Ray.Di/zipball/a7dc251a099f75d44624957a373bfb64a30d102c",
-                "reference": "a7dc251a099f75d44624957a373bfb64a30d102c",
-                "shasum": ""
-            },
-            "require": {
-                "koriym/attributes": "^1.0.4",
-                "koriym/null-object": "^1.0",
-                "koriym/param-reader": "^1.0",
-                "php": "^7.2 || ^8.0",
-                "ray/aop": "^2.16",
-                "ray/compiler": "^1.10.3"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4",
-                "ext-pdo": "*",
-                "phpunit/phpunit": "^8.5.40 || ^9.5"
-            },
-            "type": "library",
-            "extra": {
-                "bamarni-bin": {
-                    "bin-links": true,
-                    "forward-command": true
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ray\\Di\\": [
-                        "src/di",
-                        "src-deprecated/di"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Akihito Koriyama",
-                    "email": "akihito.koriyama@gmail.com"
-                }
-            ],
-            "description": "Guice style dependency injection framework",
-            "keywords": [
-                "aop",
-                "di"
-            ],
-            "support": {
-                "issues": "https://github.com/ray-di/Ray.Di/issues",
-                "source": "https://github.com/ray-di/Ray.Di/tree/2.18.0"
-            },
-            "time": "2024-11-29T15:48:21+00:00"
-        },
-        {
-            "name": "ray/rector-ray",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ray-di/rector-ray.git",
-                "reference": "4d79e72b5b4d4a1d24a258af201ce061d940b21b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ray-di/rector-ray/zipball/4d79e72b5b4d4a1d24a258af201ce061d940b21b",
-                "reference": "4d79e72b5b4d4a1d24a258af201ce061d940b21b",
-                "shasum": ""
-            },
-            "require": {
-                "koriym/attributes": "^1.0",
-                "php": ">=8.0",
-                "ray/di": "^2.14"
-            },
-            "require-dev": {
-                "doctrine/coding-standard": "^12.0.0",
-                "phpunit/phpunit": "^9.5",
-                "rector/rector": "^0.16.0",
-                "vimeo/psalm": "^4.29"
-            },
-            "type": "rector-extension",
-            "autoload": {
-                "psr-4": {
-                    "Rector\\Ray\\": "rules/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Rector upgrades rules for Ray.Di",
-            "support": {
-                "issues": "https://github.com/ray-di/rector-ray/issues",
-                "source": "https://github.com/ray-di/rector-ray/tree/1.1.0"
-            },
-            "time": "2023-05-25T08:47:43+00:00"
-        },
-        {
-            "name": "rector/rector",
-            "version": "1.2.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rectorphp/rector.git",
-                "reference": "40f9cf38c05296bd32f444121336a521a293fa61"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/40f9cf38c05296bd32f444121336a521a293fa61",
-                "reference": "40f9cf38c05296bd32f444121336a521a293fa61",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.12.5"
-            },
-            "conflict": {
-                "rector/rector-doctrine": "*",
-                "rector/rector-downgrade-php": "*",
-                "rector/rector-phpunit": "*",
-                "rector/rector-symfony": "*"
-            },
-            "suggest": {
-                "ext-dom": "To manipulate phpunit.xml via the custom-rule command"
-            },
-            "bin": [
-                "bin/rector"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Instant Upgrade and Automated Refactoring of any PHP code",
-            "keywords": [
-                "automation",
-                "dev",
-                "migration",
-                "refactoring"
-            ],
-            "support": {
-                "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.2.10"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/tomasvotruba",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-11-08T13:59:10+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -3712,16 +2883,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v7.3.4",
+            "version": "v7.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "8a09223170046d2cfda3d2e11af01df2c641e961"
+                "reference": "9d18eba95655a3152ae4c1d53c6cc34eb4d4a0b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/8a09223170046d2cfda3d2e11af01df2c641e961",
-                "reference": "8a09223170046d2cfda3d2e11af01df2c641e961",
+                "url": "https://api.github.com/repos/symfony/config/zipball/9d18eba95655a3152ae4c1d53c6cc34eb4d4a0b7",
+                "reference": "9d18eba95655a3152ae4c1d53c6cc34eb4d4a0b7",
                 "shasum": ""
             },
             "require": {
@@ -3767,7 +2938,7 @@
             "description": "Helps you find, load, combine, autofill and validate configuration values of any kind",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/config/tree/v7.3.4"
+                "source": "https://github.com/symfony/config/tree/v7.3.6"
             },
             "funding": [
                 {
@@ -3787,20 +2958,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-22T12:46:16+00:00"
+            "time": "2025-11-02T08:04:43+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v7.3.5",
+            "version": "v7.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "cdb80fa5869653c83cfe1a9084a673b6daf57ea7"
+                "reference": "c28ad91448f86c5f6d9d2c70f0cf68bf135f252a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/cdb80fa5869653c83cfe1a9084a673b6daf57ea7",
-                "reference": "cdb80fa5869653c83cfe1a9084a673b6daf57ea7",
+                "url": "https://api.github.com/repos/symfony/console/zipball/c28ad91448f86c5f6d9d2c70f0cf68bf135f252a",
+                "reference": "c28ad91448f86c5f6d9d2c70f0cf68bf135f252a",
                 "shasum": ""
             },
             "require": {
@@ -3865,7 +3036,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.3.5"
+                "source": "https://github.com/symfony/console/tree/v7.3.6"
             },
             "funding": [
                 {
@@ -3885,20 +3056,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-14T15:46:26+00:00"
+            "time": "2025-11-04T01:21:42+00:00"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v7.3.4",
+            "version": "v7.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "82119812ab0bf3425c1234d413efd1b19bb92ae4"
+                "reference": "98af8bb46c56aedd9dd5a7f0414fc72bf2dcfe69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/82119812ab0bf3425c1234d413efd1b19bb92ae4",
-                "reference": "82119812ab0bf3425c1234d413efd1b19bb92ae4",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/98af8bb46c56aedd9dd5a7f0414fc72bf2dcfe69",
+                "reference": "98af8bb46c56aedd9dd5a7f0414fc72bf2dcfe69",
                 "shasum": ""
             },
             "require": {
@@ -3949,7 +3120,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v7.3.4"
+                "source": "https://github.com/symfony/dependency-injection/tree/v7.3.6"
             },
             "funding": [
                 {
@@ -3969,7 +3140,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-11T10:12:26+00:00"
+            "time": "2025-10-31T10:11:11+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -4040,16 +3211,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v7.3.2",
+            "version": "v7.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "edcbb768a186b5c3f25d0643159a787d3e63b7fd"
+                "reference": "e9bcfd7837928ab656276fe00464092cc9e1826a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/edcbb768a186b5c3f25d0643159a787d3e63b7fd",
-                "reference": "edcbb768a186b5c3f25d0643159a787d3e63b7fd",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/e9bcfd7837928ab656276fe00464092cc9e1826a",
+                "reference": "e9bcfd7837928ab656276fe00464092cc9e1826a",
                 "shasum": ""
             },
             "require": {
@@ -4086,7 +3257,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v7.3.2"
+                "source": "https://github.com/symfony/filesystem/tree/v7.3.6"
             },
             "funding": [
                 {
@@ -4106,7 +3277,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-07T08:17:47+00:00"
+            "time": "2025-11-05T09:52:27+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4444,86 +3615,6 @@
             "time": "2024-12-23T08:48:59+00:00"
         },
         {
-            "name": "symfony/polyfill-php83",
-            "version": "v1.33.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php83.git",
-                "reference": "17f6f9a6b1735c0f163024d959f700cfbc5155e5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php83/zipball/17f6f9a6b1735c0f163024d959f700cfbc5155e5",
-                "reference": "17f6f9a6b1735c0f163024d959f700cfbc5155e5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/polyfill",
-                    "name": "symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php83\\": ""
-                },
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php83/tree/v1.33.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-07-08T02:45:35+00:00"
-        },
-        {
             "name": "symfony/polyfill-php84",
             "version": "v1.33.0",
             "source": {
@@ -4605,16 +3696,16 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v3.6.0",
+            "version": "v3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "f021b05a130d35510bd6b25fe9053c2a8a15d5d4"
+                "reference": "45112560a3ba2d715666a509a0bc9521d10b6c43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/f021b05a130d35510bd6b25fe9053c2a8a15d5d4",
-                "reference": "f021b05a130d35510bd6b25fe9053c2a8a15d5d4",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/45112560a3ba2d715666a509a0bc9521d10b6c43",
+                "reference": "45112560a3ba2d715666a509a0bc9521d10b6c43",
                 "shasum": ""
             },
             "require": {
@@ -4668,7 +3759,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v3.6.0"
+                "source": "https://github.com/symfony/service-contracts/tree/v3.6.1"
             },
             "funding": [
                 {
@@ -4680,11 +3771,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-25T09:37:31+00:00"
+            "time": "2025-07-15T11:30:57+00:00"
         },
         {
             "name": "symfony/string",

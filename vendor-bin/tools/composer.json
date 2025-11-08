@@ -5,9 +5,7 @@
         "phpmd/phpmd": "^2.13",
         "phpmetrics/phpmetrics": "^2.8",
         "squizlabs/php_codesniffer": "^4.0",
-        "vimeo/psalm": "^6.13",
-        "ray/rector-ray": "^1.1",
-        "rector/rector": "^1.0"
+        "vimeo/psalm": "^6.13"
     },
     "config": {
         "allow-plugins": {
