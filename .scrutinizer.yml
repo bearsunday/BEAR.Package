@@ -1,12 +1,12 @@
 build:
+  image: default-jammy
+  environment:
+    php: 8.4
   nodes:
     analysis:
       tests:
         override:
           - php-scrutinizer-run
-      environment:
-        php:
-          version: 8.2
 
 filter:
   paths: ["src/*"]
