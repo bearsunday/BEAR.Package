@@ -31,7 +31,7 @@
         "koriym/psr4list": "^1.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.10",
+        "phpunit/phpunit": "^11.0",
         "bamarni/composer-bin-plugin": "^1.8"
     },
     "autoload": {

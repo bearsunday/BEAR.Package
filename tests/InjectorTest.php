@@ -46,7 +46,7 @@ class InjectorTest extends TestCase
     }
 
     /** @return array<array{0: string, 1:int}> */
-    public function countOfNewProvider(): array
+    public static function countOfNewProvider(): array
     {
         return [
             ['prod-app', 0],

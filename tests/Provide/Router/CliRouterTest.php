@@ -43,7 +43,7 @@ class CliRouterTest extends TestCase
      * @return (string|string[])[][]
      * @phpstan-return array{0:              array{0: string, 1: string, 2: array<string>, 3: array<string>, 4: string}}
      */
-    public function argvProvider(): array
+    public static function argvProvider(): array
     {
         return [
             ['get', 'page://self/?name=bear', ['name' => 'bear'], [], ''],

@@ -9,19 +9,10 @@ use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 use RuntimeException;
 
-use function error_log;
 use function unlink;
 
 class CompilerTest extends TestCase
 {
-    public function setUp(): void
-    {
-        $this->setOutputCallback(static function (string $msg): void {
-            /** @noinspection ForgottenDebugOutputInspection */
-            error_log($msg);
-        });
-    }
-
     public function testInvoke(): void
     {
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
