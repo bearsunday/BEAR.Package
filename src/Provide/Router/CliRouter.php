@@ -9,6 +9,7 @@ use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
 use Aura\Cli\Stdio;
 use BEAR\Package\Annotation\StdIn;
+use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Exception;
 use Override;
@@ -30,6 +31,7 @@ use const PHP_URL_QUERY;
 /**
  * @psalm-import-type Globals from RouterInterface
  * @psalm-import-type Server from RouterInterface
+ * @psalm-import-type QueryParams from Types
  * @psalm-type CliServer = array{
  *     argc: int,
  *     argv: array<int, string>,
@@ -96,7 +98,7 @@ final class CliRouter implements RouterInterface
         /** @psalm-suppress InvalidArgument */
         [$method, $query, $server] = $this->parseServer($server);
         /** @psalm-suppress MixedArgumentTypeCoercion */
-        [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server); // @phpstan-ignore-line
+        [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server);
 
         return $this->router->match($webGlobals, $webServer);
     }
@@ -113,9 +115,9 @@ final class CliRouter implements RouterInterface
     /**
      * Set user input query to $globals or &$server
      *
-     * @param array<string, array<string, mixed>> $query
-     * @param Globals                             $globals
-     * @param Server                              $server
+     * @param QueryParams $query
+     * @param Globals     $globals
+     * @param Server      $server
      *
      * @return array{0:Globals, 1:Server}
      */
@@ -160,8 +162,8 @@ final class CliRouter implements RouterInterface
     /**
      * Return StdIn in PUT, PATCH or DELETE
      *
-     * @param  array<string, array<string, mixed>|string> $query
-     * @param Server                                     $server
+     * @param QueryParams $query
+     * @param Server      $server
      *
      * @return Server
      */
@@ -196,7 +198,7 @@ final class CliRouter implements RouterInterface
      *
      * @param Server $server
      *
-     * @return array{string, array<string, mixed>, Server}
+     * @return array{string, QueryParams, Server}
      */
     private function parseServer(array $server): array
     {
@@ -214,7 +216,7 @@ final class CliRouter implements RouterInterface
             'REQUEST_URI' => $urlPath,
         ];
 
-        /** @var array<string, array<mixed>|string> $query */
+        /** @var QueryParams $query */
         return [$method, $query, $server];
     }
 }

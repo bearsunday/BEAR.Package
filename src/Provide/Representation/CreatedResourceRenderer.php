@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Package\Exception\LocationHeaderRequestException;
+use BEAR\Package\Types;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
@@ -24,6 +25,8 @@ use const PHP_URL_SCHEME;
 
 /**
  * 201 CreatedResource renderer
+ *
+ * @psalm-import-type QueryParams from Types
  */
 final class CreatedResourceRenderer implements RenderInterface
 {
@@ -66,7 +69,7 @@ final class CreatedResourceRenderer implements RenderInterface
             return $uri;
         }
 
-        /** @var array<string, mixed> $value */
+        /** @var QueryParams $value */
         $reverseUri = $this->router->generate($routeName, $value);
         if (is_string($reverseUri)) {
             return $reverseUri;

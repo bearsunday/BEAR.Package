@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Annotation\StdIn;
 use BEAR\Package\Exception\InvalidRequestJsonException;
+use BEAR\Package\Types;
 use Override;
 
 use function file_get_contents;
@@ -20,6 +21,7 @@ use function strtolower;
 
 use const JSON_ERROR_NONE;
 
+/** @psalm-import-type QueryParams from Types */
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
     public const CONTENT_TYPE = 'CONTENT_TYPE';
@@ -61,9 +63,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
-     * @param array<string, mixed>                        $post
+     * @param QueryParams                        $post
      *
-     * @return array{0: string, 1: array<string, mixed>}
+     * @return array{0: string, 1: QueryParams}
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function unsafeMethod(string $method, array $server, array $post): array
@@ -82,7 +84,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
      * @param array{_method?: string}                     $params
      *
-     * @return array{0: string, 1: array<string, mixed>}
+     * @return array{0: string, 1: QueryParams}
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getOverrideMethod(string $method, array $server, array $params): array
@@ -109,9 +111,9 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      * Return request parameters
      *
      * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server
-     * @param array<string, mixed>                                     $post
+     * @param QueryParams                                     $post
      *
-     * @return array<string, mixed>
+     * @return QueryParams
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getParams(string $method, array $server, array $post): array
@@ -133,7 +135,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
      *
      * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server $_SERVER
      *
-     * @return array<string, mixed>
+     * @return QueryParams
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function phpInput(array $server): array
@@ -143,7 +145,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
 
-            /** @var array<string, mixed> $put */
+            /** @var QueryParams $put */
             return $put;
         }
 
@@ -152,7 +154,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return [];
         }
 
-        /** @var array<string, mixed> $content */
+        /** @var QueryParams $content */
         $content = json_decode($this->getRawBody($server), true);
         $error = json_last_error();
         if ($error !== JSON_ERROR_NONE) {
