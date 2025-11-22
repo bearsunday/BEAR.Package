@@ -68,7 +68,6 @@
         "bin/bear.compile.php"
     ],
     "scripts": {
-        "bin": "echo 'no bin command.'",
         "test": ["phpunit --no-coverage"],
         "tests": ["@cs", "@sa", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],

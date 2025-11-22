@@ -19,8 +19,8 @@
     <testsuite name="core">
       <directory>tests/</directory>
       <exclude>tests/Fake</exclude>
-      <exclude>tests/Context/**/</exclude>
-      <exclude>tests/Provide/**/</exclude>
+      <exclude>tests/Context</exclude>
+      <exclude>tests/Provide</exclude>
     </testsuite>
     <testsuite name="context">
       <directory>tests/Context</directory>
