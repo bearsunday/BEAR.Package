@@ -12,6 +12,7 @@ use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\FakeDep2;
 use FakeVendor\HelloWorld\FakeDepInterface;
 use FakeVendor\HelloWorld\Resource\Page\Injection;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
@@ -36,7 +37,7 @@ class PackageInjectorTest extends TestCase
         $this->assertInstanceOf(FakeDep::class, $page->foo);
     }
 
-    /** @depends testOriginalBind */
+    #[Depends('testOriginalBind')]
     public function testGetOverrideInstance(): void
     {
         $injector = Injector::getOverrideInstance('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', new class extends AbstractModule{
@@ -57,9 +58,13 @@ class PackageInjectorTest extends TestCase
         set_error_handler(static function (int $errno, string $errstr): void {
             throw new Exception($errstr, $errno);
         }, E_USER_WARNING);
-        $this->expectExceptionMessage('Failed to verify the injector cache.');
-        $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'bad-app', new NullAdapter());
-        $this->assertInstanceOf(InjectorInterface::class, $injector);
-        restore_error_handler();
+
+        try {
+            $this->expectExceptionMessage('Failed to verify the injector cache.');
+            $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'bad-app', new NullAdapter());
+            $this->assertInstanceOf(InjectorInterface::class, $injector);
+        } finally {
+            restore_error_handler();
+        }
     }
 }

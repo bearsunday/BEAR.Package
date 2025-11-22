@@ -6,6 +6,8 @@ namespace BEAR\Package;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
@@ -38,7 +40,7 @@ class InjectorTest extends TestCase
         return $injector;
     }
 
-    /** @depends testRayInjector */
+    #[Depends('testRayInjector')]
     public function testRayInjectorAsSingleton(RayInjector $injector): void
     {
         $singletonInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
@@ -54,7 +56,7 @@ class InjectorTest extends TestCase
         ];
     }
 
-    /** @dataProvider countOfNewProvider */
+    #[DataProvider('countOfNewProvider')]
     public function testCachedGetInstance(string $context, int $countOfNew): void
     {
         $appDir = __DIR__ . '/Fake/fake-app';
@@ -76,7 +78,7 @@ class InjectorTest extends TestCase
         $this->assertSame($count, App::$countOfNewInstance);
     }
 
-    /** @dataProvider countOfNewProvider */
+    #[DataProvider('countOfNewProvider')]
     public function estRaceConditionBoot(string $context): void
     {
         $cn = microtime();

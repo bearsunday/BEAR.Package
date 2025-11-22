@@ -8,6 +8,7 @@ use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use FakeVendor\HelloWorld\Resource\App\Post;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 use function assert;
@@ -57,7 +58,7 @@ class CreatedResourceRendererTest extends TestCase
         return $this->ro;
     }
 
-    /** @depends testRender */
+    #[Depends('testRender')]
     public function testReverseRoutedHeader(ResourceObject $ro): void
     {
         $this->assertSame('/task/10', $ro->headers['Location']);

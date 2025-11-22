@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\Package\Exception\InvalidContextException;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 use RuntimeException;
@@ -27,7 +28,7 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
-    /** @depends testInvoke */
+    #[Depends('testInvoke')]
     public function testInvokeAgain(): void
     {
         $compiled = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/compiled';

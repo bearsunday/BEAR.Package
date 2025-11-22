@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function assert;
@@ -57,9 +58,8 @@ class CliRouterTest extends TestCase
     /**
      * @param array<string, string> $get
      * @param array<string, string> $post
-     *
-     * @dataProvider argvProvider
      */
+    #[DataProvider('argvProvider')]
     public function testMatch(string $argv2, string $argv3, array $get, array $post, string $stdin): void
     {
         $server = [
