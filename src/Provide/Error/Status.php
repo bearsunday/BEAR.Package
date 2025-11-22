@@ -11,11 +11,8 @@ use Throwable;
 
 final class Status
 {
-    /** @var int */
-    public $code;
-
-    /** @var string */
-    public $text;
+    public int $code;
+    public string $text;
 
     public function __construct(Throwable $e)
     {
