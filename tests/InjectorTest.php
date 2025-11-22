@@ -6,22 +6,18 @@ namespace BEAR\Package;
 
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
-use function array_fill;
 use function assert;
-use function file_get_contents;
-use function file_put_contents;
-use function microtime;
 use function passthru;
 use function spl_object_hash;
 use function sprintf;
 use function touch;
-
-use const E_ALL;
 
 class InjectorTest extends TestCase
 {
@@ -38,7 +34,7 @@ class InjectorTest extends TestCase
         return $injector;
     }
 
-    /** @depends testRayInjector */
+    #[Depends('testRayInjector')]
     public function testRayInjectorAsSingleton(RayInjector $injector): void
     {
         $singletonInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
@@ -46,7 +42,7 @@ class InjectorTest extends TestCase
     }
 
     /** @return array<array{0: string, 1:int}> */
-    public function countOfNewProvider(): array
+    public static function countOfNewProvider(): array
     {
         return [
             ['prod-app', 0],
@@ -54,7 +50,7 @@ class InjectorTest extends TestCase
         ];
     }
 
-    /** @dataProvider countOfNewProvider */
+    #[DataProvider('countOfNewProvider')]
     public function testCachedGetInstance(string $context, int $countOfNew): void
     {
         $appDir = __DIR__ . '/Fake/fake-app';
@@ -74,20 +70,6 @@ class InjectorTest extends TestCase
         assert($app instanceof AppInterface);
         $this->assertInstanceOf(AppInterface::class, $app);
         $this->assertSame($count, App::$countOfNewInstance);
-    }
-
-    /** @dataProvider countOfNewProvider */
-    public function estRaceConditionBoot(string $context): void
-    {
-        $cn = microtime();
-        $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php -c%s -n%s', (string) E_ALL, __DIR__, $context, $cn);
-        $errorLog = __DIR__ . '/script/error.log';
-        file_put_contents($errorLog, '');
-        $cmds = array_fill(0, 7, $cmd);
-        $exitCode = (new AsyncRun())($cmds, $errorLog);
-        // no error should be recorded
-        $this->assertSame('', file_get_contents($errorLog));
-        $this->assertSame(0, $exitCode);
     }
 
     public function testBindingsModified(): void

@@ -1,6 +1,12 @@
 {
   "symbol-whitelist" : [
-    "Composer\\Autoload\\ClassLoader", "Doctrine\\Common\\Cache\\FilesystemCache", "Doctrine\\Common\\Cache\\PhpFileCache",
-    "BEAR\\Resource\\ReverseLinkInterface", "Doctrine\\Common\\Cache\\ArrayCache"
+    "BEAR\\Resource\\ReverseLinkInterface",
+    "Composer\\Autoload\\ClassLoader",
+    "Doctrine\\Common\\Annotations\\Reader",
+    "Doctrine\\Common\\Cache\\ArrayCache",
+    "Doctrine\\Common\\Cache\\Cache",
+    "Doctrine\\Common\\Cache\\CacheProvider",
+    "Doctrine\\Common\\Cache\\FilesystemCache",
+    "Doctrine\\Common\\Cache\\PhpFileCache"
   ]
 }

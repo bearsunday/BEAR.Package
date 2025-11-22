@@ -41,6 +41,8 @@ final class ProdModule extends AbstractModule
     private function installCacheModule(): void
     {
         $this->install(new ProdQueryRepositoryModule());
+        /** @deprecated This binding is no longer used by Ray.PsrCacheModule */
+        /** @psalm-suppress DeprecatedClass */
         $this->bind('')->annotatedWith(CacheDir::class)->toProvider(CacheDirProvider::class);
         $this->install(new Psr6LocalCacheModule());
         /** @psalm-suppress DeprecatedClass */

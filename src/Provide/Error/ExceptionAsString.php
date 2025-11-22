@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Error;
 
+use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Router\RouterMatch as Request;
 use Override;
 use Stringable;
@@ -15,6 +16,7 @@ use function sprintf;
 
 use const DATE_RFC2822;
 
+/** @psalm-import-type ServerArray from Types */
 final class ExceptionAsString implements Stringable
 {
     private string $string;
@@ -40,7 +42,7 @@ final class ExceptionAsString implements Stringable
         return $this->string;
     }
 
-    /** @param array<string, mixed> $server */
+    /** @param ServerArray $server */
     private function getPhpVariables(array $server): string
     {
         return sprintf("\nPHP Variables\n\n\$_SERVER => %s", print_r($server, true)); // @codeCoverageIgnore

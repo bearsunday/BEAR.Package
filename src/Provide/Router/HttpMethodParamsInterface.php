@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Types;
+
+/**
+ * @psalm-import-type ServerArray from Types
+ * @psalm-import-type QueryParams from Types
+ */
 interface HttpMethodParamsInterface
 {
     /**
@@ -14,10 +20,10 @@ interface HttpMethodParamsInterface
      * patch | put | delete  return parsed 'php://input' value if form-urlencoded or json content
      *
      * @param array{REQUEST_METHOD: string, HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server $_SERVER
-     * @param array<string, mixed>                                                $get  $_GET
-     * @param array<string, mixed>                                                $post $_POST
+     * @param QueryParams                                                $get  $_GET
+     * @param QueryParams                                                $post $_POST
      *
-     * @return array{0: string, 1: array<string, mixed>}
+     * @return array{0: string, 1: QueryParams}
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     public function get(array $server, array $get, array $post);

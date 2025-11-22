@@ -11,6 +11,7 @@ use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponse;
 use BEAR\Sunday\Provide\Transfer\Header;
 use LogicException;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -44,7 +45,7 @@ class ErrorHandlerTest extends TestCase
         return $handler;
     }
 
-    /** @depends testHandleError */
+    #[Depends('testHandleError')]
     public function testTransfer(ErrorHandler $handler): void
     {
         $handler->transfer();

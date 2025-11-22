@@ -10,6 +10,7 @@ use BEAR\Package\Module\AppMetaModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Module\ProdModule;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
 use Ray\Di\AbstractModule;
@@ -39,7 +40,7 @@ class NewAppTest extends TestCase
         return $app;
     }
 
-    /** @depends testGetInstanceByHand */
+    #[Depends('testGetInstanceByHand')]
     public function testSerializable(AppInterface $app): void
     {
         $this->assertInstanceOf(AppInterface::class, unserialize(serialize(unserialize(serialize($app)))));

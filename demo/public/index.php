@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-use BEAR\Package\Bootstrap;
+use BEAR\Package\Injector;
+use BEAR\Sunday\Extension\Application\AppInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $context = PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app';
 
-$app = (new Bootstrap)->getApp('MyVendor\MyProject', $context);
+$app = Injector::getInstance('MyVendor\MyProject', $context, dirname(__DIR__, 2))->getInstance(AppInterface::class);
 $request = $app->router->match($GLOBALS, $_SERVER);
 try {
     $page = $app

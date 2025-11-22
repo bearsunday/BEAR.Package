@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function assert;
@@ -43,7 +44,7 @@ class CliRouterTest extends TestCase
      * @return (string|string[])[][]
      * @phpstan-return array{0:              array{0: string, 1: string, 2: array<string>, 3: array<string>, 4: string}}
      */
-    public function argvProvider(): array
+    public static function argvProvider(): array
     {
         return [
             ['get', 'page://self/?name=bear', ['name' => 'bear'], [], ''],
@@ -57,9 +58,8 @@ class CliRouterTest extends TestCase
     /**
      * @param array<string, string> $get
      * @param array<string, string> $post
-     *
-     * @dataProvider argvProvider
      */
+    #[DataProvider('argvProvider')]
     public function testMatch(string $argv2, string $argv3, array $get, array $post, string $stdin): void
     {
         $server = [

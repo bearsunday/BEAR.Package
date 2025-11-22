@@ -15,6 +15,7 @@ use function mkdir;
 /**
  * Provide tmp directory
  *
+ * @deprecated This binding is no longer used by Ray.PsrCacheModule
  * @implements ProviderInterface<string>
  */
 final class CacheDirProvider implements ProviderInterface
