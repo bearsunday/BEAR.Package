@@ -95,7 +95,5 @@
             "bin-links": true,
             "forward-command": true
         }
-    },
-    "repositories": {
     }
 }

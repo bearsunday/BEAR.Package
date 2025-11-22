@@ -13,17 +13,11 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
-use function array_fill;
 use function assert;
-use function file_get_contents;
-use function file_put_contents;
-use function microtime;
 use function passthru;
 use function spl_object_hash;
 use function sprintf;
 use function touch;
-
-use const E_ALL;
 
 class InjectorTest extends TestCase
 {
@@ -76,20 +70,6 @@ class InjectorTest extends TestCase
         assert($app instanceof AppInterface);
         $this->assertInstanceOf(AppInterface::class, $app);
         $this->assertSame($count, App::$countOfNewInstance);
-    }
-
-    #[DataProvider('countOfNewProvider')]
-    public function estRaceConditionBoot(string $context): void
-    {
-        $cn = microtime();
-        $cmd = sprintf('php -d error_reporting=%s %s/script/boot.php -c%s -n%s', (string) E_ALL, __DIR__, $context, $cn);
-        $errorLog = __DIR__ . '/script/error.log';
-        file_put_contents($errorLog, '');
-        $cmds = array_fill(0, 7, $cmd);
-        $exitCode = (new AsyncRun())($cmds, $errorLog);
-        // no error should be recorded
-        $this->assertSame('', file_get_contents($errorLog));
-        $this->assertSame(0, $exitCode);
     }
 
     public function testBindingsModified(): void
