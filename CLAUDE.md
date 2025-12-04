@@ -23,6 +23,9 @@ composer test
 # Run single test file
 ./vendor/bin/phpunit tests/SomeTest.php
 
+# Run single test method
+./vendor/bin/phpunit --filter testMethodName tests/SomeTest.php
+
 # Coverage (with pcov)
 composer pcov
 
@@ -59,6 +62,15 @@ composer compile
 
 ## Architecture
 
+### Type Definitions
+
+Domain types are defined in `src/Types.php` using Psalm type aliases:
+- `AppName`: Application namespace (e.g., `"MyVendor\\MyApp"`)
+- `Context`: Context string (e.g., `"prod-api-app"`)
+- `AppDir`: Application directory path
+
+These types are imported via `@psalm-import-type` throughout the codebase.
+
 ### Core Components
 
 **Injector System**
@@ -67,10 +79,11 @@ composer compile
 - Uses Ray.Di for dependency injection with compile-time optimization
 
 **Compiler**
-- Two-phase compilation process that generates optimized autoload, preload, and DI scripts
+- Compilation process that generates optimized autoload, preload, DI scripts, and object graphs
 - `Compiler::compile()`: Main compilation orchestrator
-- Sub-compilers: `CompileDiScripts`, `CompileAutoload`, `CompilePreload`, `CompileObjectGraph`, `CompileDependencies`
+- Sub-compilers: `CompileAutoload`, `CompilePreload`, `CompileObjectGraph`, `CompileClassMetaInfo`
 - Tracks loaded classes during compilation for preload generation
+- Uses Ray.Compiler to compile DI container to PHP scripts
 
 **Module System**
 - `Module` class: Context-based module loader that processes hyphenated contexts (e.g., "prod-api-app")
@@ -160,11 +173,11 @@ These serve as both test fixtures and reference implementations.
 
 ## PHP Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - Extensions: hash
 - Ray.Di for dependency injection
 - Ray.Aop for aspect-oriented programming
-- Doctrine annotations/attributes support
+- PHP 8 attributes support (annotations deprecated)
 
 ## CI/CD
 
