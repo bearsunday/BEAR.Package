@@ -109,6 +109,35 @@ EOF
 )"
 ```
 
+### Ray.AuraSessionModule
+
+```bash
+git clone https://github.com/ray-di/Ray.AuraSessionModule.git
+cd Ray.AuraSessionModule
+git checkout -b add-psalm-taint-annotations
+git am < ray-aura-session-module-taint.patch
+git push -u origin add-psalm-taint-annotations
+gh pr create --title "Add Psalm taint annotations for session/cookie security" --body "$(cat <<'EOF'
+## Summary
+
+Add Psalm taint annotations to mark session and cookie providers as taint sources since `$_COOKIE` contains user-controlled data.
+
+## Changes
+
+- `@psalm-taint-source input` on:
+  - `SessionProvider::get()` - Returns Session initialized with $_COOKIE
+  - `CookieProvider::get()` - Returns $_COOKIE directly
+
+These annotations enable Psalm's taint analysis to track potentially dangerous user input through session and cookie handling.
+
+## Test Plan
+
+- [ ] Run `./vendor/bin/psalm --taint-analysis` to verify annotations work
+- [ ] Existing tests pass
+EOF
+)"
+```
+
 ### Qiq
 
 ```bash
@@ -149,6 +178,7 @@ EOF
 |---------|-------------|
 | bear/resource | `@psalm-taint-source input`, `@psalm-taint-sink ssrf`, `@psalm-taint-escape html` |
 | ray/aura-sql-module | `@psalm-taint-sink sql`, `@psalm-taint-escape sql` |
+| ray/aura-session-module | `@psalm-taint-source input` |
 | madapaja/twig-module | `@psalm-taint-escape html` |
 | qiq/qiq | `@psalm-taint-escape html`, `@psalm-taint-escape css` |
 

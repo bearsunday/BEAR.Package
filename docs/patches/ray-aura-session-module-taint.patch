@@ -1,0 +1,47 @@
+From a5610cbb40dbfbc6215d3878e3b0884dd08c8dd2 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 20 Dec 2025 06:23:55 +0000
+Subject: [PATCH] Add Psalm taint annotations for session/cookie security
+
+Mark session and cookie providers as taint sources since $_COOKIE
+contains user-controlled data that could be manipulated.
+
+- SessionProvider::get() - returns Session initialized with $_COOKIE
+- CookieProvider::get() - returns $_COOKIE directly
+
+These annotations enable Psalm's taint analysis to track potentially
+dangerous user input through session and cookie handling.
+---
+ src/CookieProvider.php  | 2 ++
+ src/SessionProvider.php | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/src/CookieProvider.php b/src/CookieProvider.php
+index d7c6fe9..33a7f3d 100644
+--- a/src/CookieProvider.php
++++ b/src/CookieProvider.php
+@@ -16,6 +16,8 @@ class CookieProvider implements ProviderInterface
+      * {@inheritdoc}
+      *
+      * @SuppressWarnings(PHPMD.Superglobals)
++     *
++     * @psalm-taint-source input
+      */
+     public function get()
+     {
+diff --git a/src/SessionProvider.php b/src/SessionProvider.php
+index 9997031..45d420d 100644
+--- a/src/SessionProvider.php
++++ b/src/SessionProvider.php
+@@ -18,6 +18,8 @@ class SessionProvider implements ProviderInterface
+      * {@inheritdoc}
+      *
+      * @SuppressWarnings(PHPMD.Superglobals)
++     *
++     * @psalm-taint-source input
+      */
+     public function get()
+     {
+-- 
+2.43.0
+
