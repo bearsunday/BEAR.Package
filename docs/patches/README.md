@@ -4,6 +4,8 @@ These patches add Psalm taint annotations to BEAR.Sunday ecosystem packages for 
 
 ## Applying Patches and Creating PRs
 
+**Note:** After applying each patch, run `composer cs-fix` to ensure code style compliance.
+
 ### BEAR.Resource
 
 ```bash
@@ -11,6 +13,8 @@ git clone https://github.com/bearsunday/BEAR.Resource.git
 cd BEAR.Resource
 git checkout -b add-psalm-taint-annotations
 git am < bear-resource-taint.patch
+composer cs-fix  # Fix code style if needed
+git add -A && git commit --amend --no-edit  # Include cs fixes
 git push -u origin add-psalm-taint-annotations
 gh pr create --title "Add Psalm taint annotations for security analysis" --body "$(cat <<'EOF'
 ## Summary

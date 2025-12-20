@@ -1,4 +1,4 @@
-From a5610cbb40dbfbc6215d3878e3b0884dd08c8dd2 Mon Sep 17 00:00:00 2001
+From 77274802bed49bac6d8a45cc8a9e584291b9f8b0 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Sat, 20 Dec 2025 06:23:55 +0000
 Subject: [PATCH] Add Psalm taint annotations for session/cookie security
@@ -9,39 +9,148 @@ contains user-controlled data that could be manipulated.
 - SessionProvider::get() - returns Session initialized with $_COOKIE
 - CookieProvider::get() - returns $_COOKIE directly
 
-These annotations enable Psalm's taint analysis to track potentially
-dangerous user input through session and cookie handling.
+Also apply code style fixes (phpcbf).
 ---
- src/CookieProvider.php  | 2 ++
- src/SessionProvider.php | 2 ++
- 2 files changed, 4 insertions(+)
+ src/Annotation/Cookie.php       |  3 ++-
+ src/Annotation/DeleteCookie.php |  3 ++-
+ src/AuraSessionInject.php       |  6 ++----
+ src/AuraSessionModule.php       |  2 +-
+ src/CookieProvider.php          |  3 ++-
+ src/DeleteCookieInvoker.php     |  2 +-
+ src/SessionProvider.php         | 15 ++++++++-------
+ 7 files changed, 18 insertions(+), 16 deletions(-)
 
+diff --git a/src/Annotation/Cookie.php b/src/Annotation/Cookie.php
+index 1565f7a..e4254c2 100644
+--- a/src/Annotation/Cookie.php
++++ b/src/Annotation/Cookie.php
+@@ -7,7 +7,8 @@
+ use Attribute;
+ use Ray\Di\Di\Qualifier;
+ 
+-#[Attribute, Qualifier]
++#[Attribute]
++#[Qualifier]
+ final class Cookie
+ {
+ }
+diff --git a/src/Annotation/DeleteCookie.php b/src/Annotation/DeleteCookie.php
+index 4d411a9..2e69ef6 100644
+--- a/src/Annotation/DeleteCookie.php
++++ b/src/Annotation/DeleteCookie.php
+@@ -7,7 +7,8 @@
+ use Attribute;
+ use Ray\Di\Di\Qualifier;
+ 
+-#[Attribute, Qualifier]
++#[Attribute]
++#[Qualifier]
+ final class DeleteCookie
+ {
+ }
+diff --git a/src/AuraSessionInject.php b/src/AuraSessionInject.php
+index d64c78a..b3e6687 100644
+--- a/src/AuraSessionInject.php
++++ b/src/AuraSessionInject.php
+@@ -6,15 +6,13 @@
+ 
+ use Aura\Session\Session;
+ 
+-/**
+- * @deprecated Use PHP 8.0: Class constructor property promotion instead
+- */
++/** @deprecated Use PHP 8.0: Class constructor property promotion instead */
+ trait AuraSessionInject
+ {
+     /** @var Session */
+     protected $session;
+ 
+-    public function setSession(Session $session)
++    public function setSession(Session $session): void
+     {
+         $this->session = $session;
+     }
+diff --git a/src/AuraSessionModule.php b/src/AuraSessionModule.php
+index bd40b4d..06bc2f3 100644
+--- a/src/AuraSessionModule.php
++++ b/src/AuraSessionModule.php
+@@ -22,7 +22,7 @@
+ class AuraSessionModule extends AbstractModule
+ {
+     /**
+-     * {@inheritdoc}
++     * {@inheritDoc}
+      */
+     protected function configure()
+     {
 diff --git a/src/CookieProvider.php b/src/CookieProvider.php
-index d7c6fe9..33a7f3d 100644
+index d7c6fe9..d0e1320 100644
 --- a/src/CookieProvider.php
 +++ b/src/CookieProvider.php
-@@ -16,6 +16,8 @@ class CookieProvider implements ProviderInterface
-      * {@inheritdoc}
+@@ -13,9 +13,10 @@
+ class CookieProvider implements ProviderInterface
+ {
+     /**
+-     * {@inheritdoc}
++     * {@inheritDoc}
       *
       * @SuppressWarnings(PHPMD.Superglobals)
-+     *
 +     * @psalm-taint-source input
       */
      public function get()
      {
+diff --git a/src/DeleteCookieInvoker.php b/src/DeleteCookieInvoker.php
+index 2bf2658..52251b4 100644
+--- a/src/DeleteCookieInvoker.php
++++ b/src/DeleteCookieInvoker.php
+@@ -25,7 +25,7 @@ public function __invoke(string $name, array $params): void
+             '',
+             time() - 42000,
+             $params['path'],
+-            $params['domain']
++            $params['domain'],
+         );
+     }
+ }
 diff --git a/src/SessionProvider.php b/src/SessionProvider.php
-index 9997031..45d420d 100644
+index 9997031..37c195f 100644
 --- a/src/SessionProvider.php
 +++ b/src/SessionProvider.php
-@@ -18,6 +18,8 @@ class SessionProvider implements ProviderInterface
-      * {@inheritdoc}
+@@ -1,26 +1,27 @@
+ <?php
++
++declare(strict_types=1);
++
+ /**
+  * This file is part of the Ray.AuraSessionModule package.
+- *
+- * @license http://opensource.org/licenses/MIT MIT
+  */
++
+ namespace Ray\AuraSessionModule;
+ 
+ use Aura\Session\SessionFactory;
+ use Ray\Di\ProviderInterface;
+ 
+-/**
+- * @deprecated
+- */
++/** @deprecated */
+ class SessionProvider implements ProviderInterface
+ {
+     /**
+-     * {@inheritdoc}
++     * {@inheritDoc}
       *
       * @SuppressWarnings(PHPMD.Superglobals)
-+     *
 +     * @psalm-taint-source input
       */
      public function get()
      {
+-        return (new SessionFactory)->newInstance($_COOKIE);
++        return (new SessionFactory())->newInstance($_COOKIE);
+     }
+ }
 -- 
 2.43.0
 
