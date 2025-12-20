@@ -27,9 +27,7 @@ final class DevVndErrorPage extends ResourceObject
         $this->body = $this->getResponseBody($e, $request, $status);
     }
 
-    /**
-     * @psalm-taint-escape html
-     */
+    /** @psalm-taint-escape html */
     #[Override]
     public function toString(): string
     {

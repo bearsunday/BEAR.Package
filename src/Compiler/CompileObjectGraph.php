@@ -19,9 +19,7 @@ final class CompileObjectGraph
     ) {
     }
 
-    /**
-     * @psalm-taint-sink shell $this->dotDir
-     */
+    /** @psalm-taint-sink shell $this->dotDir */
     public function __invoke(AbstractModule $module): string
     {
         $dotFile = sprintf('%s/module.dot', $this->dotDir);
