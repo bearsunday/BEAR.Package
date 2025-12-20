@@ -59,6 +59,9 @@
             ],
             "FakeVendor\\MinApp\\": [
                 "tests/Fake/fake-min-app/src"
+            ],
+            "FakeVendor\\TaintDemo\\": [
+                "tests/Fake/taint-demo-app/src"
             ]
         },
         "files": [
