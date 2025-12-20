@@ -1,0 +1,204 @@
+From efd73acba09120e46e68dfdbb5976b4694b30e6c Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 20 Dec 2025 04:25:16 +0000
+Subject: [PATCH] Add Psalm taint annotations for security analysis
+
+This commit adds Psalm taint annotations to enable static security analysis:
+
+Taint sources (user input entry points):
+- AssistedWebContextParam: marks superglobal access as tainted
+- InputParam: marks query parameter returns as tainted
+- InputFormParam: marks file upload returns as tainted
+- InputFormsParam: marks multiple file upload returns as tainted
+- Uri: marks query parameters as tainted
+- AbstractRequest: marks query parameters as tainted
+- HttpRequestCurl::parseBody: marks external HTTP response parsing as tainted
+
+Taint sinks (dangerous operations):
+- HttpRequestCurl: marks URL parameter as SSRF sink
+- AbstractUri::__toString: marks output as HTML sink
+
+Taint escapes (sanitization):
+- JsonRenderer::render: marks JSON encoding as HTML escape
+- HalRenderer::render: marks HAL+JSON encoding as HTML escape
+---
+ src/AbstractRequest.php         |  4 +++-
+ src/AbstractUri.php             |  6 +++++-
+ src/AssistedWebContextParam.php |  2 ++
+ src/HalRenderer.php             |  2 ++
+ src/HttpRequestCurl.php         | 13 +++++++++++--
+ src/InputFormParam.php          |  2 ++
+ src/InputFormsParam.php         |  2 ++
+ src/InputParam.php              |  2 ++
+ src/JsonRenderer.php            |  2 ++
+ src/Uri.php                     |  4 +++-
+ 10 files changed, 34 insertions(+), 5 deletions(-)
+
+diff --git a/src/AbstractRequest.php b/src/AbstractRequest.php
+index 43a77dff..a97550f8 100644
+--- a/src/AbstractRequest.php
++++ b/src/AbstractRequest.php
+@@ -120,7 +120,9 @@ public function __toString(): string
+     /**
+      * {@inheritDoc}
+      *
+-     * @param Query $query
++     * @param Query $query Query parameters that may contain user input
++     *
++     * @psalm-taint-source input $query
+      */
+     #[Override]
+     public function __invoke(array|null $query = null): ResourceObject
+diff --git a/src/AbstractUri.php b/src/AbstractUri.php
+index 88b02cc6..fb0cc37f 100644
+--- a/src/AbstractUri.php
++++ b/src/AbstractUri.php
+@@ -31,7 +31,11 @@ abstract class AbstractUri implements Stringable
+     /** @var string */
+     public $method = 'get';
+ 
+-    /** @return string */
++    /**
++     * @return string
++     *
++     * @psalm-taint-sink html
++     */
+     #[Override]
+     public function __toString()
+     {
+diff --git a/src/AssistedWebContextParam.php b/src/AssistedWebContextParam.php
+index c1e0ee3b..b4eadff9 100644
+--- a/src/AssistedWebContextParam.php
++++ b/src/AssistedWebContextParam.php
+@@ -32,6 +32,8 @@ public function __construct(
+ 
+     /**
+      * {@inheritDoc}
++     *
++     * @psalm-taint-source input
+      */
+     #[Override]
+     public function __invoke(string $varName, array $query, InjectorInterface $injector)
+diff --git a/src/HalRenderer.php b/src/HalRenderer.php
+index 0d5689eb..2bb9b0c6 100644
+--- a/src/HalRenderer.php
++++ b/src/HalRenderer.php
+@@ -40,6 +40,8 @@ public function __construct(
+ 
+     /**
+      * {@inheritDoc}
++     *
++     * @psalm-taint-escape html
+      */
+     #[Override]
+     public function render(ResourceObject $ro)
+diff --git a/src/HttpRequestCurl.php b/src/HttpRequestCurl.php
+index 6293c362..8f3001ba 100644
+--- a/src/HttpRequestCurl.php
++++ b/src/HttpRequestCurl.php
+@@ -47,7 +47,11 @@ public function __construct(
+     ) {
+     }
+ 
+-    /** @inheritDoc */
++    /**
++     * @inheritDoc
++     *
++     * @psalm-taint-sink ssrf $uri
++     */
+     #[Override]
+     public function request(string $method, string $uri, array $query): array
+     {
+@@ -70,6 +74,7 @@ public function request(string $method, string $uri, array $query): array
+         ];
+     }
+ 
++    /** @psalm-taint-sink ssrf $uri */
+     private function initializeCurl(string $method, string $uri, string $body): CurlHandle
+     {
+         $curl = curl_init();
+@@ -116,7 +121,11 @@ private function parseResponseHeaders(string $responseHeaders): array
+         return $responseHeadersArray;
+     }
+ 
+-    /** @return HttpBody */
++    /**
++     * @return HttpBody
++     *
++     * @psalm-taint-source input
++     */
+     private function parseBody(CurlHandle $curl, string $view): array
+     {
+         $responseBody = [];
+diff --git a/src/InputFormParam.php b/src/InputFormParam.php
+index f54f9294..2e07f432 100644
+--- a/src/InputFormParam.php
++++ b/src/InputFormParam.php
+@@ -37,6 +37,8 @@ public function __construct(
+      * Returns form metadata instead of parsing query data
+      *
+      * @param RequestQuery $query
++     *
++     * @psalm-taint-source input
+      */
+     #[Override]
+     public function __invoke(string $varName, array $query, InjectorInterface $injector): AbstractFileUpload|null
+diff --git a/src/InputFormsParam.php b/src/InputFormsParam.php
+index 393109e9..49238c56 100644
+--- a/src/InputFormsParam.php
++++ b/src/InputFormsParam.php
+@@ -42,6 +42,8 @@ public function __construct(
+      * @param RequestQuery $query
+      *
+      * @return array<AbstractFileUpload>
++     *
++     * @psalm-taint-source input
+      */
+     #[Override]
+     public function __invoke(string $varName, array $query, InjectorInterface $injector): array
+diff --git a/src/InputParam.php b/src/InputParam.php
+index 66c05442..5aaa0537 100644
+--- a/src/InputParam.php
++++ b/src/InputParam.php
+@@ -27,6 +27,8 @@ public function __construct(
+ 
+     /**
+      * {@inheritDoc}
++     *
++     * @psalm-taint-source input
+      */
+     #[Override]
+     public function __invoke(string $varName, array $query, InjectorInterface $injector)
+diff --git a/src/JsonRenderer.php b/src/JsonRenderer.php
+index 8a3da4d3..b6f0a119 100644
+--- a/src/JsonRenderer.php
++++ b/src/JsonRenderer.php
+@@ -16,6 +16,8 @@ final class JsonRenderer implements RenderInterface
+ {
+     /**
+      * {@inheritDoc}
++     *
++     * @psalm-taint-escape html
+      */
+     #[Override]
+     public function render(ResourceObject $ro)
+diff --git a/src/Uri.php b/src/Uri.php
+index c32eff7b..92499342 100644
+--- a/src/Uri.php
++++ b/src/Uri.php
+@@ -21,9 +21,11 @@
+ final class Uri extends AbstractUri
+ {
+     /**
+-     * @param Query $query
++     * @param Query $query Query parameters that may contain user input
+      *
+      * @throws UriException
++     *
++     * @psalm-taint-source input $query
+      */
+     public function __construct(
+         string $uri,
+-- 
+2.43.0
+

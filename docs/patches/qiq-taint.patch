@@ -1,0 +1,71 @@
+From 554af0740f1317e2d5bcb59cc90ab8b8d088198f Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 20 Dec 2025 04:36:40 +0000
+Subject: [PATCH] Add Psalm taint annotations for security analysis
+
+Add @psalm-taint-escape annotations to Escape helper methods:
+- h(): HTML escape
+- a(): HTML attribute escape
+- c(): CSS escape
+- j(): JavaScript escape (escapes for HTML context)
+- u(): URL escape
+
+These annotations enable Psalm's taint analysis to track potentially
+dangerous user input through the escape functions, ensuring proper
+sanitization before output.
+---
+ src/Helper/Html/Escape.php | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/Helper/Html/Escape.php b/src/Helper/Html/Escape.php
+index 5d1606b..942d0ed 100644
+--- a/src/Helper/Html/Escape.php
++++ b/src/Helper/Html/Escape.php
+@@ -19,6 +19,8 @@ class Escape
+ 
+     /**
+      * @param null|scalar|\Stringable|array<null|scalar|\Stringable|array<null|scalar|\Stringable>> $raw
++     *
++     * @psalm-taint-escape html
+      */
+     public function a(mixed $raw) : string
+     {
+@@ -64,6 +66,8 @@ class Escape
+ 
+     /**
+      * @param null|scalar|\Stringable $raw
++     *
++     * @psalm-taint-escape css
+      */
+     public function c(mixed $raw) : string
+     {
+@@ -72,6 +76,8 @@ class Escape
+ 
+     /**
+      * @param null|scalar|\Stringable $raw
++     *
++     * @psalm-taint-escape html
+      */
+     public function h(mixed $raw) : string
+     {
+@@ -80,6 +86,8 @@ class Escape
+ 
+     /**
+      * @param null|scalar|\Stringable $raw
++     *
++     * @psalm-taint-escape html
+      */
+     public function j(mixed $raw) : string
+     {
+@@ -88,6 +96,8 @@ class Escape
+ 
+     /**
+      * @param null|scalar|\Stringable $raw
++     *
++     * @psalm-taint-escape html
+      */
+     public function u(mixed $raw) : string
+     {
+-- 
+2.43.0
+

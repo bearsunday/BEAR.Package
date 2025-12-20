@@ -1,0 +1,46 @@
+From 6cb8b93e74fe5a0a79ef8cf76c6fc17105436c39 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 20 Dec 2025 04:34:19 +0000
+Subject: [PATCH] Add Psalm taint annotations for XSS prevention
+
+This commit adds Psalm taint escape annotations for HTML security:
+
+- TwigRenderer::render: marks Twig rendering as HTML escape
+- ErrorPagerRenderer::render: marks error page rendering as HTML escape
+
+Twig's autoescape feature automatically escapes HTML entities in
+template output, making these methods safe sinks for HTML-tainted data.
+---
+ src/ErrorPagerRenderer.php | 2 ++
+ src/TwigRenderer.php       | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/src/ErrorPagerRenderer.php b/src/ErrorPagerRenderer.php
+index 38903f2..0d86a9f 100644
+--- a/src/ErrorPagerRenderer.php
++++ b/src/ErrorPagerRenderer.php
+@@ -28,6 +28,8 @@ public function __construct(
+      * @throws LoaderError
+      * @throws RuntimeError
+      * @throws SyntaxError
++     *
++     * @psalm-taint-escape html
+      */
+     public function render(ResourceObject $ro): string
+     {
+diff --git a/src/TwigRenderer.php b/src/TwigRenderer.php
+index fc8a962..1f3386d 100644
+--- a/src/TwigRenderer.php
++++ b/src/TwigRenderer.php
+@@ -41,6 +41,8 @@ public function __construct(
+ 
+     /**
+      * {@inheritDoc}
++     *
++     * @psalm-taint-escape html
+      */
+     public function render(ResourceObject $ro)
+     {
+-- 
+2.43.0
+
