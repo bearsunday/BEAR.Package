@@ -1,44 +1,158 @@
 # Psalm Taint Annotation Patches
 
-These patches add Psalm taint annotations to BEAR.Sunday ecosystem packages.
+These patches add Psalm taint annotations to BEAR.Sunday ecosystem packages for security analysis.
 
-## Applying Patches
+## Applying Patches and Creating PRs
+
+### BEAR.Resource
 
 ```bash
-# BEAR.Resource
 git clone https://github.com/bearsunday/BEAR.Resource.git
 cd BEAR.Resource
 git checkout -b add-psalm-taint-annotations
 git am < bear-resource-taint.patch
 git push -u origin add-psalm-taint-annotations
+gh pr create --title "Add Psalm taint annotations for security analysis" --body "$(cat <<'EOF'
+## Summary
 
-# Ray.AuraSqlModule
+Add Psalm taint annotations to enable static security analysis for detecting:
+- XSS vulnerabilities
+- SSRF attacks
+- SQL injection (when used with database modules)
+
+## Changes
+
+- `@psalm-taint-source input` on:
+  - `AssistedWebContextParam::__invoke()` - Web context parameters
+  - `InputParam::__invoke()` - Query parameters
+  - `InputFormParam::__invoke()` - File uploads
+  - `InputFormsParam::__invoke()` - Multiple file uploads
+  - `Uri::__construct()` - URI query parameters
+  - `AbstractRequest::__invoke()` - Request query parameters
+  - `HttpRequestCurl::parseBody()` - External HTTP response body
+
+- `@psalm-taint-sink ssrf` on:
+  - `HttpRequestCurl::request()` - Prevents SSRF attacks
+  - `HttpRequestCurl::initializeCurl()` - Internal curl initialization
+
+- `@psalm-taint-escape html` on:
+  - `JsonRenderer::render()` - JSON encoding escapes HTML
+  - `HalRenderer::render()` - HAL+JSON encoding escapes HTML
+
+## Test Plan
+
+- [ ] Run `./vendor/bin/psalm --taint-analysis` to verify annotations work
+- [ ] Existing tests pass
+EOF
+)"
+```
+
+### Ray.AuraSqlModule
+
+```bash
 git clone https://github.com/ray-di/Ray.AuraSqlModule.git
 cd Ray.AuraSqlModule
 git checkout -b add-psalm-taint-annotations
 git am < ray-aura-sql-module-taint.patch
 git push -u origin add-psalm-taint-annotations
+gh pr create --title "Add Psalm taint annotations for SQL injection analysis" --body "$(cat <<'EOF'
+## Summary
 
-# Madapaja.TwigModule
+Add Psalm taint annotations to enable static security analysis for SQL injection detection.
+
+## Changes
+
+- `@psalm-taint-sink sql` on:
+  - `ExtendedPdoAdapter::__construct()` - SQL query parameter
+  - `AuraSqlPagerFactory::newInstance()` - SQL query for pagination
+
+- `@psalm-taint-sink sql` + `@psalm-taint-escape sql` on:
+  - `FetchAssoc::__invoke()` - Parameterized queries escape SQL
+  - `FetchEntity::__invoke()` - Parameterized queries escape SQL
+
+The escape annotation indicates that when using prepared statements with bound parameters, the SQL injection risk is mitigated.
+
+## Test Plan
+
+- [ ] Run `./vendor/bin/psalm --taint-analysis` to verify annotations work
+- [ ] Existing tests pass
+EOF
+)"
+```
+
+### Madapaja.TwigModule
+
+```bash
 git clone https://github.com/madapaja/Madapaja.TwigModule.git
 cd Madapaja.TwigModule
 git checkout -b add-psalm-taint-annotations
 git am < madapaja-twig-module-taint.patch
 git push -u origin add-psalm-taint-annotations
+gh pr create --title "Add Psalm taint annotations for XSS prevention" --body "$(cat <<'EOF'
+## Summary
 
-# Qiq
+Add Psalm taint annotations to mark Twig rendering as HTML-safe (due to Twig's autoescape feature).
+
+## Changes
+
+- `@psalm-taint-escape html` on:
+  - `TwigRenderer::render()` - Twig autoescapes by default
+  - `ErrorPagerRenderer::render()` - Error page rendering
+
+This allows Psalm's taint analysis to understand that data passing through Twig templates is properly escaped for HTML output.
+
+## Test Plan
+
+- [ ] Run `./vendor/bin/psalm --taint-analysis` to verify annotations work
+- [ ] Existing tests pass
+EOF
+)"
+```
+
+### Qiq
+
+```bash
 git clone https://github.com/qiqphp/qiq.git
 cd qiq
 git checkout -b add-psalm-taint-annotations
 git am < qiq-taint.patch
 git push -u origin add-psalm-taint-annotations
+gh pr create --title "Add Psalm taint annotations for security analysis" --body "$(cat <<'EOF'
+## Summary
+
+Add Psalm taint annotations to the Escape helper methods for static security analysis.
+
+## Changes
+
+- `@psalm-taint-escape html` on:
+  - `Escape::h()` - HTML escape via `htmlspecialchars()`
+  - `Escape::a()` - HTML attribute escape
+  - `Escape::j()` - JavaScript escape (safe for HTML context)
+  - `Escape::u()` - URL escape
+
+- `@psalm-taint-escape css` on:
+  - `Escape::c()` - CSS escape
+
+These annotations enable Psalm's taint analysis to track that data passing through these escape methods is properly sanitized.
+
+## Test Plan
+
+- [ ] Run `./vendor/bin/psalm --taint-analysis` to verify annotations work
+- [ ] Existing tests pass
+EOF
+)"
 ```
 
-## Patch Contents
+## Patch Contents Summary
 
 | Package | Annotations |
 |---------|-------------|
-| bear/resource | `@psalm-taint-source input` on params, `@psalm-taint-sink ssrf`, `@psalm-taint-escape html` |
+| bear/resource | `@psalm-taint-source input`, `@psalm-taint-sink ssrf`, `@psalm-taint-escape html` |
 | ray/aura-sql-module | `@psalm-taint-sink sql`, `@psalm-taint-escape sql` |
 | madapaja/twig-module | `@psalm-taint-escape html` |
 | qiq/qiq | `@psalm-taint-escape html`, `@psalm-taint-escape css` |
+
+## References
+
+- [Psalm Taint Analysis Documentation](https://psalm.dev/docs/security_analysis/)
+- [BEAR.Package Taint Demo](../tests/Fake/taint-demo-app/)
