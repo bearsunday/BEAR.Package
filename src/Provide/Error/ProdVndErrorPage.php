@@ -27,6 +27,9 @@ final class ProdVndErrorPage extends ResourceObject
         $this->body = $this->getResponseBody($e, $status);
     }
 
+    /**
+     * @psalm-taint-escape html
+     */
     #[Override]
     public function toString(): string
     {

@@ -19,6 +19,10 @@ final class FilePutContents
     ) {
     }
 
+    /**
+     * @psalm-taint-sink file $fileName
+     * @psalm-taint-sink file $content
+     */
     public function __invoke(string $fileName, string $content): void
     {
         if (file_exists($fileName)) {

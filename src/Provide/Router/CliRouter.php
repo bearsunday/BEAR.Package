@@ -87,7 +87,10 @@ final class CliRouter implements RouterInterface
      * {@inheritDoc}
      *
      * @param Globals $globals
-     * @param Server  $server
+     * @param Server  $server Server variables containing CLI arguments (argv)
+     *
+     * @psalm-taint-source input $globals
+     * @psalm-taint-source input $server
      */
     #[Override]
     public function match(array $globals, array $server)

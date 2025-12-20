@@ -36,8 +36,11 @@ class WebRouter implements RouterInterface, WebRouterInterface
     /**
      * {@inheritDoc}
      *
-     * @param Globals $globals
-     * @param Server  $server
+     * @param Globals $globals Superglobals containing user input ($_GET, $_POST)
+     * @param Server  $server  Server variables containing request data
+     *
+     * @psalm-taint-source input $globals
+     * @psalm-taint-source input $server
      */
     #[Override]
     public function match(array $globals, array $server)
