@@ -182,6 +182,43 @@ EOF
 | madapaja/twig-module | `@psalm-taint-escape html` |
 | qiq/qiq | `@psalm-taint-escape html`, `@psalm-taint-escape css` |
 
+## CI Integration
+
+Add the taint analysis job to `.github/workflows/continuous-integration.yml`:
+
+```yaml
+  taint-analysis:
+    name: Psalm Taint Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run Psalm Taint Analysis on main codebase
+        run: ./vendor/bin/psalm --taint-analysis
+
+      - name: Verify demo detects taint issues
+        run: |
+          OUTPUT=$(./vendor/bin/psalm --taint-analysis tests/Fake/taint-demo-app/src/ 2>&1) || true
+          if echo "$OUTPUT" | grep -q "TaintedHtml"; then
+            echo "OK: Taint analysis correctly detected XSS vulnerability"
+          else
+            echo "ERROR: Demo should trigger TaintedHtml detection"
+            exit 1
+          fi
+```
+
+See `ci-taint-analysis.yml` for the complete job definition.
+
 ## References
 
 - [Psalm Taint Analysis Documentation](https://psalm.dev/docs/security_analysis/)
