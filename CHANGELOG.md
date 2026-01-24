@@ -9,9 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Use `ScriptInjectorInterface` instead of deprecated `ScriptInjector` in cacheability check
-  - Reduces function calls by 67% (3,273 → 1,093) in production
-  - Reduces memory usage by 5% (65.3 MB → 61.9 MB)
   - Avoids unnecessary `FileUpdate` directory traversal when using `CompiledInjector`
+  - Benchmark (minimal skeleton app): function calls -67%, memory -5%
 
 ## [1.20.0] - 2025-11-22
 
