@@ -12,7 +12,7 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
-use Ray\Compiler\ScriptInjector;
+use Ray\Compiler\ScriptInjectorInterface;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
@@ -61,7 +61,7 @@ final class PackageInjector
         assert($cache instanceof AdapterInterface);
         /** @psalm-suppress MixedAssignment, MixedArrayAccess */
         [$injector, $fileUpdate] = $cache->getItem($injectorId)->get(); // @phpstan-ignore-line
-        $isCacheableInjector = $injector instanceof ScriptInjector || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
+        $isCacheableInjector = $injector instanceof ScriptInjectorInterface || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
         if (! $isCacheableInjector) {
             $injector = self::getInjector($meta, $context, $cache, $injectorId);
         }
