@@ -16,7 +16,7 @@ class UserTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $injector = Injector::getInstance('MyVendor\MyProject', 'app', dirname(__DIR__, 2));
+        $injector = Injector::getInstance('MyVendor\MyProject', 'app', dirname(__DIR__, 3));
         $this->resource = $injector->getInstance(ResourceInterface::class);
     }
 
