@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 
 class Website extends ResourceObject
 {
-    public function onGet($id)
+    public function onGet(int $id): static
     {
         $this->body = [
             'url' => "http:://example.org/{$id}"

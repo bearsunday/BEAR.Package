@@ -9,10 +9,8 @@ use BEAR\Resource\ResourceObject;
 
 class User extends ResourceObject
 {
-    /**
-     * @Embed(rel="user", src="/api/user{?id}")
-     */
-    public function onGet($id)
+    #[Embed(rel: 'user', src: '/api/user{?id}')]
+    public function onGet(int $id): static
     {
         return $this;
     }

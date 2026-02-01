@@ -14,7 +14,7 @@ class Friend extends ResourceObject
         ['id' => '3', 'name' => 'Aramis'],
     ];
 
-    public function onGet()
+    public function onGet(): static
     {
         return $this;
     }

@@ -12,10 +12,8 @@ class Contact extends ResourceObject
 {
     use ResourceInject;
 
-    /**
-     * @Embed(rel="contact", src="/api/user/friend{?id}")
-     */
-    public function onGet($id)
+    #[Embed(rel: 'contact', src: '/api/user/friend{?id}')]
+    public function onGet(int $id): static
     {
         return $this;
     }

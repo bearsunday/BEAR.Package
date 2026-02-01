@@ -9,10 +9,7 @@ use Ray\Di\AbstractModule;
 
 class AppModule extends AbstractModule
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this->install(new PackageModule);
     }

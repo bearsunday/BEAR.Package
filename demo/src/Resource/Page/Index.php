@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 
 class Index extends ResourceObject
 {
-    public function onGet($name = 'BEAR.Sunday') : ResourceObject
+    public function onGet(string $name = 'BEAR.Sunday'): static
     {
         $this->body = [
             'greeting' => 'Hello ' . $name

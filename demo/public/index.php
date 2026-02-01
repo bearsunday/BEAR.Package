@@ -9,7 +9,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $context = PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app';
 
-$app = Injector::getInstance('MyVendor\MyProject', $context, dirname(__DIR__, 2))->getInstance(AppInterface::class);
+$app = Injector::getInstance('MyVendor\MyProject', $context, dirname(__DIR__))->getInstance(AppInterface::class);
 $request = $app->router->match($GLOBALS, $_SERVER);
 try {
     $page = $app
