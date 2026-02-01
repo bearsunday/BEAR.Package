@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MyVendor\MyProjecct\Resource\Page;
+namespace MyVendor\MyProject\Resource\Page;
 
-use BEAR\Package\Bootstrap;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
-use MyVendor\MyProject\Resource\Page\User;
 use PHPUnit\Framework\TestCase;
 use function dirname;
-
 
 class UserTest extends TestCase
 {
@@ -56,7 +53,6 @@ class UserTest extends TestCase
     }
 }
 ';
-        $f = (string) $ro;
         $this->assertSame($expectRo, (string) $ro);
     }
 }

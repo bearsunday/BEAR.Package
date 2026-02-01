@@ -9,17 +9,13 @@ use BEAR\Resource\Annotation\Embed;
 use BEAR\Resource\Annotation\Link;
 use BEAR\Resource\ResourceObject;
 
-/**
- * @Cacheable
- */
+#[Cacheable]
 class User extends ResourceObject
 {
-    /**
-     * @Link(rel="profile", href="/api/profile{?id}")
-     * @Embed(rel="website", src="/api/website{?id}")
-     * @Embed(rel="contact", src="/api/contact{?id}")
-     */
-    public function onGet($id)
+    #[Link(rel: 'profile', href: '/api/profile{?id}')]
+    #[Embed(rel: 'website', src: '/api/website{?id}')]
+    #[Embed(rel: 'contact', src: '/api/contact{?id}')]
+    public function onGet(int $id): static
     {
         $this->body += [
             'id' => $id,
