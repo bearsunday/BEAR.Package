@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
+use ReflectionProperty;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 
 use function assert;
@@ -55,6 +56,9 @@ class PackageInjectorTest extends TestCase
 
     public function testUnserializableRootObject(): void
     {
+        // Clear memory cache to avoid hitting instances cached by other tests
+        (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
+
         set_error_handler(static function (int $errno, string $errstr): void {
             throw new Exception($errstr, $errno);
         }, E_USER_WARNING);
