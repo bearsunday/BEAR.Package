@@ -61,7 +61,7 @@ class PackageInjectorTest extends TestCase
 
         try {
             $this->expectExceptionMessage('Failed to verify the injector cache.');
-            $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'bad-app', new NullAdapter());
+            $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'prod-app', new NullAdapter());
             $this->assertInstanceOf(InjectorInterface::class, $injector);
         } finally {
             restore_error_handler();

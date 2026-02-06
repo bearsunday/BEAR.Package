@@ -58,12 +58,26 @@ final class PackageInjector
             return self::$instances[$injectorId];
         }
 
+        // Prod: restore compiled injector from cache
         assert($cache instanceof AdapterInterface);
-        /** @psalm-suppress MixedAssignment, MixedArrayAccess */
-        [$injector, $fileUpdate] = $cache->getItem($injectorId)->get(); // @phpstan-ignore-line
-        $isCacheableInjector = $injector instanceof ScriptInjectorInterface || ($injector instanceof InjectorInterface && $fileUpdate instanceof FileUpdate && $fileUpdate->isNotUpdated($meta));
-        if (! $isCacheableInjector) {
-            $injector = self::getInjector($meta, $context, $cache, $injectorId);
+        /** @psalm-suppress MixedAssignment */
+        $injector = $cache->getItem($injectorId)->get();
+        if ($injector instanceof ScriptInjectorInterface) {
+            self::$instances[$injectorId] = $injector;
+
+            return $injector;
+        }
+
+        // Dev: always build fresh injector (no FileUpdate check)
+        $injector = self::factory($meta, $context);
+
+        // Prod: cache the compiled injector
+        if ($injector instanceof ScriptInjectorInterface) {
+            $cacheItem = $cache->getItem($injectorId);
+            $cache->save($cacheItem->set($injector));
+            if ($cache->getItem($injectorId)->get() === null) {
+                trigger_error('Failed to verify the injector cache. See https://github.com/bearsunday/BEAR.Package/issues/418', E_USER_WARNING);
+            }
         }
 
         self::$instances[$injectorId] = $injector;
@@ -102,19 +116,6 @@ final class PackageInjector
 
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
-
-        return $injector;
-    }
-
-    /** @param Context $context */
-    private static function getInjector(AbstractAppMeta $meta, string $context, AdapterInterface $cache, string $injectorId): InjectorInterface
-    {
-        $injector = self::factory($meta, $context);
-        $cache->save($cache->getItem($injectorId)->set([$injector, new FileUpdate($meta)]));
-        // Check the cache
-        if ($cache->getItem($injectorId)->get() === null) {
-            trigger_error('Failed to verify the injector cache. See https://github.com/bearsunday/BEAR.Package/issues/418', E_USER_WARNING);
-        }
 
         return $injector;
     }
