@@ -1,31 +1,51 @@
-# Demo
+# BEAR.Package Demo
 
-This is a minimal BEAR.Sunday application with BEAR.Package.
- 
-## Install and Test
+Minimal [BEAR.Sunday](https://bearsunday.github.io/) application demonstrating resource-oriented architecture with [BEAR.Package](https://github.com/bearsunday/BEAR.Package).
+
+## Features
+
+- Resource embedding with `#[Embed]`
+- Hypermedia links with `#[Link]`
+- Query repository caching with `#[Cacheable]`
+- Context-based dependency bindings (`cli-hal-app`, `hal-app`)
+
+## Resource Structure
+
+```text
+page://self/index           Index (greeting)
+page://self/user            User page
+  └── #[Embed] /api/user    API User (#[Cacheable])
+        ├── #[Embed] /api/website    Website
+        ├── #[Embed] /api/contact    Contact
+        │     └── #[Embed] /api/user/friend    Friend list
+        └── #[Link] /api/profile     Profile (link)
 ```
+
+## Install
+
+```bash
 composer install
-./vendor/bin/phpunit
 ```
 
 ## Run
 
+Console:
 
-console access
-
-```
-php public/index get /
-```
-
-web access
-
-```
-php -S 127.0.0.1:8080 -t public
+```bash
+php public/index.php get /
+php public/index.php get '/user?id=1'
+CONTEXT=prod-hal-app php public/index.php get /
 ```
 
-batch command
+Web server:
 
-```
-php bin/run.php
+```bash
+composer serve
+# http://127.0.0.1:8080/
 ```
 
+## Test
+
+```bash
+./vendor/bin/phpunit
+```
