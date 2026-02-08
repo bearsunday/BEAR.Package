@@ -1,6 +1,7 @@
 {
     "name": "my-vendor/my-project",
     "require": {
+        "php": "^8.5",
         "bear/package": "^1.7"
     },
     "autoload": {
@@ -9,7 +10,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^12.3"
     },
     "scripts": {
         "serve": "php -S 127.0.0.1:8080 -t public"
