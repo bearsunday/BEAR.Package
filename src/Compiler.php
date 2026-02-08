@@ -23,14 +23,11 @@ use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
-use function printf;
 use function realpath;
 use function spl_autoload_functions;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
 use function strpos;
-
-use const PHP_EOL;
 
 /**
  * @psalm-import-type AppName from Types
@@ -38,6 +35,7 @@ use const PHP_EOL;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type ClassList from Types
  * @psalm-import-type OverwrittenFiles from Types
+ * @psalm-import-type CompileReport from Types
  */
 
 final class Compiler
@@ -78,9 +76,9 @@ final class Compiler
     /**
      * Compile application
      *
-     * @return 0|1 exit code
+     * @return CompileReport
      */
-    public function compile(): int
+    public function compile(): array
     {
         $preload = ($this->compilePreload)($this->appMeta, $this->context);
         $module = (new Module())($this->appMeta, $this->context);
@@ -93,20 +91,20 @@ final class Compiler
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();
 
-        echo PHP_EOL;
         $dot = ($this->compilerObjectGraph)($module);
         $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0;
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
-        echo PHP_EOL;
-        printf("Compilation took %f seconds and used %fMB of memory\n", $time, $memory);
-        printf("Compiled: %d resource classes\n", $compiled);
-        printf("Preload compile: %s\n", $this->dumpAutoload->getFileInfo($preload));
         $dotRealpath = realpath($dot);
         assert($dotRealpath !== false);
-        printf("Object graph diagram: %s\n", $dotRealpath);
 
-        return 0;
+        return [
+            'time' => $time,
+            'memory' => $memory,
+            'compiled' => $compiled,
+            'preload' => $this->dumpAutoload->getFileInfo($preload),
+            'dot' => $dotRealpath,
+        ];
     }
 
     public function dumpAutoload(): int

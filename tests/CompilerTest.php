@@ -21,8 +21,8 @@ class CompilerTest extends TestCase
         @unlink($compiledFile1);
         @unlink($compiledFile3);
         $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app', false);
-        $status = $compiler->compile();
-        $this->assertSame(0, $status);
+        $report = $compiler->compile();
+        $this->assertGreaterThan(0, $report['compiled']);
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
@@ -35,8 +35,8 @@ class CompilerTest extends TestCase
         $compiledFile1 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
         $compiledFile3 = __DIR__ . '/Fake/fake-app/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
         $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-cli-app', __DIR__ . '/Fake/fake-app', false);
-        $status = $compiler->compile();
-        $this->assertSame(0, $status);
+        $report = $compiler->compile();
+        $this->assertGreaterThan(0, $report['compiled']);
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);

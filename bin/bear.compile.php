@@ -12,5 +12,15 @@ init:
 
 compile:
     $compiler = new Compiler($appName, $context, $appDir);
-    $code = isset($opt['o']) ? $compiler->dumpAutoload() : $compiler->compile();
-    exit($code);
+    if (isset($opt['o'])) {
+        $code = $compiler->dumpAutoload();
+        exit($code);
+    }
+
+    $report = $compiler->compile();
+    echo PHP_EOL;
+    printf("Compilation took %s seconds and used %sMB of memory\n", $report['time'], $report['memory']);
+    printf("Compiled: %d resource classes\n", $report['compiled']);
+    printf("Preload compile: %s\n", $report['preload']);
+    printf("Object graph diagram: %s\n", $report['dot']);
+    exit(0);
