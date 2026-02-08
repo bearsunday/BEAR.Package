@@ -20,7 +20,7 @@ try {
         Method::from($request->method), $request->path, $request->query
     )()->transfer($app->responder, $_SERVER);
     exit(0);
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     $app->throwableHandler->handle($e, $request)->transfer();
     exit(1);
 }
