@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module;
 
-use BEAR\AppMeta\Meta;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\Module\SchemeCollectionProvider;
@@ -53,9 +52,5 @@ final class ImportAppModule extends AbstractModule
         $this->bind()->annotatedWith(ImportAppConfig::class)->toInstance($this->importApps);
         $this->bind(SchemeCollectionInterface::class)->annotatedWith('original')->toProvider(SchemeCollectionProvider::class);
         $this->bind(SchemeCollectionInterface::class)->toProvider(ImportSchemeCollectionProvider::class);
-        foreach ($this->importApps as $app) {
-            $meta = new Meta($app->appName, $app->context, $app->appDir);
-            $this->install(new ResourceObjectModule($meta->getResourceListGenerator()));
-        }
     }
 }
