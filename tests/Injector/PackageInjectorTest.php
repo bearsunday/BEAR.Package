@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
+use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 
@@ -70,5 +71,20 @@ class PackageInjectorTest extends TestCase
         } finally {
             restore_error_handler();
         }
+    }
+
+    public function testIsProdReturnsFalseWhenCompileIsUnbound(): void
+    {
+        // Covers the Unbound catch branch of PackageInjector::isProd().
+        // A minimal module that never installs DiCompileModule leaves
+        // Compile::class unbound, so getInstance('', Compile::class) throws.
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+
+        $isProd = new ReflectionMethod(PackageInjector::class, 'isProd');
+        $this->assertFalse($isProd->invoke(null, $module));
     }
 }
