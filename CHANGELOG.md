@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.3] - 2026-04-09
+
+### Fixed
+- Fix `PackageInjector::factory()` reusing a module instance mutated by
+  Ray.Di's AOP weaving. Constructing a `RayInjector` for prod detection
+  wove AOP aspects into the module's container, rewriting Dependency
+  class names to proxy names. Passing the same module to
+  `Ray\Compiler\Compiler::compile()` afterwards could raise
+  `ReflectionException` on the proxy class name. Prod is now detected by
+  reading `Compile::class` directly from the container, so no
+  `RayInjector` is constructed for detection (#467, #468)
+
 ## [1.20.2] - 2026-03-26
 
 ### Changed
