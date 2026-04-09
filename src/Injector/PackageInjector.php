@@ -14,13 +14,13 @@ use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
 use Ray\Compiler\ScriptInjectorInterface;
 use Ray\Di\AbstractModule;
+use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 use function assert;
-use function is_bool;
 use function is_dir;
 use function mkdir;
 use function str_replace;
@@ -96,8 +96,8 @@ final class PackageInjector
     {
         $scriptDir = $meta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
-        $module = (new Module())($meta, $context);
 
+        $module = (new Module())($meta, $context);
         if ($overrideModule instanceof AbstractModule) {
             $module->override($overrideModule);
         }
@@ -105,18 +105,29 @@ final class PackageInjector
         // Bind ResourceObject
         $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
 
-        $injector = new RayInjector($module, $scriptDir);
-        $isProd = $injector->getInstance('', Compile::class);
-        assert(is_bool($isProd));
-        if ($isProd) {
-            $compiler = new Compiler();
-            $compiler->compile($module, $scriptDir);
+        if (self::isProd($module)) {
+            (new Compiler())->compile($module, $scriptDir);
             $injector = new CompiledInjector($scriptDir);
+            /** @psalm-suppress InvalidArgument */
+            $injector->getInstance(AppInterface::class);
+
+            return $injector;
         }
 
+        $injector = new RayInjector($module, $scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
 
         return $injector;
+    }
+
+    /** Detect prod without a RayInjector — that would mutate $module via AOP weaving (#467). */
+    private static function isProd(AbstractModule $module): bool
+    {
+        try {
+            return (bool) $module->getContainer()->getInstance('', Compile::class);
+        } catch (Unbound) {
+            return false;
+        }
     }
 }
