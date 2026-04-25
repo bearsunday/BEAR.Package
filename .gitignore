@@ -18,4 +18,5 @@
 /demo/vendor
 demo/.phpunit.result.cache
 /.phpunit-cache/
+/.phpunit.cache/
 /coverage.xml
