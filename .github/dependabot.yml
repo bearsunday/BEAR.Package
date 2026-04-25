@@ -15,6 +15,13 @@ updates:
       - dependency-name: "phpunit/phpunit"
         versions: ["*"]
   - package-ecosystem: "composer"
+    directory: "/demo"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+  - package-ecosystem: "composer"
     directory: "/tests/Fake/fake-app"
     schedule:
       interval: "weekly"
