@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Router;
 
 use Aura\Cli\CliFactory;
+use BEAR\Package\Exception\InvalidCliSapiException;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -135,6 +136,20 @@ class CliRouterTest extends TestCase
         unset($this->router);
         $exists = file_exists($this->stdInFile);
         $this->assertFalse($exists);
+    }
+
+    public function testNonCliSapiThrowsException(): void
+    {
+        $this->expectException(InvalidCliSapiException::class);
+        $server = [
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/',
+        ];
+        $globals = [
+            '_GET' => [],
+            '_POST' => [],
+        ];
+        $this->router->match($globals, $server);
     }
 
     public function testSerializable(): void
