@@ -25,7 +25,7 @@
         "ray/object-visual-grapher": "^1.0",
         "psr/log": "^1.1 || ^2.0 || ^3.0",
         "koriym/http-constants": "^1.2",
-        "ray/psr-cache-module": "^1.5.1",
+        "ray/psr-cache-module": "^1.5.2",
         "symfony/cache": "^v6.4 || ^v7.2",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "koriym/psr4list": "^1.3"
