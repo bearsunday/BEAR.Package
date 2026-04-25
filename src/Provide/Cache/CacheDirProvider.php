@@ -12,12 +12,7 @@ use Ray\Di\ProviderInterface;
 use function is_writable;
 use function mkdir;
 
-/**
- * Provide tmp directory
- *
- * @deprecated This binding is no longer used by Ray.PsrCacheModule
- * @implements ProviderInterface<string>
- */
+/** @implements ProviderInterface<string> */
 final class CacheDirProvider implements ProviderInterface
 {
     private const CACHE_DIRNAME = '/cache';
