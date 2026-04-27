@@ -12,6 +12,8 @@
 /tests/Fake/fake-app/var/log/
 /tests/Fake/fake-app/var/tmp/
 /tests/Fake/fake-app/var/di/
+/tests/Fake/fake-min-app/var/
+/tests/Fake/fake-min-app/var/tmp/app/
 /tests/Fake/import-app/var/tmp/
 /vendor-bin/**/vendor
 /demo/var/tmp
