@@ -9,7 +9,7 @@ use Aura\Cli\Context\OptionFactory;
 use Aura\Cli\Status;
 use Aura\Cli\Stdio;
 use BEAR\Package\Annotation\StdIn;
-use BEAR\Package\Exception\InvalidCliSapiException;
+use BEAR\Package\Exception\InvalidCliContextException;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use Exception;
@@ -26,7 +26,6 @@ use function parse_url;
 use function strtoupper;
 use function unlink;
 
-use const PHP_SAPI;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
@@ -95,7 +94,7 @@ final class CliRouter implements RouterInterface
     public function match(array $globals, array $server)
     {
         if (! isset($server['argc'])) {
-            throw new InvalidCliSapiException(PHP_SAPI);
+            throw new InvalidCliContextException();
         }
 
         /** @var CliServer $server */
