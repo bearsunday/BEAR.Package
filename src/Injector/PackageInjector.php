@@ -34,6 +34,8 @@ use const E_USER_WARNING;
 /** @psalm-import-type Context from Types */
 final class PackageInjector
 {
+    private const INJECTOR_CACHE_DOC = 'https://bearsunday.github.io/manuals/1.0/en/troubleshooting/errors.html#injector-cache-warning';
+
     /**
      * Serialized injector instances
      *
@@ -132,7 +134,11 @@ final class PackageInjector
             return sprintf('Failed to cache the injector(%s). Serialization failed: %s', $injectorId, $e->getMessage());
         }
 
-        return sprintf('Failed to cache the injector(%s). The cache adapter could not store the item. See https://github.com/bearsunday/BEAR.Package/issues/418', $injectorId);
+        return sprintf(
+            'Failed to cache the injector(%s). The cache adapter could not store the item. See %s',
+            $injectorId,
+            self::INJECTOR_CACHE_DOC,
+        );
     }
 
     /** Detect prod without a RayInjector — that would mutate $module via AOP weaving (#467). */
