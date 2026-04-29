@@ -4,6 +4,7 @@
 /composer.lock
 /.phpunit.result.cache
 /.phpcs-cache
+.php_cs.cache
 /tests/tmp/
 /tests/stdout.log
 /tests/Fake/fake-app/autoload.php
