@@ -19,10 +19,13 @@ use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Contracts\Cache\CacheInterface;
+use Throwable;
 
 use function assert;
 use function is_dir;
 use function mkdir;
+use function serialize;
+use function sprintf;
 use function str_replace;
 use function trigger_error;
 
@@ -76,7 +79,7 @@ final class PackageInjector
             $cacheItem = $cache->getItem($injectorId);
             $cache->save($cacheItem->set($injector));
             if ($cache->getItem($injectorId)->get() === null) {
-                trigger_error('Failed to verify the injector cache. See https://github.com/bearsunday/BEAR.Package/issues/418', E_USER_WARNING);
+                trigger_error(self::diagnoseCacheFailure($injector, $injectorId), E_USER_WARNING);
             }
         }
 
@@ -119,6 +122,17 @@ final class PackageInjector
         $injector->getInstance(AppInterface::class);
 
         return $injector;
+    }
+
+    private static function diagnoseCacheFailure(InjectorInterface $injector, string $injectorId): string
+    {
+        try {
+            serialize($injector);
+        } catch (Throwable $e) {
+            return sprintf('Failed to cache the injector(%s). Serialization failed: %s', $injectorId, $e->getMessage());
+        }
+
+        return sprintf('Failed to cache the injector(%s). The cache adapter could not store the item. See https://github.com/bearsunday/BEAR.Package/issues/418', $injectorId);
     }
 
     /** Detect prod without a RayInjector — that would mutate $module via AOP weaving (#467). */

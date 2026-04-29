@@ -22,6 +22,7 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 
 use function assert;
 use function dirname;
+use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
 
@@ -55,9 +56,17 @@ class PackageInjectorTest extends TestCase
         $this->assertInstanceOf(FakeDep2::class, $page->foo);
     }
 
-    public function testUnserializableRootObject(): void
+    public function testDiagnoseCacheFailureForSerializationError(): void
     {
-        // Clear memory cache to avoid hitting instances cached by other tests
+        $diagnoseCacheFailure = new ReflectionMethod(PackageInjector::class, 'diagnoseCacheFailure');
+        $message = $diagnoseCacheFailure->invoke(null, new ThrowOnSerializeInjector(), 'injector-id');
+        assert(is_string($message));
+
+        $this->assertStringContainsString('Serialization failed: serialize failed', $message);
+    }
+
+    public function testCacheStorageFailureMessage(): void
+    {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
 
         set_error_handler(static function (int $errno, string $errstr): void {
@@ -65,8 +74,8 @@ class PackageInjectorTest extends TestCase
         }, E_USER_WARNING);
 
         try {
-            $this->expectExceptionMessage('Failed to verify the injector cache.');
-            $injector = PackageInjector::getInstance(new Meta('FakeVendor\HelloWorld'), 'prod-app', new NullAdapter());
+            $this->expectExceptionMessage('The cache adapter could not store the item.');
+            $injector = PackageInjector::getInstance(new Meta('FakeVendor\MinApp'), 'prod-app', new NullAdapter());
             $this->assertInstanceOf(InjectorInterface::class, $injector);
         } finally {
             restore_error_handler();
