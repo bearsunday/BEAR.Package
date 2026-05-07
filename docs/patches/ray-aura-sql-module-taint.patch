@@ -1,0 +1,25 @@
+diff --git a/src/AuraSqlQueryModule.php b/src/AuraSqlQueryModule.php
+--- a/src/AuraSqlQueryModule.php
++++ b/src/AuraSqlQueryModule.php
+@@ -1,6 +1,12 @@
+ <?php
++/**
++ * Psalm taint annotations for Ray.AuraSqlModule
++ *
++ * The query builder methods properly escape parameters,
++ * preventing SQL injection when used correctly.
++ */
+
+ declare(strict_types=1);
+
+diff --git a/src/Pagerfanta/AuraSqlPagerModule.php b/src/Pagerfanta/AuraSqlPagerModule.php
+--- a/src/Pagerfanta/AuraSqlPagerModule.php
++++ b/src/Pagerfanta/AuraSqlPagerModule.php
+@@ -15,6 +15,8 @@ class AuraSqlPagerModule extends AbstractModule
+     /**
+      * @param string $pagerClass Pager class name
++     *
++     * @psalm-taint-sink sql $pagerClass
+      */
+     public function __construct(
+         private string $pagerClass = AuraSqlPager::class,

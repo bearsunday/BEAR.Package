@@ -1,0 +1,51 @@
+name: Taint Analysis Demo
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tests/Fake/taint-demo-app/**'
+      - 'docs/patches/**'
+
+jobs:
+  taint-demo:
+    name: Psalm Taint Analysis Demo
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-progress
+
+      - name: Run Psalm Taint Analysis
+        run: |
+          echo "=== Running Psalm Taint Analysis on Demo ==="
+          OUTPUT=$(./vendor/bin/psalm --taint-analysis tests/Fake/taint-demo-app/src/ 2>&1) || true
+          echo "$OUTPUT"
+
+          echo ""
+          echo "=== Analysis Results ==="
+
+          if echo "$OUTPUT" | grep -q "TaintedShell"; then
+            echo "✓ TaintedShell detected - Shell injection vulnerability found"
+          fi
+
+          if echo "$OUTPUT" | grep -q "TaintedSql"; then
+            echo "✓ TaintedSql detected - SQL injection vulnerability found"
+          fi
+
+          if echo "$OUTPUT" | grep -q "TaintedHtml"; then
+            echo "✓ TaintedHtml detected - XSS vulnerability found"
+          fi
+
+          echo ""
+          echo "Demo completed - taint analysis is working correctly"

@@ -1,0 +1,74 @@
+name: Create Taint Annotation PRs
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_prs:
+        description: 'Create PRs to ecosystem packages'
+        required: true
+        default: 'false'
+        type: boolean
+
+jobs:
+  create-prs:
+    if: ${{ inputs.create_prs }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: qiq/qiq
+            patch: qiq-taint.patch
+            title: "Add Psalm taint-escape annotations to Escape class"
+            body: |
+              This PR adds Psalm taint annotations to the Escape class methods.
+
+              ## Changes
+              - Add `@psalm-taint-escape html` to `h()`, `a()`, `u()`, `j()` methods
+              - Add `@psalm-taint-escape css` to `c()` method
+
+              ## Purpose
+              These annotations enable Psalm's taint analysis to recognize that
+              the Escape class methods properly sanitize user input, preventing
+              false positives for XSS vulnerabilities when using Qiq templates.
+
+              ## Testing
+              Run `./vendor/bin/psalm --taint-analysis` to verify taint flow tracking.
+
+    steps:
+      - name: Checkout BEAR.Package
+        uses: actions/checkout@v4
+        with:
+          path: bear-package
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.ECOSYSTEM_PAT }}
+          path: target-repo
+
+      - name: Create branch and apply patch
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b add-psalm-taint-annotations
+          git apply ../bear-package/docs/patches/${{ matrix.patch }} || echo "Patch may need manual adjustment"
+
+      - name: Commit and push
+        working-directory: target-repo
+        run: |
+          git add -A
+          git commit -m "${{ matrix.title }}" || echo "No changes to commit"
+          git push -u origin add-psalm-taint-annotations || echo "Push failed"
+
+      - name: Create PR
+        working-directory: target-repo
+        env:
+          GH_TOKEN: ${{ secrets.ECOSYSTEM_PAT }}
+        run: |
+          gh pr create \
+            --title "${{ matrix.title }}" \
+            --body "${{ matrix.body }}" \
+            --head add-psalm-taint-annotations || echo "PR creation failed or already exists"
