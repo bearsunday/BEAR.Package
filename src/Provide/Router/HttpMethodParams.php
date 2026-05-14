@@ -46,6 +46,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @psalm-taint-source input
      */
     #[Override]
     public function get(array $server, array $get, array $post)

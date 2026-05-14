@@ -24,6 +24,8 @@ interface HttpMethodParamsInterface
      * @param QueryParams                                                $post $_POST
      *
      * @return array{0: string, 1: QueryParams}
+     *
+     * @psalm-taint-source input
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     public function get(array $server, array $get, array $post);
