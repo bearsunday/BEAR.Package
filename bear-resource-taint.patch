@@ -1,0 +1,49 @@
+From 07c22ab9aa2cea32332d241f04588a6bd4659cab Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 13 May 2026 23:54:32 +0000
+Subject: [PATCH] Add Psalm taint-source annotations to RequestInterface
+
+Mark query parameters as taint sources for security analysis:
+- __invoke($query)
+- withQuery($query)
+- addQuery($query)
+
+This enables Psalm's taint analysis to track user input through
+the resource request system and detect potential security issues.
+---
+ src/RequestInterface.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/RequestInterface.php b/src/RequestInterface.php
+index ede95bf3..5dad79f4 100644
+--- a/src/RequestInterface.php
++++ b/src/RequestInterface.php
+@@ -15,6 +15,8 @@ interface RequestInterface
+      * InvokerInterface resource request
+      *
+      * @param Query $query
++     *
++     * @psalm-taint-source input $query
+      */
+     public function __invoke(array|null $query = null): ResourceObject;
+
+@@ -22,6 +24,8 @@ public function __invoke(array|null $query = null): ResourceObject;
+      * Set query
+      *
+      * @param Query $query
++     *
++     * @psalm-taint-source input $query
+      */
+     public function withQuery(array $query): self;
+
+@@ -29,6 +33,8 @@ public function withQuery(array $query): self;
+      * Merge query
+      *
+      * @param Query $query
++     *
++     * @psalm-taint-source input $query
+      */
+     public function addQuery(array $query): self;
+
+--
+2.43.0
