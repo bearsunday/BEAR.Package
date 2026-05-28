@@ -11,6 +11,8 @@ use Override;
 
 use function file_get_contents;
 use function in_array;
+use function is_array;
+use function is_string;
 use function json_decode;
 use function json_last_error;
 use function json_last_error_msg;
@@ -21,7 +23,11 @@ use function strtolower;
 
 use const JSON_ERROR_NONE;
 
-/** @psalm-import-type QueryParams from Types */
+/**
+ * @psalm-import-type QueryParams from Types
+ * @psalm-import-type HttpServer from HttpMethodParamsInterface
+ * @phpstan-import-type HttpServer from HttpMethodParamsInterface
+ */
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
     public const CONTENT_TYPE = 'CONTENT_TYPE';
@@ -62,7 +68,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
+     * @param HttpServer  $server
      * @param QueryParams                        $post
      *
      * @return array{0: string, 1: QueryParams}
@@ -81,8 +87,8 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     }
 
     /**
-     * @param array{HTTP_X_HTTP_METHOD_OVERRIDE?: string, ...} $server
-     * @param array{_method?: string}                     $params
+     * @param HttpServer  $server
+     * @param array{_method?: string, ...<string, mixed>} $params
      *
      * @return array{0: string, 1: QueryParams}
      */
@@ -100,7 +106,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         }
 
         // look for override in headers
-        if (isset($server['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+        if (isset($server['HTTP_X_HTTP_METHOD_OVERRIDE']) && is_string($server['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
             $method = strtolower($server['HTTP_X_HTTP_METHOD_OVERRIDE']);
         }
 
@@ -110,7 +116,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request parameters
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server
+     * @param HttpServer  $server
      * @param QueryParams                                     $post
      *
      * @return QueryParams
@@ -133,20 +139,25 @@ final class HttpMethodParams implements HttpMethodParamsInterface
     /**
      * Return request query by media-type
      *
-     * @param array{CONTENT_TYPE?: string, HTTP_CONTENT_TYPE?: string, ...} $server $_SERVER
+     * @param HttpServer $server $_SERVER
      *
      * @return QueryParams
      */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function phpInput(array $server): array
     {
-        $contentType = $server[self::CONTENT_TYPE] ?? $server[self::HTTP_CONTENT_TYPE] ?? '';
+        $contentType = '';
+        if (isset($server[self::CONTENT_TYPE]) && is_string($server[self::CONTENT_TYPE])) {
+            $contentType = $server[self::CONTENT_TYPE];
+        } elseif (isset($server[self::HTTP_CONTENT_TYPE]) && is_string($server[self::HTTP_CONTENT_TYPE])) {
+            $contentType = $server[self::HTTP_CONTENT_TYPE];
+        }
+
         $isFormUrlEncoded = str_contains($contentType, self::FORM_URL_ENCODE);
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
 
-            /** @var QueryParams $put */
-            return $put;
+            return $this->normalizeQueryParams($put);
         }
 
         $isApplicationJson = str_contains($contentType, self::APPLICATION_JSON);
@@ -154,20 +165,45 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             return [];
         }
 
-        /** @var QueryParams $content */
+        /** @psalm-suppress MixedAssignment */
         $content = json_decode($this->getRawBody($server), true);
         $error = json_last_error();
         if ($error !== JSON_ERROR_NONE) {
             throw new InvalidRequestJsonException(json_last_error_msg());
         }
 
-        return $content;
+        return is_array($content) ? $this->normalizeQueryParams($content) : [];
     }
 
-    /** @param array{HTTP_RAW_POST_DATA?: string, ...} $server */
+    /**
+     * @param array<int|string, mixed> $params
+     *
+     * @return QueryParams
+     *
+     * @psalm-suppress MixedAssignment
+     */
+    private function normalizeQueryParams(array $params): array
+    {
+        $query = [];
+        foreach ($params as $key => $value) {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            $query[$key] = $value;
+        }
+
+        return $query;
+    }
+
+    /** @param HttpServer $server */
     // phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamName
     private function getRawBody(array $server): string
     {
-        return $server['HTTP_RAW_POST_DATA'] ?? rtrim((string) file_get_contents($this->stdIn));
+        if (isset($server['HTTP_RAW_POST_DATA']) && is_string($server['HTTP_RAW_POST_DATA'])) {
+            return $server['HTTP_RAW_POST_DATA'];
+        }
+
+        return rtrim((string) file_get_contents($this->stdIn));
     }
 }

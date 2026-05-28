@@ -7,6 +7,7 @@ namespace BEAR\Package\Compiler;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
 use BEAR\Package\Types;
+use BEAR\Resource\Method;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
@@ -49,9 +50,9 @@ final class Bootstrap
         assert($router instanceof RouterInterface);
         $request = $router->match($globals, $server);
         try {
-            /** @psalm-suppress all */
             $resource = $injector->getInstance(ResourceInterface::class);
-            $resource->{$request->method}->uri($request->path)($request->query);
+            assert($resource instanceof ResourceInterface);
+            $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
         } catch (Throwable) {
             $injector->getInstance(TransferInterface::class);
 

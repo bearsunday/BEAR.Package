@@ -8,7 +8,7 @@ use BEAR\Resource\ResourceObject;
 
 class Task extends ResourceObject
 {
-    public function onPost($id = null)
+    public function onPost(int|null $id = null): self
     {
         unset($id);
         $this->headers['Location'] = '/?id=10';

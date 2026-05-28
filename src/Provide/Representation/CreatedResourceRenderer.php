@@ -65,17 +65,38 @@ final class CreatedResourceRenderer implements RenderInterface
         $routeName = (string) parse_url($uri, PHP_URL_PATH);
         $urlQuery = (string) parse_url($uri, PHP_URL_QUERY);
         $urlQuery ? parse_str($urlQuery, $value) : $value = [];
+        $value = $this->normalizeQueryParams($value);
         if ($value === []) {
             return $uri;
         }
 
-        /** @var QueryParams $value */
         $reverseUri = $this->router->generate($routeName, $value);
         if (is_string($reverseUri)) {
             return $reverseUri;
         }
 
         return $uri;
+    }
+
+    /**
+     * @param array<int|string, mixed> $params
+     *
+     * @return QueryParams
+     *
+     * @psalm-suppress MixedAssignment
+     */
+    private function normalizeQueryParams(array $params): array
+    {
+        $query = [];
+        foreach ($params as $key => $value) {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            $query[$key] = $value;
+        }
+
+        return $query;
     }
 
     private function updateHeaders(ResourceObject $ro): void

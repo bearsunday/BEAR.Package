@@ -15,7 +15,7 @@ final class FilePutContents
 {
     /** @param OverwrittenFiles $overwritten For debugging */
     public function __construct(
-        private ArrayObject $overwritten,  // @phpstan-ignore-line
+        private ArrayObject $overwritten,
     ) {
     }
 

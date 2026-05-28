@@ -9,9 +9,10 @@ use BEAR\Sunday\Provide\Transfer\HttpResponder;
 
 class FakeHttpResponder extends HttpResponder
 {
-    public static $code = [];
-    public static $headers = [];
-    public static $content;
+    public static int $code = 0;
+    /** @var array<string, string> */
+    public static array $headers = [];
+    public static string $content = "";
 
     public function __invoke(ResourceObject $ro, array $server) : void
     {
@@ -22,9 +23,9 @@ class FakeHttpResponder extends HttpResponder
         self::$content = $ro->view;
     }
 
-    public static function reset()
+    public static function reset(): void
     {
         static::$headers = [];
-        static::$content = null;
+        static::$content = "";
     }
 }

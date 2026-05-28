@@ -19,6 +19,7 @@ use RuntimeException;
 
 use function assert;
 use function file_exists;
+use function is_float;
 use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
@@ -52,7 +53,7 @@ final class Compiler
      * @param Context $context application context "prod-app"
      * @param AppDir  $appDir  application path
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public function __construct(string $appName, private string $context, string $appDir, bool $prepend = true)
     {
@@ -92,7 +93,7 @@ final class Compiler
         $compiled = $this->compileClassMetaInfo();
 
         $dot = ($this->compilerObjectGraph)($module);
-        $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0;
+        $start = self::getRequestTime($_SERVER['REQUEST_TIME_FLOAT'] ?? null);
         $time = number_format(microtime(true) - $start, 2);
         $memory = number_format(memory_get_peak_usage() / (1024 * 1024), 3);
         $dotRealpath = realpath($dot);
@@ -110,6 +111,15 @@ final class Compiler
     public function dumpAutoload(): int
     {
         return ($this->dumpAutoload)();
+    }
+
+    private static function getRequestTime(mixed $requestTime): float
+    {
+        if (is_float($requestTime)) {
+            return $requestTime;
+        }
+
+        return 0.0;
     }
 
     private function compileClassMetaInfo(): int
@@ -130,7 +140,7 @@ final class Compiler
         return $count;
     }
 
-    /** @SuppressWarnings(PHPMD.BooleanArgumentFlag) */
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     private function registerLoader(string $appDir, bool $prepend = true): void
     {
         $this->unregisterComposerLoader();
