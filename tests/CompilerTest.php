@@ -8,8 +8,11 @@ use BEAR\Package\Exception\InvalidContextException;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
+use ReflectionMethod;
 use RuntimeException;
 
+use function assert;
+use function is_float;
 use function unlink;
 
 class CompilerTest extends TestCase
@@ -60,5 +63,14 @@ class CompilerTest extends TestCase
         $this->expectException(InvalidContextException::class);
         $compiler = new Compiler('FakeVendor\HelloWorld', 'cli-invalid-app', __DIR__ . '/Fake/fake-app', false);
         $compiler->compile();
+    }
+
+    public function testGetRequestTimeFallsBackToZeroForNonFloat(): void
+    {
+        // $_SERVER['REQUEST_TIME_FLOAT'] is normally a float, but guard against a malformed value.
+        $getRequestTime = new ReflectionMethod(Compiler::class, 'getRequestTime');
+        $result = $getRequestTime->invoke(null, 'not-a-float');
+        assert(is_float($result));
+        $this->assertSame(0.0, $result);
     }
 }

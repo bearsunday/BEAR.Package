@@ -10,9 +10,11 @@ use BEAR\Resource\ResourceObject;
 use FakeVendor\HelloWorld\Resource\App\Post;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 use function assert;
 use function dirname;
+use function is_string;
 
 class CreatedResourceRendererTest extends TestCase
 {
@@ -62,5 +64,16 @@ class CreatedResourceRendererTest extends TestCase
     public function testReverseRoutedHeader(ResourceObject $ro): void
     {
         $this->assertSame('/task/10', $ro->headers['Location']);
+    }
+
+    public function testReverseMatchDropsNonStringQueryKeys(): void
+    {
+        // parse_str() casts the numeric key "0" to int; normalizeQueryParams() skips it,
+        // leaving no params to reverse-route so the original URI is returned unchanged.
+        $getReverseMatchedLink = new ReflectionMethod(CreatedResourceRenderer::class, 'getReverseMatchedLink');
+        $uri = '/task?0=zero';
+        $result = $getReverseMatchedLink->invoke($this->renderer, $uri);
+        assert(is_string($result));
+        $this->assertSame($uri, $result);
     }
 }
