@@ -21,7 +21,6 @@ use function basename;
 use function file_exists;
 use function file_put_contents;
 use function http_build_query;
-use function is_string;
 use function parse_str;
 use function parse_url;
 use function strtoupper;
@@ -201,27 +200,6 @@ final class CliRouter implements RouterInterface
     // @codeCoverageIgnoreEnd
 
     /**
-     * @param array<int|string, mixed> $params
-     *
-     * @return QueryParams
-     *
-     * @psalm-suppress MixedAssignment
-     */
-    private function normalizeQueryParams(array $params): array
-    {
-        $query = [];
-        foreach ($params as $key => $value) {
-            if (! is_string($key)) {
-                continue;
-            }
-
-            $query[$key] = $value;
-        }
-
-        return $query;
-    }
-
-    /**
      * Return $method, $query, $server from $server
      *
      * @param Server $server
@@ -244,7 +222,7 @@ final class CliRouter implements RouterInterface
             'REQUEST_URI' => $urlPath,
         ];
 
-        $query = $this->normalizeQueryParams($query);
+        $query = QueryParamNormalizer::normalize($query);
 
         return [$method, $query, $server];
     }

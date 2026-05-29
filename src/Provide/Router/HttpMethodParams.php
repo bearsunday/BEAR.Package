@@ -25,8 +25,8 @@ use const JSON_ERROR_NONE;
 
 /**
  * @psalm-import-type QueryParams from Types
- * @psalm-import-type HttpServer from HttpMethodParamsInterface
- * @phpstan-import-type HttpServer from HttpMethodParamsInterface
+ * @psalm-import-type HttpServer from Types
+ * @phpstan-import-type HttpServer from Types
  */
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
@@ -157,7 +157,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
         if ($isFormUrlEncoded) {
             parse_str(rtrim($this->getRawBody($server)), $put);
 
-            return $this->normalizeQueryParams($put);
+            return QueryParamNormalizer::normalize($put);
         }
 
         $isApplicationJson = str_contains($contentType, self::APPLICATION_JSON);
@@ -172,28 +172,7 @@ final class HttpMethodParams implements HttpMethodParamsInterface
             throw new InvalidRequestJsonException(json_last_error_msg());
         }
 
-        return is_array($content) ? $this->normalizeQueryParams($content) : [];
-    }
-
-    /**
-     * @param array<int|string, mixed> $params
-     *
-     * @return QueryParams
-     *
-     * @psalm-suppress MixedAssignment
-     */
-    private function normalizeQueryParams(array $params): array
-    {
-        $query = [];
-        foreach ($params as $key => $value) {
-            if (! is_string($key)) {
-                continue;
-            }
-
-            $query[$key] = $value;
-        }
-
-        return $query;
+        return is_array($content) ? QueryParamNormalizer::normalize($content) : [];
     }
 
     /** @param HttpServer $server */

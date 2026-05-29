@@ -9,8 +9,8 @@ use BEAR\Package\Types;
 /**
  * @psalm-import-type ServerArray from Types
  * @psalm-import-type QueryParams from Types
- * @psalm-type HttpServer = array{REQUEST_METHOD: string, HTTP_X_HTTP_METHOD_OVERRIDE?: mixed, CONTENT_TYPE?: mixed, HTTP_CONTENT_TYPE?: mixed, HTTP_RAW_POST_DATA?: mixed, ...}
- * @phpstan-type HttpServer array{REQUEST_METHOD: string, HTTP_X_HTTP_METHOD_OVERRIDE?: mixed, CONTENT_TYPE?: mixed, HTTP_CONTENT_TYPE?: mixed, HTTP_RAW_POST_DATA?: mixed, ...<string, mixed>}
+ * @psalm-import-type HttpServer from Types
+ * @phpstan-import-type HttpServer from Types
  */
 interface HttpMethodParamsInterface
 {

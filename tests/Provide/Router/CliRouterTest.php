@@ -87,7 +87,7 @@ class CliRouterTest extends TestCase
 
     public function testMatchDropsNonStringQueryKeys(): void
     {
-        // parse_str() casts the numeric key "0" to int, which normalizeQueryParams() skips.
+        // parse_str() casts the numeric key "0" to int, which QueryParamNormalizer::normalize() skips.
         $server = [
             'argv' => [
                 'php',

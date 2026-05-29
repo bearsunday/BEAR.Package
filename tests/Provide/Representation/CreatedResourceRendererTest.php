@@ -68,7 +68,7 @@ class CreatedResourceRendererTest extends TestCase
 
     public function testReverseMatchDropsNonStringQueryKeys(): void
     {
-        // parse_str() casts the numeric key "0" to int; normalizeQueryParams() skips it,
+        // parse_str() casts the numeric key "0" to int; QueryParamNormalizer::normalize() skips it,
         // leaving no params to reverse-route so the original URI is returned unchanged.
         $getReverseMatchedLink = new ReflectionMethod(CreatedResourceRenderer::class, 'getReverseMatchedLink');
         $uri = '/task?0=zero';

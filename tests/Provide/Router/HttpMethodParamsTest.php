@@ -253,7 +253,7 @@ class HttpMethodParamsTest extends TestCase
 
     public function testFormUrlEncodedDropsNonStringKeys(): void
     {
-        // parse_str() casts the numeric key "0" to int, which normalizeQueryParams() skips.
+        // parse_str() casts the numeric key "0" to int, which QueryParamNormalizer::normalize() skips.
         $server = [
             'REQUEST_METHOD' => 'PUT',
             HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE,

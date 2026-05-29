@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Representation;
 
 use BEAR\Package\Exception\LocationHeaderRequestException;
-use BEAR\Package\Types;
+use BEAR\Package\Provide\Router\QueryParamNormalizer;
 use BEAR\Resource\RenderInterface;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
@@ -25,8 +25,6 @@ use const PHP_URL_SCHEME;
 
 /**
  * 201 CreatedResource renderer
- *
- * @psalm-import-type QueryParams from Types
  */
 final class CreatedResourceRenderer implements RenderInterface
 {
@@ -65,7 +63,7 @@ final class CreatedResourceRenderer implements RenderInterface
         $routeName = (string) parse_url($uri, PHP_URL_PATH);
         $urlQuery = (string) parse_url($uri, PHP_URL_QUERY);
         $urlQuery ? parse_str($urlQuery, $value) : $value = [];
-        $value = $this->normalizeQueryParams($value);
+        $value = QueryParamNormalizer::normalize($value);
         if ($value === []) {
             return $uri;
         }
@@ -76,27 +74,6 @@ final class CreatedResourceRenderer implements RenderInterface
         }
 
         return $uri;
-    }
-
-    /**
-     * @param array<int|string, mixed> $params
-     *
-     * @return QueryParams
-     *
-     * @psalm-suppress MixedAssignment
-     */
-    private function normalizeQueryParams(array $params): array
-    {
-        $query = [];
-        foreach ($params as $key => $value) {
-            if (! is_string($key)) {
-                continue;
-            }
-
-            $query[$key] = $value;
-        }
-
-        return $query;
     }
 
     private function updateHeaders(ResourceObject $ro): void
