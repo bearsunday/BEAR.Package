@@ -41,7 +41,7 @@ class InjectorTest extends TestCase
         $this->assertSame(spl_object_hash($injector), spl_object_hash($singletonInjector));
     }
 
-    /** @return array<array{0: string, 1:int}> */
+    /** @return array<array{0: non-empty-string, 1:int}> */
     public static function countOfNewProvider(): array
     {
         return [
@@ -50,6 +50,7 @@ class InjectorTest extends TestCase
         ];
     }
 
+    /** @param non-empty-string $context */
     #[DataProvider('countOfNewProvider')]
     public function testCachedGetInstance(string $context, int $countOfNew): void
     {
@@ -57,14 +58,12 @@ class InjectorTest extends TestCase
         $exitCode = $this->runOnce($context);
         $this->assertSame(0, $exitCode);
         App::$countOfNewInstance = 0;
-        assert($context !== '');
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         $app = $injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);
         $this->assertInstanceOf(AppInterface::class, $app);
         $count = App::$countOfNewInstance;
         // 2nd injector; AppInterface object should be stored as a singleton.
-        assert($context !== '');
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         $app = $injector->getInstance(AppInterface::class);
         assert($app instanceof AppInterface);

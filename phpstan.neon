@@ -1,10 +1,11 @@
 parameters:
   level: max
+  treatPhpDocTypesAsCertain: false
   paths:
     - src
     - tests
   excludePaths:
-    - tests/hash.php
+    - tests/hash.php (?)
     - tests/tmp/*
     - tests/Fake/*
     - tests/script/*

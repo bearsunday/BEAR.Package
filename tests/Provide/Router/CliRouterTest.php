@@ -85,6 +85,25 @@ class CliRouterTest extends TestCase
         $this->assertSame(['name' => 'bear'], $request->query);
     }
 
+    public function testMatchDropsNonStringQueryKeys(): void
+    {
+        // parse_str() casts the numeric key "0" to int, which QueryParamNormalizer::normalize() skips.
+        $server = [
+            'argv' => [
+                'php',
+                'get',
+                'page://self/?0=zero&name=bear',
+            ],
+            'argc' => 3,
+        ];
+        $globals = [
+            '_GET' => [],
+            '_POST' => [],
+        ];
+        $request = $this->router->match($globals, $server); // @phpstan-ignore-line
+        $this->assertSame(['name' => 'bear'], $request->query);
+    }
+
     public function testOption(): void
     {
         $server = [

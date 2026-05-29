@@ -250,4 +250,28 @@ class HttpMethodParamsTest extends TestCase
         $expected = [];
         $this->assertSame($expected, $params);
     }
+
+    public function testFormUrlEncodedDropsNonStringKeys(): void
+    {
+        // parse_str() casts the numeric key "0" to int, which QueryParamNormalizer::normalize() skips.
+        $server = [
+            'REQUEST_METHOD' => 'PUT',
+            HttpMethodParams::CONTENT_TYPE => HttpMethodParams::FORM_URL_ENCODE,
+            'HTTP_RAW_POST_DATA' => '0=zero&name=bear',
+        ];
+        [, $params] = (new HttpMethodParams())->get($server, [], []);
+        $this->assertSame(['name' => 'bear'], $params);
+    }
+
+    public function testJsonScalarBodyReturnsEmptyParams(): void
+    {
+        // A valid but non-array JSON body (a bare string) yields no query params.
+        $server = [
+            'REQUEST_METHOD' => 'PUT',
+            'HTTP_CONTENT_TYPE' => 'application/json',
+            'HTTP_RAW_POST_DATA' => '"hello"',
+        ];
+        [, $params] = (new HttpMethodParams())->get($server, [], []);
+        $this->assertSame([], $params);
+    }
 }

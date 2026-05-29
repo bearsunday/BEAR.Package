@@ -14,7 +14,6 @@ use BEAR\Resource\Uri;
 use FakeVendor\HelloWorld\Resource\App\Task;
 use PHPUnit\Framework\TestCase;
 
-use function assert;
 use function dirname;
 use function restore_error_handler;
 use function set_error_handler;
@@ -230,7 +229,6 @@ class HalRendererTest extends TestCase
     public function test201CreatedWithNoQuery(): void
     {
         $ro = $this->resource->post('app://self/post?uri=/post');
-        assert($ro instanceof ResourceObject);
         $result = (string) $ro;
         $this->assertSame(201, $ro->code);
         $this->assertSame('/post', $ro->headers['Location']);
@@ -239,7 +237,6 @@ class HalRendererTest extends TestCase
     public function testCreatedResourceAnnotationButFailed(): void
     {
         $ro = $this->resource->post('app://self/post?code=500');
-        assert($ro instanceof ResourceObject);
         $result = (string) $ro;
         $expect = '{
     "_links": {
@@ -263,7 +260,6 @@ class HalRendererTest extends TestCase
 
             return true;
         });
-        assert($ro instanceof ResourceObject);
         $ro->__toString();
 
         $this->assertSame(512, $errNo);

@@ -8,6 +8,7 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\QueryRepository\EtagSetter;
 use BEAR\QueryRepository\HttpCache;
+use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\TransferInterface;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -18,9 +19,9 @@ use Ray\Di\InjectorInterface;
 
 use function assert;
 use function class_exists;
+use function get_object_vars;
 use function ob_end_clean;
 use function ob_start;
-use function property_exists;
 
 final class FakeRun
 {
@@ -49,15 +50,17 @@ final class FakeRun
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);
-        assert(property_exists($app, 'resource'));
-        assert(property_exists($app, 'responder'));
+        assert($app instanceof AppInterface);
+        $appVars = get_object_vars($app);
+        $resource = $appVars['resource'] ?? null;
+        assert($resource instanceof ResourceInterface);
+        $responder = $appVars['responder'] ?? null;
+        assert($responder instanceof TransferInterface);
         $ro = $this->injector->getInstance(NullPage::class);
         $ro->uri = new Uri('app://self/');
-        /** @var NullPage $ro */
-        $ro = $app->resource->get->object($ro)(['required' => 'string']);
-        assert($app->responder instanceof TransferInterface);
+        $ro = $resource->object($ro)(['required' => 'string']);
         ob_start();
-        $ro->transfer($app->responder, []);
+        $ro->transfer($responder, []);
         ob_end_clean();
         class_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);

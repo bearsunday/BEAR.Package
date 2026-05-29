@@ -222,7 +222,8 @@ final class CliRouter implements RouterInterface
             'REQUEST_URI' => $urlPath,
         ];
 
-        /** @var QueryParams $query */
+        $query = QueryParamNormalizer::normalize($query);
+
         return [$method, $query, $server];
     }
 }

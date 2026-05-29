@@ -9,8 +9,6 @@ use BEAR\Sunday\Provide\Transfer\Header;
 use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
 
-use function assert;
-use function is_string;
 use function ob_get_clean;
 use function ob_start;
 
@@ -28,7 +26,6 @@ class CliResponderTest extends TestCase
     public function testTransfer(): void
     {
         $ro = (new Index())->onGet();
-        assert(is_string((string) $ro));
         $ro->headers['X-BEAR-VERSION'] = 'Sunday';
         ob_start();
         $ro->transfer($this->responder, []);

@@ -10,7 +10,7 @@ class Index extends ResourceObject
 {
     /** @var array{greeting: string} */
     public $body;
-    public function onGet($name = 'BEAR.Sunday')
+    public function onGet(string $name = 'BEAR.Sunday'): self
     {
         $this->body = [
             'greeting' => 'Hello ' . $name

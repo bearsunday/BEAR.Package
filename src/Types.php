@@ -24,6 +24,8 @@ use ArrayObject;
  * @psalm-type ServerArray = array<string, mixed>
  * @psalm-type GlobalsArray = array<string, mixed>
  * @psalm-type CliArgv = list<string>
+ * @psalm-type HttpServer = array{REQUEST_METHOD: string, HTTP_X_HTTP_METHOD_OVERRIDE?: mixed, CONTENT_TYPE?: mixed, HTTP_CONTENT_TYPE?: mixed, HTTP_RAW_POST_DATA?: mixed, ...}
+ * @phpstan-type HttpServer array{REQUEST_METHOD: string, HTTP_X_HTTP_METHOD_OVERRIDE?: mixed, CONTENT_TYPE?: mixed, HTTP_CONTENT_TYPE?: mixed, HTTP_RAW_POST_DATA?: mixed, ...<string, mixed>}
  *
  * Router Types
  * @psalm-type HttpMethod = non-empty-string
