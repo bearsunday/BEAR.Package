@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Isolate override injector scriptDir so AOP proxies / compiled containers do not collide with the default injector for the same app+context (#478)
+- Align `Compiler::compile()` DI script directory with runtime (`{tmpDir}/di` instead of `var/di/{context}`)
 
 ## [1.20.3] - 2026-04-09
 
