@@ -19,6 +19,7 @@ use Ray\Di\InjectorInterface;
 use function assert;
 use function class_exists;
 use function get_object_vars;
+use function interface_exists;
 
 final class FakeRun
 {
@@ -54,7 +55,7 @@ final class FakeRun
         $ro = $this->injector->getInstance(NullPage::class);
         $ro->uri = new Uri('app://self/');
         $resource->object($ro)(['required' => 'string']);
-        class_exists(HttpCacheInterface::class);
+        interface_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);
         class_exists(HttpResponder::class);
         class_exists(EtagSetter::class);

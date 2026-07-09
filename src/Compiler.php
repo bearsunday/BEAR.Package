@@ -57,6 +57,8 @@ final class Compiler
     /** @var ArrayObject<int, string> */
     private ArrayObject $classes;
     private AbstractAppMeta $appMeta;
+
+    /** @var Context */
     private string $context;
     private InjectorInterface $injector;
     private CompileAutoload $dumpAutoload;
@@ -72,13 +74,11 @@ final class Compiler
      */
     public function __construct(string $appName, string $context, string $appDir, bool $prepend = true)
     {
-        $this->init(
-            $context,
-            $appDir,
-            $prepend,
-            new Meta($appName, $context, $appDir),
-            Injector::getInstance($appName, $context, $appDir),
-        );
+        $meta = new Meta($appName, $context, $appDir);
+        // registerLoader / hookNullObjectClass must run before Injector::getInstance
+        // (argument evaluation would load the app too early and break .compile.php stubs).
+        $this->prepare($context, $appDir, $prepend, $meta);
+        $this->wire(Injector::getInstance($appName, $context, $appDir));
     }
 
     /**
@@ -94,10 +94,11 @@ final class Compiler
     public static function fromInjector(InjectorInterface $injector, string $context, bool $prepend = true): self
     {
         $meta = $injector->getInstance(AbstractAppMeta::class);
-        assert($meta instanceof AbstractAppMeta);
+        assert($meta->appDir !== '');
 
         $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        $compiler->init($context, $meta->appDir, $prepend, $meta, $injector);
+        $compiler->prepare($context, $meta->appDir, $prepend, $meta);
+        $compiler->wire($injector);
 
         return $compiler;
     }
@@ -117,7 +118,7 @@ final class Compiler
         printf("Preload compile: %s\n", $report['preload']);
         printf("Object graph diagram: %s\n", $report['dot']);
 
-        return $this->dumpAutoload();
+        return $this->dumpAutoload() === 0 ? 0 : 1;
     }
 
     /**
@@ -216,28 +217,37 @@ final class Compiler
         return $count;
     }
 
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    private function init(
+    /**
+     * @param Context $context
+     * @param AppDir  $appDir
+     *
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     */
+    private function prepare(
         string $context,
         string $appDir,
         bool $prepend,
         AbstractAppMeta $appMeta,
-        InjectorInterface $injector,
     ): void {
         /** @var ArrayObject<int, string> $classes */
         $classes = new ArrayObject();
         $this->classes = $classes;
         $this->context = $context;
         $this->appMeta = $appMeta;
-        $this->injector = $injector;
         $this->registerLoader($appDir, $prepend);
         $this->hookNullObjectClass($appDir);
+    }
+
+    private function wire(InjectorInterface $injector): void
+    {
+        $this->injector = $injector;
+        assert($this->appMeta->appDir !== '');
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
         $filePutContents = new FilePutContents($overWritten);
-        $fakeRun = new FakeRun($injector, $context, $this->appMeta);
-        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
-        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $classes, $context, $injector);
+        $fakeRun = new FakeRun($injector, $this->context, $this->appMeta);
+        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $this->appMeta->appDir, $this->context);
+        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $this->classes, $this->context, $injector);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
     }
 

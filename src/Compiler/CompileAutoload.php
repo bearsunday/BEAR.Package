@@ -69,6 +69,7 @@ final class CompileAutoload
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
         $paths = $this->getPaths($classes);
+        assert($this->appMeta->appDir !== '');
         $autoload = $this->saveAutoloadFile($this->appMeta->appDir, $paths);
         $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
         assert(is_float($start));
