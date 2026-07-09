@@ -20,6 +20,7 @@ use Ray\Di\InjectorInterface;
 use function assert;
 use function class_exists;
 use function get_object_vars;
+use function interface_exists;
 use function ob_end_clean;
 use function ob_start;
 
@@ -62,7 +63,7 @@ final class FakeRun
         ob_start();
         $ro->transfer($responder, []);
         ob_end_clean();
-        class_exists(HttpCacheInterface::class);
+        interface_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);
         class_exists(HttpResponder::class);
         class_exists(EtagSetter::class);
