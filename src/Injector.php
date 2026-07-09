@@ -41,9 +41,17 @@ final class Injector
     }
 
     /**
+     * Return an injector with the given override module applied.
+     *
+     * AOP proxies and the compiled container for override injectors are stored under a
+     * subdirectory of tmpDir/di keyed by the override module class name, so they do not
+     * collide with Injector::getInstance() for the same app+context.
+     *
      * @param AppName $appName
      * @param Context $context
      * @param AppDir  $appDir
+     *
+     * @see PackageInjector::factory()
      */
     public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
     {

@@ -22,6 +22,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Throwable;
 
 use function assert;
+use function hash;
 use function is_dir;
 use function mkdir;
 use function serialize;
@@ -93,12 +94,15 @@ final class PackageInjector
      *
      * @param Context $context
      *
-     * This is useful for testing purposes, where you want to override a module with a mock or stub
+     * This is useful for testing purposes, where you want to override a module with a mock or stub.
+     * When $overrideModule is given, AOP proxies / the compiled container are written under a
+     * subdirectory of tmpDir/di keyed by the override module class, so they do not collide with
+     * the default injector for the same app+context.
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
-        $scriptDir = $meta->tmpDir . '/di';
-        ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
+        $scriptDir = self::scriptDir($meta, $overrideModule);
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
 
         $module = (new Module())($meta, $context);
         if ($overrideModule instanceof AbstractModule) {
@@ -122,6 +126,24 @@ final class PackageInjector
         $injector->getInstance(AppInterface::class);
 
         return $injector;
+    }
+
+    /**
+     * Resolve the script directory for AOP proxies / compiled container.
+     *
+     * Override injectors use a class-name hash subdirectory so they never share
+     * on-disk artifacts with the default injector for the same app+context (#478).
+     *
+     * @return non-empty-string
+     */
+    private static function scriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    {
+        $scriptDir = $meta->tmpDir . '/di';
+        if ($overrideModule instanceof AbstractModule) {
+            $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
+        }
+
+        return $scriptDir;
     }
 
     private static function diagnoseCacheFailure(InjectorInterface $injector, string $injectorId): string
