@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
-use BEAR\AppMeta\Meta;
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Types;
 use ReflectionClass;
 
@@ -46,7 +46,7 @@ final class CompileAutoload
     public function __construct(
         private FakeRun $fakeRun,
         private FilePutContents $filePutContents,
-        private Meta $appMeta,
+        private AbstractAppMeta $appMeta,
         private ArrayObject $overwritten,
         private ArrayObject $classes,
         private string $appDir,

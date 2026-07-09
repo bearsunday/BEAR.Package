@@ -9,7 +9,6 @@ use BEAR\Package\Provide\Error\NullPage;
 use BEAR\QueryRepository\EtagSetter;
 use BEAR\QueryRepository\HttpCache;
 use BEAR\Resource\ResourceInterface;
-use BEAR\Resource\TransferInterface;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
@@ -20,8 +19,6 @@ use Ray\Di\InjectorInterface;
 use function assert;
 use function class_exists;
 use function get_object_vars;
-use function ob_end_clean;
-use function ob_start;
 
 final class FakeRun
 {
@@ -40,7 +37,7 @@ final class FakeRun
      */
     public function __invoke(): void
     {
-        $bootstrap = new Bootstrap($this->appMeta);
+        $bootstrap = new Bootstrap($this->appMeta, $this->injector);
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -54,14 +51,9 @@ final class FakeRun
         $appVars = get_object_vars($app);
         $resource = $appVars['resource'] ?? null;
         assert($resource instanceof ResourceInterface);
-        $responder = $appVars['responder'] ?? null;
-        assert($responder instanceof TransferInterface);
         $ro = $this->injector->getInstance(NullPage::class);
         $ro->uri = new Uri('app://self/');
-        $ro = $resource->object($ro)(['required' => 'string']);
-        ob_start();
-        $ro->transfer($responder, []);
-        ob_end_clean();
+        $resource->object($ro)(['required' => 'string']);
         class_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);
         class_exists(HttpResponder::class);
