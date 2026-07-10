@@ -126,6 +126,8 @@ final class PackageInjector
     /**
      * Use AOT scripts when the compile stamp matches; otherwise rebuild.
      *
+     * @param non-empty-string $scriptDir
+     *
      * @see https://github.com/bearsunday/BEAR.Package/issues/483
      */
     private static function prodInjector(AbstractAppMeta $meta, AbstractModule $module, string $scriptDir): InjectorInterface
