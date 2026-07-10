@@ -15,6 +15,7 @@ use FakeVendor\HelloWorld\Resource\Page\Injection;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -22,9 +23,11 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 
 use function assert;
 use function dirname;
+use function hash;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
+use function str_ends_with;
 
 use const E_USER_WARNING;
 
@@ -54,6 +57,74 @@ class PackageInjectorTest extends TestCase
         $page = $resource->newInstance('page://self/injection');
         assert($page instanceof Injection);
         $this->assertInstanceOf(FakeDep2::class, $page->foo);
+    }
+
+    public function testOverrideScriptDirIsIsolatedFromDefault(): void
+    {
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $defaultInjector = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir);
+        assert($defaultInjector instanceof RayInjector);
+        $defaultDir = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($defaultInjector);
+        assert(is_string($defaultDir));
+        $this->assertTrue(str_ends_with($defaultDir, '/di'));
+
+        $overrideModule = new class extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeDepInterface::class)->to(FakeDep2::class);
+            }
+        };
+        $overrideInjector = Injector::getOverrideInstance('FakeVendor\HelloWorld', 'app', $appDir, $overrideModule);
+        assert($overrideInjector instanceof RayInjector);
+        $overrideDir = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($overrideInjector);
+        assert(is_string($overrideDir));
+
+        $expectedSuffix = '/di/' . hash('xxh128', $overrideModule::class);
+        $this->assertTrue(str_ends_with($overrideDir, $expectedSuffix));
+        $this->assertNotSame($defaultDir, $overrideDir);
+    }
+
+    public function testDifferentOverrideModulesUseDifferentScriptDirs(): void
+    {
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $moduleA = new class extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeDepInterface::class)->to(FakeDep2::class);
+            }
+        };
+        $moduleB = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+
+        $injectorA = Injector::getOverrideInstance('FakeVendor\HelloWorld', 'app', $appDir, $moduleA);
+        $injectorB = Injector::getOverrideInstance('FakeVendor\HelloWorld', 'app', $appDir, $moduleB);
+        assert($injectorA instanceof RayInjector);
+        assert($injectorB instanceof RayInjector);
+
+        $dirA = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($injectorA);
+        $dirB = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($injectorB);
+        assert(is_string($dirA));
+        assert(is_string($dirB));
+
+        $this->assertNotSame($dirA, $dirB);
+        $this->assertTrue(str_ends_with($dirA, '/di/' . hash('xxh128', $moduleA::class)));
+        $this->assertTrue(str_ends_with($dirB, '/di/' . hash('xxh128', $moduleB::class)));
+    }
+
+    #[Depends('testGetOverrideInstance')]
+    public function testDefaultInjectorUnaffectedAfterOverride(): void
+    {
+        (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
+
+        $injector = Injector::getInstance('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+        $resource = $injector->getInstance(ResourceInterface::class);
+        assert($resource instanceof ResourceInterface);
+        $page = $resource->newInstance('page://self/injection');
+        assert($page instanceof Injection);
+        $this->assertInstanceOf(FakeDep::class, $page->foo);
     }
 
     public function testDiagnoseCacheFailureForSerializationError(): void
@@ -95,5 +166,27 @@ class PackageInjectorTest extends TestCase
 
         $isProd = new ReflectionMethod(PackageInjector::class, 'isProd');
         $this->assertFalse($isProd->invoke(null, $module));
+    }
+
+    public function testScriptDirWithoutOverride(): void
+    {
+        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+        $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
+        $this->assertSame($meta->tmpDir . '/di', $scriptDir->invoke(null, $meta, null));
+    }
+
+    public function testScriptDirWithOverride(): void
+    {
+        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+        $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
+        $this->assertSame(
+            $meta->tmpDir . '/di/' . hash('xxh128', $module::class),
+            $scriptDir->invoke(null, $meta, $module),
+        );
     }
 }

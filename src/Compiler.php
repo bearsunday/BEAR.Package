@@ -19,10 +19,12 @@ use RuntimeException;
 
 use function assert;
 use function file_exists;
+use function is_dir;
 use function is_float;
 use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
+use function mkdir;
 use function number_format;
 use function realpath;
 use function spl_autoload_functions;
@@ -84,9 +86,9 @@ final class Compiler
         $preload = ($this->compilePreload)($this->appMeta, $this->context);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $appDirRealpath = realpath($this->appMeta->appDir);
-        assert($appDirRealpath !== false);
-        $scriptDir = $appDirRealpath . '/var/di/' . $this->context;
+        // Same path as PackageInjector runtime scriptDir (no override): {tmpDir}/di
+        $scriptDir = $this->appMeta->tmpDir . '/di';
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
 
         // Compile class meta info (annotations and named parameters)
