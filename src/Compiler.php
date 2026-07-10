@@ -13,6 +13,7 @@ use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
+use BEAR\Package\Injector\PackageInjector;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\NamedParameterInterface;
 use Composer\Autoload\ClassLoader;
@@ -77,7 +78,7 @@ final class Compiler
         $meta = new Meta($appName, $context, $appDir);
         // registerLoader / hookNullObjectClass must run before Injector::getInstance
         // (argument evaluation would load the app too early and break .compile.php stubs).
-        $this->prepare($context, $appDir, $prepend, $meta);
+        $this->prepare($context, $appDir, $prepend, $meta, true);
         $this->wire(Injector::getInstance($appName, $context, $appDir));
     }
 
@@ -98,7 +99,8 @@ final class Compiler
         $appDir = $meta->appDir;
 
         $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        $compiler->prepare($context, $appDir, $prepend, $meta);
+        // Skip .compile.php: the injector is already built and app classes are loaded.
+        $compiler->prepare($context, $appDir, $prepend, $meta, false);
         $compiler->wire($injector);
 
         return $compiler;
@@ -106,12 +108,12 @@ final class Compiler
 
     /**
      * Full compile pipeline: clean tmpDir, compile DI/preload, dump autoload.
-     *
-     * @return 0|1 exit code
      */
     public function run(): int
     {
         $this->clean();
+        // CompiledInjector scripts live under tmpDir/di; rebuild after wipe (bear.compile uses a new process).
+        $this->wire(PackageInjector::factory($this->appMeta, $this->context));
         $report = $this->compile();
         echo PHP_EOL;
         printf("Compilation took %s seconds and used %sMB of memory\n", $report['time'], $report['memory']);
@@ -119,7 +121,7 @@ final class Compiler
         printf("Preload compile: %s\n", $report['preload']);
         printf("Object graph diagram: %s\n", $report['dot']);
 
-        return $this->dumpAutoload() === 0 ? 0 : 1;
+        return $this->dumpAutoload();
     }
 
     /**
@@ -244,6 +246,7 @@ final class Compiler
         string $appDir,
         bool $prepend,
         AbstractAppMeta $appMeta,
+        bool $loadCompileScript,
     ): void {
         /** @var ArrayObject<int, string> $classes */
         $classes = new ArrayObject();
@@ -251,6 +254,10 @@ final class Compiler
         $this->context = $context;
         $this->appMeta = $appMeta;
         $this->registerLoader($appDir, $prepend);
+        if (! $loadCompileScript) {
+            return;
+        }
+
         $this->hookNullObjectClass($appDir);
     }
 
