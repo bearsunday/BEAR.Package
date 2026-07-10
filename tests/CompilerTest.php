@@ -22,8 +22,8 @@ use function unlink;
 
 class CompilerTest extends TestCase
 {
-    private const string APP_NAME = 'FakeVendor\HelloWorld';
-    private const string APP_DIR = __DIR__ . '/Fake/fake-app';
+    private const APP_NAME = 'FakeVendor\HelloWorld';
+    private const APP_DIR = __DIR__ . '/Fake/fake-app';
 
     public function testInvoke(): void
     {
