@@ -61,7 +61,6 @@ class CompilerTest extends TestCase
         $code = $compiler->run();
         $this->assertSame(0, $code);
         $this->assertDirectoryExists(self::APP_DIR . '/var/tmp/prod-cli-app/di');
-        $this->assertDirectoryExists(self::APP_DIR . '/var/di/prod-cli-app');
     }
 
     public function testCleanRemovesArtifactsAndRecreatesDirs(): void
@@ -83,7 +82,6 @@ class CompilerTest extends TestCase
         $this->assertFileDoesNotExist($marker);
         $this->assertDirectoryDoesNotExist($nested);
         $this->assertDirectoryExists($tmpDir . '/di');
-        $this->assertDirectoryExists(self::APP_DIR . '/var/di/prod-cli-app');
     }
 
     public function testEmptyDirectoryWhenMissingIsNoOp(): void

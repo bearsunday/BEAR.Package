@@ -131,10 +131,8 @@ final class Compiler
     public function clean(): void
     {
         $this->emptyDirectory($this->appMeta->tmpDir);
+        // Same path as PackageInjector runtime scriptDir (no override): {tmpDir}/di
         $this->ensureDirectory($this->appMeta->tmpDir . '/di');
-        $appDirRealpath = realpath($this->appMeta->appDir);
-        assert($appDirRealpath !== false);
-        $this->ensureDirectory($appDirRealpath . '/var/di/' . $this->context);
     }
 
     private function emptyDirectory(string $dir): void
@@ -180,9 +178,9 @@ final class Compiler
         $preload = ($this->compilePreload)($this->appMeta, $this->context);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $appDirRealpath = realpath($this->appMeta->appDir);
-        assert($appDirRealpath !== false);
-        $scriptDir = $appDirRealpath . '/var/di/' . $this->context;
+        // Same path as PackageInjector runtime scriptDir (no override): {tmpDir}/di
+        $scriptDir = $this->appMeta->tmpDir . '/di';
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
 
         // Compile class meta info (annotations and named parameters)

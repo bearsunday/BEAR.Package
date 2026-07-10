@@ -54,6 +54,7 @@ final class FakeRun
         assert($resource instanceof ResourceInterface);
         $ro = $this->injector->getInstance(NullPage::class);
         $ro->uri = new Uri('app://self/');
+        // Do not call TransferInterface: header() is not output-buffered and is unnecessary for class loading.
         $resource->object($ro)(['required' => 'string']);
         interface_exists(HttpCacheInterface::class);
         class_exists(HttpCache::class);
