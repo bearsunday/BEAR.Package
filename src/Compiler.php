@@ -94,10 +94,11 @@ final class Compiler
     public static function fromInjector(InjectorInterface $injector, string $context, bool $prepend = true): self
     {
         $meta = $injector->getInstance(AbstractAppMeta::class);
-        assert($meta->appDir !== '');
+        /** @var AppDir $appDir */
+        $appDir = $meta->appDir;
 
         $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        $compiler->prepare($context, $meta->appDir, $prepend, $meta);
+        $compiler->prepare($context, $appDir, $prepend, $meta);
         $compiler->wire($injector);
 
         return $compiler;
@@ -127,28 +128,43 @@ final class Compiler
      */
     public function clean(): void
     {
-        $dir = $this->appMeta->tmpDir;
-        if (is_dir($dir)) {
-            $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::CHILD_FIRST,
-            );
-            /** @var SplFileInfo $file */
-            foreach ($iterator as $file) {
-                $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
-            }
-        }
-
-        $scriptDir = $dir . '/di';
-        if (! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir)) {
-            throw new RuntimeException('Unable to create script directory: ' . $scriptDir);
-        }
-
+        $this->emptyDirectory($this->appMeta->tmpDir);
+        $this->ensureDirectory($this->appMeta->tmpDir . '/di');
         $appDirRealpath = realpath($this->appMeta->appDir);
         assert($appDirRealpath !== false);
-        $compileDir = $appDirRealpath . '/var/di/' . $this->context;
-        if (! is_dir($compileDir) && ! @mkdir($compileDir, 0777, true) && ! is_dir($compileDir)) {
-            throw new RuntimeException('Unable to create compile directory: ' . $compileDir);
+        $this->ensureDirectory($appDirRealpath . '/var/di/' . $this->context);
+    }
+
+    private function emptyDirectory(string $dir): void
+    {
+        if (! is_dir($dir)) {
+            return;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            $pathname = $file->getPathname();
+            if ($file->isDir()) {
+                rmdir($pathname);
+                continue;
+            }
+
+            unlink($pathname);
+        }
+    }
+
+    private function ensureDirectory(string $dir): void
+    {
+        if (is_dir($dir)) {
+            return;
+        }
+
+        if (! @mkdir($dir, 0777, true) && ! is_dir($dir)) {
+            throw new RuntimeException('Unable to create directory: ' . $dir);
         }
     }
 
@@ -241,13 +257,14 @@ final class Compiler
     private function wire(InjectorInterface $injector): void
     {
         $this->injector = $injector;
-        assert($this->appMeta->appDir !== '');
+        /** @var AppDir $appDir */
+        $appDir = $this->appMeta->appDir;
         /** @var ArrayObject<int, string> $overWritten */
         $overWritten = new ArrayObject();
         $filePutContents = new FilePutContents($overWritten);
         $fakeRun = new FakeRun($injector, $this->context, $this->appMeta);
-        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $this->appMeta->appDir, $this->context);
-        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $this->classes, $this->context, $injector);
+        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $overWritten, $this->classes, $appDir, $this->context);
+        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $this->classes, $injector);
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
     }
 

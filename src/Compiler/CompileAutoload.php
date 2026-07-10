@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
-use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Types;
 use ReflectionClass;
 
@@ -46,7 +45,6 @@ final class CompileAutoload
     public function __construct(
         private FakeRun $fakeRun,
         private FilePutContents $filePutContents,
-        private AbstractAppMeta $appMeta,
         private ArrayObject $overwritten,
         private ArrayObject $classes,
         private string $appDir,
@@ -69,8 +67,7 @@ final class CompileAutoload
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
         $paths = $this->getPaths($classes);
-        assert($this->appMeta->appDir !== '');
-        $autoload = $this->saveAutoloadFile($this->appMeta->appDir, $paths);
+        $autoload = $this->saveAutoloadFile($this->appDir, $paths);
         $start = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0;
         assert(is_float($start));
         $time = number_format(microtime(true) - $start, 2);

@@ -21,16 +21,12 @@ use function sprintf;
  */
 final class CompilePreload
 {
-    /**
-     * @param ClassList $classes
-     * @param Context   $context
-     */
+    /** @param ClassList $classes */
     public function __construct(
         private FakeRun $fakeRun,
         private CompileAutoload $dumpAutoload,
         private FilePutContents $filePutContents,
         private ArrayObject $classes,
-        private string $context,
         private InjectorInterface $injector,
     ) {
         $this->fakeRun = $fakeRun;
@@ -57,7 +53,7 @@ final class CompilePreload
 // %s preload
 require __DIR__ . '/vendor/autoload.php';
 
-%s", $this->context, $requiredOnceFile);
+%s", $context, $requiredOnceFile);
         $appDirRealpath = realpath($appMeta->appDir);
         assert($appDirRealpath !== false);
         $fileName = $appDirRealpath . '/preload.php';
