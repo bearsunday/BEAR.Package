@@ -6,6 +6,9 @@ declare(strict_types=1);
 /**
  * BEAR/Sunday application compiler
  *
+ * @deprecated Prefer application `bin/compile.php`:
+ *   exit(Compiler::fromInjector(Injector::getInstance($context), $context)());
+ *
  * Usage: bear.compile \'MyVendor\MyProject\' prod-html-app
  *
  * * Create autoload.php
@@ -21,6 +24,11 @@ use BEAR\AppMeta\Meta;
 use BEAR\Package\Unlink;
 
 init:
+    fwrite(
+        STDERR,
+        'Deprecated: bear.compile is deprecated. Prefer application bin/compile.php:' . PHP_EOL
+        . '  exit(\\BEAR\\Package\\Compiler::fromInjector($injector, $context)());' . PHP_EOL,
+    );
     if ($argc !== 4) {
         echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
         exit(1);
