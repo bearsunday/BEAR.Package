@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CompilePreload` reuses the given Meta (no second `new Meta`) (#480)
 - FakeRun no longer calls `TransferInterface` (avoids unbuffered `header()` during compile) (#480)
 
+### Notes
+- Optional Meta `tmpDir` / `logDir` overrides need `bear/app-meta` `^1.11` (still compatible with `^1.9`)
+
 ## [1.20.4] - 2026-07-09
 
 ### Fixed
