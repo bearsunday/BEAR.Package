@@ -12,6 +12,7 @@ use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
+use Ray\Di\InjectorInterface;
 use Throwable;
 
 use function assert;
@@ -28,8 +29,10 @@ final class Bootstrap
 {
     private string $appDir;
 
-    public function __construct(AbstractAppMeta $meta)
-    {
+    public function __construct(
+        AbstractAppMeta $meta,
+        private InjectorInterface|null $injector = null,
+    ) {
         $this->appDir = $meta->appDir;
     }
 
@@ -44,7 +47,7 @@ final class Bootstrap
     public function __invoke(string $appName, string $context, array $globals, array $server): int
     {
         assert($this->appDir !== '');
-        $injector =  Injector::getInstance($appName, $context, $this->appDir);
+        $injector = $this->injector ?? Injector::getInstance($appName, $context, $this->appDir);
         $injector->getInstance(HttpCacheInterface::class);
         $router = $injector->getInstance(RouterInterface::class);
         assert($router instanceof RouterInterface);

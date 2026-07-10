@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use ArrayObject;
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\CompileAutoload;
 use BEAR\Package\Compiler\CompileClassMetaInfo;
@@ -12,10 +13,17 @@ use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
+use BEAR\Package\Injector\PackageInjector;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\NamedParameterInterface;
 use Composer\Autoload\ClassLoader;
+use FilesystemIterator;
+use Ray\Di\InjectorInterface;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use ReflectionClass;
 use RuntimeException;
+use SplFileInfo;
 
 use function assert;
 use function file_exists;
@@ -26,11 +34,16 @@ use function memory_get_peak_usage;
 use function microtime;
 use function mkdir;
 use function number_format;
+use function printf;
 use function realpath;
+use function rmdir;
 use function spl_autoload_functions;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
 use function strpos;
+use function unlink;
+
+use const PHP_EOL;
 
 /**
  * @psalm-import-type AppName from Types
@@ -40,12 +53,15 @@ use function strpos;
  * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type CompileReport from Types
  */
-
 final class Compiler
 {
     /** @var ArrayObject<int, string> */
     private ArrayObject $classes;
-    private Meta $appMeta;
+    private AbstractAppMeta $appMeta;
+
+    /** @var Context */
+    private string $context;
+    private InjectorInterface $injector;
     private CompileAutoload $dumpAutoload;
     private CompilePreload $compilePreload;
     private CompileObjectGraph $compilerObjectGraph;
@@ -57,23 +73,99 @@ final class Compiler
      *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
-    public function __construct(string $appName, private string $context, string $appDir, bool $prepend = true)
+    public function __construct(string $appName, string $context, string $appDir, bool $prepend = true)
     {
-        /** @var ArrayObject<int, string> $classes */
-        $classes = new ArrayObject();
-        $this->classes = $classes;
-        $this->registerLoader($appDir, $prepend);
-        $this->hookNullObjectClass($appDir);
-        $this->appMeta = new Meta($appName, $context, $appDir);
-        /** @psalm-suppress MixedAssignment (?) */
-        $injector = Injector::getInstance($appName, $context, $appDir);
-        /** @var ArrayObject<int, string> $overWritten */
-        $overWritten = new ArrayObject();
-        $filePutContents = new FilePutContents($overWritten);
-        $fakeRun = new FakeRun($injector, $context, $this->appMeta);
-        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->appMeta, $overWritten, $this->classes, $appDir, $context);
-        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $classes, $context);
-        $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
+        $meta = new Meta($appName, $context, $appDir);
+        // registerLoader / hookNullObjectClass must run before Injector::getInstance
+        // (argument evaluation would load the app too early and break .compile.php stubs).
+        $this->prepare($context, $appDir, $prepend, $meta, true);
+        $this->wire(Injector::getInstance($appName, $context, $appDir));
+    }
+
+    /**
+     * Create a compiler from an application injector.
+     *
+     * Meta (including tmpDir / logDir) is taken from the injector so compile
+     * uses the same path policy as runtime. Constructor BC is unchanged.
+     *
+     * @param Context $context
+     *
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     */
+    public static function fromInjector(InjectorInterface $injector, string $context, bool $prepend = true): self
+    {
+        $meta = $injector->getInstance(AbstractAppMeta::class);
+        /** @var AppDir $appDir */
+        $appDir = $meta->appDir;
+
+        $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
+        // Skip .compile.php: the injector is already built and app classes are loaded.
+        $compiler->prepare($context, $appDir, $prepend, $meta, false);
+        $compiler->wire($injector);
+
+        return $compiler;
+    }
+
+    /**
+     * Full compile pipeline: clean tmpDir, compile DI/preload, dump autoload.
+     */
+    public function __invoke(): int
+    {
+        $this->clean();
+        // CompiledInjector scripts live under tmpDir/di; rebuild after wipe (bear.compile uses a new process).
+        $this->wire(PackageInjector::factory($this->appMeta, $this->context));
+        $report = $this->compile();
+        echo PHP_EOL;
+        printf("Compilation took %s seconds and used %sMB of memory\n", $report['time'], $report['memory']);
+        printf("Compiled: %d resource classes\n", $report['compiled']);
+        printf("Preload compile: %s\n", $report['preload']);
+        printf("Object graph diagram: %s\n", $report['dot']);
+
+        return $this->dumpAutoload();
+    }
+
+    /**
+     * Remove compiled artifacts under Meta tmpDir (same as bear.compile clean step),
+     * then recreate directories needed for a subsequent in-process compile.
+     */
+    public function clean(): void
+    {
+        $this->emptyDirectory($this->appMeta->tmpDir);
+        // Same path as PackageInjector runtime scriptDir (no override): {tmpDir}/di
+        $this->ensureDirectory($this->appMeta->tmpDir . '/di');
+    }
+
+    private function emptyDirectory(string $dir): void
+    {
+        if (! is_dir($dir)) {
+            return;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            $pathname = $file->getPathname();
+            if ($file->isDir()) {
+                rmdir($pathname);
+                continue;
+            }
+
+            unlink($pathname);
+        }
+    }
+
+    private function ensureDirectory(string $dir): void
+    {
+        if (is_dir($dir)) {
+            return;
+        }
+
+        if (! @mkdir($dir, 0777, true) && ! is_dir($dir)) {
+            throw new RuntimeException('Unable to create directory: ' . $dir);
+        }
     }
 
     /**
@@ -126,8 +218,7 @@ final class Compiler
 
     private function compileClassMetaInfo(): int
     {
-        $injector = Injector::getInstance($this->appMeta->name, $this->context, $this->appMeta->appDir);
-        $namedParams = $injector->getInstance(NamedParameterInterface::class);
+        $namedParams = $this->injector->getInstance(NamedParameterInterface::class);
         assert($namedParams instanceof NamedParameterInterface);
 
         $compileClassMetaInfo = new CompileClassMetaInfo();
@@ -140,6 +231,46 @@ final class Compiler
         }
 
         return $count;
+    }
+
+    /**
+     * @param Context $context
+     * @param AppDir  $appDir
+     *
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     */
+    private function prepare(
+        string $context,
+        string $appDir,
+        bool $prepend,
+        AbstractAppMeta $appMeta,
+        bool $loadCompileScript,
+    ): void {
+        /** @var ArrayObject<int, string> $classes */
+        $classes = new ArrayObject();
+        $this->classes = $classes;
+        $this->context = $context;
+        $this->appMeta = $appMeta;
+        $this->registerLoader($appDir, $prepend);
+        if (! $loadCompileScript) {
+            return;
+        }
+
+        $this->hookNullObjectClass($appDir);
+    }
+
+    private function wire(InjectorInterface $injector): void
+    {
+        $this->injector = $injector;
+        /** @var AppDir $appDir */
+        $appDir = $this->appMeta->appDir;
+        /** @var ArrayObject<int, string> $overWritten */
+        $overWritten = new ArrayObject();
+        $filePutContents = new FilePutContents($overWritten);
+        $fakeRun = new FakeRun($injector, $this->context, $this->appMeta);
+        $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $overWritten, $this->classes, $appDir, $this->context);
+        $this->compilePreload = new CompilePreload($fakeRun, $this->dumpAutoload, $filePutContents, $this->classes, $injector);
+        $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
     }
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */

@@ -6,9 +6,8 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\Meta;
-use BEAR\Package\Injector;
 use BEAR\Package\Types;
+use Ray\Di\InjectorInterface;
 
 use function assert;
 use function realpath;
@@ -22,16 +21,13 @@ use function sprintf;
  */
 final class CompilePreload
 {
-    /**
-     * @param ClassList $classes
-     * @param Context   $context
-     */
+    /** @param ClassList $classes */
     public function __construct(
         private FakeRun $fakeRun,
         private CompileAutoload $dumpAutoload,
         private FilePutContents $filePutContents,
         private ArrayObject $classes,
-        private string $context,
+        private InjectorInterface $injector,
     ) {
         $this->fakeRun = $fakeRun;
     }
@@ -40,7 +36,7 @@ final class CompilePreload
     public function __invoke(AbstractAppMeta $appMeta, string $context): string
     {
         ($this->fakeRun)();
-        $this->loadResources($appMeta->name, $context, $appMeta->appDir);
+        $this->loadResources($appMeta);
         /** @var list<string> $classes */
         $classes = (array) $this->classes;
         $paths = $this->dumpAutoload->getPaths($classes);
@@ -57,7 +53,7 @@ final class CompilePreload
 // %s preload
 require __DIR__ . '/vendor/autoload.php';
 
-%s", $this->context, $requiredOnceFile);
+%s", $context, $requiredOnceFile);
         $appDirRealpath = realpath($appMeta->appDir);
         assert($appDirRealpath !== false);
         $fileName = $appDirRealpath . '/preload.php';
@@ -66,19 +62,10 @@ require __DIR__ . '/vendor/autoload.php';
         return $fileName;
     }
 
-    /**
-     * @param AppName $appName
-     * @param Context $context
-     * @param AppDir  $appDir
-     */
-    public function loadResources(string $appName, string $context, string $appDir): void
+    public function loadResources(AbstractAppMeta $appMeta): void
     {
-        $meta = new Meta($appName, $context, $appDir);
-        $injector = Injector::getInstance($appName, $context, $appDir);
-
-        $resMetas = $meta->getGenerator('*');
-        foreach ($resMetas as $resMeta) {
-            $injector->getInstance($resMeta->class);
+        foreach ($appMeta->getGenerator('*') as $resMeta) {
+            $this->injector->getInstance($resMeta->class);
         }
     }
 }
