@@ -13,7 +13,7 @@ use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
-use BEAR\Package\Injector\CompileFingerprint;
+use BEAR\Package\Injector\CompileStamp;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\NamedParameterInterface;
@@ -184,7 +184,7 @@ final class Compiler
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Stamp after final DI scripts so runtime can reuse AOT output (#483).
-        CompileFingerprint::write($this->appMeta, $scriptDir);
+        CompileStamp::write($this->appMeta, $scriptDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();

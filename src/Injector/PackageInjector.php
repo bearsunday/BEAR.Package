@@ -124,13 +124,13 @@ final class PackageInjector
     }
 
     /**
-     * Use AOT scripts when the compile fingerprint matches; otherwise rebuild.
+     * Use AOT scripts when the compile stamp matches; otherwise rebuild.
      *
      * @see https://github.com/bearsunday/BEAR.Package/issues/483
      */
     private static function prodInjector(AbstractAppMeta $meta, AbstractModule $module, string $scriptDir): InjectorInterface
     {
-        if (CompileFingerprint::matches($meta, $scriptDir)) {
+        if (CompileStamp::matches($meta, $scriptDir)) {
             $injector = new CompiledInjector($scriptDir);
             try {
                 /** @psalm-suppress InvalidArgument */
@@ -143,7 +143,7 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        CompileFingerprint::write($meta, $scriptDir);
+        CompileStamp::write($meta, $scriptDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

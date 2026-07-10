@@ -202,7 +202,7 @@ class PackageInjectorTest extends TestCase
         );
     }
 
-    public function testProdFactoryReusesAotScriptsWhenFingerprintMatches(): void
+    public function testProdFactoryReusesAotScriptsWhenStampMatches(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
@@ -211,7 +211,7 @@ class PackageInjectorTest extends TestCase
 
         $first = PackageInjector::factory($meta, 'prod-app');
         $this->assertInstanceOf(CompiledInjector::class, $first);
-        $this->assertTrue(file_exists(CompileFingerprint::stampPath($scriptDir)));
+        $this->assertTrue(file_exists(CompileStamp::stampPath($scriptDir)));
 
         $phpScripts = glob($scriptDir . '/*.php');
         $this->assertNotFalse($phpScripts);
@@ -229,7 +229,7 @@ class PackageInjectorTest extends TestCase
         }
     }
 
-    public function testProdFactoryRebuildsWhenFingerprintMismatches(): void
+    public function testProdFactoryRebuildsWhenStampMismatches(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
@@ -237,11 +237,11 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
 
         PackageInjector::factory($meta, 'prod-app');
-        $stampBefore = file_get_contents(CompileFingerprint::stampPath($scriptDir));
+        $stampBefore = file_get_contents(CompileStamp::stampPath($scriptDir));
 
         touch($appDir . '/src/Module/AppModule.php', time() + 5);
         PackageInjector::factory($meta, 'prod-app');
-        $stampAfter = file_get_contents(CompileFingerprint::stampPath($scriptDir));
+        $stampAfter = file_get_contents(CompileStamp::stampPath($scriptDir));
         $this->assertNotSame($stampBefore, $stampAfter);
     }
 
@@ -266,27 +266,27 @@ class PackageInjectorTest extends TestCase
         $this->assertNotSame([], glob($scriptDir . '/*.php') ?: []);
     }
 
-    public function testCompileFingerprintMatchesEdgeCases(): void
+    public function testCompileStampMatchesEdgeCases(): void
     {
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
         $missingDir = sys_get_temp_dir() . '/bear-fp-' . uniqid('', true);
-        $this->assertFalse(CompileFingerprint::matches($meta, $missingDir));
+        $this->assertFalse(CompileStamp::matches($meta, $missingDir));
 
         $scriptDir = $meta->tmpDir . '/di';
         PackageInjector::factory($meta, 'prod-app');
-        file_put_contents(CompileFingerprint::stampPath($scriptDir), '');
-        $this->assertFalse(CompileFingerprint::matches($meta, $scriptDir));
+        file_put_contents(CompileStamp::stampPath($scriptDir), '');
+        $this->assertFalse(CompileStamp::matches($meta, $scriptDir));
 
-        $env = $appDir . '/.env.fingerprint-test';
+        $env = $appDir . '/.env.compile-stamp-test';
         file_put_contents($env, "FOO=bar\n");
         try {
-            $this->assertNotSame('', CompileFingerprint::of($meta));
+            $this->assertNotSame('', CompileStamp::of($meta));
         } finally {
             unlink($env);
         }
 
         $metaNoSrc = new Meta('FakeVendor\HelloWorld', 'prod-app', sys_get_temp_dir());
-        $this->assertNotSame('', CompileFingerprint::of($metaNoSrc));
+        $this->assertNotSame('', CompileStamp::of($metaNoSrc));
     }
 }

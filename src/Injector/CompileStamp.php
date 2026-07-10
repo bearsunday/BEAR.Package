@@ -21,13 +21,13 @@ use function is_dir;
 use function max;
 
 /**
- * Source-tree fingerprint for deciding whether AOT DI scripts can be reused.
+ * Compile stamp for deciding whether AOT DI scripts can be reused.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
  */
-final class CompileFingerprint
+final class CompileStamp
 {
-    private const STAMP = '.compile-fingerprint';
+    private const STAMP = '.compile-stamp';
 
     /** @codeCoverageIgnore */
     private function __construct()
