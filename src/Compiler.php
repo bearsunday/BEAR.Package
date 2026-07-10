@@ -109,7 +109,7 @@ final class Compiler
     /**
      * Full compile pipeline: clean tmpDir, compile DI/preload, dump autoload.
      */
-    public function run(): int
+    public function __invoke(): int
     {
         $this->clean();
         // CompiledInjector scripts live under tmpDir/di; rebuild after wipe (bear.compile uses a new process).

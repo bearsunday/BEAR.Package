@@ -52,13 +52,13 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
-    public function testFromInjectorAndRun(): void
+    public function testFromInjectorAndInvoke(): void
     {
         // Establish injector the same way as new Compiler() so .compile.php stubs load first.
         new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
         $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
-        $code = $compiler->run();
+        $code = $compiler();
         $this->assertSame(0, $code);
         $this->assertDirectoryExists(self::APP_DIR . '/var/tmp/prod-cli-app/di');
     }

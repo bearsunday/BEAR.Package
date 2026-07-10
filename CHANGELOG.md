@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `Compiler::fromInjector(InjectorInterface $injector, string $context)` so apps compile with the same injector/Meta as runtime (#480)
-- `Compiler::run()` (clean → compile → dumpAutoload) and `Compiler::clean()` for CLI entry points (#480)
+- `Compiler::__invoke()` (clean → compile → dumpAutoload) and `Compiler::clean()` for CLI entry points (#480)
 
 ### Changed
 - `CompilePreload` reuses the given Meta (no second `new Meta`) (#480)
