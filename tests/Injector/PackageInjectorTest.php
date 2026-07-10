@@ -7,6 +7,7 @@ namespace BEAR\Package\Injector;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use Exception;
 use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\FakeDep2;
@@ -14,6 +15,7 @@ use FakeVendor\HelloWorld\FakeDepInterface;
 use FakeVendor\HelloWorld\Resource\Page\Injection;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
+use Ray\Compiler\CompiledInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
@@ -23,11 +25,17 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 
 use function assert;
 use function dirname;
+use function file_exists;
+use function file_get_contents;
+use function fileinode;
+use function glob;
 use function hash;
 use function is_string;
 use function restore_error_handler;
 use function set_error_handler;
 use function str_ends_with;
+use function time;
+use function touch;
 
 use const E_USER_WARNING;
 
@@ -188,5 +196,48 @@ class PackageInjectorTest extends TestCase
             $meta->tmpDir . '/di/' . hash('xxh128', $module::class),
             $scriptDir->invoke(null, $meta, $module),
         );
+    }
+
+    public function testProdFactoryReusesAotScriptsWhenFingerprintMatches(): void
+    {
+        (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
+        $scriptDir = $meta->tmpDir . '/di';
+
+        $first = PackageInjector::factory($meta, 'prod-app');
+        $this->assertInstanceOf(CompiledInjector::class, $first);
+        $this->assertTrue(file_exists(CompileFingerprint::stampPath($scriptDir)));
+
+        $phpScripts = glob($scriptDir . '/*.php');
+        $this->assertNotFalse($phpScripts);
+        $this->assertNotSame([], $phpScripts);
+        $inodes = [];
+        foreach ($phpScripts as $file) {
+            $inodes[$file] = fileinode($file);
+        }
+
+        $second = PackageInjector::factory($meta, 'prod-app');
+        $this->assertInstanceOf(CompiledInjector::class, $second);
+        $second->getInstance(AppInterface::class);
+        foreach ($inodes as $file => $inode) {
+            $this->assertSame($inode, fileinode($file), $file . ' was rewritten');
+        }
+    }
+
+    public function testProdFactoryRebuildsWhenFingerprintMismatches(): void
+    {
+        (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
+        $scriptDir = $meta->tmpDir . '/di';
+
+        PackageInjector::factory($meta, 'prod-app');
+        $stampBefore = file_get_contents(CompileFingerprint::stampPath($scriptDir));
+
+        touch($appDir . '/src/Module/AppModule.php', time() + 5);
+        PackageInjector::factory($meta, 'prod-app');
+        $stampAfter = file_get_contents(CompileFingerprint::stampPath($scriptDir));
+        $this->assertNotSame($stampBefore, $stampAfter);
     }
 }

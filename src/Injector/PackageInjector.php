@@ -113,15 +113,38 @@ final class PackageInjector
         $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
 
         if (self::isProd($module)) {
-            (new Compiler())->compile($module, $scriptDir);
-            $injector = new CompiledInjector($scriptDir);
-            /** @psalm-suppress InvalidArgument */
-            $injector->getInstance(AppInterface::class);
-
-            return $injector;
+            return self::prodInjector($meta, $module, $scriptDir);
         }
 
         $injector = new RayInjector($module, $scriptDir);
+        /** @psalm-suppress InvalidArgument */
+        $injector->getInstance(AppInterface::class);
+
+        return $injector;
+    }
+
+    /**
+     * Use AOT scripts when the compile fingerprint matches; otherwise rebuild.
+     *
+     * @see https://github.com/bearsunday/BEAR.Package/issues/483
+     */
+    private static function prodInjector(AbstractAppMeta $meta, AbstractModule $module, string $scriptDir): InjectorInterface
+    {
+        if (CompileFingerprint::matches($meta, $scriptDir)) {
+            $injector = new CompiledInjector($scriptDir);
+            try {
+                /** @psalm-suppress InvalidArgument */
+                $injector->getInstance(AppInterface::class);
+
+                return $injector;
+            } catch (Throwable) {
+                // Fall through and rebuild when scripts are incomplete or unreadable.
+            }
+        }
+
+        (new Compiler())->compile($module, $scriptDir);
+        CompileFingerprint::write($meta, $scriptDir);
+        $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
 
