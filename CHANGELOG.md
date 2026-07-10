@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.0] - 2026-07-10
+
+### Added
+- `Compiler::fromInjector(InjectorInterface $injector, string $context)` so apps compile with the same injector/Meta as runtime (#480)
+- `Compiler::run()` (clean → compile → dumpAutoload) and `Compiler::clean()` for CLI entry points (#480)
+
+### Changed
+- `CompilePreload` reuses the given Meta (no second `new Meta`) (#480)
+- FakeRun no longer calls `TransferInterface` (avoids unbuffered `header()` during compile) (#480)
+
 ## [1.20.4] - 2026-07-09
 
 ### Fixed
