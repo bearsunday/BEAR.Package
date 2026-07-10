@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.20.4] - 2026-07-09
 
 ### Fixed
-- Isolate override injector scriptDir so AOP proxies / compiled containers do not collide with the default injector for the same app+context (#478)
-- Align `Compiler::compile()` DI script directory with runtime (`{tmpDir}/di` instead of `var/di/{context}`)
+- Isolate override injector scriptDir so AOP proxies / compiled containers do not collide with the default injector for the same app+context (#478, #479)
+- Align `Compiler::compile()` DI script directory with runtime (`{tmpDir}/di` instead of `var/di/{context}`) (#479)
+- Fix PHPStan 2 `impossibleType` on `class_exists(HttpCacheInterface::class)` in `FakeRun` — use `interface_exists()` (#479)
 
 ## [1.20.3] - 2026-04-09
 
