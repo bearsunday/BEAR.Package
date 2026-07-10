@@ -11,6 +11,8 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 
 use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
 use function filemtime;
 use function glob;
 use function hash;
@@ -91,13 +93,10 @@ final class CompileFingerprint
         $times = [0];
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::LEAVES_ONLY,
         );
         /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
-            if (! $file->isFile()) {
-                continue;
-            }
-
             $times[] = (int) $file->getMTime();
         }
 
