@@ -6,8 +6,8 @@ declare(strict_types=1);
 /**
  * BEAR/Sunday application compiler
  *
- * @deprecated Prefer application `bin/compile.php`:
- *   exit(Compiler::fromInjector(Injector::getInstance($context), $context)());
+ * @deprecated Prefer application `bin/compile.php` with `Compiler::fromInjector()`.
+ * @see https://github.com/bearsunday/BEAR.Package/issues/482
  *
  * Usage: bear.compile \'MyVendor\MyProject\' prod-html-app
  *
@@ -26,8 +26,7 @@ use BEAR\Package\Unlink;
 init:
     fwrite(
         STDERR,
-        'Deprecated: bear.compile is deprecated. Prefer application bin/compile.php:' . PHP_EOL
-        . '  exit(\\BEAR\\Package\\Compiler::fromInjector($injector, $context)());' . PHP_EOL,
+        'Deprecated: bear.compile is deprecated. See https://github.com/bearsunday/BEAR.Package/issues/482' . PHP_EOL,
     );
     if ($argc !== 4) {
         echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Deprecated
-- `bin/bear.compile` — prefer application `bin/compile.php` with `Compiler::fromInjector(... )()` (still works; prints a deprecation notice)
+- `bin/bear.compile` — prefer application `bin/compile.php` with `Compiler::fromInjector(... )()` (still works; see #482)
 
 ## [1.21.0] - 2026-07-10
 
