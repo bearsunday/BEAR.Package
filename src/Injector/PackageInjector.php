@@ -153,7 +153,7 @@ final class PackageInjector
         }
 
         trigger_error(
-            'Not precompiled; compiling on demand. Pre-compile DI scripts for production.',
+            'Not precompiled; compiling on demand. Pre-compile DI scripts for production. See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
             E_USER_NOTICE,
         );
         (new Compiler())->compile($module, $scriptDir);
