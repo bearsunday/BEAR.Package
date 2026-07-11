@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Reuse ahead-of-time DI scripts in `PackageInjector::factory()` when the compile stamp matches (skip unconditional rebuild; #483)
+- Reuse ahead-of-time DI scripts in `PackageInjector::factory()` when a compile marker is present (skip unconditional rebuild; #483)
 
 ## [1.21.0] - 2026-07-10
 

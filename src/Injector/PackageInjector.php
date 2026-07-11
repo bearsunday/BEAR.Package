@@ -30,6 +30,7 @@ use function sprintf;
 use function str_replace;
 use function trigger_error;
 
+use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 /** @psalm-import-type Context from Types */
@@ -113,7 +114,7 @@ final class PackageInjector
         $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
 
         if (self::isProd($module)) {
-            return self::prodInjector($meta, $module, $scriptDir);
+            return self::prodInjector($module, $scriptDir);
         }
 
         $injector = new RayInjector($module, $scriptDir);
@@ -124,28 +125,38 @@ final class PackageInjector
     }
 
     /**
-     * Use AOT scripts when the compile stamp matches; otherwise rebuild.
+     * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
+     *
+     * The marker only records that a compile has run — it does not verify the
+     * scripts still match the source tree. Freshness is the deploy's
+     * responsibility: ship the marker with the scripts (image) or recompile
+     * before the cache is reused. On a missing marker the cold path compiles on
+     * demand and emits `E_USER_NOTICE` so a forgotten `bin/compile.php` is loud.
+     *
+     * A marker with broken scripts is a deploy error, not a recoverable one, so
+     * the boot is left to throw instead of falling back to a runtime recompile
+     * (which would also die under a read-only filesystem).
      *
      * @param non-empty-string $scriptDir
      *
      * @see https://github.com/bearsunday/BEAR.Package/issues/483
      */
-    private static function prodInjector(AbstractAppMeta $meta, AbstractModule $module, string $scriptDir): InjectorInterface
+    private static function prodInjector(AbstractModule $module, string $scriptDir): InjectorInterface
     {
-        if (CompileStamp::matches($meta, $scriptDir)) {
+        if (CompileMarker::exists($scriptDir)) {
             $injector = new CompiledInjector($scriptDir);
-            try {
-                /** @psalm-suppress InvalidArgument */
-                $injector->getInstance(AppInterface::class);
+            /** @psalm-suppress InvalidArgument */
+            $injector->getInstance(AppInterface::class);
 
-                return $injector;
-            } catch (Throwable) {
-                // Fall through and rebuild when scripts are incomplete or unreadable.
-            }
+            return $injector;
         }
 
+        trigger_error(
+            'Not precompiled; compiling on demand. Run bin/compile.php for production.',
+            E_USER_NOTICE,
+        );
         (new Compiler())->compile($module, $scriptDir);
-        CompileStamp::write($meta, $scriptDir);
+        CompileMarker::write($scriptDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

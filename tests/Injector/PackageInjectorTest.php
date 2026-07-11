@@ -22,17 +22,20 @@ use Ray\Di\InjectorInterface;
 use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Throwable;
 
 use function assert;
 use function dirname;
 use function file_exists;
-use function file_get_contents;
-use function file_put_contents;
 use function fileinode;
+use function filemtime;
 use function glob;
 use function hash;
+use function is_int;
 use function is_string;
+use function mkdir;
 use function restore_error_handler;
+use function rmdir;
 use function set_error_handler;
 use function str_ends_with;
 use function sys_get_temp_dir;
@@ -41,10 +44,24 @@ use function touch;
 use function uniqid;
 use function unlink;
 
+use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
 {
+    /**
+     * Remove the compile marker and DI scripts so a prod factory() starts cold.
+     * (tests/bootstrap.php's deleteFiles skips dotfiles, so a leftover marker
+     * from a previous run would otherwise short-circuit the on-demand path.)
+     */
+    private static function cleanProdDi(string $scriptDir): void
+    {
+        @unlink(CompileMarker::path($scriptDir));
+        foreach (glob($scriptDir . '/*.php') ?: [] as $file) {
+            @unlink($file);
+        }
+    }
+
     public function testOriginalBind(): void
     {
         $injector = Injector::getInstance('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
@@ -202,16 +219,27 @@ class PackageInjectorTest extends TestCase
         );
     }
 
-    public function testProdFactoryReusesAotScriptsWhenStampMatches(): void
+    public function testProdFactoryReusesAotScriptsWhenMarkerPresent(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
         $scriptDir = $meta->tmpDir . '/di';
+        self::cleanProdDi($scriptDir);
 
-        $first = PackageInjector::factory($meta, 'prod-app');
+        // First factory compiles on demand and emits E_USER_NOTICE; swallow it so
+        // the cold-start notice does not leak into this test's output.
+        set_error_handler(static function (): bool {
+            return true;
+        }, E_USER_NOTICE);
+        try {
+            $first = PackageInjector::factory($meta, 'prod-app');
+        } finally {
+            restore_error_handler();
+        }
+
         $this->assertInstanceOf(CompiledInjector::class, $first);
-        $this->assertTrue(file_exists(CompileStamp::stampPath($scriptDir)));
+        $this->assertTrue(file_exists(CompileMarker::path($scriptDir)));
 
         $phpScripts = glob($scriptDir . '/*.php');
         $this->assertNotFalse($phpScripts);
@@ -229,7 +257,35 @@ class PackageInjectorTest extends TestCase
         }
     }
 
-    public function testProdFactoryRebuildsWhenStampMismatches(): void
+    public function testProdFactoryNoticesAndCompilesWhenMarkerMissing(): void
+    {
+        (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
+        $scriptDir = $meta->tmpDir . '/di';
+        self::cleanProdDi($scriptDir);
+
+        $notices = [];
+        set_error_handler(static function (int $errno, string $errstr) use (&$notices): bool {
+            $notices[] = $errstr;
+
+            return true;
+        }, E_USER_NOTICE);
+
+        try {
+            $injector = PackageInjector::factory($meta, 'prod-app');
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertInstanceOf(CompiledInjector::class, $injector);
+        $injector->getInstance(AppInterface::class);
+        $this->assertNotEmpty($notices);
+        $this->assertStringContainsString('Not precompiled', $notices[0]);
+        $this->assertTrue(file_exists(CompileMarker::path($scriptDir)));
+    }
+
+    public function testProdFactoryIgnoresSourceChangesWhenMarkerPresent(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
@@ -237,15 +293,32 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
 
         PackageInjector::factory($meta, 'prod-app');
-        $stampBefore = file_get_contents(CompileStamp::stampPath($scriptDir));
+        $phpScripts = glob($scriptDir . '/*.php');
+        $this->assertNotFalse($phpScripts);
+        $inodes = [];
+        foreach ($phpScripts as $file) {
+            $inodes[$file] = fileinode($file);
+        }
 
-        touch($appDir . '/src/Module/AppModule.php', time() + 5);
-        PackageInjector::factory($meta, 'prod-app');
-        $stampAfter = file_get_contents(CompileStamp::stampPath($scriptDir));
-        $this->assertNotSame($stampBefore, $stampAfter);
+        $source = $appDir . '/src/Module/AppModule.php';
+        $original = filemtime($source);
+        assert(is_int($original));
+        try {
+            // A source change must not invalidate the marker — freshness is the
+            // deploy's responsibility, not a fingerprint the framework checks.
+            touch($source, time() + 5);
+            $injector = PackageInjector::factory($meta, 'prod-app');
+        } finally {
+            touch($source, $original);
+        }
+
+        $this->assertInstanceOf(CompiledInjector::class, $injector);
+        foreach ($inodes as $file => $inode) {
+            $this->assertSame($inode, fileinode($file), $file . ' was rewritten');
+        }
     }
 
-    public function testProdFactoryRebuildsWhenReuseBootFails(): void
+    public function testProdFactoryThrowsWhenMarkerPresentButScriptsBroken(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
@@ -259,34 +332,33 @@ class PackageInjectorTest extends TestCase
             unlink($file);
         }
 
-        // Stamp still matches, but scripts are gone — must rebuild instead of soft-failing.
-        $injector = PackageInjector::factory($meta, 'prod-app');
-        $this->assertInstanceOf(CompiledInjector::class, $injector);
-        $injector->getInstance(AppInterface::class);
-        $this->assertNotSame([], glob($scriptDir . '/*.php') ?: []);
+        // Marker present but scripts corrupted — a deploy error, not a
+        // recoverable one. Must throw instead of silently rebuilding.
+        try {
+            PackageInjector::factory($meta, 'prod-app');
+            $this->fail('A broken marker-present boot was expected to throw.');
+        } catch (Throwable $e) {
+            $this->assertStringContainsString('AppInterface', $e->getMessage());
+        } finally {
+            // Leave the script dir uncompiled so later tests start cold again.
+            self::cleanProdDi($scriptDir);
+        }
     }
 
-    public function testCompileStampMatchesEdgeCases(): void
+    public function testCompileMarkerEdgeCases(): void
     {
-        $appDir = dirname(__DIR__) . '/Fake/fake-app';
-        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $missingDir = sys_get_temp_dir() . '/bear-fp-' . uniqid('', true);
-        $this->assertFalse(CompileStamp::matches($meta, $missingDir));
+        $missingDir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
+        $this->assertFalse(CompileMarker::exists($missingDir));
 
-        $scriptDir = $meta->tmpDir . '/di';
-        PackageInjector::factory($meta, 'prod-app');
-        file_put_contents(CompileStamp::stampPath($scriptDir), '');
-        $this->assertFalse(CompileStamp::matches($meta, $scriptDir));
-
-        $env = $appDir . '/.env.compile-stamp-test';
-        file_put_contents($env, "FOO=bar\n");
+        $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
+        @mkdir($dir, 0777, true);
         try {
-            $this->assertNotSame('', CompileStamp::of($meta));
+            $this->assertFalse(CompileMarker::exists($dir));
+            CompileMarker::write($dir);
+            $this->assertTrue(CompileMarker::exists($dir));
         } finally {
-            unlink($env);
+            @unlink(CompileMarker::path($dir));
+            @rmdir($dir);
         }
-
-        $metaNoSrc = new Meta('FakeVendor\HelloWorld', 'prod-app', sys_get_temp_dir());
-        $this->assertNotSame('', CompileStamp::of($metaNoSrc));
     }
 }
