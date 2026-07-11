@@ -18,6 +18,7 @@ use function time;
  * compiles on demand and emits `E_USER_NOTICE`.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
+ * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended
  */
 final class CompileMarker
 {

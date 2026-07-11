@@ -131,7 +131,7 @@ final class PackageInjector
      * scripts still match the source tree. Freshness is the deploy's
      * responsibility: ship the marker with the scripts (image) or recompile
      * before the cache is reused. On a missing marker the cold path compiles on
-     * demand and emits `E_USER_NOTICE` so a forgotten `bin/compile.php` is loud.
+     * demand and emits `E_USER_NOTICE` so a forgotten production compile is loud.
      *
      * A marker with broken scripts is a deploy error, not a recoverable one, so
      * the boot is left to throw instead of falling back to a runtime recompile
@@ -140,6 +140,7 @@ final class PackageInjector
      * @param non-empty-string $scriptDir
      *
      * @see https://github.com/bearsunday/BEAR.Package/issues/483
+     * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended
      */
     private static function prodInjector(AbstractModule $module, string $scriptDir): InjectorInterface
     {
@@ -152,7 +153,7 @@ final class PackageInjector
         }
 
         trigger_error(
-            'Not precompiled; compiling on demand. Run bin/compile.php for production.',
+            'Not precompiled; compiling on demand. Pre-compile DI scripts for production.',
             E_USER_NOTICE,
         );
         (new Compiler())->compile($module, $scriptDir);
