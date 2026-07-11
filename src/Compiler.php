@@ -99,7 +99,9 @@ final class Compiler
         $appDir = $meta->appDir;
 
         $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        // Skip .compile.php: the injector is already built and app classes are loaded.
+        // Do not load .compile.php here: the application's compile entry
+        // (e.g. bin/compile.php) loads build-time stubs before Injector::getInstance().
+        // @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation
         $compiler->prepare($context, $appDir, $prepend, $meta, false);
         $compiler->wire($injector);
 
