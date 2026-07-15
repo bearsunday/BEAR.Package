@@ -5,20 +5,33 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\Package\Exception\InvalidContextException;
+use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use ReflectionMethod;
 use RuntimeException;
+use SplFileInfo;
 
 use function assert;
+use function escapeshellarg;
+use function file_get_contents;
 use function file_put_contents;
 use function is_dir;
 use function is_float;
 use function mkdir;
+use function passthru;
+use function preg_match_all;
+use function rmdir;
+use function sprintf;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
+use function var_export;
+
+use const PHP_BINARY;
 
 class CompilerTest extends TestCase
 {
@@ -61,6 +74,116 @@ class CompilerTest extends TestCase
         $code = $compiler();
         $this->assertSame(0, $code);
         $this->assertDirectoryExists(self::APP_DIR . '/var/tmp/prod-cli-app/di');
+    }
+
+    /**
+     * Constructor path installs the class-tracking autoloader before the app is loaded,
+     * so FakeRun + loadResources record real runtime classes into preload.php.
+     */
+    public function testConstructorPreloadRecordsAppResourceClasses(): void
+    {
+        $this->cleanCompileArtifacts('prod-app');
+        $this->runCompileProcess('constructor');
+
+        $preload = self::APP_DIR . '/preload.php';
+        $autoload = self::APP_DIR . '/autoload.php';
+        $this->assertFileExists($preload);
+        $contents = (string) file_get_contents($preload);
+        $this->assertStringContainsString('Resource/Page/Index.php', $contents);
+        $this->assertStringContainsString('require_once ', $contents);
+        $this->assertStringNotContainsString('compile-stub', $contents);
+        $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
+        $this->assertGreaterThan(
+            50,
+            preg_match_all('/^require(?:_once)? /m', $contents),
+            'Constructor compile should record a substantial preload class list',
+        );
+        $this->assertGeneratedFileCanBeRequired($preload);
+        $this->assertGeneratedFileCanBeRequired($autoload);
+    }
+
+    /**
+     * Skeleton-style compile entry builds the injector first, then calls fromInjector.
+     * The tracking autoloader is installed too late: classes already in memory are not
+     * re-autoloaded, so FakeRun/loadResources leave preload.php nearly empty.
+     *
+     * @see https://github.com/bearsunday/BEAR.Package/issues/482
+     */
+    public function testFromInjectorPreloadRecordsAppResourceClasses(): void
+    {
+        $this->cleanCompileArtifacts('prod-app');
+        $this->runCompileProcess('from-injector');
+
+        $preload = self::APP_DIR . '/preload.php';
+        $autoload = self::APP_DIR . '/autoload.php';
+        $this->assertFileExists($preload);
+        $contents = (string) file_get_contents($preload);
+        $this->assertStringContainsString(
+            'Resource/Page/Index.php',
+            $contents,
+            'fromInjector compile must record app resource classes loaded during FakeRun/loadResources',
+        );
+        $this->assertStringContainsString('require_once ', $contents);
+        $this->assertGreaterThan(
+            50,
+            preg_match_all('/^require(?:_once)? /m', $contents),
+            'fromInjector compile should record a substantial preload class list (not only classes loaded after tracking starts)',
+        );
+        $this->assertStringNotContainsString('compile-stub', $contents);
+        $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
+        $this->assertGeneratedFileCanBeRequired($preload);
+        $this->assertGeneratedFileCanBeRequired($autoload);
+    }
+
+    private function runCompileProcess(string $factory): void
+    {
+        $command = sprintf(
+            '%s %s %s',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg(__DIR__ . '/script/compile.php'),
+            escapeshellarg($factory),
+        );
+        passthru($command, $exitCode);
+        $this->assertSame(0, $exitCode, 'Fixture compilation must succeed in a clean PHP process');
+    }
+
+    private function assertGeneratedFileCanBeRequired(string $file): void
+    {
+        $code = sprintf('require %s;', var_export($file, true));
+        $command = sprintf('%s -d display_errors=1 -r %s', escapeshellarg(PHP_BINARY), escapeshellarg($code));
+        passthru($command, $exitCode);
+        $this->assertSame(0, $exitCode, 'Generated PHP file must be require-able in a clean PHP process: ' . $file);
+    }
+
+    /**
+     * Wipe compile outputs without constructing Compiler (which would preload classes
+     * and spoil FakeRun class-tracking measurements in this process).
+     *
+     * @param non-empty-string $context
+     */
+    private function cleanCompileArtifacts(string $context): void
+    {
+        @unlink(self::APP_DIR . '/preload.php');
+        @unlink(self::APP_DIR . '/autoload.php');
+        $tmpDir = self::APP_DIR . '/var/tmp/' . $context;
+        if (! is_dir($tmpDir)) {
+            return;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($tmpDir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            $pathname = $file->getPathname();
+            if ($file->isDir()) {
+                rmdir($pathname);
+                continue;
+            }
+
+            unlink($pathname);
+        }
     }
 
     public function testCleanRemovesArtifactsAndRecreatesDirs(): void

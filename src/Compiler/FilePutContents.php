@@ -9,11 +9,12 @@ use BEAR\Package\Types;
 
 use function file_exists;
 use function file_put_contents;
+use function in_array;
 
 /** @psalm-import-type OverwrittenFiles from Types */
 final class FilePutContents
 {
-    /** @param OverwrittenFiles $overwritten For debugging */
+    /** @param OverwrittenFiles $overwritten Tracks files replaced during compile (for reports). */
     public function __construct(
         private ArrayObject $overwritten,
     ) {
@@ -27,5 +28,10 @@ final class FilePutContents
         }
 
         file_put_contents($fileName, $content);
+    }
+
+    public function isOverwritten(string $fileName): bool
+    {
+        return in_array($fileName, (array) $this->overwritten, true);
     }
 }

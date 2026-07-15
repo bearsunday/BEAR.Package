@@ -7,9 +7,13 @@ namespace BEAR\Package\Compiler;
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Types;
+use Closure;
 use Ray\Di\InjectorInterface;
 
 use function assert;
+use function get_declared_classes;
+use function get_declared_interfaces;
+use function get_declared_traits;
 use function realpath;
 use function sprintf;
 
@@ -21,13 +25,17 @@ use function sprintf;
  */
 final class CompilePreload
 {
-    /** @param ClassList $classes */
+    /**
+     * @param ClassList            $classes
+     * @param Closure(string):bool $isPreloadClass
+     */
     public function __construct(
         private FakeRun $fakeRun,
         private CompileAutoload $dumpAutoload,
         private FilePutContents $filePutContents,
         private ArrayObject $classes,
         private InjectorInterface $injector,
+        private Closure $isPreloadClass,
     ) {
         $this->fakeRun = $fakeRun;
     }
@@ -37,13 +45,12 @@ final class CompilePreload
     {
         ($this->fakeRun)();
         $this->loadResources($appMeta);
-        /** @var list<string> $classes */
-        $classes = (array) $this->classes;
+        $classes = $this->getClasses();
         $paths = $this->dumpAutoload->getPaths($classes);
         $requiredOnceFile = '';
         foreach ($paths as $path) {
             $requiredOnceFile .= sprintf(
-                "require %s;\n",
+                "require_once %s;\n",
                 $path,
             );
         }
@@ -52,7 +59,6 @@ final class CompilePreload
 
 // %s preload
 require __DIR__ . '/vendor/autoload.php';
-
 %s", $context, $requiredOnceFile);
         $appDirRealpath = realpath($appMeta->appDir);
         assert($appDirRealpath !== false);
@@ -60,6 +66,36 @@ require __DIR__ . '/vendor/autoload.php';
         ($this->filePutContents)($fileName, $preloadFile);
 
         return $fileName;
+    }
+
+    /** @return list<string> */
+    private function getClasses(): array
+    {
+        /** @var list<list<string>> $classGroups */
+        $classGroups = [
+            get_declared_interfaces(),
+            get_declared_traits(),
+            get_declared_classes(),
+            (array) $this->classes,
+        ];
+        $classes = [];
+        $seen = [];
+        foreach ($classGroups as $classGroup) {
+            foreach ($classGroup as $class) {
+                if (isset($seen[$class])) {
+                    continue;
+                }
+
+                $seen[$class] = true;
+                if (! ($this->isPreloadClass)($class)) {
+                    continue;
+                }
+
+                $classes[] = $class;
+            }
+        }
+
+        return $classes;
     }
 
     public function loadResources(AbstractAppMeta $appMeta): void

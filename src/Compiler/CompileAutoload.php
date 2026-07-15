@@ -11,7 +11,6 @@ use ReflectionClass;
 use function assert;
 use function class_exists;
 use function file_exists;
-use function in_array;
 use function interface_exists;
 use function is_float;
 use function is_int;
@@ -29,7 +28,6 @@ use function trait_exists;
 
 /**
  * @psalm-import-type ClassList from Types
- * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type ClassPaths from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
@@ -37,15 +35,13 @@ use function trait_exists;
 final class CompileAutoload
 {
     /**
-     * @param OverwrittenFiles $overwritten
-     * @param ClassList        $classes
-     * @param AppDir           $appDir
-     * @param Context          $context
+     * @param ClassList $classes
+     * @param AppDir    $appDir
+     * @param Context   $context
      */
     public function __construct(
         private FakeRun $fakeRun,
         private FilePutContents $filePutContents,
-        private ArrayObject $overwritten,
         private ArrayObject $classes,
         private string $appDir,
         private string $context,
@@ -54,7 +50,7 @@ final class CompileAutoload
 
     public function getFileInfo(string $filename): string
     {
-        if (in_array($filename, (array) $this->overwritten, true)) {
+        if ($this->filePutContents->isOverwritten($filename)) {
             return $filename . ' (overwritten)';
         }
 
@@ -86,6 +82,7 @@ final class CompileAutoload
     public function getPaths(array $classes): array
     {
         $paths = [];
+        $seen = [];
         foreach ($classes as $class) {
             // could be phpdoc tag by annotation loader
             if ($this->isNotAutoloadble($class)) {
@@ -98,6 +95,13 @@ final class CompileAutoload
                 continue; // @codeCoverageIgnore
             }
 
+            $pathKey = realpath($filePath);
+            $pathKey = $pathKey !== false ? $pathKey : $filePath;
+            if (isset($seen[$pathKey])) {
+                continue;
+            }
+
+            $seen[$pathKey] = true;
             $paths[] = $this->getRelativePath($this->appDir, $filePath);
         }
 
@@ -122,9 +126,8 @@ final class CompileAutoload
 
 // %s autoload
 
-%s
 require __DIR__ . '/vendor/autoload.php';
-", $this->context, $requiredFile);
+%s", $this->context, $requiredFile);
         $appDirRealpath = realpath($appDir);
         assert($appDirRealpath !== false);
         $fileName = $appDirRealpath . '/autoload.php';
