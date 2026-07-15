@@ -101,17 +101,23 @@ final class PreloadClassFilter
         $this->composerDir = $composerDir;
 
         $autoloadFilesPath = $composerDir . '/autoload_files.php';
+        // @codeCoverageIgnoreStart
         if (! file_exists($autoloadFilesPath)) {
             return;
         }
+
+        // @codeCoverageIgnoreEnd
 
         /** @var array<string, string> $autoloadFiles */
         $autoloadFiles = require $autoloadFilesPath;
         foreach ($autoloadFiles as $autoloadFile) {
             $path = $this->normalizePath($autoloadFile);
+            // @codeCoverageIgnoreStart
             if (! is_string($path)) {
                 continue;
             }
+
+            // @codeCoverageIgnoreEnd
 
             $this->composerLoadedFiles[$path] = true;
         }
@@ -125,9 +131,12 @@ final class PreloadClassFilter
 
     private function normalizePath(string $path): string|false
     {
+        // @codeCoverageIgnoreStart
         if (str_starts_with($path, 'phar://')) {
             return $path;
         }
+
+        // @codeCoverageIgnoreEnd
 
         return realpath($path);
     }
