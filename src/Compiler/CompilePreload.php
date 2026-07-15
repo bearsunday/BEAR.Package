@@ -7,7 +7,6 @@ namespace BEAR\Package\Compiler;
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Types;
-use Closure;
 use Ray\Di\InjectorInterface;
 
 use function assert;
@@ -25,17 +24,14 @@ use function sprintf;
  */
 final class CompilePreload
 {
-    /**
-     * @param ClassList            $classes
-     * @param Closure(string):bool $isPreloadClass
-     */
+    /** @param ClassList $classes */
     public function __construct(
         private FakeRun $fakeRun,
         private CompileAutoload $dumpAutoload,
         private FilePutContents $filePutContents,
         private ArrayObject $classes,
         private InjectorInterface $injector,
-        private Closure $isPreloadClass,
+        private PreloadClassFilter $isPreloadClass,
     ) {
         $this->fakeRun = $fakeRun;
     }

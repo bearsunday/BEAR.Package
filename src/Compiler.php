@@ -13,8 +13,8 @@ use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
+use BEAR\Package\Compiler\PreloadClassFilter;
 use BEAR\Package\Injector\PackageInjector;
-use BEAR\Package\Provide\Error\NullPage;
 use BEAR\Resource\NamedParameterInterface;
 use Composer\Autoload\ClassLoader;
 use FilesystemIterator;
@@ -26,14 +26,9 @@ use RuntimeException;
 use SplFileInfo;
 
 use function assert;
-use function class_exists;
-use function dirname;
 use function file_exists;
-use function interface_exists;
 use function is_dir;
 use function is_float;
-use function is_int;
-use function is_string;
 use function memory_get_peak_usage;
 use function microtime;
 use function mkdir;
@@ -44,12 +39,8 @@ use function rmdir;
 use function spl_autoload_functions;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
-use function str_starts_with;
-use function strpos;
-use function trait_exists;
 use function unlink;
 
-use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
 /**
@@ -72,11 +63,7 @@ final class Compiler
     private CompileAutoload $dumpAutoload;
     private CompilePreload $compilePreload;
     private CompileObjectGraph $compilerObjectGraph;
-    private ClassLoader $loader;
-    private string $composerDir;
-
-    /** @var array<string, true> */
-    private array $composerLoadedFiles = [];
+    private PreloadClassFilter $preloadClassFilter;
 
     /**
      * @param AppName $appName application name "MyVendor|MyProject"
@@ -288,7 +275,7 @@ final class Compiler
             $filePutContents,
             $this->classes,
             $injector,
-            $this->isPreloadClass(...),
+            $this->preloadClassFilter,
         );
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
     }
@@ -296,21 +283,22 @@ final class Compiler
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     private function registerLoader(string $appDir, bool $prepend = true): void
     {
-        $this->unregisterComposerLoader();
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
             throw new RuntimeException('no loader');
         }
 
+        // Keep Composer autoload registered until PreloadClassFilter is constructed:
+        // getLoader() will not re-register after unregisterComposerLoader().
         $loader = require $loaderFile;
         assert($loader instanceof ClassLoader);
-        $this->loader = $loader;
-        $this->prepareComposerFiles();
+        $this->preloadClassFilter = new PreloadClassFilter($loader);
+        $this->unregisterComposerLoader();
         spl_autoload_register(
             /** @ class-string $class */
             function (string $class) use ($loader): void {
                 $loader->loadClass($class);
-                if ($this->isExcludedClass($class)) {
+                if ($this->preloadClassFilter->isExcludedClass($class)) {
                     return;
                 }
 
@@ -320,84 +308,6 @@ final class Compiler
             true,
             $prepend,
         );
-    }
-
-    private function prepareComposerFiles(): void
-    {
-        $classLoaderFile = (new ReflectionClass(ClassLoader::class))->getFileName();
-        assert(is_string($classLoaderFile));
-        $composerDir = $this->normalizePath(dirname($classLoaderFile));
-        assert(is_string($composerDir));
-        $this->composerDir = $composerDir;
-
-        $autoloadFilesPath = $composerDir . '/autoload_files.php';
-        if (! file_exists($autoloadFilesPath)) {
-            return;
-        }
-
-        /** @var array<string, string> $autoloadFiles */
-        $autoloadFiles = require $autoloadFilesPath;
-        foreach ($autoloadFiles as $autoloadFile) {
-            $path = $this->normalizePath($autoloadFile);
-            if (! is_string($path)) {
-                continue;
-            }
-
-            $this->composerLoadedFiles[$path] = true;
-        }
-    }
-
-    private function isPreloadClass(string $class): bool
-    {
-        if ($this->isExcludedClass($class)) {
-            return false;
-        }
-
-        if (! class_exists($class, false) && ! interface_exists($class, false) && ! trait_exists($class, false)) {
-            return false;
-        }
-
-        /** @var class-string $class */
-        $reflection = new ReflectionClass($class);
-        if ($reflection->isAnonymous()) {
-            return false;
-        }
-
-        $fileName = $reflection->getFileName();
-        $loaderFile = $this->loader->findFile($class);
-        if (! is_string($fileName) || ! is_string($loaderFile)) {
-            return false;
-        }
-
-        $filePath = $this->normalizePath($fileName);
-        $loaderPath = $this->normalizePath($loaderFile);
-        if (! is_string($filePath) || $filePath !== $loaderPath) {
-            return false;
-        }
-
-        return ! $this->isComposerLoadedFile($filePath);
-    }
-
-    private function isExcludedClass(string $class): bool
-    {
-        return $class === NullPage::class
-            || is_int(strpos($class, self::class))
-            || is_int(strpos($class, NullPage::class));
-    }
-
-    private function isComposerLoadedFile(string $filePath): bool
-    {
-        return str_starts_with($filePath, $this->composerDir . DIRECTORY_SEPARATOR)
-            || isset($this->composerLoadedFiles[$filePath]);
-    }
-
-    private function normalizePath(string $path): string|false
-    {
-        if (str_starts_with($path, 'phar://')) {
-            return $path;
-        }
-
-        return realpath($path);
     }
 
     private function hookNullObjectClass(string $appDir): void
