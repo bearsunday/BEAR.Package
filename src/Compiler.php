@@ -97,9 +97,8 @@ final class Compiler
         // registerLoader / hookNullObjectClass must run before the injector is built
         // (building it first would load the app too early and break .compile.php stubs).
         $this->prepare($context, $appDir, $prepend, $meta);
-        // Never boot the compile pipeline from AOT scripts or a cached injector: a marker
-        // left by an earlier compile would hand back a CompiledInjector that FakeRun cannot
-        // resolve through, and the result would depend on leftover state.
+        // Not factory(): a marker from an earlier compile would hand back a CompiledInjector
+        // that FakeRun cannot resolve through, making the result depend on leftover state.
         $this->wire(PackageInjector::compileInjector($meta, $context));
     }
 
