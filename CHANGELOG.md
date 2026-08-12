@@ -5,13 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.22.0] - 2026-08-13
+
+### Added
+- `Injector::fromMeta()` — injector for an already resolved `Meta` (#482)
+
+### Changed
+- `preload.php` emits `require` in dependency order again, not `require_once` (#482)
+- `Compiler::__construct()` takes optional `$tmpDir` / `$logDir`; requires `bear/app-meta ^1.11` (#482)
+- `compile()` / `dumpAutoload()` / `clean()` on a `fromInjector()` compiler throw `DelegatedCompileException` (#482)
+- An on-demand compile is reported through the application logger, not `trigger_error()` (#483)
+- Reusing ahead-of-time output requires `ray/aop ^2.20` for weaved-file re-emission (#483)
+- `isProd()` no longer reports an unbound `Compile` as dev (#488)
 
 ### Deprecated
 - `bin/bear.compile` — prefer application `bin/compile.php` with `Compiler::fromInjector(... )()` (still works; see #482)
 
 ### Fixed
-- Reuse ahead-of-time DI scripts in `PackageInjector::factory()` when a compile marker is present (skip unconditional rebuild; #483)
+- `Compiler::fromInjector()` compiles in a clean child process, so `preload.php` is complete (#482)
+- Reuse ahead-of-time DI scripts when a compile marker is present, and boot from a read-only script directory (#483)
+- `CompileMarker::write()` throws instead of discarding a failed write (#483)
 
 ## [1.21.0] - 2026-07-10
 
