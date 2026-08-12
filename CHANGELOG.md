@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Deprecated
+- `bin/bear.compile` — prefer application `bin/compile.php` with `Compiler::fromInjector(... )()` (still works; see #482)
+
 ### Fixed
 - Reuse ahead-of-time DI scripts in `PackageInjector::factory()` when a compile marker is present (skip unconditional rebuild; #483)
 
