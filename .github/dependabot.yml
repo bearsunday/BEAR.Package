@@ -28,3 +28,11 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+  - package-ecosystem: "composer"
+    directory: "/vendor-bin/tools"
+    schedule:
+      interval: "monthly"
+    # Dev tools are pinned by hand: no minor/patch noise, no major bumps, and
+    # no security-update PRs either (`ignore` applies to security updates too).
+    ignore:
+      - dependency-name: "*"
