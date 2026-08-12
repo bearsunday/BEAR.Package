@@ -9,6 +9,7 @@ use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Psr\Log\LoggerInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
@@ -30,7 +31,6 @@ use function sprintf;
 use function str_replace;
 use function trigger_error;
 
-use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 /** @psalm-import-type Context from Types */
@@ -185,17 +185,31 @@ final class PackageInjector
             return $injector;
         }
 
-        trigger_error(
-            'Not precompiled; compiling on demand. Pre-compile DI scripts for production. See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
-            E_USER_NOTICE,
-        );
         (new Compiler())->compile($module, $scriptDir);
         CompileMarker::write($scriptDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
+        self::logOnDemandCompile($injector, $scriptDir);
 
         return $injector;
+    }
+
+    /**
+     * Record the on-demand compile through the application's logger.
+     *
+     * Not trigger_error(): a logger cannot land in a response body or be turned into an
+     * exception by an error handler, and whether this is a fault depends on the deployment —
+     * some projects let the first prod health check do the compile.
+     */
+    private static function logOnDemandCompile(InjectorInterface $injector, string $scriptDir): void
+    {
+        $logger = $injector->getInstance(LoggerInterface::class);
+        assert($logger instanceof LoggerInterface);
+        $logger->notice('Compiled DI scripts on demand', [
+            'scriptDir' => $scriptDir,
+            'see' => 'https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
+        ]);
     }
 
     /**

@@ -23,14 +23,14 @@ use function assert;
 use function escapeshellarg;
 use function file_get_contents;
 use function file_put_contents;
+use function ini_get;
+use function ini_set;
 use function is_dir;
 use function is_float;
 use function mkdir;
 use function passthru;
 use function preg_match_all;
-use function restore_error_handler;
 use function rmdir;
-use function set_error_handler;
 use function sprintf;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -38,7 +38,6 @@ use function unlink;
 use function var_export;
 
 use const DIRECTORY_SEPARATOR;
-use const E_USER_NOTICE;
 use const PHP_BINARY;
 
 class CompilerTest extends TestCase
@@ -61,24 +60,22 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
-    /** Routing the build through factory() would compile an extra time and emit the on-demand notice. */
+    /** Routing the build through factory() would compile an extra time and log an on-demand compile. */
     public function testInvokeDoesNotEnterTheOnDemandCompilePath(): void
     {
-        $notices = [];
-        set_error_handler(static function (int $errno, string $message) use (&$notices): bool {
-            $notices[] = $message;
-
-            return true;
-        }, E_USER_NOTICE);
+        $errorLog = sys_get_temp_dir() . '/bear-errorlog-' . uniqid('', true) . '.log';
+        $previous = (string) ini_get('error_log');
+        ini_set('error_log', $errorLog);
 
         try {
             $code = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false))();
         } finally {
-            restore_error_handler();
+            ini_set('error_log', $previous);
         }
 
         $this->assertSame(0, $code);
-        $this->assertSame([], $notices);
+        $this->assertStringNotContainsString('Compiled DI scripts on demand', (string) @file_get_contents($errorLog));
+        @unlink($errorLog);
     }
 
     #[Depends('testInvoke')]
@@ -205,16 +202,7 @@ class CompilerTest extends TestCase
         $tmpDir = sys_get_temp_dir() . '/bear-package-compile-' . uniqid();
         $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
         $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $tmpDir, $logDir);
-        // factory() is the runtime entry: with a fresh tmpDir it legitimately takes the
-        // on-demand compile path and emits E_USER_NOTICE. Swallow it so the notice does
-        // not surface as an unexplained one in this test's output.
-        set_error_handler(static fn (): bool => true, E_USER_NOTICE);
-
-        try {
-            $injector = PackageInjector::factory($meta, 'prod-cli-app');
-        } finally {
-            restore_error_handler();
-        }
+        $injector = PackageInjector::factory($meta, 'prod-cli-app');
 
         $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
         $code = $compiler();

@@ -28,10 +28,13 @@ use Throwable;
 use function assert;
 use function dirname;
 use function file_exists;
+use function file_get_contents;
 use function fileinode;
 use function filemtime;
 use function glob;
 use function hash;
+use function ini_get;
+use function ini_set;
 use function is_int;
 use function is_string;
 use function mkdir;
@@ -46,7 +49,6 @@ use function touch;
 use function uniqid;
 use function unlink;
 
-use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
@@ -230,16 +232,7 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
         self::cleanProdDi($scriptDir);
 
-        // First factory compiles on demand and emits E_USER_NOTICE; swallow it so
-        // the cold-start notice does not leak into this test's output.
-        set_error_handler(static function (): bool {
-            return true;
-        }, E_USER_NOTICE);
-        try {
-            $first = PackageInjector::factory($meta, 'prod-app');
-        } finally {
-            restore_error_handler();
-        }
+        $first = PackageInjector::factory($meta, 'prod-app');
 
         $this->assertInstanceOf(CompiledInjector::class, $first);
         $this->assertTrue(file_exists(CompileMarker::path($scriptDir)));
@@ -260,7 +253,7 @@ class PackageInjectorTest extends TestCase
         }
     }
 
-    public function testProdFactoryNoticesAndCompilesWhenMarkerMissing(): void
+    public function testProdFactoryLogsAndCompilesWhenMarkerMissing(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
@@ -268,24 +261,22 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
         self::cleanProdDi($scriptDir);
 
-        $notices = [];
-        set_error_handler(static function (int $errno, string $errstr) use (&$notices): bool {
-            $notices[] = $errstr;
-
-            return true;
-        }, E_USER_NOTICE);
+        // The prod logger writes through ErrorLogHandler, so error_log is the destination.
+        $errorLog = sys_get_temp_dir() . '/bear-errorlog-' . uniqid('', true) . '.log';
+        $previous = (string) ini_get('error_log');
+        ini_set('error_log', $errorLog);
 
         try {
             $injector = PackageInjector::factory($meta, 'prod-app');
         } finally {
-            restore_error_handler();
+            ini_set('error_log', $previous);
         }
 
         $this->assertInstanceOf(CompiledInjector::class, $injector);
         $injector->getInstance(AppInterface::class);
-        $this->assertNotEmpty($notices);
-        $this->assertStringContainsString('Not precompiled', $notices[0]);
+        $this->assertStringContainsString('Compiled DI scripts on demand', (string) file_get_contents($errorLog));
         $this->assertTrue(file_exists(CompileMarker::path($scriptDir)));
+        @unlink($errorLog);
     }
 
     public function testProdFactoryIgnoresSourceChangesWhenMarkerPresent(): void
