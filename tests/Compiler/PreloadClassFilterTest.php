@@ -63,7 +63,11 @@ class PreloadClassFilterTest extends TestCase
         require $tmp;
         $this->assertTrue(class_exists($class, false));
 
-        // ClassLoader has no map entry (or a different path); findFile is false → reject.
+        // ClassLoader has no map entry (findFile is false) → reject.
+        $this->assertFalse(($this->filter)($class));
+
+        // Map entry resolves to a different file than the declaring one → reject.
+        $this->loader->addClassMap([$class => __FILE__]);
         $this->assertFalse(($this->filter)($class));
         @unlink($tmp);
     }

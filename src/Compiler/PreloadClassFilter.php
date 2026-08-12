@@ -24,7 +24,7 @@ use function trait_exists;
 use const DIRECTORY_SEPARATOR;
 
 /**
- * Filters declared symbols for preload.php generation.
+ * Filters tracker-recorded classes for preload.php generation.
  */
 final class PreloadClassFilter
 {

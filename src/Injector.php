@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector\PackageInjector;
 use Ray\Di\AbstractModule;
@@ -33,8 +34,20 @@ final class Injector
      */
     public static function getInstance(string $appName, string $context, string $appDir, CacheInterface|null $cache = null): InjectorInterface
     {
-        $meta = new Meta($appName, $context, $appDir);
-        $cacheNamespace = str_replace('\\', '_', $appName) . $context;
+        return self::fromMeta(new Meta($appName, $context, $appDir), $context, $cache);
+    }
+
+    /**
+     * Return an injector for an already resolved Meta.
+     *
+     * Compile paths hold a Meta whose tmpDir/logDir may be overridden; re-deriving one
+     * from appName/context/appDir would silently fall back to the default directories.
+     *
+     * @param Context $context
+     */
+    public static function fromMeta(AbstractAppMeta $meta, string $context, CacheInterface|null $cache = null): InjectorInterface
+    {
+        $cacheNamespace = str_replace('\\', '_', $meta->name) . $context;
         $cache ??= (new LocalCacheProvider($meta->tmpDir . '/injector', $cacheNamespace))->get();
 
         return PackageInjector::getInstance($meta, $context, $cache);
