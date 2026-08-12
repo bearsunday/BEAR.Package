@@ -49,11 +49,7 @@ use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
 {
-    /**
-     * Remove the compile marker and DI scripts so a prod factory() starts cold.
-     * (tests/bootstrap.php's deleteFiles skips dotfiles, so a leftover marker
-     * from a previous run would otherwise short-circuit the on-demand path.)
-     */
+    /** Remove the compile marker and DI scripts so a prod factory() starts cold. */
     private static function cleanProdDi(string $scriptDir): void
     {
         @unlink(CompileMarker::path($scriptDir));

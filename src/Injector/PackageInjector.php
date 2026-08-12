@@ -127,20 +127,13 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * The marker only records that a compile has run — it does not verify the
-     * scripts still match the source tree. Freshness is the deploy's
-     * responsibility: ship the marker with the scripts (image) or recompile
-     * before the cache is reused. On a missing marker the cold path compiles on
-     * demand and emits `E_USER_NOTICE` so a forgotten production compile is loud.
-     *
      * A marker with broken scripts is a deploy error, not a recoverable one, so
      * the boot is left to throw instead of falling back to a runtime recompile
      * (which would also die under a read-only filesystem).
      *
      * @param non-empty-string $scriptDir
      *
-     * @see https://github.com/bearsunday/BEAR.Package/issues/483
-     * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended
+     * @see CompileMarker for what the marker does and does not guarantee
      */
     private static function prodInjector(AbstractModule $module, string $scriptDir): InjectorInterface
     {
