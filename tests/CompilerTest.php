@@ -31,12 +31,14 @@ use function uniqid;
 use function unlink;
 use function var_export;
 
+use const DIRECTORY_SEPARATOR;
 use const PHP_BINARY;
 
 class CompilerTest extends TestCase
 {
     private const APP_NAME = 'FakeVendor\HelloWorld';
     private const APP_DIR = __DIR__ . '/Fake/fake-app';
+    private const INDEX_RESOURCE_PATH = 'Resource' . DIRECTORY_SEPARATOR . 'Page' . DIRECTORY_SEPARATOR . 'Index.php';
 
     public function testInvoke(): void
     {
@@ -89,7 +91,7 @@ class CompilerTest extends TestCase
         $autoload = self::APP_DIR . '/autoload.php';
         $this->assertFileExists($preload);
         $contents = (string) file_get_contents($preload);
-        $this->assertStringContainsString('Resource/Page/Index.php', $contents);
+        $this->assertStringContainsString(self::INDEX_RESOURCE_PATH, $contents);
         $this->assertStringContainsString('require_once ', $contents);
         $this->assertStringNotContainsString('compile-stub', $contents);
         $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
@@ -119,7 +121,7 @@ class CompilerTest extends TestCase
         $this->assertFileExists($preload);
         $contents = (string) file_get_contents($preload);
         $this->assertStringContainsString(
-            'Resource/Page/Index.php',
+            self::INDEX_RESOURCE_PATH,
             $contents,
             'fromInjector compile must record app resource classes loaded during FakeRun/loadResources',
         );
