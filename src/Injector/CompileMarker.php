@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Injector;
 
+use BEAR\Package\Exception\DirectoryNotWritableException;
+
 use function file_exists;
 use function file_put_contents;
 use function sprintf;
@@ -39,8 +41,18 @@ final class CompileMarker
         return file_exists(self::path($scriptDir));
     }
 
+    /**
+     * @throws DirectoryNotWritableException When the marker cannot be persisted: the compile
+     *                                       looks precompiled to nobody and every later boot
+     *                                       silently recompiles on demand.
+     */
     public static function write(string $scriptDir): void
     {
-        @file_put_contents(self::path($scriptDir), sprintf('compiled at %d', time()));
+        $path = self::path($scriptDir);
+        if (@file_put_contents($path, sprintf('compiled at %d', time())) !== false) {
+            return;
+        }
+
+        throw new DirectoryNotWritableException($path);
     }
 }

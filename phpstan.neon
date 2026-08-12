@@ -10,3 +10,5 @@ parameters:
     - tests/Fake/*
     - tests/script/*
     - tests/Injector/Fake/fake-app/var/tmp/*
+  scanFiles:
+    - tests/Fake/preload/anonymous.php

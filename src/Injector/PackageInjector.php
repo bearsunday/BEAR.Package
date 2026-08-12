@@ -102,9 +102,44 @@ final class PackageInjector
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
-        $scriptDir = self::scriptDir($meta, $overrideModule);
-        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
+        $scriptDir = self::ensureScriptDir($meta, $overrideModule);
+        $module = self::module($meta, $context, $overrideModule);
+        if (self::isProd($module)) {
+            return self::prodInjector($module, $scriptDir);
+        }
 
+        return self::rayInjector($module, $scriptDir);
+    }
+
+    /**
+     * Injector for the compile pipeline, which never enters the AOT branch.
+     *
+     * Compiler::__invoke() wipes tmpDir and then needs a working injector to drive
+     * FakeRun before it compiles. Going through factory() in a prod context would
+     * take prodInjector()'s runtime cold path, which emits the "Not precompiled"
+     * notice and writes the compile marker in the middle of a build — the compiler
+     * writes that marker itself once the final scripts are in place.
+     *
+     * The container compile stays: it is not the same pass as the one in
+     * Compiler::compile(). This one populates the scripts FakeRun then resolves
+     * through; the later pass re-emits them once AOP weaving has happened.
+     *
+     * @param Context $context
+     */
+    public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
+    {
+        $scriptDir = self::ensureScriptDir($meta, null);
+        $module = self::module($meta, $context, null);
+        if (self::isProd($module)) {
+            (new Compiler())->compile($module, $scriptDir);
+        }
+
+        return self::rayInjector($module, $scriptDir);
+    }
+
+    /** @param Context $context */
+    private static function module(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): AbstractModule
+    {
         $module = (new Module())($meta, $context);
         if ($overrideModule instanceof AbstractModule) {
             $module->override($overrideModule);
@@ -113,10 +148,20 @@ final class PackageInjector
         // Bind ResourceObject
         $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
 
-        if (self::isProd($module)) {
-            return self::prodInjector($module, $scriptDir);
-        }
+        return $module;
+    }
 
+    /** @return non-empty-string */
+    private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    {
+        $scriptDir = self::scriptDir($meta, $overrideModule);
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
+
+        return $scriptDir;
+    }
+
+    private static function rayInjector(AbstractModule $module, string $scriptDir): InjectorInterface
+    {
         $injector = new RayInjector($module, $scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

@@ -4,26 +4,48 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use BEAR\AppMeta\Meta;
+use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
+use BEAR\Package\Injector\PackageInjector;
+use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use ReflectionMethod;
 use RuntimeException;
+use SplFileInfo;
 
+use function array_diff;
 use function assert;
+use function escapeshellarg;
+use function file_get_contents;
 use function file_put_contents;
 use function is_dir;
 use function is_float;
 use function mkdir;
+use function passthru;
+use function preg_match_all;
+use function restore_error_handler;
+use function rmdir;
+use function set_error_handler;
+use function sprintf;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
+use function var_export;
+
+use const DIRECTORY_SEPARATOR;
+use const E_USER_NOTICE;
+use const PHP_BINARY;
 
 class CompilerTest extends TestCase
 {
     private const APP_NAME = 'FakeVendor\HelloWorld';
     private const APP_DIR = __DIR__ . '/Fake/fake-app';
+    private const INDEX_RESOURCE_PATH = 'Resource' . DIRECTORY_SEPARATOR . 'Page' . DIRECTORY_SEPARATOR . 'Index.php';
 
     public function testInvoke(): void
     {
@@ -37,6 +59,30 @@ class CompilerTest extends TestCase
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
+    }
+
+    /**
+     * The compile pipeline must build its own uncompiled injector. Routing it through
+     * PackageInjector::factory() would enter the AOT cold path after clean(), compiling
+     * the same DI scripts an extra time and emitting the on-demand notice during a build.
+     */
+    public function testInvokeDoesNotEnterTheOnDemandCompilePath(): void
+    {
+        $notices = [];
+        set_error_handler(static function (int $errno, string $message) use (&$notices): bool {
+            $notices[] = $message;
+
+            return true;
+        }, E_USER_NOTICE);
+
+        try {
+            $code = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false))();
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame(0, $code);
+        $this->assertSame([], $notices);
     }
 
     #[Depends('testInvoke')]
@@ -54,13 +100,204 @@ class CompilerTest extends TestCase
 
     public function testFromInjectorAndInvoke(): void
     {
-        // Establish injector the same way as new Compiler() so .compile.php stubs load first.
-        new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        // fromInjector() delegates the compile to one clean child process (constructor path).
         $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
         $code = $compiler();
         $this->assertSame(0, $code);
         $this->assertDirectoryExists(self::APP_DIR . '/var/tmp/prod-cli-app/di');
+    }
+
+    /**
+     * Constructor path installs the class-tracking autoloader before the app is loaded,
+     * so FakeRun + loadResources record real runtime classes into preload.php.
+     */
+    public function testConstructorPreloadRecordsAppResourceClasses(): void
+    {
+        $this->cleanCompileArtifacts('prod-app');
+        $this->runCompileProcess('constructor');
+
+        $preload = self::APP_DIR . '/preload.php';
+        $autoload = self::APP_DIR . '/autoload.php';
+        $this->assertFileExists($preload);
+        $contents = (string) file_get_contents($preload);
+        $this->assertStringContainsString(self::INDEX_RESOURCE_PATH, $contents);
+        $this->assertStringContainsString('require ', $contents);
+        $this->assertStringNotContainsString('require_once', $contents);
+        $this->assertStringNotContainsString('phpunit', $contents);
+        $this->assertStringNotContainsString('compile-stub', $contents);
+        $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
+        $this->assertGreaterThan(
+            50,
+            preg_match_all('/^require(?:_once)? /m', $contents),
+            'Constructor compile should record a substantial preload class list',
+        );
+        $this->assertGeneratedFileCanBeRequired($preload);
+        $this->assertGeneratedFileCanBeRequired($autoload);
+    }
+
+    /**
+     * Skeleton-style compile entry builds the injector first, then calls fromInjector().
+     * fromInjector() compiles in a clean child process, so the class-tracking autoloader
+     * is installed before any app class loads and records the same app resource classes.
+     * No PHPUnit class can leak into the preload list from the clean child either.
+     *
+     * @see https://github.com/bearsunday/BEAR.Package/issues/482
+     */
+    public function testFromInjectorPreloadRecordsAppResourceClasses(): void
+    {
+        $this->cleanCompileArtifacts('prod-app');
+        $this->runCompileProcess('from-injector');
+
+        $preload = self::APP_DIR . '/preload.php';
+        $autoload = self::APP_DIR . '/autoload.php';
+        $this->assertFileExists($preload);
+        $contents = (string) file_get_contents($preload);
+        $this->assertStringContainsString(
+            self::INDEX_RESOURCE_PATH,
+            $contents,
+            'fromInjector compile must record app resource classes loaded during FakeRun/loadResources',
+        );
+        $this->assertStringContainsString('require ', $contents);
+        $this->assertStringNotContainsString('require_once', $contents);
+        $this->assertStringNotContainsString('phpunit', $contents);
+        $this->assertGreaterThan(
+            50,
+            preg_match_all('/^require(?:_once)? /m', $contents),
+            'fromInjector compile should record a substantial preload class list (not only classes loaded after tracking starts)',
+        );
+        $this->assertStringNotContainsString('compile-stub', $contents);
+        $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
+        $this->assertGeneratedFileCanBeRequired($preload);
+        $this->assertGeneratedFileCanBeRequired($autoload);
+    }
+
+    /**
+     * Both entries measure the same tracker-recorded population, so the fromInjector
+     * preload must contain every path the constructor preload has. (The child process
+     * may add the compile entry's own classes on top.)
+     */
+    public function testFromInjectorPreloadContainsConstructorPreloadPaths(): void
+    {
+        $this->cleanCompileArtifacts('prod-app');
+        $this->runCompileProcess('constructor');
+        $constructorPaths = $this->getPreloadPaths();
+        $this->cleanCompileArtifacts('prod-app');
+        $this->runCompileProcess('from-injector');
+        $fromInjectorPaths = $this->getPreloadPaths();
+        $missing = array_diff($constructorPaths, $fromInjectorPaths);
+        $this->assertSame([], $missing, 'fromInjector preload must contain every constructor preload path');
+    }
+
+    public function testConstructorWritesArtifactsToGivenDirs(): void
+    {
+        $tmpDir = sys_get_temp_dir() . '/bear-package-compile-' . uniqid();
+        $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false, $tmpDir, $logDir);
+        $code = $compiler();
+        $this->assertSame(0, $code);
+        $this->assertFileExists($tmpDir . '/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists($logDir . '/module.dot');
+    }
+
+    /**
+     * fromInjector() must carry the injector-resolved Meta dirs into the child process;
+     * re-deriving a default Meta would write compiled artifacts where runtime never looks.
+     */
+    public function testFromInjectorWritesArtifactsToInjectorMetaDirs(): void
+    {
+        $tmpDir = sys_get_temp_dir() . '/bear-package-compile-' . uniqid();
+        $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
+        $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $tmpDir, $logDir);
+        // factory() is the runtime entry: with a fresh tmpDir it legitimately takes the
+        // on-demand compile path and emits E_USER_NOTICE. Swallow it so the notice does
+        // not surface as an unexplained one in this test's output.
+        set_error_handler(static fn (): bool => true, E_USER_NOTICE);
+
+        try {
+            $injector = PackageInjector::factory($meta, 'prod-cli-app');
+        } finally {
+            restore_error_handler();
+        }
+
+        $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
+        $code = $compiler();
+        $this->assertSame(0, $code);
+        $this->assertFileExists($tmpDir . '/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists($logDir . '/module.dot');
+    }
+
+    /**
+     * The delegating compiler holds only the compile job, so an in-process pipeline
+     * call must fail with intent rather than an uninitialized-property Error.
+     */
+    public function testDelegatedCompilerRejectsInProcessCompile(): void
+    {
+        $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
+        $injector = PackageInjector::factory($meta, 'prod-cli-app');
+        $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
+        $this->expectException(DelegatedCompileException::class);
+        $compiler->compile();
+    }
+
+    /** @return list<string> */
+    private function getPreloadPaths(): array
+    {
+        $contents = (string) file_get_contents(self::APP_DIR . '/preload.php');
+        preg_match_all('/^require (.+);$/m', $contents, $matches);
+
+        return $matches[1];
+    }
+
+    private function runCompileProcess(string $factory): void
+    {
+        $command = sprintf(
+            '%s %s %s',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg(__DIR__ . '/script/compile.php'),
+            escapeshellarg($factory),
+        );
+        passthru($command, $exitCode);
+        $this->assertSame(0, $exitCode, 'Fixture compilation must succeed in a clean PHP process');
+    }
+
+    private function assertGeneratedFileCanBeRequired(string $file): void
+    {
+        $code = sprintf('require %s;', var_export($file, true));
+        $command = sprintf('%s -d display_errors=1 -r %s', escapeshellarg(PHP_BINARY), escapeshellarg($code));
+        passthru($command, $exitCode);
+        $this->assertSame(0, $exitCode, 'Generated PHP file must be require-able in a clean PHP process: ' . $file);
+    }
+
+    /**
+     * Wipe compile outputs without constructing Compiler (which would preload classes
+     * and spoil FakeRun class-tracking measurements in this process).
+     *
+     * @param non-empty-string $context
+     */
+    private function cleanCompileArtifacts(string $context): void
+    {
+        @unlink(self::APP_DIR . '/preload.php');
+        @unlink(self::APP_DIR . '/autoload.php');
+        $tmpDir = self::APP_DIR . '/var/tmp/' . $context;
+        if (! is_dir($tmpDir)) {
+            return;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($tmpDir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            $pathname = $file->getPathname();
+            if ($file->isDir()) {
+                rmdir($pathname);
+                continue;
+            }
+
+            unlink($pathname);
+        }
     }
 
     public function testCleanRemovesArtifactsAndRecreatesDirs(): void

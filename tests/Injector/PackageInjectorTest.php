@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Exception\DirectoryNotWritableException;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -356,5 +357,16 @@ class PackageInjectorTest extends TestCase
             @unlink(CompileMarker::path($dir));
             @rmdir($dir);
         }
+    }
+
+    /**
+     * A marker that cannot be persisted means every later boot silently recompiles
+     * on demand, so the write must fail loudly rather than be swallowed.
+     */
+    public function testCompileMarkerWriteFailsLoudlyWhenNotWritable(): void
+    {
+        $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
+        $this->expectException(DirectoryNotWritableException::class);
+        CompileMarker::write($missingDir);
     }
 }
