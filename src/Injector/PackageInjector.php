@@ -48,7 +48,7 @@ final class PackageInjector
     }
 
     /**
-     * Return an injector, cached in memory and in the cache adapter.
+     * Return an injector, reusing in-memory instances and cached compiled injectors.
      *
      * @param Context $context
      */
