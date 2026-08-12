@@ -187,21 +187,6 @@ class PackageInjectorTest extends TestCase
         }
     }
 
-    public function testIsProdReturnsFalseWhenCompileIsUnbound(): void
-    {
-        // Covers the Unbound catch branch of PackageInjector::isProd().
-        // A minimal module that never installs DiCompileModule leaves
-        // Compile::class unbound, so getInstance('', Compile::class) throws.
-        $module = new class extends AbstractModule {
-            protected function configure(): void
-            {
-            }
-        };
-
-        $isProd = new ReflectionMethod(PackageInjector::class, 'isProd');
-        $this->assertFalse($isProd->invoke(null, $module));
-    }
-
     public function testScriptDirWithoutOverride(): void
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');

@@ -15,7 +15,6 @@ use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
 use Ray\Compiler\ScriptInjectorInterface;
 use Ray\Di\AbstractModule;
-use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -240,13 +239,15 @@ final class PackageInjector
         return sprintf('Failed to cache the injector(%s). The cache adapter could not store the item. See https://github.com/bearsunday/BEAR.Package/issues/418', $injectorId);
     }
 
-    /** Detect prod without a RayInjector — that would mutate $module via AOP weaving (#467). */
+    /**
+     * Detect prod without a RayInjector — that would mutate $module via AOP weaving (#467).
+     *
+     * DiCompileModule always binds Compile (false in dev, true in prod) and PackageModule
+     * always installs it, so an unbound Compile means the module never came from Module:
+     * a programming error, not a context to treat as dev.
+     */
     private static function isProd(AbstractModule $module): bool
     {
-        try {
-            return (bool) $module->getContainer()->getInstance('', Compile::class);
-        } catch (Unbound) {
-            return false;
-        }
+        return (bool) $module->getContainer()->getInstance('', Compile::class);
     }
 }
