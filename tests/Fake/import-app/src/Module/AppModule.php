@@ -6,7 +6,7 @@ namespace Import\HelloWorld\Module;
 
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use BEAR\Sunday\Module\SundayModule;
+use BEAR\Package\PackageModule;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Di\AbstractModule;
 
@@ -16,6 +16,6 @@ class AppModule extends AbstractModule
     {
         $this->bind(AppInterface::class)->to(App::class);
         $this->bind()->annotatedWith(Compile::class)->toInstance(true);
-        $this->install(new SundayModule());
+        $this->install(new PackageModule());
     }
 }

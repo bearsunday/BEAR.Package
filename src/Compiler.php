@@ -15,6 +15,7 @@ use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Compiler\PreloadClassFilter;
 use BEAR\Package\Exception\DelegatedCompileException;
+use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Resource\NamedParameterInterface;
 use Composer\Autoload\ClassLoader;
@@ -96,7 +97,9 @@ final class Compiler
         // registerLoader / hookNullObjectClass must run before the injector is built
         // (building it first would load the app too early and break .compile.php stubs).
         $this->prepare($context, $appDir, $prepend, $meta);
-        $this->wire(Injector::fromMeta($meta, $context));
+        // Not factory(): a marker from an earlier compile would hand back a CompiledInjector
+        // that FakeRun cannot resolve through, making the result depend on leftover state.
+        $this->wire(PackageInjector::compileInjector($meta, $context));
     }
 
     /**
@@ -135,8 +138,7 @@ final class Compiler
         }
 
         $this->clean();
-        // CompiledInjector scripts live under tmpDir/di; rebuild after wipe (bear.compile uses a new process).
-        $this->wire(PackageInjector::factory($this->appMeta, $this->context));
+        $this->wire(PackageInjector::compileInjector($this->appMeta, $this->context));
         $report = $this->compile();
         echo PHP_EOL;
         printf("Compilation took %s seconds and used %sMB of memory\n", $report['time'], $report['memory']);
@@ -250,6 +252,8 @@ final class Compiler
         $scriptDir = $this->appMeta->tmpDir . '/di';
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
+        // Marker after final DI scripts so runtime can reuse AOT output (#483).
+        CompileMarker::write($scriptDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();

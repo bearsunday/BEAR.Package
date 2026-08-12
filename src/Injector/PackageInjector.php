@@ -9,6 +9,7 @@ use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use Psr\Log\LoggerInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
@@ -101,9 +102,39 @@ final class PackageInjector
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
-        $scriptDir = self::scriptDir($meta, $overrideModule);
-        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
+        $scriptDir = self::ensureScriptDir($meta, $overrideModule);
+        $module = self::module($meta, $context, $overrideModule);
+        if (self::isProd($module)) {
+            return self::prodInjector($module, $scriptDir);
+        }
 
+        return self::rayInjector($module, $scriptDir);
+    }
+
+    /**
+     * Injector for the compile pipeline: never the AOT branch.
+     *
+     * factory() would take prodInjector()'s runtime cold path, logging an on-demand compile
+     * and writing the marker mid-build. The compile here is not the pass in
+     * Compiler::compile(): it populates the scripts FakeRun resolves through, the later pass
+     * re-emits them after AOP weaving.
+     *
+     * @param Context $context
+     */
+    public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
+    {
+        $scriptDir = self::ensureScriptDir($meta, null);
+        $module = self::module($meta, $context, null);
+        if (self::isProd($module)) {
+            (new Compiler())->compile($module, $scriptDir);
+        }
+
+        return self::rayInjector($module, $scriptDir);
+    }
+
+    /** @param Context $context */
+    private static function module(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): AbstractModule
+    {
         $module = (new Module())($meta, $context);
         if ($overrideModule instanceof AbstractModule) {
             $module->override($overrideModule);
@@ -112,8 +143,41 @@ final class PackageInjector
         // Bind ResourceObject
         $module->install(new ResourceObjectModule($meta->getResourceListGenerator()));
 
-        if (self::isProd($module)) {
-            (new Compiler())->compile($module, $scriptDir);
+        return $module;
+    }
+
+    /** @return non-empty-string */
+    private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    {
+        $scriptDir = self::scriptDir($meta, $overrideModule);
+        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
+
+        return $scriptDir;
+    }
+
+    private static function rayInjector(AbstractModule $module, string $scriptDir): InjectorInterface
+    {
+        $injector = new RayInjector($module, $scriptDir);
+        /** @psalm-suppress InvalidArgument */
+        $injector->getInstance(AppInterface::class);
+
+        return $injector;
+    }
+
+    /**
+     * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
+     *
+     * A marker with broken scripts is a deploy error, not a recoverable one, so
+     * the boot is left to throw instead of falling back to a runtime recompile
+     * (which would also die under a read-only filesystem).
+     *
+     * @param non-empty-string $scriptDir
+     *
+     * @see CompileMarker for what the marker does and does not guarantee
+     */
+    private static function prodInjector(AbstractModule $module, string $scriptDir): InjectorInterface
+    {
+        if (CompileMarker::exists($scriptDir)) {
             $injector = new CompiledInjector($scriptDir);
             /** @psalm-suppress InvalidArgument */
             $injector->getInstance(AppInterface::class);
@@ -121,11 +185,30 @@ final class PackageInjector
             return $injector;
         }
 
-        $injector = new RayInjector($module, $scriptDir);
+        (new Compiler())->compile($module, $scriptDir);
+        CompileMarker::write($scriptDir);
+        $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
+        self::logOnDemandCompile($injector, $scriptDir);
 
         return $injector;
+    }
+
+    /**
+     * Record the on-demand compile through the application's logger.
+     *
+     * Not trigger_error(): that reaches the response body when display_errors is on, and any
+     * handler converting errors to exceptions would turn this report into a boot failure.
+     */
+    private static function logOnDemandCompile(InjectorInterface $injector, string $scriptDir): void
+    {
+        $logger = $injector->getInstance(LoggerInterface::class);
+        assert($logger instanceof LoggerInterface);
+        $logger->notice('Compiled DI scripts on demand', [
+            'scriptDir' => $scriptDir,
+            'see' => 'https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
+        ]);
     }
 
     /**

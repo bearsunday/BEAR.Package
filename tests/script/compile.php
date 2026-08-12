@@ -8,6 +8,9 @@ use BEAR\Package\Injector;
 $appDir = dirname(__DIR__) . '/Fake/fake-app';
 require $appDir . '/vendor/autoload.php';
 
+// This runs via passthru(), so keep the app's own diagnostics out of the suite output.
+ini_set('error_log', dirname(__DIR__) . '/tmp/error_log.txt');
+
 $factory = $argv[1] ?? '';
 if ($factory === 'constructor') {
     $compiler = new Compiler('FakeVendor\HelloWorld', 'prod-app', $appDir, false);

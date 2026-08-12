@@ -23,6 +23,8 @@ use function assert;
 use function escapeshellarg;
 use function file_get_contents;
 use function file_put_contents;
+use function ini_get;
+use function ini_set;
 use function is_dir;
 use function is_float;
 use function mkdir;
@@ -56,6 +58,24 @@ class CompilerTest extends TestCase
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
+    }
+
+    /** Routing the build through factory() would compile an extra time and log an on-demand compile. */
+    public function testInvokeDoesNotEnterTheOnDemandCompilePath(): void
+    {
+        $errorLog = sys_get_temp_dir() . '/bear-errorlog-' . uniqid('', true) . '.log';
+        $previous = (string) ini_get('error_log');
+        ini_set('error_log', $errorLog);
+
+        try {
+            $code = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false))();
+        } finally {
+            ini_set('error_log', $previous);
+        }
+
+        $this->assertSame(0, $code);
+        $this->assertStringNotContainsString('Compiled DI scripts on demand', (string) @file_get_contents($errorLog));
+        @unlink($errorLog);
     }
 
     #[Depends('testInvoke')]
@@ -183,6 +203,7 @@ class CompilerTest extends TestCase
         $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
         $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $tmpDir, $logDir);
         $injector = PackageInjector::factory($meta, 'prod-cli-app');
+
         $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
         $code = $compiler();
         $this->assertSame(0, $code);
