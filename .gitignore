@@ -13,7 +13,7 @@
 /tests/Fake/fake-app/var/log/
 /tests/Fake/fake-app/var/tmp/
 /tests/Fake/fake-app/var/di/
-/tests/Fake/import-app/var/tmp/
+/tests/Fake/import-app/var/
 /vendor-bin/**/vendor
 /demo/var/tmp
 /demo/vendor
