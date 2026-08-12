@@ -14,13 +14,10 @@ use function time;
 /**
  * Marker file written after a successful AOT compile.
  *
- * Presence means "a compile has run for this script directory"; freshness is
- * the deploy's responsibility — the framework does not verify the scripts
- * still match the source tree. On a missing marker, {@see PackageInjector}
- * compiles on demand and emits `E_USER_NOTICE`.
+ * Presence means "a compile has run for this script directory", not that the scripts still
+ * match the source tree: freshness is the deploy's responsibility.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
- * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended
  */
 final class CompileMarker
 {

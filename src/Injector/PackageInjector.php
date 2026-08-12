@@ -114,10 +114,10 @@ final class PackageInjector
     /**
      * Injector for the compile pipeline: never the AOT branch.
      *
-     * factory() would take prodInjector()'s runtime cold path — "Not precompiled" notice,
-     * marker written mid-build. The compile here is not the pass in Compiler::compile():
-     * it populates the scripts FakeRun resolves through, the later pass re-emits them
-     * after AOP weaving.
+     * factory() would take prodInjector()'s runtime cold path, logging an on-demand compile
+     * and writing the marker mid-build. The compile here is not the pass in
+     * Compiler::compile(): it populates the scripts FakeRun resolves through, the later pass
+     * re-emits them after AOP weaving.
      *
      * @param Context $context
      */
@@ -198,9 +198,8 @@ final class PackageInjector
     /**
      * Record the on-demand compile through the application's logger.
      *
-     * Not trigger_error(): a logger cannot land in a response body or be turned into an
-     * exception by an error handler, and whether this is a fault depends on the deployment —
-     * some projects let the first prod health check do the compile.
+     * Not trigger_error(): that reaches the response body when display_errors is on, and any
+     * handler converting errors to exceptions would turn this report into a boot failure.
      */
     private static function logOnDemandCompile(InjectorInterface $injector, string $scriptDir): void
     {

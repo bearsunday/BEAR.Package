@@ -138,7 +138,6 @@ final class Compiler
         }
 
         $this->clean();
-        // clean() wiped tmpDir/di; rebuild an uncompiled injector for the compile pipeline.
         $this->wire(PackageInjector::compileInjector($this->appMeta, $this->context));
         $report = $this->compile();
         echo PHP_EOL;
