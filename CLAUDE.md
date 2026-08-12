@@ -53,11 +53,11 @@ composer clean
 
 ### Compilation
 ```bash
-# Compile a BEAR.Sunday application: the application owns its compile entry and
-# hands its own injector to the compiler (bin/bear.compile is deprecated; #482)
+# Compile a BEAR.Sunday application: each app ships bin/compile.php,
+# which calls Compiler::fromInjector($injector, $context)()
 php bin/compile.php prod-app
 
-# Example (this repository's fake application)
+# Example (used in tests)
 composer compile
 ```
 
