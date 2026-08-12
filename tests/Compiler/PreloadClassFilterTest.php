@@ -9,7 +9,6 @@ use BEAR\Package\Context\CliModule;
 use BEAR\Package\Provide\Error\NullPage;
 use Composer\Autoload\ClassLoader;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use ReflectionMethod;
 
 use function assert;
@@ -18,9 +17,6 @@ use function class_exists;
 use function dirname;
 use function file_put_contents;
 use function is_array;
-use function is_file;
-use function realpath;
-use function reset;
 use function spl_autoload_functions;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -72,25 +68,10 @@ class PreloadClassFilterTest extends TestCase
         @unlink($tmp);
     }
 
-    public function testRejectsComposerAutoloadFilesEntry(): void
+    public function testRejectsClassesUnderVendorComposer(): void
     {
-        // Files from Composer's "files" autoload are already required by vendor/autoload.php.
-        $composerDir = dirname((string) (new ReflectionClass(ClassLoader::class))->getFileName());
-        $autoloadFiles = $composerDir . '/autoload_files.php';
-        if (! is_file($autoloadFiles)) {
-            $this->markTestSkipped('autoload_files.php not present');
-        }
-
-        /** @var array<string, string> $files */
-        $files = require $autoloadFiles;
-        if ($files === []) {
-            $this->markTestSkipped('no composer files autoload entries');
-        }
-
-        $path = (string) realpath(reset($files));
-        // ClassLoader itself lives under vendor/composer.
+        // vendor/autoload.php already requires everything Composer generates there.
         $this->assertFalse(($this->filter)(ClassLoader::class));
-        $this->assertNotSame('', $path);
     }
 
     public function testNormalizePathKeepsPharUri(): void

@@ -8,8 +8,8 @@ use ArrayObject;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Fake\Preload\SameFileClass;
 use BEAR\Package\Fake\Preload\SameFileInterface;
+use BEAR\Package\FakeUnusedInjector;
 use PHPUnit\Framework\TestCase;
-use Ray\Di\InjectorInterface;
 use ReflectionMethod;
 
 use function class_exists;
@@ -47,9 +47,7 @@ class CompileAutoloadTest extends TestCase
         $classes = new ArrayObject();
         $filePutContents = new FilePutContents(new ArrayObject());
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        // Avoid Injector::getInstance() — it loads real AuthProvider and later
-        // .compile.php stubs redeclare the same FQCN in this process.
-        $injector = $this->createMock(InjectorInterface::class);
+        $injector = new FakeUnusedInjector();
         $fakeRun = new FakeRun($injector, 'prod-app', $meta);
 
         return new CompileAutoload($fakeRun, $filePutContents, $classes, $appDir, 'prod-app');
