@@ -112,6 +112,8 @@ final class Compiler
      *
      * @param Context $context
      *
+     * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended
+     *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public static function fromInjector(InjectorInterface $injector, string $context, bool $prepend = true): self
