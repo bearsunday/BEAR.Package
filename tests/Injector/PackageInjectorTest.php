@@ -38,6 +38,7 @@ use function mkdir;
 use function restore_error_handler;
 use function rmdir;
 use function set_error_handler;
+use function str_contains;
 use function str_ends_with;
 use function sys_get_temp_dir;
 use function time;
@@ -165,7 +166,12 @@ class PackageInjectorTest extends TestCase
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
 
-        set_error_handler(static function (int $errno, string $errstr): void {
+        // A cold script dir also warns "Not precompiled"; this test is about the cache diagnostic.
+        set_error_handler(static function (int $errno, string $errstr): bool {
+            if (! str_contains($errstr, 'Failed to cache the injector')) {
+                return true;
+            }
+
             throw new Exception($errstr, $errno);
         }, E_USER_WARNING);
 
