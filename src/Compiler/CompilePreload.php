@@ -28,6 +28,7 @@ final class CompilePreload
         private FilePutContents $filePutContents,
         private ArrayObject $classes,
         private InjectorInterface $injector,
+        private PreloadClassFilter $isPreloadClass,
     ) {
         $this->fakeRun = $fakeRun;
     }
@@ -37,12 +38,23 @@ final class CompilePreload
     {
         ($this->fakeRun)();
         $this->loadResources($appMeta);
-        /** @var list<string> $classes */
-        $classes = (array) $this->classes;
+        // The tracker records a class after its load returns, so dependencies are
+        // appended first: the list is in dependency order and plain require is safe.
+        /** @var list<string> $trackedClasses */
+        $trackedClasses = (array) $this->classes;
+        $classes = [];
+        foreach ($trackedClasses as $class) {
+            if (! ($this->isPreloadClass)($class)) {
+                continue;
+            }
+
+            $classes[] = $class;
+        }
+
         $paths = $this->dumpAutoload->getPaths($classes);
-        $requiredOnceFile = '';
+        $requiredFile = '';
         foreach ($paths as $path) {
-            $requiredOnceFile .= sprintf(
+            $requiredFile .= sprintf(
                 "require %s;\n",
                 $path,
             );
@@ -52,8 +64,7 @@ final class CompilePreload
 
 // %s preload
 require __DIR__ . '/vendor/autoload.php';
-
-%s", $context, $requiredOnceFile);
+%s", $context, $requiredFile);
         $appDirRealpath = realpath($appMeta->appDir);
         assert($appDirRealpath !== false);
         $fileName = $appDirRealpath . '/preload.php';
