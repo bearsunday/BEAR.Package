@@ -17,7 +17,7 @@ use function time;
  * Presence means "a compile has run for this script directory"; freshness is
  * the deploy's responsibility — the framework does not verify the scripts
  * still match the source tree. On a missing marker, {@see PackageInjector}
- * compiles on demand and emits `E_USER_NOTICE`.
+ * compiles on demand and emits `E_USER_WARNING`.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
  * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended
@@ -41,11 +41,7 @@ final class CompileMarker
         return file_exists(self::path($scriptDir));
     }
 
-    /**
-     * @throws DirectoryNotWritableException When the marker cannot be persisted: the compile
-     *                                       looks precompiled to nobody and every later boot
-     *                                       silently recompiles on demand.
-     */
+    /** @throws DirectoryNotWritableException A marker that cannot be persisted makes every later boot recompile. */
     public static function write(string $scriptDir): void
     {
         $path = self::path($scriptDir);

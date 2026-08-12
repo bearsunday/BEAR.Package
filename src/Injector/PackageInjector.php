@@ -30,7 +30,6 @@ use function sprintf;
 use function str_replace;
 use function trigger_error;
 
-use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 /** @psalm-import-type Context from Types */
@@ -112,17 +111,12 @@ final class PackageInjector
     }
 
     /**
-     * Injector for the compile pipeline, which never enters the AOT branch.
+     * Injector for the compile pipeline: never the AOT branch.
      *
-     * Compiler::__invoke() wipes tmpDir and then needs a working injector to drive
-     * FakeRun before it compiles. Going through factory() in a prod context would
-     * take prodInjector()'s runtime cold path, which emits the "Not precompiled"
-     * notice and writes the compile marker in the middle of a build — the compiler
-     * writes that marker itself once the final scripts are in place.
-     *
-     * The container compile stays: it is not the same pass as the one in
-     * Compiler::compile(). This one populates the scripts FakeRun then resolves
-     * through; the later pass re-emits them once AOP weaving has happened.
+     * factory() would take prodInjector()'s runtime cold path — "Not precompiled" warning,
+     * marker written mid-build. The compile here is not the pass in Compiler::compile():
+     * it populates the scripts FakeRun resolves through, the later pass re-emits them
+     * after AOP weaving.
      *
      * @param Context $context
      */
@@ -192,7 +186,7 @@ final class PackageInjector
 
         trigger_error(
             'Not precompiled; compiling on demand. Pre-compile DI scripts for production. See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
-            E_USER_NOTICE,
+            E_USER_WARNING,
         );
         (new Compiler())->compile($module, $scriptDir);
         CompileMarker::write($scriptDir);

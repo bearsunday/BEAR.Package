@@ -45,7 +45,6 @@ use function touch;
 use function uniqid;
 use function unlink;
 
-use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
@@ -224,11 +223,11 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
         self::cleanProdDi($scriptDir);
 
-        // First factory compiles on demand and emits E_USER_NOTICE; swallow it so
-        // the cold-start notice does not leak into this test's output.
+        // First factory compiles on demand and emits E_USER_WARNING; swallow it so
+        // the cold-start warning does not leak into this test's output.
         set_error_handler(static function (): bool {
             return true;
-        }, E_USER_NOTICE);
+        }, E_USER_WARNING);
         try {
             $first = PackageInjector::factory($meta, 'prod-app');
         } finally {
@@ -262,12 +261,12 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
         self::cleanProdDi($scriptDir);
 
-        $notices = [];
-        set_error_handler(static function (int $errno, string $errstr) use (&$notices): bool {
-            $notices[] = $errstr;
+        $warnings = [];
+        set_error_handler(static function (int $errno, string $errstr) use (&$warnings): bool {
+            $warnings[] = $errstr;
 
             return true;
-        }, E_USER_NOTICE);
+        }, E_USER_WARNING);
 
         try {
             $injector = PackageInjector::factory($meta, 'prod-app');
@@ -277,8 +276,8 @@ class PackageInjectorTest extends TestCase
 
         $this->assertInstanceOf(CompiledInjector::class, $injector);
         $injector->getInstance(AppInterface::class);
-        $this->assertNotEmpty($notices);
-        $this->assertStringContainsString('Not precompiled', $notices[0]);
+        $this->assertNotEmpty($warnings);
+        $this->assertStringContainsString('Not precompiled', $warnings[0]);
         $this->assertTrue(file_exists(CompileMarker::path($scriptDir)));
     }
 
@@ -359,10 +358,7 @@ class PackageInjectorTest extends TestCase
         }
     }
 
-    /**
-     * A marker that cannot be persisted means every later boot silently recompiles
-     * on demand, so the write must fail loudly rather than be swallowed.
-     */
+    /** A marker that cannot be persisted makes every later boot recompile, so it must not be swallowed. */
     public function testCompileMarkerWriteFailsLoudlyWhenNotWritable(): void
     {
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);

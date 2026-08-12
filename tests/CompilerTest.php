@@ -38,7 +38,7 @@ use function unlink;
 use function var_export;
 
 use const DIRECTORY_SEPARATOR;
-use const E_USER_NOTICE;
+use const E_USER_WARNING;
 use const PHP_BINARY;
 
 class CompilerTest extends TestCase
@@ -61,19 +61,15 @@ class CompilerTest extends TestCase
         $this->assertFileExists($compiledFile3);
     }
 
-    /**
-     * The compile pipeline must build its own uncompiled injector. Routing it through
-     * PackageInjector::factory() would enter the AOT cold path after clean(), compiling
-     * the same DI scripts an extra time and emitting the on-demand notice during a build.
-     */
+    /** Routing the build through factory() would compile an extra time and emit the on-demand warning. */
     public function testInvokeDoesNotEnterTheOnDemandCompilePath(): void
     {
-        $notices = [];
-        set_error_handler(static function (int $errno, string $message) use (&$notices): bool {
-            $notices[] = $message;
+        $warnings = [];
+        set_error_handler(static function (int $errno, string $message) use (&$warnings): bool {
+            $warnings[] = $message;
 
             return true;
-        }, E_USER_NOTICE);
+        }, E_USER_WARNING);
 
         try {
             $code = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false))();
@@ -82,7 +78,7 @@ class CompilerTest extends TestCase
         }
 
         $this->assertSame(0, $code);
-        $this->assertSame([], $notices);
+        $this->assertSame([], $warnings);
     }
 
     #[Depends('testInvoke')]
@@ -210,9 +206,9 @@ class CompilerTest extends TestCase
         $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
         $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $tmpDir, $logDir);
         // factory() is the runtime entry: with a fresh tmpDir it legitimately takes the
-        // on-demand compile path and emits E_USER_NOTICE. Swallow it so the notice does
+        // on-demand compile path and emits E_USER_WARNING. Swallow it so the warning does
         // not surface as an unexplained one in this test's output.
-        set_error_handler(static fn (): bool => true, E_USER_NOTICE);
+        set_error_handler(static fn (): bool => true, E_USER_WARNING);
 
         try {
             $injector = PackageInjector::factory($meta, 'prod-cli-app');
