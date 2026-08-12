@@ -19,7 +19,7 @@
         "bear/streamer": "^1.4",
         "bear/sunday": "^1.8",
         "monolog/monolog": "^1.25 || ^2.0 || ^3.0",
-        "ray/aop": "^2.19",
+        "ray/aop": "^2.20",
         "ray/di": "^2.19.3",
         "ray/compiler": "^1.13",
         "ray/object-visual-grapher": "^1.0",
