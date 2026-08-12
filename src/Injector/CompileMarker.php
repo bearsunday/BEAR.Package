@@ -17,7 +17,7 @@ use function time;
  * Presence means "a compile has run for this script directory"; freshness is
  * the deploy's responsibility — the framework does not verify the scripts
  * still match the source tree. On a missing marker, {@see PackageInjector}
- * compiles on demand and emits `E_USER_WARNING`.
+ * compiles on demand and emits `E_USER_NOTICE`.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
  * @see https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended

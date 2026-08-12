@@ -30,6 +30,7 @@ use function sprintf;
 use function str_replace;
 use function trigger_error;
 
+use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 /** @psalm-import-type Context from Types */
@@ -113,7 +114,7 @@ final class PackageInjector
     /**
      * Injector for the compile pipeline: never the AOT branch.
      *
-     * factory() would take prodInjector()'s runtime cold path — "Not precompiled" warning,
+     * factory() would take prodInjector()'s runtime cold path — "Not precompiled" notice,
      * marker written mid-build. The compile here is not the pass in Compiler::compile():
      * it populates the scripts FakeRun resolves through, the later pass re-emits them
      * after AOP weaving.
@@ -186,7 +187,7 @@ final class PackageInjector
 
         trigger_error(
             'Not precompiled; compiling on demand. Pre-compile DI scripts for production. See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
-            E_USER_WARNING,
+            E_USER_NOTICE,
         );
         (new Compiler())->compile($module, $scriptDir);
         CompileMarker::write($scriptDir);

@@ -46,6 +46,7 @@ use function touch;
 use function uniqid;
 use function unlink;
 
+use const E_USER_NOTICE;
 use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
@@ -166,7 +167,7 @@ class PackageInjectorTest extends TestCase
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
 
-        // A cold script dir also warns "Not precompiled"; this test is about the cache diagnostic.
+        // Only the cache diagnostic is asserted here, whatever else may be reported.
         set_error_handler(static function (int $errno, string $errstr): bool {
             if (! str_contains($errstr, 'Failed to cache the injector')) {
                 return true;
@@ -229,11 +230,11 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
         self::cleanProdDi($scriptDir);
 
-        // First factory compiles on demand and emits E_USER_WARNING; swallow it so
-        // the cold-start warning does not leak into this test's output.
+        // First factory compiles on demand and emits E_USER_NOTICE; swallow it so
+        // the cold-start notice does not leak into this test's output.
         set_error_handler(static function (): bool {
             return true;
-        }, E_USER_WARNING);
+        }, E_USER_NOTICE);
         try {
             $first = PackageInjector::factory($meta, 'prod-app');
         } finally {
@@ -267,12 +268,12 @@ class PackageInjectorTest extends TestCase
         $scriptDir = $meta->tmpDir . '/di';
         self::cleanProdDi($scriptDir);
 
-        $warnings = [];
-        set_error_handler(static function (int $errno, string $errstr) use (&$warnings): bool {
-            $warnings[] = $errstr;
+        $notices = [];
+        set_error_handler(static function (int $errno, string $errstr) use (&$notices): bool {
+            $notices[] = $errstr;
 
             return true;
-        }, E_USER_WARNING);
+        }, E_USER_NOTICE);
 
         try {
             $injector = PackageInjector::factory($meta, 'prod-app');
@@ -282,8 +283,8 @@ class PackageInjectorTest extends TestCase
 
         $this->assertInstanceOf(CompiledInjector::class, $injector);
         $injector->getInstance(AppInterface::class);
-        $this->assertNotEmpty($warnings);
-        $this->assertStringContainsString('Not precompiled', $warnings[0]);
+        $this->assertNotEmpty($notices);
+        $this->assertStringContainsString('Not precompiled', $notices[0]);
         $this->assertTrue(file_exists(CompileMarker::path($scriptDir)));
     }
 
