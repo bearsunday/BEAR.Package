@@ -55,8 +55,6 @@ class PreloadClassFilterTest extends TestCase
 
     public function testAcceptsNormalDeclaredClass(): void
     {
-        // Must not use BEAR\Package\Compiler\* — isExcludedClass matches that prefix.
-        // Filter only accepts already-declared symbols (get_declared_* style).
         $this->assertTrue(class_exists(CliModule::class));
         $this->assertTrue(($this->filter)(CliModule::class));
     }
@@ -90,7 +88,6 @@ class PreloadClassFilterTest extends TestCase
         }
 
         $path = (string) realpath(reset($files));
-        // Any declared class whose file is under vendor/composer or files list is excluded.
         // ClassLoader itself lives under vendor/composer.
         $this->assertFalse(($this->filter)(ClassLoader::class));
         $this->assertNotSame('', $path);

@@ -105,9 +105,9 @@ class CompilerTest extends TestCase
     }
 
     /**
-     * Skeleton-style compile entry builds the injector first, then calls fromInjector.
-     * The tracking autoloader is installed too late: classes already in memory are not
-     * re-autoloaded, so FakeRun/loadResources leave preload.php nearly empty.
+     * Skeleton-style compile entry builds the injector first, then calls fromInjector, so the
+     * class-tracking autoloader misses classes already in memory. Preload is measured from
+     * declared symbols instead, and must record the same app resource classes.
      *
      * @see https://github.com/bearsunday/BEAR.Package/issues/482
      */
