@@ -16,9 +16,15 @@
 /tests/Fake/import-app/var/
 /vendor-bin/**/vendor
 /demo/var/tmp
+/demo/var/log/
 /demo/vendor
 demo/.phpunit.result.cache
 /.phpunit-cache/
 /.phpunit.cache/
 /coverage.xml
 /tests/Fake/fake-min-app/var/
+
+# Agent artifacts: AGENTS.md is a generated copy of CLAUDE.md (see ed5d7249),
+# .codex/ holds machine-local hook paths.
+/AGENTS.md
+/.codex/
