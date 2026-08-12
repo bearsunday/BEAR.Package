@@ -48,12 +48,9 @@ final class PackageInjector
     }
 
     /**
-     * Returns an instance of InjectorInterface based on the given parameters
+     * Return an injector, cached in memory and in the cache adapter.
      *
      * @param Context $context
-     *
-     * - Injector instances are cached in memory and in the cache adapter.
-     * - The injector is re-used in subsequent calls in the same context in the unit test.
      */
     public static function getInstance(AbstractAppMeta $meta, string $context, CacheInterface|null $cache): InjectorInterface
     {
@@ -90,14 +87,9 @@ final class PackageInjector
     }
 
     /**
-     * Return an injector instance with the given override module
+     * Return an injector, optionally with an override module applied.
      *
      * @param Context $context
-     *
-     * This is useful for testing purposes, where you want to override a module with a mock or stub.
-     * When $overrideModule is given, AOP proxies / the compiled container are written under a
-     * subdirectory of tmpDir/di keyed by the override module class, so they do not collide with
-     * the default injector for the same app+context.
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
@@ -242,9 +234,8 @@ final class PackageInjector
     /**
      * Detect prod without a RayInjector — that would mutate $module via AOP weaving (#467).
      *
-     * DiCompileModule always binds Compile (false in dev, true in prod) and PackageModule
-     * always installs it, so an unbound Compile means the module never came from Module:
-     * a programming error, not a context to treat as dev.
+     * DiCompileModule always binds Compile, so an unbound one means the module did not come
+     * from Module: a programming error, not a context to treat as dev.
      */
     private static function isProd(AbstractModule $module): bool
     {
