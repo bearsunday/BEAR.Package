@@ -9,18 +9,19 @@ declare(strict_types=1);
  * autoloader is installed before any application class loads (#482). This script is
  * not a public API; it is spawned only by BEAR\Package\Compiler.
  *
- * usage: php compile-worker.php <appName> <context> <appDir> <tmpDir> <logDir> <prepend:0|1>
+ * usage: php compile-worker.php <appName> <context> <appDir> <writeDir>
  */
 
 use BEAR\Package\Compiler;
 
-if ($argc !== 7) {
-    echo 'usage: compile-worker.php <appName> <context> <appDir> <tmpDir> <logDir> <prepend:0|1>' . PHP_EOL;
+if ($argc !== 5) {
+    echo 'usage: compile-worker.php <appName> <context> <appDir> <writeDir>' . PHP_EOL;
     exit(1);
 }
 
-[, $appName, $context, $appDir, $tmpDir, $logDir, $prepend] = $argv;
+[, $appName, $context, $appDir, $writeDir] = $argv;
+// The caller builds these from a resolved Meta; empty ones would compile a different application.
+assert($appName !== '' && $context !== '' && $appDir !== '');
 require $appDir . '/vendor/autoload.php';
 
-$compiler = new Compiler($appName, $context, $appDir, $prepend === '1', $tmpDir, $logDir);
-exit($compiler());
+exit((new Compiler($appName, $context, $appDir, $writeDir === '' ? null : $writeDir))());

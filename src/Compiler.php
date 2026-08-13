@@ -6,19 +6,19 @@ namespace BEAR\Package;
 
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\Meta;
+use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
 use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
-use BEAR\Package\Compiler\CompilePreload;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
-use BEAR\Package\Compiler\PreloadClassFilter;
 use BEAR\Package\Exception\DelegatedCompileException;
+use BEAR\Package\Exception\PreloadRecordException;
+use BEAR\Package\Exception\WriteDirMismatchException;
+use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Resource\NamedParameterInterface;
-use Composer\Autoload\ClassLoader;
 use FilesystemIterator;
 use Ray\Di\InjectorInterface;
 use RecursiveDirectoryIterator;
@@ -41,21 +41,21 @@ use function passthru;
 use function printf;
 use function realpath;
 use function rmdir;
-use function spl_autoload_functions;
-use function spl_autoload_register;
-use function spl_autoload_unregister;
 use function sprintf;
 use function unlink;
 
 use const PHP_BINARY;
+use const PHP_BINDIR;
 use const PHP_EOL;
+use const PHP_SAPI;
 
 /**
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
- * @psalm-import-type TmpDir from Types
+ * @psalm-import-type WriteDir from Types
  * @psalm-import-type LogDir from Types
+ * @psalm-import-type ScriptDir from Types
  * @psalm-import-type ClassList from Types
  * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type CompileReport from Types
@@ -70,33 +70,37 @@ final class Compiler
     private string $context;
     private InjectorInterface $injector;
     private CompileAutoload $dumpAutoload;
-    private CompilePreload $compilePreload;
     private CompileObjectGraph $compilerObjectGraph;
-    private PreloadClassFilter $preloadClassFilter;
 
     /**
-     * Compile job recorded by fromInjector() and run once in a clean child process:
-     * appName, context, appDir, tmpDir, logDir, prepend. Null on the constructor path.
+     * Boot job handed to the preload worker: preload.php records what a boot of this
+     * application loads, so the worker has to build the same Meta from the same writeDir.
      *
-     * @var array{AppName, Context, AppDir, TmpDir, LogDir, bool}|null
+     * @var array{AppName, Context, AppDir, WriteDir|null}
+     */
+    private array $preloadJob;
+
+    /**
+     * Compile job recorded by fromInjector() and run once in a clean child process.
+     * Null on the constructor path.
+     *
+     * @var array{AppName, Context, AppDir, WriteDir|null}|null
      */
     private array|null $compileJob = null;
 
     /**
-     * @param AppName     $appName application name "MyVendor|MyProject"
-     * @param Context     $context application context "prod-app"
-     * @param AppDir      $appDir  application path
-     * @param TmpDir|null $tmpDir  writable tmp directory (default: {appDir}/var/tmp/{context})
-     * @param LogDir|null $logDir  log directory (default: {appDir}/var/log/{context})
-     *
-     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @param AppName       $appName  application name "MyVendor|MyProject"
+     * @param Context       $context  application context "prod-app"
+     * @param AppDir        $appDir   application path
+     * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
      */
-    public function __construct(string $appName, string $context, string $appDir, bool $prepend = true, string|null $tmpDir = null, string|null $logDir = null)
+    public function __construct(string $appName, string $context, string $appDir, string|null $writeDir = null)
     {
-        $meta = new Meta($appName, $context, $appDir, $tmpDir, $logDir);
-        // registerLoader / hookNullObjectClass must run before the injector is built
+        $meta = AppDirs::meta($appName, $context, $appDir, $writeDir);
+        $this->preloadJob = [$meta->name, $context, $appDir, $writeDir];
+        // The tracker and hookNullObjectClass must run before the injector is built
         // (building it first would load the app too early and break .compile.php stubs).
-        $this->prepare($context, $appDir, $prepend, $meta);
+        $this->prepare($context, $appDir, $meta);
         // Not factory(): a marker from an earlier compile would hand back a CompiledInjector
         // that FakeRun cannot resolve through, making the result depend on leftover state.
         $this->wire(PackageInjector::compileInjector($meta, $context));
@@ -105,22 +109,26 @@ final class Compiler
     /**
      * Create a compiler from an application injector.
      *
-     * Meta (including tmpDir / logDir) is taken from the injector so the compile
-     * honours the same path policy as runtime. The caller's process has already
-     * loaded app classes, so __invoke() delegates to a clean child process in which
-     * the class-tracking autoloader is installed before any app class loads (#482).
+     * Pass the same $writeDir the injector was built with: __invoke() compiles in a child process
+     * that builds its own Meta from it (#482).
      *
-     * @param Context $context
+     * @param Context       $context
+     * @param WriteDir|null $writeDir the one the injector was built with
      *
-     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @throws WriteDirMismatchException
      */
-    public static function fromInjector(InjectorInterface $injector, string $context, bool $prepend = true): self
+    public static function fromInjector(InjectorInterface $injector, string $context, string|null $writeDir = null): self
     {
         $meta = $injector->getInstance(AbstractAppMeta::class);
         /** @var AppDir $appDir */
         $appDir = $meta->appDir;
+        $compileTmpDir = AppDirs::meta($meta->name, $context, $appDir, $writeDir)->tmpDir;
+        if ($compileTmpDir !== $meta->tmpDir) {
+            throw new WriteDirMismatchException($compileTmpDir, $meta->tmpDir);
+        }
+
         $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        $compiler->compileJob = [$meta->name, $context, $appDir, $meta->tmpDir, $meta->logDir, $prepend];
+        $compiler->compileJob = [$meta->name, $context, $appDir, $writeDir];
 
         return $compiler;
     }
@@ -154,25 +162,71 @@ final class Compiler
      *
      * The child prints the compile report itself; only its exit code is returned here.
      *
-     * @param array{AppName, Context, AppDir, TmpDir, LogDir, bool} $job
+     * @param array{AppName, Context, AppDir, WriteDir|null} $job
+     *
+     * @throws PreloadRecordException
      */
     private static function compileInChildProcess(array $job): int
     {
-        [$appName, $context, $appDir, $tmpDir, $logDir, $prepend] = $job;
-        $command = sprintf(
-            '%s %s %s %s %s %s %s %s',
-            escapeshellarg(PHP_BINARY),
-            escapeshellarg(dirname(__DIR__) . '/bin/compile-worker.php'),
+        [$appName, $context, $appDir, $writeDir] = $job;
+        $exitCode = 1;
+        passthru(self::workerCommand('compile-worker.php', $appName, $context, $appDir, $writeDir), $exitCode);
+
+        return $exitCode;
+    }
+
+    /**
+     * Write preload.php in a process that boots from the compiled scripts.
+     *
+     * The compile process cannot measure a boot: it holds the compiler and the module tree,
+     * and it loaded the boot path itself before the tracker was installed. Only a process
+     * that does nothing but boot the application knows what a request loads.
+     *
+     * @param array{AppName, Context, AppDir, WriteDir|null} $job
+     *
+     * @return non-empty-string the generated preload.php
+     *
+     * @throws PreloadRecordException
+     */
+    private static function recordPreloadInChildProcess(array $job): string
+    {
+        [$appName, $context, $appDir, $writeDir] = $job;
+        $command = self::workerCommand('preload-worker.php', $appName, $context, $appDir, $writeDir);
+        $appDirRealpath = realpath($appDir);
+        assert($appDirRealpath !== false);
+        $preload = $appDirRealpath . '/preload.php';
+        // Remove it first so the check below proves this worker wrote it, not the last deploy.
+        @unlink($preload);
+        $exitCode = 1;
+        passthru($command, $exitCode);
+        if ($exitCode !== 0 || ! file_exists($preload)) {
+            throw PreloadRecordException::workerFailed($context, $exitCode);
+        }
+
+        return $preload;
+    }
+
+    /**
+     * @param AppName       $appName
+     * @param Context       $context
+     * @param AppDir        $appDir
+     * @param WriteDir|null $writeDir
+     */
+    private static function workerCommand(string $worker, string $appName, string $context, string $appDir, string|null $writeDir): string
+    {
+        // PHP_BINARY is the server binary under fpm and empty under some embedded SAPIs:
+        // the worker needs the interpreter, not whatever is running this compile.
+        $php = PHP_SAPI === 'cli' ? PHP_BINARY : PHP_BINDIR . '/php';
+
+        return sprintf(
+            '%s %s %s %s %s %s',
+            escapeshellarg($php),
+            escapeshellarg(dirname(__DIR__) . '/bin/' . $worker),
             escapeshellarg($appName),
             escapeshellarg($context),
             escapeshellarg($appDir),
-            escapeshellarg($tmpDir),
-            escapeshellarg($logDir),
-            $prepend ? '1' : '0',
+            escapeshellarg((string) $writeDir),
         );
-        passthru($command, $exitCode);
-
-        return $exitCode;
     }
 
     /**
@@ -193,15 +247,23 @@ final class Compiler
     }
 
     /**
-     * Remove compiled artifacts under Meta tmpDir (same as bear.compile clean step),
-     * then recreate directories needed for a subsequent in-process compile.
+     * Remove compiled artifacts from both directories, then recreate the script directory.
+     *
+     * preload.php and autoload.php go too: a compile that dies before rewriting them would
+     * otherwise leave the previous deploy's files looking like this compile's output.
      */
     public function clean(): void
     {
         $this->assertNotDelegated(__FUNCTION__);
+        $scriptDir = AppDirs::script($this->appMeta->appDir, $this->context);
         $this->emptyDirectory($this->appMeta->tmpDir);
-        // Same path as PackageInjector runtime scriptDir (no override): {tmpDir}/di
-        $this->ensureDirectory($this->appMeta->tmpDir . '/di');
+        $this->emptyDirectory($scriptDir);
+        $this->ensureDirectory($scriptDir);
+        $appDirRealpath = realpath($this->appMeta->appDir);
+        assert($appDirRealpath !== false);
+        foreach (['/preload.php', '/autoload.php'] as $generated) {
+            @unlink($appDirRealpath . $generated);
+        }
     }
 
     private function emptyDirectory(string $dir): void
@@ -245,18 +307,20 @@ final class Compiler
     public function compile(): array
     {
         $this->assertNotDelegated(__FUNCTION__);
-        $preload = ($this->compilePreload)($this->appMeta, $this->context);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        // Same path as PackageInjector runtime scriptDir (no override): {tmpDir}/di
-        $scriptDir = $this->appMeta->tmpDir . '/di';
+        $scriptDir = AppDirs::script($this->appMeta->appDir, $this->context);
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
-        CompileMarker::write($scriptDir);
+        CompileMarker::write($scriptDir, $this->appMeta->tmpDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();
+
+        // Preload last: the worker boots from the finished artifact - scripts, marker and
+        // meta caches all in place - so it loads what a deployed first request loads.
+        $preload = self::recordPreloadInChildProcess($this->preloadJob);
 
         $dot = ($this->compilerObjectGraph)($module);
         $start = self::getRequestTime($_SERVER['REQUEST_TIME_FLOAT'] ?? null);
@@ -269,7 +333,7 @@ final class Compiler
             'time' => $time,
             'memory' => $memory,
             'compiled' => $compiled,
-            'preload' => $this->dumpAutoload->getFileInfo($preload),
+            'preload' => $preload,
             'dot' => $dotRealpath,
         ];
     }
@@ -310,21 +374,17 @@ final class Compiler
     /**
      * @param Context $context
      * @param AppDir  $appDir
-     *
-     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function prepare(
         string $context,
         string $appDir,
-        bool $prepend,
         AbstractAppMeta $appMeta,
     ): void {
-        /** @var ArrayObject<int, string> $classes */
-        $classes = new ArrayObject();
-        $this->classes = $classes;
+        $tracker = ClassTracker::fromAppDir($appDir);
+        $this->classes = $tracker->classes();
         $this->context = $context;
         $this->appMeta = $appMeta;
-        $this->registerLoader($appDir, $prepend);
+        $tracker->register();
         $this->hookNullObjectClass($appDir);
     }
 
@@ -338,45 +398,7 @@ final class Compiler
         $filePutContents = new FilePutContents($overWritten);
         $fakeRun = new FakeRun($injector, $this->context, $this->appMeta);
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->classes, $appDir, $this->context);
-        $this->compilePreload = new CompilePreload(
-            $fakeRun,
-            $this->dumpAutoload,
-            $filePutContents,
-            $this->classes,
-            $injector,
-            $this->preloadClassFilter,
-        );
         $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
-    }
-
-    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
-    private function registerLoader(string $appDir, bool $prepend = true): void
-    {
-        $loaderFile = $appDir . '/vendor/autoload.php';
-        if (! file_exists($loaderFile)) {
-            throw new RuntimeException('no loader');
-        }
-
-        // Keep Composer autoload registered until PreloadClassFilter is constructed:
-        // getLoader() will not re-register after unregisterComposerLoader().
-        $loader = require $loaderFile;
-        assert($loader instanceof ClassLoader);
-        $this->preloadClassFilter = new PreloadClassFilter($loader);
-        $this->unregisterComposerLoader();
-        spl_autoload_register(
-            /** @ class-string $class */
-            function (string $class) use ($loader): void {
-                $loader->loadClass($class);
-                if ($this->preloadClassFilter->isExcludedClass($class)) {
-                    return;
-                }
-
-                /** @psalm-suppress NullArgument */
-                $this->classes[] = $class;
-            },
-            true,
-            $prepend,
-        );
     }
 
     private function hookNullObjectClass(string $appDir): void
@@ -391,17 +413,5 @@ final class Compiler
         }
 
         require $compileScript;
-    }
-
-    private function unregisterComposerLoader(): void
-    {
-        $autoload = spl_autoload_functions();
-        if (! isset($autoload[0])) {
-            // @codeCoverageIgnoreStart
-            return;
-            // @codeCoverageIgnoreEnd
-        }
-
-        spl_autoload_unregister($autoload[0]);
     }
 }

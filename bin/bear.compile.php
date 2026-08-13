@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * Internal compile script of bin/bear.compile
+ *
+ * @deprecated Prefer application `bin/compile.php` with `Compiler::fromInjector()`.
+ * @see https://github.com/bearsunday/BEAR.Package/issues/482
+ */
+
 use BEAR\Package\Compiler;
 
 init:

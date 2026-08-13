@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
+use BEAR\Package\Exception\PartialWriteException;
 use BEAR\Package\Types;
 
 use function file_exists;
 use function file_put_contents;
 use function in_array;
+use function strlen;
 
 /** @psalm-import-type OverwrittenFiles from Types */
 final class FilePutContents
@@ -20,6 +22,7 @@ final class FilePutContents
     ) {
     }
 
+    /** @throws PartialWriteException */
     public function __invoke(string $fileName, string $content): void
     {
         if (file_exists($fileName)) {
@@ -27,7 +30,12 @@ final class FilePutContents
             $this->overwritten[] = $fileName;
         }
 
-        file_put_contents($fileName, $content);
+        // A full disk writes some of the bytes and reports no error. The compile would then
+        // ship a truncated preload.php or autoload.php, which is a parse error on every boot.
+        $written = file_put_contents($fileName, $content);
+        if ($written !== strlen($content)) {
+            throw new PartialWriteException($fileName, $written === false ? 0 : $written, strlen($content));
+        }
     }
 
     public function isOverwritten(string $fileName): bool

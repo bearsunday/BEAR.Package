@@ -17,6 +17,7 @@ use function dirname;
 use function interface_exists;
 use function sys_get_temp_dir;
 use function uniqid;
+use function var_export;
 
 require_once dirname(__DIR__) . '/Fake/preload/SameFileSymbols.php';
 
@@ -38,7 +39,7 @@ class CompileAutoloadTest extends TestCase
         $getRelativePath = new ReflectionMethod(CompileAutoload::class, 'getRelativePath');
         $outside = sys_get_temp_dir() . '/bear-package-' . uniqid('', true) . '.php';
         $result = $getRelativePath->invoke($autoload, dirname(__DIR__, 2), $outside);
-        $this->assertSame("'" . $outside . "'", $result);
+        $this->assertSame(var_export($outside, true), $result);
     }
 
     private function newCompileAutoload(): CompileAutoload

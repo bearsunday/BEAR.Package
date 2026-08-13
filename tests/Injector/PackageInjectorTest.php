@@ -191,7 +191,7 @@ class PackageInjectorTest extends TestCase
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
-        $this->assertSame($meta->tmpDir . '/di', $scriptDir->invoke(null, $meta, null));
+        $this->assertSame($meta->appDir . '/var/tmp/app/di', $scriptDir->invoke(null, $meta, 'app', null));
     }
 
     public function testScriptDirWithOverride(): void
@@ -204,8 +204,8 @@ class PackageInjectorTest extends TestCase
         };
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
         $this->assertSame(
-            $meta->tmpDir . '/di/' . hash('xxh128', $module::class),
-            $scriptDir->invoke(null, $meta, $module),
+            $meta->appDir . '/var/tmp/app/di/' . hash('xxh128', $module::class),
+            $scriptDir->invoke(null, $meta, 'app', $module),
         );
     }
 
@@ -214,7 +214,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = $meta->tmpDir . '/di';
+        $scriptDir = AppDirs::script($appDir, 'prod-app');
         self::cleanProdDi($scriptDir);
 
         $first = PackageInjector::factory($meta, 'prod-app');
@@ -243,7 +243,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = $meta->tmpDir . '/di';
+        $scriptDir = AppDirs::script($appDir, 'prod-app');
         self::cleanProdDi($scriptDir);
 
         // The prod logger writes through ErrorLogHandler, so error_log is the destination.
@@ -269,7 +269,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = $meta->tmpDir . '/di';
+        $scriptDir = AppDirs::script($appDir, 'prod-app');
 
         PackageInjector::factory($meta, 'prod-app');
         $phpScripts = glob($scriptDir . '/*.php');
@@ -302,7 +302,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = $meta->tmpDir . '/di';
+        $scriptDir = AppDirs::script($appDir, 'prod-app');
 
         PackageInjector::factory($meta, 'prod-app');
         $phpScripts = glob($scriptDir . '/*.php');
@@ -326,15 +326,34 @@ class PackageInjectorTest extends TestCase
 
     public function testCompileMarkerEdgeCases(): void
     {
+        $tmpDir = '/var/cache/app/tmp';
         $missingDir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
-        $this->assertFalse(CompileMarker::exists($missingDir));
+        $this->assertFalse(CompileMarker::matches($missingDir, $tmpDir));
 
         $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
         @mkdir($dir, 0777, true);
         try {
-            $this->assertFalse(CompileMarker::exists($dir));
-            CompileMarker::write($dir);
-            $this->assertTrue(CompileMarker::exists($dir));
+            $this->assertFalse(CompileMarker::matches($dir, $tmpDir));
+            CompileMarker::write($dir, $tmpDir);
+            $this->assertTrue(CompileMarker::matches($dir, $tmpDir));
+        } finally {
+            @unlink(CompileMarker::path($dir));
+            @rmdir($dir);
+        }
+    }
+
+    /**
+     * The script directory is keyed by app and context, but the scripts hold the writable
+     * directory. Booting with another one must recompile instead of answering with the old paths.
+     */
+    public function testMarkerOfAnotherWritableDirIsNotReused(): void
+    {
+        $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
+        @mkdir($dir, 0777, true);
+        try {
+            CompileMarker::write($dir, '/var/cache/a/tmp');
+            $this->assertFalse(CompileMarker::matches($dir, '/var/cache/b/tmp'));
+            $this->assertTrue(CompileMarker::matches($dir, '/var/cache/a/tmp'));
         } finally {
             @unlink(CompileMarker::path($dir));
             @rmdir($dir);
@@ -346,6 +365,6 @@ class PackageInjectorTest extends TestCase
     {
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
         $this->expectException(DirectoryNotWritableException::class);
-        CompileMarker::write($missingDir);
+        CompileMarker::write($missingDir, '/var/cache/app/tmp');
     }
 }
