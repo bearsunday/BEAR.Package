@@ -61,6 +61,8 @@ final class FakeRun
         $_SERVER['argc'] = 3;
         $_SERVER['argv'] = ['', 'get', 'page:://self/'];
         /** @psalm-suppress ArgumentTypeCoercion, InvalidArgument */
+        // The return code is not checked: an application with nothing at "/" boots through the
+        // error handler, which is normal for an API and still the boot preload has to describe.
         ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $app = $this->injector->getInstance(AppInterface::class);

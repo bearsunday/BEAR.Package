@@ -27,12 +27,15 @@ use SplFileInfo;
 
 use function array_diff;
 use function assert;
+use function dirname;
 use function escapeshellarg;
+use function exec;
 use function explode;
 use function file_get_contents;
 use function file_put_contents;
 use function fileinode;
 use function glob;
+use function implode;
 use function ini_get;
 use function ini_set;
 use function is_dir;
@@ -43,6 +46,7 @@ use function preg_match_all;
 use function preg_quote;
 use function rmdir;
 use function sprintf;
+use function str_replace;
 use function str_starts_with;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -147,6 +151,7 @@ class CompilerTest extends TestCase
         $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
         $this->assertPreloadHoldsBootNotCompiler($contents);
         $this->assertPreloadCompilesLoadedScripts($contents);
+        $this->assertPreloadBodyRuns($preload);
         $this->assertGreaterThan(
             50,
             preg_match_all('/^require(?:_once)? /m', $contents),
@@ -383,6 +388,31 @@ class CompilerTest extends TestCase
         $command = sprintf('%s -d display_errors=1 -r %s', escapeshellarg(PHP_BINARY), escapeshellarg($code));
         passthru($command, $exitCode);
         $this->assertSame(0, $exitCode, 'Generated PHP file must be require-able in a clean PHP process: ' . $file);
+    }
+
+    /**
+     * Run every entry of preload.php, which requiring the file under CLI never does.
+     *
+     * The generated SAPI guard returns before the first require, so a redeclare, a missing
+     * parent or an unlinked proxy would go unseen here. The body is run beside the original so
+     * `__DIR__` still resolves, with every diagnostic promoted to a failure.
+     */
+    private function assertPreloadBodyRuns(string $preload): void
+    {
+        $contents = (string) file_get_contents($preload);
+        $guard = "if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {\n    return;\n}\n";
+        $this->assertStringContainsString($guard, $contents);
+        $body = dirname($preload) . '/preload-body-test.php';
+        file_put_contents($body, str_replace($guard, '', $contents));
+        $command = sprintf(
+            '%s -d error_reporting=-1 -d display_errors=1 -r %s',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg(sprintf('require %s;', var_export($body, true))),
+        );
+        exec($command . ' 2>&1', $output, $exitCode);
+        @unlink($body);
+        $this->assertSame(0, $exitCode, 'preload.php body must run: ' . implode("\n", $output));
+        $this->assertSame([], $output, 'preload.php body must run without a diagnostic');
     }
 
     /**

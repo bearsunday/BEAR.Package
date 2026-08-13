@@ -25,6 +25,7 @@ use function strlen;
 use function strpos;
 use function substr;
 use function trait_exists;
+use function var_export;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -174,10 +175,12 @@ require __DIR__ . '/vendor/autoload.php';
     private function getRelativePath(string $rootDir, string $file): string
     {
         $dir = (string) realpath($rootDir);
+        // var_export(): a path can hold a quote or end in a backslash, and interpolating one
+        // into a single-quoted literal writes a file that does not parse.
         if ($dir !== '' && str_starts_with($file, $dir . DIRECTORY_SEPARATOR)) {
-            return sprintf("__DIR__ . '%s'", substr($file, strlen($dir)));
+            return sprintf('__DIR__ . %s', var_export(substr($file, strlen($dir)), true));
         }
 
-        return sprintf("'%s'", $file);
+        return var_export($file, true);
     }
 }
