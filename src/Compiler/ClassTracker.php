@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
+use BEAR\Package\Exception\ComposerLoaderNotFoundException;
 use BEAR\Package\Types;
 use Composer\Autoload\ClassLoader;
-use RuntimeException;
 
 use function assert;
 use function file_exists;
@@ -43,13 +43,13 @@ final class ClassTracker
     /**
      * @param AppDir $appDir
      *
-     * @throws RuntimeException
+     * @throws ComposerLoaderNotFoundException
      */
     public static function fromAppDir(string $appDir): self
     {
         $loaderFile = $appDir . '/vendor/autoload.php';
         if (! file_exists($loaderFile)) {
-            throw new RuntimeException('no loader');
+            throw new ComposerLoaderNotFoundException($appDir);
         }
 
         // Keep Composer autoload registered until PreloadClassFilter is constructed:

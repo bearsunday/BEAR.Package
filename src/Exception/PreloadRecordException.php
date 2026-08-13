@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use RuntimeException;
-
 use function sprintf;
 
 /**

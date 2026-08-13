@@ -20,6 +20,8 @@ if ($argc !== 5) {
 }
 
 [, $appName, $context, $appDir, $writeDir] = $argv;
+// The caller builds these from a resolved Meta; empty ones would compile a different application.
+assert($appName !== '' && $context !== '' && $appDir !== '');
 require $appDir . '/vendor/autoload.php';
 
 exit((new Compiler($appName, $context, $appDir, $writeDir === '' ? null : $writeDir))());
