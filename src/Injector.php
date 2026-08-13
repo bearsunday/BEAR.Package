@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\PackageInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
@@ -19,6 +20,7 @@ use function str_replace;
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
+ * @psalm-import-type WriteDir from Types
  */
 final class Injector
 {
@@ -28,13 +30,14 @@ final class Injector
     }
 
     /**
-     * @param AppName $appName
-     * @param Context $context
-     * @param AppDir  $appDir
+     * @param AppName       $appName
+     * @param Context       $context
+     * @param AppDir        $appDir
+     * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
      */
-    public static function getInstance(string $appName, string $context, string $appDir, CacheInterface|null $cache = null): InjectorInterface
+    public static function getInstance(string $appName, string $context, string $appDir, CacheInterface|null $cache = null, string|null $writeDir = null): InjectorInterface
     {
-        return self::fromMeta(new Meta($appName, $context, $appDir), $context, $cache);
+        return self::fromMeta(AppDirs::meta($appName, $context, $appDir, $writeDir), $context, $cache);
     }
 
     /**

@@ -19,6 +19,7 @@ use ArrayObject;
  * @psalm-type VarDir = non-empty-string
  * @psalm-type LogDir = non-empty-string
  * @psalm-type TmpDir = non-empty-string
+ * @psalm-type WriteDir = non-empty-string
  *
  * Server Arrays
  * @psalm-type ServerArray = array<string, mixed>

@@ -32,7 +32,10 @@ use function trigger_error;
 
 use const E_USER_WARNING;
 
-/** @psalm-import-type Context from Types */
+/**
+ * @psalm-import-type AppDir from Types
+ * @psalm-import-type Context from Types
+ */
 final class PackageInjector
 {
     /**
@@ -54,7 +57,8 @@ final class PackageInjector
      */
     public static function getInstance(AbstractAppMeta $meta, string $context, CacheInterface|null $cache): InjectorInterface
     {
-        $injectorId = str_replace('\\', '_', $meta->name) . $context;
+        // tmpDir too: one app+context can be booted with different writable directories.
+        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->tmpDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
@@ -63,7 +67,9 @@ final class PackageInjector
         assert($cache instanceof AdapterInterface);
         /** @psalm-suppress MixedAssignment */
         $injector = $cache->getItem($injectorId)->get();
-        if ($injector instanceof ScriptInjectorInterface) {
+        // A restored injector reads the shared scripts lazily: reuse it only while they are still
+        // the ones compiled for this writable directory.
+        if ($injector instanceof ScriptInjectorInterface && CompileMarker::matches(self::scriptDir($meta, $context, null), $meta->tmpDir)) {
             self::$instances[$injectorId] = $injector;
 
             return $injector;
@@ -93,10 +99,10 @@ final class PackageInjector
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
-        $scriptDir = self::ensureScriptDir($meta, $overrideModule);
+        $scriptDir = self::ensureScriptDir($meta, $context, $overrideModule);
         $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
-            return self::prodInjector($module, $scriptDir);
+            return self::prodInjector($module, $scriptDir, $meta->tmpDir);
         }
 
         return self::rayInjector($module, $scriptDir);
@@ -114,7 +120,7 @@ final class PackageInjector
      */
     public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        $scriptDir = self::ensureScriptDir($meta, null);
+        $scriptDir = self::ensureScriptDir($meta, $context, null);
         $module = self::module($meta, $context, null);
         if (self::isProd($module)) {
             (new Compiler())->compile($module, $scriptDir);
@@ -137,10 +143,14 @@ final class PackageInjector
         return $module;
     }
 
-    /** @return non-empty-string */
-    private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    /**
+     * @param Context $context
+     *
+     * @return non-empty-string
+     */
+    private static function ensureScriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
     {
-        $scriptDir = self::scriptDir($meta, $overrideModule);
+        $scriptDir = self::scriptDir($meta, $context, $overrideModule);
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
 
         return $scriptDir;
@@ -166,9 +176,9 @@ final class PackageInjector
      *
      * @see CompileMarker for what the marker does and does not guarantee
      */
-    private static function prodInjector(AbstractModule $module, string $scriptDir): InjectorInterface
+    private static function prodInjector(AbstractModule $module, string $scriptDir, string $tmpDir): InjectorInterface
     {
-        if (CompileMarker::exists($scriptDir)) {
+        if (CompileMarker::matches($scriptDir, $tmpDir)) {
             $injector = new CompiledInjector($scriptDir);
             /** @psalm-suppress InvalidArgument */
             $injector->getInstance(AppInterface::class);
@@ -177,7 +187,7 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        CompileMarker::write($scriptDir);
+        CompileMarker::write($scriptDir, $tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
@@ -208,11 +218,15 @@ final class PackageInjector
      * Override injectors use a class-name hash subdirectory so they never share
      * on-disk artifacts with the default injector for the same app+context (#478).
      *
+     * @param Context $context
+     *
      * @return non-empty-string
      */
-    private static function scriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    private static function scriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
     {
-        $scriptDir = $meta->tmpDir . '/di';
+        /** @var AppDir $appDir */
+        $appDir = $meta->appDir;
+        $scriptDir = AppDirs::script($appDir, $context);
         if ($overrideModule instanceof AbstractModule) {
             $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -17,7 +18,9 @@ use function assert;
 use function passthru;
 use function spl_object_hash;
 use function sprintf;
+use function sys_get_temp_dir;
 use function touch;
+use function uniqid;
 
 class InjectorTest extends TestCase
 {
@@ -80,6 +83,18 @@ class InjectorTest extends TestCase
         touch(__DIR__ . '/Fake/fake-app/src/Module/AppModule.php');
         $injector = Injector::getInstance('FakeVendor\HelloWorld', $context, $appDir);
         $this->assertInstanceOf(RayInjector::class, $injector);
+    }
+
+    /** The in-memory instance is keyed by the writable directory too, or the second boot gets the first one's paths. */
+    public function testWriteDirIsPartOfInjectorIdentity(): void
+    {
+        $appDir = __DIR__ . '/Fake/fake-app';
+        $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, sys_get_temp_dir() . '/bear-injector-a-' . uniqid());
+        $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, sys_get_temp_dir() . '/bear-injector-b-' . uniqid());
+        $this->assertNotSame(
+            $first->getInstance(AbstractAppMeta::class)->tmpDir,
+            $second->getInstance(AbstractAppMeta::class)->tmpDir,
+        );
     }
 
     public function testGetOverrideInstance(): void

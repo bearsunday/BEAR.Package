@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
+use BEAR\Package\Exception\InvalidWriteDirException;
+use BEAR\Package\Exception\WriteDirMismatchException;
+use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\PackageInjector;
+use BEAR\Sunday\Extension\Application\AppInterface;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
@@ -23,6 +28,8 @@ use function assert;
 use function escapeshellarg;
 use function file_get_contents;
 use function file_put_contents;
+use function fileinode;
+use function glob;
 use function ini_get;
 use function ini_set;
 use function is_dir;
@@ -52,7 +59,7 @@ class CompilerTest extends TestCase
         $compiledFile3 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
         @unlink($compiledFile1);
         @unlink($compiledFile3);
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $report = $compiler->compile();
         $this->assertGreaterThan(0, $report['compiled']);
         $compiler->dumpAutoload();
@@ -68,7 +75,7 @@ class CompilerTest extends TestCase
         ini_set('error_log', $errorLog);
 
         try {
-            $code = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false))();
+            $code = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))();
         } finally {
             ini_set('error_log', $previous);
         }
@@ -83,7 +90,7 @@ class CompilerTest extends TestCase
     {
         $compiledFile1 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
         $compiledFile3 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $report = $compiler->compile();
         $this->assertGreaterThan(0, $report['compiled']);
         $compiler->dumpAutoload();
@@ -95,7 +102,7 @@ class CompilerTest extends TestCase
     {
         // fromInjector() delegates the compile to one clean child process (constructor path).
         $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
-        $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
+        $compiler = Compiler::fromInjector($injector, 'prod-cli-app');
         $code = $compiler();
         $this->assertSame(0, $code);
         $this->assertDirectoryExists(self::APP_DIR . '/var/tmp/prod-cli-app/di');
@@ -182,33 +189,77 @@ class CompilerTest extends TestCase
         $this->assertSame([], $missing, 'fromInjector preload must contain every constructor preload path');
     }
 
-    public function testConstructorWritesArtifactsToGivenDirs(): void
+    /**
+     * A writeDir takes the writable directories, one place per app and context. Compiled scripts
+     * are not among them: they ship in the deployment artifact, under appDir.
+     */
+    public function testConstructorWritesUnderWriteDirAndKeepsScriptsUnderAppDir(): void
     {
-        $tmpDir = sys_get_temp_dir() . '/bear-package-compile-' . uniqid();
-        $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false, $tmpDir, $logDir);
-        $code = $compiler();
-        $this->assertSame(0, $code);
-        $this->assertFileExists($tmpDir . '/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
-        $this->assertFileExists($logDir . '/module.dot');
+        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir);
+        $this->assertSame(0, $compiler());
+        $app = $writeDir . '/FakeVendor/HelloWorld/prod-cli-app';
+        $this->assertFileExists(self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists($app . '/log/module.dot');
+        $this->assertDirectoryExists($app . '/tmp');
+        $this->assertFileDoesNotExist($app . '/tmp/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
     }
 
     /**
-     * fromInjector() must carry the injector-resolved Meta dirs into the child process;
-     * re-deriving a default Meta would write compiled artifacts where runtime never looks.
+     * The compile runs in a child process that builds its own Meta, so the paths must come out
+     * identical to the injector's - not layered a second time.
      */
-    public function testFromInjectorWritesArtifactsToInjectorMetaDirs(): void
+    public function testFromInjectorWritesWhereTheInjectorWrites(): void
     {
-        $tmpDir = sys_get_temp_dir() . '/bear-package-compile-' . uniqid();
-        $logDir = sys_get_temp_dir() . '/bear-package-log-' . uniqid();
-        $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $tmpDir, $logDir);
-        $injector = PackageInjector::factory($meta, 'prod-cli-app');
+        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
+        $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR, null, $writeDir);
+        $meta = $injector->getInstance(AbstractAppMeta::class);
+        $app = $writeDir . '/FakeVendor/HelloWorld/prod-cli-app';
+        $this->assertSame($app . '/tmp', $meta->tmpDir);
 
-        $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
-        $code = $compiler();
-        $this->assertSame(0, $code);
-        $this->assertFileExists($tmpDir . '/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
-        $this->assertFileExists($logDir . '/module.dot');
+        $this->assertSame(0, Compiler::fromInjector($injector, 'prod-cli-app', $writeDir)());
+        $this->assertFileExists(self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists($app . '/log/module.dot');
+        $this->assertDirectoryDoesNotExist($app . '/tmp/FakeVendor');
+    }
+
+    /**
+     * Passing the write directory to one side only compiles for the default paths, and every boot
+     * then finds scripts compiled for somewhere else and recompiles.
+     */
+    public function testFromInjectorRejectsAWriteDirTheInjectorDoesNotUse(): void
+    {
+        $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR, null, sys_get_temp_dir() . '/bear-package-write-' . uniqid());
+        $this->expectException(WriteDirMismatchException::class);
+        Compiler::fromInjector($injector, 'prod-cli-app');
+    }
+
+    /** A relative or empty write directory resolves against the current directory, which differs between compile and request. */
+    public function testWriteDirMustBeAbsolute(): void
+    {
+        $this->expectException(InvalidWriteDirException::class);
+        new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, 'relative/dir');
+    }
+
+    /** A boot after a compile with the same writeDir reuses the scripts instead of writing them again. */
+    public function testBootAfterCompileWithSameWriteDirDoesNotRewriteScripts(): void
+    {
+        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
+        $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir))());
+        $scriptDir = AppDirs::script(self::APP_DIR, 'prod-cli-app');
+        $scripts = glob($scriptDir . '/*.php');
+        $this->assertNotFalse($scripts);
+        $this->assertNotSame([], $scripts);
+        $inodes = [];
+        foreach ($scripts as $file) {
+            $inodes[$file] = fileinode($file);
+        }
+
+        $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR, null, $writeDir);
+        $injector->getInstance(AppInterface::class);
+        foreach ($inodes as $file => $inode) {
+            $this->assertSame($inode, fileinode($file), $file . ' was rewritten');
+        }
     }
 
     /**
@@ -219,7 +270,7 @@ class CompilerTest extends TestCase
     {
         $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $injector = PackageInjector::factory($meta, 'prod-cli-app');
-        $compiler = Compiler::fromInjector($injector, 'prod-cli-app', false);
+        $compiler = Compiler::fromInjector($injector, 'prod-cli-app');
         $this->expectException(DelegatedCompileException::class);
         $compiler->compile();
     }
@@ -286,7 +337,7 @@ class CompilerTest extends TestCase
 
     public function testCleanRemovesArtifactsAndRecreatesDirs(): void
     {
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $tmpDir = self::APP_DIR . '/var/tmp/prod-cli-app';
         if (! is_dir($tmpDir)) {
             mkdir($tmpDir, 0777, true);
@@ -307,7 +358,7 @@ class CompilerTest extends TestCase
 
     public function testEmptyDirectoryWhenMissingIsNoOp(): void
     {
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $emptyDirectory = new ReflectionMethod(Compiler::class, 'emptyDirectory');
         $emptyDirectory->invoke($compiler, sys_get_temp_dir() . '/bear-package-missing-' . uniqid());
         $this->addToAssertionCount(1);
@@ -315,7 +366,7 @@ class CompilerTest extends TestCase
 
     public function testEnsureDirectoryWhenExistsIsNoOp(): void
     {
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $ensureDirectory = new ReflectionMethod(Compiler::class, 'ensureDirectory');
         $ensureDirectory->invoke($compiler, sys_get_temp_dir());
         $this->addToAssertionCount(1);
@@ -323,7 +374,7 @@ class CompilerTest extends TestCase
 
     public function testEnsureDirectoryThrowsWhenUncreatable(): void
     {
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $ensureDirectory = new ReflectionMethod(Compiler::class, 'ensureDirectory');
         $file = sys_get_temp_dir() . '/bear-package-not-dir-' . uniqid();
         file_put_contents($file, 'x');
@@ -344,14 +395,14 @@ class CompilerTest extends TestCase
     public function testUnbound(): void
     {
         $this->expectException(Unbound::class);
-        $compiler = new Compiler(self::APP_NAME, 'cli-unbound-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'cli-unbound-app', self::APP_DIR);
         $compiler->compile();
     }
 
     public function testInvalidConetxt(): void
     {
         $this->expectException(InvalidContextException::class);
-        $compiler = new Compiler(self::APP_NAME, 'cli-invalid-app', self::APP_DIR, false);
+        $compiler = new Compiler(self::APP_NAME, 'cli-invalid-app', self::APP_DIR);
         $compiler->compile();
     }
 

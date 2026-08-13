@@ -12,11 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `preload.php` emits `require` in dependency order again, not `require_once` (#482)
-- `Compiler::__construct()` takes optional `$tmpDir` / `$logDir`; requires `bear/app-meta ^1.11` (#482)
+- `Compiler::__construct()` and `Compiler::fromInjector()` take an optional `$writeDir`, and `Injector::getInstance()` takes one too: an application writing outside its own tree hands one directory, and `{writeDir}/{Vendor}/{Project}/{context}/{tmp,log}` keeps applications and contexts apart (#482)
+- Compiled DI scripts stay under `appDir` and never follow `$writeDir`: they ship in the deployment artifact, so a cold start on a read-only platform reads them instead of compiling again (#482)
+- The compile marker records the writable directory the scripts were compiled for; booting with another one recompiles rather than answering with the old paths (#483)
 - `compile()` / `dumpAutoload()` / `clean()` on a `fromInjector()` compiler throw `DelegatedCompileException` (#482)
 - An on-demand compile is reported through the application logger, not `trigger_error()` (#483)
 - Reusing ahead-of-time output requires `ray/aop ^2.20` for weaved-file re-emission (#483)
 - `isProd()` no longer reports an unbound `Compile` as dev (#488)
+
+### Removed
+- The `$prepend` argument of `Compiler::__construct()` / `Compiler::fromInjector()`. It turned the class-tracking autoloader's queue position into a public knob for one 2021 workaround ("Set autoloder prepend off for phpunit"); `PreloadClassFilter` has since made the position irrelevant to what `preload.php` records
 
 ### Deprecated
 - `bin/bear.compile` — prefer application `bin/compile.php` with `Compiler::fromInjector(... )()` (still works; see #482)
