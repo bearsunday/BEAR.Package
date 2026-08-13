@@ -8,36 +8,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.22.0] - 2026-08-13
 
 ### Added
-- `Injector::fromMeta()` — injector for an already resolved `Meta` (#482)
+- `Injector::fromMeta()` — an injector for an already resolved `Meta` (#482)
+- An optional `$writeDir` on `Compiler` and `Injector::getInstance()`, for a tree that is read-only at runtime (#482)
 
 ### Changed
-- `preload.php` records what a boot loads, not what the compile loads. The compile process was never able to answer the question: it holds the compiler and the module tree, and it had already loaded the boot path before its tracker started. The compile now spawns a worker that boots the application from the finished artifact — scripts, marker and meta caches in place — and writes `preload.php` from the classes that boot pulls in. Measured on a five-resource application: 50 classes the boot loads were missing and 40 the boot never loads were present; both counts are now 2 and 7 (#489)
-- `preload.php` compiles the DI scripts and AOP proxies the boot loaded with `opcache_compile_file()`. They cannot be required — a DI script builds an instance from variables that only exist in the injector's scope — and preload links what it compiled after the file has run, so no ordering applies. The list is measured, never a glob of the script directory: a proxy whose parent the boot never loaded cannot be linked, and PHP says so at every startup (#489)
-- `FakeRun` transfers what the recorded request produced, through the real responder and buffered, because rendering is where a response format loads its renderer: a HAL application was missing `koriym/hal` and `rize/uri-template` from `preload.php` entirely. `Compiler\Bootstrap` returns that response and calls `isNotModified()` like a real entry point, which is what loads `BEAR\QueryRepository\Header`. Measured on a 161-resource application: classes the boot loads but preload missed went from 16 to 2, and entries the boot never loads from 46 to 10 (#489)
-- A build no longer has to boot the application. `preload.php` is measured by its own worker now, so the in-process constructor path - `new Compiler($appName, $context, $appDir, $writeDir)` - produces the same `preload.php` and `autoload.php` as `fromInjector()`, without first building an injector: on a cold tree that compiled the container once for nothing and logged an on-demand compile (measured 933ms against 769ms on a five-resource application). `fromInjector()` stays for a caller that already holds an injector, where the child process is what keeps the recording clean (#489)
-- `preload.php` returns early under the `cli`, `phpdbg` and `embed` SAPIs, as Symfony's generated preload does. A CLI application is one process per request: it would compile the whole list and throw it away, measured at +50ms on every invocation. It also keeps the artifact out of the way of the next compile, which is itself a CLI process — in an image where the cli and fpm binaries share `conf.d`, an `opcache.preload` that dies on startup takes the build down with it (#489)
+- `preload.php` is recorded by a boot of the finished artifact, not by the compile: it holds the boot path and no compiler (#489)
+- `preload.php` compiles the DI scripts and AOP proxies that boot loaded with `opcache_compile_file()`; requiring them would run them (#489)
+- `preload.php` returns early under `cli`, `phpdbg` and `embed`: a process that serves one request compiles the list and throws it away (#489)
 - `preload.php` emits `require` in dependency order again, not `require_once` (#482)
-- `Compiler::__construct()` and `Compiler::fromInjector()` take an optional `$writeDir`, and `Injector::getInstance()` takes one too: an application writing outside its own tree hands one directory, and `{writeDir}/{Vendor}/{Project}/{context}/{tmp,log}` keeps applications and contexts apart (#482)
-- Compiled DI scripts stay under `appDir` and never follow `$writeDir`: they ship in the deployment artifact, so a cold start on a read-only platform reads them instead of compiling again (#482)
-- The compile marker records the writable directory the scripts were compiled for; booting with another one recompiles rather than answering with the old paths (#483)
-- `compile()` / `dumpAutoload()` / `clean()` on a `fromInjector()` compiler throw `DelegatedCompileException` (#482)
+- `FakeRun` transfers the response it fetched, which is what loads the renderer of the response format (#489)
+- A build script names the application rather than booting it: `new Compiler($appName, $context, $appDir, $writeDir)` (#489)
+- Compiled DI scripts stay under `appDir` and never follow `$writeDir`: the deployment artifact carries them (#482)
+- `{writeDir}/{Vendor}/{Project}/{context}/{tmp,log}` keeps applications and contexts apart (#482)
+- The compile marker records the writable directory the scripts were compiled for; another one recompiles (#483)
 - An on-demand compile is reported through the application logger, not `trigger_error()` (#483)
 - Reusing ahead-of-time output requires `ray/aop ^2.20` for weaved-file re-emission (#483)
-- `isProd()` no longer reports an unbound `Compile` as dev (#488)
-- `clean()` removes `preload.php` and `autoload.php` too, and the compile deletes `preload.php` before recording it: the check that the worker wrote one can no longer pass on the last deploy's file (#489)
-- `Compiler::compile()` now always spawns a worker, so the constructor path needs `passthru()` and a CLI interpreter where it previously ran entirely in-process (#489)
-- A compile whose recording boot fails stops with `PreloadRecordException` instead of shipping a stale or absent `preload.php`. It also refuses a context that assembles the container per request, and one whose compiled scripts are not current — recording either would write the assembler into `preload.php` (#489)
-
-### Removed
-- The `$prepend` argument of `Compiler::__construct()` / `Compiler::fromInjector()`. It turned the class-tracking autoloader's queue position into a public knob for one 2021 workaround ("Set autoloder prepend off for phpunit"); `PreloadClassFilter` has since made the position irrelevant to what `preload.php` records
+- `Compiler::compile()` spawns a worker, so it needs `passthru()` and a CLI interpreter (#489)
 
 ### Deprecated
-- `bin/bear.compile` — prefer application `bin/compile.php` with `new Compiler($appName, $context, $appDir, $writeDir)` (still works; see #482)
+- `bin/bear.compile` — use the application's `bin/compile.php` (#482)
+
+### Removed
+- The `$prepend` argument of `Compiler::__construct()` / `Compiler::fromInjector()`, a 2021 PHPUnit workaround (#489)
 
 ### Fixed
-- `Compiler::fromInjector()` compiles in a clean child process, so `preload.php` is complete (#482)
-- Reuse ahead-of-time DI scripts when a compile marker is present, and boot from a read-only script directory (#483)
-- `CompileMarker::write()` throws instead of discarding a failed write (#483)
+- A compile stops rather than ship a stale `preload.php`: `PreloadRecordException` when the recording boot fails, or when the scripts are not current (#489)
+- `FilePutContents` throws `PartialWriteException` on a short write, which would leave a truncated `preload.php` (#489)
+- Generated paths go through `var_export()`, so a quote in a directory name cannot break the file (#489)
+- `CompileMarker::write()` throws instead of discarding a failed write, and writes through a temporary file (#483)
+- `compile()` / `dumpAutoload()` / `clean()` on a `fromInjector()` compiler throw `DelegatedCompileException` (#482)
+- `isProd()` no longer reports an unbound `Compile` as dev (#488)
+- `clean()` removes `preload.php` and `autoload.php`, and the compile deletes `preload.php` before recording it (#489)
 
 ## [1.21.0] - 2026-07-10
 
