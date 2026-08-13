@@ -165,9 +165,8 @@ class CompilerTest extends TestCase
      */
     private function assertPreloadHoldsBootNotCompiler(string $preload): void
     {
-        // A one-shot CLI process would pay for the whole list and throw it away, and under that
-        // SAPI php://stdout cannot be opened this early - a dependency that touches it kills the
-        // process with no message. Preload belongs to a server that reuses the process.
+        // Preload belongs to a process that is reused: a CLI one compiles the list, serves its
+        // single request and throws it away.
         $this->assertStringContainsString("if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {", $preload);
 
         foreach (

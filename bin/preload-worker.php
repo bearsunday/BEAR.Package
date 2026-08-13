@@ -25,9 +25,9 @@ if ($argc !== 5) {
 // The caller builds these from a resolved Meta; empty ones would compile a different application.
 assert($appName !== '' && $context !== '' && $appDir !== '');
 
-// Buffer before the first include: a deprecation printed by any autoloaded file would mark
-// the headers as sent, and the responder this boot must record skips its work when they are.
-// Failures go to STDERR, which no buffer touches.
+// This process writes a file; its stdout is piped into the compile report. Buffer from the
+// first include so the boot's own output - deprecations, the transferred response - stays out
+// of it. Failures go to STDERR, which no buffer touches.
 ob_start();
 require $appDir . '/vendor/autoload.php';
 

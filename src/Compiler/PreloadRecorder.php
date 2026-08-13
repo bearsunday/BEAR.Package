@@ -86,10 +86,8 @@ final class PreloadRecorder
             $tracker->filter(),
         );
 
-        // Buffer the boot: this process only measures, and anything it prints - a deprecation
-        // from a vendor file, the response body - would otherwise mark the headers as sent and
-        // make the responder skip its own transfer. A fatal still surfaces: PHP flushes buffers
-        // on shutdown, and failures here are reported through STDERR.
+        // Buffer the boot: recording is not the caller's output. A fatal still surfaces - PHP
+        // flushes buffers on shutdown, and failures here are reported through STDERR.
         ob_start();
         try {
             return ($compilePreload)($meta, $context);

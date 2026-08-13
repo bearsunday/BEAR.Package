@@ -64,9 +64,7 @@ final class CompilePreload
         $preloadFile = sprintf("<?php
 
 // %s preload
-// A one-shot process pays for this list and throws it away, and php://stdout cannot even be
-// opened this early under the CLI SAPI - a dependency that touches it there takes the process
-// down with no message. Preload where the process is reused.
+// A process that serves one request compiles this list and throws it away.
 if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     return;
 }
