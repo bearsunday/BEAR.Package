@@ -33,10 +33,12 @@ require $appDir . '/vendor/autoload.php';
 
 try {
     (new PreloadRecorder())($appName, $context, $appDir, $writeDir === '' ? null : $writeDir);
+    ob_end_clean();
 } catch (PreloadRecordException $e) {
+    // Before exit(), which runs no finally: the shutdown flush would otherwise put a half
+    // boot's output into the compile report. The message goes to STDERR, which no buffer holds.
+    ob_end_clean();
     fwrite(STDERR, $e->getMessage() . PHP_EOL);
 
     exit(1);
-} finally {
-    ob_end_clean();
 }

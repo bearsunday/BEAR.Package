@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reusing ahead-of-time output requires `ray/aop ^2.20` for weaved-file re-emission (#483)
 - `isProd()` no longer reports an unbound `Compile` as dev (#488)
 - `clean()` removes `preload.php` and `autoload.php` too, and the compile deletes `preload.php` before recording it: the check that the worker wrote one can no longer pass on the last deploy's file (#489)
+- `Compiler::compile()` now always spawns a worker, so the constructor path needs `passthru()` and a CLI interpreter where it previously ran entirely in-process (#489)
 - A compile whose recording boot fails stops with `PreloadRecordException` instead of shipping a stale or absent `preload.php`. It also refuses a context that assembles the container per request, and one whose compiled scripts are not current — recording either would write the assembler into `preload.php` (#489)
 
 ### Removed
