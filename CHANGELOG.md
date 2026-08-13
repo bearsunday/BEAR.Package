@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Injector::fromMeta()` — injector for an already resolved `Meta` (#482)
 
 ### Changed
+- `preload.php` records what a boot loads, not what the compile loads. The compile process was never able to answer the question: it holds the compiler and the module tree, and it had already loaded the boot path before its tracker started. The compile now spawns a worker that boots the application from the finished artifact — scripts, marker and meta caches in place — and writes `preload.php` from the classes that boot pulls in. Measured on a five-resource application: 50 classes the boot loads were missing and 40 the boot never loads were present; both counts are now 2 and 7 (#489)
+- `preload.php` compiles the DI scripts and AOP proxies the boot loaded with `opcache_compile_file()`. They cannot be required — a DI script builds an instance from variables that only exist in the injector's scope — and preload links what it compiled after the file has run, so no ordering applies. The list is measured, never a glob of the script directory: a proxy whose parent the boot never loaded cannot be linked, and PHP says so at every startup (#489)
+- `FakeRun` transfers the response through the real responder, buffered, so the responder and `Output` are recorded; `Compiler\Bootstrap` calls `isNotModified()` like a real entry point, which is what loads `BEAR\QueryRepository\Header` (#489)
 - `preload.php` emits `require` in dependency order again, not `require_once` (#482)
 - `Compiler::__construct()` and `Compiler::fromInjector()` take an optional `$writeDir`, and `Injector::getInstance()` takes one too: an application writing outside its own tree hands one directory, and `{writeDir}/{Vendor}/{Project}/{context}/{tmp,log}` keeps applications and contexts apart (#482)
 - Compiled DI scripts stay under `appDir` and never follow `$writeDir`: they ship in the deployment artifact, so a cold start on a read-only platform reads them instead of compiling again (#482)
@@ -19,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An on-demand compile is reported through the application logger, not `trigger_error()` (#483)
 - Reusing ahead-of-time output requires `ray/aop ^2.20` for weaved-file re-emission (#483)
 - `isProd()` no longer reports an unbound `Compile` as dev (#488)
+- `clean()` removes `preload.php` and `autoload.php` too, and the compile deletes `preload.php` before recording it: the check that the worker wrote one can no longer pass on the last deploy's file (#489)
+- A compile whose recording boot fails stops with `PreloadRecordException` instead of shipping a stale or absent `preload.php`. It also refuses a context that assembles the container per request, and one whose compiled scripts are not current — recording either would write the assembler into `preload.php` (#489)
 
 ### Removed
 - The `$prepend` argument of `Compiler::__construct()` / `Compiler::fromInjector()`. It turned the class-tracking autoloader's queue position into a public knob for one 2021 workaround ("Set autoloder prepend off for phpunit"); `PreloadClassFilter` has since made the position irrelevant to what `preload.php` records

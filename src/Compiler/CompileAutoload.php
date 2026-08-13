@@ -17,14 +17,16 @@ use function is_int;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
-use function preg_quote;
-use function preg_replace;
 use function printf;
 use function realpath;
 use function sprintf;
-use function str_contains;
+use function str_starts_with;
+use function strlen;
 use function strpos;
+use function substr;
 use function trait_exists;
+
+use const DIRECTORY_SEPARATOR;
 
 /**
  * @psalm-import-type ClassList from Types
@@ -109,6 +111,23 @@ final class CompileAutoload
     }
 
     /**
+     * Render already-known files as preload/autoload entries.
+     *
+     * @param list<string> $files
+     *
+     * @return ClassPaths
+     */
+    public function getFilePaths(array $files): array
+    {
+        $paths = [];
+        foreach ($files as $file) {
+            $paths[] = $this->getRelativePath($this->appDir, $file);
+        }
+
+        return $paths;
+    }
+
+    /**
      * @param AppDir     $appDir
      * @param ClassPaths $paths
      */
@@ -147,11 +166,16 @@ require __DIR__ . '/vendor/autoload.php';
         return file_exists($filePath) || is_int(strpos($filePath, 'phar'));
     }
 
+    /**
+     * Anchor on the prefix, never a substring: "/data/app" also appears in "/data/app-cache/Foo.php"
+     * (which would emit __DIR__ . '-cache/Foo.php') and in "/srv/data/app/Foo.php" (where the old
+     * regex matched nothing and emitted an unterminated string literal).
+     */
     private function getRelativePath(string $rootDir, string $file): string
     {
         $dir = (string) realpath($rootDir);
-        if (str_contains($file, $dir)) {
-            return (string) preg_replace('#^' . preg_quote($dir, '#') . '#', "__DIR__ . '", $file) . "'";
+        if ($dir !== '' && str_starts_with($file, $dir . DIRECTORY_SEPARATOR)) {
+            return sprintf("__DIR__ . '%s'", substr($file, strlen($dir)));
         }
 
         return sprintf("'%s'", $file);

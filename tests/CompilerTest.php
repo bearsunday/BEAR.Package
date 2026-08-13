@@ -26,6 +26,7 @@ use SplFileInfo;
 use function array_diff;
 use function assert;
 use function escapeshellarg;
+use function explode;
 use function file_get_contents;
 use function file_put_contents;
 use function fileinode;
@@ -37,8 +38,10 @@ use function is_float;
 use function mkdir;
 use function passthru;
 use function preg_match_all;
+use function preg_quote;
 use function rmdir;
 use function sprintf;
+use function str_starts_with;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
@@ -109,8 +112,8 @@ class CompilerTest extends TestCase
     }
 
     /**
-     * Constructor path installs the class-tracking autoloader before the app is loaded,
-     * so FakeRun + loadResources record real runtime classes into preload.php.
+     * preload.php is recorded by a worker that boots from the compiled scripts, so it holds
+     * the boot path and the app's resources - and none of the compiler that produced them.
      */
     public function testConstructorPreloadRecordsAppResourceClasses(): void
     {
@@ -127,6 +130,8 @@ class CompilerTest extends TestCase
         $this->assertStringNotContainsString('phpunit', $contents);
         $this->assertStringNotContainsString('compile-stub', $contents);
         $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
+        $this->assertPreloadHoldsBootNotCompiler($contents);
+        $this->assertPreloadCompilesLoadedScripts($contents);
         $this->assertGreaterThan(
             50,
             preg_match_all('/^require(?:_once)? /m', $contents),
@@ -134,6 +139,68 @@ class CompilerTest extends TestCase
         );
         $this->assertGeneratedFileCanBeRequired($preload);
         $this->assertGeneratedFileCanBeRequired($autoload);
+    }
+
+    /**
+     * The boot path is what every request pays for, and the AOT compiler is what no request runs.
+     *
+     * Recording inside the compile process got both wrong: it missed the boot classes it had
+     * already loaded, and it kept the compiler that wrote the scripts. (Ray.Di's assembler is
+     * not on this list: a cold start builds the module tree before it reads the scripts.)
+     */
+    private function assertPreloadHoldsBootNotCompiler(string $preload): void
+    {
+        // A one-shot CLI process would pay for the whole list and throw it away, and under that
+        // SAPI php://stdout cannot be opened this early - a dependency that touches it kills the
+        // process with no message. Preload belongs to a server that reuses the process.
+        $this->assertStringContainsString("if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {", $preload);
+
+        foreach (
+            [
+                'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'PackageInjector.php',
+                'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'AppDirs.php',
+            ] as $bootFile
+        ) {
+            $this->assertStringContainsString($bootFile, $preload);
+        }
+
+        foreach (
+            [
+                'ray' . DIRECTORY_SEPARATOR . 'compiler' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Compiler.php',
+                'ray' . DIRECTORY_SEPARATOR . 'compiler' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'CompileVisitor.php',
+                'ray' . DIRECTORY_SEPARATOR . 'aop' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Compiler.php',
+            ] as $compilerFile
+        ) {
+            $this->assertStringNotContainsString($compilerFile, $preload);
+        }
+    }
+
+    /**
+     * DI scripts and AOP proxies are compiled, never required: a DI script builds an instance
+     * from variables that only exist in the injector's scope. The list is what the boot loaded,
+     * so every proxy's parent is in the require list above it and PHP can link them all.
+     */
+    private function assertPreloadCompilesLoadedScripts(string $preload): void
+    {
+        $diScript = 'var' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'prod-app'
+            . DIRECTORY_SEPARATOR . 'di' . DIRECTORY_SEPARATOR;
+        $this->assertStringContainsString("if (function_exists('opcache_compile_file')", $preload);
+        $this->assertGreaterThan(
+            0,
+            preg_match_all('/^ {4}opcache_compile_file\(.*' . preg_quote($diScript, '/') . '/m', $preload),
+            'Preload must compile the DI scripts the boot loaded',
+        );
+        foreach (explode("\n", $preload) as $line) {
+            if (! str_starts_with($line, 'require ')) {
+                continue;
+            }
+
+            $this->assertStringNotContainsString(
+                $diScript,
+                $line,
+                'A DI script must never be required: it runs against the injector\'s scope',
+            );
+        }
     }
 
     /**

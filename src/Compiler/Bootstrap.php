@@ -48,7 +48,11 @@ final class Bootstrap
     {
         assert($this->appDir !== '');
         $injector = $this->injector ?? Injector::getInstance($appName, $context, $this->appDir);
-        $injector->getInstance(HttpCacheInterface::class);
+        $httpCache = $injector->getInstance(HttpCacheInterface::class);
+        assert($httpCache instanceof HttpCacheInterface);
+        // Resolving it is not enough: the constants a real entry point reads on every request
+        // (BEAR\QueryRepository\Header) only load when this runs.
+        $httpCache->isNotModified($server);
         $router = $injector->getInstance(RouterInterface::class);
         assert($router instanceof RouterInterface);
         $request = $router->match($globals, $server);

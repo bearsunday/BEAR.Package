@@ -35,11 +35,18 @@ class PreloadClassFilterTest extends TestCase
         $this->filter = new PreloadClassFilter($this->loader);
     }
 
-    public function testRejectsExcludedAndUndeclaredSymbols(): void
+    public function testRejectsCompilerMachineryAndUndeclaredSymbols(): void
     {
-        $this->assertFalse(($this->filter)(NullPage::class));
         $this->assertFalse(($this->filter)(Compiler::class));
+        $this->assertFalse(($this->filter)(PreloadClassFilter::class));
         $this->assertFalse(($this->filter)('BEAR\\Package\\DefinitelyNotAClass' . self::class));
+    }
+
+    /** A boot loads the null object, so preload records it like any other runtime class. */
+    public function testAcceptsNullPage(): void
+    {
+        $this->assertTrue(class_exists(NullPage::class));
+        $this->assertTrue(($this->filter)(NullPage::class));
     }
 
     public function testRejectsAnonymousClasses(): void

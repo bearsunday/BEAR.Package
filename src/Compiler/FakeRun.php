@@ -5,21 +5,29 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Injector as PackageInjectorFacade;
 use BEAR\Package\Provide\Error\NullPage;
 use BEAR\QueryRepository\EtagSetter;
 use BEAR\QueryRepository\HttpCache;
 use BEAR\Resource\ResourceInterface;
+use BEAR\Resource\ResourceObject;
 use BEAR\Resource\Uri;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
-use BEAR\Sunday\Provide\Transfer\HttpResponder;
+use BEAR\Sunday\Extension\Transfer\TransferInterface;
+use Ray\Aop\InterceptTrait;
 use Ray\Aop\ReflectiveMethodInvocation;
+use Ray\Aop\WeavedInterface;
 use Ray\Di\InjectorInterface;
 
 use function assert;
 use function class_exists;
 use function get_object_vars;
+use function headers_sent;
 use function interface_exists;
+use function ob_end_clean;
+use function ob_start;
+use function trait_exists;
 
 final class FakeRun
 {
@@ -54,12 +62,42 @@ final class FakeRun
         assert($resource instanceof ResourceInterface);
         $ro = $this->injector->getInstance(NullPage::class);
         $ro->uri = new Uri('app://self/');
-        // Do not call TransferInterface: header() is not output-buffered and is unnecessary for class loading.
-        $resource->object($ro)(['required' => 'string']);
+        $response = $resource->object($ro)(['required' => 'string']);
+        $this->transfer($response);
+
+        // Linked at the end of preload, not autoloaded: an AOP proxy whose interface or trait
+        // is missing is dropped with a warning at every startup.
         interface_exists(HttpCacheInterface::class);
+        interface_exists(WeavedInterface::class);
+        trait_exists(InterceptTrait::class);
         class_exists(HttpCache::class);
-        class_exists(HttpResponder::class);
         class_exists(EtagSetter::class);
         class_exists(ReflectiveMethodInvocation::class);
+        class_exists(PackageInjectorFacade::class);
+    }
+
+    /**
+     * Run the response through the real responder, so preload records it and Output.
+     *
+     * Buffered, because the body would otherwise land in the compile report - and skipped once
+     * anything has been printed, since header() then warns instead of being the CLI no-op it is
+     * in the preload worker, which prints nothing before this point.
+     */
+    private function transfer(ResourceObject $response): void
+    {
+        if (headers_sent()) {
+            return;
+        }
+
+        $transfer = $this->injector->getInstance(TransferInterface::class);
+        assert($transfer instanceof TransferInterface);
+        ob_start();
+        try {
+            /** @var array<string, mixed> $server */
+            $server = $_SERVER;
+            $response->transfer($transfer, $server);
+        } finally {
+            ob_end_clean();
+        }
     }
 }

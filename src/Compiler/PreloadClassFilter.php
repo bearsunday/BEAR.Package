@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Compiler;
-use BEAR\Package\Provide\Error\NullPage;
 use Composer\Autoload\ClassLoader;
 use ReflectionClass;
 
@@ -85,11 +84,15 @@ final class PreloadClassFilter
         return $filePath;
     }
 
+    /**
+     * The compiler's own machinery is never part of a boot.
+     *
+     * Nothing else is excluded by name: preload is recorded by booting the application,
+     * so a class is in the list because that boot loaded it.
+     */
     public function isExcludedClass(string $class): bool
     {
-        return $class === NullPage::class
-            || is_int(strpos($class, Compiler::class))
-            || is_int(strpos($class, NullPage::class));
+        return is_int(strpos($class, Compiler::class));
     }
 
     private function prepareComposerFiles(): void
