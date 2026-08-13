@@ -23,7 +23,6 @@ use Ray\Di\InjectorInterface;
 use function assert;
 use function class_exists;
 use function get_object_vars;
-use function headers_sent;
 use function interface_exists;
 use function ob_end_clean;
 use function ob_start;
@@ -31,10 +30,19 @@ use function trait_exists;
 
 final class FakeRun
 {
+    /**
+     * @param bool $transfersResponse whether to run the response through the responder.
+     *                                The compile prints its report to the same stdout, so a
+     *                                transfer there only warns; the preload worker prints
+     *                                nothing and needs the responder in its recording.
+     *
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     */
     public function __construct(
         private InjectorInterface $injector,
         private string $context,
         private AbstractAppMeta $appMeta,
+        private bool $transfersResponse = false,
     ) {
     }
 
@@ -79,13 +87,13 @@ final class FakeRun
     /**
      * Run the response through the real responder, so preload records it and Output.
      *
-     * Buffered, because the body would otherwise land in the compile report - and skipped once
-     * anything has been printed, since header() then warns instead of being the CLI no-op it is
-     * in the preload worker, which prints nothing before this point.
+     * Buffered: the body would otherwise land in the caller's output. Only the preload worker
+     * asks for it - header() is a no-op under CLI, but warns once anything has been printed,
+     * which is exactly the compile's situation and never the worker's.
      */
     private function transfer(ResourceObject $response): void
     {
-        if (headers_sent()) {
+        if (! $this->transfersResponse) {
             return;
         }
 

@@ -9,6 +9,8 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Types;
 
+use function array_filter;
+use function array_values;
 use function assert;
 use function class_exists;
 use function get_included_files;
@@ -48,14 +50,7 @@ final class CompilePreload
         // appended first: the list is in dependency order and plain require is safe.
         /** @var list<string> $trackedClasses */
         $trackedClasses = (array) $this->classes;
-        $classes = [];
-        foreach ($trackedClasses as $class) {
-            if (! ($this->isPreloadClass)($class)) {
-                continue;
-            }
-
-            $classes[] = $class;
-        }
+        $classes = array_values(array_filter($trackedClasses, $this->isPreloadClass));
 
         $paths = $this->dumpAutoload->getPaths($classes);
         $requiredFile = '';

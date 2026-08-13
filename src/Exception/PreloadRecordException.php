@@ -34,16 +34,6 @@ final class PreloadRecordException extends RuntimeException
         ));
     }
 
-    /** The compile shells out to a worker, and there is no CLI interpreter to shell out to. */
-    public static function noPhpBinary(string $binary, string $sapi): self
-    {
-        return new self(sprintf(
-            'Recording preload.php needs a CLI php binary; "%s" is not executable (SAPI "%s").',
-            $binary,
-            $sapi,
-        ));
-    }
-
     /**
      * Without a matching marker the boot compiles on demand, and the recording measures that
      * compile instead of a request - the exact error this pipeline exists to remove.

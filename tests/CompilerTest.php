@@ -6,9 +6,11 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidWriteDirException;
+use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Exception\WriteDirMismatchException;
 use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\PackageInjector;
@@ -99,6 +101,19 @@ class CompilerTest extends TestCase
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
+    }
+
+    /**
+     * The compile stops rather than ship a preload of the compiler.
+     *
+     * @see PreloadRecorder
+     */
+    public function testCompileRefusesWhenTheRecordingBootIsNotTheCompiledOne(): void
+    {
+        $compiler = new Compiler(self::APP_NAME, 'app', self::APP_DIR);
+
+        $this->expectException(PreloadRecordException::class);
+        $compiler->compile();
     }
 
     public function testFromInjectorAndInvoke(): void

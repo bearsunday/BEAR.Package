@@ -76,7 +76,7 @@ final class PreloadRecorder
         /** @var ArrayObject<int, string> $overwritten */
         $overwritten = new ArrayObject();
         $filePutContents = new FilePutContents($overwritten);
-        $fakeRun = new FakeRun($injector, $context, $meta);
+        $fakeRun = new FakeRun($injector, $context, $meta, transfersResponse: true);
         $dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $tracker->classes(), $appDir, $context);
         $compilePreload = new CompilePreload(
             $fakeRun,

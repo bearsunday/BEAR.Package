@@ -32,7 +32,6 @@ use function dirname;
 use function escapeshellarg;
 use function file_exists;
 use function is_dir;
-use function is_executable;
 use function is_float;
 use function memory_get_peak_usage;
 use function microtime;
@@ -212,17 +211,12 @@ final class Compiler
      * @param Context       $context
      * @param AppDir        $appDir
      * @param WriteDir|null $writeDir
-     *
-     * @throws PreloadRecordException
      */
     private static function workerCommand(string $worker, string $appName, string $context, string $appDir, string|null $writeDir): string
     {
-        // PHP_BINARY is the server binary under fpm and empty under some embedded SAPIs,
-        // and a compile that shells out to those produces an unrelated failure.
+        // PHP_BINARY is the server binary under fpm and empty under some embedded SAPIs:
+        // the worker needs the interpreter, not whatever is running this compile.
         $php = PHP_SAPI === 'cli' ? PHP_BINARY : PHP_BINDIR . '/php';
-        if (! is_executable($php)) {
-            throw PreloadRecordException::noPhpBinary($php, PHP_SAPI);
-        }
 
         return sprintf(
             '%s %s %s %s %s %s',
