@@ -9,6 +9,7 @@ use BEAR\Package\Injector;
 use BEAR\Package\Types;
 use BEAR\Resource\Method;
 use BEAR\Resource\ResourceInterface;
+use BEAR\Resource\ResourceObject;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Transfer\HttpCacheInterface;
 use BEAR\Sunday\Extension\Transfer\TransferInterface;
@@ -37,14 +38,19 @@ final class Bootstrap
     }
 
     /**
+     * Run the request a deployed entry point runs, and hand back what it produced.
+     *
+     * The caller decides whether to transfer it: rendering is where a response format loads its
+     * renderer, and a preload that never rendered describes no format at all.
+     *
      * @param AppName $appName
      * @param Context $context
      * @param Globals $globals
      * @param Server  $server
      *
-     * @return 0|1
+     * @return ResourceObject|null the response, or null when the request ended in the error path
      */
-    public function __invoke(string $appName, string $context, array $globals, array $server): int
+    public function __invoke(string $appName, string $context, array $globals, array $server): ResourceObject|null
     {
         assert($this->appDir !== '');
         $injector = $this->injector ?? Injector::getInstance($appName, $context, $this->appDir);
@@ -59,15 +65,12 @@ final class Bootstrap
         try {
             $resource = $injector->getInstance(ResourceInterface::class);
             assert($resource instanceof ResourceInterface);
-            $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
+
+            return $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
         } catch (Throwable) {
             $injector->getInstance(TransferInterface::class);
 
-            return 1;
+            return null;
         }
-
-        // @codeCoverageIgnoreStart
-        return 0;
-        // @codeCoverageIgnoreEnd
     }
 }
