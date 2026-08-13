@@ -18,6 +18,8 @@ use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
 
+use const DIRECTORY_SEPARATOR;
+
 class FilePutContentsTest extends TestCase
 {
     private FilePutContents $filePutContents;
@@ -56,6 +58,10 @@ class FilePutContentsTest extends TestCase
      */
     public function testRefusesToReportSuccessOnAWriteThatDidNotHappen(): void
     {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $this->markTestSkipped('chmod does not restrict writing on Windows');
+        }
+
         chmod($this->dir, 0555);
         set_error_handler(static fn (): bool => true);
         try {

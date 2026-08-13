@@ -49,11 +49,15 @@ use function sprintf;
 use function str_replace;
 use function str_starts_with;
 use function sys_get_temp_dir;
+use function trim;
 use function uniqid;
 use function unlink;
 use function var_export;
 
 use const DIRECTORY_SEPARATOR;
+use const E_ALL;
+use const E_DEPRECATED;
+use const E_USER_DEPRECATED;
 use const PHP_BINARY;
 
 class CompilerTest extends TestCase
@@ -143,7 +147,7 @@ class CompilerTest extends TestCase
         $autoload = self::APP_DIR . '/autoload.php';
         $this->assertFileExists($preload);
         $contents = (string) file_get_contents($preload);
-        $this->assertStringContainsString(self::INDEX_RESOURCE_PATH, $contents);
+        $this->assertStringContainsString(self::pathLiteral(self::INDEX_RESOURCE_PATH), $contents);
         $this->assertStringContainsString('require ', $contents);
         $this->assertStringNotContainsString('require_once', $contents);
         $this->assertStringNotContainsString('phpunit', $contents);
@@ -168,6 +172,13 @@ class CompilerTest extends TestCase
      * already loaded, and it kept the compiler that wrote the scripts. (Ray.Di's assembler is
      * not on this list: a cold start builds the module tree before it reads the scripts.)
      */
+
+    /** Render a path fragment the way the generated file holds it (var_export escapes '\\'). */
+    private static function pathLiteral(string $fragment): string
+    {
+        return trim(var_export($fragment, true), "'");
+    }
+
     private function assertPreloadHoldsBootNotCompiler(string $preload): void
     {
         // Preload belongs to a process that is reused: a CLI one compiles the list, serves its
@@ -180,7 +191,7 @@ class CompilerTest extends TestCase
                 'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'AppDirs.php',
             ] as $bootFile
         ) {
-            $this->assertStringContainsString($bootFile, $preload);
+            $this->assertStringContainsString(self::pathLiteral($bootFile), $preload);
         }
 
         foreach (
@@ -190,7 +201,7 @@ class CompilerTest extends TestCase
                 'ray' . DIRECTORY_SEPARATOR . 'aop' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Compiler.php',
             ] as $compilerFile
         ) {
-            $this->assertStringNotContainsString($compilerFile, $preload);
+            $this->assertStringNotContainsString(self::pathLiteral($compilerFile), $preload);
         }
     }
 
@@ -206,7 +217,7 @@ class CompilerTest extends TestCase
         $this->assertStringContainsString("if (function_exists('opcache_compile_file')", $preload);
         $this->assertGreaterThan(
             0,
-            preg_match_all('/^ {4}opcache_compile_file\(.*' . preg_quote($diScript, '/') . '/m', $preload),
+            preg_match_all('/^ {4}opcache_compile_file\(.*' . preg_quote(self::pathLiteral($diScript), '/') . '/m', $preload),
             'Preload must compile the DI scripts the boot loaded',
         );
         foreach (explode("\n", $preload) as $line) {
@@ -215,7 +226,7 @@ class CompilerTest extends TestCase
             }
 
             $this->assertStringNotContainsString(
-                $diScript,
+                self::pathLiteral($diScript),
                 $line,
                 'A DI script must never be required: it runs against the injector\'s scope',
             );
@@ -240,7 +251,7 @@ class CompilerTest extends TestCase
         $this->assertFileExists($preload);
         $contents = (string) file_get_contents($preload);
         $this->assertStringContainsString(
-            self::INDEX_RESOURCE_PATH,
+            self::pathLiteral(self::INDEX_RESOURCE_PATH),
             $contents,
             'fromInjector compile must record app resource classes loaded during FakeRun/loadResources',
         );
@@ -405,8 +416,9 @@ class CompilerTest extends TestCase
         $body = dirname($preload) . '/preload-body-test.php';
         file_put_contents($body, str_replace($guard, '', $contents));
         $command = sprintf(
-            '%s -d error_reporting=-1 -d display_errors=1 -r %s',
+            '%s -d error_reporting=%d -d display_errors=1 -r %s',
             escapeshellarg(PHP_BINARY),
+            E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED,
             escapeshellarg(sprintf('require %s;', var_export($body, true))),
         );
         exec($command . ' 2>&1', $output, $exitCode);
