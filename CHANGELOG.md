@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `$prepend` argument of `Compiler::__construct()` / `Compiler::fromInjector()`. It turned the class-tracking autoloader's queue position into a public knob for one 2021 workaround ("Set autoloder prepend off for phpunit"); `PreloadClassFilter` has since made the position irrelevant to what `preload.php` records
 
 ### Deprecated
-- `bin/bear.compile` — prefer application `bin/compile.php` with `Compiler::fromInjector(... )()` (still works; see #482)
+- `bin/bear.compile` — prefer application `bin/compile.php` with `new Compiler($appName, $context, $appDir, $writeDir)` (still works; see #482)
 
 ### Fixed
 - `Compiler::fromInjector()` compiles in a clean child process, so `preload.php` is complete (#482)
