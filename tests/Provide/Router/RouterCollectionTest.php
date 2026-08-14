@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Exception\InvalidRequestUriException;
 use BEAR\Package\FakeErrorRouter;
 use BEAR\Package\FakeWebRouter;
 use BEAR\Sunday\Provide\Router\WebRouter;
@@ -91,5 +92,19 @@ class RouterCollectionTest extends TestCase
         $matchUri = (string) $routerCollection->match($globals, $server);
         $expected = 'get page://self/__route_not_found';
         $this->assertSame($expected, $matchUri);
+    }
+
+    /**
+     * Route-not-found answers 404, and a malformed request line is a 400.
+     *
+     * FakeWebRouter is the package WebRouter with generate() overridden; the plain WebRouter
+     * name in this file is BEAR\Sunday's.
+     */
+    public function testClientErrorPropagates(): void
+    {
+        $routerCollection = new RouterCollection([new FakeWebRouter('page://self', new HttpMethodParams())]);
+
+        $this->expectException(InvalidRequestUriException::class);
+        $routerCollection->match(['_GET' => [], '_POST' => []], ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '//']);
     }
 }

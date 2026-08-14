@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Exception\InvalidRequestUriException;
+use BEAR\Package\Provide\Error\Status;
 use PHPUnit\Framework\TestCase;
 
 class WebRouterTest extends TestCase
@@ -53,5 +55,29 @@ class WebRouterTest extends TestCase
     {
         $actual = $this->router->generate('', []);
         $this->assertFalse((bool) $actual);
+    }
+
+    public function testPathlessRequestUriIsABadRequest(): void
+    {
+        $global = ['_GET' => [], '_POST' => []];
+        $server = ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '//'];
+
+        $this->expectException(InvalidRequestUriException::class);
+        $this->expectExceptionMessage('No path in request URI "//"');
+        $this->router->match($global, $server);
+    }
+
+    /** Status reads the code off BadRequestException; without that branch the fallback is 500. */
+    public function testPathlessRequestUriMapsTo400(): void
+    {
+        try {
+            $this->router->match(['_GET' => [], '_POST' => []], ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '///']);
+        } catch (InvalidRequestUriException $e) {
+            $this->assertSame(400, (new Status($e))->code);
+
+            return;
+        }
+
+        $this->fail('A pathless request URI must be rejected');
     }
 }

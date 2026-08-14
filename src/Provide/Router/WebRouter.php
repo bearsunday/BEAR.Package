@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Router;
 
+use BEAR\Package\Exception\InvalidRequestUriException;
 use BEAR\Sunday\Annotation\DefaultSchemeHost;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use Override;
 
-use function assert;
+use function is_string;
 use function parse_url;
 
 use const PHP_URL_PATH;
@@ -38,6 +39,8 @@ class WebRouter implements RouterInterface, WebRouterInterface
      *
      * @param Globals $globals
      * @param Server  $server
+     *
+     * @throws InvalidRequestUriException
      */
     #[Override]
     public function match(array $globals, array $server)
@@ -47,7 +50,10 @@ class WebRouter implements RouterInterface, WebRouterInterface
         $post = $globals['_POST'];
         [$method, $query] = $this->httpMethodParams->get($server, $get, $post);
         $parsedPath = parse_url($requestUri, PHP_URL_PATH);
-        assert($parsedPath !== null && $parsedPath !== false);
+        if (! is_string($parsedPath)) {
+            throw new InvalidRequestUriException($requestUri);
+        }
+
         $path = $this->schemeHost . $parsedPath;
 
         return new RouterMatch($method, $path, $query);
