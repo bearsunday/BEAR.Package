@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Provide\Router;
 
 use BEAR\Package\Exception\RouterException;
+use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Sunday\Extension\Router\NullMatch;
 use BEAR\Sunday\Extension\Router\RouterInterface;
 use BEAR\Sunday\Extension\Router\RouterMatch;
@@ -26,6 +27,8 @@ final class RouterCollection implements RouterInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @throws BadRequestException A router rejected the client input.
      */
     #[Override]
     public function match(array $globals, array $server)
@@ -33,6 +36,10 @@ final class RouterCollection implements RouterInterface
         foreach ($this->routers as $route) {
             try {
                 $match = $route->match($globals, $server);
+            } catch (BadRequestException $e) {
+                // A router rejecting client input has already decided the answer, and it is a 4xx.
+                // Falling back to route-not-found would report a malformed request as a missing one.
+                throw $e;
             } catch (Throwable $e) {
                 $e = new RouterException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());
                 /** @noinspection ForgottenDebugOutputInspection */

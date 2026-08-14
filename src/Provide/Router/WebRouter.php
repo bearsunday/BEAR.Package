@@ -50,9 +50,7 @@ class WebRouter implements RouterInterface, WebRouterInterface
         $post = $globals['_POST'];
         [$method, $query] = $this->httpMethodParams->get($server, $get, $post);
         $parsedPath = parse_url($requestUri, PHP_URL_PATH);
-        // Not assert(): the request line is client input, and "//" is one PHP accepts and
-        // parse_url() reads no path from. With assertions compiled out the false became an
-        // empty path and the answer was a 500; a client error has to be 400 either way.
+        // Not assert(): REQUEST_URI is client input, and "//" is a request line PHP accepts.
         if (! is_string($parsedPath)) {
             throw new InvalidRequestUriException($requestUri);
         }

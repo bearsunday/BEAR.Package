@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- A request line with no path - `//` and `///` are two PHP accepts - answers 400 instead of 500. `WebRouter` checked it with `assert()`, so development raised `AssertionError` and production concatenated the `false` into `page://self`, which the resource layer reported as an unrecoverable `UriException` (#493)
+- A request line with no path (`//`, `///`) answers 400, not the 500 an `assert()` on `parse_url()` gave (#493)
+- The entry point calls `router->match()` inside its `try`, so a router's client error answers 400 instead of a fatal 500 (#493)
+- `RouterCollection` propagates a router's client error instead of answering route-not-found (#493)
 
 ## [1.22.0] - 2026-08-13
 
