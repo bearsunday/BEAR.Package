@@ -15,8 +15,7 @@ $context = getenv('CONTEXT') ?: (PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app')
 
 $app = Injector::getInstance('MyVendor\MyProject', $context, dirname(__DIR__))->getInstance(AppInterface::class);
 assert($app instanceof App);
-// The router reads the request line, so it fails on client input: a request URI with no path,
-// or a JSON body that does not parse. Those answer 400 only if the handler below sees them.
+// match() throws BadRequestException on client input it cannot read.
 $request = new NullMatch();
 try {
     $request = $app->router->match($GLOBALS, $_SERVER);

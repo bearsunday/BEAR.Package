@@ -37,8 +37,7 @@ final class RouterCollection implements RouterInterface
             try {
                 $match = $route->match($globals, $server);
             } catch (BadRequestException $e) {
-                // A router rejecting client input has already decided the answer, and it is a 4xx.
-                // Falling back to route-not-found would report a malformed request as a missing one.
+                // Route-not-found would report a malformed request as a missing one.
                 throw $e;
             } catch (Throwable $e) {
                 $e = new RouterException($e->getMessage(), (int) $e->getCode(), $e->getPrevious());

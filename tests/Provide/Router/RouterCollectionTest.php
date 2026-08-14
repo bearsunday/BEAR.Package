@@ -95,13 +95,10 @@ class RouterCollectionTest extends TestCase
     }
 
     /**
-     * A collection is what an application with a primary router uses, and the primary router
-     * returns NullMatch for a request line it holds no route for, so the WebRouter behind it is
-     * the one that reads the URI. Its client error has to reach the caller: route-not-found
-     * answers 404, and a malformed request line is a 400.
+     * Route-not-found answers 404, and a malformed request line is a 400.
      *
-     * FakeWebRouter is the package WebRouter with generate() overridden, so match() below is the
-     * production one. The plain WebRouter name in this file is BEAR\Sunday's.
+     * FakeWebRouter is the package WebRouter with generate() overridden; the plain WebRouter
+     * name in this file is BEAR\Sunday's.
      */
     public function testClientErrorPropagates(): void
     {
