@@ -50,7 +50,6 @@ class WebRouter implements RouterInterface, WebRouterInterface
         $post = $globals['_POST'];
         [$method, $query] = $this->httpMethodParams->get($server, $get, $post);
         $parsedPath = parse_url($requestUri, PHP_URL_PATH);
-        // Not assert(): REQUEST_URI is client input, and "//" is a request line PHP accepts.
         if (! is_string($parsedPath)) {
             throw new InvalidRequestUriException($requestUri);
         }

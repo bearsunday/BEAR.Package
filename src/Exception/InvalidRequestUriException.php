@@ -12,8 +12,7 @@ use function sprintf;
  * The request line holds no path.
  *
  * PHP accepts request lines that `parse_url()` cannot read a path from - "//" and "///" among
- * them - and a path is what the router turns into a resource URI. That is a client error, and it
- * has to be one whether or not assertions are compiled in.
+ * them - and a path is what the router turns into a resource URI.
  */
 final class InvalidRequestUriException extends BadRequestException implements ExceptionInterface
 {
