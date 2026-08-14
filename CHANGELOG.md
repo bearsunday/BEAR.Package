@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.22.1] - 2026-08-14
 
 ### Fixed
 - A request line with no path (`//`, `///`) answers 400, not the 500 an `assert()` on `parse_url()` gave (#493)
-- The entry point calls `router->match()` inside its `try`, so a router's client error answers 400 instead of a fatal 500 (#493)
+- Call `router->match()` inside the `try` that reaches `throwableHandler`; outside it, a router's client error is an uncaught fatal (#493)
 - `RouterCollection` propagates a router's client error instead of answering route-not-found (#493)
 
 ## [1.22.0] - 2026-08-13
