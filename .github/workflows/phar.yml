@@ -25,16 +25,21 @@ jobs:
       # phar.readonly is INI_SYSTEM: only a process started with -d phar.readonly=0 can
       # write an archive, and only one started with =1 reaches the guard that says so.
       - name: Test the packing a read-only ini has to skip
-        run: php -d phar.readonly=0 -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: php -d phar.readonly=0 -d pcov.enabled=1 vendor/bin/phpunit --coverage-php=/tmp/cov-writable.php
 
       - name: Test the guard a writable ini has to skip
-        run: php -d phar.readonly=1 -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover=coverage-readonly.xml --filter testPackingNeedsAWritablePharIni
+        run: php -d phar.readonly=1 -d pcov.enabled=1 vendor/bin/phpunit --coverage-php=/tmp/cov-readonly.php --filter testPackingNeedsAWritablePharIni
+
+      # One report, not two: the service keeps the last upload for each file, so two clover
+      # files would let the second run's misses erase the first run's hits.
+      - name: Merge both inis into one report
+        run: php script/merge-coverage.php coverage.xml /tmp/cov-writable.php /tmp/cov-readonly.php
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml,./coverage-readonly.xml
+          files: ./coverage.xml
           fail_ci_if_error: false
 
       - name: Install the demo against this checkout
