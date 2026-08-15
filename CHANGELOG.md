@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A phar boot whose `APP_WRITE_DIR` differs from the build throws `PharWriteDirMismatchException` naming both paths, instead of failing on a phar write (#426)
 - A file named `.env` never ships in an archive, wherever it sits in the tree (#426)
 - `ImportApp` takes a `$writeDir`, so an imported application in a read-only artifact writes outside it too (#426)
+- `Injector::getOverrideInstance()` takes a `$writeDir`, like `getInstance()`: an override injector in a read-only tree needs one too (#426)
 
 ### Changed
 - `ImportApp::appDir()` replaces the `$appDir` property: the compiled container holds the object, and the build-time path is not the runtime one (#426)

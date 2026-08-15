@@ -42,8 +42,9 @@ final class Injector
     /**
      * Return an injector for an already resolved Meta.
      *
-     * Compile paths hold a Meta whose tmpDir/logDir may be overridden; re-deriving one
-     * from appName/context/appDir would silently fall back to the default directories.
+     * For an application with its own AbstractAppMeta - a bespoke resource list, say.
+     * Overriding tmpDir/logDir is not a reason to come here: pass $writeDir to
+     * getInstance() instead, so the build and the boot derive the same paths.
      *
      * @param Context $context
      */
@@ -59,17 +60,19 @@ final class Injector
      * Return an injector with the given override module applied.
      *
      * AOP proxies and the compiled container for override injectors are stored under a
-     * subdirectory of tmpDir/di keyed by the override module class name, so they do not
-     * collide with Injector::getInstance() for the same app+context.
+     * subdirectory of the script directory ({appDir}/var/tmp/{context}/di) keyed by the
+     * override module class name, so they do not collide with Injector::getInstance()
+     * for the same app+context.
      *
-     * @param AppName $appName
-     * @param Context $context
-     * @param AppDir  $appDir
+     * @param AppName       $appName
+     * @param Context       $context
+     * @param AppDir        $appDir
+     * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
      *
      * @see PackageInjector::factory()
      */
-    public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
+    public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule, string|null $writeDir = null): InjectorInterface
     {
-        return PackageInjector::factory(AppDirs::meta($appName, $context, $appDir), $context, $overrideModule);
+        return PackageInjector::factory(AppDirs::meta($appName, $context, $appDir, $writeDir), $context, $overrideModule);
     }
 }

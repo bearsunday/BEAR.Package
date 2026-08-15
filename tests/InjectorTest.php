@@ -118,7 +118,18 @@ class InjectorTest extends TestCase
         $this->assertSame($fakeApp, $app);
     }
 
-    private function getInjector(AppInterface $fakeApp): InjectorInterface
+    /** An override injector writes where the default one does, or a read-only tree has no home for it. */
+    public function testGetOverrideInstanceWithWriteDir(): void
+    {
+        $writeDir = sys_get_temp_dir() . '/bear-override-' . uniqid();
+        $injector = $this->getInjector(new class implements AppInterface {
+        }, $writeDir);
+
+        $this->assertSame($writeDir . '/FakeVendor/HelloWorld/app/tmp', $injector->getInstance(AbstractAppMeta::class)->tmpDir);
+    }
+
+    /** @param non-empty-string|null $writeDir */
+    private function getInjector(AppInterface $fakeApp, string|null $writeDir = null): InjectorInterface
     {
         return Injector::getOverrideInstance(
             'FakeVendor\HelloWorld',
@@ -135,6 +146,7 @@ class InjectorTest extends TestCase
                     $this->bind(AppInterface::class)->toInstance($this->app);
                 }
             },
+            $writeDir,
         );
     }
 
