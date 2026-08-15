@@ -9,7 +9,6 @@ use BEAR\Package\Exception\PharEntryNotPackedException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Exception\PharNotCompiledException;
-use BEAR\Package\Exception\PharReadOnlyException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
@@ -34,7 +33,6 @@ use function dirname;
 use function file_exists;
 use function filesize;
 use function in_array;
-use function ini_get;
 use function is_file;
 use function mkdir;
 use function realpath;
@@ -70,8 +68,8 @@ use function var_export;
  * live in a hash subdirectory that ships with the script directory, but a phar boot is
  * expected to use the default injector.
  *
- * Runs in bin/phar-worker.php: phar.readonly is INI_SYSTEM, so only a process started
- * with -d phar.readonly=0 can write an archive.
+ * Runs in bin/phar-worker.php, which owns the ini contract: phar.readonly is INI_SYSTEM,
+ * so only a process started with -d phar.readonly=0 can write an archive at all.
  */
 final class PharBuilder
 {
@@ -84,7 +82,6 @@ final class PharBuilder
      * @param non-empty-string      $entry   stub entry, relative to appDir
      * @param non-empty-string|null $output  archive path; default {appDir}/var/build/{context}.phar
      *
-     * @throws PharReadOnlyException
      * @throws PharEntryNotFoundException
      * @throws PharNotCompiledException
      * @throws PharImportsUnreadableException
@@ -96,10 +93,6 @@ final class PharBuilder
      */
     public function __invoke(string $context, string $appDir, string $entry, string|null $output = null): PharReport
     {
-        if (ini_get('phar.readonly') === '1') {
-            throw new PharReadOnlyException();
-        }
-
         // Native form for the filesystem and Phar APIs; comparisons normalize separators.
         $appDirReal = realpath($appDir);
         assert($appDirReal !== false);

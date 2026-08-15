@@ -18,6 +18,11 @@ if ($argc !== 5) {
     exit(1);
 }
 
+if (ini_get('phar.readonly') !== '0') {
+    fwrite(STDERR, 'phar.readonly is on: start this worker with -d phar.readonly=0.' . PHP_EOL);
+    exit(1);
+}
+
 [, $context, $appDir, $entry, $output] = $argv;
 // A guard, not an assert(): the worker runs under the deploy's ini, where assertions are off.
 $autoload = $appDir . '/vendor/autoload.php';

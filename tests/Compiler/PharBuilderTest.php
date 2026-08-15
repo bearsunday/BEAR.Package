@@ -8,7 +8,6 @@ use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PharEntryNotPackedException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
-use BEAR\Package\Exception\PharReadOnlyException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
@@ -289,17 +288,6 @@ class PharBuilderTest extends TestCase
         $this->assertNull($report->writeDir);
     }
 
-    /** The one thing the packer cannot do for itself: the ini it was started with. */
-    public function testPackingNeedsAWritablePharIni(): void
-    {
-        if (ini_get('phar.readonly') === '0') {
-            $this->markTestSkipped('this process can write archives');
-        }
-
-        $this->expectException(PharReadOnlyException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
-    }
-
     /** The worker's own contract, the one Compiler::phar() consumes: a report on stdout and exit 0. */
     public function testWorkerReportsWhatItPacked(): void
     {
@@ -313,6 +301,19 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
         $this->assertStringContainsString('Boot: APP_WRITE_DIR=' . $this->writeDir, $output);
         $this->assertFileExists($this->appDir . '/var/build/prod-app.phar');
+    }
+
+    /** The ini contract is the worker's: it is the process the Compiler starts with -d phar.readonly=0. */
+    public function testWorkerUnderAReadOnlyPharIni(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        $this->entry();
+        $this->vendor();
+
+        [$exitCode, $output] = $this->worker('public/index.php', '', readOnly: true);
+
+        $this->assertSame(1, $exitCode);
+        $this->assertStringContainsString('start this worker with -d phar.readonly=0', $output);
     }
 
     /** The worker runs under the deploy's ini, where assert() is off. */
@@ -334,11 +335,12 @@ class PharBuilderTest extends TestCase
     }
 
     /** @return array{int, string} exit code and merged output of one worker run */
-    private function worker(string $entry, string $output = ''): array
+    private function worker(string $entry, string $output = '', bool $readOnly = false): array
     {
         $command = sprintf(
-            '%s -d phar.readonly=0 %s prod-app %s %s %s 2>&1',
+            '%s -d phar.readonly=%d %s prod-app %s %s %s 2>&1',
             escapeshellarg(PHP_BINARY),
+            (int) $readOnly,
             escapeshellarg(dirname(__DIR__, 2) . '/bin/phar-worker.php'),
             escapeshellarg($this->appDir),
             escapeshellarg($entry),
