@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -95,6 +96,13 @@ class InjectorTest extends TestCase
             $first->getInstance(AbstractAppMeta::class)->tmpDir,
             $second->getInstance(AbstractAppMeta::class)->tmpDir,
         );
+    }
+
+    /** An app running from a phar has nowhere to put tmp and log unless it is told where. */
+    public function testStreamAppDirWithoutWriteDir(): void
+    {
+        $this->expectException(WriteDirRequiredException::class);
+        Injector::getInstance('FakeVendor\HelloWorld', 'app', 'phar:///tmp/fake-app.phar');
     }
 
     public function testGetOverrideInstance(): void

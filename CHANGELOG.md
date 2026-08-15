@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `ImportApp` takes a `$writeDir`, so an imported application in a read-only artifact writes outside it too (#426)
+
+### Changed
+- `ImportApp::appDir()` replaces the `$appDir` property: the compiled container holds the object, and the build-time path is not the runtime one (#426)
+- Requires `ray/compiler ^1.16`, whose `CompiledInjector` accepts a `phar://` script directory (#426)
+
+### Fixed
+- A stream-URI `appDir` such as `phar://app.phar` without a write directory throws `WriteDirRequiredException`, instead of reporting the tmp directory it cannot create inside the artifact (#426)
+
 ## [1.22.1] - 2026-08-14
 
 ### Fixed

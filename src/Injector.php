@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\PackageInjector;
 use Ray\Di\AbstractModule;
@@ -71,6 +70,6 @@ final class Injector
      */
     public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
     {
-        return PackageInjector::factory(new Meta($appName, $context, $appDir), $context, $overrideModule);
+        return PackageInjector::factory(AppDirs::meta($appName, $context, $appDir), $context, $overrideModule);
     }
 }

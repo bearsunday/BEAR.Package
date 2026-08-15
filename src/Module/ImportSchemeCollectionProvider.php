@@ -33,7 +33,7 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     public function get(): SchemeCollectionInterface
     {
         foreach ($this->importAppConfig as $app) {
-            $injector = Injector::getInstance($app->appName, $app->context, $app->appDir);
+            $injector = Injector::getInstance($app->appName, $app->context, $app->appDir(), null, $app->writeDir);
             $adapter = new AppAdapter($injector, $app->appName);
             $this->schemeCollection
                 ->scheme('page')->host($app->host)->toAdapter($adapter)

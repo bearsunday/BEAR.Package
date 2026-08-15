@@ -6,6 +6,7 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Exception\InvalidWriteDirException;
+use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Package\Types;
 
 use function preg_match;
@@ -35,9 +36,14 @@ final class AppDirs
      * @param WriteDir|null $writeDir absolute path; defaults to {appDir}/var
      *
      * @throws InvalidWriteDirException
+     * @throws WriteDirRequiredException
      */
     public static function meta(string $appName, string $context, string $appDir, string|null $writeDir = null): Meta
     {
+        if ($writeDir === null && self::isStreamUri($appDir)) {
+            throw new WriteDirRequiredException($appDir);
+        }
+
         if ($writeDir === null) {
             return new Meta($appName, $context, $appDir);
         }
@@ -56,6 +62,11 @@ final class AppDirs
         return str_starts_with($path, '/')
             || str_starts_with($path, '\\\\')
             || (bool) preg_match('#^[A-Za-z]:[/\\\\]#', $path);
+    }
+
+    private static function isStreamUri(string $path): bool
+    {
+        return (bool) preg_match('#^[A-Za-z][A-Za-z0-9+.\-]*://#', $path);
     }
 
     /**
