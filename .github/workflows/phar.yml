@@ -22,11 +22,13 @@ jobs:
       - name: Install
         run: composer update --no-interaction --no-progress
 
-      # phar.readonly is INI_SYSTEM, so the tests that pack an archive only run in a process
-      # started with -d phar.readonly=0. Named here rather than trusted from the runner's
-      # ini: a default that flips would silently skip the core of the feature.
-      - name: Test the packing a read-only ini has to skip
+      # The suite covers the same lines under any phar.readonly, but only a process started
+      # with =0 packs an archive, so run it that way here and prove nothing was left unrun.
+      - name: Test with a writable phar ini
         run: php -d phar.readonly=0 -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Check that every statement ran
+        run: php script/coverage-gate.php coverage.xml
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v5

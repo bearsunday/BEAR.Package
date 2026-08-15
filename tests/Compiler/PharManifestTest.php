@@ -1,0 +1,297 @@
+<?php
+
+declare(strict_types=1);
+
+namespace BEAR\Package\Compiler;
+
+use BEAR\Package\Exception\PharImportOutsideTreeException;
+use BEAR\Package\Exception\PharNotCompiledException;
+use BEAR\Package\Exception\PharSymlinkedDirectoryException;
+use BEAR\Package\Exception\PharWriteDirMismatchException;
+use BEAR\Package\Exception\PharWritesInsideArchiveException;
+use BEAR\Package\Injector\CompileMarker;
+use BEAR\Package\Injector\CompileRecord;
+use BEAR\Package\Module\Import\ImportApp;
+use Iterator;
+use PHPUnit\Framework\TestCase;
+use SplFileInfo;
+
+use function assert;
+use function BEAR\Package\deleteFiles;
+use function file_put_contents;
+use function is_dir;
+use function mkdir;
+use function realpath;
+use function rmdir;
+use function sort;
+use function spl_autoload_register;
+use function sprintf;
+use function str_replace;
+use function symlink;
+use function sys_get_temp_dir;
+use function uniqid;
+
+use const DIRECTORY_SEPARATOR;
+
+class PharManifestTest extends TestCase
+{
+    /** @var non-empty-string */
+    private string $appDir;
+
+    /** @var non-empty-string */
+    private string $writeDir;
+
+    protected function setUp(): void
+    {
+        $this->appDir = sys_get_temp_dir() . '/bear-manifest-' . uniqid();
+        $this->writeDir = sys_get_temp_dir() . '/bear-write-' . uniqid();
+    }
+
+    protected function tearDown(): void
+    {
+        deleteFiles($this->appDir);
+        @rmdir($this->appDir);
+        deleteFiles($this->writeDir);
+        @rmdir($this->writeDir);
+    }
+
+    /** The application and every application it declares as an import ship their scripts. */
+
+    /** The application and every application it declares as an import ship their scripts. */
+    public function testRootsShipTheApplicationAndItsImports(): void
+    {
+        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        $appName = $this->importApp('import');
+        $import = $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp');
+
+        $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app', $this->writeDir)]);
+
+        $real = $this->norm((string) realpath($this->appDir));
+        $this->assertSame([$real => $host, $real . '/import' => $import], $roots);
+    }
+
+    /** An unrelated application tree in the same repository is not consulted at all. */
+    public function testUnrelatedApplicationTreeIsIgnored(): void
+    {
+        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->appDir . '/legacy-app', 'old-app', '/var/www/legacy/var/tmp/old-app');
+
+        $this->assertSame([$this->norm((string) realpath($this->appDir)) => $host], PharManifest::roots($this->appDir, 'prod-app', []));
+    }
+
+    public function testUncompiledApplication(): void
+    {
+        $this->expectException(PharNotCompiledException::class);
+        PharManifest::roots($this->appDir, 'prod-app', []);
+    }
+
+    /** Scripts that write inside the tree cannot work once the tree is a read-only archive. */
+    public function testApplicationWritingIntoTheArchive(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->appDir . '/var/tmp/prod-app');
+
+        $this->expectException(PharWritesInsideArchiveException::class);
+        PharManifest::roots($this->appDir, 'prod-app', []);
+    }
+
+    /** A tmpDir spelled through a symlinked var/ resolves outside, but the boot uses the spelling. */
+    public function testSymlinkedVarDoesNotHideWritingIntoTheArchive(): void
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $this->markTestSkipped('a symlinked var/ is a POSIX deployment shape');
+        }
+
+        mkdir($this->appDir, 0777, true);
+        mkdir($this->writeDir . '/real-var', 0777, true);
+        symlink($this->writeDir . '/real-var', $this->appDir . '/var');
+        mkdir($this->appDir . '/var/tmp/prod-app/di', 0777, true);
+        CompileMarker::write($this->appDir . '/var/tmp/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app');
+
+        $this->expectException(PharWritesInsideArchiveException::class);
+        PharManifest::roots($this->appDir, 'prod-app', []);
+    }
+
+    /** An import whose AppModule never read APP_WRITE_DIR writes under its own tree, inside the archive. */
+    public function testImportWritingIntoTheArchive(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        $appName = $this->importApp('import');
+        $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
+
+        $this->expectException(PharWritesInsideArchiveException::class);
+        $this->expectExceptionMessageMatches('#/import" were compiled to write to#');
+        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
+    }
+
+    /** The scripts must write where the declaration that boots them derives, or the boot recompiles. */
+    public function testImportCompiledForAnotherWriteDirThanDeclared(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        $appName = $this->importApp('import');
+        $this->marker($this->appDir . '/import', 'app', '/somewhere/else/' . str_replace('\\', '/', $appName) . '/app/tmp');
+
+        $this->expectException(PharWriteDirMismatchException::class);
+        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app', $this->writeDir)]);
+    }
+
+    /** The build read APP_WRITE_DIR, the declaration did not: the boot would derive {appDir}/var/tmp. */
+    public function testImportWhoseDeclarationCarriesNoWriteDir(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        $appName = $this->importApp('import');
+        $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp');
+
+        $this->expectException(PharWriteDirMismatchException::class);
+        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
+    }
+
+    /** An import outside the tree being packed cannot ship at all. */
+    public function testImportOutsideTheTree(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+
+        $this->expectException(PharImportOutsideTreeException::class);
+        $this->expectExceptionMessageMatches('#import-app" lies outside#');
+        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
+    }
+
+    /**
+     * What ships ships, and what must not - a .env anywhere, logs, build noise - does not.
+     *
+     * In-process, so the packing decisions are measured where they are made. Only a process
+     * started with -d phar.readonly=0 can write an archive; .github/workflows/phar.yml runs
+     * the suite that way.
+
+    /** The filter decides what reaches the archive, and it needs no archive to decide. */
+    public function testFilesShipTheTreeAndTheScriptsOnly(): void
+    {
+        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
+        file_put_contents($scriptDir . '/compile.lock', 'noise');
+        mkdir($this->appDir . '/src', 0777, true);
+        file_put_contents($this->appDir . '/src/App.php', "<?php\n");
+        file_put_contents($this->appDir . '/autoload.php', "<?php\n");
+        file_put_contents($this->appDir . '/preload.php', "<?php\n");
+        file_put_contents($this->appDir . '/.env', 'SECRET=1');
+        file_put_contents($this->appDir . '/.env.production', 'SECRET=2');
+        mkdir($this->appDir . '/legacy', 0777, true);
+        file_put_contents($this->appDir . '/legacy/.env.local', 'SECRET=3');
+        mkdir($this->appDir . '/var/log', 0777, true);
+        file_put_contents($this->appDir . '/var/log/app.log', 'log');
+        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $appDir = $this->resolved();
+
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/var/build/prod-app.phar'));
+
+        $this->assertSame([
+            'src/App.php',
+            'var/tmp/prod-app/di/' . CompileMarker::FILENAME,
+            'var/tmp/prod-app/di/Fake_App-.php',
+        ], $shipped);
+    }
+
+    /** A symlinked directory stops the build: Phar::buildFromIterator() cannot pack it. */
+    public function testSymlinkedDirectoryInTheTree(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
+        mkdir($this->writeDir . '/linked', 0777, true);
+        if (! @symlink($this->writeDir . '/linked', $this->appDir . '/vendor')) {
+            $this->markTestSkipped('this platform does not let the test user create a symlink');
+        }
+
+        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $appDir = $this->resolved();
+
+        $this->expectException(PharSymlinkedDirectoryException::class);
+        $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/var/build/prod-app.phar'));
+    }
+
+    /** {writeDir}/{Vendor}/{Project}/{context}/tmp names a write directory; another tmpDir does not. */
+    public function testWriteDirOfAMarker(): void
+    {
+        $named = new CompileRecord('My\App', 'prod-app', '/write/My/App/prod-app/tmp', 1);
+        $ownTree = new CompileRecord('My\App', 'prod-app', '/app/var/tmp/prod-app', 1);
+
+        $this->assertSame('/write', PharManifest::writeDirOf($named));
+        $this->assertNull(PharManifest::writeDirOf($ownTree));
+    }
+
+    /** @return non-empty-string the form roots() speaks */
+    private function resolved(): string
+    {
+        $real = realpath($this->appDir);
+        assert($real !== false);
+        /** @var non-empty-string $real psalm's realpath stub says string; phpstan's already says non-empty */
+
+        return $real;
+    }
+
+    /**
+     * @param Iterator<SplFileInfo> $files
+     *
+     * @return list<string> sorted, relative to appDir
+     */
+    private function relativePaths(Iterator $files): array
+    {
+        $base = str_replace('\\', '/', $this->resolved()) . '/';
+        $paths = [];
+        foreach ($files as $file) {
+            $paths[] = str_replace([$base, '\\'], ['', '/'], $file->getPathname());
+        }
+
+        sort($paths);
+
+        return $paths;
+    }
+
+    /**
+     * An application inside the tree, autoloadable so ImportApp can resolve its directory.
+     *
+     * @return non-empty-string application name
+     */
+    private function importApp(string $relative): string
+    {
+        $appName = 'TempImport' . str_replace('.', '', uniqid('', true));
+        $dir = $this->appDir . '/' . $relative;
+        mkdir($dir . '/src/Module', 0777, true);
+        $file = $dir . '/src/Module/AppModule.php';
+        file_put_contents($file, sprintf("<?php\n\nnamespace %s\\Module;\n\nclass AppModule\n{\n}\n", $appName));
+        spl_autoload_register(static function (string $class) use ($appName, $file): void {
+            if ($class !== $appName . '\Module\AppModule') {
+                return;
+            }
+
+            require $file;
+        });
+
+        return $appName;
+    }
+
+    /**
+     * @param non-empty-string $appDir
+     * @param non-empty-string $context
+     * @param non-empty-string $tmpDir
+     *
+     * @return non-empty-string the created script dir
+     */
+    private function marker(string $appDir, string $context, string $tmpDir): string
+    {
+        $scriptDir = $appDir . '/var/tmp/' . $context . '/di';
+        ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
+        CompileMarker::write($scriptDir, 'My\App', $context, $tmpDir);
+
+        $real = realpath($scriptDir);
+        assert($real !== false);
+        /** @var non-empty-string $real */
+
+        return $this->norm($real);
+    }
+
+    /** @return non-empty-string forward-slashed, the form PharManifest speaks */
+    private function norm(string $path): string
+    {
+        assert($path !== '');
+
+        return str_replace('\\', '/', $path);
+    }
+}

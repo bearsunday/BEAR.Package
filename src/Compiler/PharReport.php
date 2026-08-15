@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+/**
+ * What PharBuilder wrote, for the worker to report.
+ *
+ * @see PharBuilder the only producer, and the only code a coverage run cannot execute
+ * @codeCoverageIgnore
+ */
 final class PharReport
 {
     /**

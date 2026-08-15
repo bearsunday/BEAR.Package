@@ -6,6 +6,10 @@ namespace BEAR\Package\Exception;
 
 use function sprintf;
 
+/**
+ * @see \BEAR\Package\Compiler\PharBuilder the only thrower, and the only code a coverage run cannot execute
+ * @codeCoverageIgnore
+ */
 final class PharEntryNotPackedException extends LogicException
 {
     public function __construct(string $entry)
