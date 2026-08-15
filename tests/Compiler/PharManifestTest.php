@@ -58,9 +58,6 @@ class PharManifestTest extends TestCase
         @rmdir($this->writeDir);
     }
 
-    /** The application and every application it declares as an import ship their scripts. */
-
-    /** The application and every application it declares as an import ship their scripts. */
     public function testRootsShipTheApplicationAndItsImports(): void
     {
         $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
@@ -73,7 +70,6 @@ class PharManifestTest extends TestCase
         $this->assertSame([$real => $host, $real . '/import' => $import], $roots);
     }
 
-    /** An unrelated application tree in the same repository is not consulted at all. */
     public function testUnrelatedApplicationTreeIsIgnored(): void
     {
         $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
@@ -148,7 +144,6 @@ class PharManifestTest extends TestCase
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
-    /** An import outside the tree being packed cannot ship at all. */
     public function testImportOutsideTheTree(): void
     {
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
@@ -158,14 +153,6 @@ class PharManifestTest extends TestCase
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
     }
 
-    /**
-     * What ships ships, and what must not - a .env anywhere, logs, build noise - does not.
-     *
-     * In-process, so the packing decisions are measured where they are made. Only a process
-     * started with -d phar.readonly=0 can write an archive; .github/workflows/phar.yml runs
-     * the suite that way.
-
-    /** The filter decides what reaches the archive, and it needs no archive to decide. */
     public function testFilesShipTheTreeAndTheScriptsOnly(): void
     {
         $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
@@ -193,7 +180,6 @@ class PharManifestTest extends TestCase
         ], $shipped);
     }
 
-    /** A symlinked directory stops the build: Phar::buildFromIterator() cannot pack it. */
     public function testSymlinkedDirectoryInTheTree(): void
     {
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
@@ -209,7 +195,6 @@ class PharManifestTest extends TestCase
         $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/var/build/prod-app.phar'));
     }
 
-    /** {writeDir}/{Vendor}/{Project}/{context}/tmp names a write directory; another tmpDir does not. */
     public function testWriteDirOfAMarker(): void
     {
         $named = new CompileRecord('My\App', 'prod-app', '/write/My/App/prod-app/tmp', 1);

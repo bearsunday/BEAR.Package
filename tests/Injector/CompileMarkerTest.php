@@ -12,10 +12,7 @@ use function mkdir;
 use function sys_get_temp_dir;
 use function uniqid;
 
-/**
- * A marker this version cannot read is a marker that is not there: the boot recompiles
- * instead of trusting scripts it cannot identify.
- */
+/** A marker this version cannot read is a marker that is not there. */
 class CompileMarkerTest extends TestCase
 {
     /** @var non-empty-string */

@@ -33,27 +33,13 @@ use function substr;
 /**
  * What goes into an archive, and whether the tree can become one at all.
  *
- * What ships is the framework's knowledge, not configuration: the tree, vendor/, and the
- * DI scripts - compile markers included - of the application and of every application it
- * imports. Logs, caches, every .env file, build outputs and build noise stay out.
+ * Applications are the host plus what its compiled container declares as imports: a tree
+ * that merely looks like an application is never treated as one. Every application must
+ * write outside the archive, and where its own declaration derives, or the boot would
+ * recompile - in a read-only filesystem, or into a directory nothing reads.
  *
- * Nothing is guessed and nothing is passed in twice. Each script directory carries a
- * marker saying which application, which context and which writable directory it was
- * compiled for, and the imported applications come from the compiled container's own
- * declaration - an unrelated application tree in the same repository is never consulted
- * as an application, though its files travel with the tree like any others.
- *
- * One rule decides whether a tree can be an archive at all: every application in it must
- * write outside it, and must write exactly where its declaration says. An application
- * compiled to write into its own tree would recompile inside the read-only archive; one
- * compiled for a directory its declaration does not name would recompile on first boot.
- *
- * Override injectors (Injector::getOverrideInstance()) are out of scope: their scripts
- * live in a hash subdirectory that ships with the script directory, but a phar boot is
- * expected to use the default injector.
- *
- * Decisions only, so they can be tested wherever the tests run: PharBuilder writes the
- * archive, which takes a process started with -d phar.readonly=0.
+ * Override injector scripts (Injector::getOverrideInstance()) ship with the script
+ * directory, but a phar boot is expected to use the default injector.
  */
 final class PharManifest
 {
@@ -66,14 +52,6 @@ final class PharManifest
     }
 
     /**
-     * Application roots to ship, each with the DI script directory to take from it.
-     *
-     * Two checks per application, and both stop the build rather than the deploy:
-     * its scripts must write outside the archive (an import compiled without APP_WRITE_DIR
-     * writes under its own tree, inside it), and they must write exactly where the
-     * declaration that boots them derives - a marker that says otherwise means the build
-     * and the AppModule read different write directories, and the boot would recompile.
-     *
      * All returned paths use forward slashes, whatever the platform spells them with.
      *
      * @param non-empty-string $appDir  resolved application root
@@ -89,9 +67,7 @@ final class PharManifest
      */
     public static function roots(string $appDir, string $context, array $imports): array
     {
-        // Both forms of the tree root: the marker holds textual paths, so "inside the
-        // archive" must catch a tmpDir spelled through a symlink (var/ -> elsewhere) as
-        // well as one spelled through a deployment link (current -> releases/42).
+        // Both spellings: a marker holds text, and var/ or current/ may be a symlink.
         $archiveDir = self::resolve($appDir);
         $bases = [self::normalize($appDir), $archiveDir];
 
@@ -162,12 +138,10 @@ final class PharManifest
     }
 
     /**
-     * {writeDir}/{Vendor}/{Project}/{context}/tmp names its write directory; another tmpDir does not.
+     * The writeDir a tmpDir was derived from, or null when it was not: only
+     * {writeDir}/{Vendor}/{Project}/{context}/tmp names one.
      *
-     * Matched on the normalized form, cut from the marker's own: the report is a command for
-     * an operator to run, so it echoes the path the build was given, separators and all.
-     *
-     * @return non-empty-string|null
+     * @return non-empty-string|null in the marker's own spelling - an operator runs it
      */
     public static function writeDirOf(CompileRecord $record): string|null
     {
@@ -183,17 +157,13 @@ final class PharManifest
     }
 
     /**
-     * Everything under appDir except what must not ship.
+     * No .env* file ships wherever it sits: a boot reads its values from the compiled
+     * scripts, and an archive is distributable. autoload.php and preload.php hold
+     * build-time absolute paths. A symlinked directory stops the build - buildFromIterator()
+     * cannot pack one.
      *
-     * No file whose name starts with .env ships, wherever it sits - `.env.local` and
-     * `.env.production` carry secrets as readily as `.env`, and the values a boot needs are
-     * compiled into the DI scripts. Of each application's var/ only
-     * its DI script directory goes in, minus Ray.Compiler's build noise. autoload.php and
-     * preload.php hold build-time absolute paths a phar boot cannot use. A symlinked
-     * directory stops the build: Phar::buildFromIterator() cannot pack it.
-     *
-     * The application root must be resolved, the form roots() returns as its keys: a raw
-     * path would compare unequal to them and let every var/ path ship.
+     * $appDir must be resolved, as roots() returns it: a raw path compares unequal to those
+     * keys and lets every var/ path ship.
      *
      * @param non-empty-string                                    $appDir resolved application root
      * @param non-empty-array<non-empty-string, non-empty-string> $roots  app root => script dir

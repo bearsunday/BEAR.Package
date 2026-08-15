@@ -22,8 +22,7 @@ jobs:
       - name: Install
         run: composer update --no-interaction --no-progress
 
-      # The suite covers the same lines under any phar.readonly, but only a process started
-      # with =0 packs an archive, so run it that way here and prove nothing was left unrun.
+      # Only a process started with phar.readonly=0 packs an archive.
       - name: Test with a writable phar ini
         run: php -d phar.readonly=0 -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover=coverage.xml
 

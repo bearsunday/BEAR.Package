@@ -35,9 +35,8 @@ final class ImportApp
     /**
      * Directory of the imported application, resolved from its AppModule on each call.
      *
-     * Never stored: the compiled container holds this object, and an artifact that moves the
-     * application - a phar, an image - moves its directory. The write directory is stored
-     * because it has to be the same at the build and at the boot.
+     * Never stored: the compiled container holds this object, and an artifact that moves
+     * the application moves its directory. $writeDir is stored - it must not move.
      *
      * @return non-empty-string
      */

@@ -15,11 +15,8 @@ use function is_array;
 /**
  * The applications a compiled container imports, asked of the container itself.
  *
- * The compiled scripts hold the ImportAppConfig binding, so a deployment tool does not
- * have to scan the tree for something that looks like an imported application: it reads
- * the declaration the build wrote. An application that imports nothing has no binding -
- * that is the only failure that means "no imports". Anything else is a container that
- * cannot say what it imports, and packing it would silently ship a broken archive.
+ * No binding is the only failure that means "imports nothing": anything else is a
+ * container that cannot say, and packing it would ship an archive missing an application.
  */
 final class ImportedApps
 {

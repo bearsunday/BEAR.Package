@@ -174,9 +174,8 @@ final class PackageInjector
      * the boot is left to throw instead of falling back to a runtime recompile
      * (which would also die under a read-only filesystem).
      *
-     * A phar boot cannot take the on-demand branch at all - the archive is read-only -
-     * so a marker mismatch there is answered with its cause: the boot derived a tmpDir
-     * the scripts were not compiled for, which is an APP_WRITE_DIR mismatch.
+     * A phar boot cannot recompile - the archive is read-only - so a marker mismatch
+     * there is answered with its cause instead: an APP_WRITE_DIR that differs.
      *
      * @param non-empty-string $scriptDir
      * @param Context          $context

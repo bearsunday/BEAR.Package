@@ -26,9 +26,8 @@ use function var_export;
 use const PHP_BINARY;
 
 /**
- * Writing an archive takes a process started with -d phar.readonly=0, which is what
- * bin/phar-worker.php is, so PharBuilder is exercised the way Compiler::phar() runs it.
- * What it decides is PharManifest's, and tested there.
+ * Writing an archive takes -d phar.readonly=0, so PharBuilder is exercised through the
+ * worker, the way Compiler::phar() runs it. Its decisions are PharManifest's.
  *
  * @see PharManifestTest
  */
@@ -54,7 +53,6 @@ class PharBuilderTest extends TestCase
         @rmdir($this->writeDir);
     }
 
-    /** The archive carries the tree and the scripts, and the report says where it writes. */
     public function testPacksWhatTheManifestSelected(): void
     {
         $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp');
@@ -143,7 +141,6 @@ class PharBuilderTest extends TestCase
         $this->assertStringNotContainsString('Boot: ', $output);
     }
 
-    /** The ini contract is the worker's: it is the process the Compiler starts with -d phar.readonly=0. */
     public function testWorkerUnderAReadOnlyPharIni(): void
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp');

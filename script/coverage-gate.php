@@ -5,11 +5,6 @@ declare(strict_types=1);
 /**
  * Fail when a clover report leaves any statement unexecuted, naming the lines.
  *
- * The packing tests only run in a process started with -d phar.readonly=0, so the coverage
- * of this package depends on which run a report came from. This gate is checked inside the
- * job that uses the right ini, in the job's own log, rather than inferred from whichever
- * upload a coverage service kept last.
- *
  * usage: php script/coverage-gate.php <clover.xml>
  */
 

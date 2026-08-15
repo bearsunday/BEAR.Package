@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 /**
- * Internal phar worker for Compiler::phar()
+ * Internal worker for Compiler::phar(), not a public API.
  *
- * phar.readonly is INI_SYSTEM - no running process can turn it off - so the Compiler
- * spawns this script with -d phar.readonly=0. This script is not a public API.
+ * phar.readonly is INI_SYSTEM, so writing an archive takes a fresh process.
  *
  * usage: php -d phar.readonly=0 phar-worker.php <context> <appDir> <entry> <output>
  */

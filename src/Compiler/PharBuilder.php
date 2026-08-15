@@ -33,10 +33,8 @@ use function var_export;
 /**
  * Write the archive PharManifest describes.
  *
- * Runs in bin/phar-worker.php, which owns the ini contract: phar.readonly is INI_SYSTEM,
- * so only a process started with -d phar.readonly=0 can write an archive at all. That is
- * why this class is ignored by the coverage gate and asserted through the worker instead -
- * every decision it acts on lives in PharManifest, which the suite tests directly.
+ * Runs in bin/phar-worker.php: phar.readonly is INI_SYSTEM, so no coverage process can
+ * execute this - the worker tests assert it, and every decision lives in PharManifest.
  *
  * @see PharManifest
  * @codeCoverageIgnore

@@ -160,16 +160,7 @@ final class Compiler
     }
 
     /**
-     * Pack the compiled application into one archive.
-     *
-     * On the fromInjector() path this packs what is on disk - compile first. On the
-     * constructor path the constructor itself has already compiled the DI scripts, and
-     * this packs that output. The write directory is not passed again: the compile
-     * marker says what the scripts write to, and the pack refuses a tree whose
-     * applications write into it - a read-only archive cannot hold its own tmp and log.
-     *
-     * Runs in a child process started with -d phar.readonly=0: the ini is INI_SYSTEM,
-     * so this process cannot write a phar itself.
+     * Pack what compile() left on disk into one archive.
      *
      * @param non-empty-string|null $entry  stub entry, relative to appDir (default public/index.php)
      * @param non-empty-string|null $output archive path (default {appDir}/var/build/{context}.phar)

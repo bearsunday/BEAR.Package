@@ -25,11 +25,9 @@ use const JSON_THROW_ON_ERROR;
 /**
  * Marker file written after a successful AOT compile.
  *
- * Presence means "a compile has run for this script directory", not that the scripts still
- * match the source tree: freshness is the deploy's responsibility. It records what the
- * scripts cannot say about themselves - the application, the context, and the writable
- * directory their bindings hold - so a boot can tell whether they are the ones it needs,
- * and a deployment tool can read a script directory without guessing from its path.
+ * Presence means a compile has run here, not that the scripts still match the sources:
+ * freshness is the deploy's responsibility. It records what the scripts cannot say about
+ * themselves, so a boot can tell whether they are the ones it needs.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
  * @psalm-import-type AppName from Types

@@ -54,10 +54,8 @@ final class AppDirs
     }
 
     /**
-     * The tmp directory a Meta built from these values will hold — computed, not created.
-     *
-     * What the pack uses to compare a compile marker against a declaration without the
-     * directory-creating side effect of building a Meta.
+     * The tmp directory a Meta built from these values would hold - computed, not created,
+     * so the pack can compare a marker against a declaration without making directories.
      *
      * @param AppName       $appName
      * @param Context       $context
