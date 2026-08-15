@@ -60,19 +60,42 @@ final class CompileMarker
             return null;
         }
 
-        /** @var mixed $appName */
-        $appName = $record['app'] ?? null;
-        /** @var mixed $context */
-        $context = $record['context'] ?? null;
-        /** @var mixed $tmpDir */
-        $tmpDir = $record['tmpDir'] ?? null;
         /** @var mixed $time */
         $time = $record['time'] ?? null;
-        if (! is_string($appName) || ! is_string($context) || ! is_string($tmpDir) || $appName === '' || $context === '' || $tmpDir === '') {
+
+        return self::record(
+            self::field($record, 'app'),
+            self::field($record, 'context'),
+            self::field($record, 'tmpDir'),
+            is_int($time) ? $time : 0,
+        );
+    }
+
+    /**
+     * @param array<array-key, mixed> $record
+     *
+     * @return non-empty-string|null
+     */
+    private static function field(array $record, string $key): string|null
+    {
+        /** @var mixed $value */
+        $value = $record[$key] ?? null;
+
+        return is_string($value) && $value !== '' ? $value : null;
+    }
+
+    /**
+     * @param non-empty-string|null $appName
+     * @param non-empty-string|null $context
+     * @param non-empty-string|null $tmpDir
+     */
+    private static function record(string|null $appName, string|null $context, string|null $tmpDir, int $time): CompileRecord|null
+    {
+        if ($appName === null || $context === null || $tmpDir === null) {
             return null;
         }
 
-        return new CompileRecord($appName, $context, $tmpDir, is_int($time) ? $time : 0);
+        return new CompileRecord($appName, $context, $tmpDir, $time);
     }
 
     /** Scripts here were compiled for $tmpDir, the writable directory their bindings hold. */

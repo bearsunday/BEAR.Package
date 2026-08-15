@@ -32,6 +32,7 @@ use function sys_get_temp_dir;
 use function uniqid;
 use function var_export;
 
+use const DIRECTORY_SEPARATOR;
 use const PHP_BINARY;
 
 class PharBuilderTest extends TestCase
@@ -65,7 +66,7 @@ class PharBuilderTest extends TestCase
 
         $roots = PharBuilder::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app', $this->writeDir)]);
 
-        $real = (string) realpath($this->appDir);
+        $real = $this->norm((string) realpath($this->appDir));
         $this->assertSame([$real => $host, $real . '/import' => $import], $roots);
     }
 
@@ -75,7 +76,7 @@ class PharBuilderTest extends TestCase
         $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $this->marker($this->appDir . '/legacy-app', 'old-app', '/var/www/legacy/var/tmp/old-app');
 
-        $this->assertSame([(string) realpath($this->appDir) => $host], PharBuilder::roots($this->appDir, 'prod-app', []));
+        $this->assertSame([$this->norm((string) realpath($this->appDir)) => $host], PharBuilder::roots($this->appDir, 'prod-app', []));
     }
 
     public function testUncompiledApplication(): void
@@ -96,6 +97,10 @@ class PharBuilderTest extends TestCase
     /** A tmpDir spelled through a symlinked var/ resolves outside, but the boot uses the spelling. */
     public function testSymlinkedVarDoesNotHideWritingIntoTheArchive(): void
     {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $this->markTestSkipped('a symlinked var/ is a POSIX deployment shape');
+        }
+
         mkdir($this->appDir, 0777, true);
         mkdir($this->writeDir . '/real-var', 0777, true);
         symlink($this->writeDir . '/real-var', $this->appDir . '/var');
@@ -223,6 +228,14 @@ class PharBuilderTest extends TestCase
         assert($real !== false);
         /** @var non-empty-string $real */
 
-        return $real;
+        return $this->norm($real);
+    }
+
+    /** @return non-empty-string forward-slashed, the form PharBuilder speaks */
+    private function norm(string $path): string
+    {
+        assert($path !== '');
+
+        return str_replace('\\', '/', $path);
     }
 }

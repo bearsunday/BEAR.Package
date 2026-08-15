@@ -7,6 +7,7 @@ namespace BEAR\Package\Module\Import;
 use PHPUnit\Framework\TestCase;
 
 use function dirname;
+use function realpath;
 use function serialize;
 
 class ImportAppTest extends TestCase
@@ -14,7 +15,7 @@ class ImportAppTest extends TestCase
     public function testAppDirIsTheImportedApplicationRoot(): void
     {
         $importApp = new ImportApp('foo', 'Import\HelloWorld', 'app');
-        $this->assertSame(dirname(__DIR__, 2) . '/Fake/import-app', $importApp->appDir());
+        $this->assertSame(realpath(dirname(__DIR__, 2) . '/Fake/import-app'), realpath($importApp->appDir()));
     }
 
     /**
