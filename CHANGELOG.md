@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The pack reads imports from the compiled `ImportAppConfig` and stops the build when any application was never compiled, writes into the archive, or writes where its declaration does not say (#426)
 - A phar boot whose `APP_WRITE_DIR` differs from the build throws `PharWriteDirMismatchException` naming both paths, instead of failing on a phar write (#426)
 - No file whose name starts with `.env` ships in an archive, wherever it sits in the tree (#426)
+- The pack refuses an entry the archive does not carry, and refuses an output it could not remove first (#426)
 - `ImportApp` takes a `$writeDir`, so an imported application in a read-only artifact writes outside it too (#426)
 - `Injector::getOverrideInstance()` takes a `$writeDir`, like `getInstance()`: an override injector in a read-only tree needs one too (#426)
 
