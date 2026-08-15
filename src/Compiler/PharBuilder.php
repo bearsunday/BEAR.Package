@@ -246,17 +246,20 @@ final class PharBuilder
     /**
      * {writeDir}/{Vendor}/{Project}/{context}/tmp names its write directory; another tmpDir does not.
      *
+     * Matched on the normalized form, cut from the marker's own: the report is a command for
+     * an operator to run, so it echoes the path the build was given, separators and all.
+     *
      * @return non-empty-string|null
      */
     private static function writeDirOf(CompileRecord $record): string|null
     {
-        $tmpDir = self::normalize($record->tmpDir);
         $suffix = '/' . str_replace('\\', '/', $record->appName) . '/' . $record->context . '/tmp';
-        if (! str_ends_with($tmpDir, $suffix)) {
+        if (! str_ends_with(self::normalize($record->tmpDir), $suffix)) {
             return null;
         }
 
-        $writeDir = substr($tmpDir, 0, -strlen($suffix));
+        // normalize() never changes the length, so the suffix cuts at the same place in both.
+        $writeDir = substr($record->tmpDir, 0, -strlen($suffix));
 
         return $writeDir === '' ? null : $writeDir;
     }
