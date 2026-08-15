@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 
 use function assert;
 use function BEAR\Package\deleteFiles;
-use function chmod;
 use function dirname;
 use function escapeshellarg;
 use function exec;
@@ -218,41 +217,32 @@ class PharBuilderTest extends TestCase
         (new PharBuilder())('prod-app', $this->appDir, '.env');
     }
 
-    /** Packing into a surviving archive would ship the entries of the last build with the new ones. */
+    /**
+     * Packing into whatever survives at the output path would ship the last build's entries
+     * with the new ones. A directory cannot be unlinked on any platform, which is the one
+     * shape of "it is still there" every runner can produce.
+     */
     public function testPreviousArchiveThatCannotBeRemoved(): void
     {
         $this->needsWritablePhar();
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('directory permissions do not stop unlink() on Windows');
-        }
-
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
-        $buildDir = $this->appDir . '/var/build';
-        mkdir($buildDir, 0777, true);
-        file_put_contents($buildDir . '/prod-app.phar', 'the last build');
-        chmod($buildDir, 0555);
+        mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
 
-        try {
-            $this->expectException(PharStaleOutputException::class);
-            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
-        } finally {
-            chmod($buildDir, 0777);
-        }
+        $this->expectException(PharStaleOutputException::class);
+        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
     }
 
     /** Phar::buildFromIterator() cannot pack a symlinked directory, so the build stops instead of the deploy. */
     public function testSymlinkedDirectoryInTheTree(): void
     {
         $this->needsWritablePhar();
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('a symlinked vendor directory is a POSIX shape');
-        }
-
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         mkdir($this->writeDir . '/linked', 0777, true);
-        symlink($this->writeDir . '/linked', $this->appDir . '/vendor');
+        if (! @symlink($this->writeDir . '/linked', $this->appDir . '/vendor')) {
+            $this->markTestSkipped('this platform does not let the test user create a symlink');
+        }
 
         $this->expectException(PharSymlinkedDirectoryException::class);
         (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
