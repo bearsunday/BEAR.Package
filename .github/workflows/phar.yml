@@ -46,6 +46,11 @@ jobs:
         working-directory: demo
         run: APP_WRITE_DIR=/tmp/bear php bin/compile.php
 
+      - name: Boot with the wrong write directory
+        run: |
+          CONTEXT=prod-cli-hal-app APP_WRITE_DIR=/tmp/elsewhere php demo/var/build/prod-cli-hal-app.phar get /index 2>&1 | tee /tmp/wrong
+          grep -q 'Start with APP_WRITE_DIR set to what the build used' /tmp/wrong
+
       - name: Boot the archive with the build tree deleted
         run: |
           mv demo/var/build/prod-cli-hal-app.phar /tmp/app.phar

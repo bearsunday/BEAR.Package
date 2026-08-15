@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
 use BEAR\Package\Exception\DirectoryNotWritableException;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
@@ -29,6 +30,7 @@ use function assert;
 use function dirname;
 use function file_exists;
 use function file_get_contents;
+use function file_put_contents;
 use function fileinode;
 use function filemtime;
 use function glob;
@@ -357,6 +359,30 @@ class PackageInjectorTest extends TestCase
         } finally {
             @unlink(CompileMarker::path($dir));
             @rmdir($dir);
+        }
+    }
+
+    /**
+     * A boot that cannot rewrite the scripts is told what the mismatch was, instead of failing
+     * on the write: an archive, an immutable image, or here a path nothing can be created under.
+     */
+    public function testBootThatCannotReplaceTheScripts(): void
+    {
+        $inTheWay = sys_get_temp_dir() . '/bear-not-a-dir-' . uniqid('', true);
+        file_put_contents($inTheWay, 'not a directory');
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', dirname(__DIR__) . '/Fake/fake-app');
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+
+        try {
+            $this->expectException(CompiledForAnotherWriteDirException::class);
+            (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
+                ->invoke(null, $module, $inTheWay . '/di', $meta, 'prod-app');
+        } finally {
+            @unlink($inTheWay);
         }
     }
 

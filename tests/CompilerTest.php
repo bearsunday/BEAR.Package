@@ -11,7 +11,6 @@ use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidWriteDirException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
-use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Exception\WriteDirMismatchException;
 use BEAR\Package\Injector\AppDirs;
@@ -21,7 +20,6 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
-use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -386,20 +384,6 @@ class CompilerTest extends TestCase
 
         $this->expectException(PharEntryNotFoundException::class);
         $compiler->phar('public/nowhere.php');
-    }
-
-    /** A phar boot with the wrong APP_WRITE_DIR is answered with its cause, not a mkdir failure. */
-    public function testPharBootNamesTheWriteDirMismatch(): void
-    {
-        $meta = new Meta(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
-        $module = new class extends AbstractModule{
-            protected function configure(): void
-            {
-            }
-        };
-        $prodInjector = new ReflectionMethod(PackageInjector::class, 'prodInjector');
-        $this->expectException(PharWriteDirMismatchException::class);
-        $prodInjector->invoke(null, $module, 'phar:///deploy/app.phar/var/tmp/prod-cli-app/di', $meta, 'prod-cli-app');
     }
 
     /**

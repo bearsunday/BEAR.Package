@@ -109,9 +109,8 @@ final class CompileMarker
     /**
      * Written through a temporary file: a concurrent boot must not read a half-written marker.
      *
-     * @param AppName $appName
-     * @param Context $context
-     * @param TmpDir  $tmpDir
+     * Takes plain strings - a Meta hands them over as such - and read() is where a record
+     * has to be valid to exist.
      *
      * @throws DirectoryNotWritableException A marker that cannot be persisted makes every later boot recompile.
      */
