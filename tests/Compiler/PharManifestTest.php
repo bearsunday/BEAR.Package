@@ -17,10 +17,13 @@ use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
 use function assert;
+use function basename;
 use function BEAR\Package\deleteFiles;
 use function file_put_contents;
 use function is_dir;
 use function mkdir;
+use function preg_quote;
+use function preg_replace;
 use function realpath;
 use function rmdir;
 use function sort;
@@ -227,16 +230,19 @@ class PharManifestTest extends TestCase
     }
 
     /**
+     * Cut at the fixture directory's own name: Windows spells the same root as both
+     * RUNNER~1 and runneradmin, so no prefix string matches every form of it.
+     *
      * @param Iterator<SplFileInfo> $files
      *
      * @return list<string> sorted, relative to appDir
      */
     private function relativePaths(Iterator $files): array
     {
-        $base = str_replace('\\', '/', $this->resolved()) . '/';
+        $cut = '#^.*/' . preg_quote(basename($this->appDir), '#') . '/#';
         $paths = [];
         foreach ($files as $file) {
-            $paths[] = str_replace([$base, '\\'], ['', '/'], $file->getPathname());
+            $paths[] = (string) preg_replace($cut, '', str_replace('\\', '/', $file->getPathname()));
         }
 
         sort($paths);
