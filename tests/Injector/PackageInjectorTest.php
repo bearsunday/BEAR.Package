@@ -334,7 +334,7 @@ class PackageInjectorTest extends TestCase
         @mkdir($dir, 0777, true);
         try {
             $this->assertFalse(CompileMarker::matches($dir, $tmpDir));
-            CompileMarker::write($dir, $tmpDir);
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', $tmpDir);
             $this->assertTrue(CompileMarker::matches($dir, $tmpDir));
         } finally {
             @unlink(CompileMarker::path($dir));
@@ -351,7 +351,7 @@ class PackageInjectorTest extends TestCase
         $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
         @mkdir($dir, 0777, true);
         try {
-            CompileMarker::write($dir, '/var/cache/a/tmp');
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/a/tmp');
             $this->assertFalse(CompileMarker::matches($dir, '/var/cache/b/tmp'));
             $this->assertTrue(CompileMarker::matches($dir, '/var/cache/a/tmp'));
         } finally {
@@ -365,6 +365,6 @@ class PackageInjectorTest extends TestCase
     {
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
         $this->expectException(DirectoryNotWritableException::class);
-        CompileMarker::write($missingDir, '/var/cache/app/tmp');
+        CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/app/tmp');
     }
 }

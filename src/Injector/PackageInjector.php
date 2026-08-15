@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
@@ -28,6 +29,7 @@ use function mkdir;
 use function serialize;
 use function sprintf;
 use function str_replace;
+use function str_starts_with;
 use function trigger_error;
 
 use const E_USER_WARNING;
@@ -102,7 +104,7 @@ final class PackageInjector
         $scriptDir = self::ensureScriptDir($meta, $context, $overrideModule);
         $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
-            return self::prodInjector($module, $scriptDir, $meta->tmpDir);
+            return self::prodInjector($module, $scriptDir, $meta, $context);
         }
 
         return self::rayInjector($module, $scriptDir);
@@ -172,13 +174,18 @@ final class PackageInjector
      * the boot is left to throw instead of falling back to a runtime recompile
      * (which would also die under a read-only filesystem).
      *
+     * A phar boot cannot take the on-demand branch at all - the archive is read-only -
+     * so a marker mismatch there is answered with its cause: the boot derived a tmpDir
+     * the scripts were not compiled for, which is an APP_WRITE_DIR mismatch.
+     *
      * @param non-empty-string $scriptDir
+     * @param Context          $context
      *
      * @see CompileMarker for what the marker does and does not guarantee
      */
-    private static function prodInjector(AbstractModule $module, string $scriptDir, string $tmpDir): InjectorInterface
+    private static function prodInjector(AbstractModule $module, string $scriptDir, AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        if (CompileMarker::matches($scriptDir, $tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
             $injector = new CompiledInjector($scriptDir);
             /** @psalm-suppress InvalidArgument */
             $injector->getInstance(AppInterface::class);
@@ -186,8 +193,16 @@ final class PackageInjector
             return $injector;
         }
 
+        if (str_starts_with($scriptDir, 'phar://')) {
+            throw new PharWriteDirMismatchException($meta->appDir, CompileMarker::read($scriptDir)->tmpDir ?? '(no compile marker)', $meta->tmpDir);
+        }
+
         (new Compiler())->compile($module, $scriptDir);
-        CompileMarker::write($scriptDir, $tmpDir);
+        /** @var non-empty-string $appName */
+        $appName = $meta->name;
+        /** @var non-empty-string $tmpDir */
+        $tmpDir = $meta->tmpDir;
+        CompileMarker::write($scriptDir, $appName, $context, $tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

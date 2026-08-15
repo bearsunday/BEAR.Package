@@ -48,13 +48,51 @@ final class AppDirs
             return new Meta($appName, $context, $appDir);
         }
 
+        $base = self::base($appName, $context, $writeDir);
+
+        return new Meta($appName, $context, $appDir, $base . '/tmp', $base . '/log');
+    }
+
+    /**
+     * The tmp directory a Meta built from these values will hold — computed, not created.
+     *
+     * What the pack uses to compare a compile marker against a declaration without the
+     * directory-creating side effect of building a Meta.
+     *
+     * @param AppName       $appName
+     * @param Context       $context
+     * @param AppDir        $appDir
+     * @param WriteDir|null $writeDir
+     *
+     * @return non-empty-string
+     *
+     * @throws InvalidWriteDirException
+     */
+    public static function tmpDirFor(string $appName, string $context, string $appDir, string|null $writeDir): string
+    {
+        if ($writeDir === null) {
+            return $appDir . '/var/tmp/' . $context;
+        }
+
+        return self::base($appName, $context, $writeDir) . '/tmp';
+    }
+
+    /**
+     * @param AppName  $appName
+     * @param Context  $context
+     * @param WriteDir $writeDir
+     *
+     * @return non-empty-string
+     *
+     * @throws InvalidWriteDirException
+     */
+    private static function base(string $appName, string $context, string $writeDir): string
+    {
         if (! self::isAbsolute($writeDir)) {
             throw new InvalidWriteDirException($writeDir);
         }
 
-        $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $appName) . '/' . $context;
-
-        return new Meta($appName, $context, $appDir, $base . '/tmp', $base . '/log');
+        return rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $appName) . '/' . $context;
     }
 
     private static function isAbsolute(string $path): bool

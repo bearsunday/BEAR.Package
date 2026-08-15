@@ -13,6 +13,7 @@ use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Exception\DelegatedCompileException;
+use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Exception\WriteDirMismatchException;
 use BEAR\Package\Injector\AppDirs;
@@ -32,6 +33,7 @@ use function dirname;
 use function escapeshellarg;
 use function file_exists;
 use function is_dir;
+use function is_file;
 use function is_float;
 use function memory_get_peak_usage;
 use function microtime;
@@ -158,6 +160,38 @@ final class Compiler
     }
 
     /**
+     * Pack the compiled application into one archive.
+     *
+     * On the fromInjector() path this packs what is on disk - compile first. On the
+     * constructor path the constructor itself has already compiled the DI scripts, and
+     * this packs that output. The write directory is not passed again: the compile
+     * marker says what the scripts write to, and the pack refuses a tree whose
+     * applications write into it - a read-only archive cannot hold its own tmp and log.
+     *
+     * Runs in a child process started with -d phar.readonly=0: the ini is INI_SYSTEM,
+     * so this process cannot write a phar itself.
+     *
+     * @param non-empty-string|null $entry  stub entry, relative to appDir (default public/index.php)
+     * @param non-empty-string|null $output archive path (default {appDir}/var/build/{context}.phar)
+     *
+     * @throws PharEntryNotFoundException
+     */
+    public function phar(string|null $entry = null, string|null $output = null): int
+    {
+        // Both shapes can pack: fromInjector() holds the same job the constructor path records.
+        [, $context, $appDir] = $this->compileJob ?? $this->preloadJob;
+        $entry ??= 'public/index.php';
+        if (! is_file($appDir . '/' . $entry)) {
+            throw new PharEntryNotFoundException($appDir . '/' . $entry);
+        }
+
+        $exitCode = 1;
+        passthru(self::pharWorkerCommand($context, $appDir, $entry, $output), $exitCode);
+
+        return $exitCode;
+    }
+
+    /**
      * Run the constructor compile path once in a clean PHP process.
      *
      * The child prints the compile report itself; only its exit code is returned here.
@@ -214,19 +248,39 @@ final class Compiler
      */
     private static function workerCommand(string $worker, string $appName, string $context, string $appDir, string|null $writeDir): string
     {
-        // PHP_BINARY is the server binary under fpm and empty under some embedded SAPIs:
-        // the worker needs the interpreter, not whatever is running this compile.
-        $php = PHP_SAPI === 'cli' ? PHP_BINARY : PHP_BINDIR . '/php';
-
         return sprintf(
             '%s %s %s %s %s %s',
-            escapeshellarg($php),
+            escapeshellarg(self::phpBinary()),
             escapeshellarg(dirname(__DIR__) . '/bin/' . $worker),
             escapeshellarg($appName),
             escapeshellarg($context),
             escapeshellarg($appDir),
             escapeshellarg((string) $writeDir),
         );
+    }
+
+    /**
+     * @param Context $context
+     * @param AppDir  $appDir
+     */
+    private static function pharWorkerCommand(string $context, string $appDir, string $entry, string|null $output): string
+    {
+        return sprintf(
+            '%s -d phar.readonly=0 %s %s %s %s %s',
+            escapeshellarg(self::phpBinary()),
+            escapeshellarg(dirname(__DIR__) . '/bin/phar-worker.php'),
+            escapeshellarg($context),
+            escapeshellarg($appDir),
+            escapeshellarg($entry),
+            escapeshellarg((string) $output),
+        );
+    }
+
+    private static function phpBinary(): string
+    {
+        // PHP_BINARY is the server binary under fpm and empty under some embedded SAPIs:
+        // the worker needs the interpreter, not whatever is running this compile.
+        return PHP_SAPI === 'cli' ? PHP_BINARY : PHP_BINDIR . '/php';
     }
 
     /**
@@ -313,7 +367,7 @@ final class Compiler
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
-        CompileMarker::write($scriptDir, $this->appMeta->tmpDir);
+        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();
