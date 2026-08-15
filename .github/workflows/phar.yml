@@ -1,0 +1,38 @@
+name: Phar
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  boot:
+    name: Build the demo as a phar and boot it
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+
+      - name: Install the demo against this checkout
+        working-directory: demo
+        run: |
+          composer config repositories.package '{"type":"path","url":"..","options":{"symlink":false}}'
+          composer require 'bear/package:*@dev' -W --no-interaction
+
+      - name: Compile and pack
+        working-directory: demo
+        run: APP_WRITE_DIR=/tmp/bear php bin/compile.php
+
+      - name: Boot the archive with the build tree deleted
+        run: |
+          mv demo/var/build/prod-cli-hal-app.phar /tmp/app.phar
+          rm -rf demo src vendor
+          rm -rf /tmp/bear
+          CONTEXT=prod-cli-hal-app APP_WRITE_DIR=/tmp/bear php /tmp/app.phar get /index | tee /tmp/response
+          grep -q '200 OK' /tmp/response

@@ -12,8 +12,9 @@ use MyVendor\MyProject\Module\App;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $context = getenv('CONTEXT') ?: (PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app');
+$writeDir = getenv('APP_WRITE_DIR') ?: null;
 
-$app = Injector::getInstance('MyVendor\MyProject', $context, dirname(__DIR__))->getInstance(AppInterface::class);
+$app = Injector::getInstance('MyVendor\MyProject', $context, dirname(__DIR__), writeDir: $writeDir)->getInstance(AppInterface::class);
 assert($app instanceof App);
 // match() throws BadRequestException on client input it cannot read.
 $request = new NullMatch();

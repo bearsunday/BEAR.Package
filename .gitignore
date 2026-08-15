@@ -18,6 +18,7 @@
 /vendor-bin/**/vendor
 /demo/var/tmp
 /demo/var/log/
+/demo/var/build/
 /demo/vendor
 demo/.phpunit.result.cache
 /.phpunit-cache/
