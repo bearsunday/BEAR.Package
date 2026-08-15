@@ -19,8 +19,14 @@ if ($argc !== 5) {
 }
 
 [, $context, $appDir, $entry, $output] = $argv;
-assert($context !== '' && $appDir !== '' && $entry !== '');
-require $appDir . '/vendor/autoload.php';
+// A guard, not an assert(): the worker runs under the deploy's ini, where assertions are off.
+$autoload = $appDir . '/vendor/autoload.php';
+if ($context === '' || $entry === '' || ! is_file($autoload)) {
+    fwrite(STDERR, sprintf('No application to pack: "%s" holds no vendor/autoload.php, or the context is empty.', $appDir) . PHP_EOL);
+    exit(1);
+}
+
+require $autoload;
 
 try {
     $report = (new PharBuilder())($context, $appDir, $entry, $output === '' ? null : $output);

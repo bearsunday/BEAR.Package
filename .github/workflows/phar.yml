@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  boot:
-    name: Build the demo as a phar and boot it
+  pack:
+    name: Pack in-process, then build the demo and boot it
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,7 +17,21 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          coverage: none
+          coverage: pcov
+
+      - name: Install
+        run: composer update --no-interaction --no-progress
+
+      # phar.readonly is INI_SYSTEM: only a process started with -d phar.readonly=0 can
+      # write an archive, so the tests that pack in-process run nowhere else.
+      - name: Test the packing the rest of the matrix has to skip
+        run: php -d phar.readonly=0 -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
       - name: Install the demo against this checkout
         working-directory: demo

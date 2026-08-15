@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\Package\Exception\DirectoryNotWritableException;
+use BEAR\Package\Types;
 
 use function file_exists;
 use function file_get_contents;
@@ -31,6 +32,9 @@ use const JSON_THROW_ON_ERROR;
  * and a deployment tool can read a script directory without guessing from its path.
  *
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type TmpDir from Types
  */
 final class CompileMarker
 {
@@ -107,9 +111,9 @@ final class CompileMarker
     /**
      * Written through a temporary file: a concurrent boot must not read a half-written marker.
      *
-     * @param non-empty-string $appName
-     * @param non-empty-string $context
-     * @param non-empty-string $tmpDir
+     * @param AppName $appName
+     * @param Context $context
+     * @param TmpDir  $tmpDir
      *
      * @throws DirectoryNotWritableException A marker that cannot be persisted makes every later boot recompile.
      */

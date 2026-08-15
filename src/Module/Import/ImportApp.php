@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module\Import;
 
+use BEAR\Package\Types;
 use ReflectionClass;
 
 use function assert;
 use function dirname;
 use function sprintf;
 
+/**
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type WriteDir from Types
+ */
 final class ImportApp
 {
     /**
-     * @param non-empty-string      $host
-     * @param non-empty-string      $appName
-     * @param non-empty-string      $context
-     * @param non-empty-string|null $writeDir writable base of the imported app; defaults to {appDir}/var
+     * @param non-empty-string $host
+     * @param AppName          $appName
+     * @param Context          $context
+     * @param WriteDir|null    $writeDir writable base of the imported app; defaults to {appDir}/var
      */
     public function __construct(
         public string $host,

@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Injector;
 
+use BEAR\Package\Types;
+
 /**
  * What a compile wrote into a script directory: which application, which context,
  * and the writable directory its bindings hold.
  *
  * @see CompileMarker
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type TmpDir from Types
  */
 final class CompileRecord
 {
     /**
-     * @param non-empty-string $appName
-     * @param non-empty-string $context
-     * @param non-empty-string $tmpDir
+     * @param AppName $appName
+     * @param Context $context
+     * @param TmpDir  $tmpDir
      */
     public function __construct(
         public readonly string $appName,

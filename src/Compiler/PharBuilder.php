@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
-use BEAR\Package\Exception\PharEmptyArchiveException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
+use BEAR\Package\Exception\PharEntryNotPackedException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
+use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharReadOnlyException;
+use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
@@ -29,6 +31,7 @@ use function basename;
 use function clearstatcache;
 use function count;
 use function dirname;
+use function file_exists;
 use function filesize;
 use function in_array;
 use function ini_get;
@@ -50,7 +53,7 @@ use function var_export;
  *
  * What ships is the framework's knowledge, not configuration: the tree, vendor/, and the
  * DI scripts - compile markers included - of the application and of every application it
- * imports. Logs, caches, .env files anywhere, build outputs and build noise stay out.
+ * imports. Logs, caches, every .env file, build outputs and build noise stay out.
  *
  * Nothing is guessed and nothing is passed in twice. Each script directory carries a
  * marker saying which application, which context and which writable directory it was
@@ -84,9 +87,12 @@ final class PharBuilder
      * @throws PharReadOnlyException
      * @throws PharEntryNotFoundException
      * @throws PharNotCompiledException
+     * @throws PharImportsUnreadableException
      * @throws PharWritesInsideArchiveException
      * @throws PharWriteDirMismatchException
-     * @throws PharEmptyArchiveException
+     * @throws PharImportOutsideTreeException
+     * @throws PharStaleOutputException
+     * @throws PharEntryNotPackedException
      */
     public function __invoke(string $context, string $appDir, string $entry, string|null $output = null): PharReport
     {
@@ -114,14 +120,20 @@ final class PharBuilder
         $output ??= $appDirReal . '/var/build/' . $context . '.phar';
         @mkdir(dirname($output), 0777, true);
         @unlink($output);
+        clearstatcache(true, $output);
+        // new Phar() on a surviving file adds to it, and the stale entries would ship unnoticed.
+        if (file_exists($output)) {
+            throw new PharStaleOutputException($output);
+        }
 
         $alias = basename($output);
         $phar = new Phar($output);
         $phar->setSignatureAlgorithm(Phar::SHA256);
         $phar->startBuffering();
         $files = $phar->buildFromIterator(self::files($appDirReal, $roots, $output), $appDirReal);
-        if ($files === []) {
-            throw new PharEmptyArchiveException($appDirReal);
+        // The entry is on disk - checked above - but the filter decides what reaches the archive.
+        if (! isset($phar[$entry])) {
+            throw new PharEntryNotPackedException($appDirReal . '/' . $entry);
         }
 
         $phar->setStub(sprintf(
@@ -252,8 +264,9 @@ final class PharBuilder
     /**
      * Everything under appDir except what must not ship.
      *
-     * A file named .env never ships, wherever it sits: its values are compiled in, and a
-     * secret has no business in a distributable archive. Of each application's var/ only
+     * No file whose name starts with .env ships, wherever it sits - `.env.local` and
+     * `.env.production` carry secrets as readily as `.env`, and the values a boot needs are
+     * compiled into the DI scripts. Of each application's var/ only
      * its DI script directory goes in, minus Ray.Compiler's build noise. autoload.php and
      * preload.php hold build-time absolute paths a phar boot cannot use. A symlinked
      * directory stops the build: Phar::buildFromIterator() cannot pack it.
@@ -271,7 +284,7 @@ final class PharBuilder
         $filter = static function (mixed $file) use ($roots, $excluded): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
-            if ($name === '.git' || $name === '.env') {
+            if ($name === '.git' || str_starts_with($name, '.env')) {
                 return false;
             }
 
