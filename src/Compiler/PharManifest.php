@@ -69,7 +69,7 @@ final class PharManifest
 
         $roots = [$archiveDir => AppDirs::script($archiveDir, $context)];
         $host = self::writesOutside($bases, $archiveDir, $context);
-        $writeDir = AppDirs::writeDirOf($host->appName, $host->tmpDir);
+        $writeDir = AppDirs::writeDir($host->appName, $host->tmpDir);
         foreach ($imports as $import) {
             $importDir = self::resolve($import->appDir());
             if (! self::isUnder($importDir, $archiveDir)) {

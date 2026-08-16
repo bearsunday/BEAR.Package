@@ -35,7 +35,7 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     public function get(): SchemeCollectionInterface
     {
         // Where the host writes, read back from its Meta: an import writes beside it.
-        $writeDir = AppDirs::writeDirOf($this->appMeta->name, $this->appMeta->tmpDir);
+        $writeDir = AppDirs::writeDir($this->appMeta->name, $this->appMeta->tmpDir);
         foreach ($this->importAppConfig as $app) {
             $injector = Injector::getInstance($app->appName, $app->context, $app->appDir(), null, $writeDir);
             $adapter = new AppAdapter($injector, $app->appName);

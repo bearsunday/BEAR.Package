@@ -70,7 +70,7 @@ final class AppDirs
      *
      * @return WriteDir|null in the spelling it was given
      */
-    public static function writeDirOf(string $appName, string $tmpDir): string|null
+    public static function writeDir(string $appName, string $tmpDir): string|null
     {
         // {writeDir}/{Vendor}/{Project}/{context}/tmp - the context is one segment, whatever it is
         $suffix = '/' . str_replace('\\', '/', $appName);

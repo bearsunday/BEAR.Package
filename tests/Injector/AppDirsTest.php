@@ -11,12 +11,12 @@ class AppDirsTest extends TestCase
 {
     public function testWriteDirOfATmpDir(): void
     {
-        $this->assertSame('/write', AppDirs::writeDirOf('My\App', '/write/My/App/prod-app/tmp'));
+        $this->assertSame('/write', AppDirs::writeDir('My\App', '/write/My/App/prod-app/tmp'));
     }
 
     /** A tmp directory that does not follow the layout names no write directory. */
     public function testTmpDirOutsideTheLayout(): void
     {
-        $this->assertNull(AppDirs::writeDirOf('My\App', '/app/var/tmp/prod-app'));
+        $this->assertNull(AppDirs::writeDir('My\App', '/app/var/tmp/prod-app'));
     }
 }
