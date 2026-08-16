@@ -7,17 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- `bear/app-meta` `^1.12`: `Meta::create()` owns the write-directory layout, and a Meta carries the base it was placed under
-- The compile marker records that base, so the pack reads it instead of taking a tmp directory apart
-- `AppDirs` is gone: `Injector\CompiledScripts::dir()` answers where compiled scripts live, and nothing else composes paths
-
-### Removed
-- `InvalidWriteDirException`: a relative write directory is refused by `BEAR\AppMeta\Exception\WriteDirNotAbsoluteException`
-
 ### Added
 - `Compiler::phar()` — pack the compiled tree into `var/build/{context}.phar`, on both the `new Compiler(...)` and `Compiler::fromInjector(...)` shapes (#426)
-- The compile marker is a readable record (`.bear-compile.json`: app, context, tmpDir), and the pack derives the write directory from it instead of taking it again (#426)
+- The compile marker is a readable record (`.bear-compile.json`: app, context, tmpDir, writeDir), and the pack reads the write directory from it instead of taking it again (#426)
 - The pack reads imports from the compiled `ImportAppConfig` and stops the build when any application was never compiled, writes into the archive, or writes outside the write directory the host was compiled for (#426)
 - A boot that cannot rewrite its scripts - an archive, an immutable image - throws `CompiledForAnotherWriteDirException` naming both write directories, instead of failing on the write (#426)
 - No file directly under the application root ships in an archive - `composer.json`, `autoload.php`, `preload.php`, `env.json`, `.env` and the rest are the project's, not the artifact's - and no `.env*` file ships wherever it sits (#426)
@@ -28,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ImportApp::appDir()` replaces the `$appDir` property: the compiled container holds the object, and the build-time path is not the runtime one (#426)
 - The compile marker filename is `.bear-compile.json`; a 1.22 marker reads as absent, so recompile after upgrading (#426)
 - Requires `ray/compiler ^1.16`, whose `CompiledInjector` accepts a `phar://` script directory (#426)
+- Requires `bear/app-meta ^1.12`, which owns the write-directory layout: `Meta::create()` places an application and the Meta carries the base it was placed under (#426)
+- `AppDirs` is gone: `Injector\CompiledScripts::dir()` answers where compiled scripts live, and nothing else composes paths (#426)
+
+### Removed
+- `InvalidWriteDirException`: a relative write directory is refused by `BEAR\AppMeta\Exception\WriteDirNotAbsoluteException` (#426)
 
 ### Fixed
 - A stream-URI `appDir` such as `phar://app.phar` without a write directory throws `WriteDirRequiredException`, instead of reporting the tmp directory it cannot create inside the artifact (#426)
