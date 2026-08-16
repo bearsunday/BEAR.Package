@@ -16,6 +16,7 @@ use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
 use function assert;
+use function mkdir;
 use function passthru;
 use function spl_object_hash;
 use function sprintf;
@@ -96,6 +97,20 @@ class InjectorTest extends TestCase
             $first->getInstance(AbstractAppMeta::class)->tmpDir,
             $second->getInstance(AbstractAppMeta::class)->tmpDir,
         );
+    }
+
+    /** Two trees can share one write directory, and the second must not be handed the first one's paths. */
+    public function testAppDirIsPartOfInjectorIdentity(): void
+    {
+        $appDir = __DIR__ . '/Fake/fake-app';
+        $otherTree = sys_get_temp_dir() . '/bear-tree-' . uniqid();
+        mkdir($otherTree . '/src/Resource', 0777, true);
+        $writeDir = sys_get_temp_dir() . '/bear-shared-' . uniqid();
+        $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, $writeDir);
+        $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $otherTree, null, $writeDir);
+        $this->assertSame($appDir, $first->getInstance(AbstractAppMeta::class)->appDir);
+        $this->assertSame($otherTree, $second->getInstance(AbstractAppMeta::class)->appDir);
+        deleteFiles($otherTree);
     }
 
     /** An app running from a phar has nowhere to put tmp and log unless it is told where. */

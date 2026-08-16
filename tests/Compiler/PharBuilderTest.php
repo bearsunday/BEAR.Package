@@ -8,20 +8,24 @@ use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Injector\CompileMarker;
+use Phar;
 use PHPUnit\Framework\TestCase;
 
 use function BEAR\Package\deleteFiles;
+use function chdir;
 use function dirname;
 use function escapeshellarg;
 use function exec;
 use function file_exists;
 use function file_put_contents;
+use function getcwd;
 use function implode;
 use function is_dir;
 use function mkdir;
 use function realpath;
 use function rmdir;
 use function sprintf;
+use function str_replace;
 use function sys_get_temp_dir;
 use function uniqid;
 use function var_export;
@@ -58,7 +62,7 @@ class PharBuilderTest extends TestCase
 
     public function testPacksWhatTheManifestSelected(): void
     {
-        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\nreturn null;\n");
         file_put_contents($scriptDir . '/compile.lock', 'noise');
         mkdir($this->appDir . '/src', 0777, true);
@@ -85,7 +89,7 @@ class PharBuilderTest extends TestCase
 
     public function testEntryThatIsNotOnDisk(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
 
         $this->expectException(PharEntryNotFoundException::class);
         (new PharBuilder())('prod-app', $this->appDir, 'public/nowhere.php');
@@ -94,7 +98,7 @@ class PharBuilderTest extends TestCase
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
     public function testEntryThatCannotShip(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         $this->vendor();
 
@@ -115,7 +119,7 @@ class PharBuilderTest extends TestCase
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
     public function testPreviousArchiveThatCannotBeRemoved(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
         mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
 
@@ -123,7 +127,7 @@ class PharBuilderTest extends TestCase
         (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
     }
 
-    /** A tmpDir that does not follow the writeDir convention names no write directory to print. */
+    /** A compile that named its own tmp directory was placed under no base, so there is none to print. */
     public function testReportWithoutAWriteDirectory(): void
     {
         $this->marker($this->writeDir . '/somewhere/of/its/own');
@@ -139,7 +143,7 @@ class PharBuilderTest extends TestCase
 
     public function testWorkerUnderAReadOnlyPharIni(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
         $this->vendor();
 
@@ -147,6 +151,47 @@ class PharBuilderTest extends TestCase
 
         $this->assertSame(1, $exitCode);
         $this->assertStringContainsString('start this worker with -d phar.readonly=0', $output);
+    }
+
+    /** A relative output is resolved before anything else looks at it. */
+    public function testRelativeOutputIsResolvedBeforeTheStaleCheck(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
+
+        $cwd = getcwd();
+        chdir($this->appDir);
+        try {
+            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php', 'var/build/prod-app.phar');
+            $this->fail('a directory at the output path is a stale output');
+        } catch (PharStaleOutputException $e) {
+            $this->assertStringContainsString($this->norm((string) realpath($this->appDir)), $this->norm($e->getMessage()));
+        } finally {
+            chdir($cwd !== false ? $cwd : dirname(__DIR__, 2));
+        }
+    }
+
+    /** An output named relative to the tree must not end up inside the archive being written. */
+    public function testRelativeOutputUnderTheApplicationTree(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        $this->vendor();
+
+        $cwd = getcwd();
+        chdir($this->appDir);
+        try {
+            [$exitCode, $output] = $this->worker('public/index.php', 'var/build/prod-app.phar');
+        } finally {
+            chdir($cwd !== false ? $cwd : dirname(__DIR__, 2));
+        }
+
+        $this->assertSame(0, $exitCode, $output);
+        $built = realpath($this->appDir) . '/var/build/prod-app.phar';
+        $this->assertStringContainsString($this->norm($built), $this->norm($output));
+        $phar = new Phar($built);
+        $this->assertFalse(isset($phar['var/build/prod-app.phar']), 'the archive packed itself');
     }
 
     /** The worker runs under the deploy's ini, where assert() is off. */
@@ -193,13 +238,19 @@ class PharBuilderTest extends TestCase
      *
      * @return non-empty-string the script directory the marker was written to
      */
-    private function marker(string $tmpDir): string
+    private function marker(string $tmpDir, string|null $writeDir = null): string
     {
         $scriptDir = $this->appDir . '/var/tmp/prod-app/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir);
+        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir, $writeDir);
 
         return $scriptDir;
+    }
+
+    /** Windows spells realpath() with backslashes, and the worker prints what it was given. */
+    private function norm(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 
     private function entry(): void

@@ -12,7 +12,7 @@ use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Types;
@@ -27,6 +27,7 @@ use function file_exists;
 use function filesize;
 use function is_file;
 use function mkdir;
+use function preg_match;
 use function realpath;
 use function sprintf;
 use function unlink;
@@ -46,6 +47,9 @@ use function var_export;
  */
 final class PharBuilder
 {
+    /** A leading slash, a UNC share, or a drive letter - the spellings realpath() would not change. */
+    private const ABSOLUTE = '#^(/|\\\\|[A-Za-z]:[/\\\\])#';
+
     /**
      * @param Context       $context
      * @param AppDir        $appDir
@@ -73,7 +77,7 @@ final class PharBuilder
 
         // The host marker is read before the container is asked for its imports, so an
         // uncompiled tree reports "not compiled", not a script-directory error.
-        $hostDir = AppDirs::script($appDirReal, $context);
+        $hostDir = CompiledScripts::dir($appDirReal, $context);
         $hostRecord = CompileMarker::read($hostDir);
         if ($hostRecord === null) {
             throw new PharNotCompiledException($hostDir);
@@ -82,6 +86,8 @@ final class PharBuilder
         $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
         $output ??= $appDirReal . '/var/build/' . $context . '.phar';
         @mkdir(dirname($output), 0777, true);
+        // PharManifest::files() excludes the archive by path, and the iterator yields absolute ones.
+        $output = self::absolute($output);
         @unlink($output);
         clearstatcache(true, $output);
         // new Phar() on a surviving file adds to it, and the stale entries would ship unnoticed.
@@ -90,6 +96,22 @@ final class PharBuilder
         }
 
         return self::pack($appDirReal, $roots, $entry, $output, $hostRecord); // @codeCoverageIgnore
+    }
+
+    /**
+     * @param PharPath $path
+     *
+     * @return PharPath
+     */
+    private static function absolute(string $path): string
+    {
+        if (preg_match(self::ABSOLUTE, $path)) {
+            return $path;
+        }
+
+        $dir = realpath(dirname($path));
+
+        return $dir === false ? $path : $dir . '/' . basename($path);
     }
 
     /**
@@ -122,6 +144,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), AppDirs::writeDir($record->appName, $record->tmpDir));
+        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir);
     }
 }

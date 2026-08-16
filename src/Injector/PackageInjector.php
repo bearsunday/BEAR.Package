@@ -63,8 +63,9 @@ final class PackageInjector
      */
     public static function getInstance(AbstractAppMeta $meta, string $context, CacheInterface|null $cache): InjectorInterface
     {
-        // tmpDir too: one app+context can be booted with different writable directories.
-        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->tmpDir);
+        // Both directories: one app+context can be booted with different writable ones, and two
+        // trees can be booted with the same one.
+        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir . "\n" . $meta->tmpDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
@@ -197,7 +198,7 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
+        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir, $meta->writeDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
@@ -252,7 +253,7 @@ final class PackageInjector
     {
         /** @var AppDir $appDir */
         $appDir = $meta->appDir;
-        $scriptDir = AppDirs::script($appDir, $context);
+        $scriptDir = CompiledScripts::dir($appDir, $context);
         if ($overrideModule instanceof AbstractModule) {
             $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
         }

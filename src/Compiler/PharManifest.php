@@ -9,7 +9,7 @@ use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Module\Import\ImportApp;
@@ -67,9 +67,9 @@ final class PharManifest
         $archiveDir = self::resolve($appDir);
         $bases = [self::normalize($appDir), $archiveDir];
 
-        $roots = [$archiveDir => AppDirs::script($archiveDir, $context)];
+        $roots = [$archiveDir => CompiledScripts::dir($archiveDir, $context)];
         $host = self::writesOutside($bases, $archiveDir, $context);
-        $writeDir = AppDirs::writeDir($host->appName, $host->tmpDir);
+        $writeDir = $host->writeDir;
         foreach ($imports as $import) {
             $importDir = self::resolve($import->appDir());
             if (! self::isUnder($importDir, $archiveDir)) {
@@ -82,7 +82,7 @@ final class PharManifest
                 throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $writeDir);
             }
 
-            $roots[$importDir] = AppDirs::script($importDir, $import->context);
+            $roots[$importDir] = CompiledScripts::dir($importDir, $import->context);
         }
 
         return $roots;
@@ -116,7 +116,7 @@ final class PharManifest
      */
     private static function writesOutside(array $archiveBases, string $appDir, string $context): CompileRecord
     {
-        $scriptDir = AppDirs::script($appDir, $context);
+        $scriptDir = CompiledScripts::dir($appDir, $context);
         $record = CompileMarker::read($scriptDir);
         if ($record === null) {
             throw new PharNotCompiledException($scriptDir);

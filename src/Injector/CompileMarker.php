@@ -31,6 +31,7 @@ use const JSON_THROW_ON_ERROR;
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type TmpDir from Types
+ * @psalm-import-type WriteDir from Types
  */
 final class CompileMarker
 {
@@ -67,6 +68,7 @@ final class CompileMarker
             self::field($record, 'app'),
             self::field($record, 'context'),
             self::field($record, 'tmpDir'),
+            self::field($record, 'writeDir'),
             is_int($time) ? $time : 0,
         );
     }
@@ -85,17 +87,18 @@ final class CompileMarker
     }
 
     /**
-     * @param AppName|null $appName
-     * @param Context|null $context
-     * @param TmpDir|null  $tmpDir
+     * @param AppName|null  $appName
+     * @param Context|null  $context
+     * @param TmpDir|null   $tmpDir
+     * @param WriteDir|null $writeDir
      */
-    private static function record(string|null $appName, string|null $context, string|null $tmpDir, int $time): CompileRecord|null
+    private static function record(string|null $appName, string|null $context, string|null $tmpDir, string|null $writeDir, int $time): CompileRecord|null
     {
         if ($appName === null || $context === null || $tmpDir === null) {
             return null;
         }
 
-        return new CompileRecord($appName, $context, $tmpDir, $time);
+        return new CompileRecord($appName, $context, $tmpDir, $writeDir, $time);
     }
 
     /** Scripts here were compiled for $tmpDir, the writable directory their bindings hold. */
@@ -112,7 +115,7 @@ final class CompileMarker
      *
      * @throws DirectoryNotWritableException A marker that cannot be persisted makes every later boot recompile.
      */
-    public static function write(string $scriptDir, string $appName, string $context, string $tmpDir): void
+    public static function write(string $scriptDir, string $appName, string $context, string $tmpDir, string|null $writeDir): void
     {
         $path = self::path($scriptDir);
         $temp = $path . '.' . uniqid('', true);
@@ -120,6 +123,7 @@ final class CompileMarker
             'app' => $appName,
             'context' => $context,
             'tmpDir' => $tmpDir,
+            'writeDir' => $writeDir,
             'time' => time(),
         ], JSON_THROW_ON_ERROR) . "\n";
         if (@file_put_contents($temp, $content) !== false && @rename($temp, $path)) {

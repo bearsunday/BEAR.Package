@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Exception\PharImportsUnreadableException;
-use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Package\Module\ImportAppModule;
 use BEAR\Resource\Annotation\ImportAppConfig;
@@ -80,7 +80,7 @@ class ImportedAppsTest extends TestCase
 
     private function meta(): AbstractModule
     {
-        $meta = AppDirs::meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+        $meta = Meta::create('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', null);
 
         return new class ($meta) extends AbstractModule {
             public function __construct(private AbstractAppMeta $meta)
