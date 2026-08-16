@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use BEAR\Package\Exception\PharEntryNotFoundException;
+use BEAR\Package\Exception\PharNotCompiledException;
+use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Injector\CompileMarker;
 use PHPUnit\Framework\TestCase;
 
@@ -69,7 +72,7 @@ class PharBuilderTest extends TestCase
 
         $this->assertSame(0, $exitCode, $output);
         $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
-        $this->assertStringContainsString('Boot: APP_WRITE_DIR=' . $this->writeDir, $output);
+        $this->assertStringContainsString('Writes: ' . $this->writeDir, $output);
         $phar = 'phar://' . realpath($this->appDir . '/var/build/prod-app.phar');
         $this->assertTrue(file_exists($phar . '/public/index.php'), 'the stub requires this entry');
         $this->assertTrue(file_exists($phar . '/src/App.php'));
@@ -83,12 +86,9 @@ class PharBuilderTest extends TestCase
     public function testEntryThatIsNotOnDisk(): void
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp');
-        $this->vendor();
 
-        [$exitCode, $output] = $this->worker('public/nowhere.php');
-
-        $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('PharEntryNotFoundException: ' . realpath($this->appDir) . '/public/nowhere.php', $output);
+        $this->expectException(PharEntryNotFoundException::class);
+        (new PharBuilder())('prod-app', $this->appDir, 'public/nowhere.php');
     }
 
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
@@ -107,12 +107,9 @@ class PharBuilderTest extends TestCase
     public function testTreeThatWasNeverCompiled(): void
     {
         $this->entry();
-        $this->vendor();
 
-        [$exitCode, $output] = $this->worker('public/index.php');
-
-        $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('PharNotCompiledException: ' . realpath($this->appDir) . '/var/tmp/prod-app/di', $output);
+        $this->expectException(PharNotCompiledException::class);
+        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
     }
 
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
@@ -120,13 +117,10 @@ class PharBuilderTest extends TestCase
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
-        $this->vendor();
         mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
 
-        [$exitCode, $output] = $this->worker('public/index.php');
-
-        $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('PharStaleOutputException: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
+        $this->expectException(PharStaleOutputException::class);
+        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
     }
 
     /** A tmpDir that does not follow the writeDir convention names no write directory to print. */
@@ -140,7 +134,7 @@ class PharBuilderTest extends TestCase
 
         $this->assertSame(0, $exitCode, $output);
         $this->assertStringContainsString('Phar: ', $output);
-        $this->assertStringNotContainsString('Boot: ', $output);
+        $this->assertStringNotContainsString('Writes: ', $output);
     }
 
     public function testWorkerUnderAReadOnlyPharIni(): void

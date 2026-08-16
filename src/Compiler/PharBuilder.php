@@ -14,6 +14,7 @@ use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\CompileMarker;
+use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Types;
 use Phar;
 
@@ -34,11 +35,11 @@ use function var_export;
 /**
  * Write the archive PharManifest describes.
  *
- * Runs in bin/phar-worker.php, which the tests drive: phar.readonly is INI_SYSTEM.
+ * Every refusal is decided before a Phar is touched; only pack() needs -d phar.readonly=0.
  *
  * @see PharManifest
- * @codeCoverageIgnore writing a phar takes -d phar.readonly=0, which no coverage run has
  * @psalm-import-type AppDir from Types
+ * @psalm-import-type ScriptDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type StubEntry from Types
  * @psalm-import-type PharPath from Types
@@ -88,14 +89,29 @@ final class PharBuilder
             throw new PharStaleOutputException($output);
         }
 
+        return self::pack($appDirReal, $roots, $entry, $output, $hostRecord); // @codeCoverageIgnore
+    }
+
+    /**
+     * @param AppDir                             $appDir
+     * @param non-empty-array<AppDir, ScriptDir> $roots
+     * @param StubEntry                          $entry
+     * @param PharPath                           $output
+     *
+     * @throws PharEntryNotPackedException
+     *
+     * @codeCoverageIgnore writing a phar takes -d phar.readonly=0, which no coverage run has
+     */
+    private static function pack(string $appDir, array $roots, string $entry, string $output, CompileRecord $record): PharReport
+    {
         $alias = basename($output);
         $phar = new Phar($output);
         $phar->setSignatureAlgorithm(Phar::SHA256);
         $phar->startBuffering();
-        $files = $phar->buildFromIterator(PharManifest::files($appDirReal, $roots, $output), $appDirReal);
+        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output), $appDir);
         // The entry is on disk - checked above - but the filter decides what reaches the archive.
         if (! isset($phar[$entry])) {
-            throw new PharEntryNotPackedException($appDirReal . '/' . $entry);
+            throw new PharEntryNotPackedException($appDir . '/' . $entry);
         }
 
         $phar->setStub(sprintf(
@@ -106,6 +122,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), PharManifest::writeDirOf($hostRecord));
+        return new PharReport($output, (int) filesize($output), count($files), PharManifest::writeDirOf($record));
     }
 }

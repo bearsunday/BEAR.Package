@@ -156,15 +156,9 @@ final class PharManifest
     }
 
     /**
-     * No file directly under the application root ships. A boot reads src/, vendor/, the DI
-     * scripts and its entry, all of them directories; what lies loose at the root is the
-     * project's - composer.json, dev configs, autoload.php and preload.php with their
-     * build-time paths, and whatever holds the secrets, be it .env, env.json or another name
-     * nobody told the packer about. A .env* file is dropped wherever it sits, and a symlinked
-     * directory stops the build - buildFromIterator() cannot pack one.
+     * Nothing directly under the application root ships, of each var/ only the DI scripts.
      *
-     * $appDir must be resolved, as roots() returns it: a raw path compares unequal to those
-     * keys and lets every var/ path ship.
+     * $appDir must be resolved, as roots() returns it: a raw path lets every var/ path ship.
      *
      * @param AppDir                             $appDir resolved application root
      * @param non-empty-array<AppDir, ScriptDir> $roots  app root => script dir

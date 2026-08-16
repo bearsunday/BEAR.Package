@@ -173,12 +173,8 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * A marker with broken scripts is a deploy error, not a recoverable one, so
-     * the boot is left to throw instead of falling back to a runtime recompile
-     * (which would also die under a read-only filesystem).
-     *
-     * Recompiling writes here, so a tree that cannot be written - an archive, an immutable
-     * image - is told what the mismatch was instead of failing on the write.
+     * Broken scripts under a marker are left to throw: a deploy error, not a cold start. A
+     * tree that cannot be written is told what the mismatch was instead of failing on it.
      *
      * @param ScriptDir $scriptDir
      * @param Context   $context
@@ -223,9 +219,8 @@ final class PackageInjector
     /**
      * Report an on-demand compile to the server's log.
      *
-     * The deployment owns this, not the application: the report is due while the container is
-     * still being built, and where an operator reads boot problems. Not trigger_error() - that
-     * reaches the response body when display_errors is on.
+     * Not the application logger - the report is due while its container is still being built.
+     * Not trigger_error() - display_errors would put it in the response body.
      */
     private static function logOnDemandCompile(string $scriptDir): void
     {

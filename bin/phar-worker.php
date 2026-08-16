@@ -42,7 +42,9 @@ try {
 
 printf('Phar: %s (%.1fMB, %d files)' . PHP_EOL, $report->path, $report->bytes / 1048576, $report->files);
 if ($report->writeDir !== null) {
-    printf('Boot: APP_WRITE_DIR=%s php %s' . PHP_EOL, $report->writeDir, $report->path);
+    // The directory the packed scripts write to. How an entry script receives it is the
+    // application's business - the skeleton reads APP_WRITE_DIR, this tool does not care.
+    printf('Writes: %s' . PHP_EOL, $report->writeDir);
 }
 
 exit(0);

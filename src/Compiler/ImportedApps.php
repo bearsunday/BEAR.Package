@@ -16,8 +16,8 @@ use function is_array;
 /**
  * The applications a compiled container imports, asked of the container itself.
  *
- * No binding is the only failure that means "imports nothing": anything else is a
- * container that cannot say, and packing it would ship an archive missing an application.
+ * Unbound says only that no script holds the binding, so reading it as "imports nothing"
+ * needs the caller's compile marker: proof that the rest of the directory is there.
  *
  * @psalm-import-type ScriptDir from Types
  */
@@ -29,7 +29,7 @@ final class ImportedApps
     }
 
     /**
-     * @param ScriptDir $scriptDir compiled DI scripts of the importing application
+     * @param ScriptDir $scriptDir compiled DI scripts whose compile marker the caller has read
      *
      * @return list<ImportApp>
      *
@@ -44,7 +44,7 @@ final class ImportedApps
              */
             $config = (new CompiledInjector($scriptDir))->getInstance('', ImportAppConfig::class);
         } catch (Unbound) {
-            return [];
+            return [];  // ImportAppModule was never installed - the marker says the rest is here
         }
 
         if (! is_array($config)) {
