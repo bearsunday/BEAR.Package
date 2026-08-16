@@ -163,6 +163,8 @@ class PharManifestTest extends TestCase
         file_put_contents($this->appDir . '/autoload.php', "<?php\n");
         file_put_contents($this->appDir . '/preload.php', "<?php\n");
         file_put_contents($this->appDir . '/composer.json', '{}');
+        mkdir($this->appDir . '/.github/workflows', 0777, true);
+        file_put_contents($this->appDir . '/.github/workflows/ci.yml', 'on: push');
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         file_put_contents($this->appDir . '/.env.production', 'SECRET=2');
         file_put_contents($this->appDir . '/env.json', '{"SECRET": 3}');

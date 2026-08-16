@@ -10,7 +10,6 @@ use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Psr\Log\LoggerInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
@@ -24,6 +23,7 @@ use Throwable;
 
 use function assert;
 use function dirname;
+use function error_log;
 use function file_exists;
 use function hash;
 use function is_dir;
@@ -203,15 +203,12 @@ final class PackageInjector
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
-        self::logOnDemandCompile($injector, $scriptDir);
+        self::logOnDemandCompile($scriptDir);
 
         return $injector;
     }
 
-    /**
-     * Whether a compile could write to $dir, which a first boot has yet to create: the
-     * nearest existing ancestor decides, and dirname() always reaches one that exists.
-     */
+    /** Whether a compile could write to $dir, which a first boot has not created yet. */
     private static function canWrite(string $dir): bool
     {
         $path = $dir;
@@ -223,19 +220,18 @@ final class PackageInjector
     }
 
     /**
-     * Record the on-demand compile through the application's logger.
+     * Report an on-demand compile to the server's log.
      *
-     * Not trigger_error(): that reaches the response body when display_errors is on, and any
-     * handler converting errors to exceptions would turn this report into a boot failure.
+     * The deployment owns this, not the application: the report is due while the container is
+     * still being built, and where an operator reads boot problems. Not trigger_error() - that
+     * reaches the response body when display_errors is on.
      */
-    private static function logOnDemandCompile(InjectorInterface $injector, string $scriptDir): void
+    private static function logOnDemandCompile(string $scriptDir): void
     {
-        $logger = $injector->getInstance(LoggerInterface::class);
-        assert($logger instanceof LoggerInterface);
-        $logger->notice('Compiled DI scripts on demand', [
-            'scriptDir' => $scriptDir,
-            'see' => 'https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
-        ]);
+        error_log(sprintf(
+            'Compiled DI scripts on demand in "%s". See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
+            $scriptDir,
+        ));
     }
 
     /**

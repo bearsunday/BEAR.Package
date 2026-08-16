@@ -33,11 +33,10 @@ use function var_export;
 /**
  * Write the archive PharManifest describes.
  *
- * Runs in bin/phar-worker.php: phar.readonly is INI_SYSTEM, so no coverage process can
- * execute this - the worker tests assert it, and every decision lives in PharManifest.
+ * Runs in bin/phar-worker.php, which the tests drive: phar.readonly is INI_SYSTEM.
  *
  * @see PharManifest
- * @codeCoverageIgnore
+ * @codeCoverageIgnore writing a phar takes -d phar.readonly=0, which no coverage run has
  */
 final class PharBuilder
 {

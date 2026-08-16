@@ -170,6 +170,7 @@ final class PharManifest
         $filter = static function (mixed $file) use ($roots, $excluded, $base): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
+            // Deeper in the tree: an imported application and a --prefer-source vendor bring their own.
             if ($name === '.git' || str_starts_with($name, '.env')) {
                 return false;
             }
@@ -178,7 +179,7 @@ final class PharManifest
                 throw new PharSymlinkedDirectoryException($file->getPathname());
             }
 
-            if (! $file->isDir() && self::normalize($file->getPath()) === $base) {
+            if (self::normalize($file->getPath()) === $base && (! $file->isDir() || str_starts_with($name, '.'))) {
                 return false;
             }
 
@@ -187,7 +188,7 @@ final class PharManifest
                 return false;
             }
 
-            return self::varVerdict($path, $name, $roots) ?? true;
+            return self::shipsFromVar($path, $name, $roots) ?? true;
         };
 
         /** @psalm-suppress MixedArgumentTypeCoercion, PossiblyInvalidArgument */
@@ -197,11 +198,11 @@ final class PharManifest
     }
 
     /**
-     * Whether a path inside some application's var/ ships. Null when it is in no var/.
+     * Whether a path under some application's var/ ships; null when it is under none.
      *
      * @param non-empty-array<non-empty-string, non-empty-string> $roots app root => script dir
      */
-    private static function varVerdict(string $path, string $name, array $roots): bool|null
+    private static function shipsFromVar(string $path, string $name, array $roots): bool|null
     {
         foreach ($roots as $root => $scriptDir) {
             if (! self::isUnder($path, $root . '/var')) {

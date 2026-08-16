@@ -7,8 +7,8 @@ namespace BEAR\Package\Compiler;
 /**
  * What PharBuilder wrote, for the worker to report.
  *
- * @see PharBuilder the only producer, and the only code a coverage run cannot execute
- * @codeCoverageIgnore
+ * @see PharBuilder
+ * @codeCoverageIgnore built only where a phar is written, which no coverage run does
  */
 final class PharReport
 {
