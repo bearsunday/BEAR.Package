@@ -62,8 +62,8 @@ final class AppDirs
     /**
      * The write directory a tmp directory was derived from, or null when it names none.
      *
-     * The inverse of tmpDirIn(), so this class owns the layout in both directions: the runtime
-     * reads it out of a Meta, the pack out of a compile marker.
+     * The inverse of what meta() composes: the runtime reads it out of a Meta, the pack out of a
+     * compile marker, and nothing else has to know the shape.
      *
      * @param AppName $appName
      * @param TmpDir  $tmpDir
@@ -82,23 +82,6 @@ final class AppDirs
         $writeDir = substr($base, 0, -strlen($suffix));
 
         return $writeDir === '' ? null : $writeDir;
-    }
-
-    /**
-     * The tmp directory meta() puts under a write directory - computed, not created, so the pack
-     * can compare a marker against a declaration without making one.
-     *
-     * @param AppName  $appName
-     * @param Context  $context
-     * @param WriteDir $writeDir
-     *
-     * @return TmpDir
-     *
-     * @throws InvalidWriteDirException
-     */
-    public static function tmpDirIn(string $appName, string $context, string $writeDir): string
-    {
-        return self::base($appName, $context, $writeDir) . '/tmp';
     }
 
     /**

@@ -77,10 +77,9 @@ final class PharManifest
             }
 
             $record = self::writesOutside($bases, $importDir, $import->context);
-            // An import writes beside the host, because the container hands it the same directory.
-            $expected = $writeDir === null ? null : self::normalize(AppDirs::tmpDirIn($import->appName, $import->context, $writeDir));
-            if ($expected !== null && self::normalize($record->tmpDir) !== $expected) {
-                throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $expected);
+            // Beside the host, because that is the directory the container hands it at boot.
+            if ($writeDir !== null && ! self::isUnder($record->tmpDir, $writeDir)) {
+                throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $writeDir);
             }
 
             $roots[$importDir] = AppDirs::script($importDir, $import->context);

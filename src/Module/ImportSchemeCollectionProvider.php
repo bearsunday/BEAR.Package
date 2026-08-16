@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module;
 
-use BEAR\Package\Annotation\WriteDir;
+use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
+use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\AppAdapter;
@@ -17,17 +18,13 @@ use Ray\Di\ProviderInterface;
 /** @implements ProviderInterface<SchemeCollectionInterface> */
 final class ImportSchemeCollectionProvider implements ProviderInterface
 {
-    /**
-     * @param ImportApp[]           $importAppConfig
-     * @param non-empty-string|null $writeDir        the host's, as WriteDirProvider read it back from the Meta
-     */
+    /** @param ImportApp[] $importAppConfig */
     public function __construct(
         #[Named(ImportAppConfig::class)]
         private array $importAppConfig,
         #[Named('original')]
         private SchemeCollectionInterface $schemeCollection,
-        #[WriteDir]
-        private string|null $writeDir,
+        private AbstractAppMeta $appMeta,
     ) {
     }
 
@@ -37,9 +34,10 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     #[Override]
     public function get(): SchemeCollectionInterface
     {
+        // Where the host writes, read back from its Meta: an import writes beside it.
+        $writeDir = AppDirs::writeDirOf($this->appMeta->name, $this->appMeta->tmpDir);
         foreach ($this->importAppConfig as $app) {
-            // The host's write directory, not one the declaration repeats: an import writes beside it.
-            $injector = Injector::getInstance($app->appName, $app->context, $app->appDir(), null, $this->writeDir);
+            $injector = Injector::getInstance($app->appName, $app->context, $app->appDir(), null, $writeDir);
             $adapter = new AppAdapter($injector, $app->appName);
             $this->schemeCollection
                 ->scheme('page')->host($app->host)->toAdapter($adapter)

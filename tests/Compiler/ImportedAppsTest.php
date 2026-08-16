@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Annotation\WriteDir;
 use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Package\Module\ImportAppModule;
-use BEAR\Package\Module\WriteDirProvider;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\Module\ResourceModule;
 use PHPUnit\Framework\TestCase;
@@ -93,7 +91,6 @@ class ImportedAppsTest extends TestCase
             protected function configure(): void
             {
                 $this->bind(AbstractAppMeta::class)->toInstance($this->meta);
-                $this->bind()->annotatedWith(WriteDir::class)->toProvider(WriteDirProvider::class);
             }
         };
     }
