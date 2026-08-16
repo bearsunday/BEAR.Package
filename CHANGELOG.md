@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.23.0] - 2026-08-17
 
+An application can be packed into one phar and booted read-only. `Compiler::phar()` packs what a compile
+just produced, and the archive writes only under the directory named at the build and at the boot.
+
 ### Added
 - `Compiler::phar()` — pack the compiled tree into `var/build/{context}.phar`, on both the `new Compiler(...)` and `Compiler::fromInjector(...)` shapes (#426)
 - The compile marker is a readable record (`.bear-compile.json`: app, context, tmpDir, writeDir), and the pack reads the write directory from it instead of taking it again (#426)
