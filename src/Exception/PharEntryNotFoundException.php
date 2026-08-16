@@ -11,7 +11,7 @@ final class PharEntryNotFoundException extends LogicException
     public function __construct(string $entry)
     {
         parent::__construct(sprintf(
-            'The phar stub runs "%s", which does not exist. Pass $entry to Compiler::phar().',
+            'The stub entry "%s" does not exist.',
             $entry,
         ));
     }

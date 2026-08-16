@@ -11,7 +11,7 @@ final class InvalidWriteDirException extends LogicException
     public function __construct(string $writeDir)
     {
         parent::__construct(sprintf(
-            'The write directory must be an absolute path, "%s" given. A relative path resolves against the current directory, which differs between the compile and the request.',
+            'The write directory must be an absolute path, "%s" given.',
             $writeDir,
         ));
     }

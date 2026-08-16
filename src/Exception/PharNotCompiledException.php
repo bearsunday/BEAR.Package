@@ -11,7 +11,7 @@ final class PharNotCompiledException extends LogicException
     public function __construct(string $scriptDir)
     {
         parent::__construct(sprintf(
-            'No compiled DI scripts in "%s": compile the context before packing it.',
+            'No compiled DI scripts in "%s".',
             $scriptDir,
         ));
     }

@@ -11,7 +11,7 @@ final class WriteDirRequiredException extends LogicException
     public function __construct(string $appDir)
     {
         parent::__construct(sprintf(
-            'The application directory "%s" is a stream URI, which cannot hold the tmp and log directories. Pass an absolute write directory as the last argument.',
+            'The application directory "%s" is a stream URI, which holds no tmp and log.',
             $appDir,
         ));
     }

@@ -11,7 +11,7 @@ final class PharImportsUnreadableException extends RuntimeException
     public function __construct(string $scriptDir)
     {
         parent::__construct(sprintf(
-            'The compiled container in "%s" holds an import declaration this version cannot read. Recompile the application with the same bear/package version that packs it.',
+            'Unreadable import declaration in the compiled container "%s".',
             $scriptDir,
         ));
     }

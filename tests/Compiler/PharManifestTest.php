@@ -118,7 +118,7 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
-        $this->expectExceptionMessageMatches('#/import" were compiled to write to#');
+        $this->expectExceptionMessageMatches('#/import" write to#');
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
@@ -170,10 +170,15 @@ class PharManifestTest extends TestCase
         file_put_contents($this->appDir . '/legacy/.env.local', 'SECRET=3');
         mkdir($this->appDir . '/var/log', 0777, true);
         file_put_contents($this->appDir . '/var/log/app.log', 'log');
+        mkdir($this->appDir . '/tests', 0777, true);
+        file_put_contents($this->appDir . '/tests/AppTest.php', "<?php\n");
+        mkdir($this->appDir . '/build', 0777, true);
+        file_put_contents($this->appDir . '/build/app.phar', 'the archive being written');
         $roots = PharManifest::roots($this->appDir, 'prod-app', []);
         $appDir = $this->resolved();
 
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/var/build/prod-app.phar'));
+        // An output inside the tree, but outside var/: the archive must not pack itself.
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/build/app.phar'));
 
         $this->assertSame([
             'src/App.php',

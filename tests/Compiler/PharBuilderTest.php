@@ -88,7 +88,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('public/nowhere.php');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('The phar stub runs', $output);
+        $this->assertStringContainsString('does not exist', $output);
     }
 
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
@@ -101,7 +101,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('.env');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('does not ship', $output);
+        $this->assertStringContainsString('is not in the archive', $output);
     }
 
     public function testTreeThatWasNeverCompiled(): void
@@ -126,7 +126,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('public/index.php');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('could not be removed', $output);
+        $this->assertStringContainsString('Cannot remove the previous archive', $output);
     }
 
     /** A tmpDir that does not follow the writeDir convention names no write directory to print. */
