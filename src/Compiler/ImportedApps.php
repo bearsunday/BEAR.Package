@@ -6,6 +6,7 @@ namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Module\Import\ImportApp;
+use BEAR\Package\Types;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Exception\Unbound;
@@ -17,6 +18,8 @@ use function is_array;
  *
  * No binding is the only failure that means "imports nothing": anything else is a
  * container that cannot say, and packing it would ship an archive missing an application.
+ *
+ * @psalm-import-type ScriptDir from Types
  */
 final class ImportedApps
 {
@@ -26,7 +29,7 @@ final class ImportedApps
     }
 
     /**
-     * @param non-empty-string $scriptDir compiled DI scripts of the importing application
+     * @param ScriptDir $scriptDir compiled DI scripts of the importing application
      *
      * @return list<ImportApp>
      *

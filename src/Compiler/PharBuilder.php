@@ -14,6 +14,7 @@ use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\CompileMarker;
+use BEAR\Package\Types;
 use Phar;
 
 use function assert;
@@ -37,14 +38,18 @@ use function var_export;
  *
  * @see PharManifest
  * @codeCoverageIgnore writing a phar takes -d phar.readonly=0, which no coverage run has
+ * @psalm-import-type AppDir from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type StubEntry from Types
+ * @psalm-import-type PharPath from Types
  */
 final class PharBuilder
 {
     /**
-     * @param non-empty-string      $context
-     * @param non-empty-string      $appDir
-     * @param non-empty-string      $entry   stub entry, relative to appDir
-     * @param non-empty-string|null $output  archive path; default {appDir}/var/build/{context}.phar
+     * @param Context       $context
+     * @param AppDir        $appDir
+     * @param StubEntry     $entry   relative to appDir
+     * @param PharPath|null $output  default {appDir}/var/build/{context}.phar
      *
      * @throws PharEntryNotFoundException
      * @throws PharNotCompiledException
@@ -60,7 +65,7 @@ final class PharBuilder
         // Native form for the filesystem and Phar APIs; PharManifest normalizes separators.
         $appDirReal = realpath($appDir);
         assert($appDirReal !== false);
-        /** @var non-empty-string $appDirReal psalm's realpath stub says string; phpstan's already says non-empty */
+        /** @var AppDir $appDirReal psalm's realpath stub says string; phpstan's already says non-empty */
         if (! is_file($appDirReal . '/' . $entry)) {
             throw new PharEntryNotFoundException($appDirReal . '/' . $entry);
         }

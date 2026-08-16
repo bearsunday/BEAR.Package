@@ -13,6 +13,7 @@ use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Module\Import\ImportApp;
+use BEAR\Package\Types;
 use FilesystemIterator;
 use Iterator;
 use RecursiveCallbackFilterIterator;
@@ -30,7 +31,15 @@ use function str_starts_with;
 use function strlen;
 use function substr;
 
-/** What goes into an archive, and whether the tree can become one at all. */
+/**
+ * What goes into an archive, and whether the tree can become one at all.
+ *
+ * @psalm-import-type AppDir from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type WriteDir from Types
+ * @psalm-import-type PharPath from Types
+ */
 final class PharManifest
 {
     /** Ray.Compiler build noise: written next to the scripts, read by no boot. */
@@ -44,11 +53,11 @@ final class PharManifest
     /**
      * All returned paths use forward slashes, whatever the platform spells them with.
      *
-     * @param non-empty-string $appDir  resolved application root
-     * @param non-empty-string $context
-     * @param list<ImportApp>  $imports as declared by the compiled container
+     * @param AppDir          $appDir  resolved application root
+     * @param Context         $context
+     * @param list<ImportApp> $imports as declared by the compiled container
      *
-     * @return non-empty-array<non-empty-string, non-empty-string> app root => script dir
+     * @return non-empty-array<AppDir, ScriptDir>
      *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
@@ -98,9 +107,9 @@ final class PharManifest
     }
 
     /**
-     * @param non-empty-list<non-empty-string> $archiveBases raw and resolved forms of the tree root
-     * @param non-empty-string                 $appDir       the application to check
-     * @param non-empty-string                 $context
+     * @param non-empty-list<AppDir> $archiveBases raw and resolved forms of the tree root
+     * @param AppDir                 $appDir       the application to check
+     * @param Context                $context
      *
      * @return CompileRecord what the marker says the scripts were compiled for
      *
@@ -131,7 +140,7 @@ final class PharManifest
      * The writeDir a tmpDir was derived from, or null when it was not: only
      * {writeDir}/{Vendor}/{Project}/{context}/tmp names one.
      *
-     * @return non-empty-string|null in the marker's own spelling - an operator runs it
+     * @return WriteDir|null in the marker's own spelling - an operator runs it
      */
     public static function writeDirOf(CompileRecord $record): string|null
     {
@@ -157,9 +166,9 @@ final class PharManifest
      * $appDir must be resolved, as roots() returns it: a raw path compares unequal to those
      * keys and lets every var/ path ship.
      *
-     * @param non-empty-string                                    $appDir resolved application root
-     * @param non-empty-array<non-empty-string, non-empty-string> $roots  app root => script dir
-     * @param non-empty-string                                    $output
+     * @param AppDir                             $appDir resolved application root
+     * @param non-empty-array<AppDir, ScriptDir> $roots  app root => script dir
+     * @param PharPath                           $output
      *
      * @return Iterator<SplFileInfo>
      */
@@ -200,7 +209,7 @@ final class PharManifest
     /**
      * Whether a path under some application's var/ ships; null when it is under none.
      *
-     * @param non-empty-array<non-empty-string, non-empty-string> $roots app root => script dir
+     * @param non-empty-array<AppDir, ScriptDir> $roots
      */
     private static function shipsFromVar(string $path, string $name, array $roots): bool|null
     {

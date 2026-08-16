@@ -85,9 +85,9 @@ final class CompileMarker
     }
 
     /**
-     * @param non-empty-string|null $appName
-     * @param non-empty-string|null $context
-     * @param non-empty-string|null $tmpDir
+     * @param AppName|null $appName
+     * @param Context|null $context
+     * @param TmpDir|null  $tmpDir
      */
     private static function record(string|null $appName, string|null $context, string|null $tmpDir, int $time): CompileRecord|null
     {

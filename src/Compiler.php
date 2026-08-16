@@ -58,6 +58,8 @@ use const PHP_SAPI;
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type LogDir from Types
  * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type StubEntry from Types
+ * @psalm-import-type PharPath from Types
  * @psalm-import-type ClassList from Types
  * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type CompileReport from Types
@@ -162,8 +164,8 @@ final class Compiler
     /**
      * Pack what compile() left on disk into one archive.
      *
-     * @param non-empty-string|null $entry  stub entry, relative to appDir (default public/index.php)
-     * @param non-empty-string|null $output archive path (default {appDir}/var/build/{context}.phar)
+     * @param StubEntry|null $entry  relative to appDir (default public/index.php)
+     * @param PharPath|null  $output default {appDir}/var/build/{context}.phar
      *
      * @throws PharEntryNotFoundException
      */

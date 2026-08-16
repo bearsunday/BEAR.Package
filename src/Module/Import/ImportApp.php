@@ -14,6 +14,7 @@ use function sprintf;
 /**
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
+ * @psalm-import-type AppDir from Types
  * @psalm-import-type WriteDir from Types
  */
 final class ImportApp
@@ -38,7 +39,7 @@ final class ImportApp
      * Never stored: the compiled container holds this object, and an artifact that moves
      * the application moves its directory. $writeDir is stored - it must not move.
      *
-     * @return non-empty-string
+     * @return AppDir
      */
     public function appDir(): string
     {

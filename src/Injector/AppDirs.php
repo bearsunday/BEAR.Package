@@ -19,6 +19,8 @@ use function str_starts_with;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type WriteDir from Types
+ * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type TmpDir from Types
  */
 final class AppDirs
 {
@@ -62,7 +64,7 @@ final class AppDirs
      * @param AppDir        $appDir
      * @param WriteDir|null $writeDir
      *
-     * @return non-empty-string
+     * @return TmpDir
      *
      * @throws InvalidWriteDirException
      */
@@ -111,7 +113,7 @@ final class AppDirs
      * @param AppDir  $appDir
      * @param Context $context
      *
-     * @return non-empty-string
+     * @return ScriptDir
      */
     public static function script(string $appDir, string $context): string
     {

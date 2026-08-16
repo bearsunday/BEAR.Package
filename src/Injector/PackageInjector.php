@@ -39,6 +39,7 @@ use const E_USER_WARNING;
 /**
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
+ * @psalm-import-type ScriptDir from Types
  */
 final class PackageInjector
 {
@@ -150,7 +151,7 @@ final class PackageInjector
     /**
      * @param Context $context
      *
-     * @return non-empty-string
+     * @return ScriptDir
      */
     private static function ensureScriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
     {
@@ -179,8 +180,8 @@ final class PackageInjector
      * Recompiling writes here, so a tree that cannot be written - an archive, an immutable
      * image - is told what the mismatch was instead of failing on the write.
      *
-     * @param non-empty-string $scriptDir
-     * @param Context          $context
+     * @param ScriptDir $scriptDir
+     * @param Context   $context
      *
      * @see CompileMarker for what the marker does and does not guarantee
      */
@@ -242,7 +243,7 @@ final class PackageInjector
      *
      * @param Context $context
      *
-     * @return non-empty-string
+     * @return ScriptDir
      */
     private static function scriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
     {
