@@ -63,8 +63,9 @@ final class PackageInjector
      */
     public static function getInstance(AbstractAppMeta $meta, string $context, CacheInterface|null $cache): InjectorInterface
     {
-        // tmpDir too: one app+context can be booted with different writable directories.
-        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->tmpDir);
+        // Both directories: one app+context can be booted with different writable ones, and two
+        // trees can be booted with the same one.
+        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir . "\n" . $meta->tmpDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
