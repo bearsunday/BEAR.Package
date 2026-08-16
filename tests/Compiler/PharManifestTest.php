@@ -162,8 +162,10 @@ class PharManifestTest extends TestCase
         file_put_contents($this->appDir . '/src/App.php', "<?php\n");
         file_put_contents($this->appDir . '/autoload.php', "<?php\n");
         file_put_contents($this->appDir . '/preload.php', "<?php\n");
+        file_put_contents($this->appDir . '/composer.json', '{}');
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         file_put_contents($this->appDir . '/.env.production', 'SECRET=2');
+        file_put_contents($this->appDir . '/env.json', '{"SECRET": 3}');
         mkdir($this->appDir . '/legacy', 0777, true);
         file_put_contents($this->appDir . '/legacy/.env.local', 'SECRET=3');
         mkdir($this->appDir . '/var/log', 0777, true);

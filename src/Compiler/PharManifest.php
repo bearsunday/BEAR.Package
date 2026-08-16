@@ -147,10 +147,12 @@ final class PharManifest
     }
 
     /**
-     * No .env* file ships wherever it sits: a boot reads its values from the compiled
-     * scripts, and an archive is distributable. autoload.php and preload.php hold
-     * build-time absolute paths. A symlinked directory stops the build - buildFromIterator()
-     * cannot pack one.
+     * No file directly under the application root ships. A boot reads src/, vendor/, the DI
+     * scripts and its entry, all of them directories; what lies loose at the root is the
+     * project's - composer.json, dev configs, autoload.php and preload.php with their
+     * build-time paths, and whatever holds the secrets, be it .env, env.json or another name
+     * nobody told the packer about. A .env* file is dropped wherever it sits, and a symlinked
+     * directory stops the build - buildFromIterator() cannot pack one.
      *
      * $appDir must be resolved, as roots() returns it: a raw path compares unequal to those
      * keys and lets every var/ path ship.
@@ -164,8 +166,8 @@ final class PharManifest
     public static function files(string $appDir, array $roots, string $output): Iterator
     {
         $base = self::normalize($appDir);
-        $excluded = [self::normalize($output), $base . '/tests', $base . '/autoload.php', $base . '/preload.php'];
-        $filter = static function (mixed $file) use ($roots, $excluded): bool {
+        $excluded = [self::normalize($output), $base . '/tests'];
+        $filter = static function (mixed $file) use ($roots, $excluded, $base): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
             if ($name === '.git' || str_starts_with($name, '.env')) {
@@ -174,6 +176,10 @@ final class PharManifest
 
             if ($file->isDir() && $file->isLink()) {
                 throw new PharSymlinkedDirectoryException($file->getPathname());
+            }
+
+            if (! $file->isDir() && self::normalize($file->getPath()) === $base) {
+                return false;
             }
 
             $path = self::normalize($file->getPathname());

@@ -61,6 +61,7 @@ class PharBuilderTest extends TestCase
         mkdir($this->appDir . '/src', 0777, true);
         file_put_contents($this->appDir . '/src/App.php', "<?php\n");
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
+        file_put_contents($this->appDir . '/env.json', '{"SECRET": 2}');
         $this->entry();
         $this->vendor();
 
@@ -75,6 +76,7 @@ class PharBuilderTest extends TestCase
         $this->assertTrue(file_exists($phar . '/var/tmp/prod-app/di/Fake_App-.php'));
         $this->assertTrue(file_exists($phar . '/var/tmp/prod-app/di/' . CompileMarker::FILENAME), 'the boot reads the marker from the archive');
         $this->assertFalse(file_exists($phar . '/.env'));
+        $this->assertFalse(file_exists($phar . '/env.json'), 'a secret at the root ships under any name');
         $this->assertFalse(file_exists($phar . '/var/tmp/prod-app/di/compile.lock'));
     }
 
