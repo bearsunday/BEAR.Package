@@ -7,6 +7,11 @@ namespace BEAR\Package\Exception;
 use function sprintf;
 
 /**
+ * The entry exists, but the manifest does not ship it.
+ *
+ * Nothing loose at the application root ships, nor `tests/`, nor a `var/` path other than the
+ * DI scripts, so a stub pointing at one of those would require a path the archive has not got.
+ *
  * @see \BEAR\Package\Compiler\PharBuilder the only thrower, and the only code a coverage run cannot execute
  * @codeCoverageIgnore
  */
