@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.23.0] - 2026-08-17
 
 ### Added
 - `Compiler::phar()` — pack the compiled tree into `var/build/{context}.phar`, on both the `new Compiler(...)` and `Compiler::fromInjector(...)` shapes (#426)
@@ -21,10 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The compile marker filename is `.bear-compile.json`; a 1.22 marker reads as absent, so recompile after upgrading (#426)
 - Requires `ray/compiler ^1.16`, whose `CompiledInjector` accepts a `phar://` script directory (#426)
 - Requires `bear/app-meta ^1.12`, which owns the write-directory layout: `Meta::create()` places an application and the Meta carries the base it was placed under (#426)
-- `AppDirs` is gone: `Injector\CompiledScripts::dir()` answers where compiled scripts live, and nothing else composes paths (#426)
 
 ### Removed
-- `InvalidWriteDirException`: a relative write directory is refused by `BEAR\AppMeta\Exception\WriteDirNotAbsoluteException` (#426)
+- `Injector\AppDirs` (1.22): `Injector\CompiledScripts::dir()` answers where compiled scripts live, `Meta::create()` places an application, and `$meta->writeDir` carries the base it was placed under (#426)
+- `InvalidWriteDirException` (1.22): a relative write directory is refused by `BEAR\AppMeta\Exception\WriteDirNotAbsoluteException` (#426)
 
 ### Fixed
 - A stream-URI `appDir` such as `phar://app.phar` without a write directory throws `WriteDirRequiredException`, instead of reporting the tmp directory it cannot create inside the artifact (#426)
