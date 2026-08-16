@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\PharImportOutsideTreeException;
-use BEAR\Package\Exception\PharImportWithoutWriteDirException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
-use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Injector\CompileMarker;
-use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Module\Import\ImportApp;
 use Iterator;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +63,7 @@ class PharManifestTest extends TestCase
         $appName = $this->importApp('import');
         $import = $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp');
 
-        $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app', $this->writeDir)]);
+        $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
 
         $real = $this->norm((string) realpath($this->appDir));
         $this->assertSame([$real => $host, $real . '/import' => $import], $roots);
@@ -120,7 +117,7 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
-        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app', $this->writeDir)]);
+        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
     /** The scripts must write where the declaration that boots them derives, or the boot recompiles. */
@@ -131,17 +128,6 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir . '/import', 'app', '/somewhere/else/' . str_replace('\\', '/', $appName) . '/app/tmp');
 
         $this->expectException(PharWriteDirMismatchException::class);
-        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app', $this->writeDir)]);
-    }
-
-    /** `getenv('APP_WRITE_DIR') ?: null` in an AppModule, with the env unset: the manual's shape, unfed. */
-    public function testImportWhoseDeclarationCarriesNoWriteDir(): void
-    {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
-        $appName = $this->importApp('import');
-        $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
-
-        $this->expectException(PharImportWithoutWriteDirException::class);
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
@@ -202,26 +188,6 @@ class PharManifestTest extends TestCase
 
         $this->expectException(PharSymlinkedDirectoryException::class);
         $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/var/build/prod-app.phar'));
-    }
-
-    public function testWriteDirOfAMarker(): void
-    {
-        $named = new CompileRecord('My\App', 'prod-app', '/write/My/App/prod-app/tmp', 1);
-        $ownTree = new CompileRecord('My\App', 'prod-app', '/app/var/tmp/prod-app', 1);
-
-        $this->assertSame('/write', PharManifest::writeDirOf($named));
-        $this->assertNull(PharManifest::writeDirOf($ownTree));
-    }
-
-    /** tmpDirIn() computes what meta() creates, so a marker can be compared without making directories. */
-    public function testTmpDirInMatchesWhatMetaWouldHold(): void
-    {
-        $writeDir = $this->writeDir . '/pinned';
-
-        $this->assertSame(
-            AppDirs::tmpDirIn('My\App', 'prod-app', $writeDir),
-            AppDirs::meta('My\App', 'prod-app', $this->appDir, $writeDir)->tmpDir,
-        );
     }
 
     /** @return non-empty-string the form roots() speaks */

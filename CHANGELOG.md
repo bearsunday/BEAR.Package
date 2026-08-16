@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A boot that cannot rewrite its scripts - an archive, an immutable image - throws `CompiledForAnotherWriteDirException` naming both write directories, instead of failing on the write (#426)
 - No file directly under the application root ships in an archive - `composer.json`, `autoload.php`, `preload.php`, `env.json`, `.env` and the rest are the project's, not the artifact's - and no `.env*` file ships wherever it sits (#426)
 - The pack refuses an entry the archive does not carry, and refuses an output it could not remove first (#426)
-- `ImportApp` takes a `$writeDir`, so an imported application in a read-only artifact writes outside it too (#426)
+- `#[AppDir]` and `#[WriteDir]` bindings beside `#[AppName]`, so an imported application writes beside the host without its declaration repeating the directory (#426)
 - `Injector::getOverrideInstance()` takes a `$writeDir`, like `getInstance()`: an override injector in a read-only tree needs one too (#426)
 
 ### Changed

@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Annotation\WriteDir;
 use BEAR\Package\Exception\PharImportsUnreadableException;
+use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Package\Module\ImportAppModule;
+use BEAR\Package\Module\WriteDirProvider;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\Module\ResourceModule;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +18,7 @@ use Ray\Compiler\Compiler as RayCompiler;
 use Ray\Di\AbstractModule;
 
 use function BEAR\Package\deleteFiles;
+use function dirname;
 use function mkdir;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -37,9 +42,10 @@ class ImportedAppsTest extends TestCase
     /** What ImportAppModule wrote at build time is what the packer reads back. */
     public function testTheContainerDeclaresWhatItImports(): void
     {
-        $writeDir = sys_get_temp_dir() . '/bear-imported-write-' . uniqid();
         $module = new ResourceModule('FakeVendor\HelloWorld');
-        $module->override(new ImportAppModule([new ImportApp('foo', 'Import\HelloWorld', 'app', $writeDir)]));
+        $module->override(new ImportAppModule([new ImportApp('foo', 'Import\HelloWorld', 'app')]));
+        // The Meta alone: a compile resolves every binding, and AppInterface is not what is under test.
+        $module->override($this->meta());
         $this->compile($module);
 
         $imports = ImportedApps::of($this->scriptDir);
@@ -47,7 +53,6 @@ class ImportedAppsTest extends TestCase
         $this->assertCount(1, $imports);
         $this->assertSame('Import\HelloWorld', $imports[0]->appName);
         $this->assertSame('app', $imports[0]->context);
-        $this->assertSame($writeDir, $imports[0]->writeDir);
     }
 
     /** No binding is the one failure that means "imports nothing". */
@@ -73,6 +78,24 @@ class ImportedAppsTest extends TestCase
 
         $this->expectException(PharImportsUnreadableException::class);
         ImportedApps::of($this->scriptDir);
+    }
+
+    private function meta(): AbstractModule
+    {
+        $meta = AppDirs::meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+
+        return new class ($meta) extends AbstractModule {
+            public function __construct(private AbstractAppMeta $meta)
+            {
+                parent::__construct();
+            }
+
+            protected function configure(): void
+            {
+                $this->bind(AbstractAppMeta::class)->toInstance($this->meta);
+                $this->bind()->annotatedWith(WriteDir::class)->toProvider(WriteDirProvider::class);
+            }
+        };
     }
 
     private function declaring(mixed $config): AbstractModule

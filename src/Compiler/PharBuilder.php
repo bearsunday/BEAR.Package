@@ -122,6 +122,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), PharManifest::writeDirOf($record));
+        return new PharReport($output, (int) filesize($output), count($files), AppDirs::writeDirOf($record->appName, $record->tmpDir));
     }
 }

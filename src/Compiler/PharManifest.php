@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\PharImportOutsideTreeException;
-use BEAR\Package\Exception\PharImportWithoutWriteDirException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
@@ -26,11 +25,8 @@ use function assert;
 use function in_array;
 use function realpath;
 use function rtrim;
-use function str_ends_with;
 use function str_replace;
 use function str_starts_with;
-use function strlen;
-use function substr;
 
 /**
  * What goes into an archive, and whether the tree can become one at all.
@@ -62,7 +58,6 @@ final class PharManifest
      *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
-     * @throws PharImportWithoutWriteDirException
      * @throws PharWriteDirMismatchException
      * @throws PharImportOutsideTreeException
      */
@@ -73,23 +68,19 @@ final class PharManifest
         $bases = [self::normalize($appDir), $archiveDir];
 
         $roots = [$archiveDir => AppDirs::script($archiveDir, $context)];
-        self::writesOutside($bases, $archiveDir, $context);
+        $host = self::writesOutside($bases, $archiveDir, $context);
+        $writeDir = AppDirs::writeDirOf($host->appName, $host->tmpDir);
         foreach ($imports as $import) {
             $importDir = self::resolve($import->appDir());
             if (! self::isUnder($importDir, $archiveDir)) {
                 throw new PharImportOutsideTreeException($importDir, $archiveDir);
             }
 
-            // Before the marker: an import with no write directory has nowhere outside to write,
-            // whatever its scripts happen to hold, and that is the answer the operator needs.
-            if ($import->writeDir === null) {
-                throw new PharImportWithoutWriteDirException($importDir);
-            }
-
             $record = self::writesOutside($bases, $importDir, $import->context);
-            $declared = self::normalize(AppDirs::tmpDirIn($import->appName, $import->context, $import->writeDir));
-            if (self::normalize($record->tmpDir) !== $declared) {
-                throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $declared);
+            // An import writes beside the host, because the container hands it the same directory.
+            $expected = $writeDir === null ? null : self::normalize(AppDirs::tmpDirIn($import->appName, $import->context, $writeDir));
+            if ($expected !== null && self::normalize($record->tmpDir) !== $expected) {
+                throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $expected);
             }
 
             $roots[$importDir] = AppDirs::script($importDir, $import->context);
@@ -142,25 +133,6 @@ final class PharManifest
         }
 
         return $record;
-    }
-
-    /**
-     * The writeDir a tmpDir was derived from, or null when it was not: only
-     * {writeDir}/{Vendor}/{Project}/{context}/tmp names one.
-     *
-     * @return WriteDir|null in the marker's own spelling - an operator runs it
-     */
-    public static function writeDirOf(CompileRecord $record): string|null
-    {
-        $suffix = '/' . str_replace('\\', '/', $record->appName) . '/' . $record->context . '/tmp';
-        if (! str_ends_with(self::normalize($record->tmpDir), $suffix)) {
-            return null;
-        }
-
-        // normalize() never changes the length, so the suffix cuts at the same place in both.
-        $writeDir = substr($record->tmpDir, 0, -strlen($suffix));
-
-        return $writeDir === '' ? null : $writeDir;
     }
 
     /**

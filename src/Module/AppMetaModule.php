@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Annotation\AppDir;
+use BEAR\Package\Annotation\WriteDir;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Override;
@@ -22,6 +24,8 @@ use function class_exists;
  * AbstractAppMeta
  * AppInterface
  * :AppName
+ * :AppDir
+ * :WriteDir
  *
  * @psalm-suppress ClassMustBeFinal
  */
@@ -43,5 +47,8 @@ class AppMetaModule extends AbstractModule
         assert(class_exists($appClass));
         $this->bind(AppInterface::class)->to($appClass)->in(Scope::SINGLETON);
         $this->bind()->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
+        $this->bind()->annotatedWith(AppDir::class)->toInstance($this->appMeta->appDir);
+        // A derivation, not a property: the provider reads it back from whatever Meta is bound.
+        $this->bind()->annotatedWith(WriteDir::class)->toProvider(WriteDirProvider::class);
     }
 }
