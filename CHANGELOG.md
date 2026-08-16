@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- An archive carries the application's own files under `var/` - `var/sql`, `var/conf`, `var/json_schema`, `var/templates` - which 1.23.0 dropped along with everything else there. Only `var/log`, `var/tmp` and `var/build` stay out (#426)
+
 ## [1.23.0] - 2026-08-17
 
 An application can be packed into one phar and booted read-only. `Compiler::phar()` packs what a compile

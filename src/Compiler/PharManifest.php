@@ -42,6 +42,12 @@ final class PharManifest
     /** Ray.Compiler build noise: written next to the scripts, read by no boot. */
     private const SCRIPT_DIR_NOISE = ['compile.lock', '_bindings.log', 'bindings.md'];
 
+    /**
+     * Directories under var/ an archive leaves behind: a run writes them, or a build produced them.
+     * The compiled scripts sit under `tmp/` and are named separately, so they still ship.
+     */
+    private const UNSHIPPED_VAR_DIRS = ['log', 'tmp', 'build'];
+
     /** @codeCoverageIgnore */
     private function __construct()
     {
@@ -182,6 +188,9 @@ final class PharManifest
     /**
      * Whether a path under some application's var/ ships; null when it is under none.
      *
+     * An application keeps its own files there - `var/sql`, `var/conf`, `var/json_schema`,
+     * `var/templates` - and the boot reads them. Only what a run writes stays out.
+     *
      * @param non-empty-array<AppDir, ScriptDir> $roots
      */
     private static function shipsFromVar(string $path, string $name, array $roots): bool|null
@@ -195,8 +204,14 @@ final class PharManifest
                 return ! in_array($name, self::SCRIPT_DIR_NOISE, true);
             }
 
-            // Ancestors of the script directory must pass, or the iterator never descends to it.
-            return self::isUnder($scriptDir, $path);
+            foreach (self::UNSHIPPED_VAR_DIRS as $dir) {
+                if (self::isUnder($path, $root . '/var/' . $dir)) {
+                    // Ancestors of the script directory must pass, or the iterator never descends to it.
+                    return self::isUnder($scriptDir, $path);
+                }
+            }
+
+            return true;
         }
 
         return null;
