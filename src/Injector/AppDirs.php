@@ -56,24 +56,19 @@ final class AppDirs
     }
 
     /**
-     * The tmp directory a Meta built from these values would hold - computed, not created,
-     * so the pack can compare a marker against a declaration without making directories.
+     * The tmp directory meta() puts under a write directory - computed, not created, so the pack
+     * can compare a marker against a declaration without making one.
      *
-     * @param AppName       $appName
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param WriteDir|null $writeDir
+     * @param AppName  $appName
+     * @param Context  $context
+     * @param WriteDir $writeDir
      *
      * @return TmpDir
      *
      * @throws InvalidWriteDirException
      */
-    public static function tmpDirFor(string $appName, string $context, string $appDir, string|null $writeDir): string
+    public static function tmpDirIn(string $appName, string $context, string $writeDir): string
     {
-        if ($writeDir === null) {
-            return $appDir . '/var/tmp/' . $context;
-        }
-
         return self::base($appName, $context, $writeDir) . '/tmp';
     }
 

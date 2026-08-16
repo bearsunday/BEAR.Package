@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\PharImportOutsideTreeException;
+use BEAR\Package\Exception\PharImportWithoutWriteDirException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
@@ -61,6 +62,7 @@ final class PharManifest
      *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
+     * @throws PharImportWithoutWriteDirException
      * @throws PharWriteDirMismatchException
      * @throws PharImportOutsideTreeException
      */
@@ -78,8 +80,14 @@ final class PharManifest
                 throw new PharImportOutsideTreeException($importDir, $archiveDir);
             }
 
+            // Before the marker: an import with no write directory has nowhere outside to write,
+            // whatever its scripts happen to hold, and that is the answer the operator needs.
+            if ($import->writeDir === null) {
+                throw new PharImportWithoutWriteDirException($importDir);
+            }
+
             $record = self::writesOutside($bases, $importDir, $import->context);
-            $declared = self::normalize(AppDirs::tmpDirFor($import->appName, $import->context, $importDir, $import->writeDir));
+            $declared = self::normalize(AppDirs::tmpDirIn($import->appName, $import->context, $import->writeDir));
             if (self::normalize($record->tmpDir) !== $declared) {
                 throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $declared);
             }
