@@ -12,6 +12,8 @@ use function sprintf;
  * The archive is read-only at run time, so scripts that write to their own `var/` would try to
  * recompile into it on the first boot. Compile with `APP_WRITE_DIR` set - an imported
  * application reads it in its own AppModule too.
+ *
+ * @see https://bearsunday.github.io/manuals/1.0/en/phar.html#when-the-build-stops
  */
 final class PharWritesInsideArchiveException extends LogicException
 {

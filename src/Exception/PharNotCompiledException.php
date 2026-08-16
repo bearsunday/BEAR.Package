@@ -9,6 +9,8 @@ namespace BEAR\Package\Exception;
  *
  * `Compiler::phar()` packs what is on disk: `$compiler(); $compiler->phar();` is the order. The
  * compile marker is what proves a compile ran, and the boot inside the archive reads it too.
+ *
+ * @see https://bearsunday.github.io/manuals/1.0/en/phar.html#when-the-build-stops
  */
 final class PharNotCompiledException extends LogicException
 {

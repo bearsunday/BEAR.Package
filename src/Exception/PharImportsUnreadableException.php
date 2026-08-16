@@ -9,6 +9,8 @@ namespace BEAR\Package\Exception;
  *
  * That declaration is what the packer trusts instead of scanning the tree, so it stops rather
  * than ship an archive with an application missing. Recompile with the version that packs it.
+ *
+ * @see https://bearsunday.github.io/manuals/1.0/en/phar.html#when-the-build-stops
  */
 final class PharImportsUnreadableException extends RuntimeException
 {

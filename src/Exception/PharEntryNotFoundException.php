@@ -9,6 +9,8 @@ namespace BEAR\Package\Exception;
  *
  * The stub requires this path on every boot, so a missing one stops the build instead. An
  * application whose entry is not `public/index.php` passes its own to `Compiler::phar()`.
+ *
+ * @see https://bearsunday.github.io/manuals/1.0/en/phar.html#when-the-build-stops
  */
 final class PharEntryNotFoundException extends LogicException
 {

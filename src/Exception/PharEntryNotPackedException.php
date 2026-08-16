@@ -12,6 +12,7 @@ namespace BEAR\Package\Exception;
  *
  * @see \BEAR\Package\Compiler\PharBuilder
  * @codeCoverageIgnore thrown only where a phar is written, which no coverage run does
+ * @see https://bearsunday.github.io/manuals/1.0/en/phar.html#when-the-build-stops
  */
 final class PharEntryNotPackedException extends LogicException
 {
