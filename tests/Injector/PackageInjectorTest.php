@@ -216,7 +216,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = AppDirs::script($appDir, 'prod-app');
+        $scriptDir = CompiledScripts::dir($appDir, 'prod-app');
         self::cleanProdDi($scriptDir);
 
         $first = PackageInjector::factory($meta, 'prod-app');
@@ -245,7 +245,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = AppDirs::script($appDir, 'prod-app');
+        $scriptDir = CompiledScripts::dir($appDir, 'prod-app');
         self::cleanProdDi($scriptDir);
 
         // The prod logger writes through ErrorLogHandler, so error_log is the destination.
@@ -271,7 +271,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = AppDirs::script($appDir, 'prod-app');
+        $scriptDir = CompiledScripts::dir($appDir, 'prod-app');
 
         PackageInjector::factory($meta, 'prod-app');
         $phpScripts = glob($scriptDir . '/*.php');
@@ -304,7 +304,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = AppDirs::script($appDir, 'prod-app');
+        $scriptDir = CompiledScripts::dir($appDir, 'prod-app');
 
         PackageInjector::factory($meta, 'prod-app');
         $phpScripts = glob($scriptDir . '/*.php');
@@ -336,7 +336,7 @@ class PackageInjectorTest extends TestCase
         @mkdir($dir, 0777, true);
         try {
             $this->assertFalse(CompileMarker::matches($dir, $tmpDir));
-            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', $tmpDir);
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', $tmpDir, null);
             $this->assertTrue(CompileMarker::matches($dir, $tmpDir));
         } finally {
             @unlink(CompileMarker::path($dir));
@@ -353,7 +353,7 @@ class PackageInjectorTest extends TestCase
         $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
         @mkdir($dir, 0777, true);
         try {
-            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/a/tmp');
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/a/tmp', '/var/cache');
             $this->assertFalse(CompileMarker::matches($dir, '/var/cache/b/tmp'));
             $this->assertTrue(CompileMarker::matches($dir, '/var/cache/a/tmp'));
         } finally {
@@ -406,6 +406,6 @@ class PackageInjectorTest extends TestCase
     {
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
         $this->expectException(DirectoryNotWritableException::class);
-        CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/app/tmp');
+        CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/app/tmp', '/var/cache');
     }
 }

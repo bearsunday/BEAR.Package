@@ -6,7 +6,7 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Types;
 
 use function array_filter;
@@ -95,7 +95,7 @@ require __DIR__ . '/vendor/autoload.php';
     {
         /** @var AppDir $appDir */
         $appDir = $appMeta->appDir;
-        $scriptDir = realpath(AppDirs::script($appDir, $context));
+        $scriptDir = realpath(CompiledScripts::dir($appDir, $context));
         if ($scriptDir === false) {
             return ''; // @codeCoverageIgnore
         }

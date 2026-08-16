@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use PHPUnit\Framework\TestCase;
 
@@ -42,10 +43,10 @@ class PreloadRecorderTest extends TestCase
     public function testRefusesAContextThatAssemblesPerRequest(): void
     {
         $context = 'app';
-        $meta = AppDirs::meta(self::APP_NAME, $context, self::APP_DIR, null);
-        $scriptDir = AppDirs::script(self::APP_DIR, $context);
+        $meta = Meta::create(self::APP_NAME, $context, self::APP_DIR, null);
+        $scriptDir = CompiledScripts::dir(self::APP_DIR, $context);
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir);
+        CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir, $meta->writeDir);
 
         $this->expectException(PreloadRecordException::class);
         $this->expectExceptionMessage('assembles the container on each request');

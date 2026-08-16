@@ -58,7 +58,7 @@ class PharBuilderTest extends TestCase
 
     public function testPacksWhatTheManifestSelected(): void
     {
-        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\nreturn null;\n");
         file_put_contents($scriptDir . '/compile.lock', 'noise');
         mkdir($this->appDir . '/src', 0777, true);
@@ -85,7 +85,7 @@ class PharBuilderTest extends TestCase
 
     public function testEntryThatIsNotOnDisk(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
 
         $this->expectException(PharEntryNotFoundException::class);
         (new PharBuilder())('prod-app', $this->appDir, 'public/nowhere.php');
@@ -94,7 +94,7 @@ class PharBuilderTest extends TestCase
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
     public function testEntryThatCannotShip(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         $this->vendor();
 
@@ -115,7 +115,7 @@ class PharBuilderTest extends TestCase
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
     public function testPreviousArchiveThatCannotBeRemoved(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
         mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
 
@@ -123,7 +123,7 @@ class PharBuilderTest extends TestCase
         (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
     }
 
-    /** A tmpDir that does not follow the writeDir convention names no write directory to print. */
+    /** A compile that named its own tmp directory was placed under no base, so there is none to print. */
     public function testReportWithoutAWriteDirectory(): void
     {
         $this->marker($this->writeDir . '/somewhere/of/its/own');
@@ -139,7 +139,7 @@ class PharBuilderTest extends TestCase
 
     public function testWorkerUnderAReadOnlyPharIni(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
         $this->vendor();
 
@@ -193,11 +193,11 @@ class PharBuilderTest extends TestCase
      *
      * @return non-empty-string the script directory the marker was written to
      */
-    private function marker(string $tmpDir): string
+    private function marker(string $tmpDir, string|null $writeDir = null): string
     {
         $scriptDir = $this->appDir . '/var/tmp/prod-app/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir);
+        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir, $writeDir);
 
         return $scriptDir;
     }

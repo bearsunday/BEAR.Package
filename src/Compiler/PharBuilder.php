@@ -12,7 +12,7 @@ use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Types;
@@ -73,7 +73,7 @@ final class PharBuilder
 
         // The host marker is read before the container is asked for its imports, so an
         // uncompiled tree reports "not compiled", not a script-directory error.
-        $hostDir = AppDirs::script($appDirReal, $context);
+        $hostDir = CompiledScripts::dir($appDirReal, $context);
         $hostRecord = CompileMarker::read($hostDir);
         if ($hostRecord === null) {
             throw new PharNotCompiledException($hostDir);
@@ -122,6 +122,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), AppDirs::writeDir($record->appName, $record->tmpDir));
+        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir);
     }
 }

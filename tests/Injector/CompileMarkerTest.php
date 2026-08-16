@@ -31,7 +31,7 @@ class CompileMarkerTest extends TestCase
 
     public function testWhatWasWrittenIsWhatIsRead(): void
     {
-        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp');
+        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp', '/write');
 
         $record = CompileMarker::read($this->scriptDir);
 
@@ -67,7 +67,7 @@ class CompileMarkerTest extends TestCase
     /** Only the writable directory decides whether the scripts are the ones this boot needs. */
     public function testMatchesTheWritableDirectoryTheScriptsHold(): void
     {
-        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp');
+        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp', '/write');
 
         $this->assertTrue(CompileMarker::matches($this->scriptDir, '/write/My/App/prod-app/tmp'));
         $this->assertFalse(CompileMarker::matches($this->scriptDir, '/other/My/App/prod-app/tmp'));

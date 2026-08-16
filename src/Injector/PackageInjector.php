@@ -197,7 +197,7 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
+        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir, $meta->writeDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
@@ -252,7 +252,7 @@ final class PackageInjector
     {
         /** @var AppDir $appDir */
         $appDir = $meta->appDir;
-        $scriptDir = AppDirs::script($appDir, $context);
+        $scriptDir = CompiledScripts::dir($appDir, $context);
         if ($overrideModule instanceof AbstractModule) {
             $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
         }

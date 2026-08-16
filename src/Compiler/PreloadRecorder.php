@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Package\Types;
@@ -55,8 +56,8 @@ final class PreloadRecorder
             require $compileStub;
         }
 
-        $meta = AppDirs::meta($appName, $context, $appDir, $writeDir);
-        $scriptDir = AppDirs::script($appDir, $context);
+        $meta = Meta::create($appName, $context, $appDir, $writeDir);
+        $scriptDir = CompiledScripts::dir($appDir, $context);
         // Without a current marker the boot below compiles on demand and the recording
         // measures that compile - the very error this pipeline removes.
         if (! CompileMarker::matches($scriptDir, $meta->tmpDir)) {

@@ -6,7 +6,6 @@ namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
-use BEAR\Package\Injector\AppDirs;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Resource\Annotation\ImportAppConfig;
 use BEAR\Resource\AppAdapter;
@@ -34,8 +33,8 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     #[Override]
     public function get(): SchemeCollectionInterface
     {
-        // Where the host writes, read back from its Meta: an import writes beside it.
-        $writeDir = AppDirs::writeDir($this->appMeta->name, $this->appMeta->tmpDir);
+        // The host's base: an import is placed beside it.
+        $writeDir = $this->appMeta->writeDir;
         foreach ($this->importAppConfig as $app) {
             $injector = Injector::getInstance($app->appName, $app->context, $app->appDir(), null, $writeDir);
             $adapter = new AppAdapter($injector, $app->appName);

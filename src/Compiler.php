@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
 use BEAR\Package\Compiler\CompileClassMetaInfo;
@@ -16,7 +17,7 @@ use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Exception\WriteDirMismatchException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Resource\NamedParameterInterface;
@@ -100,7 +101,7 @@ final class Compiler
      */
     public function __construct(string $appName, string $context, string $appDir, string|null $writeDir = null)
     {
-        $meta = AppDirs::meta($appName, $context, $appDir, $writeDir);
+        $meta = Meta::create($appName, $context, $appDir, $writeDir);
         $this->preloadJob = [$meta->name, $context, $appDir, $writeDir];
         // The tracker and hookNullObjectClass must run before the injector is built
         // (building it first would load the app too early and break .compile.php stubs).
@@ -126,7 +127,7 @@ final class Compiler
         $meta = $injector->getInstance(AbstractAppMeta::class);
         /** @var AppDir $appDir */
         $appDir = $meta->appDir;
-        $compileTmpDir = AppDirs::meta($meta->name, $context, $appDir, $writeDir)->tmpDir;
+        $compileTmpDir = Meta::create($meta->name, $context, $appDir, $writeDir)->tmpDir;
         if ($compileTmpDir !== $meta->tmpDir) {
             throw new WriteDirMismatchException($compileTmpDir, $meta->tmpDir);
         }
@@ -302,7 +303,7 @@ final class Compiler
     public function clean(): void
     {
         $this->assertNotDelegated(__FUNCTION__);
-        $scriptDir = AppDirs::script($this->appMeta->appDir, $this->context);
+        $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
         $this->emptyDirectory($this->appMeta->tmpDir);
         $this->emptyDirectory($scriptDir);
         $this->ensureDirectory($scriptDir);
@@ -356,11 +357,11 @@ final class Compiler
         $this->assertNotDelegated(__FUNCTION__);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $scriptDir = AppDirs::script($this->appMeta->appDir, $this->context);
+        $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
-        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
+        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir, $this->appMeta->writeDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();

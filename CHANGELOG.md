@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `bear/app-meta` `^1.12`: `Meta::create()` owns the write-directory layout, and a Meta carries the base it was placed under
+- The compile marker records that base, so the pack reads it instead of taking a tmp directory apart
+- `AppDirs` is gone: `Injector\CompiledScripts::dir()` answers where compiled scripts live, and nothing else composes paths
+
+### Removed
+- `InvalidWriteDirException`: a relative write directory is refused by `BEAR\AppMeta\Exception\WriteDirNotAbsoluteException`
+
 ### Added
 - `Compiler::phar()` — pack the compiled tree into `var/build/{context}.phar`, on both the `new Compiler(...)` and `Compiler::fromInjector(...)` shapes (#426)
 - The compile marker is a readable record (`.bear-compile.json`: app, context, tmpDir), and the pack derives the write directory from it instead of taking it again (#426)

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
-use BEAR\Package\Exception\InvalidWriteDirException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Exception\WriteDirMismatchException;
-use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -191,7 +191,7 @@ class CompilerTest extends TestCase
         foreach (
             [
                 'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'PackageInjector.php',
-                'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'AppDirs.php',
+                'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'CompiledScripts.php',
             ] as $bootFile
         ) {
             $this->assertStringContainsString(self::pathLiteral($bootFile), $preload);
@@ -337,7 +337,7 @@ class CompilerTest extends TestCase
     /** A relative or empty write directory resolves against the current directory, which differs between compile and request. */
     public function testWriteDirMustBeAbsolute(): void
     {
-        $this->expectException(InvalidWriteDirException::class);
+        $this->expectException(WriteDirNotAbsoluteException::class);
         new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, 'relative/dir');
     }
 
@@ -346,7 +346,7 @@ class CompilerTest extends TestCase
     {
         $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
         $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir))());
-        $scriptDir = AppDirs::script(self::APP_DIR, 'prod-cli-app');
+        $scriptDir = CompiledScripts::dir(self::APP_DIR, 'prod-cli-app');
         $scripts = glob($scriptDir . '/*.php');
         $this->assertNotFalse($scripts);
         $this->assertNotSame([], $scripts);

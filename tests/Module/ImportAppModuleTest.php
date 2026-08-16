@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module;
 
-use BEAR\Package\Injector\AppDirs;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Resource\Module\ResourceModule;
 use BEAR\Resource\ResourceInterface;
@@ -58,7 +58,7 @@ class ImportAppModuleTest extends TestCase
      */
     private function module(array $imports, string|null $writeDir = null): AbstractModule
     {
-        $meta = AppDirs::meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', $writeDir);
+        $meta = Meta::create('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', $writeDir);
         $module = new ResourceModule('FakeVendor\HelloWorld');
         $module->override(new AppMetaModule($meta));
         $module->override(new ImportAppModule($imports));
