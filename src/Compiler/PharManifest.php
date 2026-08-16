@@ -30,17 +30,7 @@ use function str_starts_with;
 use function strlen;
 use function substr;
 
-/**
- * What goes into an archive, and whether the tree can become one at all.
- *
- * Applications are the host plus what its compiled container declares as imports: a tree
- * that merely looks like an application is never treated as one. Every application must
- * write outside the archive, and where its own declaration derives, or the boot would
- * recompile - in a read-only filesystem, or into a directory nothing reads.
- *
- * Override injector scripts (Injector::getOverrideInstance()) ship with the script
- * directory, but a phar boot is expected to use the default injector.
- */
+/** What goes into an archive, and whether the tree can become one at all. */
 final class PharManifest
 {
     /** Ray.Compiler build noise: written next to the scripts, read by no boot. */

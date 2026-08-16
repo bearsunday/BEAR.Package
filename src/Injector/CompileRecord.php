@@ -7,8 +7,7 @@ namespace BEAR\Package\Injector;
 use BEAR\Package\Types;
 
 /**
- * What a compile wrote into a script directory: which application, which context,
- * and the writable directory its bindings hold.
+ * What a compile wrote into a script directory.
  *
  * @see CompileMarker
  * @psalm-import-type AppName from Types
