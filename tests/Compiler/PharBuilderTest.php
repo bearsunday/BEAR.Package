@@ -12,17 +12,20 @@ use Phar;
 use PHPUnit\Framework\TestCase;
 
 use function BEAR\Package\deleteFiles;
+use function chdir;
 use function dirname;
 use function escapeshellarg;
 use function exec;
 use function file_exists;
 use function file_put_contents;
+use function getcwd;
 use function implode;
 use function is_dir;
 use function mkdir;
 use function realpath;
 use function rmdir;
 use function sprintf;
+use function str_replace;
 use function sys_get_temp_dir;
 use function uniqid;
 use function var_export;
@@ -157,11 +160,18 @@ class PharBuilderTest extends TestCase
         $this->entry();
         $this->vendor();
 
-        [$exitCode, $output] = $this->worker('public/index.php', 'var/build/prod-app.phar', cwd: $this->appDir);
+        $cwd = getcwd();
+        chdir($this->appDir);
+        try {
+            [$exitCode, $output] = $this->worker('public/index.php', 'var/build/prod-app.phar');
+        } finally {
+            chdir($cwd !== false ? $cwd : dirname(__DIR__, 2));
+        }
 
         $this->assertSame(0, $exitCode, $output);
-        $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
-        $phar = new Phar(realpath($this->appDir) . '/var/build/prod-app.phar');
+        $built = realpath($this->appDir) . '/var/build/prod-app.phar';
+        $this->assertStringContainsString($this->norm($built), $this->norm($output));
+        $phar = new Phar($built);
         $this->assertFalse(isset($phar['var/build/prod-app.phar']), 'the archive packed itself');
     }
 
@@ -183,7 +193,7 @@ class PharBuilderTest extends TestCase
     }
 
     /** @return array{int, string} exit code and merged output of one worker run */
-    private function worker(string $entry, string $output = '', bool $readOnly = false, string|null $cwd = null): array
+    private function worker(string $entry, string $output = '', bool $readOnly = false): array
     {
         $command = sprintf(
             '%s -d phar.readonly=%d %s prod-app %s %s %s 2>&1',
@@ -194,7 +204,7 @@ class PharBuilderTest extends TestCase
             escapeshellarg($entry),
             escapeshellarg($output),
         );
-        exec($cwd === null ? $command : sprintf('cd %s && %s', escapeshellarg($cwd), $command), $lines, $exitCode);
+        exec($command, $lines, $exitCode);
 
         return [$exitCode, implode("\n", $lines)];
     }
@@ -216,6 +226,12 @@ class PharBuilderTest extends TestCase
         CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir, $writeDir);
 
         return $scriptDir;
+    }
+
+    /** Windows spells realpath() with backslashes, and the worker prints what it was given. */
+    private function norm(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 
     private function entry(): void

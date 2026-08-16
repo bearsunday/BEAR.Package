@@ -27,6 +27,7 @@ use function file_exists;
 use function filesize;
 use function is_file;
 use function mkdir;
+use function preg_match;
 use function realpath;
 use function sprintf;
 use function unlink;
@@ -82,10 +83,9 @@ final class PharBuilder
         $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
         $output ??= $appDirReal . '/var/build/' . $context . '.phar';
         @mkdir(dirname($output), 0777, true);
-        // Absolute from here on: the packer excludes the archive by path, and a relative one
-        // would name a file the iterator never yields, so the archive would ship inside itself.
-        $outputDir = realpath(dirname($output));
-        $output = $outputDir === false ? $output : $outputDir . '/' . basename($output);
+        // The packer excludes the archive by path, so a relative one names a file the iterator
+        // never yields and the archive ships inside itself. An absolute one keeps its spelling.
+        $output = self::absolute($output);
         @unlink($output);
         clearstatcache(true, $output);
         // new Phar() on a surviving file adds to it, and the stale entries would ship unnoticed.
@@ -94,6 +94,22 @@ final class PharBuilder
         }
 
         return self::pack($appDirReal, $roots, $entry, $output, $hostRecord); // @codeCoverageIgnore
+    }
+
+    /**
+     * @param PharPath $path
+     *
+     * @return PharPath
+     */
+    private static function absolute(string $path): string
+    {
+        if (preg_match('#^(/|\\\\|[A-Za-z]:[/\\\\])#', $path)) {
+            return $path;
+        }
+
+        $dir = realpath(dirname($path));
+
+        return $dir === false ? $path : $dir . '/' . basename($path);
     }
 
     /**
