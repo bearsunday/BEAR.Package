@@ -21,7 +21,6 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
      * @param ImportApp[]           $importAppConfig
      * @param non-empty-string|null $writeDir        the host's, as WriteDirProvider read it back from the Meta
      */
-    #[Named('importAppConfig=BEAR\Resource\Annotation\ImportAppConfig,schemeCollection=original')]
     public function __construct(
         #[Named(ImportAppConfig::class)]
         private array $importAppConfig,
