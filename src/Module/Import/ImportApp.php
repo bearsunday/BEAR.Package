@@ -36,7 +36,7 @@ final class ImportApp
      * Directory of the imported application, resolved from its AppModule on each call.
      *
      * Never stored: the compiled container holds this object, and an artifact that moves
-     * the application moves its directory. $writeDir is stored - it must not move.
+     * the application moves its directory.
      *
      * Resolved the way Meta resolves its own, down to the exception an unknown name gets.
      *
