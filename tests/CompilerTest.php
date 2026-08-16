@@ -10,9 +10,11 @@ use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\InvalidWriteDirException;
+use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Exception\WriteDirMismatchException;
 use BEAR\Package\Injector\AppDirs;
+use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FilesystemIterator;
@@ -31,6 +33,7 @@ use function dirname;
 use function escapeshellarg;
 use function exec;
 use function explode;
+use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function fileinode;
@@ -357,6 +360,30 @@ class CompilerTest extends TestCase
         foreach ($inodes as $file => $inode) {
             $this->assertSame($inode, fileinode($file), $file . ' was rewritten');
         }
+    }
+
+    /** Compile, then pack: the archive carries the scripts and their marker. */
+    public function testPharPacksTheCompiledScripts(): void
+    {
+        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir);
+        $this->assertSame(0, $compiler());
+        $this->assertSame(0, $compiler->phar());
+
+        $phar = self::APP_DIR . '/var/build/prod-cli-app.phar';
+        $this->assertFileExists($phar);
+        $this->assertTrue(file_exists('phar://' . $phar . '/var/tmp/prod-cli-app/di/' . CompileMarker::FILENAME));
+        $this->assertTrue(file_exists('phar://' . $phar . '/src/Module/AppModule.php'));
+        $this->assertFalse(file_exists('phar://' . $phar . '/autoload.php'));
+    }
+
+    /** The stub would require a path that is not there, so the entry is checked before the worker starts. */
+    public function testPharEntryThatDoesNotExist(): void
+    {
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, sys_get_temp_dir() . '/bear-package-write-' . uniqid());
+
+        $this->expectException(PharEntryNotFoundException::class);
+        $compiler->phar('public/nowhere.php');
     }
 
     /**

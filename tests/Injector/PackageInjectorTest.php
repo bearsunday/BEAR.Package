@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\Meta;
+use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
 use BEAR\Package\Exception\DirectoryNotWritableException;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
@@ -29,6 +30,7 @@ use function assert;
 use function dirname;
 use function file_exists;
 use function file_get_contents;
+use function file_put_contents;
 use function fileinode;
 use function filemtime;
 use function glob;
@@ -334,7 +336,7 @@ class PackageInjectorTest extends TestCase
         @mkdir($dir, 0777, true);
         try {
             $this->assertFalse(CompileMarker::matches($dir, $tmpDir));
-            CompileMarker::write($dir, $tmpDir);
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', $tmpDir);
             $this->assertTrue(CompileMarker::matches($dir, $tmpDir));
         } finally {
             @unlink(CompileMarker::path($dir));
@@ -351,7 +353,7 @@ class PackageInjectorTest extends TestCase
         $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
         @mkdir($dir, 0777, true);
         try {
-            CompileMarker::write($dir, '/var/cache/a/tmp');
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/a/tmp');
             $this->assertFalse(CompileMarker::matches($dir, '/var/cache/b/tmp'));
             $this->assertTrue(CompileMarker::matches($dir, '/var/cache/a/tmp'));
         } finally {
@@ -360,11 +362,50 @@ class PackageInjectorTest extends TestCase
         }
     }
 
+    /**
+     * A boot that cannot rewrite the scripts is told what the mismatch was, instead of failing
+     * on the write: an archive, an immutable image, or here a path nothing can be created under.
+     */
+    public function testBootThatCannotReplaceTheScripts(): void
+    {
+        $inTheWay = sys_get_temp_dir() . '/bear-not-a-dir-' . uniqid('', true);
+        file_put_contents($inTheWay, 'not a directory');
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', dirname(__DIR__) . '/Fake/fake-app');
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+
+        try {
+            $this->expectException(CompiledForAnotherWriteDirException::class);
+            (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
+                ->invoke(null, $module, $inTheWay . '/di', $meta, 'prod-app');
+        } finally {
+            @unlink($inTheWay);
+        }
+    }
+
+    /** An archive that is not there has no ancestor to ask, and the working directory does not answer for it. */
+    public function testBootWhoseScriptDirHasNoExistingAncestor(): void
+    {
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', dirname(__DIR__) . '/Fake/fake-app');
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+
+        $this->expectException(CompiledForAnotherWriteDirException::class);
+        (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
+            ->invoke(null, $module, 'phar:///deploy/app.phar/var/tmp/prod-app/di', $meta, 'prod-app');
+    }
+
     /** A marker that cannot be persisted makes every later boot recompile, so it must not be swallowed. */
     public function testCompileMarkerWriteFailsLoudlyWhenNotWritable(): void
     {
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
         $this->expectException(DirectoryNotWritableException::class);
-        CompileMarker::write($missingDir, '/var/cache/app/tmp');
+        CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/app/tmp');
     }
 }

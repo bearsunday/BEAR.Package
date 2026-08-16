@@ -6,18 +6,25 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Exception\InvalidWriteDirException;
+use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Package\Types;
 
+use function dirname;
 use function preg_match;
 use function rtrim;
+use function str_ends_with;
 use function str_replace;
 use function str_starts_with;
+use function strlen;
+use function substr;
 
 /**
  * @psalm-import-type AppName from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type WriteDir from Types
+ * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type TmpDir from Types
  */
 final class AppDirs
 {
@@ -35,20 +42,64 @@ final class AppDirs
      * @param WriteDir|null $writeDir absolute path; defaults to {appDir}/var
      *
      * @throws InvalidWriteDirException
+     * @throws WriteDirRequiredException
      */
     public static function meta(string $appName, string $context, string $appDir, string|null $writeDir = null): Meta
     {
+        if ($writeDir === null && self::isStreamUri($appDir)) {
+            throw new WriteDirRequiredException($appDir);
+        }
+
         if ($writeDir === null) {
             return new Meta($appName, $context, $appDir);
         }
 
+        $base = self::base($appName, $context, $writeDir);
+
+        return new Meta($appName, $context, $appDir, $base . '/tmp', $base . '/log');
+    }
+
+    /**
+     * The write directory a tmp directory was derived from, or null when it names none.
+     *
+     * The inverse of what meta() composes: the runtime reads it out of a Meta, the pack out of a
+     * compile marker, and nothing else has to know the shape.
+     *
+     * @param AppName $appName
+     * @param TmpDir  $tmpDir
+     *
+     * @return WriteDir|null in the spelling it was given
+     */
+    public static function writeDir(string $appName, string $tmpDir): string|null
+    {
+        // {writeDir}/{Vendor}/{Project}/{context}/tmp - the context is one segment, whatever it is
+        $suffix = '/' . str_replace('\\', '/', $appName);
+        $base = dirname($tmpDir, 2);
+        if (! str_ends_with(str_replace('\\', '/', $base), $suffix)) {
+            return null;
+        }
+
+        $writeDir = substr($base, 0, -strlen($suffix));
+
+        return $writeDir === '' ? null : $writeDir;
+    }
+
+    /**
+     * @param AppName  $appName
+     * @param Context  $context
+     * @param WriteDir $writeDir
+     *
+     * @return non-empty-string
+     *
+     * @throws InvalidWriteDirException
+     */
+    private static function base(string $appName, string $context, string $writeDir): string
+    {
         if (! self::isAbsolute($writeDir)) {
             throw new InvalidWriteDirException($writeDir);
         }
 
-        $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $appName) . '/' . $context;
-
-        return new Meta($appName, $context, $appDir, $base . '/tmp', $base . '/log');
+        return rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $appName) . '/' . $context;
     }
 
     private static function isAbsolute(string $path): bool
@@ -58,13 +109,18 @@ final class AppDirs
             || (bool) preg_match('#^[A-Za-z]:[/\\\\]#', $path);
     }
 
+    private static function isStreamUri(string $path): bool
+    {
+        return (bool) preg_match('#^[A-Za-z][A-Za-z0-9+.\-]*://#', $path);
+    }
+
     /**
      * Compiled DI scripts, never under writeDir: the deployment artifact carries them.
      *
      * @param AppDir  $appDir
      * @param Context $context
      *
-     * @return non-empty-string
+     * @return ScriptDir
      */
     public static function script(string $appDir, string $context): string
     {

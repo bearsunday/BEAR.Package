@@ -34,6 +34,8 @@ use ArrayObject;
  * @psalm-type QueryParams = array<string, mixed>
  *
  * Compiler Types
+ * @psalm-type PharPath = non-empty-string
+ * @psalm-type StubEntry = non-empty-string
  * @psalm-type ClassList = ArrayObject<int, string>
  * @psalm-type OverwrittenFiles = ArrayObject<int, string>
  * @psalm-type ClassPaths = list<string>

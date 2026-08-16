@@ -45,7 +45,7 @@ class PreloadRecorderTest extends TestCase
         $meta = AppDirs::meta(self::APP_NAME, $context, self::APP_DIR, null);
         $scriptDir = AppDirs::script(self::APP_DIR, $context);
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, $meta->tmpDir);
+        CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir);
 
         $this->expectException(PreloadRecordException::class);
         $this->expectExceptionMessage('assembles the container on each request');

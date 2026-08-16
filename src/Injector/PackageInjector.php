@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Psr\Log\LoggerInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
@@ -22,12 +22,17 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Throwable;
 
 use function assert;
+use function dirname;
+use function error_log;
+use function file_exists;
 use function hash;
 use function is_dir;
+use function is_writable;
 use function mkdir;
 use function serialize;
 use function sprintf;
 use function str_replace;
+use function str_starts_with;
 use function trigger_error;
 
 use const E_USER_WARNING;
@@ -35,6 +40,7 @@ use const E_USER_WARNING;
 /**
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
+ * @psalm-import-type ScriptDir from Types
  */
 final class PackageInjector
 {
@@ -102,7 +108,7 @@ final class PackageInjector
         $scriptDir = self::ensureScriptDir($meta, $context, $overrideModule);
         $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
-            return self::prodInjector($module, $scriptDir, $meta->tmpDir);
+            return self::prodInjector($module, $scriptDir, $meta, $context);
         }
 
         return self::rayInjector($module, $scriptDir);
@@ -146,7 +152,7 @@ final class PackageInjector
     /**
      * @param Context $context
      *
-     * @return non-empty-string
+     * @return ScriptDir
      */
     private static function ensureScriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
     {
@@ -168,17 +174,17 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * A marker with broken scripts is a deploy error, not a recoverable one, so
-     * the boot is left to throw instead of falling back to a runtime recompile
-     * (which would also die under a read-only filesystem).
+     * Broken scripts under a marker are left to throw: a deploy error, not a cold start. A
+     * tree that cannot be written is told what the mismatch was instead of failing on it.
      *
-     * @param non-empty-string $scriptDir
+     * @param ScriptDir $scriptDir
+     * @param Context   $context
      *
      * @see CompileMarker for what the marker does and does not guarantee
      */
-    private static function prodInjector(AbstractModule $module, string $scriptDir, string $tmpDir): InjectorInterface
+    private static function prodInjector(AbstractModule $module, string $scriptDir, AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        if (CompileMarker::matches($scriptDir, $tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
             $injector = new CompiledInjector($scriptDir);
             /** @psalm-suppress InvalidArgument */
             $injector->getInstance(AppInterface::class);
@@ -186,30 +192,50 @@ final class PackageInjector
             return $injector;
         }
 
+        if (! self::canWrite($scriptDir)) {
+            throw new CompiledForAnotherWriteDirException($scriptDir, CompileMarker::read($scriptDir)?->tmpDir, $meta->tmpDir);
+        }
+
         (new Compiler())->compile($module, $scriptDir);
-        CompileMarker::write($scriptDir, $tmpDir);
+        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);
-        self::logOnDemandCompile($injector, $scriptDir);
+        self::logOnDemandCompile($scriptDir);
 
         return $injector;
     }
 
     /**
-     * Record the on-demand compile through the application's logger.
+     * Whether a compile could write to $dir, which a first boot has not created yet.
      *
-     * Not trigger_error(): that reaches the response body when display_errors is on, and any
-     * handler converting errors to exceptions would turn this report into a boot failure.
+     * Answered by the nearest existing ancestor, and only by an ancestor: dirname() leaves the
+     * path for the working directory once it runs out of them, and the cwd knows nothing here.
      */
-    private static function logOnDemandCompile(InjectorInterface $injector, string $scriptDir): void
+    private static function canWrite(string $dir): bool
     {
-        $logger = $injector->getInstance(LoggerInterface::class);
-        assert($logger instanceof LoggerInterface);
-        $logger->notice('Compiled DI scripts on demand', [
-            'scriptDir' => $scriptDir,
-            'see' => 'https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
-        ]);
+        for ($path = $dir; ! file_exists($path); $path = $parent) {
+            $parent = dirname($path);
+            if (! str_starts_with($dir, $parent)) {
+                return false;
+            }
+        }
+
+        return is_dir($path) && is_writable($path);
+    }
+
+    /**
+     * Report an on-demand compile to the server's log.
+     *
+     * Not the application logger - the report is due while its container is still being built.
+     * Not trigger_error() - display_errors would put it in the response body.
+     */
+    private static function logOnDemandCompile(string $scriptDir): void
+    {
+        error_log(sprintf(
+            'Compiled DI scripts on demand in "%s". See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
+            $scriptDir,
+        ));
     }
 
     /**
@@ -220,7 +246,7 @@ final class PackageInjector
      *
      * @param Context $context
      *
-     * @return non-empty-string
+     * @return ScriptDir
      */
     private static function scriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
     {

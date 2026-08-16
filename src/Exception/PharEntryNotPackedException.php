@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace BEAR\Package\Exception;
+
+/**
+ * The entry exists, but the manifest does not ship it.
+ *
+ * Nothing loose at the application root ships, nor `tests/`, nor a `var/` path other than the
+ * DI scripts, so a stub pointing at one of those would require a path the archive has not got.
+ *
+ * @see \BEAR\Package\Compiler\PharBuilder
+ * @codeCoverageIgnore thrown only where a phar is written, which no coverage run does
+ * @see https://bearsunday.github.io/manuals/1.0/en/phar.html#when-the-build-stops
+ */
+final class PharEntryNotPackedException extends LogicException
+{
+    public function __construct(string $entry)
+    {
+        parent::__construct($entry);
+    }
+}

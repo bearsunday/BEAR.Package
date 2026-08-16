@@ -21,7 +21,7 @@
         "monolog/monolog": "^1.25 || ^2.0 || ^3.0",
         "ray/aop": "^2.20",
         "ray/di": "^2.19.3",
-        "ray/compiler": "^1.13",
+        "ray/compiler": "^1.16",
         "ray/object-visual-grapher": "^1.0",
         "psr/log": "^1.1 || ^2.0 || ^3.0",
         "koriym/http-constants": "^1.2",

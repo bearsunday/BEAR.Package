@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `Compiler::phar()` — pack the compiled tree into `var/build/{context}.phar`, on both the `new Compiler(...)` and `Compiler::fromInjector(...)` shapes (#426)
+- The compile marker is a readable record (`.bear-compile.json`: app, context, tmpDir), and the pack derives the write directory from it instead of taking it again (#426)
+- The pack reads imports from the compiled `ImportAppConfig` and stops the build when any application was never compiled, writes into the archive, or writes outside the write directory the host was compiled for (#426)
+- A boot that cannot rewrite its scripts - an archive, an immutable image - throws `CompiledForAnotherWriteDirException` naming both write directories, instead of failing on the write (#426)
+- No file directly under the application root ships in an archive - `composer.json`, `autoload.php`, `preload.php`, `env.json`, `.env` and the rest are the project's, not the artifact's - and no `.env*` file ships wherever it sits (#426)
+- The pack refuses an entry the archive does not carry, and refuses an output it could not remove first (#426)
+- `Injector::getOverrideInstance()` takes a `$writeDir`, like `getInstance()`: an override injector in a read-only tree needs one too (#426)
+
+### Changed
+- `ImportApp::appDir()` replaces the `$appDir` property: the compiled container holds the object, and the build-time path is not the runtime one (#426)
+- The compile marker filename is `.bear-compile.json`; a 1.22 marker reads as absent, so recompile after upgrading (#426)
+- Requires `ray/compiler ^1.16`, whose `CompiledInjector` accepts a `phar://` script directory (#426)
+
+### Fixed
+- A stream-URI `appDir` such as `phar://app.phar` without a write directory throws `WriteDirRequiredException`, instead of reporting the tmp directory it cannot create inside the artifact (#426)
+
 ## [1.22.1] - 2026-08-14
 
 ### Fixed

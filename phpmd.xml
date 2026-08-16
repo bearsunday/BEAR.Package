@@ -18,7 +18,13 @@
     <rule ref="rulesets/design.xml/EvalExpression"/>
     <rule ref="rulesets/design.xml/ExitExpression"/>
     <rule ref="rulesets/design.xml/GotoStatement" />
-    <rule ref="rulesets/design.xml/NumberOfChildren"/>
+    <!-- Domain exceptions are leaves of LogicException / RuntimeException by policy, and grow with
+         every feature; the metric is for hierarchies that have a balance to keep. -->
+    <rule ref="rulesets/design.xml/NumberOfChildren">
+        <properties>
+            <property name="minimum" value="50"/>
+        </properties>
+    </rule>
     <rule ref="rulesets/design.xml/DepthOfInheritance"/>
     <!-- <rule ref="rulesets/design.xml/CouplingBetweenObjects" /> -->
     <!--naming-->

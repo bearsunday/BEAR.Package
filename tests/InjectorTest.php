@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -97,6 +98,13 @@ class InjectorTest extends TestCase
         );
     }
 
+    /** An app running from a phar has nowhere to put tmp and log unless it is told where. */
+    public function testStreamAppDirWithoutWriteDir(): void
+    {
+        $this->expectException(WriteDirRequiredException::class);
+        Injector::getInstance('FakeVendor\HelloWorld', 'app', 'phar:///tmp/fake-app.phar');
+    }
+
     public function testGetOverrideInstance(): void
     {
         $fakeApp = new class implements AppInterface {
@@ -110,7 +118,18 @@ class InjectorTest extends TestCase
         $this->assertSame($fakeApp, $app);
     }
 
-    private function getInjector(AppInterface $fakeApp): InjectorInterface
+    /** An override injector writes where the default one does, or a read-only tree has no home for it. */
+    public function testGetOverrideInstanceWithWriteDir(): void
+    {
+        $writeDir = sys_get_temp_dir() . '/bear-override-' . uniqid();
+        $injector = $this->getInjector(new class implements AppInterface {
+        }, $writeDir);
+
+        $this->assertSame($writeDir . '/FakeVendor/HelloWorld/app/tmp', $injector->getInstance(AbstractAppMeta::class)->tmpDir);
+    }
+
+    /** @param non-empty-string|null $writeDir */
+    private function getInjector(AppInterface $fakeApp, string|null $writeDir = null): InjectorInterface
     {
         return Injector::getOverrideInstance(
             'FakeVendor\HelloWorld',
@@ -127,6 +146,7 @@ class InjectorTest extends TestCase
                     $this->bind(AppInterface::class)->toInstance($this->app);
                 }
             },
+            $writeDir,
         );
     }
 
