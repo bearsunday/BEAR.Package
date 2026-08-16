@@ -47,6 +47,9 @@ use function var_export;
  */
 final class PharBuilder
 {
+    /** A leading slash, a UNC share, or a drive letter - the spellings realpath() would not change. */
+    private const ABSOLUTE = '#^(/|\\\\|[A-Za-z]:[/\\\\])#';
+
     /**
      * @param Context       $context
      * @param AppDir        $appDir
@@ -83,8 +86,7 @@ final class PharBuilder
         $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
         $output ??= $appDirReal . '/var/build/' . $context . '.phar';
         @mkdir(dirname($output), 0777, true);
-        // The packer excludes the archive by path, so a relative one names a file the iterator
-        // never yields and the archive ships inside itself. An absolute one keeps its spelling.
+        // PharManifest::files() excludes the archive by path, and the iterator yields absolute ones.
         $output = self::absolute($output);
         @unlink($output);
         clearstatcache(true, $output);
@@ -103,7 +105,7 @@ final class PharBuilder
      */
     private static function absolute(string $path): string
     {
-        if (preg_match('#^(/|\\\\|[A-Za-z]:[/\\\\])#', $path)) {
+        if (preg_match(self::ABSOLUTE, $path)) {
             return $path;
         }
 
