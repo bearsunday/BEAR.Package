@@ -358,7 +358,7 @@ final class Compiler
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
         $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
-        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
+        $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
         CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir, $this->appMeta->writeDir);

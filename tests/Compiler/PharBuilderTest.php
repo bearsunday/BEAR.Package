@@ -8,6 +8,7 @@ use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Injector\CompileMarker;
+use Phar;
 use PHPUnit\Framework\TestCase;
 
 use function BEAR\Package\deleteFiles;
@@ -149,6 +150,21 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('start this worker with -d phar.readonly=0', $output);
     }
 
+    /** An output named relative to the tree must not end up inside the archive being written. */
+    public function testRelativeOutputUnderTheApplicationTree(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        $this->vendor();
+
+        [$exitCode, $output] = $this->worker('public/index.php', 'var/build/prod-app.phar', cwd: $this->appDir);
+
+        $this->assertSame(0, $exitCode, $output);
+        $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
+        $phar = new Phar(realpath($this->appDir) . '/var/build/prod-app.phar');
+        $this->assertFalse(isset($phar['var/build/prod-app.phar']), 'the archive packed itself');
+    }
+
     /** The worker runs under the deploy's ini, where assert() is off. */
     public function testWorkerWithoutAnApplication(): void
     {
@@ -167,7 +183,7 @@ class PharBuilderTest extends TestCase
     }
 
     /** @return array{int, string} exit code and merged output of one worker run */
-    private function worker(string $entry, string $output = '', bool $readOnly = false): array
+    private function worker(string $entry, string $output = '', bool $readOnly = false, string|null $cwd = null): array
     {
         $command = sprintf(
             '%s -d phar.readonly=%d %s prod-app %s %s %s 2>&1',
@@ -178,7 +194,7 @@ class PharBuilderTest extends TestCase
             escapeshellarg($entry),
             escapeshellarg($output),
         );
-        exec($command, $lines, $exitCode);
+        exec($cwd === null ? $command : sprintf('cd %s && %s', escapeshellarg($cwd), $command), $lines, $exitCode);
 
         return [$exitCode, implode("\n", $lines)];
     }

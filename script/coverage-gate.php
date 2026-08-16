@@ -20,7 +20,10 @@ if (! is_file($clover)) {
 }
 
 $xml = simplexml_load_file($clover);
-assert($xml !== false);
+if ($xml === false) {
+    fwrite(STDERR, sprintf('Cannot read the clover report at "%s".', $clover) . PHP_EOL);
+    exit(1);
+}
 $uncovered = [];
 $statements = 0;
 foreach ($xml->xpath('//file') ?: [] as $file) {

@@ -82,6 +82,10 @@ final class PharBuilder
         $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
         $output ??= $appDirReal . '/var/build/' . $context . '.phar';
         @mkdir(dirname($output), 0777, true);
+        // Absolute from here on: the packer excludes the archive by path, and a relative one
+        // would name a file the iterator never yields, so the archive would ship inside itself.
+        $outputDir = realpath(dirname($output));
+        $output = $outputDir === false ? $output : $outputDir . '/' . basename($output);
         @unlink($output);
         clearstatcache(true, $output);
         // new Phar() on a surviving file adds to it, and the stale entries would ship unnoticed.
