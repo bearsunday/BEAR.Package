@@ -32,6 +32,7 @@ use function mkdir;
 use function serialize;
 use function sprintf;
 use function str_replace;
+use function str_starts_with;
 use function trigger_error;
 
 use const E_USER_WARNING;
@@ -205,12 +206,19 @@ final class PackageInjector
         return $injector;
     }
 
-    /** Whether a compile could write to $dir, which a first boot has not created yet. */
+    /**
+     * Whether a compile could write to $dir, which a first boot has not created yet.
+     *
+     * Answered by the nearest existing ancestor, and only by an ancestor: dirname() leaves the
+     * path for the working directory once it runs out of them, and the cwd knows nothing here.
+     */
     private static function canWrite(string $dir): bool
     {
-        $path = $dir;
-        while (! file_exists($path)) {
-            $path = dirname($path);
+        for ($path = $dir; ! file_exists($path); $path = $parent) {
+            $parent = dirname($path);
+            if (! str_starts_with($dir, $parent)) {
+                return false;
+            }
         }
 
         return is_dir($path) && is_writable($path);

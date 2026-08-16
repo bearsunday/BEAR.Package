@@ -386,6 +386,21 @@ class PackageInjectorTest extends TestCase
         }
     }
 
+    /** An archive that is not there has no ancestor to ask, and the working directory does not answer for it. */
+    public function testBootWhoseScriptDirHasNoExistingAncestor(): void
+    {
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', dirname(__DIR__) . '/Fake/fake-app');
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+
+        $this->expectException(CompiledForAnotherWriteDirException::class);
+        (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
+            ->invoke(null, $module, 'phar:///deploy/app.phar/var/tmp/prod-app/di', $meta, 'prod-app');
+    }
+
     /** A marker that cannot be persisted makes every later boot recompile, so it must not be swallowed. */
     public function testCompileMarkerWriteFailsLoudlyWhenNotWritable(): void
     {
