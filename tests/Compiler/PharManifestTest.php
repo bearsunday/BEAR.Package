@@ -109,7 +109,7 @@ class PharManifestTest extends TestCase
         PharManifest::roots($this->appDir, 'prod-app', []);
     }
 
-    /** A declared write directory the scripts were not compiled for: they still write into the tree. */
+    /** Compiled for a write directory of its own, so the host's boot would not find these scripts. */
     public function testImportWritingIntoTheArchive(): void
     {
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
@@ -121,7 +121,7 @@ class PharManifestTest extends TestCase
     }
 
     /** The scripts must write where the declaration that boots them derives, or the boot recompiles. */
-    public function testImportCompiledForAnotherWriteDirThanDeclared(): void
+    public function testImportCompiledOutsideTheHostWriteDir(): void
     {
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $appName = $this->importApp('import');
