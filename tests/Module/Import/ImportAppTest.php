@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module\Import;
 
+use BEAR\AppMeta\Exception\AppNameException;
+use BEAR\AppMeta\Meta;
 use PHPUnit\Framework\TestCase;
 
 use function dirname;
@@ -16,6 +18,23 @@ class ImportAppTest extends TestCase
     {
         $importApp = new ImportApp('foo', 'Import\HelloWorld', 'app');
         $this->assertSame(realpath(dirname(__DIR__, 2) . '/Fake/import-app'), realpath($importApp->appDir()));
+    }
+
+    /** Resolved the way Meta resolves its own, so an import and its Meta never disagree on where it lives. */
+    public function testAppDirIsWhatMetaResolves(): void
+    {
+        $importApp = new ImportApp('foo', 'Import\HelloWorld', 'app');
+
+        $this->assertSame((new Meta('Import\HelloWorld', 'app'))->appDir, $importApp->appDir());
+    }
+
+    /** An unknown application name gets app-meta's own exception, not a reflection error. */
+    public function testAppNameWithoutAnAppModule(): void
+    {
+        $importApp = new ImportApp('foo', 'No\Such\App', 'app');
+
+        $this->expectException(AppNameException::class);
+        $importApp->appDir();
     }
 
     /**
