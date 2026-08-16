@@ -139,7 +139,7 @@ class PharManifestTest extends TestCase
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
     }
 
-    public function testFilesShipTheTreeAndTheScriptsOnly(): void
+    public function testFilesShipTheTreeAndTheScriptsButNotWhatARunWrote(): void
     {
         $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
@@ -156,8 +156,16 @@ class PharManifestTest extends TestCase
         file_put_contents($this->appDir . '/env.json', '{"SECRET": 3}');
         mkdir($this->appDir . '/legacy', 0777, true);
         file_put_contents($this->appDir . '/legacy/.env.local', 'SECRET=3');
+        mkdir($this->appDir . '/var/sql', 0777, true);
+        file_put_contents($this->appDir . '/var/sql/user_item.sql', 'SELECT 1');
+        mkdir($this->appDir . '/var/conf', 0777, true);
+        file_put_contents($this->appDir . '/var/conf/aura.route.php', "<?php\n");
         mkdir($this->appDir . '/var/log', 0777, true);
         file_put_contents($this->appDir . '/var/log/app.log', 'log');
+        mkdir($this->appDir . '/var/build', 0777, true);
+        file_put_contents($this->appDir . '/var/build/old.phar', 'an earlier archive');
+        mkdir($this->appDir . '/var/tmp/other-app/di', 0777, true);
+        file_put_contents($this->appDir . '/var/tmp/other-app/di/Fake_Other-.php', "<?php\n");
         mkdir($this->appDir . '/tests', 0777, true);
         file_put_contents($this->appDir . '/tests/AppTest.php', "<?php\n");
         mkdir($this->appDir . '/build', 0777, true);
@@ -170,6 +178,8 @@ class PharManifestTest extends TestCase
 
         $this->assertSame([
             'src/App.php',
+            'var/conf/aura.route.php',
+            'var/sql/user_item.sql',
             'var/tmp/prod-app/di/' . CompileMarker::FILENAME,
             'var/tmp/prod-app/di/Fake_App-.php',
         ], $shipped);
