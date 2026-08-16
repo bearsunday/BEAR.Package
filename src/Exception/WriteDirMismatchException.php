@@ -16,10 +16,6 @@ final class WriteDirMismatchException extends LogicException
 {
     public function __construct(string $compileTmpDir, string $injectorTmpDir)
     {
-        parent::__construct(sprintf(
-            'The compile writes to "%s", the injector to "%s".',
-            $compileTmpDir,
-            $injectorTmpDir,
-        ));
+        parent::__construct(sprintf('compile %s, injector %s', $compileTmpDir, $injectorTmpDir));
     }
 }

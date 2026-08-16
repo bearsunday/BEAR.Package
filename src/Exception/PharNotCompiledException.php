@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use function sprintf;
-
 /**
  * The context has no compiled DI scripts to pack.
  *
@@ -16,9 +14,6 @@ final class PharNotCompiledException extends LogicException
 {
     public function __construct(string $scriptDir)
     {
-        parent::__construct(sprintf(
-            'No compiled DI scripts in "%s".',
-            $scriptDir,
-        ));
+        parent::__construct($scriptDir);
     }
 }

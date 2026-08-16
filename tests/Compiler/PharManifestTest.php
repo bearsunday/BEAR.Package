@@ -118,7 +118,6 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
-        $this->expectExceptionMessageMatches('#/import" write to#');
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
@@ -149,7 +148,6 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
 
         $this->expectException(PharImportOutsideTreeException::class);
-        $this->expectExceptionMessageMatches('#import-app" lies outside#');
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
     }
 

@@ -16,11 +16,6 @@ final class PharWriteDirMismatchException extends LogicException
 {
     public function __construct(string $appDir, string $compiledFor, string $expected)
     {
-        parent::__construct(sprintf(
-            'The scripts of "%s" write to "%s", its declaration derives "%s".',
-            $appDir,
-            $compiledFor,
-            $expected,
-        ));
+        parent::__construct(sprintf('%s, compiled %s, declared %s', $appDir, $compiledFor, $expected));
     }
 }

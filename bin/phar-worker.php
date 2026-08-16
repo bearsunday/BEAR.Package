@@ -35,7 +35,8 @@ require $autoload;
 try {
     $report = (new PharBuilder())($context, $appDir, $entry, $output === '' ? null : $output);
 } catch (Throwable $e) {
-    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    // The class is the diagnosis, the message the value it happened with.
+    fwrite(STDERR, sprintf('%s: %s', basename(str_replace('\\', '/', $e::class)), $e->getMessage()) . PHP_EOL);
     exit(1);
 }
 

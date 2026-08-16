@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use function sprintf;
-
 /**
  * The compiled container declares its imports in a form this version cannot read.
  *
@@ -16,9 +14,6 @@ final class PharImportsUnreadableException extends RuntimeException
 {
     public function __construct(string $scriptDir)
     {
-        parent::__construct(sprintf(
-            'Unreadable import declaration in the compiled container "%s".',
-            $scriptDir,
-        ));
+        parent::__construct($scriptDir);
     }
 }

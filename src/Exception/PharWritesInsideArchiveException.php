@@ -17,10 +17,6 @@ final class PharWritesInsideArchiveException extends LogicException
 {
     public function __construct(string $appDir, string $tmpDir)
     {
-        parent::__construct(sprintf(
-            'The scripts of "%s" write to "%s", inside the archive.',
-            $appDir,
-            $tmpDir,
-        ));
+        parent::__construct(sprintf('%s, writes %s', $appDir, $tmpDir));
     }
 }

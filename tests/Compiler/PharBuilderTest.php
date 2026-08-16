@@ -88,7 +88,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('public/nowhere.php');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('does not exist', $output);
+        $this->assertStringContainsString('PharEntryNotFoundException: ' . realpath($this->appDir) . '/public/nowhere.php', $output);
     }
 
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
@@ -101,7 +101,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('.env');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('is not in the archive', $output);
+        $this->assertStringContainsString('PharEntryNotPackedException: ' . realpath($this->appDir) . '/.env', $output);
     }
 
     public function testTreeThatWasNeverCompiled(): void
@@ -112,7 +112,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('public/index.php');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('No compiled DI scripts', $output);
+        $this->assertStringContainsString('PharNotCompiledException: ' . realpath($this->appDir) . '/var/tmp/prod-app/di', $output);
     }
 
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
@@ -126,7 +126,7 @@ class PharBuilderTest extends TestCase
         [$exitCode, $output] = $this->worker('public/index.php');
 
         $this->assertSame(1, $exitCode);
-        $this->assertStringContainsString('Cannot remove the previous archive', $output);
+        $this->assertStringContainsString('PharStaleOutputException: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
     }
 
     /** A tmpDir that does not follow the writeDir convention names no write directory to print. */

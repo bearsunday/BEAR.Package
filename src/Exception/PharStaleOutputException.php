@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use function sprintf;
-
 /**
  * A previous archive survived at the output path.
  *
@@ -19,9 +17,6 @@ final class PharStaleOutputException extends RuntimeException
 {
     public function __construct(string $output)
     {
-        parent::__construct(sprintf(
-            'Cannot remove the previous archive "%s".',
-            $output,
-        ));
+        parent::__construct($output);
     }
 }

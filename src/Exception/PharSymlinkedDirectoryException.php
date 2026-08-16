@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use function sprintf;
-
 /**
  * A directory in the tree is a symlink.
  *
@@ -17,9 +15,6 @@ final class PharSymlinkedDirectoryException extends LogicException
 {
     public function __construct(string $path)
     {
-        parent::__construct(sprintf(
-            'Cannot pack the directory symlink "%s".',
-            $path,
-        ));
+        parent::__construct($path);
     }
 }

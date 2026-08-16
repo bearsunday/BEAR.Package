@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use function sprintf;
-
 /**
  * The entry the stub would run is not on disk.
  *
@@ -16,9 +14,6 @@ final class PharEntryNotFoundException extends LogicException
 {
     public function __construct(string $entry)
     {
-        parent::__construct(sprintf(
-            'The stub entry "%s" does not exist.',
-            $entry,
-        ));
+        parent::__construct($entry);
     }
 }

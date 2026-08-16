@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Exception;
 
-use function sprintf;
-
 /**
  * The entry exists, but the manifest does not ship it.
  *
@@ -19,9 +17,6 @@ final class PharEntryNotPackedException extends LogicException
 {
     public function __construct(string $entry)
     {
-        parent::__construct(sprintf(
-            'The stub entry "%s" is not in the archive.',
-            $entry,
-        ));
+        parent::__construct($entry);
     }
 }

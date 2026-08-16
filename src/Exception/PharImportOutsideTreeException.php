@@ -16,10 +16,6 @@ final class PharImportOutsideTreeException extends LogicException
 {
     public function __construct(string $importDir, string $archiveDir)
     {
-        parent::__construct(sprintf(
-            'The imported application "%s" lies outside "%s".',
-            $importDir,
-            $archiveDir,
-        ));
+        parent::__construct(sprintf('%s, tree %s', $importDir, $archiveDir));
     }
 }
