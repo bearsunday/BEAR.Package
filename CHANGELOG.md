@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- An archive carries the application's own files under `var/` - `var/sql`, `var/conf`, `var/json_schema`, `var/templates` - which 1.23.0 dropped along with everything else there. Only `var/log`, `var/tmp` and `var/build` stay out (#426)
+- An archive carries the application's own files under `var/` - `var/sql`, `var/conf`, `var/json_schema`, `var/templates`; only `var/log`, `var/tmp` and `var/build` stay out (#426)
 
 ## [1.23.0] - 2026-08-17
 

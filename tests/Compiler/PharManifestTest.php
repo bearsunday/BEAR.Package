@@ -156,7 +156,6 @@ class PharManifestTest extends TestCase
         file_put_contents($this->appDir . '/env.json', '{"SECRET": 3}');
         mkdir($this->appDir . '/legacy', 0777, true);
         file_put_contents($this->appDir . '/legacy/.env.local', 'SECRET=3');
-        // The application's own files under var/: a boot reads them, so they ship.
         mkdir($this->appDir . '/var/sql', 0777, true);
         file_put_contents($this->appDir . '/var/sql/user_item.sql', 'SELECT 1');
         mkdir($this->appDir . '/var/conf', 0777, true);

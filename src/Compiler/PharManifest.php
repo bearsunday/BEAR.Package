@@ -42,10 +42,7 @@ final class PharManifest
     /** Ray.Compiler build noise: written next to the scripts, read by no boot. */
     private const SCRIPT_DIR_NOISE = ['compile.lock', '_bindings.log', 'bindings.md'];
 
-    /**
-     * Directories under var/ an archive leaves behind: a run writes them, or a build produced them.
-     * The compiled scripts sit under `tmp/` and are named separately, so they still ship.
-     */
+    /** What a run writes or a build produced. The scripts under tmp/ are named first, so they still ship. */
     private const UNSHIPPED_VAR_DIRS = ['log', 'tmp', 'build'];
 
     /** @codeCoverageIgnore */
@@ -141,7 +138,7 @@ final class PharManifest
     }
 
     /**
-     * Nothing directly under the application root ships, of each var/ only the DI scripts.
+     * Nothing directly under the application root ships, and of each var/ nothing a run writes.
      *
      * $appDir must be resolved, as roots() returns it: a raw path lets every var/ path ship.
      *
@@ -187,9 +184,6 @@ final class PharManifest
 
     /**
      * Whether a path under some application's var/ ships; null when it is under none.
-     *
-     * An application keeps its own files there - `var/sql`, `var/conf`, `var/json_schema`,
-     * `var/templates` - and the boot reads them. Only what a run writes stays out.
      *
      * @param non-empty-array<AppDir, ScriptDir> $roots
      */
