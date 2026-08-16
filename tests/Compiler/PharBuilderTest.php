@@ -153,6 +153,25 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('start this worker with -d phar.readonly=0', $output);
     }
 
+    /** A relative output is resolved before anything else looks at it. */
+    public function testRelativeOutputIsResolvedBeforeTheStaleCheck(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
+
+        $cwd = getcwd();
+        chdir($this->appDir);
+        try {
+            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php', 'var/build/prod-app.phar');
+            $this->fail('a directory at the output path is a stale output');
+        } catch (PharStaleOutputException $e) {
+            $this->assertStringContainsString($this->norm((string) realpath($this->appDir)), $this->norm($e->getMessage()));
+        } finally {
+            chdir($cwd !== false ? $cwd : dirname(__DIR__, 2));
+        }
+    }
+
     /** An output named relative to the tree must not end up inside the archive being written. */
     public function testRelativeOutputUnderTheApplicationTree(): void
     {
