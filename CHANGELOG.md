@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
 - A compile refuses a context that assembles its container per request before `clean()` runs, and `clean()` no longer removes `preload.php`, `autoload.php` or `app.phar`: a compile that fails leaves the last one's files where they were (#426)
 - A directory holding an imported application carries that application only: what sits beside it no longer ships (#426)
+- The demo tests run in CI, and the demo asserts the `int` its resource declares
 
 ## [1.23.1] - 2026-08-17
 
