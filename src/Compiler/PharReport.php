@@ -18,13 +18,15 @@ final class PharReport
 {
     /**
      * @param PharPath      $path
-     * @param WriteDir|null $writeDir the directory the packed scripts write to, when they name one
+     * @param WriteDir|null $writeDir  the directory the packed scripts write to, when they name one
+     * @param list<string>  $notPacked top-level directories the archive left behind
      */
     public function __construct(
         public readonly string $path,
         public readonly int $bytes,
         public readonly int $files,
         public readonly string|null $writeDir,
+        public readonly array $notPacked,
     ) {
     }
 }

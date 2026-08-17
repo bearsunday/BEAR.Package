@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
+- `Compiler::phar()` writes `{appDir}/app.phar`, beside `autoload.php` and `preload.php`, and no longer takes an output path: collect the archive from the root instead of naming where it lands (#426)
+- An archive carries named top-level directories only - `src`, `public`, `bin`, `vendor`, `var`, and wherever an imported application sits - and the build prints `Not packed:` for the rest (#426)
+- Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
+- An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
+
 ### Fixed
+- The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
+- A compile refuses a context that assembles its container per request before `clean()` runs, and `clean()` no longer removes `preload.php`, `autoload.php` or `app.phar`: a compile that fails leaves the last one's files where they were (#426)
+- A directory holding an imported application carries that application only: what sits beside it no longer ships (#426)
+- The demo tests run in CI, and the demo asserts the `int` its resource declares
 - The object graph diagram renders to SVG again: a path fragment pasted into the `which dot` probe had disabled it since 1.10.7
 
 ## [1.23.1] - 2026-08-17

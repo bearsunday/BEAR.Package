@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Compile the demo, then pack it into var/build/{context}.phar.
+ * Compile the demo, then pack it into app.phar.
  *
  * Usage:  APP_WRITE_DIR=/tmp php bin/compile.php
  *         CONTEXT picks the context (default prod-cli-hal-app), same as public/index.php.

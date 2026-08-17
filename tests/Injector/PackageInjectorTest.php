@@ -193,7 +193,7 @@ class PackageInjectorTest extends TestCase
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
-        $this->assertSame($meta->appDir . '/var/tmp/app/di', $scriptDir->invoke(null, $meta, 'app', null));
+        $this->assertSame($meta->appDir . '/var/build/app/di', $scriptDir->invoke(null, $meta, 'app', null));
     }
 
     public function testScriptDirWithOverride(): void
@@ -206,7 +206,7 @@ class PackageInjectorTest extends TestCase
         };
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
         $this->assertSame(
-            $meta->appDir . '/var/tmp/app/di/' . hash('xxh128', $module::class),
+            $meta->appDir . '/var/build/app/di/' . hash('xxh128', $module::class),
             $scriptDir->invoke(null, $meta, 'app', $module),
         );
     }
@@ -398,7 +398,7 @@ class PackageInjectorTest extends TestCase
 
         $this->expectException(CompiledForAnotherWriteDirException::class);
         (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
-            ->invoke(null, $module, 'phar:///deploy/app.phar/var/tmp/prod-app/di', $meta, 'prod-app');
+            ->invoke(null, $module, 'phar:///deploy/app.phar/var/build/prod-app/di', $meta, 'prod-app');
     }
 
     /** A marker that cannot be persisted makes every later boot recompile, so it must not be swallowed. */

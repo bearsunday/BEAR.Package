@@ -62,7 +62,7 @@ final class Injector
      * Return an injector with the given override module applied.
      *
      * AOP proxies and the compiled container for override injectors are stored under a
-     * subdirectory of the script directory ({appDir}/var/tmp/{context}/di) keyed by the
+     * subdirectory of the script directory ({appDir}/var/build/{context}/di) keyed by the
      * override module class name, so they do not collide with Injector::getInstance()
      * for the same app+context.
      *

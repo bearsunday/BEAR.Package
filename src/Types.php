@@ -16,6 +16,7 @@ use ArrayObject;
  * @psalm-type Context = non-empty-string
  * @psalm-type AppDir = non-empty-string
  * @psalm-type ScriptDir = non-empty-string
+ * @psalm-type BuildDir = non-empty-string
  * @psalm-type VarDir = non-empty-string
  * @psalm-type LogDir = non-empty-string
  * @psalm-type TmpDir = non-empty-string

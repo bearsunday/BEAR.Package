@@ -35,20 +35,20 @@ class UserTest extends TestCase
         "contact": {
             "contact": [
                 {
-                    "id": "1",
+                    "id": 1,
                     "name": "Athos"
                 },
                 {
-                    "id": "2",
+                    "id": 2,
                     "name": "Porthos"
                 },
                 {
-                    "id": "3",
+                    "id": 3,
                     "name": "Aramis"
                 }
             ]
         },
-        "id": "1",
+        "id": 1,
         "name": "Koriym"
     }
 }
