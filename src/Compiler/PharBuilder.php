@@ -40,7 +40,7 @@ use function var_export;
  *
  * @see PharManifest
  * @psalm-import-type AppDir from Types
- * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type BuildDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type StubEntry from Types
  * @psalm-import-type PharPath from Types
@@ -54,7 +54,7 @@ final class PharBuilder
      * @param Context       $context
      * @param AppDir        $appDir
      * @param StubEntry     $entry   relative to appDir
-     * @param PharPath|null $output  default {appDir}/var/build/{context}.phar
+     * @param PharPath|null $output  default {appDir}/app.phar
      *
      * @throws PharEntryNotFoundException
      * @throws PharNotCompiledException
@@ -84,7 +84,7 @@ final class PharBuilder
         }
 
         $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
-        $output ??= $appDirReal . '/var/build/' . $context . '.phar';
+        $output ??= $appDirReal . '/app.phar';
         @mkdir(dirname($output), 0777, true);
         // PharManifest::files() excludes the archive by path, and the iterator yields absolute ones.
         $output = self::absolute($output);
@@ -115,10 +115,10 @@ final class PharBuilder
     }
 
     /**
-     * @param AppDir                             $appDir
-     * @param non-empty-array<AppDir, ScriptDir> $roots
-     * @param StubEntry                          $entry
-     * @param PharPath                           $output
+     * @param AppDir                            $appDir
+     * @param non-empty-array<AppDir, BuildDir> $roots
+     * @param StubEntry                         $entry
+     * @param PharPath                          $output
      *
      * @throws PharEntryNotPackedException
      *
@@ -130,7 +130,7 @@ final class PharBuilder
         $phar = new Phar($output);
         $phar->setSignatureAlgorithm(Phar::SHA256);
         $phar->startBuffering();
-        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output), $appDir);
+        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output, $entry), $appDir);
         // The entry is on disk - checked above - but the filter decides what reaches the archive.
         if (! isset($phar[$entry])) {
             throw new PharEntryNotPackedException($appDir . '/' . $entry);
@@ -144,6 +144,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir);
+        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir, PharManifest::notPacked($appDir, $roots, $entry));
     }
 }
