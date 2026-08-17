@@ -11,6 +11,7 @@ use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
 use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
+use BEAR\Package\Compiler\DotCommand;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Exception\DelegatedCompileException;
@@ -57,11 +58,7 @@ use const PHP_SAPI;
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type WriteDir from Types
- * @psalm-import-type LogDir from Types
- * @psalm-import-type ScriptDir from Types
  * @psalm-import-type StubEntry from Types
- * @psalm-import-type ClassList from Types
- * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type CompileReport from Types
  */
 final class Compiler
@@ -446,7 +443,7 @@ final class Compiler
         $filePutContents = new FilePutContents($overWritten);
         $fakeRun = new FakeRun($injector, $this->context, $this->appMeta);
         $this->dumpAutoload = new CompileAutoload($fakeRun, $filePutContents, $this->classes, $appDir, $this->context);
-        $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir);
+        $this->compilerObjectGraph = new CompileObjectGraph($filePutContents, $this->appMeta->logDir, new DotCommand());
     }
 
     private function hookNullObjectClass(string $appDir): void
