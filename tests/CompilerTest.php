@@ -7,7 +7,6 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Compiler\GeneratedFiles;
 use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\InvalidContextException;
@@ -128,10 +127,11 @@ class CompilerTest extends TestCase
         $compiler->compile();
     }
 
-    public function testFailedCompileRestoresTheGeneratedRootFiles(): void
+    /** The refusal has to come before clean(), which empties what the compile was going to rewrite. */
+    public function testCompileRefusesAContextThatAssemblesPerRequestWithoutTouchingTheTree(): void
     {
         $generated = [];
-        foreach (GeneratedFiles::NAMES as $name) {
+        foreach (['preload.php', 'autoload.php', 'app.phar'] as $name) {
             $generated[self::APP_DIR . '/' . $name] = 'left by the last compile: ' . $name;
         }
 
@@ -142,7 +142,8 @@ class CompilerTest extends TestCase
         try {
             (new Compiler(self::APP_NAME, 'app', self::APP_DIR))();
             $this->fail('a context that assembles per request cannot record a preload');
-        } catch (PreloadRecordException) {
+        } catch (PreloadRecordException $e) {
+            $this->assertStringContainsString('assembles the container on each request', $e->getMessage());
             foreach ($generated as $file => $contents) {
                 $this->assertStringEqualsFile($file, $contents);
                 @unlink($file);
@@ -542,7 +543,8 @@ class CompilerTest extends TestCase
         $this->assertFileDoesNotExist($stale);
         $this->assertDirectoryExists($scriptDir);
         foreach ($generated as $file) {
-            $this->assertFileDoesNotExist($file);
+            $this->assertFileExists($file, 'each root file is replaced by whatever writes it');
+            @unlink($file);
         }
     }
 

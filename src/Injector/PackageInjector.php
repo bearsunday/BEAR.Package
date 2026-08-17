@@ -136,6 +136,16 @@ final class PackageInjector
         return self::rayInjector($module, $scriptDir);
     }
 
+    /**
+     * Whether $context boots from compiled scripts, which only a compiled one does.
+     *
+     * @param Context $context
+     */
+    public static function isCompiled(AbstractAppMeta $meta, string $context): bool
+    {
+        return self::isProd(self::module($meta, $context, null));
+    }
+
     /** @param Context $context */
     private static function module(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): AbstractModule
     {

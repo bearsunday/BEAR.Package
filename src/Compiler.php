@@ -13,7 +13,6 @@ use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
-use BEAR\Package\Compiler\GeneratedFiles;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
@@ -29,7 +28,6 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
-use Throwable;
 
 use function assert;
 use function dirname;
@@ -151,26 +149,12 @@ final class Compiler
             return self::compileInChildProcess($this->compileJob);
         }
 
-        $appDirRealpath = realpath($this->appMeta->appDir);
-        assert($appDirRealpath !== false);
-        /** @var AppDir $appDirRealpath psalm's realpath stub says string; phpstan's already says non-empty */
-        $generated = GeneratedFiles::stash($appDirRealpath);
-
-        try {
-            $exitCode = $this->run();
-        } catch (Throwable $e) {
-            $generated->restore();
-
-            throw $e;
+        // Before clean(): the recorder refuses this context three steps later, with the tree
+        // already emptied for a compile that was never going to finish.
+        if (! PackageInjector::isCompiled($this->appMeta, $this->context)) {
+            throw PreloadRecordException::notCompiled($this->context);
         }
 
-        $generated->discard();
-
-        return $exitCode;
-    }
-
-    private function run(): int
-    {
         $this->clean();
         $this->wire(PackageInjector::compileInjector($this->appMeta, $this->context));
         $report = $this->compile();
@@ -315,7 +299,12 @@ final class Compiler
         ));
     }
 
-    /** Remove compiled artifacts from both directories and the three root files, then recreate the script directory. */
+    /**
+     * Empty both directories, then recreate the script directory.
+     *
+     * preload.php, autoload.php and app.phar stay: each is replaced by whatever writes it, at
+     * the moment it writes, so a compile that dies partway leaves the last one's files alone.
+     */
     public function clean(): void
     {
         $this->assertNotDelegated(__FUNCTION__);
@@ -323,11 +312,6 @@ final class Compiler
         $this->emptyDirectory($this->appMeta->tmpDir);
         $this->emptyDirectory($scriptDir);
         $this->ensureDirectory($scriptDir);
-        $appDirRealpath = realpath($this->appMeta->appDir);
-        assert($appDirRealpath !== false);
-        foreach (GeneratedFiles::NAMES as $generated) {
-            @unlink($appDirRealpath . '/' . $generated);
-        }
     }
 
     private function emptyDirectory(string $dir): void
