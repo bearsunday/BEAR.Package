@@ -69,15 +69,19 @@ class PharBuilderTest extends TestCase
         file_put_contents($this->appDir . '/src/App.php', "<?php\n");
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         file_put_contents($this->appDir . '/env.json', '{"SECRET": 2}');
+        mkdir($this->appDir . '/vendor-bin/tools/vendor', 0777, true);
+        file_put_contents($this->appDir . '/vendor-bin/tools/vendor/phpstan.php', "<?php\n");
+        mkdir($this->appDir . '/build/coverage', 0777, true);
+        file_put_contents($this->appDir . '/build/coverage/index.html', '<html></html>');
         $this->entry();
         $this->vendor();
 
         [$exitCode, $output] = $this->worker('public/index.php');
 
         $this->assertSame(0, $exitCode, $output);
-        $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/var/build/prod-app.phar', $output);
+        $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/app.phar', $output);
         $this->assertStringContainsString('Writes: ' . $this->writeDir, $output);
-        $phar = 'phar://' . realpath($this->appDir . '/var/build/prod-app.phar');
+        $phar = 'phar://' . realpath($this->appDir . '/app.phar');
         $this->assertTrue(file_exists($phar . '/public/index.php'), 'the stub requires this entry');
         $this->assertTrue(file_exists($phar . '/src/App.php'));
         $this->assertTrue(file_exists($phar . '/var/build/prod-app/di/Fake_App-.php'));
@@ -85,6 +89,10 @@ class PharBuilderTest extends TestCase
         $this->assertFalse(file_exists($phar . '/.env'));
         $this->assertFalse(file_exists($phar . '/env.json'), 'a secret at the root ships under any name');
         $this->assertFalse(file_exists($phar . '/var/build/prod-app/di/compile.lock'));
+        $this->assertFalse(file_exists($phar . '/app.phar'), 'the archive packed itself');
+        $this->assertFalse(file_exists($phar . '/vendor-bin/tools/vendor/phpstan.php'));
+        $this->assertFalse(file_exists($phar . '/build/coverage/index.html'));
+        $this->assertStringContainsString('Not packed: build, vendor-bin', $output, 'a dropped directory is named at the build');
     }
 
     public function testEntryThatIsNotOnDisk(): void
@@ -121,7 +129,7 @@ class PharBuilderTest extends TestCase
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
-        mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
+        mkdir($this->appDir . '/app.phar', 0777, true);
 
         $this->expectException(PharStaleOutputException::class);
         (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
@@ -158,12 +166,12 @@ class PharBuilderTest extends TestCase
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
-        mkdir($this->appDir . '/var/build/prod-app.phar', 0777, true);
+        mkdir($this->appDir . '/vendor/app.phar', 0777, true);
 
         $cwd = getcwd();
         chdir($this->appDir);
         try {
-            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php', 'var/build/prod-app.phar');
+            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php', 'vendor/app.phar');
             $this->fail('a directory at the output path is a stale output');
         } catch (PharStaleOutputException $e) {
             $this->assertStringContainsString($this->norm((string) realpath($this->appDir)), $this->norm($e->getMessage()));
@@ -172,7 +180,11 @@ class PharBuilderTest extends TestCase
         }
     }
 
-    /** An output named relative to the tree must not end up inside the archive being written. */
+    /**
+     * An output named relative to the tree must not end up inside the archive being written.
+     *
+     * vendor/ ships, so only the manifest's own exclusion holds the output out of it.
+     */
     public function testRelativeOutputUnderTheApplicationTree(): void
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
@@ -182,16 +194,17 @@ class PharBuilderTest extends TestCase
         $cwd = getcwd();
         chdir($this->appDir);
         try {
-            [$exitCode, $output] = $this->worker('public/index.php', 'var/build/prod-app.phar');
+            [$exitCode, $output] = $this->worker('public/index.php', 'vendor/app.phar');
         } finally {
             chdir($cwd !== false ? $cwd : dirname(__DIR__, 2));
         }
 
         $this->assertSame(0, $exitCode, $output);
-        $built = realpath($this->appDir) . '/var/build/prod-app.phar';
+        $built = realpath($this->appDir) . '/vendor/app.phar';
         $this->assertStringContainsString($this->norm($built), $this->norm($output));
         $phar = new Phar($built);
-        $this->assertFalse(isset($phar['var/build/prod-app.phar']), 'the archive packed itself');
+        $this->assertTrue(isset($phar['vendor/autoload.php']), 'vendor/ ships');
+        $this->assertFalse(isset($phar['vendor/app.phar']), 'the archive packed itself');
     }
 
     /** The worker runs under the deploy's ini, where assert() is off. */

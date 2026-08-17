@@ -60,7 +60,6 @@ use const PHP_SAPI;
  * @psalm-import-type LogDir from Types
  * @psalm-import-type ScriptDir from Types
  * @psalm-import-type StubEntry from Types
- * @psalm-import-type PharPath from Types
  * @psalm-import-type ClassList from Types
  * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type CompileReport from Types
@@ -163,14 +162,13 @@ final class Compiler
     }
 
     /**
-     * Pack what compile() left on disk into one archive.
+     * Pack what compile() left on disk into {appDir}/app.phar.
      *
-     * @param StubEntry|null $entry  relative to appDir (default public/index.php)
-     * @param PharPath|null  $output default {appDir}/var/build/{context}.phar
+     * @param StubEntry|null $entry relative to appDir (default public/index.php)
      *
      * @throws PharEntryNotFoundException
      */
-    public function phar(string|null $entry = null, string|null $output = null): int
+    public function phar(string|null $entry = null): int
     {
         // Both shapes can pack: fromInjector() holds the same job the constructor path records.
         [, $context, $appDir] = $this->compileJob ?? $this->preloadJob;
@@ -180,7 +178,7 @@ final class Compiler
         }
 
         $exitCode = 1;
-        passthru(self::pharWorkerCommand($context, $appDir, $entry, $output), $exitCode);
+        passthru(self::pharWorkerCommand($context, $appDir, $entry), $exitCode);
 
         return $exitCode;
     }
@@ -257,16 +255,17 @@ final class Compiler
      * @param Context $context
      * @param AppDir  $appDir
      */
-    private static function pharWorkerCommand(string $context, string $appDir, string $entry, string|null $output): string
+    private static function pharWorkerCommand(string $context, string $appDir, string $entry): string
     {
         return sprintf(
+            // The empty argument is the worker's optional output.
             '%s -d phar.readonly=0 %s %s %s %s %s',
             escapeshellarg(self::phpBinary()),
             escapeshellarg(dirname(__DIR__) . '/bin/phar-worker.php'),
             escapeshellarg($context),
             escapeshellarg($appDir),
             escapeshellarg($entry),
-            escapeshellarg((string) $output),
+            escapeshellarg(''),
         );
     }
 
@@ -294,12 +293,7 @@ final class Compiler
         ));
     }
 
-    /**
-     * Remove compiled artifacts from both directories, then recreate the script directory.
-     *
-     * preload.php and autoload.php go too: a compile that dies before rewriting them would
-     * otherwise leave the previous deploy's files looking like this compile's output.
-     */
+    /** Remove compiled artifacts from both directories and the three root files, then recreate the script directory. */
     public function clean(): void
     {
         $this->assertNotDelegated(__FUNCTION__);
@@ -309,7 +303,7 @@ final class Compiler
         $this->ensureDirectory($scriptDir);
         $appDirRealpath = realpath($this->appMeta->appDir);
         assert($appDirRealpath !== false);
-        foreach (['/preload.php', '/autoload.php'] as $generated) {
+        foreach (['/preload.php', '/autoload.php', '/app.phar'] as $generated) {
             @unlink($appDirRealpath . $generated);
         }
     }

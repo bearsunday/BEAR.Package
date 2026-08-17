@@ -362,7 +362,6 @@ class CompilerTest extends TestCase
         }
     }
 
-    /** Compile, then pack: the archive carries the scripts and their marker. */
     public function testPharPacksTheCompiledScripts(): void
     {
         $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
@@ -370,11 +369,13 @@ class CompilerTest extends TestCase
         $this->assertSame(0, $compiler());
         $this->assertSame(0, $compiler->phar());
 
-        $phar = self::APP_DIR . '/var/build/prod-cli-app.phar';
+        $phar = self::APP_DIR . '/app.phar';
         $this->assertFileExists($phar);
         $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-cli-app/di/' . CompileMarker::FILENAME));
+        $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php'));
         $this->assertTrue(file_exists('phar://' . $phar . '/src/Module/AppModule.php'));
         $this->assertFalse(file_exists('phar://' . $phar . '/autoload.php'));
+        $this->assertFalse(file_exists('phar://' . $phar . '/app.phar'), 'the archive packed itself');
     }
 
     /** The stub would require a path that is not there, so the entry is checked before the worker starts. */
@@ -507,11 +508,19 @@ class CompilerTest extends TestCase
         $stale = $scriptDir . '/Stale_Script-.php';
         file_put_contents($marker, 'x');
         file_put_contents($stale, 'x');
+        $generated = [self::APP_DIR . '/preload.php', self::APP_DIR . '/autoload.php', self::APP_DIR . '/app.phar'];
+        foreach ($generated as $file) {
+            file_put_contents($file, 'x');
+        }
+
         $compiler->clean();
         $this->assertFileDoesNotExist($marker);
         $this->assertDirectoryDoesNotExist($nested);
         $this->assertFileDoesNotExist($stale);
         $this->assertDirectoryExists($scriptDir);
+        foreach ($generated as $file) {
+            $this->assertFileDoesNotExist($file);
+        }
     }
 
     public function testEmptyDirectoryWhenMissingIsNoOp(): void

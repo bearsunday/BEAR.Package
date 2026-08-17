@@ -10,12 +10,14 @@
 /tests/Fake/fake-app/autoload.php
 /tests/Fake/fake-app/module.dot
 /tests/Fake/fake-app/preload.php
+/tests/Fake/fake-app/app.phar
 /tests/Fake/fake-app/var/log/
 /tests/Fake/fake-app/var/tmp/
-/tests/Fake/fake-app/var/di/
 /tests/Fake/fake-app/var/build/
+/tests/Fake/fake-app/var/di/
 /tests/Fake/import-app/var/
 /vendor-bin/**/vendor
+/demo/app.phar
 /demo/var/tmp
 /demo/var/log/
 /demo/var/build/

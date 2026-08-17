@@ -54,7 +54,7 @@ final class PharBuilder
      * @param Context       $context
      * @param AppDir        $appDir
      * @param StubEntry     $entry   relative to appDir
-     * @param PharPath|null $output  default {appDir}/var/build/{context}.phar
+     * @param PharPath|null $output  default {appDir}/app.phar
      *
      * @throws PharEntryNotFoundException
      * @throws PharNotCompiledException
@@ -84,7 +84,7 @@ final class PharBuilder
         }
 
         $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
-        $output ??= $appDirReal . '/var/build/' . $context . '.phar';
+        $output ??= $appDirReal . '/app.phar';
         @mkdir(dirname($output), 0777, true);
         // PharManifest::files() excludes the archive by path, and the iterator yields absolute ones.
         $output = self::absolute($output);
