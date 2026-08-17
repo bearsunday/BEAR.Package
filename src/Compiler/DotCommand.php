@@ -16,10 +16,14 @@ final class DotCommand
     ) {
     }
 
+    /**
+     * $output is captured and never read: that is what keeps dot's stdout, and the shell's
+     * "not found" on 2>&1, out of the compile output. passthru() here would print both.
+     *
+     * @SuppressWarnings("PHPMD.UnusedLocalVariable")
+     */
     public function __invoke(string $dotFile, string $svgFile): bool
     {
-        // exec() keeps stdout out of the compile output, and 2>&1 keeps the shell's
-        // "not found" message out of it too; passthru() here would print both.
         exec(
             sprintf('%s -Tsvg %s -o %s 2>&1', escapeshellarg($this->command), escapeshellarg($dotFile), escapeshellarg($svgFile)),
             $output,
