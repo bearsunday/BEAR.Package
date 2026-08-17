@@ -21,10 +21,12 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+use function array_keys;
 use function assert;
 use function in_array;
 use function realpath;
 use function rtrim;
+use function sort;
 use function str_replace;
 use function str_starts_with;
 
@@ -33,14 +35,17 @@ use function str_starts_with;
  *
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
- * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type BuildDir from Types
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type PharPath from Types
  */
 final class PharManifest
 {
-    /** Ray.Compiler build noise: written next to the scripts, read by no boot. */
-    private const SCRIPT_DIR_NOISE = ['compile.lock', '_bindings.log', 'bindings.md'];
+    /** The only top-level directories an archive carries. */
+    private const SHIPPED_DIRS = ['src', 'public', 'bin', 'vendor', 'var'];
+
+    /** Ray.Compiler noise: written beside what it produced, read by no boot. */
+    private const BUILD_NOISE = ['compile.lock', '_bindings.log', 'bindings.md'];
 
     /** What a run writes. */
     private const UNSHIPPED_VAR_DIRS = ['log', 'tmp'];
@@ -57,7 +62,7 @@ final class PharManifest
      * @param Context         $context
      * @param list<ImportApp> $imports as declared by the compiled container
      *
-     * @return non-empty-array<AppDir, ScriptDir>
+     * @return non-empty-array<AppDir, BuildDir>
      *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
@@ -70,7 +75,7 @@ final class PharManifest
         $archiveDir = self::resolve($appDir);
         $bases = [self::normalize($appDir), $archiveDir];
 
-        $roots = [$archiveDir => CompiledScripts::dir($archiveDir, $context)];
+        $roots = [$archiveDir => CompiledScripts::buildDir($archiveDir, $context)];
         $host = self::writesOutside($bases, $archiveDir, $context);
         $writeDir = $host->writeDir;
         foreach ($imports as $import) {
@@ -85,7 +90,7 @@ final class PharManifest
                 throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $writeDir);
             }
 
-            $roots[$importDir] = CompiledScripts::dir($importDir, $import->context);
+            $roots[$importDir] = CompiledScripts::buildDir($importDir, $import->context);
         }
 
         return $roots;
@@ -138,21 +143,21 @@ final class PharManifest
     }
 
     /**
-     * Nothing directly under the application root ships, and of each var/ nothing a run writes.
+     * Of the application root only SHIPPED_DIRS, and of each var/ only this build.
      *
      * $appDir must be resolved, as roots() returns it: a raw path lets every var/ path ship.
      *
-     * @param AppDir                             $appDir resolved application root
-     * @param non-empty-array<AppDir, ScriptDir> $roots  app root => script dir
-     * @param PharPath                           $output
+     * @param AppDir                            $appDir resolved application root
+     * @param non-empty-array<AppDir, BuildDir> $roots  app root => build dir
+     * @param PharPath                          $output an override can name a shipped directory
      *
      * @return Iterator<SplFileInfo>
      */
     public static function files(string $appDir, array $roots, string $output): Iterator
     {
         $base = self::normalize($appDir);
-        $excluded = [self::normalize($output), $base . '/tests'];
-        $filter = static function (mixed $file) use ($roots, $excluded, $base): bool {
+        $excludedOutput = self::normalize($output);
+        $filter = static function (mixed $file) use ($roots, $excludedOutput, $base): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
             // Deeper in the tree: an imported application and a --prefer-source vendor bring their own.
@@ -164,12 +169,12 @@ final class PharManifest
                 throw new PharSymlinkedDirectoryException($file->getPathname());
             }
 
-            if (self::normalize($file->getPath()) === $base && (! $file->isDir() || str_starts_with($name, '.'))) {
-                return false;
+            if (self::normalize($file->getPath()) === $base) {
+                return $file->isDir() && self::shipsFromRoot(self::normalize($file->getPathname()), $name, $roots);
             }
 
             $path = self::normalize($file->getPathname());
-            if (in_array($path, $excluded, true)) {
+            if ($path === $excludedOutput) {
                 return false;
             }
 
@@ -183,19 +188,72 @@ final class PharManifest
     }
 
     /**
+     * @param AppDir                            $appDir resolved application root
+     * @param non-empty-array<AppDir, BuildDir> $roots
+     *
+     * @return list<string> sorted, as spelled on disk
+     */
+    public static function notPacked(string $appDir, array $roots): array
+    {
+        $left = [];
+        foreach (new FilesystemIterator(self::normalize($appDir), FilesystemIterator::SKIP_DOTS) as $entry) {
+            assert($entry instanceof SplFileInfo);
+            $name = $entry->getFilename();
+            if (! $entry->isDir() || str_starts_with($name, '.')) {
+                continue;
+            }
+
+            if (self::shipsFromRoot(self::normalize($entry->getPathname()), $name, $roots)) {
+                continue;
+            }
+
+            $left[] = $name;
+        }
+
+        sort($left);
+
+        return $left;
+    }
+
+    /**
+     * An imported application sits wherever the tree put it, and the host boots it from there.
+     *
+     * @param non-empty-array<AppDir, BuildDir> $roots
+     */
+    private static function shipsFromRoot(string $path, string $name, array $roots): bool
+    {
+        if (in_array($name, self::SHIPPED_DIRS, true)) {
+            return true;
+        }
+
+        foreach (array_keys($roots) as $root) {
+            if (self::isUnder($root, $path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Whether a path under some application's var/ ships; null when it is under none.
      *
-     * @param non-empty-array<AppDir, ScriptDir> $roots
+     * @param non-empty-array<AppDir, BuildDir> $roots
      */
     private static function shipsFromVar(string $path, string $name, array $roots): bool|null
     {
-        foreach ($roots as $root => $scriptDir) {
+        foreach ($roots as $root => $buildDir) {
             if (! self::isUnder($path, $root . '/var')) {
                 continue;
             }
 
-            if (self::isUnder($path, $scriptDir)) {
-                return ! in_array($name, self::SCRIPT_DIR_NOISE, true);
+            if (self::isUnder($path, $buildDir)) {
+                return ! in_array($name, self::BUILD_NOISE, true);
+            }
+
+            // var/ and var/build: the iterator only reaches the build directory through them.
+            if (self::isUnder($buildDir, $path)) {
+                return true;
             }
 
             foreach (self::UNSHIPPED_VAR_DIRS as $dir) {
@@ -204,7 +262,9 @@ final class PharManifest
                 }
             }
 
-            return true;
+            // Anything else under var/build: another context's build, or what an earlier release
+            // left there.
+            return ! self::isUnder($path, CompiledScripts::buildRoot($root));
         }
 
         return null;

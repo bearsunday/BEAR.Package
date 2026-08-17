@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
+- An archive carries named top-level directories only - `src`, `public`, `bin`, `vendor`, `var`, and wherever an imported application sits - and the build prints `Not packed:` for the rest (#426)
+- Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
+- An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 
 ## [1.23.1] - 2026-08-17
 

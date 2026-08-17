@@ -40,7 +40,7 @@ use function var_export;
  *
  * @see PharManifest
  * @psalm-import-type AppDir from Types
- * @psalm-import-type ScriptDir from Types
+ * @psalm-import-type BuildDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type StubEntry from Types
  * @psalm-import-type PharPath from Types
@@ -115,10 +115,10 @@ final class PharBuilder
     }
 
     /**
-     * @param AppDir                             $appDir
-     * @param non-empty-array<AppDir, ScriptDir> $roots
-     * @param StubEntry                          $entry
-     * @param PharPath                           $output
+     * @param AppDir                            $appDir
+     * @param non-empty-array<AppDir, BuildDir> $roots
+     * @param StubEntry                         $entry
+     * @param PharPath                          $output
      *
      * @throws PharEntryNotPackedException
      *
@@ -144,6 +144,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir);
+        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir, PharManifest::notPacked($appDir, $roots));
     }
 }
