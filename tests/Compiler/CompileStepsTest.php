@@ -31,6 +31,8 @@ use function unlink;
 
 class CompileStepsTest extends TestCase
 {
+    private const CONTEXT = 'prod-app';
+
     /** @var non-empty-string */
     private string $appDir;
 
@@ -83,8 +85,8 @@ class CompileStepsTest extends TestCase
     {
         $step = new FakeRecordingStep();
 
-        $this->assertSame(['recorded' => 0], CompileSteps::run(self::injector(['recorded' => $step]), $this->appDir));
-        $this->assertSame($this->appDir . '/var/build/recorded', $step->stepDir);
+        $this->assertSame(['recorded' => 0], CompileSteps::run(self::injector(['recorded' => $step]), $this->appDir, self::CONTEXT));
+        $this->assertSame($this->appDir . '/var/build/' . self::CONTEXT . '/recorded', $step->stepDir);
         $this->assertTrue($step->stepDirExisted, 'the step had to create its own directory');
     }
 
@@ -92,9 +94,9 @@ class CompileStepsTest extends TestCase
     public function testTwoStepsWriteUnderTheirOwnKeys(): void
     {
         $steps = ['alpha' => new FakeAlphaStep(), 'beta' => new FakeBetaStep()];
-        $counts = CompileSteps::run(self::injector($steps), $this->appDir);
+        $counts = CompileSteps::run(self::injector($steps), $this->appDir, self::CONTEXT);
 
-        $buildDir = $this->appDir . '/var/build';
+        $buildDir = $this->appDir . '/var/build/' . self::CONTEXT;
         $this->assertSame(['alpha' => 2, 'beta' => 1], $counts);
         $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-1.txt'));
         $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-2.txt'));
@@ -109,13 +111,13 @@ class CompileStepsTest extends TestCase
     public function testASecondRunOverAPopulatedDirectoryWritesTheSameSet(): void
     {
         $steps = ['alpha' => new FakeAlphaStep()];
-        $stepDir = $this->appDir . '/var/build/alpha';
+        $stepDir = $this->appDir . '/var/build/' . self::CONTEXT . '/alpha';
 
-        $first = CompileSteps::run(self::injector($steps), $this->appDir);
+        $first = CompileSteps::run(self::injector($steps), $this->appDir, self::CONTEXT);
         file_put_contents($stepDir . '/stale.txt', 'left by an earlier build');
         mkdir($stepDir . '/nested');
         file_put_contents($stepDir . '/nested/stale.txt', 'left by an earlier build');
-        $second = CompileSteps::run(self::injector($steps), $this->appDir);
+        $second = CompileSteps::run(self::injector($steps), $this->appDir, self::CONTEXT);
 
         $this->assertSame($first, $second);
         $this->assertSame(['alpha-1.txt', 'alpha-2.txt'], self::entries($stepDir));
@@ -137,8 +139,8 @@ class CompileStepsTest extends TestCase
 
     public function testNoStepsIsNoWork(): void
     {
-        $this->assertSame([], CompileSteps::run(self::injector([]), $this->appDir));
-        $this->assertDirectoryDoesNotExist($this->appDir . '/var/build');
+        $this->assertSame([], CompileSteps::run(self::injector([]), $this->appDir, self::CONTEXT));
+        $this->assertDirectoryDoesNotExist($this->appDir . '/var/build/' . self::CONTEXT);
     }
 
     /** A step whose directory cannot be created must not be handed a path it would write nowhere. */
@@ -149,9 +151,27 @@ class CompileStepsTest extends TestCase
 
         try {
             $this->expectException(DirectoryNotWritableException::class);
-            CompileSteps::run(self::injector(['blocked' => $step]), $this->appDir);
+            CompileSteps::run(self::injector(['blocked' => $step]), $this->appDir, self::CONTEXT);
         } finally {
             $this->assertNull($step->stepDir);
         }
+    }
+
+    /** One directory per context: a build for one must leave another context's artifacts alone. */
+    public function testABuildForOneContextLeavesAnotherContextsArtifactsAlone(): void
+    {
+        $injector = self::injector(['alpha' => new FakeAlphaStep()]);
+
+        CompileSteps::run($injector, $this->appDir, 'prod-app');
+        CompileSteps::run($injector, $this->appDir, 'prod-hal-app');
+
+        $this->assertSame(
+            $this->appDir . '/var/build/prod-app/alpha',
+            file_get_contents($this->appDir . '/var/build/prod-app/alpha/alpha-1.txt'),
+        );
+        $this->assertSame(
+            $this->appDir . '/var/build/prod-hal-app/alpha',
+            file_get_contents($this->appDir . '/var/build/prod-hal-app/alpha/alpha-1.txt'),
+        );
     }
 }

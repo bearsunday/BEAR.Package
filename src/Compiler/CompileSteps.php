@@ -27,6 +27,7 @@ use function unlink;
  *
  * @psalm-import-type AppDir from Types
  * @psalm-import-type BuildDir from Types
+ * @psalm-import-type Context from Types
  * @psalm-import-type StepCounts from Types
  */
 final class CompileSteps
@@ -39,15 +40,16 @@ final class CompileSteps
     }
 
     /**
-     * @param AppDir $appDir
+     * @param AppDir  $appDir
+     * @param Context $context the one being compiled; its build directory is the steps' own
      *
      * @return StepCounts
      *
      * @throws DirectoryNotWritableException
      */
-    public static function run(InjectorInterface $injector, string $appDir): array
+    public static function run(InjectorInterface $injector, string $appDir, string $context): array
     {
-        return $injector->getInstance(self::class)(CompiledScripts::buildDir($appDir));
+        return $injector->getInstance(self::class)(CompiledScripts::buildDir($appDir, $context));
     }
 
     /**

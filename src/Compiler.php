@@ -274,7 +274,7 @@ final class Compiler
         $compiler->compile($module, $scriptDir);
         /** @var AppDir $appDir */
         $appDir = $this->appMeta->appDir;
-        $steps = CompileSteps::run($this->injector, $appDir);
+        $steps = CompileSteps::run($this->injector, $appDir, $this->context);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
         CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 

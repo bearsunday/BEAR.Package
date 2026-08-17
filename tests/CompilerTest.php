@@ -502,7 +502,7 @@ class CompilerTest extends TestCase
      */
     public function testCompileRunsTheStepsModulesContributed(): void
     {
-        $buildDir = self::APP_DIR . '/var/build';
+        $buildDir = self::APP_DIR . '/var/build/prod-step-cli-app';
         $stale = $buildDir . '/alpha/stale.txt';
         ! is_dir($buildDir . '/alpha') && mkdir($buildDir . '/alpha', 0777, true);
         file_put_contents($stale, 'left by an earlier build');
@@ -533,7 +533,7 @@ class CompilerTest extends TestCase
      */
     public function testAFailedStepLeavesNoMarker(): void
     {
-        $markerPath = CompileMarker::path(CompiledScripts::dir(self::APP_DIR));
+        $markerPath = CompileMarker::path(CompiledScripts::dir(self::APP_DIR, 'prod-failstep-cli-app'));
         @unlink($markerPath);
 
         $this->expectException(FakeCompileStepException::class);

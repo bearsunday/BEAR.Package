@@ -415,16 +415,16 @@ class PackageInjectorTest extends TestCase
     {
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-step-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir);
+        $scriptDir = CompiledScripts::dir($appDir, 'prod-step-app');
         self::cleanProdDi($scriptDir);
-        @unlink($appDir . '/var/build/alpha/alpha-1.txt');
-        @unlink($appDir . '/var/build/beta/beta-1.txt');
+        @unlink($appDir . '/var/build/prod-step-app/alpha/alpha-1.txt');
+        @unlink($appDir . '/var/build/prod-step-app/beta/beta-1.txt');
 
         $injector = PackageInjector::factory($meta, 'prod-step-app');
 
         $this->assertInstanceOf(CompiledInjector::class, $injector);
-        $this->assertFileExists($appDir . '/var/build/alpha/alpha-1.txt');
-        $this->assertFileExists($appDir . '/var/build/beta/beta-1.txt');
+        $this->assertFileExists($appDir . '/var/build/prod-step-app/alpha/alpha-1.txt');
+        $this->assertFileExists($appDir . '/var/build/prod-step-app/beta/beta-1.txt');
         $this->assertFileExists(CompileMarker::path($scriptDir));
     }
 
@@ -432,7 +432,7 @@ class PackageInjectorTest extends TestCase
     {
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-failstep-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir);
+        $scriptDir = CompiledScripts::dir($appDir, 'prod-failstep-app');
         self::cleanProdDi($scriptDir);
 
         $this->expectException(FakeCompileStepException::class);
