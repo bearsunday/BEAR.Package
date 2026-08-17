@@ -1,0 +1,16 @@
+#!/bin/sh
+# Stands in for graphviz so the render path runs on machines without it.
+out=''
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -o)
+            shift
+            out="$1"
+            ;;
+    esac
+    shift
+done
+
+[ -n "$out" ] || exit 64
+
+printf '<svg xmlns="http://www.w3.org/2000/svg"/>' > "$out"
