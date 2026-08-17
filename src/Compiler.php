@@ -13,6 +13,7 @@ use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
+use BEAR\Package\Compiler\GeneratedFiles;
 use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
@@ -28,6 +29,7 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
+use Throwable;
 
 use function assert;
 use function dirname;
@@ -149,6 +151,26 @@ final class Compiler
             return self::compileInChildProcess($this->compileJob);
         }
 
+        $appDirRealpath = realpath($this->appMeta->appDir);
+        assert($appDirRealpath !== false);
+        /** @var AppDir $appDirRealpath psalm's realpath stub says string; phpstan's already says non-empty */
+        $generated = GeneratedFiles::stash($appDirRealpath);
+
+        try {
+            $exitCode = $this->run();
+        } catch (Throwable $e) {
+            $generated->restore();
+
+            throw $e;
+        }
+
+        $generated->discard();
+
+        return $exitCode;
+    }
+
+    private function run(): int
+    {
         $this->clean();
         $this->wire(PackageInjector::compileInjector($this->appMeta, $this->context));
         $report = $this->compile();
@@ -303,8 +325,8 @@ final class Compiler
         $this->ensureDirectory($scriptDir);
         $appDirRealpath = realpath($this->appMeta->appDir);
         assert($appDirRealpath !== false);
-        foreach (['/preload.php', '/autoload.php', '/app.phar'] as $generated) {
-            @unlink($appDirRealpath . $generated);
+        foreach (GeneratedFiles::NAMES as $generated) {
+            @unlink($appDirRealpath . '/' . $generated);
         }
     }
 
