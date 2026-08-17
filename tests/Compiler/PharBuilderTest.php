@@ -75,6 +75,7 @@ class PharBuilderTest extends TestCase
         file_put_contents($this->appDir . '/build/coverage/index.html', '<html></html>');
         $this->entry();
         $this->vendor();
+        $this->composer();
 
         [$exitCode, $output] = $this->worker('public/index.php');
 
@@ -84,11 +85,11 @@ class PharBuilderTest extends TestCase
         $phar = 'phar://' . realpath($this->appDir . '/app.phar');
         $this->assertTrue(file_exists($phar . '/public/index.php'), 'the stub requires this entry');
         $this->assertTrue(file_exists($phar . '/src/App.php'));
-        $this->assertTrue(file_exists($phar . '/var/build/prod-app/di/Fake_App-.php'));
-        $this->assertTrue(file_exists($phar . '/var/build/prod-app/di/' . CompileMarker::FILENAME), 'the boot reads the marker from the archive');
+        $this->assertTrue(file_exists($phar . '/var/build/di/Fake_App-.php'));
+        $this->assertTrue(file_exists($phar . '/var/build/di/' . CompileMarker::FILENAME), 'the boot reads the marker from the archive');
         $this->assertFalse(file_exists($phar . '/.env'));
         $this->assertFalse(file_exists($phar . '/env.json'), 'a secret at the root ships under any name');
-        $this->assertFalse(file_exists($phar . '/var/build/prod-app/di/compile.lock'));
+        $this->assertFalse(file_exists($phar . '/var/build/di/compile.lock'));
         $this->assertFalse(file_exists($phar . '/app.phar'), 'the archive packed itself');
         $this->assertFalse(file_exists($phar . '/vendor-bin/tools/vendor/phpstan.php'));
         $this->assertFalse(file_exists($phar . '/build/coverage/index.html'));
@@ -100,7 +101,7 @@ class PharBuilderTest extends TestCase
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
 
         $this->expectException(PharEntryNotFoundException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/nowhere.php');
+        (new PharBuilder())($this->appDir, 'public/nowhere.php');
     }
 
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
@@ -109,6 +110,7 @@ class PharBuilderTest extends TestCase
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         $this->vendor();
+        $this->composer();
 
         [$exitCode, $output] = $this->worker('.env');
 
@@ -122,6 +124,7 @@ class PharBuilderTest extends TestCase
         mkdir($this->appDir . '/bootstrap', 0777, true);
         file_put_contents($this->appDir . '/bootstrap/admin.php', "<?php\n");
         $this->vendor();
+        $this->composer();
 
         [$exitCode, $output] = $this->worker('bootstrap/admin.php');
 
@@ -136,7 +139,7 @@ class PharBuilderTest extends TestCase
         $this->entry();
 
         $this->expectException(PharNotCompiledException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
+        (new PharBuilder())($this->appDir, 'public/index.php');
     }
 
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
@@ -144,10 +147,11 @@ class PharBuilderTest extends TestCase
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
+        $this->composer();
         mkdir($this->appDir . '/app.phar', 0777, true);
 
         $this->expectException(PharStaleOutputException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
+        (new PharBuilder())($this->appDir, 'public/index.php');
     }
 
     /** A compile that named its own tmp directory was placed under no base, so there is none to print. */
@@ -156,6 +160,7 @@ class PharBuilderTest extends TestCase
         $this->marker($this->writeDir . '/somewhere/of/its/own');
         $this->entry();
         $this->vendor();
+        $this->composer();
 
         [$exitCode, $output] = $this->worker('public/index.php');
 
@@ -181,12 +186,13 @@ class PharBuilderTest extends TestCase
     {
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
+        $this->composer();
         mkdir($this->appDir . '/vendor/app.phar', 0777, true);
 
         $cwd = getcwd();
         chdir($this->appDir);
         try {
-            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php', 'vendor/app.phar');
+            (new PharBuilder())($this->appDir, 'public/index.php', 'vendor/app.phar');
             $this->fail('a directory at the output path is a stale output');
         } catch (PharStaleOutputException $e) {
             $this->assertStringContainsString($this->norm((string) realpath($this->appDir)), $this->norm($e->getMessage()));
@@ -205,6 +211,7 @@ class PharBuilderTest extends TestCase
         $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->entry();
         $this->vendor();
+        $this->composer();
 
         $cwd = getcwd();
         chdir($this->appDir);
@@ -231,6 +238,38 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('holds no vendor/autoload.php', $output);
     }
 
+    /** The archive carries what composer.json autoloads, wherever the application keeps it. */
+    public function testPacksWhatComposerAutoloads(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        mkdir($this->appDir . '/src-fixed/Injector', 0777, true);
+        file_put_contents($this->appDir . '/src-fixed/Injector/PackageInjector.php', "<?php\n");
+        $this->entry();
+        $this->vendor();
+        $this->composer('{"autoload":{"classmap":["src-fixed/Injector/"]}}');
+
+        [$exitCode, $output] = $this->worker('public/index.php');
+
+        $this->assertSame(0, $exitCode, $output);
+        $phar = 'phar://' . realpath($this->appDir . '/app.phar');
+        $this->assertTrue(file_exists($phar . '/src-fixed/Injector/PackageInjector.php'));
+        $this->assertStringNotContainsString('Not packed:', $output);
+    }
+
+    /** An unread autoload declaration would ship a tree missing the classes that boot it. */
+    public function testManifestTheBuildCannotRead(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        $this->vendor();
+        $this->composer('{"autoload":');
+
+        [$exitCode, $output] = $this->worker('public/index.php');
+
+        $this->assertSame(1, $exitCode);
+        $this->assertStringContainsString('PharComposerUnreadableException: ' . realpath($this->appDir) . '/composer.json', $output);
+    }
+
     public function testWorkerWithoutItsArguments(): void
     {
         exec(sprintf('%s %s 2>&1', escapeshellarg(PHP_BINARY), escapeshellarg(self::workerScript())), $lines, $exitCode);
@@ -243,7 +282,7 @@ class PharBuilderTest extends TestCase
     private function worker(string $entry, string $output = '', bool $readOnly = false): array
     {
         $command = sprintf(
-            '%s -d phar.readonly=%d %s prod-app %s %s %s 2>&1',
+            '%s -d phar.readonly=%d %s %s %s %s 2>&1',
             escapeshellarg(PHP_BINARY),
             (int) $readOnly,
             escapeshellarg(self::workerScript()),
@@ -268,7 +307,7 @@ class PharBuilderTest extends TestCase
      */
     private function marker(string $tmpDir, string|null $writeDir = null): string
     {
-        $scriptDir = $this->appDir . '/var/build/prod-app/di';
+        $scriptDir = $this->appDir . '/var/build/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir, $writeDir);
 
@@ -295,5 +334,11 @@ class PharBuilderTest extends TestCase
             $this->appDir . '/vendor/autoload.php',
             sprintf("<?php\nreturn require %s;\n", var_export(dirname(__DIR__, 2) . '/vendor/autoload.php', true)),
         );
+    }
+
+    /** The manifest the packer reads the archive's autoload paths from. */
+    private function composer(string $json = '{}'): void
+    {
+        file_put_contents($this->appDir . '/composer.json', $json);
     }
 }

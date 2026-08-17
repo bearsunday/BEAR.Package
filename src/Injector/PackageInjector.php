@@ -76,7 +76,7 @@ final class PackageInjector
         $injector = $cache->getItem($injectorId)->get();
         // A restored injector reads the shared scripts lazily: reuse it only while they are still
         // the ones compiled for this writable directory.
-        if ($injector instanceof ScriptInjectorInterface && CompileMarker::matches(self::scriptDir($meta, $context, null), $meta->tmpDir)) {
+        if ($injector instanceof ScriptInjectorInterface && CompileMarker::matches(self::scriptDir($meta, null), $meta->tmpDir)) {
             self::$instances[$injectorId] = $injector;
 
             return $injector;
@@ -106,7 +106,7 @@ final class PackageInjector
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
-        $scriptDir = self::ensureScriptDir($meta, $context, $overrideModule);
+        $scriptDir = self::ensureScriptDir($meta, $overrideModule);
         $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
             return self::prodInjector($module, $scriptDir, $meta, $context);
@@ -127,7 +127,7 @@ final class PackageInjector
      */
     public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        $scriptDir = self::ensureScriptDir($meta, $context, null);
+        $scriptDir = self::ensureScriptDir($meta, null);
         $module = self::module($meta, $context, null);
         if (self::isProd($module)) {
             (new Compiler())->compile($module, $scriptDir);
@@ -160,14 +160,10 @@ final class PackageInjector
         return $module;
     }
 
-    /**
-     * @param Context $context
-     *
-     * @return ScriptDir
-     */
-    private static function ensureScriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
+    /** @return ScriptDir */
+    private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
     {
-        $scriptDir = self::scriptDir($meta, $context, $overrideModule);
+        $scriptDir = self::scriptDir($meta, $overrideModule);
         ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
 
         return $scriptDir;
@@ -255,15 +251,13 @@ final class PackageInjector
      * Override injectors use a class-name hash subdirectory so they never share
      * on-disk artifacts with the default injector for the same app+context (#478).
      *
-     * @param Context $context
-     *
      * @return ScriptDir
      */
-    private static function scriptDir(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): string
+    private static function scriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
     {
         /** @var AppDir $appDir */
         $appDir = $meta->appDir;
-        $scriptDir = CompiledScripts::dir($appDir, $context);
+        $scriptDir = CompiledScripts::dir($appDir);
         if ($overrideModule instanceof AbstractModule) {
             $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
         }

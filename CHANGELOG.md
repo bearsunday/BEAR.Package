@@ -8,11 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
+- Compiled DI scripts move to `{appDir}/var/build/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
 - `Compiler::phar()` writes `{appDir}/app.phar`, beside `autoload.php` and `preload.php`, and no longer takes an output path: collect the archive from the root instead of naming where it lands (#426)
-- An archive carries named top-level directories only - `src`, `public`, `bin`, `vendor`, `var`, and wherever an imported application sits - and the build prints `Not packed:` for the rest (#426)
+- An archive carries named top-level directories only - `src`, `public`, `bin`, `vendor`, `var`, whatever `{appDir}/composer.json` autoloads, and wherever an imported application sits - and the build prints `Not packed:` for the rest (#426)
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
-- An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
+- One tree holds one build: nothing under `var/build` is named after a context, so a second compile replaces the first and the whole directory ships, while `var/log` and `var/tmp` stay out (#426)
+- The build stops when `{appDir}/composer.json` is missing or its `autoload` section cannot be read (#426)
 
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)

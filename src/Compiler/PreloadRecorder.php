@@ -57,7 +57,7 @@ final class PreloadRecorder
         }
 
         $meta = Meta::create($appName, $context, $appDir, $writeDir);
-        $scriptDir = CompiledScripts::dir($appDir, $context);
+        $scriptDir = CompiledScripts::dir($appDir);
         // Without a current marker the boot below compiles on demand and the recording
         // measures that compile - the very error this pipeline removes.
         if (! CompileMarker::matches($scriptDir, $meta->tmpDir)) {

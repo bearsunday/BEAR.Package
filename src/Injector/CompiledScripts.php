@@ -9,9 +9,11 @@ use BEAR\Package\Types;
 /**
  * Where a compile puts what it produced.
  *
+ * One tree holds one build: nothing here is named after the context compiled for, so a second
+ * compile replaces the first. What a run writes stays under the context's own tmp directory.
+ *
  * @psalm-import-type AppDir from Types
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type Context from Types
  * @psalm-import-type ScriptDir from Types
  */
 final class CompiledScripts
@@ -22,37 +24,21 @@ final class CompiledScripts
     }
 
     /**
-     * @param AppDir  $appDir
-     * @param Context $context
+     * @param AppDir $appDir
      *
      * @return ScriptDir
      */
-    public static function dir(string $appDir, string $context): string
+    public static function dir(string $appDir): string
     {
-        return self::buildDir($appDir, $context) . '/di';
+        return self::buildDir($appDir) . '/di';
     }
 
     /**
-     * One compile's output.
-     *
-     * @param AppDir  $appDir
-     * @param Context $context
+     * @param AppDir $appDir
      *
      * @return BuildDir
      */
-    public static function buildDir(string $appDir, string $context): string
-    {
-        return self::buildRoot($appDir) . '/' . $context;
-    }
-
-    /**
-     * Every context's build directory sits here.
-     *
-     * @param AppDir $appDir
-     *
-     * @return non-empty-string
-     */
-    public static function buildRoot(string $appDir): string
+    public static function buildDir(string $appDir): string
     {
         return $appDir . '/var/build';
     }

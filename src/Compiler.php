@@ -174,14 +174,14 @@ final class Compiler
     public function phar(string|null $entry = null): int
     {
         // Both shapes can pack: fromInjector() holds the same job the constructor path records.
-        [, $context, $appDir] = $this->compileJob ?? $this->preloadJob;
+        [, , $appDir] = $this->compileJob ?? $this->preloadJob;
         $entry ??= 'public/index.php';
         if (! is_file($appDir . '/' . $entry)) {
             throw new PharEntryNotFoundException($appDir . '/' . $entry);
         }
 
         $exitCode = 1;
-        passthru(self::pharWorkerCommand($context, $appDir, $entry), $exitCode);
+        passthru(self::pharWorkerCommand($appDir, $entry), $exitCode);
 
         return $exitCode;
     }
@@ -254,18 +254,14 @@ final class Compiler
         );
     }
 
-    /**
-     * @param Context $context
-     * @param AppDir  $appDir
-     */
-    private static function pharWorkerCommand(string $context, string $appDir, string $entry): string
+    /** @param AppDir $appDir */
+    private static function pharWorkerCommand(string $appDir, string $entry): string
     {
         return sprintf(
             // The empty argument is the worker's optional output.
-            '%s -d phar.readonly=0 %s %s %s %s %s',
+            '%s -d phar.readonly=0 %s %s %s %s',
             escapeshellarg(self::phpBinary()),
             escapeshellarg(dirname(__DIR__) . '/bin/phar-worker.php'),
-            escapeshellarg($context),
             escapeshellarg($appDir),
             escapeshellarg($entry),
             escapeshellarg(''),
@@ -305,7 +301,7 @@ final class Compiler
     public function clean(): void
     {
         $this->assertNotDelegated(__FUNCTION__);
-        $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
+        $scriptDir = CompiledScripts::dir($this->appMeta->appDir);
         $this->emptyDirectory($this->appMeta->tmpDir);
         $this->emptyDirectory($scriptDir);
         $this->ensureDirectory($scriptDir);
@@ -354,7 +350,7 @@ final class Compiler
         $this->assertNotDelegated(__FUNCTION__);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
+        $scriptDir = CompiledScripts::dir($this->appMeta->appDir);
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
