@@ -58,11 +58,7 @@ use const PHP_SAPI;
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type WriteDir from Types
- * @psalm-import-type LogDir from Types
- * @psalm-import-type ScriptDir from Types
  * @psalm-import-type StubEntry from Types
- * @psalm-import-type ClassList from Types
- * @psalm-import-type OverwrittenFiles from Types
  * @psalm-import-type CompileReport from Types
  */
 final class Compiler
