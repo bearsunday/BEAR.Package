@@ -41,7 +41,8 @@ use ArrayObject;
  * @psalm-type OverwrittenFiles = ArrayObject<int, string>
  * @psalm-type ClassPaths = list<string>
  * @psalm-type LoadedClasses = list<class-string>
- * @psalm-type CompileReport = array{time: string, memory: string, compiled: int, preload: string, dot: string}
+ * @psalm-type StepCounts = array<string, int>
+ * @psalm-type CompileReport = array{time: string, memory: string, compiled: int, preload: string, dot: string, steps: array<string, int>}
  *
  * @phpcs:enable
  */

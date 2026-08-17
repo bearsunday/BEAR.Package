@@ -11,6 +11,7 @@ use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
 use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
+use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Compiler\DotCommand;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
@@ -106,6 +107,10 @@ final class Compiler
         echo PHP_EOL;
         printf("Compilation took %s seconds and used %sMB of memory\n", $report['time'], $report['memory']);
         printf("Compiled: %d resource classes\n", $report['compiled']);
+        foreach ($report['steps'] as $step => $count) {
+            printf("Compile step %s: %d artifacts\n", $step, $count);
+        }
+
         printf("Preload compile: %s\n", $report['preload']);
         printf("Object graph diagram: %s\n", $report['dot']);
 
@@ -267,7 +272,10 @@ final class Compiler
         $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
-        // Marker after final DI scripts so runtime can reuse AOT output (#483).
+        /** @var AppDir $appDir */
+        $appDir = $this->appMeta->appDir;
+        $steps = CompileSteps::run($this->injector, $appDir);
+        // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
         CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 
         // Compile class meta info (annotations and named parameters)
@@ -290,6 +298,7 @@ final class Compiler
             'compiled' => $compiled,
             'preload' => $preload,
             'dot' => $dotRealpath,
+            'steps' => $steps,
         ];
     }
 

@@ -11,6 +11,7 @@ use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Exception;
+use FakeVendor\HelloWorld\FakeCompileStepException;
 use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\FakeDep2;
 use FakeVendor\HelloWorld\FakeDepInterface;
@@ -407,5 +408,39 @@ class PackageInjectorTest extends TestCase
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
         $this->expectException(DirectoryNotWritableException::class);
         CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/app/tmp');
+    }
+
+    /** The on-demand branch mirrors the compile command's steps, so a first boot has the same build output. */
+    public function testProdFactoryRunsTheStepsOnDemand(): void
+    {
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-step-app', $appDir);
+        $scriptDir = CompiledScripts::dir($appDir);
+        self::cleanProdDi($scriptDir);
+        @unlink($appDir . '/var/build/alpha/alpha-1.txt');
+        @unlink($appDir . '/var/build/beta/beta-1.txt');
+
+        $injector = PackageInjector::factory($meta, 'prod-step-app');
+
+        $this->assertInstanceOf(CompiledInjector::class, $injector);
+        $this->assertFileExists($appDir . '/var/build/alpha/alpha-1.txt');
+        $this->assertFileExists($appDir . '/var/build/beta/beta-1.txt');
+        $this->assertFileExists(CompileMarker::path($scriptDir));
+    }
+
+    public function testAFailedStepOnDemandLeavesNoMarker(): void
+    {
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-failstep-app', $appDir);
+        $scriptDir = CompiledScripts::dir($appDir);
+        self::cleanProdDi($scriptDir);
+
+        $this->expectException(FakeCompileStepException::class);
+
+        try {
+            PackageInjector::factory($meta, 'prod-failstep-app');
+        } finally {
+            $this->assertFileDoesNotExist(CompileMarker::path($scriptDir));
+        }
     }
 }
