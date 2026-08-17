@@ -22,7 +22,9 @@ use SplFileInfo;
 use function file_get_contents;
 use function file_put_contents;
 use function is_dir;
+use function mkdir;
 use function rmdir;
+use function sort;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
@@ -97,6 +99,40 @@ class CompileStepsTest extends TestCase
         $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-1.txt'));
         $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-2.txt'));
         $this->assertSame($buildDir . '/beta', file_get_contents($buildDir . '/beta/beta-1.txt'));
+    }
+
+    /**
+     * A step handed the last build's files writes a different set than the same sources would
+     * from empty: Twig's cache skips a template it can already see loaded, Qiq keeps the first
+     * root that claimed a name.
+     */
+    public function testASecondRunOverAPopulatedDirectoryWritesTheSameSet(): void
+    {
+        $steps = ['alpha' => new FakeAlphaStep()];
+        $stepDir = $this->appDir . '/var/build/alpha';
+
+        $first = CompileSteps::run(self::injector($steps), $this->appDir);
+        file_put_contents($stepDir . '/stale.txt', 'left by an earlier build');
+        mkdir($stepDir . '/nested');
+        file_put_contents($stepDir . '/nested/stale.txt', 'left by an earlier build');
+        $second = CompileSteps::run(self::injector($steps), $this->appDir);
+
+        $this->assertSame($first, $second);
+        $this->assertSame(['alpha-1.txt', 'alpha-2.txt'], self::entries($stepDir));
+    }
+
+    /** @return list<string> */
+    private static function entries(string $dir): array
+    {
+        $names = [];
+        /** @var SplFileInfo $file */
+        foreach (new FilesystemIterator($dir, FilesystemIterator::SKIP_DOTS) as $file) {
+            $names[] = $file->getFilename();
+        }
+
+        sort($names);
+
+        return $names;
     }
 
     public function testNoStepsIsNoWork(): void

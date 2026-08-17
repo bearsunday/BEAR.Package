@@ -495,12 +495,17 @@ class CompilerTest extends TestCase
         $this->assertSame(0.0, $result);
     }
 
-    /** Each fake writes its own $stepDir into every artifact, so the files say which directory it was handed. */
+    /**
+     * clean() empties var/build/di and the tmp tree only, so a rebuild reaches a step directory
+     * the last build filled. Each fake writes its own $stepDir into every artifact, so the files
+     * say which directory it was handed.
+     */
     public function testCompileRunsTheStepsModulesContributed(): void
     {
         $buildDir = self::APP_DIR . '/var/build';
-        $this->removeTree($buildDir . '/alpha');
-        $this->removeTree($buildDir . '/beta');
+        $stale = $buildDir . '/alpha/stale.txt';
+        ! is_dir($buildDir . '/alpha') && mkdir($buildDir . '/alpha', 0777, true);
+        file_put_contents($stale, 'left by an earlier build');
 
         ob_start();
         $code = (new Compiler(self::APP_NAME, 'prod-step-cli-app', self::APP_DIR))();
@@ -512,6 +517,7 @@ class CompilerTest extends TestCase
         $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-1.txt'));
         $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-2.txt'));
         $this->assertSame($buildDir . '/beta', file_get_contents($buildDir . '/beta/beta-1.txt'));
+        $this->assertFileDoesNotExist($stale, 'the step was handed the last build output');
     }
 
     public function testCompileWithoutAnyStep(): void
