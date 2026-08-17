@@ -42,6 +42,9 @@ jobs:
           composer config repositories.package '{"type":"path","url":"..","options":{"symlink":false}}'
           composer require 'bear/package:*@dev' -W --no-interaction
 
+      - name: Run the demo tests
+        run: vendor/bin/phpunit --no-coverage -c demo/phpunit.xml.dist
+
       - name: Compile and pack
         working-directory: demo
         run: APP_WRITE_DIR=/tmp/bear php bin/compile.php
