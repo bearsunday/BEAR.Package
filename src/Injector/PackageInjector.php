@@ -137,7 +137,7 @@ final class PackageInjector
     }
 
     /**
-     * Whether $context boots from compiled scripts, which only a compiled one does.
+     * Whether $context boots from compiled scripts rather than assembling per request.
      *
      * @param Context $context
      */

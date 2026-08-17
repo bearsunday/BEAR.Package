@@ -127,7 +127,6 @@ class CompilerTest extends TestCase
         $compiler->compile();
     }
 
-    /** The refusal has to come before clean(), which empties what the compile was going to rewrite. */
     public function testCompileRefusesAContextThatAssemblesPerRequestWithoutTouchingTheTree(): void
     {
         $generated = [];

@@ -244,11 +244,10 @@ final class PharManifest
     }
 
     /**
-     * Whether the chain from the root to $path leads to an imported application, or is inside one.
+     * Whether $path is inside an imported application, or on the chain that reaches one.
      *
-     * An import sits wherever the tree put it and the host boots it from there, but that admits
-     * the directory it sits in - and everything else parked beside it, until this narrows to the
-     * application itself.
+     * Both directions: an ancestor has to pass for the iterator to descend, and nothing parked
+     * beside the application may ride along with it.
      *
      * @param non-empty-array<AppDir, BuildDir> $roots
      */
