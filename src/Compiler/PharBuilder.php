@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
-use BEAR\Package\Exception\PharComposerUnreadableException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PharEntryNotPackedException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
@@ -62,7 +61,6 @@ final class PharBuilder
      * @throws PharWritesInsideArchiveException
      * @throws PharWriteDirMismatchException
      * @throws PharImportOutsideTreeException
-     * @throws PharComposerUnreadableException
      * @throws PharStaleOutputException
      * @throws PharEntryNotPackedException
      */
@@ -85,7 +83,6 @@ final class PharBuilder
         }
 
         $roots = PharManifest::roots($appDirReal, ImportedApps::of($hostDir));
-        $shipped = PharManifest::shippedDirs($appDirReal);
         $output ??= $appDirReal . '/app.phar';
         @mkdir(dirname($output), 0777, true);
         // PharManifest::files() excludes the archive by path, and the iterator yields absolute ones.
@@ -97,7 +94,7 @@ final class PharBuilder
             throw new PharStaleOutputException($output);
         }
 
-        return self::pack($appDirReal, $roots, $shipped, $entry, $output, $hostRecord); // @codeCoverageIgnore
+        return self::pack($appDirReal, $roots, $entry, $output, $hostRecord); // @codeCoverageIgnore
     }
 
     /**
@@ -119,7 +116,6 @@ final class PharBuilder
     /**
      * @param AppDir                            $appDir
      * @param non-empty-array<AppDir, BuildDir> $roots
-     * @param list<string>                      $shipped
      * @param StubEntry                         $entry
      * @param PharPath                          $output
      *
@@ -127,7 +123,7 @@ final class PharBuilder
      *
      * @codeCoverageIgnore writing a phar takes -d phar.readonly=0, which no coverage run has
      */
-    private static function pack(string $appDir, array $roots, array $shipped, string $entry, string $output, CompileRecord $record): PharReport
+    private static function pack(string $appDir, array $roots, string $entry, string $output, CompileRecord $record): PharReport
     {
         $alias = basename($output);
         $phar = new Phar($output);
@@ -135,7 +131,7 @@ final class PharBuilder
         $phar->startBuffering();
         /** @var ArrayObject<int, string> $symlinked */
         $symlinked = new ArrayObject();
-        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $shipped, $output, $entry, $symlinked), $appDir);
+        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output, $entry, $symlinked), $appDir);
         // The entry is on disk - checked above - but the filter decides what reaches the archive.
         if (! isset($phar[$entry])) {
             throw new PharEntryNotPackedException($appDir . '/' . $entry);
@@ -154,7 +150,7 @@ final class PharBuilder
             (int) filesize($output),
             count($files),
             $record->writeDir,
-            PharManifest::notPacked($appDir, $roots, $shipped, $entry),
+            PharManifest::notPacked($appDir, $roots, $entry),
             PharManifest::symlinkedDirs($symlinked),
         );
     }

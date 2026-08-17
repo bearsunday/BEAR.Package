@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use ArrayObject;
-use BEAR\Package\Exception\PharComposerUnreadableException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
@@ -23,8 +22,6 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 
 use function array_keys;
-use function array_merge;
-use function array_unique;
 use function array_values;
 use function assert;
 use function explode;
@@ -49,7 +46,7 @@ use function substr;
  */
 final class PharManifest
 {
-    /** Carried whether the application's composer.json names them or not. */
+    /** The only top-level directories an archive carries. */
     private const SHIPPED_DIRS = ['src', 'public', 'bin', 'vendor', 'var'];
 
     /** Ray.Compiler noise: written beside what it produced, read by no boot. */
@@ -149,42 +146,24 @@ final class PharManifest
     }
 
     /**
-     * The top-level directories of $appDir an archive carries.
-     *
-     * A step of its own, so a manifest the packer cannot read stops the build before a Phar
-     * is opened.
-     *
-     * @param AppDir $appDir
-     *
-     * @return list<string>
-     *
-     * @throws PharComposerUnreadableException
-     */
-    public static function shippedDirs(string $appDir): array
-    {
-        return array_values(array_unique(array_merge(self::SHIPPED_DIRS, AutoloadDirs::of($appDir))));
-    }
-
-    /**
-     * Of the application root only $shipped, and of each var/ nothing a run writes.
+     * Of the application root only SHIPPED_DIRS, and of each var/ nothing a run writes.
      *
      * $appDir must be resolved, as roots() returns it: a raw path lets every var/ path ship.
      *
      * @param AppDir                            $appDir    resolved application root
      * @param non-empty-array<AppDir, BuildDir> $roots     app root => build dir
-     * @param list<string>                      $shipped   as shippedDirs() reports them
      * @param PharPath                          $output    an override can name a shipped directory
      * @param StubEntry                         $entry     relative to appDir
      * @param SymlinkedDirs                     $symlinked collects the directories left out for being links
      *
      * @return Iterator<SplFileInfo>
      */
-    public static function files(string $appDir, array $roots, array $shipped, string $output, string $entry, ArrayObject $symlinked): Iterator
+    public static function files(string $appDir, array $roots, string $output, string $entry, ArrayObject $symlinked): Iterator
     {
         $base = self::normalize($appDir);
         $excludedOutput = self::normalize($output);
         $entryDir = self::entryDir($entry);
-        $filter = static function (mixed $file) use ($roots, $shipped, $excludedOutput, $base, $entryDir, $symlinked): bool {
+        $filter = static function (mixed $file) use ($roots, $excludedOutput, $base, $entryDir, $symlinked): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
             // Deeper in the tree: an imported application and a --prefer-source vendor bring their own.
@@ -197,7 +176,7 @@ final class PharManifest
                 return false;
             }
 
-            if ($path === $excludedOutput || ! self::shipsFromRoot($path, $roots, $shipped, $base, $entryDir)) {
+            if ($path === $excludedOutput || ! self::shipsFromRoot($path, $roots, $base, $entryDir)) {
                 return false;
             }
 
@@ -236,14 +215,13 @@ final class PharManifest
     }
 
     /**
-     * @param AppDir                            $appDir  resolved application root
+     * @param AppDir                            $appDir resolved application root
      * @param non-empty-array<AppDir, BuildDir> $roots
-     * @param list<string>                      $shipped as shippedDirs() reports them
-     * @param StubEntry                         $entry   relative to appDir
+     * @param StubEntry                         $entry  relative to appDir
      *
      * @return list<string> sorted, as spelled on disk
      */
-    public static function notPacked(string $appDir, array $roots, array $shipped, string $entry): array
+    public static function notPacked(string $appDir, array $roots, string $entry): array
     {
         $entryDir = self::entryDir($entry);
         $left = [];
@@ -254,7 +232,7 @@ final class PharManifest
                 continue;
             }
 
-            if (self::shipsFromRoot(self::normalize($file->getPathname()), $roots, $shipped, self::normalize($appDir), $entryDir)) {
+            if (self::shipsFromRoot(self::normalize($file->getPathname()), $roots, self::normalize($appDir), $entryDir)) {
                 continue;
             }
 
@@ -278,13 +256,12 @@ final class PharManifest
      * The stub requires $entry, so whatever holds it ships even when nothing else there does.
      *
      * @param non-empty-array<AppDir, BuildDir> $roots
-     * @param list<string>                      $shipped
      */
-    private static function shipsFromRoot(string $path, array $roots, array $shipped, string $base, string $entryDir): bool
+    private static function shipsFromRoot(string $path, array $roots, string $base, string $entryDir): bool
     {
         $top = self::topDir($path, $base);
 
-        return $top === $entryDir || in_array($top, $shipped, true) || self::holdsImport($path, $roots, $base);
+        return $top === $entryDir || in_array($top, self::SHIPPED_DIRS, true) || self::holdsImport($path, $roots, $base);
     }
 
     /**

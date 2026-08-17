@@ -10,10 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Compiled DI scripts move to `{appDir}/var/build/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
 - `Compiler::phar()` writes `{appDir}/app.phar`, beside `autoload.php` and `preload.php`, and no longer takes an output path: collect the archive from the root instead of naming where it lands (#426)
-- An archive carries named top-level directories only - `src`, `public`, `bin`, `vendor`, `var`, whatever `{appDir}/composer.json` autoloads, and wherever an imported application sits - and the build prints `Not packed:` for the rest (#426)
+- An archive carries a fixed set of top-level directories - `src`, `public`, `bin`, `vendor`, `var`, whatever holds the entry, and wherever an imported application sits - and the build prints `Not packed:` for the rest; code an application keeps elsewhere belongs under one of these (#426)
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - One tree holds one build: nothing under `var/build` is named after a context, so a second compile replaces the first and the whole directory ships, while `var/log` and `var/tmp` stay out (#426)
-- The build stops when `{appDir}/composer.json` is missing or its `autoload` section cannot be read (#426)
 - A symlinked directory no longer stops the build: the pack leaves it behind and reports it as `Not packed (symlink):`, so the archive names the runtime code it is missing instead of refusing to exist (#426)
 - `PharSymlinkedDirectoryException` is removed - a directory the archive was not going to carry is not an error (#426)
 
