@@ -130,7 +130,7 @@ final class PharBuilder
         $phar = new Phar($output);
         $phar->setSignatureAlgorithm(Phar::SHA256);
         $phar->startBuffering();
-        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output), $appDir);
+        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output, $entry), $appDir);
         // The entry is on disk - checked above - but the filter decides what reaches the archive.
         if (! isset($phar[$entry])) {
             throw new PharEntryNotPackedException($appDir . '/' . $entry);
@@ -144,6 +144,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir, PharManifest::notPacked($appDir, $roots));
+        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir, PharManifest::notPacked($appDir, $roots, $entry));
     }
 }

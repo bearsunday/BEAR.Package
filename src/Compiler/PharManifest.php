@@ -23,6 +23,7 @@ use SplFileInfo;
 
 use function array_keys;
 use function assert;
+use function explode;
 use function in_array;
 use function realpath;
 use function rtrim;
@@ -38,6 +39,7 @@ use function str_starts_with;
  * @psalm-import-type BuildDir from Types
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type PharPath from Types
+ * @psalm-import-type StubEntry from Types
  */
 final class PharManifest
 {
@@ -150,14 +152,16 @@ final class PharManifest
      * @param AppDir                            $appDir resolved application root
      * @param non-empty-array<AppDir, BuildDir> $roots  app root => build dir
      * @param PharPath                          $output an override can name a shipped directory
+     * @param StubEntry                         $entry  relative to appDir
      *
      * @return Iterator<SplFileInfo>
      */
-    public static function files(string $appDir, array $roots, string $output): Iterator
+    public static function files(string $appDir, array $roots, string $output, string $entry): Iterator
     {
         $base = self::normalize($appDir);
         $excludedOutput = self::normalize($output);
-        $filter = static function (mixed $file) use ($roots, $excludedOutput, $base): bool {
+        $entryDir = self::entryDir($entry);
+        $filter = static function (mixed $file) use ($roots, $excludedOutput, $base, $entryDir): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
             // Deeper in the tree: an imported application and a --prefer-source vendor bring their own.
@@ -170,7 +174,7 @@ final class PharManifest
             }
 
             if (self::normalize($file->getPath()) === $base) {
-                return $file->isDir() && self::shipsFromRoot(self::normalize($file->getPathname()), $name, $roots);
+                return $file->isDir() && self::shipsFromRoot(self::normalize($file->getPathname()), $name, $roots, $entryDir);
             }
 
             $path = self::normalize($file->getPathname());
@@ -190,20 +194,22 @@ final class PharManifest
     /**
      * @param AppDir                            $appDir resolved application root
      * @param non-empty-array<AppDir, BuildDir> $roots
+     * @param StubEntry                         $entry  relative to appDir
      *
      * @return list<string> sorted, as spelled on disk
      */
-    public static function notPacked(string $appDir, array $roots): array
+    public static function notPacked(string $appDir, array $roots, string $entry): array
     {
+        $entryDir = self::entryDir($entry);
         $left = [];
-        foreach (new FilesystemIterator(self::normalize($appDir), FilesystemIterator::SKIP_DOTS) as $entry) {
-            assert($entry instanceof SplFileInfo);
-            $name = $entry->getFilename();
-            if (! $entry->isDir() || str_starts_with($name, '.')) {
+        foreach (new FilesystemIterator(self::normalize($appDir), FilesystemIterator::SKIP_DOTS) as $file) {
+            assert($file instanceof SplFileInfo);
+            $name = $file->getFilename();
+            if (! $file->isDir() || str_starts_with($name, '.')) {
                 continue;
             }
 
-            if (self::shipsFromRoot(self::normalize($entry->getPathname()), $name, $roots)) {
+            if (self::shipsFromRoot(self::normalize($file->getPathname()), $name, $roots, $entryDir)) {
                 continue;
             }
 
@@ -215,14 +221,21 @@ final class PharManifest
         return $left;
     }
 
+    /** @param StubEntry $entry */
+    private static function entryDir(string $entry): string
+    {
+        return explode('/', self::normalize($entry), 2)[0];
+    }
+
     /**
      * An imported application sits wherever the tree put it, and the host boots it from there.
+     * The stub requires $entry, so whatever holds it ships even when nothing else there does.
      *
      * @param non-empty-array<AppDir, BuildDir> $roots
      */
-    private static function shipsFromRoot(string $path, string $name, array $roots): bool
+    private static function shipsFromRoot(string $path, string $name, array $roots, string $entryDir): bool
     {
-        if (in_array($name, self::SHIPPED_DIRS, true)) {
+        if ($name === $entryDir || in_array($name, self::SHIPPED_DIRS, true)) {
             return true;
         }
 

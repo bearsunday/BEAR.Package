@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 
+### Fixed
+- The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
+
 ## [1.23.1] - 2026-08-17
 
 ### Fixed

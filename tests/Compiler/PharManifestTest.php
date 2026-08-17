@@ -185,7 +185,7 @@ class PharManifestTest extends TestCase
         $appDir = $this->resolved();
 
         // An output in a directory that ships: only the manifest's own exclusion keeps it out.
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/vendor/app.phar'));
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/vendor/app.phar', 'public/index.php'));
 
         $this->assertSame([
             'bin/app.php',
@@ -199,7 +199,7 @@ class PharManifestTest extends TestCase
             'var/templates/index.html.twig',
             'vendor/autoload.php',
         ], $shipped);
-        $this->assertSame(['build', 'docs', 'legacy', 'tests', 'vendor-bin'], PharManifest::notPacked($appDir, $roots));
+        $this->assertSame(['build', 'docs', 'legacy', 'tests', 'vendor-bin'], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
     }
 
     /** import/ is not a named directory: it ships because an application sits in it. */
@@ -216,7 +216,7 @@ class PharManifestTest extends TestCase
         $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
         $appDir = $this->resolved();
 
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar'));
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
 
         $this->assertSame([
             'import/src/Module/AppModule.php',
@@ -225,7 +225,31 @@ class PharManifestTest extends TestCase
             'var/build/prod-app/di/' . CompileMarker::FILENAME,
             'var/build/prod-app/di/Fake_App-.php',
         ], $shipped);
-        $this->assertSame([], PharManifest::notPacked($appDir, $roots));
+        $this->assertSame([], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
+    }
+
+    public function testFilesShipTheDirectoryHoldingTheEntry(): void
+    {
+        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
+        $this->tree([
+            'bootstrap/admin.php' => "<?php\n",
+            'bootstrap/batch.php' => "<?php\n",
+            'public-cms/index.php' => "<?php\n",
+        ]);
+        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $appDir = $this->resolved();
+
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'bootstrap/admin.php'));
+
+        $this->assertSame([
+            'bootstrap/admin.php',
+            'bootstrap/batch.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'var/build/prod-app/di/Fake_App-.php',
+        ], $shipped);
+        // One pack names one entry, so the other document root is left behind and said so.
+        $this->assertSame(['public-cms'], PharManifest::notPacked($appDir, $roots, 'bootstrap/admin.php'));
     }
 
     public function testSymlinkedDirectoryInTheTree(): void
@@ -240,7 +264,7 @@ class PharManifestTest extends TestCase
         $appDir = $this->resolved();
 
         $this->expectException(PharSymlinkedDirectoryException::class);
-        $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar'));
+        $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
     }
 
     /** @param array<string, string> $files path relative to appDir => contents */

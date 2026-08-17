@@ -116,6 +116,21 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('PharEntryNotPackedException: ' . realpath($this->appDir) . '/.env', $output);
     }
 
+    public function testEntryInADirectoryOfItsOwn(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        mkdir($this->appDir . '/bootstrap', 0777, true);
+        file_put_contents($this->appDir . '/bootstrap/admin.php', "<?php\n");
+        $this->vendor();
+
+        [$exitCode, $output] = $this->worker('bootstrap/admin.php');
+
+        $this->assertSame(0, $exitCode, $output);
+        $phar = 'phar://' . realpath($this->appDir . '/app.phar');
+        $this->assertTrue(file_exists($phar . '/bootstrap/admin.php'), 'the stub requires this entry');
+        $this->assertStringNotContainsString('Not packed: bootstrap', $output);
+    }
+
     public function testTreeThatWasNeverCompiled(): void
     {
         $this->entry();
