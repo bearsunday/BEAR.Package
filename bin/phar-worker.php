@@ -47,4 +47,8 @@ if ($report->writeDir !== null) {
     printf('Writes: %s' . PHP_EOL, $report->writeDir);
 }
 
+if ($report->notPacked !== []) {
+    printf('Not packed: %s' . PHP_EOL, implode(', ', $report->notPacked));
+}
+
 exit(0);

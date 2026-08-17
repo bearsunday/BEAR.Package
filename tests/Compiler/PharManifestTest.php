@@ -18,6 +18,7 @@ use SplFileInfo;
 use function assert;
 use function basename;
 use function BEAR\Package\deleteFiles;
+use function dirname;
 use function file_put_contents;
 use function is_dir;
 use function mkdir;
@@ -59,22 +60,26 @@ class PharManifestTest extends TestCase
 
     public function testRootsShipTheApplicationAndItsImports(): void
     {
-        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $appName = $this->importApp('import');
-        $import = $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
+        $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
 
         $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
 
         $real = $this->norm((string) realpath($this->appDir));
-        $this->assertSame([$real => $host, $real . '/import' => $import], $roots);
+        $this->assertSame([
+            $real => $real . '/var/build/prod-app',
+            $real . '/import' => $real . '/import/var/build/app',
+        ], $roots);
     }
 
     public function testUnrelatedApplicationTreeIsIgnored(): void
     {
-        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         $this->marker($this->appDir . '/legacy-app', 'old-app', '/var/www/legacy/var/tmp/old-app');
 
-        $this->assertSame([$this->norm((string) realpath($this->appDir)) => $host], PharManifest::roots($this->appDir, 'prod-app', []));
+        $real = $this->norm((string) realpath($this->appDir));
+        $this->assertSame([$real => $real . '/var/build/prod-app'], PharManifest::roots($this->appDir, 'prod-app', []));
     }
 
     public function testUncompiledApplication(): void
@@ -102,8 +107,8 @@ class PharManifestTest extends TestCase
         mkdir($this->appDir, 0777, true);
         mkdir($this->writeDir . '/real-var', 0777, true);
         symlink($this->writeDir . '/real-var', $this->appDir . '/var');
-        mkdir($this->appDir . '/var/tmp/prod-app/di', 0777, true);
-        CompileMarker::write($this->appDir . '/var/tmp/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app', null);
+        mkdir($this->appDir . '/var/build/prod-app/di', 0777, true);
+        CompileMarker::write($this->appDir . '/var/build/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app', null);
 
         $this->expectException(PharWritesInsideArchiveException::class);
         PharManifest::roots($this->appDir, 'prod-app', []);
@@ -139,50 +144,114 @@ class PharManifestTest extends TestCase
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
     }
 
-    public function testFilesShipTheTreeAndTheScriptsButNotWhatARunWrote(): void
+    public function testFilesShipTheNamedDirectoriesAndThisBuildOnly(): void
     {
         $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
         file_put_contents($scriptDir . '/compile.lock', 'noise');
-        mkdir($this->appDir . '/src', 0777, true);
-        file_put_contents($this->appDir . '/src/App.php', "<?php\n");
-        file_put_contents($this->appDir . '/autoload.php', "<?php\n");
-        file_put_contents($this->appDir . '/preload.php', "<?php\n");
-        file_put_contents($this->appDir . '/composer.json', '{}');
-        mkdir($this->appDir . '/.github/workflows', 0777, true);
-        file_put_contents($this->appDir . '/.github/workflows/ci.yml', 'on: push');
-        file_put_contents($this->appDir . '/.env', 'SECRET=1');
-        file_put_contents($this->appDir . '/.env.production', 'SECRET=2');
-        file_put_contents($this->appDir . '/env.json', '{"SECRET": 3}');
-        mkdir($this->appDir . '/legacy', 0777, true);
-        file_put_contents($this->appDir . '/legacy/.env.local', 'SECRET=3');
-        mkdir($this->appDir . '/var/sql', 0777, true);
-        file_put_contents($this->appDir . '/var/sql/user_item.sql', 'SELECT 1');
-        mkdir($this->appDir . '/var/conf', 0777, true);
-        file_put_contents($this->appDir . '/var/conf/aura.route.php', "<?php\n");
-        mkdir($this->appDir . '/var/log', 0777, true);
-        file_put_contents($this->appDir . '/var/log/app.log', 'log');
-        mkdir($this->appDir . '/var/build', 0777, true);
-        file_put_contents($this->appDir . '/var/build/old.phar', 'an earlier archive');
-        mkdir($this->appDir . '/var/tmp/other-app/di', 0777, true);
-        file_put_contents($this->appDir . '/var/tmp/other-app/di/Fake_Other-.php', "<?php\n");
-        mkdir($this->appDir . '/tests', 0777, true);
-        file_put_contents($this->appDir . '/tests/AppTest.php', "<?php\n");
-        mkdir($this->appDir . '/build', 0777, true);
-        file_put_contents($this->appDir . '/build/app.phar', 'the archive being written');
+        $this->tree([
+            'src/App.php' => "<?php\n",
+            'public/index.php' => "<?php\n",
+            'bin/app.php' => "<?php\n",
+            'vendor/autoload.php' => "<?php\n",
+            'vendor/app.phar' => 'the archive being written',
+            'var/sql/user_item.sql' => 'SELECT 1',
+            'var/conf/aura.route.php' => "<?php\n",
+            'var/json_schema/user.json' => '{}',
+            'var/templates/index.html.twig' => 'hi',
+            // Not named, so not carried.
+            'vendor-bin/tools/vendor/phpstan.php' => "<?php\n",
+            'build/coverage/index.html' => '<html></html>',
+            'docs/a.md' => '# a',
+            'tests/AppTest.php' => "<?php\n",
+            'legacy/.env.local' => 'SECRET=3',
+            '.github/workflows/ci.yml' => 'on: push',
+            // Nothing directly at the root.
+            'autoload.php' => "<?php\n",
+            'preload.php' => "<?php\n",
+            'app.phar' => 'the archive of an earlier run',
+            'composer.json' => '{}',
+            'env.json' => '{"SECRET": 3}',
+            '.env' => 'SECRET=1',
+            '.env.production' => 'SECRET=2',
+            'var/log/app.log' => 'log',
+            // What an earlier release left in var/build, and a context this archive is not for.
+            'var/build/old.phar' => 'an earlier archive',
+            'var/build/other-app/di/Fake_Other-.php' => "<?php\n",
+            // Scripts left where the previous layout put them: var/tmp stays unshipped.
+            'var/tmp/other-app/di/Fake_Other-.php' => "<?php\n",
+        ]);
         $roots = PharManifest::roots($this->appDir, 'prod-app', []);
         $appDir = $this->resolved();
 
-        // An output inside the tree, but outside var/: the archive must not pack itself.
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/build/app.phar'));
+        // An output in a directory that ships: only the manifest's own exclusion keeps it out.
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/vendor/app.phar', 'public/index.php'));
 
         $this->assertSame([
+            'bin/app.php',
+            'public/index.php',
             'src/App.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'var/build/prod-app/di/Fake_App-.php',
             'var/conf/aura.route.php',
+            'var/json_schema/user.json',
             'var/sql/user_item.sql',
-            'var/tmp/prod-app/di/' . CompileMarker::FILENAME,
-            'var/tmp/prod-app/di/Fake_App-.php',
+            'var/templates/index.html.twig',
+            'vendor/autoload.php',
         ], $shipped);
+        $this->assertSame(['build', 'docs', 'legacy', 'tests', 'vendor-bin'], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
+    }
+
+    /** modules/ is not a named directory: it ships only as far as the application inside it. */
+    public function testFilesShipEachApplicationsOwnBuild(): void
+    {
+        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        file_put_contents($host . '/Fake_App-.php', "<?php\n");
+        $appName = $this->importApp('modules/import');
+        $import = $this->marker($this->appDir . '/modules/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
+        file_put_contents($import . '/Fake_Import-.php', "<?php\n");
+        $this->tree([
+            'modules/import/var/build/other-app/di/Fake_Other-.php' => "<?php\n",
+            'modules/sibling/secrets/keys.txt' => 'PRIVATE',
+        ]);
+
+        $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
+        $appDir = $this->resolved();
+
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
+
+        $this->assertSame([
+            'modules/import/src/Module/AppModule.php',
+            'modules/import/var/build/app/di/' . CompileMarker::FILENAME,
+            'modules/import/var/build/app/di/Fake_Import-.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'var/build/prod-app/di/Fake_App-.php',
+        ], $shipped);
+        $this->assertSame([], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
+    }
+
+    public function testFilesShipTheDirectoryHoldingTheEntry(): void
+    {
+        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
+        $this->tree([
+            'bootstrap/admin.php' => "<?php\n",
+            'bootstrap/batch.php' => "<?php\n",
+            'public-cms/index.php' => "<?php\n",
+        ]);
+        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $appDir = $this->resolved();
+
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'bootstrap/admin.php'));
+
+        $this->assertSame([
+            'bootstrap/admin.php',
+            'bootstrap/batch.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'var/build/prod-app/di/Fake_App-.php',
+        ], $shipped);
+        // One pack names one entry, so the other document root is left behind and said so.
+        $this->assertSame(['public-cms'], PharManifest::notPacked($appDir, $roots, 'bootstrap/admin.php'));
     }
 
     public function testSymlinkedDirectoryInTheTree(): void
@@ -197,7 +266,18 @@ class PharManifestTest extends TestCase
         $appDir = $this->resolved();
 
         $this->expectException(PharSymlinkedDirectoryException::class);
-        $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/var/build/prod-app.phar'));
+        $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
+    }
+
+    /** @param array<string, string> $files path relative to appDir => contents */
+    private function tree(array $files): void
+    {
+        foreach ($files as $relative => $contents) {
+            $file = $this->appDir . '/' . $relative;
+            $dir = dirname($file);
+            ! is_dir($dir) && mkdir($dir, 0777, true);
+            file_put_contents($file, $contents);
+        }
     }
 
     /** @return non-empty-string the form roots() speaks */
@@ -263,7 +343,7 @@ class PharManifestTest extends TestCase
      */
     private function marker(string $appDir, string $context, string $tmpDir, string|null $writeDir = null): string
     {
-        $scriptDir = $appDir . '/var/tmp/' . $context . '/di';
+        $scriptDir = $appDir . '/var/build/' . $context . '/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, 'My\App', $context, $tmpDir, $writeDir);
 

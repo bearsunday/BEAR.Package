@@ -49,9 +49,13 @@ jobs:
       - name: Check the archive carries the application's own files under var/
         run: |
           php -r '
-          $phar = new Phar("demo/var/build/prod-cli-hal-app.phar");
+          $phar = new Phar("demo/app.phar");
           if (! isset($phar["var/foo.txt"])) {
               fwrite(STDERR, "the archive dropped var/foo.txt\n");
+              exit(1);
+          }
+          if (isset($phar["app.phar"])) {
+              fwrite(STDERR, "the archive packed itself\n");
               exit(1);
           }
           foreach (new RecursiveIteratorIterator($phar) as $file) {
@@ -63,12 +67,12 @@ jobs:
 
       - name: Boot with the wrong write directory
         run: |
-          CONTEXT=prod-cli-hal-app APP_WRITE_DIR=/tmp/elsewhere php demo/var/build/prod-cli-hal-app.phar get /index 2>&1 | tee /tmp/wrong
+          CONTEXT=prod-cli-hal-app APP_WRITE_DIR=/tmp/elsewhere php demo/app.phar get /index 2>&1 | tee /tmp/wrong
           grep -q CompiledForAnotherWriteDirException /tmp/wrong
 
       - name: Boot the archive with the build tree deleted
         run: |
-          mv demo/var/build/prod-cli-hal-app.phar /tmp/app.phar
+          mv demo/app.phar /tmp/app.phar
           rm -rf demo src vendor
           rm -rf /tmp/bear
           CONTEXT=prod-cli-hal-app APP_WRITE_DIR=/tmp/bear php /tmp/app.phar get /index | tee /tmp/response
