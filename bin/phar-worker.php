@@ -51,4 +51,9 @@ if ($report->notPacked !== []) {
     printf('Not packed: %s' . PHP_EOL, implode(', ', $report->notPacked));
 }
 
+if ($report->symlinked !== []) {
+    // Phar packs files, not links: whatever these directories hold is missing from the archive.
+    printf('Not packed (symlink): %s' . PHP_EOL, implode(', ', $report->symlinked));
+}
+
 exit(0);

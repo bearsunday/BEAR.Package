@@ -39,6 +39,7 @@ use ArrayObject;
  * @psalm-type StubEntry = non-empty-string
  * @psalm-type ClassList = ArrayObject<int, string>
  * @psalm-type OverwrittenFiles = ArrayObject<int, string>
+ * @psalm-type SymlinkedDirs = ArrayObject<int, string>
  * @psalm-type ClassPaths = list<string>
  * @psalm-type LoadedClasses = list<class-string>
  * @psalm-type CompileReport = array{time: string, memory: string, compiled: int, preload: string, dot: string}

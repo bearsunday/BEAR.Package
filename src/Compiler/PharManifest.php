@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use ArrayObject;
 use BEAR\Package\Exception\PharComposerUnreadableException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
-use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\CompiledScripts;
@@ -45,6 +45,7 @@ use function substr;
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type PharPath from Types
  * @psalm-import-type StubEntry from Types
+ * @psalm-import-type SymlinkedDirs from Types
  */
 final class PharManifest
 {
@@ -169,29 +170,26 @@ final class PharManifest
      *
      * $appDir must be resolved, as roots() returns it: a raw path lets every var/ path ship.
      *
-     * @param AppDir                            $appDir  resolved application root
-     * @param non-empty-array<AppDir, BuildDir> $roots   app root => build dir
-     * @param list<string>                      $shipped as shippedDirs() reports them
-     * @param PharPath                          $output  an override can name a shipped directory
-     * @param StubEntry                         $entry   relative to appDir
+     * @param AppDir                            $appDir    resolved application root
+     * @param non-empty-array<AppDir, BuildDir> $roots     app root => build dir
+     * @param list<string>                      $shipped   as shippedDirs() reports them
+     * @param PharPath                          $output    an override can name a shipped directory
+     * @param StubEntry                         $entry     relative to appDir
+     * @param SymlinkedDirs                     $symlinked collects the directories left out for being links
      *
      * @return Iterator<SplFileInfo>
      */
-    public static function files(string $appDir, array $roots, array $shipped, string $output, string $entry): Iterator
+    public static function files(string $appDir, array $roots, array $shipped, string $output, string $entry, ArrayObject $symlinked): Iterator
     {
         $base = self::normalize($appDir);
         $excludedOutput = self::normalize($output);
         $entryDir = self::entryDir($entry);
-        $filter = static function (mixed $file) use ($roots, $shipped, $excludedOutput, $base, $entryDir): bool {
+        $filter = static function (mixed $file) use ($roots, $shipped, $excludedOutput, $base, $entryDir, $symlinked): bool {
             assert($file instanceof SplFileInfo);
             $name = $file->getFilename();
             // Deeper in the tree: an imported application and a --prefer-source vendor bring their own.
             if ($name === '.git' || str_starts_with($name, '.env')) {
                 return false;
-            }
-
-            if ($file->isDir() && $file->isLink()) {
-                throw new PharSymlinkedDirectoryException($file->getPathname());
             }
 
             $path = self::normalize($file->getPathname());
@@ -203,6 +201,13 @@ final class PharManifest
                 return false;
             }
 
+            // After the allowlist, so a link the archive would not carry anyway is nobody's news.
+            if ($file->isDir() && $file->isLink()) {
+                $symlinked->append(self::relative($path, $base));
+
+                return false;
+            }
+
             return self::shipsFromVar($path, $name, $roots) ?? true;
         };
 
@@ -210,6 +215,24 @@ final class PharManifest
         return new RecursiveIteratorIterator(
             new RecursiveCallbackFilterIterator(new RecursiveDirectoryIterator($appDir, FilesystemIterator::SKIP_DOTS), $filter),
         );
+    }
+
+    /**
+     * Directories that would have shipped but are links, so the archive holds nothing of them.
+     *
+     * Phar packs files: following a link packs the tree it points at, which on a build machine
+     * is a working copy and may sit outside the application altogether.
+     *
+     * @param SymlinkedDirs $symlinked as files() filled it
+     *
+     * @return list<string> sorted, relative to appDir
+     */
+    public static function symlinkedDirs(ArrayObject $symlinked): array
+    {
+        $dirs = array_values($symlinked->getArrayCopy());
+        sort($dirs);
+
+        return $dirs;
     }
 
     /**
@@ -286,7 +309,13 @@ final class PharManifest
     /** @return string the first segment of $path below $base, or the empty string at the root */
     private static function topDir(string $path, string $base): string
     {
-        return explode('/', substr($path, strlen($base) + 1), 2)[0];
+        return explode('/', self::relative($path, $base), 2)[0];
+    }
+
+    /** @return string $path spelled the way the report and the archive spell it */
+    private static function relative(string $path, string $base): string
+    {
+        return substr($path, strlen($base) + 1);
     }
 
     /**
