@@ -9,9 +9,9 @@ use BEAR\Resource\ResourceObject;
 class Friend extends ResourceObject
 {
     public $body = [
-        ['id' => '1', 'name' => 'Athos'],
-        ['id' => '2', 'name' => 'Porthos'],
-        ['id' => '3', 'name' => 'Aramis'],
+        ['id' => 1, 'name' => 'Athos'],
+        ['id' => 2, 'name' => 'Porthos'],
+        ['id' => 3, 'name' => 'Aramis'],
     ];
 
     public function onGet(): static
