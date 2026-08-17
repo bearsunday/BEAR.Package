@@ -30,6 +30,8 @@ use function rtrim;
 use function sort;
 use function str_replace;
 use function str_starts_with;
+use function strlen;
+use function substr;
 
 /**
  * What goes into an archive, and whether the tree can become one at all.
@@ -173,12 +175,12 @@ final class PharManifest
                 throw new PharSymlinkedDirectoryException($file->getPathname());
             }
 
-            if (self::normalize($file->getPath()) === $base) {
-                return $file->isDir() && self::shipsFromRoot(self::normalize($file->getPathname()), $name, $roots, $entryDir);
+            $path = self::normalize($file->getPathname());
+            if (self::normalize($file->getPath()) === $base && ! $file->isDir()) {
+                return false;
             }
 
-            $path = self::normalize($file->getPathname());
-            if ($path === $excludedOutput) {
+            if ($path === $excludedOutput || ! self::shipsFromRoot($path, $roots, $base, $entryDir)) {
                 return false;
             }
 
@@ -209,7 +211,7 @@ final class PharManifest
                 continue;
             }
 
-            if (self::shipsFromRoot(self::normalize($file->getPathname()), $name, $roots, $entryDir)) {
+            if (self::shipsFromRoot(self::normalize($file->getPathname()), $roots, self::normalize($appDir), $entryDir)) {
                 continue;
             }
 
@@ -228,24 +230,43 @@ final class PharManifest
     }
 
     /**
-     * An imported application sits wherever the tree put it, and the host boots it from there.
+     * Whether the top-level directory $path lies in is one the archive carries.
+     *
      * The stub requires $entry, so whatever holds it ships even when nothing else there does.
      *
      * @param non-empty-array<AppDir, BuildDir> $roots
      */
-    private static function shipsFromRoot(string $path, string $name, array $roots, string $entryDir): bool
+    private static function shipsFromRoot(string $path, array $roots, string $base, string $entryDir): bool
     {
-        if ($name === $entryDir || in_array($name, self::SHIPPED_DIRS, true)) {
-            return true;
-        }
+        $top = self::topDir($path, $base);
 
+        return $top === $entryDir || in_array($top, self::SHIPPED_DIRS, true) || self::holdsImport($path, $roots, $base);
+    }
+
+    /**
+     * Whether the chain from the root to $path leads to an imported application, or is inside one.
+     *
+     * An import sits wherever the tree put it and the host boots it from there, but that admits
+     * the directory it sits in - and everything else parked beside it, until this narrows to the
+     * application itself.
+     *
+     * @param non-empty-array<AppDir, BuildDir> $roots
+     */
+    private static function holdsImport(string $path, array $roots, string $base): bool
+    {
         foreach (array_keys($roots) as $root) {
-            if (self::isUnder($root, $path)) {
+            if ($root !== $base && (self::isUnder($root, $path) || self::isUnder($path, $root))) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /** @return string the first segment of $path below $base, or the empty string at the root */
+    private static function topDir(string $path, string $base): string
+    {
+        return explode('/', substr($path, strlen($base) + 1), 2)[0];
     }
 
     /**

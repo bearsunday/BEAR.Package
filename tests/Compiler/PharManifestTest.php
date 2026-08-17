@@ -202,16 +202,18 @@ class PharManifestTest extends TestCase
         $this->assertSame(['build', 'docs', 'legacy', 'tests', 'vendor-bin'], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
     }
 
-    /** import/ is not a named directory: it ships because an application sits in it. */
+    /** modules/ is not a named directory: it ships only as far as the application inside it. */
     public function testFilesShipEachApplicationsOwnBuild(): void
     {
         $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
         file_put_contents($host . '/Fake_App-.php', "<?php\n");
-        $appName = $this->importApp('import');
-        $import = $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
+        $appName = $this->importApp('modules/import');
+        $import = $this->marker($this->appDir . '/modules/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
         file_put_contents($import . '/Fake_Import-.php', "<?php\n");
-        mkdir($this->appDir . '/import/var/build/other-app/di', 0777, true);
-        file_put_contents($this->appDir . '/import/var/build/other-app/di/Fake_Other-.php', "<?php\n");
+        $this->tree([
+            'modules/import/var/build/other-app/di/Fake_Other-.php' => "<?php\n",
+            'modules/sibling/secrets/keys.txt' => 'PRIVATE',
+        ]);
 
         $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
         $appDir = $this->resolved();
@@ -219,9 +221,9 @@ class PharManifestTest extends TestCase
         $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
 
         $this->assertSame([
-            'import/src/Module/AppModule.php',
-            'import/var/build/app/di/' . CompileMarker::FILENAME,
-            'import/var/build/app/di/Fake_Import-.php',
+            'modules/import/src/Module/AppModule.php',
+            'modules/import/var/build/app/di/' . CompileMarker::FILENAME,
+            'modules/import/var/build/app/di/Fake_Import-.php',
             'var/build/prod-app/di/' . CompileMarker::FILENAME,
             'var/build/prod-app/di/Fake_App-.php',
         ], $shipped);
