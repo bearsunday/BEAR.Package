@@ -102,8 +102,8 @@ class PharManifestTest extends TestCase
         mkdir($this->appDir, 0777, true);
         mkdir($this->writeDir . '/real-var', 0777, true);
         symlink($this->writeDir . '/real-var', $this->appDir . '/var');
-        mkdir($this->appDir . '/var/tmp/prod-app/di', 0777, true);
-        CompileMarker::write($this->appDir . '/var/tmp/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app', null);
+        mkdir($this->appDir . '/var/build/prod-app/di', 0777, true);
+        CompileMarker::write($this->appDir . '/var/build/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app', null);
 
         $this->expectException(PharWritesInsideArchiveException::class);
         PharManifest::roots($this->appDir, 'prod-app', []);
@@ -162,8 +162,7 @@ class PharManifestTest extends TestCase
         file_put_contents($this->appDir . '/var/conf/aura.route.php', "<?php\n");
         mkdir($this->appDir . '/var/log', 0777, true);
         file_put_contents($this->appDir . '/var/log/app.log', 'log');
-        mkdir($this->appDir . '/var/build', 0777, true);
-        file_put_contents($this->appDir . '/var/build/old.phar', 'an earlier archive');
+        // Scripts left where the previous layout put them: var/tmp stays unshipped, so they do not follow.
         mkdir($this->appDir . '/var/tmp/other-app/di', 0777, true);
         file_put_contents($this->appDir . '/var/tmp/other-app/di/Fake_Other-.php', "<?php\n");
         mkdir($this->appDir . '/tests', 0777, true);
@@ -178,10 +177,10 @@ class PharManifestTest extends TestCase
 
         $this->assertSame([
             'src/App.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'var/build/prod-app/di/Fake_App-.php',
             'var/conf/aura.route.php',
             'var/sql/user_item.sql',
-            'var/tmp/prod-app/di/' . CompileMarker::FILENAME,
-            'var/tmp/prod-app/di/Fake_App-.php',
         ], $shipped);
     }
 
@@ -263,7 +262,7 @@ class PharManifestTest extends TestCase
      */
     private function marker(string $appDir, string $context, string $tmpDir, string|null $writeDir = null): string
     {
-        $scriptDir = $appDir . '/var/tmp/' . $context . '/di';
+        $scriptDir = $appDir . '/var/build/' . $context . '/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, 'My\App', $context, $tmpDir, $writeDir);
 

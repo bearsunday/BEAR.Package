@@ -28,6 +28,6 @@ final class CompiledScripts
      */
     public static function dir(string $appDir, string $context): string
     {
-        return $appDir . '/var/tmp/' . $context . '/di';
+        return $appDir . '/var/build/' . $context . '/di';
     }
 }

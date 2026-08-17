@@ -42,8 +42,8 @@ final class PharManifest
     /** Ray.Compiler build noise: written next to the scripts, read by no boot. */
     private const SCRIPT_DIR_NOISE = ['compile.lock', '_bindings.log', 'bindings.md'];
 
-    /** What a run writes or a build produced. The scripts under tmp/ are named first, so they still ship. */
-    private const UNSHIPPED_VAR_DIRS = ['log', 'tmp', 'build'];
+    /** What a run writes. */
+    private const UNSHIPPED_VAR_DIRS = ['log', 'tmp'];
 
     /** @codeCoverageIgnore */
     private function __construct()
@@ -200,8 +200,7 @@ final class PharManifest
 
             foreach (self::UNSHIPPED_VAR_DIRS as $dir) {
                 if (self::isUnder($path, $root . '/var/' . $dir)) {
-                    // Ancestors of the script directory must pass, or the iterator never descends to it.
-                    return self::isUnder($scriptDir, $path);
+                    return false;
                 }
             }
 

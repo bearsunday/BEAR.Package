@@ -80,11 +80,11 @@ class PharBuilderTest extends TestCase
         $phar = 'phar://' . realpath($this->appDir . '/var/build/prod-app.phar');
         $this->assertTrue(file_exists($phar . '/public/index.php'), 'the stub requires this entry');
         $this->assertTrue(file_exists($phar . '/src/App.php'));
-        $this->assertTrue(file_exists($phar . '/var/tmp/prod-app/di/Fake_App-.php'));
-        $this->assertTrue(file_exists($phar . '/var/tmp/prod-app/di/' . CompileMarker::FILENAME), 'the boot reads the marker from the archive');
+        $this->assertTrue(file_exists($phar . '/var/build/prod-app/di/Fake_App-.php'));
+        $this->assertTrue(file_exists($phar . '/var/build/prod-app/di/' . CompileMarker::FILENAME), 'the boot reads the marker from the archive');
         $this->assertFalse(file_exists($phar . '/.env'));
         $this->assertFalse(file_exists($phar . '/env.json'), 'a secret at the root ships under any name');
-        $this->assertFalse(file_exists($phar . '/var/tmp/prod-app/di/compile.lock'));
+        $this->assertFalse(file_exists($phar . '/var/build/prod-app/di/compile.lock'));
     }
 
     public function testEntryThatIsNotOnDisk(): void
@@ -240,7 +240,7 @@ class PharBuilderTest extends TestCase
      */
     private function marker(string $tmpDir, string|null $writeDir = null): string
     {
-        $scriptDir = $this->appDir . '/var/tmp/prod-app/di';
+        $scriptDir = $this->appDir . '/var/build/prod-app/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir, $writeDir);
 

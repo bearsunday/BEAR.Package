@@ -15,5 +15,6 @@ deleteFiles(__DIR__ . '/tmp');
 deleteFiles(__DIR__ . '/Fake/fake-app/var/log');
 deleteFiles(__DIR__ . '/Fake/fake-app/var/tmp');
 deleteFiles(__DIR__ . '/Fake/fake-app/var/tmp/hal-app');
+deleteFiles(__DIR__ . '/Fake/fake-app/var/build');
 
 ini_set('error_log', __DIR__ . '/tmp/error_log.txt');

@@ -71,8 +71,8 @@ class CompilerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $compiledFile1 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
-        $compiledFile3 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
+        $compiledFile1 = self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
+        $compiledFile3 = self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
         @unlink($compiledFile1);
         @unlink($compiledFile3);
         $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
@@ -104,8 +104,8 @@ class CompilerTest extends TestCase
     #[Depends('testInvoke')]
     public function testInvokeAgain(): void
     {
-        $compiledFile1 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
-        $compiledFile3 = self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
+        $compiledFile1 = self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php';
+        $compiledFile3 = self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_FakeFoo-.php';
         $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $report = $compiler->compile();
         $this->assertGreaterThan(0, $report['compiled']);
@@ -134,7 +134,7 @@ class CompilerTest extends TestCase
         $compiler = Compiler::fromInjector($injector, 'prod-cli-app');
         $code = $compiler();
         $this->assertSame(0, $code);
-        $this->assertDirectoryExists(self::APP_DIR . '/var/tmp/prod-cli-app/di');
+        $this->assertDirectoryExists(self::APP_DIR . '/var/build/prod-cli-app/di');
     }
 
     /**
@@ -215,7 +215,7 @@ class CompilerTest extends TestCase
      */
     private function assertPreloadCompilesLoadedScripts(string $preload): void
     {
-        $diScript = 'var' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'prod-app'
+        $diScript = 'var' . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR . 'prod-app'
             . DIRECTORY_SEPARATOR . 'di' . DIRECTORY_SEPARATOR;
         $this->assertStringContainsString("if (function_exists('opcache_compile_file')", $preload);
         $this->assertGreaterThan(
@@ -299,7 +299,7 @@ class CompilerTest extends TestCase
         $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir);
         $this->assertSame(0, $compiler());
         $app = $writeDir . '/FakeVendor/HelloWorld/prod-cli-app';
-        $this->assertFileExists(self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists(self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
         $this->assertFileExists($app . '/log/module.dot');
         $this->assertDirectoryExists($app . '/tmp');
         $this->assertFileDoesNotExist($app . '/tmp/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
@@ -318,7 +318,7 @@ class CompilerTest extends TestCase
         $this->assertSame($app . '/tmp', $meta->tmpDir);
 
         $this->assertSame(0, Compiler::fromInjector($injector, 'prod-cli-app', $writeDir)());
-        $this->assertFileExists(self::APP_DIR . '/var/tmp/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists(self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
         $this->assertFileExists($app . '/log/module.dot');
         $this->assertDirectoryDoesNotExist($app . '/tmp/FakeVendor');
     }
@@ -372,7 +372,7 @@ class CompilerTest extends TestCase
 
         $phar = self::APP_DIR . '/var/build/prod-cli-app.phar';
         $this->assertFileExists($phar);
-        $this->assertTrue(file_exists('phar://' . $phar . '/var/tmp/prod-cli-app/di/' . CompileMarker::FILENAME));
+        $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-cli-app/di/' . CompileMarker::FILENAME));
         $this->assertTrue(file_exists('phar://' . $phar . '/src/Module/AppModule.php'));
         $this->assertFalse(file_exists('phar://' . $phar . '/autoload.php'));
     }
@@ -464,13 +464,18 @@ class CompilerTest extends TestCase
     {
         @unlink(self::APP_DIR . '/preload.php');
         @unlink(self::APP_DIR . '/autoload.php');
-        $tmpDir = self::APP_DIR . '/var/tmp/' . $context;
-        if (! is_dir($tmpDir)) {
+        $this->removeTree(self::APP_DIR . '/var/tmp/' . $context);
+        $this->removeTree(CompiledScripts::dir(self::APP_DIR, $context));
+    }
+
+    private function removeTree(string $dir): void
+    {
+        if (! is_dir($dir)) {
             return;
         }
 
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($tmpDir, FilesystemIterator::SKIP_DOTS),
+            new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST,
         );
         /** @var SplFileInfo $file */
@@ -488,22 +493,25 @@ class CompilerTest extends TestCase
     public function testCleanRemovesArtifactsAndRecreatesDirs(): void
     {
         $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
-        $tmpDir = self::APP_DIR . '/var/tmp/prod-cli-app';
-        if (! is_dir($tmpDir)) {
-            mkdir($tmpDir, 0777, true);
-        }
-
-        $nested = $tmpDir . '/nested';
+        $nested = self::APP_DIR . '/var/tmp/prod-cli-app/nested';
         if (! is_dir($nested)) {
             mkdir($nested, 0777, true);
         }
 
+        $scriptDir = CompiledScripts::dir(self::APP_DIR, 'prod-cli-app');
+        if (! is_dir($scriptDir)) {
+            mkdir($scriptDir, 0777, true);
+        }
+
         $marker = $nested . '/marker.txt';
+        $stale = $scriptDir . '/Stale_Script-.php';
         file_put_contents($marker, 'x');
+        file_put_contents($stale, 'x');
         $compiler->clean();
         $this->assertFileDoesNotExist($marker);
         $this->assertDirectoryDoesNotExist($nested);
-        $this->assertDirectoryExists($tmpDir . '/di');
+        $this->assertFileDoesNotExist($stale);
+        $this->assertDirectoryExists($scriptDir);
     }
 
     public function testEmptyDirectoryWhenMissingIsNoOp(): void
