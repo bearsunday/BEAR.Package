@@ -26,6 +26,7 @@ use function realpath;
 use function rmdir;
 use function sprintf;
 use function str_replace;
+use function symlink;
 use function sys_get_temp_dir;
 use function uniqid;
 use function var_export;
@@ -220,6 +221,45 @@ class PharBuilderTest extends TestCase
         $phar = new Phar($built);
         $this->assertTrue(isset($phar['vendor/autoload.php']), 'vendor/ ships');
         $this->assertFalse(isset($phar['vendor/app.phar']), 'the archive packed itself');
+    }
+
+    /** A link where the archive expected code: packed without it, and said so. */
+    public function testSymlinkedDirectoryIsReportedAndLeftBehind(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        $this->vendor();
+        mkdir($this->writeDir . '/linked-package/src', 0777, true);
+        file_put_contents($this->writeDir . '/linked-package/src/Linked.php', "<?php\n");
+        if (! @symlink($this->writeDir . '/linked-package', $this->appDir . '/vendor/linked')) {
+            $this->markTestSkipped('this platform does not let the test user create a symlink');
+        }
+
+        [$exitCode, $output] = $this->worker('public/index.php');
+
+        $this->assertSame(0, $exitCode, $output);
+        $this->assertStringContainsString('Not packed (symlink): vendor/linked', $output);
+        $phar = 'phar://' . realpath($this->appDir . '/app.phar');
+        $this->assertTrue(file_exists($phar . '/vendor/autoload.php'), 'vendor/ ships');
+        $this->assertFalse(file_exists($phar . '/vendor/linked/src/Linked.php'), 'the build did not follow the link');
+    }
+
+    /** A link resolving to nothing: Phar cannot open it either, and isDir() does not see it. */
+    public function testDanglingSymlinkIsReportedAndLeftBehind(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->entry();
+        $this->vendor();
+        if (! @symlink('vendor/xhprof/xhprof_html', $this->appDir . '/vendor/devtools-html')) {
+            $this->markTestSkipped('this platform does not let the test user create a symlink');
+        }
+
+        [$exitCode, $output] = $this->worker('public/index.php');
+
+        $this->assertSame(0, $exitCode, $output);
+        $this->assertStringContainsString('Not packed (symlink): vendor/devtools-html', $output);
+        $phar = 'phar://' . realpath($this->appDir . '/app.phar');
+        $this->assertTrue(file_exists($phar . '/vendor/autoload.php'), 'vendor/ ships');
     }
 
     /** The worker runs under the deploy's ini, where assert() is off. */

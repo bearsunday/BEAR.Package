@@ -20,6 +20,7 @@ final class PharReport
      * @param PharPath      $path
      * @param WriteDir|null $writeDir  the directory the packed scripts write to, when they name one
      * @param list<string>  $notPacked top-level directories the archive left behind
+     * @param list<string>  $symlinked directories left behind for being links, so the archive lacks them
      */
     public function __construct(
         public readonly string $path,
@@ -27,6 +28,7 @@ final class PharReport
         public readonly int $files,
         public readonly string|null $writeDir,
         public readonly array $notPacked,
+        public readonly array $symlinked,
     ) {
     }
 }

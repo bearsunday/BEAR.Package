@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use ArrayObject;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PharEntryNotPackedException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
@@ -130,7 +131,9 @@ final class PharBuilder
         $phar = new Phar($output);
         $phar->setSignatureAlgorithm(Phar::SHA256);
         $phar->startBuffering();
-        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output, $entry), $appDir);
+        /** @var ArrayObject<int, string> $symlinked */
+        $symlinked = new ArrayObject();
+        $files = $phar->buildFromIterator(PharManifest::files($appDir, $roots, $output, $entry, $symlinked), $appDir);
         // The entry is on disk - checked above - but the filter decides what reaches the archive.
         if (! isset($phar[$entry])) {
             throw new PharEntryNotPackedException($appDir . '/' . $entry);
@@ -144,6 +147,13 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir, PharManifest::notPacked($appDir, $roots, $entry));
+        return new PharReport(
+            $output,
+            (int) filesize($output),
+            count($files),
+            $record->writeDir,
+            PharManifest::notPacked($appDir, $roots, $entry),
+            PharManifest::symlinkedDirs($symlinked),
+        );
     }
 }

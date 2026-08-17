@@ -51,4 +51,8 @@ if ($report->notPacked !== []) {
     printf('Not packed: %s' . PHP_EOL, implode(', ', $report->notPacked));
 }
 
+if ($report->symlinked !== []) {
+    printf('Not packed (symlink): %s' . PHP_EOL, implode(', ', $report->symlinked));
+}
+
 exit(0);

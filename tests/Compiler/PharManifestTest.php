@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Compiler;
 
+use ArrayObject;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
-use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\CompileMarker;
@@ -44,10 +44,14 @@ class PharManifestTest extends TestCase
     /** @var non-empty-string */
     private string $writeDir;
 
+    /** @var ArrayObject<int, string> what files() left out for being links */
+    private ArrayObject $symlinked;
+
     protected function setUp(): void
     {
         $this->appDir = sys_get_temp_dir() . '/bear-manifest-' . uniqid();
         $this->writeDir = sys_get_temp_dir() . '/bear-write-' . uniqid();
+        $this->symlinked = new ArrayObject();
     }
 
     protected function tearDown(): void
@@ -185,7 +189,7 @@ class PharManifestTest extends TestCase
         $appDir = $this->resolved();
 
         // An output in a directory that ships: only the manifest's own exclusion keeps it out.
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/vendor/app.phar', 'public/index.php'));
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/vendor/app.phar', 'public/index.php', $this->symlinked));
 
         $this->assertSame([
             'bin/app.php',
@@ -218,7 +222,7 @@ class PharManifestTest extends TestCase
         $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
         $appDir = $this->resolved();
 
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php', $this->symlinked));
 
         $this->assertSame([
             'modules/import/src/Module/AppModule.php',
@@ -242,7 +246,7 @@ class PharManifestTest extends TestCase
         $roots = PharManifest::roots($this->appDir, 'prod-app', []);
         $appDir = $this->resolved();
 
-        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'bootstrap/admin.php'));
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'bootstrap/admin.php', $this->symlinked));
 
         $this->assertSame([
             'bootstrap/admin.php',
@@ -254,19 +258,89 @@ class PharManifestTest extends TestCase
         $this->assertSame(['public-cms'], PharManifest::notPacked($appDir, $roots, 'bootstrap/admin.php'));
     }
 
-    public function testSymlinkedDirectoryInTheTree(): void
+    /** A link the archive would not have carried anyway is left behind like any other directory. */
+    public function testSymlinkedDirectoryOutsideTheAllowList(): void
     {
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
-        mkdir($this->writeDir . '/linked', 0777, true);
-        if (! @symlink($this->writeDir . '/linked', $this->appDir . '/vendor')) {
+        $this->tree([
+            'public/index.php' => "<?php\n",
+            'docs/alps-doc/index.html' => '<html></html>',
+        ]);
+        if (! @symlink($this->appDir . '/docs/alps-doc', $this->appDir . '/alps-doc')) {
             $this->markTestSkipped('this platform does not let the test user create a symlink');
         }
 
         $roots = PharManifest::roots($this->appDir, 'prod-app', []);
         $appDir = $this->resolved();
 
-        $this->expectException(PharSymlinkedDirectoryException::class);
-        $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php', $this->symlinked));
+
+        $this->assertSame(['public/index.php', 'var/build/prod-app/di/' . CompileMarker::FILENAME], $shipped);
+        $this->assertSame([], PharManifest::symlinkedDirs($this->symlinked), 'nothing was lost: it was not going to ship');
+        $this->assertSame(['alps-doc', 'docs'], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
+    }
+
+    /** A link where the archive expected code: packing what it points at would ship the build machine's tree. */
+    public function testSymlinkedDirectoryThatWouldHaveShipped(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->tree([
+            'public/index.php' => "<?php\n",
+            'vendor/autoload.php' => "<?php\n",
+            'src/Lib/Helper.php' => "<?php\n",
+        ]);
+        mkdir($this->writeDir . '/outside-package/src', 0777, true);
+        file_put_contents($this->writeDir . '/outside-package/src/Outside.php', "<?php\n");
+        $links = @symlink($this->writeDir . '/outside-package', $this->appDir . '/vendor/outside')
+            && @symlink($this->appDir . '/src/Lib', $this->appDir . '/vendor/inside');
+        if (! $links) {
+            $this->markTestSkipped('this platform does not let the test user create a symlink');
+        }
+
+        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $appDir = $this->resolved();
+
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php', $this->symlinked));
+
+        $this->assertSame([
+            'public/index.php',
+            'src/Lib/Helper.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'vendor/autoload.php',
+        ], $shipped);
+        $this->assertSame(['vendor/inside', 'vendor/outside'], PharManifest::symlinkedDirs($this->symlinked));
+        $this->assertSame([], PharManifest::notPacked($appDir, $roots, 'public/index.php'));
+    }
+
+    /** A dangling link is what Phar cannot open either; a link to a file it reads through. */
+    public function testLinksThatHoldNoFileAndOneThatDoes(): void
+    {
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->tree([
+            'public/index.php' => "<?php\n",
+            'vendor/xhprof/xhprof_html/index.php' => "<?php\n",
+            'vendor/composer/installed.json' => '[]',
+        ]);
+        // As Composer left it in a real tree: one segment short, so it resolves to nothing.
+        $links = @symlink('vendor/xhprof/xhprof_html', $this->appDir . '/vendor/devtools-html')
+            && @symlink($this->appDir . '/vendor/composer/installed.json', $this->appDir . '/vendor/installed-link.json');
+        if (! $links) {
+            $this->markTestSkipped('this platform does not let the test user create a symlink');
+        }
+
+        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $appDir = $this->resolved();
+
+        $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php', $this->symlinked));
+
+        $this->assertSame([
+            'public/index.php',
+            'var/build/prod-app/di/' . CompileMarker::FILENAME,
+            'vendor/composer/installed.json',
+            'vendor/installed-link.json',
+            'vendor/xhprof/xhprof_html/index.php',
+        ], $shipped);
+        $this->assertSame(['vendor/devtools-html'], PharManifest::symlinkedDirs($this->symlinked));
     }
 
     /** @param array<string, string> $files path relative to appDir => contents */
