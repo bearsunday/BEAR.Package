@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 
+### Removed
+- `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
+- `WriteDirMismatchException`, `DelegatedCompileException` and `bin/compile-worker.php`, with the delegated compile they served (#482)
+
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
 - A compile refuses a context that assembles its container per request before `clean()` runs, and `clean()` no longer removes `preload.php`, `autoload.php` or `app.phar`: a compile that fails leaves the last one's files where they were (#426)
