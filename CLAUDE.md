@@ -54,7 +54,7 @@ composer clean
 ### Compilation
 ```bash
 # Compile a BEAR.Sunday application: each app ships bin/compile.php,
-# which calls Compiler::fromInjector($injector, $context)()
+# which calls (new Compiler($appName, $context, $appDir))()
 php bin/compile.php prod-app
 
 # Example (used in tests)

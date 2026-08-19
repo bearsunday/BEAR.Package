@@ -6,6 +6,7 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use BEAR\Package\Compiler\PreloadRecorder;
+use BEAR\Package\Exception\ComposerLoaderNotFoundException;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
@@ -460,6 +461,12 @@ class CompilerTest extends TestCase
     {
         $this->expectException(WriteDirNotAbsoluteException::class);
         (new Compiler(self::APP_NAME, 'app', '__invalid__'))->compile();
+    }
+
+    public function testMissingVendorAutoload(): void
+    {
+        $this->expectException(ComposerLoaderNotFoundException::class);
+        new Compiler(self::APP_NAME, 'app', sys_get_temp_dir() . '/bear-no-vendor-' . uniqid());
     }
 
     public function testUnbound(): void
