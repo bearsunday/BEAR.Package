@@ -71,8 +71,8 @@ final class Compiler
     private CompileObjectGraph $compilerObjectGraph;
 
     /**
-     * Boot job handed to the preload worker: preload.php records what a boot of this
-     * application loads, so the worker has to build the same Meta from the same writeDir.
+     * What the compile was asked for: the preload worker builds the same Meta from it, and
+     * phar() takes the context and the directory it packs.
      *
      * @var array{AppName, Context, AppDir, WriteDir|null}
      */
@@ -88,11 +88,7 @@ final class Compiler
     {
         $meta = Meta::create($appName, $context, $appDir, $writeDir);
         $this->preloadJob = [$meta->name, $context, $appDir, $writeDir];
-        // The tracker and hookNullObjectClass must run before the injector is built
-        // (building it first would load the app too early and break .compile.php stubs).
         $this->prepare($context, $appDir, $meta);
-        // Not factory(): a marker from an earlier compile would hand back a CompiledInjector
-        // that FakeRun cannot resolve through, making the result depend on leftover state.
         $this->wire(PackageInjector::compileInjector($meta, $context));
     }
 
@@ -329,6 +325,9 @@ final class Compiler
     }
 
     /**
+     * Install the class tracker and the `.compile.php` stubs before any injector is built:
+     * an injector loads the application, and stubs that arrive after it never apply.
+     *
      * @param Context $context
      * @param AppDir  $appDir
      */
