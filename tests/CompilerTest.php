@@ -458,7 +458,7 @@ class CompilerTest extends TestCase
 
     public function testWrongAppDir(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(WriteDirNotAbsoluteException::class);
         (new Compiler(self::APP_NAME, 'app', '__invalid__'))->compile();
     }
 
