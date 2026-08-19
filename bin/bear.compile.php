@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * Internal compile script of bin/bear.compile
  *
- * @deprecated Prefer the application's own `bin/compile.php` with `new Compiler()`.
+ * @deprecated Prefer the application's own `bin/compile.php` with `new Compiler($appName, $context, $appDir)`.
  * @see https://github.com/bearsunday/BEAR.Package/issues/482
  */
 

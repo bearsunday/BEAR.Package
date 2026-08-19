@@ -15,10 +15,6 @@ use BEAR\Package\Compiler;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// Load build-time-only stubs (null objects / fake env) if present.
-$dotCompile = dirname(__DIR__) . '/.compile.php';
-is_file($dotCompile) && require $dotCompile;
-
 $context = $argv[1] ?? 'prod-app';
 
 exit((new Compiler('FakeVendor\HelloWorld', $context, dirname(__DIR__)))());
