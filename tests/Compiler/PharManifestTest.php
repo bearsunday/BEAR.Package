@@ -7,7 +7,6 @@ namespace BEAR\Package\Compiler;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
-use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Module\Import\ImportApp;
@@ -60,9 +59,9 @@ class PharManifestTest extends TestCase
 
     public function testRootsShipTheApplicationAndItsImports(): void
     {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $appName = $this->importApp('import');
-        $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
+        $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp');
 
         $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
 
@@ -75,7 +74,7 @@ class PharManifestTest extends TestCase
 
     public function testUnrelatedApplicationTreeIsIgnored(): void
     {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $this->marker($this->appDir . '/legacy-app', 'old-app', '/var/www/legacy/var/tmp/old-app');
 
         $real = $this->norm((string) realpath($this->appDir));
@@ -108,7 +107,7 @@ class PharManifestTest extends TestCase
         mkdir($this->writeDir . '/real-var', 0777, true);
         symlink($this->writeDir . '/real-var', $this->appDir . '/var');
         mkdir($this->appDir . '/var/build/prod-app/di', 0777, true);
-        CompileMarker::write($this->appDir . '/var/build/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app', null);
+        CompileMarker::write($this->appDir . '/var/build/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
         PharManifest::roots($this->appDir, 'prod-app', []);
@@ -117,7 +116,7 @@ class PharManifestTest extends TestCase
     /** Compiled for a write directory of its own, so the host's boot would not find these scripts. */
     public function testImportWritingIntoTheArchive(): void
     {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         $appName = $this->importApp('import');
         $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
 
@@ -125,20 +124,9 @@ class PharManifestTest extends TestCase
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
-    /** The scripts must write where the declaration that boots them derives, or the boot recompiles. */
-    public function testImportCompiledOutsideTheHostWriteDir(): void
-    {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
-        $appName = $this->importApp('import');
-        $this->marker($this->appDir . '/import', 'app', '/somewhere/else/' . str_replace('\\', '/', $appName) . '/app/tmp', '/somewhere/else');
-
-        $this->expectException(PharWriteDirMismatchException::class);
-        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
-    }
-
     public function testImportOutsideTheTree(): void
     {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
 
         $this->expectException(PharImportOutsideTreeException::class);
         PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
@@ -146,7 +134,7 @@ class PharManifestTest extends TestCase
 
     public function testFilesShipTheNamedDirectoriesAndThisBuildOnly(): void
     {
-        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
         file_put_contents($scriptDir . '/compile.lock', 'noise');
         $this->tree([
@@ -205,10 +193,10 @@ class PharManifestTest extends TestCase
     /** modules/ is not a named directory: it ships only as far as the application inside it. */
     public function testFilesShipEachApplicationsOwnBuild(): void
     {
-        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $host = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($host . '/Fake_App-.php', "<?php\n");
         $appName = $this->importApp('modules/import');
-        $import = $this->marker($this->appDir . '/modules/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp', $this->writeDir);
+        $import = $this->marker($this->appDir . '/modules/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp');
         file_put_contents($import . '/Fake_Import-.php', "<?php\n");
         $this->tree([
             'modules/import/var/build/other-app/di/Fake_Other-.php' => "<?php\n",
@@ -232,7 +220,7 @@ class PharManifestTest extends TestCase
 
     public function testFilesShipTheDirectoryHoldingTheEntry(): void
     {
-        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $scriptDir = $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\n");
         $this->tree([
             'bootstrap/admin.php' => "<?php\n",
@@ -256,7 +244,7 @@ class PharManifestTest extends TestCase
 
     public function testSymlinkedDirectoryInTheTree(): void
     {
-        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
         mkdir($this->writeDir . '/linked', 0777, true);
         if (! @symlink($this->writeDir . '/linked', $this->appDir . '/vendor')) {
             $this->markTestSkipped('this platform does not let the test user create a symlink');
@@ -341,11 +329,11 @@ class PharManifestTest extends TestCase
      *
      * @return non-empty-string the created script dir
      */
-    private function marker(string $appDir, string $context, string $tmpDir, string|null $writeDir = null): string
+    private function marker(string $appDir, string $context, string $tmpDir): string
     {
         $scriptDir = $appDir . '/var/build/' . $context . '/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, 'My\App', $context, $tmpDir, $writeDir);
+        CompileMarker::write($scriptDir, 'My\App', $context, $tmpDir);
 
         $real = realpath($scriptDir);
         assert($real !== false);

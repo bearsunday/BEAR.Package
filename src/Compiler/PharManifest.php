@@ -7,11 +7,9 @@ namespace BEAR\Package\Compiler;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
-use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
-use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Package\Types;
 use FilesystemIterator;
@@ -70,7 +68,6 @@ final class PharManifest
      *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
-     * @throws PharWriteDirMismatchException
      * @throws PharImportOutsideTreeException
      */
     public static function roots(string $appDir, string $context, array $imports): array
@@ -80,20 +77,14 @@ final class PharManifest
         $bases = [self::normalize($appDir), $archiveDir];
 
         $roots = [$archiveDir => CompiledScripts::buildDir($archiveDir, $context)];
-        $host = self::writesOutside($bases, $archiveDir, $context);
-        $writeDir = $host->writeDir;
+        self::writesOutside($bases, $archiveDir, $context);
         foreach ($imports as $import) {
             $importDir = self::resolve($import->appDir());
             if (! self::isUnder($importDir, $archiveDir)) {
                 throw new PharImportOutsideTreeException($importDir, $archiveDir);
             }
 
-            $record = self::writesOutside($bases, $importDir, $import->context);
-            // Beside the host, because that is the directory the container hands it at boot.
-            if ($writeDir !== null && ! self::isUnder($record->tmpDir, $writeDir)) {
-                throw new PharWriteDirMismatchException($importDir, $record->tmpDir, $writeDir);
-            }
-
+            self::writesOutside($bases, $importDir, $import->context);
             $roots[$importDir] = CompiledScripts::buildDir($importDir, $import->context);
         }
 
@@ -121,12 +112,10 @@ final class PharManifest
      * @param AppDir                 $appDir       the application to check
      * @param Context                $context
      *
-     * @return CompileRecord what the marker says the scripts were compiled for
-     *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
      */
-    private static function writesOutside(array $archiveBases, string $appDir, string $context): CompileRecord
+    private static function writesOutside(array $archiveBases, string $appDir, string $context): void
     {
         $scriptDir = CompiledScripts::dir($appDir, $context);
         $record = CompileMarker::read($scriptDir);
@@ -142,8 +131,6 @@ final class PharManifest
                 }
             }
         }
-
-        return $record;
     }
 
     /**

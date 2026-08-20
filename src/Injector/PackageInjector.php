@@ -208,7 +208,7 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir, $meta->writeDir);
+        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

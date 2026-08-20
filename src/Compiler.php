@@ -14,10 +14,8 @@ use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\DotCommand;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
-use BEAR\Package\Exception\DelegatedCompileException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Exception\WriteDirMismatchException;
 use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
@@ -26,7 +24,6 @@ use FilesystemIterator;
 use Ray\Di\InjectorInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use ReflectionClass;
 use RuntimeException;
 use SplFileInfo;
 
@@ -74,20 +71,12 @@ final class Compiler
     private CompileObjectGraph $compilerObjectGraph;
 
     /**
-     * Boot job handed to the preload worker: preload.php records what a boot of this
-     * application loads, so the worker has to build the same Meta from the same writeDir.
+     * What the compile was asked for: the preload worker builds the same Meta from it, and
+     * phar() takes the context and the directory it packs.
      *
      * @var array{AppName, Context, AppDir, WriteDir|null}
      */
     private array $preloadJob;
-
-    /**
-     * Compile job recorded by fromInjector() and run once in a clean child process.
-     * Null on the constructor path.
-     *
-     * @var array{AppName, Context, AppDir, WriteDir|null}|null
-     */
-    private array|null $compileJob = null;
 
     /**
      * @param AppName       $appName  application name "MyVendor|MyProject"
@@ -99,53 +88,12 @@ final class Compiler
     {
         $meta = Meta::create($appName, $context, $appDir, $writeDir);
         $this->preloadJob = [$meta->name, $context, $appDir, $writeDir];
-        // The tracker and hookNullObjectClass must run before the injector is built
-        // (building it first would load the app too early and break .compile.php stubs).
         $this->prepare($context, $appDir, $meta);
-        // Not factory(): a marker from an earlier compile would hand back a CompiledInjector
-        // that FakeRun cannot resolve through, making the result depend on leftover state.
         $this->wire(PackageInjector::compileInjector($meta, $context));
     }
 
-    /**
-     * Create a compiler from an application injector.
-     *
-     * Pass the same $writeDir the injector was built with: __invoke() compiles in a child process
-     * that builds its own Meta from it (#482).
-     *
-     * @param Context       $context
-     * @param WriteDir|null $writeDir the one the injector was built with
-     *
-     * @throws WriteDirMismatchException
-     */
-    public static function fromInjector(InjectorInterface $injector, string $context, string|null $writeDir = null): self
-    {
-        $meta = $injector->getInstance(AbstractAppMeta::class);
-        /** @var AppDir $appDir */
-        $appDir = $meta->appDir;
-        $compileTmpDir = Meta::create($meta->name, $context, $appDir, $writeDir)->tmpDir;
-        if ($compileTmpDir !== $meta->tmpDir) {
-            throw new WriteDirMismatchException($compileTmpDir, $meta->tmpDir);
-        }
-
-        $compiler = (new ReflectionClass(self::class))->newInstanceWithoutConstructor();
-        $compiler->compileJob = [$meta->name, $context, $appDir, $writeDir];
-
-        return $compiler;
-    }
-
-    /**
-     * Full compile pipeline: clean tmpDir, compile DI/preload, dump autoload.
-     *
-     * A compiler created by fromInjector() delegates the whole pipeline to one
-     * clean child process and returns that process's exit code.
-     */
     public function __invoke(): int
     {
-        if ($this->compileJob !== null) {
-            return self::compileInChildProcess($this->compileJob);
-        }
-
         // Before clean(): the recorder refuses this context three steps later, with the tree
         // already emptied for a compile that was never going to finish.
         if (! PackageInjector::isCompiled($this->appMeta, $this->context)) {
@@ -173,8 +121,7 @@ final class Compiler
      */
     public function phar(string|null $entry = null): int
     {
-        // Both shapes can pack: fromInjector() holds the same job the constructor path records.
-        [, $context, $appDir] = $this->compileJob ?? $this->preloadJob;
+        [, $context, $appDir] = $this->preloadJob;
         $entry ??= 'public/index.php';
         if (! is_file($appDir . '/' . $entry)) {
             throw new PharEntryNotFoundException($appDir . '/' . $entry);
@@ -182,24 +129,6 @@ final class Compiler
 
         $exitCode = 1;
         passthru(self::pharWorkerCommand($context, $appDir, $entry), $exitCode);
-
-        return $exitCode;
-    }
-
-    /**
-     * Run the constructor compile path once in a clean PHP process.
-     *
-     * The child prints the compile report itself; only its exit code is returned here.
-     *
-     * @param array{AppName, Context, AppDir, WriteDir|null} $job
-     *
-     * @throws PreloadRecordException
-     */
-    private static function compileInChildProcess(array $job): int
-    {
-        [$appName, $context, $appDir, $writeDir] = $job;
-        $exitCode = 1;
-        passthru(self::workerCommand('compile-worker.php', $appName, $context, $appDir, $writeDir), $exitCode);
 
         return $exitCode;
     }
@@ -280,23 +209,6 @@ final class Compiler
     }
 
     /**
-     * A compiler created by fromInjector() carries only the compile job, so the
-     * in-process pipeline is unavailable on it: fail with intent instead of an
-     * uninitialized-property Error.
-     */
-    private function assertNotDelegated(string $method): void
-    {
-        if ($this->compileJob === null) {
-            return;
-        }
-
-        throw new DelegatedCompileException(sprintf(
-            '%s() is unavailable on a compiler created by fromInjector(); invoke the compiler itself: Compiler::fromInjector($injector, $context)()',
-            $method,
-        ));
-    }
-
-    /**
      * Empty both directories, then recreate the script directory.
      *
      * preload.php, autoload.php and app.phar stay: each is replaced by whatever writes it, at
@@ -304,7 +216,6 @@ final class Compiler
      */
     public function clean(): void
     {
-        $this->assertNotDelegated(__FUNCTION__);
         $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
         $this->emptyDirectory($this->appMeta->tmpDir);
         $this->emptyDirectory($scriptDir);
@@ -351,14 +262,13 @@ final class Compiler
      */
     public function compile(): array
     {
-        $this->assertNotDelegated(__FUNCTION__);
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
         $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
-        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir, $this->appMeta->writeDir);
+        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();
@@ -385,8 +295,6 @@ final class Compiler
 
     public function dumpAutoload(): int
     {
-        $this->assertNotDelegated(__FUNCTION__);
-
         return ($this->dumpAutoload)();
     }
 
@@ -417,6 +325,9 @@ final class Compiler
     }
 
     /**
+     * Install the class tracker and the `.compile.php` stubs before any injector is built:
+     * an injector loads the application, and stubs that arrive after it never apply.
+     *
      * @param Context $context
      * @param AppDir  $appDir
      */

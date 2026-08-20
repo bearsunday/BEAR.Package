@@ -12,14 +12,9 @@ declare(strict_types=1);
  */
 
 use BEAR\Package\Compiler;
-use BEAR\Package\Injector;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// Load build-time-only stubs (null objects / fake env) if present.
-$dotCompile = dirname(__DIR__) . '/.compile.php';
-is_file($dotCompile) && require $dotCompile;
-
 $context = $argv[1] ?? 'prod-app';
 
-exit(Compiler::fromInjector(Injector::getInstance('FakeVendor\HelloWorld', $context, dirname(__DIR__)), $context)());
+exit((new Compiler('FakeVendor\HelloWorld', $context, dirname(__DIR__)))());

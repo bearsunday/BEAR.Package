@@ -6,7 +6,7 @@ declare(strict_types=1);
 /**
  * BEAR/Sunday application compiler
  *
- * @deprecated Prefer application `bin/compile.php` with `Compiler::fromInjector()`.
+ * @deprecated Prefer the application's own `bin/compile.php` with `new Compiler($appName, $context, $appDir)`.
  * @see https://github.com/bearsunday/BEAR.Package/issues/482
  *
  * Usage: bear.compile \'MyVendor\MyProject\' prod-html-app

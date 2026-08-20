@@ -10,11 +10,9 @@ use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharStaleOutputException;
-use BEAR\Package\Exception\PharWriteDirMismatchException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
-use BEAR\Package\Injector\CompileRecord;
 use BEAR\Package\Types;
 use Phar;
 
@@ -60,7 +58,6 @@ final class PharBuilder
      * @throws PharNotCompiledException
      * @throws PharImportsUnreadableException
      * @throws PharWritesInsideArchiveException
-     * @throws PharWriteDirMismatchException
      * @throws PharImportOutsideTreeException
      * @throws PharStaleOutputException
      * @throws PharEntryNotPackedException
@@ -95,7 +92,7 @@ final class PharBuilder
             throw new PharStaleOutputException($output);
         }
 
-        return self::pack($appDirReal, $roots, $entry, $output, $hostRecord); // @codeCoverageIgnore
+        return self::pack($appDirReal, $roots, $entry, $output); // @codeCoverageIgnore
     }
 
     /**
@@ -124,7 +121,7 @@ final class PharBuilder
      *
      * @codeCoverageIgnore writing a phar takes -d phar.readonly=0, which no coverage run has
      */
-    private static function pack(string $appDir, array $roots, string $entry, string $output, CompileRecord $record): PharReport
+    private static function pack(string $appDir, array $roots, string $entry, string $output): PharReport
     {
         $alias = basename($output);
         $phar = new Phar($output);
@@ -144,6 +141,6 @@ final class PharBuilder
         $phar->stopBuffering();
         clearstatcache(true, $output);
 
-        return new PharReport($output, (int) filesize($output), count($files), $record->writeDir, PharManifest::notPacked($appDir, $roots, $entry));
+        return new PharReport($output, (int) filesize($output), count($files), PharManifest::notPacked($appDir, $roots, $entry));
     }
 }

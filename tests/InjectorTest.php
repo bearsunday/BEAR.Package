@@ -18,6 +18,7 @@ use Ray\Di\InjectorInterface;
 use function assert;
 use function mkdir;
 use function passthru;
+use function realpath;
 use function spl_object_hash;
 use function sprintf;
 use function sys_get_temp_dir;
@@ -108,8 +109,8 @@ class InjectorTest extends TestCase
         $writeDir = sys_get_temp_dir() . '/bear-shared-' . uniqid();
         $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, $writeDir);
         $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $otherTree, null, $writeDir);
-        $this->assertSame($appDir, $first->getInstance(AbstractAppMeta::class)->appDir);
-        $this->assertSame($otherTree, $second->getInstance(AbstractAppMeta::class)->appDir);
+        $this->assertSame(realpath($appDir), $first->getInstance(AbstractAppMeta::class)->appDir);
+        $this->assertSame(realpath($otherTree), $second->getInstance(AbstractAppMeta::class)->appDir);
         deleteFiles($otherTree);
     }
 
@@ -140,7 +141,7 @@ class InjectorTest extends TestCase
         $injector = $this->getInjector(new class implements AppInterface {
         }, $writeDir);
 
-        $this->assertSame($writeDir . '/FakeVendor/HelloWorld/app/tmp', $injector->getInstance(AbstractAppMeta::class)->tmpDir);
+        $this->assertSame(realpath($writeDir . '/FakeVendor/HelloWorld/app/tmp'), $injector->getInstance(AbstractAppMeta::class)->tmpDir);
     }
 
     /** @param non-empty-string|null $writeDir */
