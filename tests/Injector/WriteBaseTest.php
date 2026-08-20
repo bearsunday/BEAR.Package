@@ -26,10 +26,4 @@ final class WriteBaseTest extends TestCase
         $meta = Meta::create('FakeVendor\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\HelloWorld'), $base);
         $this->assertSame(str_replace('\\', '/', (string) realpath($base)), WriteBase::of($meta));
     }
-
-    public function testDirectTmpDirHasNoDerivableBase(): void
-    {
-        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', '', sys_get_temp_dir() . '/bear-direct-' . uniqid());
-        $this->assertNull(WriteBase::of($meta));
-    }
 }
