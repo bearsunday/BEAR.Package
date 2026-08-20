@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 - Requires bear/app-meta ^1.13: an invalid application directory is refused with `WriteDirNotAbsoluteException` (a `LogicException`) before any compile work, instead of a late `RuntimeException` (#482)
+- An imported application writes under the host's tmp and log (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base (#426)
 
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)

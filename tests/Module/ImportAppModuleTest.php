@@ -36,8 +36,8 @@ class ImportAppModuleTest extends TestCase
     }
 
     /**
-     * An imported application is a separate application with its own Meta, and it writes beside the
-     * host: the write directory comes from the container, not from the declaration.
+     * An imported application is a separate application with its own Meta, and it writes under the
+     * host's tmp and log: the write directory comes from the container, not from the declaration.
      */
     public function testImportAppWritesUnderTheHostWriteDir(): void
     {
@@ -48,8 +48,10 @@ class ImportAppModuleTest extends TestCase
         assert($resource instanceof ResourceInterface);
         $resource->get('page://bar/index');
 
-        $this->assertDirectoryExists($writeDir . '/Import/HelloWorld/app/tmp');
-        $this->assertDirectoryExists($writeDir . '/Import/HelloWorld/app/log');
+        $hostTmp = $writeDir . '/FakeVendor/HelloWorld/app/tmp';
+        $hostLog = $writeDir . '/FakeVendor/HelloWorld/app/log';
+        $this->assertDirectoryExists($hostTmp . '/Import/HelloWorld/app/tmp');
+        $this->assertDirectoryExists($hostLog . '/Import/HelloWorld/app/log');
     }
 
     /**

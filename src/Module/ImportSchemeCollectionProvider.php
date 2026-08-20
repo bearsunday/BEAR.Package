@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Resource\Annotation\ImportAppConfig;
@@ -14,9 +15,8 @@ use Override;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
-use function dirname;
-use function str_replace;
-use function str_starts_with;
+use function explode;
+use function sprintf;
 
 /** @implements ProviderInterface<SchemeCollectionInterface> */
 final class ImportSchemeCollectionProvider implements ProviderInterface
@@ -37,10 +37,8 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     #[Override]
     public function get(): SchemeCollectionInterface
     {
-        // The host's base: an import is placed beside it.
-        $writeDir = self::writeBaseOf($this->appMeta);
         foreach ($this->importAppConfig as $app) {
-            $injector = Injector::getInstance($app->appName, $app->context, $app->appDir(), null, $writeDir);
+            $injector = Injector::fromMeta($this->importMeta($app), $app->context);
             $adapter = new AppAdapter($injector, $app->appName);
             $this->schemeCollection
                 ->scheme('page')->host($app->host)->toAdapter($adapter)
@@ -50,24 +48,13 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
         return $this->schemeCollection;
     }
 
-    /**
-     * The base the host writes under, derived from tmpDir: Meta::create() lays it out as
-     * {base}/{Vendor}/{Project}/{context}/tmp; a tmpDir under appDir means the default
-     * var/ layout and no separate base.
-     *
-     * @return non-empty-string|null
-     */
-    private static function writeBaseOf(AbstractAppMeta $meta): string|null
+    /** An import writes under the host's tmp and log, so an archive needs no writable tree of its own. */
+    private function importMeta(ImportApp $app): Meta
     {
-        $tmpDir = str_replace('\\', '/', $meta->tmpDir);
-        $appDir = str_replace('\\', '/', $meta->appDir);
-        if (str_starts_with($tmpDir, $appDir . '/')) {
-            return null;
-        }
+        [$vendor, $project] = explode('\\', $app->appName);
+        $base = sprintf('%s/%s/%s/%s', $this->appMeta->tmpDir, $vendor, $project, $app->context);
+        $logBase = sprintf('%s/%s/%s/%s', $this->appMeta->logDir, $vendor, $project, $app->context);
 
-        /** @var non-empty-string $base */
-        $base = dirname($meta->tmpDir, 4);
-
-        return $base;
+        return new Meta($app->appName, $app->context, $app->appDir(), $base . '/tmp', $logBase . '/log');
     }
 }
