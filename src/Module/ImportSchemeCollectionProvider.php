@@ -15,8 +15,8 @@ use Override;
 use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
-use function explode;
 use function sprintf;
+use function str_replace;
 
 /** @implements ProviderInterface<SchemeCollectionInterface> */
 final class ImportSchemeCollectionProvider implements ProviderInterface
@@ -51,10 +51,10 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     /** An import writes under the host's tmp and log, so an archive needs no writable tree of its own. */
     private function importMeta(ImportApp $app): Meta
     {
-        [$vendor, $project] = explode('\\', $app->appName);
-        $base = sprintf('%s/%s/%s/%s', $this->appMeta->tmpDir, $vendor, $project, $app->context);
-        $logBase = sprintf('%s/%s/%s/%s', $this->appMeta->logDir, $vendor, $project, $app->context);
+        $name = str_replace('\\', '/', $app->appName);
+        $tmp = sprintf('%s/%s/%s/tmp', $this->appMeta->tmpDir, $name, $app->context);
+        $log = sprintf('%s/%s/%s/log', $this->appMeta->logDir, $name, $app->context);
 
-        return new Meta($app->appName, $app->context, $app->appDir(), $base . '/tmp', $logBase . '/log');
+        return new Meta($app->appName, $app->context, $app->appDir(), $tmp, $log);
     }
 }
