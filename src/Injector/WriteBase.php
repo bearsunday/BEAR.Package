@@ -36,7 +36,7 @@ final class WriteBase
         }
 
         /** @var non-empty-string $base */
-        $base = dirname($meta->tmpDir, 4);
+        $base = dirname($tmpDir, 4);
 
         return $base;
     }
