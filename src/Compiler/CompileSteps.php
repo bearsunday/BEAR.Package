@@ -102,11 +102,16 @@ final class CompileSteps
         foreach ($iterator as $file) {
             $pathname = $file->getPathname();
             if ($file->isDir()) {
-                rmdir($pathname);
+                if (! @rmdir($pathname)) {
+                    throw new DirectoryNotWritableException($pathname);
+                }
+
                 continue;
             }
 
-            unlink($pathname);
+            if (! @unlink($pathname)) {
+                throw new DirectoryNotWritableException($pathname);
+            }
         }
     }
 }

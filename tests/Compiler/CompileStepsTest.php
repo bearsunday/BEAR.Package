@@ -21,6 +21,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+use function chmod;
 use function file_get_contents;
 use function file_put_contents;
 use function is_dir;
@@ -30,6 +31,8 @@ use function sort;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
+
+use const PHP_OS_FAMILY;
 
 class CompileStepsTest extends TestCase
 {
@@ -170,6 +173,44 @@ class CompileStepsTest extends TestCase
             CompileSteps::run(self::injector(['blocked' => $step]), $this->appDir, self::CONTEXT);
         } finally {
             $this->assertNull($step->stepDir);
+        }
+    }
+
+    /** A step directory that cannot be emptied must not hand the step stale output. */
+    public function testAFileThatCannotBeRemovedStopsTheBuild(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('chmod does not write-protect a directory on Windows.');
+        }
+
+        $stepDir = $this->appDir . '/var/build/' . self::CONTEXT . '/alpha';
+        mkdir($stepDir . '/locked', 0777, true);
+        file_put_contents($stepDir . '/locked/file.txt', 'x');
+        chmod($stepDir . '/locked', 0555);
+        try {
+            $this->expectException(DirectoryNotWritableException::class);
+            CompileSteps::run(self::injector(['alpha' => new FakeAlphaStep()]), $this->appDir, self::CONTEXT);
+        } finally {
+            chmod($stepDir . '/locked', 0777);
+        }
+    }
+
+    /** Same for a directory entry: a failed rmdir leaves the last build's shape behind. */
+    public function testADirectoryThatCannotBeRemovedStopsTheBuild(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('chmod does not write-protect a directory on Windows.');
+        }
+
+        $stepDir = $this->appDir . '/var/build/' . self::CONTEXT . '/alpha';
+        mkdir($stepDir . '/locked', 0777, true);
+        file_put_contents($stepDir . '/locked/file.txt', 'x');
+        chmod($stepDir, 0555);
+        try {
+            $this->expectException(DirectoryNotWritableException::class);
+            CompileSteps::run(self::injector(['alpha' => new FakeAlphaStep()]), $this->appDir, self::CONTEXT);
+        } finally {
+            chmod($stepDir, 0777);
         }
     }
 
