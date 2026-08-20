@@ -45,6 +45,7 @@ use function ob_start;
 use function passthru;
 use function preg_match_all;
 use function preg_quote;
+use function realpath;
 use function rmdir;
 use function sprintf;
 use function str_replace;
@@ -502,7 +503,7 @@ class CompilerTest extends TestCase
      */
     public function testCompileRunsTheStepsModulesContributed(): void
     {
-        $buildDir = self::APP_DIR . '/var/build/prod-step-cli-app';
+        $buildDir = realpath(self::APP_DIR) . '/var/build/prod-step-cli-app';
         $stale = $buildDir . '/alpha/stale.txt';
         ! is_dir($buildDir . '/alpha') && mkdir($buildDir . '/alpha', 0777, true);
         file_put_contents($stale, 'left by an earlier build');
