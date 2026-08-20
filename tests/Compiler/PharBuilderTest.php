@@ -62,7 +62,7 @@ class PharBuilderTest extends TestCase
 
     public function testPacksWhatTheManifestSelected(): void
     {
-        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\nreturn null;\n");
         file_put_contents($scriptDir . '/compile.lock', 'noise');
         mkdir($this->appDir . '/src', 0777, true);
@@ -80,7 +80,6 @@ class PharBuilderTest extends TestCase
 
         $this->assertSame(0, $exitCode, $output);
         $this->assertStringContainsString('Phar: ' . realpath($this->appDir) . '/app.phar', $output);
-        $this->assertStringContainsString('Writes: ' . $this->writeDir, $output);
         $phar = 'phar://' . realpath($this->appDir . '/app.phar');
         $this->assertTrue(file_exists($phar . '/public/index.php'), 'the stub requires this entry');
         $this->assertTrue(file_exists($phar . '/src/App.php'));
@@ -97,7 +96,7 @@ class PharBuilderTest extends TestCase
 
     public function testEntryThatIsNotOnDisk(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
 
         $this->expectException(PharEntryNotFoundException::class);
         (new PharBuilder())('prod-app', $this->appDir, 'public/nowhere.php');
@@ -106,7 +105,7 @@ class PharBuilderTest extends TestCase
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
     public function testEntryThatCannotShip(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         $this->vendor();
 
@@ -118,7 +117,7 @@ class PharBuilderTest extends TestCase
 
     public function testEntryInADirectoryOfItsOwn(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         mkdir($this->appDir . '/bootstrap', 0777, true);
         file_put_contents($this->appDir . '/bootstrap/admin.php', "<?php\n");
         $this->vendor();
@@ -142,7 +141,7 @@ class PharBuilderTest extends TestCase
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
     public function testPreviousArchiveThatCannotBeRemoved(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         mkdir($this->appDir . '/app.phar', 0777, true);
 
@@ -166,7 +165,7 @@ class PharBuilderTest extends TestCase
 
     public function testWorkerUnderAReadOnlyPharIni(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         $this->vendor();
 
@@ -179,7 +178,7 @@ class PharBuilderTest extends TestCase
     /** A relative output is resolved before anything else looks at it. */
     public function testRelativeOutputIsResolvedBeforeTheStaleCheck(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         mkdir($this->appDir . '/vendor/app.phar', 0777, true);
 
@@ -202,7 +201,7 @@ class PharBuilderTest extends TestCase
      */
     public function testRelativeOutputUnderTheApplicationTree(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp', $this->writeDir);
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         $this->vendor();
 
@@ -266,11 +265,11 @@ class PharBuilderTest extends TestCase
      *
      * @return non-empty-string the script directory the marker was written to
      */
-    private function marker(string $tmpDir, string|null $writeDir = null): string
+    private function marker(string $tmpDir): string
     {
         $scriptDir = $this->appDir . '/var/build/prod-app/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir, $writeDir);
+        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir);
 
         return $scriptDir;
     }

@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
 - `WriteDirMismatchException`, `DelegatedCompileException` and `bin/compile-worker.php`, with the delegated compile they served (#482)
+- `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - compile both with the same one; a mismatch fails the boot's marker check instead (#426)
+- `CompileRecord::$writeDir` and `PharReport::$writeDir`: the marker no longer carries the write base (#426)
 
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)

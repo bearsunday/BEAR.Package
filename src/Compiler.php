@@ -268,8 +268,7 @@ final class Compiler
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
         // Marker after final DI scripts so runtime can reuse AOT output (#483).
-        [, , , $writeDir] = $this->preloadJob;
-        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir, $writeDir);
+        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();
