@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\DirectoryNotWritableException;
+use BEAR\Package\Exception\InvalidStepKeyException;
 use BEAR\Package\FakeRecordingStep;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use FakeVendor\HelloWorld\FakeAlphaStep;
 use FakeVendor\HelloWorld\FakeBetaStep;
 use FilesystemIterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
@@ -135,6 +137,20 @@ class CompileStepsTest extends TestCase
         sort($names);
 
         return $names;
+    }
+
+    /** A key that is not a safe single segment would wipe or escape the build directory. */
+    #[DataProvider('badKeys')]
+    public function testAKeyThatCannotNameADirectoryIsRefused(string $key): void
+    {
+        $this->expectException(InvalidStepKeyException::class);
+        CompileSteps::run(self::injector([$key => new FakeAlphaStep()]), $this->appDir, self::CONTEXT);
+    }
+
+    /** @return array<string, array{string}> */
+    public static function badKeys(): array
+    {
+        return ['empty' => [''], 'parent' => ['..'], 'separator' => ['a/b'], 'reserved for the DI scripts' => ['di'], 'reserved, other case' => ['DI']];
     }
 
     public function testNoStepsIsNoWork(): void

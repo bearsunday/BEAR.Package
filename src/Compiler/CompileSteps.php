@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\DirectoryNotWritableException;
+use BEAR\Package\Exception\InvalidStepKeyException;
 use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Types;
 use BEAR\Sunday\Compile\CompileStepInterface;
@@ -19,7 +20,9 @@ use SplFileInfo;
 use function assert;
 use function is_dir;
 use function mkdir;
+use function preg_match;
 use function rmdir;
+use function strtolower;
 use function unlink;
 
 /**
@@ -64,6 +67,11 @@ final class CompileSteps
         $counts = [];
         foreach ($this->steps as $key => $step) {
             assert($step instanceof CompileStepInterface);
+            // The key names a directory: anything else would wipe or escape the build
+            if (! preg_match('/\A[A-Za-z0-9_][A-Za-z0-9_-]*\z/', (string) $key) || strtolower((string) $key) === 'di') {
+                throw new InvalidStepKeyException((string) $key);
+            }
+
             $stepDir = $buildDir . '/' . $key;
             $this->reset($stepDir);
             $counts[(string) $key] = $step($stepDir);

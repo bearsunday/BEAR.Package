@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Compile steps a module contributes through `MultiBinder` for `CompileStepInterface` now run, each into `{appDir}/var/build/{binding key}`
+- Compile steps a module contributes through `MultiBinder` for `CompileStepInterface` now run, each into `{appDir}/var/build/{context}/{binding key}`
 
 ### Changed
 - Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
