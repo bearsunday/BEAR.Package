@@ -498,8 +498,7 @@ class CompilerTest extends TestCase
 
     /**
      * clean() empties var/build/di and the tmp tree only, so a rebuild reaches a step directory
-     * the last build filled. Each fake writes its own $stepDir into every artifact, so the files
-     * say which directory it was handed.
+     * the last build filled.
      */
     public function testCompileRunsTheStepsModulesContributed(): void
     {

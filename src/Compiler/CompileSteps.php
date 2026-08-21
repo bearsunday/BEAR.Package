@@ -83,8 +83,8 @@ final class CompileSteps
     /**
      * Hand the step an empty directory it did not have to create.
      *
-     * The step object is injectable while serving, so it cannot own this; and a step handed
-     * the last build's files writes a different set than the same sources would from empty.
+     * A step handed the last build's files writes a different set than the same sources would
+     * from empty.
      *
      * @throws DirectoryNotWritableException
      */

@@ -108,11 +108,7 @@ class CompileStepsTest extends TestCase
         $this->assertSame($buildDir . '/beta', file_get_contents($buildDir . '/beta/beta-1.txt'));
     }
 
-    /**
-     * A step handed the last build's files writes a different set than the same sources would
-     * from empty: Twig's cache skips a template it can already see loaded, Qiq keeps the first
-     * root that claimed a name.
-     */
+    /** A step handed the last build's files writes a different set than the same sources would from empty. */
     public function testASecondRunOverAPopulatedDirectoryWritesTheSameSet(): void
     {
         $steps = ['alpha' => new FakeAlphaStep()];
@@ -142,7 +138,6 @@ class CompileStepsTest extends TestCase
         return $names;
     }
 
-    /** A key that is not a safe single segment would wipe or escape the build directory. */
     #[DataProvider('badKeys')]
     public function testAKeyThatCannotNameADirectoryIsRefused(string $key): void
     {
