@@ -44,7 +44,7 @@ class PreloadRecorderTest extends TestCase
     {
         $context = 'app';
         $meta = Meta::create(self::APP_NAME, $context, self::APP_DIR, null);
-        $scriptDir = CompiledScripts::dir(self::APP_DIR, $context);
+        $scriptDir = CompiledScripts::dir(self::APP_DIR . '/var/build/' . $context);
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir);
 

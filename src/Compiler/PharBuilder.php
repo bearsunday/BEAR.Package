@@ -49,10 +49,10 @@ final class PharBuilder
     private const ABSOLUTE = '#^(/|\\\\|[A-Za-z]:[/\\\\])#';
 
     /**
-     * @param Context       $context
      * @param AppDir        $appDir
-     * @param StubEntry     $entry   relative to appDir
-     * @param PharPath|null $output  default {appDir}/app.phar
+     * @param BuildDir      $buildDir what the compile wrote, so no path of the host's is derived
+     * @param StubEntry     $entry    relative to appDir
+     * @param PharPath|null $output   default {appDir}/app.phar
      *
      * @throws PharEntryNotFoundException
      * @throws PharNotCompiledException
@@ -62,7 +62,7 @@ final class PharBuilder
      * @throws PharStaleOutputException
      * @throws PharEntryNotPackedException
      */
-    public function __invoke(string $context, string $appDir, string $entry, string|null $output = null): PharReport
+    public function __invoke(string $appDir, string $buildDir, string $entry, string|null $output = null): PharReport
     {
         // Native form for the filesystem and Phar APIs; PharManifest normalizes separators.
         $appDirReal = realpath($appDir);
@@ -74,13 +74,13 @@ final class PharBuilder
 
         // The host marker is read before the container is asked for its imports, so an
         // uncompiled tree reports "not compiled", not a script-directory error.
-        $hostDir = CompiledScripts::dir($appDirReal, $context);
+        $hostDir = CompiledScripts::dir($buildDir);
         $hostRecord = CompileMarker::read($hostDir);
         if ($hostRecord === null) {
             throw new PharNotCompiledException($hostDir);
         }
 
-        $roots = PharManifest::roots($appDirReal, $context, ImportedApps::of($hostDir));
+        $roots = PharManifest::roots($appDirReal, $buildDir, ImportedApps::of($hostDir));
         $output ??= $appDirReal . '/app.phar';
         @mkdir(dirname($output), 0777, true);
         // PharManifest::files() excludes the archive by path, and the iterator yields absolute ones.

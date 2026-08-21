@@ -276,7 +276,7 @@ class CompilerTest extends TestCase
     {
         $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
         $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir))());
-        $scriptDir = CompiledScripts::dir(self::APP_DIR, 'prod-cli-app');
+        $scriptDir = CompiledScripts::dir(self::APP_DIR . '/var/build/prod-cli-app');
         $scripts = glob($scriptDir . '/*.php');
         $this->assertNotFalse($scripts);
         $this->assertNotSame([], $scripts);
@@ -373,7 +373,7 @@ class CompilerTest extends TestCase
         @unlink(self::APP_DIR . '/preload.php');
         @unlink(self::APP_DIR . '/autoload.php');
         $this->removeTree(self::APP_DIR . '/var/tmp/' . $context);
-        $this->removeTree(CompiledScripts::dir(self::APP_DIR, $context));
+        $this->removeTree(CompiledScripts::dir(self::APP_DIR . '/var/build/' . $context));
     }
 
     private function removeTree(string $dir): void
@@ -406,7 +406,7 @@ class CompilerTest extends TestCase
             mkdir($nested, 0777, true);
         }
 
-        $scriptDir = CompiledScripts::dir(self::APP_DIR, 'prod-cli-app');
+        $scriptDir = CompiledScripts::dir(self::APP_DIR . '/var/build/prod-cli-app');
         if (! is_dir($scriptDir)) {
             mkdir($scriptDir, 0777, true);
         }
@@ -533,7 +533,7 @@ class CompilerTest extends TestCase
      */
     public function testAFailedStepLeavesNoMarker(): void
     {
-        $markerPath = CompileMarker::path(CompiledScripts::dir(self::APP_DIR, 'prod-failstep-cli-app'));
+        $markerPath = CompileMarker::path(CompiledScripts::dir(self::APP_DIR . '/var/build/prod-failstep-cli-app'));
         @unlink($markerPath);
 
         $this->expectException(FakeCompileStepException::class);

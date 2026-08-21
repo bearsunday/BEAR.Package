@@ -21,6 +21,7 @@ use SplFileInfo;
 
 use function array_keys;
 use function assert;
+use function dirname;
 use function explode;
 use function in_array;
 use function realpath;
@@ -60,9 +61,9 @@ final class PharManifest
     /**
      * All returned paths use forward slashes, whatever the platform spells them with.
      *
-     * @param AppDir          $appDir  resolved application root
-     * @param Context         $context
-     * @param list<ImportApp> $imports as declared by the compiled container
+     * @param AppDir          $appDir   resolved application root
+     * @param BuildDir        $buildDir the host's, as the compile wrote it
+     * @param list<ImportApp> $imports  as declared by the compiled container
      *
      * @return non-empty-array<AppDir, BuildDir>
      *
@@ -70,22 +71,22 @@ final class PharManifest
      * @throws PharWritesInsideArchiveException
      * @throws PharImportOutsideTreeException
      */
-    public static function roots(string $appDir, string $context, array $imports): array
+    public static function roots(string $appDir, string $buildDir, array $imports): array
     {
         // Both spellings: a marker holds text, and var/ or current/ may be a symlink.
         $archiveDir = self::resolve($appDir);
         $bases = [self::normalize($appDir), $archiveDir];
 
-        $roots = [$archiveDir => CompiledScripts::buildDir($archiveDir, $context)];
-        self::writesOutside($bases, $archiveDir, $context);
+        $roots = [$archiveDir => self::resolve($buildDir)];
+        self::writesOutside($bases, $archiveDir, $buildDir);
         foreach ($imports as $import) {
             $importDir = self::resolve($import->appDir());
             if (! self::isUnder($importDir, $archiveDir)) {
                 throw new PharImportOutsideTreeException($importDir, $archiveDir);
             }
 
-            self::writesOutside($bases, $importDir, $import->context);
-            $roots[$importDir] = CompiledScripts::buildDir($importDir, $import->context);
+            self::writesOutside($bases, $importDir, $import->buildDir());
+            $roots[$importDir] = self::resolve($import->buildDir());
         }
 
         return $roots;
@@ -110,14 +111,14 @@ final class PharManifest
     /**
      * @param non-empty-list<AppDir> $archiveBases raw and resolved forms of the tree root
      * @param AppDir                 $appDir       the application to check
-     * @param Context                $context
+     * @param BuildDir               $buildDir     where its compile wrote
      *
      * @throws PharNotCompiledException
      * @throws PharWritesInsideArchiveException
      */
-    private static function writesOutside(array $archiveBases, string $appDir, string $context): void
+    private static function writesOutside(array $archiveBases, string $appDir, string $buildDir): void
     {
-        $scriptDir = CompiledScripts::dir($appDir, $context);
+        $scriptDir = CompiledScripts::dir($buildDir);
         $record = CompileMarker::read($scriptDir);
         if ($record === null) {
             throw new PharNotCompiledException($scriptDir);
@@ -284,7 +285,7 @@ final class PharManifest
 
             // Anything else under var/build: another context's build, or what an earlier release
             // left there.
-            return ! self::isUnder($path, CompiledScripts::buildRoot($root));
+            return ! self::isUnder($path, dirname($buildDir));
         }
 
         return null;
