@@ -261,7 +261,7 @@ final class PackageInjector
      */
     private static function scriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
     {
-        $scriptDir = CompiledScripts::dir($meta->buildDir);
+        $scriptDir = $meta->buildDir . '/di';
         if ($overrideModule instanceof AbstractModule) {
             $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
         }

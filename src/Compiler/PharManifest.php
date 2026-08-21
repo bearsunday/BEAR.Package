@@ -8,7 +8,6 @@ use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharSymlinkedDirectoryException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Package\Types;
@@ -118,7 +117,7 @@ final class PharManifest
      */
     private static function writesOutside(array $archiveBases, string $appDir, string $buildDir): void
     {
-        $scriptDir = CompiledScripts::dir($buildDir);
+        $scriptDir = $buildDir . '/di';
         $record = CompileMarker::read($scriptDir);
         if ($record === null) {
             throw new PharNotCompiledException($scriptDir);
