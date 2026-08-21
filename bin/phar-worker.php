@@ -25,8 +25,13 @@ if (ini_get('phar.readonly') !== '0') {
 [, $appDir, $buildDir, $entry, $output] = $argv;
 // A guard, not an assert(): the worker runs under the deploy's ini, where assertions are off.
 $autoload = $appDir . '/vendor/autoload.php';
-if ($buildDir === '' || $entry === '' || ! is_file($autoload)) {
-    fwrite(STDERR, sprintf('No application to pack: "%s" holds no vendor/autoload.php, or no build directory was given.', $appDir) . PHP_EOL);
+if ($buildDir === '' || $entry === '') {
+    fwrite(STDERR, 'Nothing to pack: the build directory and the entry are both required.' . PHP_EOL);
+    exit(1);
+}
+
+if (! is_file($autoload)) {
+    fwrite(STDERR, sprintf('No application to pack: "%s" holds no vendor/autoload.php.', $appDir) . PHP_EOL);
     exit(1);
 }
 
