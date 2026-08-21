@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
@@ -188,6 +189,10 @@ final class PackageInjector
      * Broken scripts under a marker are left to throw: a deploy error, not a cold start. A
      * tree that cannot be written is told what the mismatch was instead of failing on it.
      *
+     * Of the compile command's pipeline only the steps are mirrored here; class meta info and
+     * preload are not. Steps resolve through a module injector, not the AOT one: their classes
+     * are compile-time collaborators and no script is emitted for them.
+     *
      * @param ScriptDir $scriptDir
      * @param Context   $context
      *
@@ -208,6 +213,9 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
+        /** @var AppDir $appDir */
+        $appDir = $meta->appDir;
+        CompileSteps::run(new RayInjector($module, $scriptDir), $appDir, $context);
         CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */

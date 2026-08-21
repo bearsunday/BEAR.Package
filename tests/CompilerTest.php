@@ -13,6 +13,7 @@ use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Sunday\Extension\Application\AppInterface;
+use FakeVendor\HelloWorld\FakeCompileStepException;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
@@ -39,9 +40,12 @@ use function ini_set;
 use function is_dir;
 use function is_float;
 use function mkdir;
+use function ob_get_clean;
+use function ob_start;
 use function passthru;
 use function preg_match_all;
 use function preg_quote;
+use function realpath;
 use function rmdir;
 use function sprintf;
 use function str_replace;
@@ -490,5 +494,54 @@ class CompilerTest extends TestCase
         $result = $getRequestTime->invoke(null, 'not-a-float');
         assert(is_float($result));
         $this->assertSame(0.0, $result);
+    }
+
+    /**
+     * clean() empties var/build/di and the tmp tree only, so a rebuild reaches a step directory
+     * the last build filled.
+     */
+    public function testCompileRunsTheStepsModulesContributed(): void
+    {
+        $buildDir = realpath(self::APP_DIR) . '/var/build/prod-step-cli-app';
+        $stale = $buildDir . '/alpha/stale.txt';
+        ! is_dir($buildDir . '/alpha') && mkdir($buildDir . '/alpha', 0777, true);
+        file_put_contents($stale, 'left by an earlier build');
+
+        ob_start();
+        $code = (new Compiler(self::APP_NAME, 'prod-step-cli-app', self::APP_DIR))();
+        $report = (string) ob_get_clean();
+
+        $this->assertSame(0, $code);
+        $this->assertStringContainsString('Compile step alpha: 2 artifacts', $report);
+        $this->assertStringContainsString('Compile step beta: 1 artifacts', $report);
+        $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-1.txt'));
+        $this->assertSame($buildDir . '/alpha', file_get_contents($buildDir . '/alpha/alpha-2.txt'));
+        $this->assertSame($buildDir . '/beta', file_get_contents($buildDir . '/beta/beta-1.txt'));
+        $this->assertFileDoesNotExist($stale, 'the step was handed the last build output');
+    }
+
+    public function testCompileWithoutAnyStep(): void
+    {
+        $report = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $this->assertSame([], $report['steps']);
+    }
+
+    /**
+     * A marker makes every later boot skip the compile, so a build whose step failed must not
+     * leave one: it would be "DI present, templates missing" for good.
+     */
+    public function testAFailedStepLeavesNoMarker(): void
+    {
+        $markerPath = CompileMarker::path(CompiledScripts::dir(self::APP_DIR, 'prod-failstep-cli-app'));
+        @unlink($markerPath);
+
+        $this->expectException(FakeCompileStepException::class);
+
+        try {
+            (new Compiler(self::APP_NAME, 'prod-failstep-cli-app', self::APP_DIR))->compile();
+        } finally {
+            $this->assertFileDoesNotExist($markerPath);
+        }
     }
 }

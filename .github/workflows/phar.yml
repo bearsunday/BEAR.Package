@@ -40,6 +40,9 @@ jobs:
         working-directory: demo
         run: |
           composer config repositories.package '{"type":"path","url":"..","options":{"symlink":false}}'
+          # Stability flags only count from the root: drop this once bear/sunday 1.9.0 is tagged.
+          composer config minimum-stability dev
+          composer config prefer-stable true
           composer require 'bear/package:*@dev' -W --no-interaction
 
       - name: Run the demo tests
