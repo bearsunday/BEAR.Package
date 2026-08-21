@@ -183,7 +183,7 @@ class PackageInjectorTest extends TestCase
 
         try {
             $this->expectExceptionMessage('The cache adapter could not store the item.');
-            $injector = PackageInjector::getInstance(new Meta('FakeVendor\MinApp'), 'prod-app', new NullAdapter());
+            $injector = PackageInjector::getInstance(new Meta('FakeVendor\MinApp', 'prod-app'), 'prod-app', new NullAdapter());
             $this->assertInstanceOf(InjectorInterface::class, $injector);
         } finally {
             restore_error_handler();
