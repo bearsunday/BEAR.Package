@@ -127,7 +127,7 @@ final class Compiler
      */
     public function phar(string|null $entry = null): int
     {
-        [, $context, $appDir] = $this->preloadJob;
+        [, , $appDir] = $this->preloadJob;
         $entry ??= 'public/index.php';
         if (! is_file($appDir . '/' . $entry)) {
             throw new PharEntryNotFoundException($appDir . '/' . $entry);
