@@ -12,6 +12,7 @@ use BEAR\Package\Types;
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
+ * @psalm-import-type BuildDir from Types
  */
 final class ImportApp
 {
@@ -40,5 +41,20 @@ final class ImportApp
     public function appDir(): string
     {
         return Meta::appDir($this->appName);
+    }
+
+    /**
+     * Build directory of the imported application, on the same terms as appDir().
+     *
+     * A pack reads it for an application it never boots: a Meta of one would create the tmp
+     * and log the host's container gives it instead, inside the tree being packed.
+     *
+     * @return BuildDir
+     *
+     * @throws AppNameException
+     */
+    public function buildDir(): string
+    {
+        return $this->appDir() . '/var/build/' . $this->context;
     }
 }

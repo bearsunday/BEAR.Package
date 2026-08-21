@@ -7,11 +7,12 @@ namespace BEAR\Package\Injector;
 use BEAR\Package\Types;
 
 /**
- * Where a compile puts what it produced.
+ * The subdirectory of a build a compile writes its DI scripts into.
  *
- * @psalm-import-type AppDir from Types
+ * Where the build directory is belongs to app-meta: read `$meta->buildDir`, or take it from
+ * whoever held the Meta.
+ *
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type Context from Types
  * @psalm-import-type ScriptDir from Types
  */
 final class CompiledScripts
@@ -22,38 +23,12 @@ final class CompiledScripts
     }
 
     /**
-     * @param AppDir  $appDir
-     * @param Context $context
+     * @param BuildDir $buildDir
      *
      * @return ScriptDir
      */
-    public static function dir(string $appDir, string $context): string
+    public static function dir(string $buildDir): string
     {
-        return self::buildDir($appDir, $context) . '/di';
-    }
-
-    /**
-     * One compile's output.
-     *
-     * @param AppDir  $appDir
-     * @param Context $context
-     *
-     * @return BuildDir
-     */
-    public static function buildDir(string $appDir, string $context): string
-    {
-        return self::buildRoot($appDir) . '/' . $context;
-    }
-
-    /**
-     * Every context's build directory sits here.
-     *
-     * @param AppDir $appDir
-     *
-     * @return non-empty-string
-     */
-    public static function buildRoot(string $appDir): string
-    {
-        return $appDir . '/var/build';
+        return $buildDir . '/di';
     }
 }

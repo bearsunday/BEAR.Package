@@ -93,9 +93,7 @@ require __DIR__ . '/vendor/autoload.php';
      */
     private function compileScripts(AbstractAppMeta $appMeta, string $context): string
     {
-        /** @var AppDir $appDir */
-        $appDir = $appMeta->appDir;
-        $scriptDir = realpath(CompiledScripts::dir($appDir, $context));
+        $scriptDir = realpath(CompiledScripts::dir($appMeta->buildDir));
         if ($scriptDir === false) {
             return ''; // @codeCoverageIgnore
         }
