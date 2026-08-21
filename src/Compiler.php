@@ -74,7 +74,7 @@ final class Compiler
 
     /**
      * What the compile was asked for: the preload worker builds the same Meta from it, and
-     * phar() takes the context and the directory it packs.
+     * phar() takes the directory it packs.
      *
      * @var array{AppName, Context, AppDir, WriteDir|null}
      */
