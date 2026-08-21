@@ -244,8 +244,17 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('usage:', implode("\n", $lines));
     }
 
+    /** Right argument count, empty value: the message has to say which one the compile left out. */
+    public function testWorkerWithoutABuildDirectory(): void
+    {
+        [$exitCode, $output] = $this->worker('public/index.php', '', false, '');
+
+        $this->assertSame(1, $exitCode);
+        $this->assertStringContainsString('the build directory and the entry are both required', $output);
+    }
+
     /** @return array{int, string} exit code and merged output of one worker run */
-    private function worker(string $entry, string $output = '', bool $readOnly = false): array
+    private function worker(string $entry, string $output = '', bool $readOnly = false, string|null $buildDir = null): array
     {
         $command = sprintf(
             '%s -d phar.readonly=%d %s %s %s %s %s 2>&1',
@@ -253,7 +262,7 @@ class PharBuilderTest extends TestCase
             (int) $readOnly,
             escapeshellarg(self::workerScript()),
             escapeshellarg($this->appDir),
-            escapeshellarg($this->buildDir()),
+            escapeshellarg($buildDir ?? $this->buildDir()),
             escapeshellarg($entry),
             escapeshellarg($output),
         );
