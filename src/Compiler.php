@@ -17,7 +17,6 @@ use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Resource\NamedParameterInterface;
@@ -222,7 +221,7 @@ final class Compiler
      */
     public function clean(): void
     {
-        $scriptDir = CompiledScripts::dir($this->appMeta->buildDir);
+        $scriptDir = $this->appMeta->buildDir . '/di';
         $this->emptyDirectory($this->appMeta->tmpDir);
         $this->emptyDirectory($scriptDir);
         $this->ensureDirectory($scriptDir);
@@ -270,7 +269,7 @@ final class Compiler
     {
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $scriptDir = CompiledScripts::dir($this->appMeta->buildDir);
+        $scriptDir = $this->appMeta->buildDir . '/di';
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
         $steps = CompileSteps::run($this->injector, $this->appMeta->buildDir);

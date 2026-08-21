@@ -11,7 +11,6 @@ use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Exception\PharNotCompiledException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Types;
 use Phar;
@@ -74,7 +73,7 @@ final class PharBuilder
 
         // The host marker is read before the container is asked for its imports, so an
         // uncompiled tree reports "not compiled", not a script-directory error.
-        $hostDir = CompiledScripts::dir($buildDir);
+        $hostDir = $buildDir . '/di';
         $hostRecord = CompileMarker::read($hostDir);
         if ($hostRecord === null) {
             throw new PharNotCompiledException($hostDir);

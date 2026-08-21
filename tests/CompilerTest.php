@@ -10,7 +10,6 @@ use BEAR\Package\Exception\ComposerLoaderNotFoundException;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\FakeCompileStepException;
@@ -203,7 +202,7 @@ class CompilerTest extends TestCase
         foreach (
             [
                 'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'PackageInjector.php',
-                'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'CompiledScripts.php',
+                'src' . DIRECTORY_SEPARATOR . 'Injector' . DIRECTORY_SEPARATOR . 'CompileMarker.php',
             ] as $bootFile
         ) {
             $this->assertStringContainsString(self::pathLiteral($bootFile), $preload);
@@ -276,7 +275,7 @@ class CompilerTest extends TestCase
     {
         $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
         $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir))());
-        $scriptDir = CompiledScripts::dir(self::APP_DIR . '/var/build/prod-cli-app');
+        $scriptDir = self::APP_DIR . '/var/build/prod-cli-app/di';
         $scripts = glob($scriptDir . '/*.php');
         $this->assertNotFalse($scripts);
         $this->assertNotSame([], $scripts);
@@ -373,7 +372,7 @@ class CompilerTest extends TestCase
         @unlink(self::APP_DIR . '/preload.php');
         @unlink(self::APP_DIR . '/autoload.php');
         $this->removeTree(self::APP_DIR . '/var/tmp/' . $context);
-        $this->removeTree(CompiledScripts::dir(self::APP_DIR . '/var/build/' . $context));
+        $this->removeTree(self::APP_DIR . '/var/build/' . $context . '/di');
     }
 
     private function removeTree(string $dir): void
@@ -406,7 +405,7 @@ class CompilerTest extends TestCase
             mkdir($nested, 0777, true);
         }
 
-        $scriptDir = CompiledScripts::dir(self::APP_DIR . '/var/build/prod-cli-app');
+        $scriptDir = self::APP_DIR . '/var/build/prod-cli-app/di';
         if (! is_dir($scriptDir)) {
             mkdir($scriptDir, 0777, true);
         }
@@ -533,7 +532,7 @@ class CompilerTest extends TestCase
      */
     public function testAFailedStepLeavesNoMarker(): void
     {
-        $markerPath = CompileMarker::path(CompiledScripts::dir(self::APP_DIR . '/var/build/prod-failstep-cli-app'));
+        $markerPath = CompileMarker::path(self::APP_DIR . '/var/build/prod-failstep-cli-app/di');
         @unlink($markerPath);
 
         $this->expectException(FakeCompileStepException::class);

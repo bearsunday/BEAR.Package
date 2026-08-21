@@ -217,7 +217,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir . '/var/build/prod-app');
+        $scriptDir = $appDir . '/var/build/prod-app/di';
         self::cleanProdDi($scriptDir);
 
         $first = PackageInjector::factory($meta, 'prod-app');
@@ -246,7 +246,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir . '/var/build/prod-app');
+        $scriptDir = $appDir . '/var/build/prod-app/di';
         self::cleanProdDi($scriptDir);
 
         // The prod logger writes through ErrorLogHandler, so error_log is the destination.
@@ -272,7 +272,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir . '/var/build/prod-app');
+        $scriptDir = $appDir . '/var/build/prod-app/di';
 
         PackageInjector::factory($meta, 'prod-app');
         $phpScripts = glob($scriptDir . '/*.php');
@@ -305,7 +305,7 @@ class PackageInjectorTest extends TestCase
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir . '/var/build/prod-app');
+        $scriptDir = $appDir . '/var/build/prod-app/di';
 
         PackageInjector::factory($meta, 'prod-app');
         $phpScripts = glob($scriptDir . '/*.php');
@@ -415,7 +415,7 @@ class PackageInjectorTest extends TestCase
     {
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-step-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir . '/var/build/prod-step-app');
+        $scriptDir = $appDir . '/var/build/prod-step-app/di';
         self::cleanProdDi($scriptDir);
         @unlink($appDir . '/var/build/prod-step-app/alpha/alpha-1.txt');
         @unlink($appDir . '/var/build/prod-step-app/beta/beta-1.txt');
@@ -432,7 +432,7 @@ class PackageInjectorTest extends TestCase
     {
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-failstep-app', $appDir);
-        $scriptDir = CompiledScripts::dir($appDir . '/var/build/prod-failstep-app');
+        $scriptDir = $appDir . '/var/build/prod-failstep-app/di';
         self::cleanProdDi($scriptDir);
 
         $this->expectException(FakeCompileStepException::class);
