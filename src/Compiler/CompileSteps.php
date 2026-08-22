@@ -10,7 +10,6 @@ use BEAR\Package\Types;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use FilesystemIterator;
 use Ray\Di\Di\Set;
-use Ray\Di\InjectorInterface;
 use Ray\Di\MultiBinding\Map;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -39,18 +38,6 @@ final class CompileSteps
         #[Set(CompileStepInterface::class)]
         private readonly Map $steps,
     ) {
-    }
-
-    /**
-     * @param BuildDir $buildDir of the context being compiled; the steps' own
-     *
-     * @return StepCounts
-     *
-     * @throws DirectoryNotWritableException
-     */
-    public static function run(InjectorInterface $injector, string $buildDir): array
-    {
-        return $injector->getInstance(self::class)($buildDir);
     }
 
     /**

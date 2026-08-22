@@ -86,11 +86,21 @@ class CompileStepsTest extends TestCase
         });
     }
 
+    /**
+     * @param non-empty-string $buildDir
+     *
+     * @return array<string, int>
+     */
+    private static function runSteps(InjectorInterface $injector, string $buildDir): array
+    {
+        return $injector->getInstance(CompileSteps::class)($buildDir);
+    }
+
     public function testTheCallerHandsEachStepTheDirectoryItsBindingKeyNames(): void
     {
         $step = new FakeRecordingStep();
 
-        $this->assertSame(['recorded' => 0], CompileSteps::run(self::injector(['recorded' => $step]), $this->appDir . '/var/build/' . self::CONTEXT));
+        $this->assertSame(['recorded' => 0], self::runSteps(self::injector(['recorded' => $step]), $this->appDir . '/var/build/' . self::CONTEXT));
         $this->assertSame($this->appDir . '/var/build/' . self::CONTEXT . '/recorded', $step->stepDir);
         $this->assertTrue($step->stepDirExisted, 'the step had to create its own directory');
     }
@@ -99,7 +109,7 @@ class CompileStepsTest extends TestCase
     public function testTwoStepsWriteUnderTheirOwnKeys(): void
     {
         $steps = ['alpha' => new FakeAlphaStep(), 'beta' => new FakeBetaStep()];
-        $counts = CompileSteps::run(self::injector($steps), $this->appDir . '/var/build/' . self::CONTEXT);
+        $counts = self::runSteps(self::injector($steps), $this->appDir . '/var/build/' . self::CONTEXT);
 
         $buildDir = $this->appDir . '/var/build/' . self::CONTEXT;
         $this->assertSame(['alpha' => 2, 'beta' => 1], $counts);
@@ -114,11 +124,11 @@ class CompileStepsTest extends TestCase
         $steps = ['alpha' => new FakeAlphaStep()];
         $stepDir = $this->appDir . '/var/build/' . self::CONTEXT . '/alpha';
 
-        $first = CompileSteps::run(self::injector($steps), $this->appDir . '/var/build/' . self::CONTEXT);
+        $first = self::runSteps(self::injector($steps), $this->appDir . '/var/build/' . self::CONTEXT);
         file_put_contents($stepDir . '/stale.txt', 'left by an earlier build');
         mkdir($stepDir . '/nested');
         file_put_contents($stepDir . '/nested/stale.txt', 'left by an earlier build');
-        $second = CompileSteps::run(self::injector($steps), $this->appDir . '/var/build/' . self::CONTEXT);
+        $second = self::runSteps(self::injector($steps), $this->appDir . '/var/build/' . self::CONTEXT);
 
         $this->assertSame($first, $second);
         $this->assertSame(['alpha-1.txt', 'alpha-2.txt'], self::entries($stepDir));
@@ -142,7 +152,7 @@ class CompileStepsTest extends TestCase
     public function testAKeyThatCannotNameADirectoryIsRefused(string $key): void
     {
         $this->expectException(InvalidStepKeyException::class);
-        CompileSteps::run(self::injector([$key => new FakeAlphaStep()]), $this->appDir . '/var/build/' . self::CONTEXT);
+        self::runSteps(self::injector([$key => new FakeAlphaStep()]), $this->appDir . '/var/build/' . self::CONTEXT);
     }
 
     /** @return array<string, array{string}> */
@@ -153,7 +163,7 @@ class CompileStepsTest extends TestCase
 
     public function testNoStepsIsNoWork(): void
     {
-        $this->assertSame([], CompileSteps::run(self::injector([]), $this->appDir . '/var/build/' . self::CONTEXT));
+        $this->assertSame([], self::runSteps(self::injector([]), $this->appDir . '/var/build/' . self::CONTEXT));
         $this->assertDirectoryDoesNotExist($this->appDir . '/var/build/' . self::CONTEXT);
     }
 
@@ -165,7 +175,7 @@ class CompileStepsTest extends TestCase
 
         try {
             $this->expectException(DirectoryNotWritableException::class);
-            CompileSteps::run(self::injector(['blocked' => $step]), $this->appDir . '/var/build/' . self::CONTEXT);
+            self::runSteps(self::injector(['blocked' => $step]), $this->appDir . '/var/build/' . self::CONTEXT);
         } finally {
             $this->assertNull($step->stepDir);
         }
@@ -184,7 +194,7 @@ class CompileStepsTest extends TestCase
         chmod($stepDir . '/locked', 0555);
         try {
             $this->expectException(DirectoryNotWritableException::class);
-            CompileSteps::run(self::injector(['alpha' => new FakeAlphaStep()]), $this->appDir . '/var/build/' . self::CONTEXT);
+            self::runSteps(self::injector(['alpha' => new FakeAlphaStep()]), $this->appDir . '/var/build/' . self::CONTEXT);
         } finally {
             chmod($stepDir . '/locked', 0777);
         }
@@ -203,7 +213,7 @@ class CompileStepsTest extends TestCase
         chmod($stepDir, 0555);
         try {
             $this->expectException(DirectoryNotWritableException::class);
-            CompileSteps::run(self::injector(['alpha' => new FakeAlphaStep()]), $this->appDir . '/var/build/' . self::CONTEXT);
+            self::runSteps(self::injector(['alpha' => new FakeAlphaStep()]), $this->appDir . '/var/build/' . self::CONTEXT);
         } finally {
             chmod($stepDir, 0777);
         }
@@ -214,8 +224,8 @@ class CompileStepsTest extends TestCase
     {
         $injector = self::injector(['alpha' => new FakeAlphaStep()]);
 
-        CompileSteps::run($injector, $this->appDir . '/var/build/prod-app');
-        CompileSteps::run($injector, $this->appDir . '/var/build/prod-hal-app');
+        self::runSteps($injector, $this->appDir . '/var/build/prod-app');
+        self::runSteps($injector, $this->appDir . '/var/build/prod-hal-app');
 
         $this->assertSame(
             $this->appDir . '/var/build/prod-app/alpha',

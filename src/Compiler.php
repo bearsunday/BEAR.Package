@@ -271,7 +271,7 @@ final class Compiler
         $scriptDir = $this->appMeta->buildDir . '/di';
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
-        $steps = CompileSteps::run($this->injector, $this->appMeta->buildDir);
+        $steps = $this->injector->getInstance(CompileSteps::class)($this->appMeta->buildDir);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
         CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 
