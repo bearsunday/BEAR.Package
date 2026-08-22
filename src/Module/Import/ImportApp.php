@@ -44,11 +44,6 @@ final class ImportApp
     }
 
     /**
-     * Build directory of the imported application, on the same terms as appDir().
-     *
-     * A pack reads it for an application it never boots: a Meta of one would create the tmp
-     * and log the host's container gives it instead, inside the tree being packed.
-     *
      * @return BuildDir
      *
      * @throws AppNameException

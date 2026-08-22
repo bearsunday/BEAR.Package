@@ -244,8 +244,7 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('usage:', implode("\n", $lines));
     }
 
-    /** Right argument count, empty value: the message has to say which one the compile left out. */
-    public function testWorkerWithoutABuildDirectory(): void
+    public function testWorkerWithTheRightArgumentCountButAnEmptyBuildDirectory(): void
     {
         [$exitCode, $output] = $this->worker('public/index.php', '', false, '');
 
