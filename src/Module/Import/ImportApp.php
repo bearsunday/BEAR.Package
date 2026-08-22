@@ -12,6 +12,7 @@ use BEAR\Package\Types;
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
+ * @psalm-import-type BuildDir from Types
  */
 final class ImportApp
 {
@@ -40,5 +41,15 @@ final class ImportApp
     public function appDir(): string
     {
         return Meta::appDir($this->appName);
+    }
+
+    /**
+     * @return BuildDir
+     *
+     * @throws AppNameException
+     */
+    public function buildDir(): string
+    {
+        return $this->appDir() . '/var/build/' . $this->context;
     }
 }

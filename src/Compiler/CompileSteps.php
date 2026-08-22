@@ -6,12 +6,10 @@ namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\DirectoryNotWritableException;
 use BEAR\Package\Exception\InvalidStepKeyException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Types;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use FilesystemIterator;
 use Ray\Di\Di\Set;
-use Ray\Di\InjectorInterface;
 use Ray\Di\MultiBinding\Map;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -40,19 +38,6 @@ final class CompileSteps
         #[Set(CompileStepInterface::class)]
         private readonly Map $steps,
     ) {
-    }
-
-    /**
-     * @param AppDir  $appDir
-     * @param Context $context the one being compiled; its build directory is the steps' own
-     *
-     * @return StepCounts
-     *
-     * @throws DirectoryNotWritableException
-     */
-    public static function run(InjectorInterface $injector, string $appDir, string $context): array
-    {
-        return $injector->getInstance(self::class)(CompiledScripts::buildDir($appDir, $context));
     }
 
     /**

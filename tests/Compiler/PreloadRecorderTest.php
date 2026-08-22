@@ -7,7 +7,6 @@ namespace BEAR\Package\Compiler;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +43,7 @@ class PreloadRecorderTest extends TestCase
     {
         $context = 'app';
         $meta = Meta::create(self::APP_NAME, $context, self::APP_DIR, null);
-        $scriptDir = CompiledScripts::dir(self::APP_DIR, $context);
+        $scriptDir = self::APP_DIR . '/var/build/' . $context . '/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir);
 

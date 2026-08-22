@@ -6,7 +6,6 @@ namespace BEAR\Package\Compiler;
 
 use ArrayObject;
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Types;
 
 use function array_filter;
@@ -70,7 +69,7 @@ if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
 }
 
 require __DIR__ . '/vendor/autoload.php';
-%s%s", $context, $requiredFile, $this->compileScripts($appMeta, $context));
+%s%s", $context, $requiredFile, $this->compileScripts($appMeta));
         $appDirRealpath = realpath($appMeta->appDir);
         assert($appDirRealpath !== false);
         $fileName = $appDirRealpath . '/preload.php';
@@ -88,14 +87,10 @@ require __DIR__ . '/vendor/autoload.php';
      *
      * The list is what the boot loaded, never a glob of the script directory: a proxy whose
      * parent this boot never loaded cannot be linked, and PHP would say so on every startup.
-     *
-     * @param Context $context
      */
-    private function compileScripts(AbstractAppMeta $appMeta, string $context): string
+    private function compileScripts(AbstractAppMeta $appMeta): string
     {
-        /** @var AppDir $appDir */
-        $appDir = $appMeta->appDir;
-        $scriptDir = realpath(CompiledScripts::dir($appDir, $context));
+        $scriptDir = realpath($appMeta->buildDir . '/di');
         if ($scriptDir === false) {
             return ''; // @codeCoverageIgnore
         }

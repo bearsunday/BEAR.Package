@@ -63,7 +63,7 @@ class PharManifestTest extends TestCase
         $appName = $this->importApp('import');
         $this->marker($this->appDir . '/import', 'app', $this->writeDir . '/' . str_replace('\\', '/', $appName) . '/app/tmp');
 
-        $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
+        $roots = PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', [new ImportApp('foo', $appName, 'app')]);
 
         $real = $this->norm((string) realpath($this->appDir));
         $this->assertSame([
@@ -78,13 +78,13 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir . '/legacy-app', 'old-app', '/var/www/legacy/var/tmp/old-app');
 
         $real = $this->norm((string) realpath($this->appDir));
-        $this->assertSame([$real => $real . '/var/build/prod-app'], PharManifest::roots($this->appDir, 'prod-app', []));
+        $this->assertSame([$real => $real . '/var/build/prod-app'], PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []));
     }
 
     public function testUncompiledApplication(): void
     {
         $this->expectException(PharNotCompiledException::class);
-        PharManifest::roots($this->appDir, 'prod-app', []);
+        PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []);
     }
 
     /** Scripts that write inside the tree cannot work once the tree is a read-only archive. */
@@ -93,7 +93,7 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir, 'prod-app', $this->appDir . '/var/tmp/prod-app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
-        PharManifest::roots($this->appDir, 'prod-app', []);
+        PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []);
     }
 
     /** A tmpDir spelled through a symlinked var/ resolves outside, but the boot uses the spelling. */
@@ -110,7 +110,7 @@ class PharManifestTest extends TestCase
         CompileMarker::write($this->appDir . '/var/build/prod-app/di', 'My\App', 'prod-app', $this->appDir . '/var/tmp/prod-app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
-        PharManifest::roots($this->appDir, 'prod-app', []);
+        PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []);
     }
 
     /** Compiled for a write directory of its own, so the host's boot would not find these scripts. */
@@ -121,7 +121,7 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir . '/import', 'app', $this->appDir . '/import/var/tmp/app');
 
         $this->expectException(PharWritesInsideArchiveException::class);
-        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
+        PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', [new ImportApp('foo', $appName, 'app')]);
     }
 
     public function testImportOutsideTheTree(): void
@@ -129,7 +129,7 @@ class PharManifestTest extends TestCase
         $this->marker($this->appDir, 'prod-app', $this->writeDir . '/My/App/prod-app/tmp');
 
         $this->expectException(PharImportOutsideTreeException::class);
-        PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
+        PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', [new ImportApp('foo', 'Import\HelloWorld', 'app')]);
     }
 
     public function testFilesShipTheNamedDirectoriesAndThisBuildOnly(): void
@@ -169,7 +169,7 @@ class PharManifestTest extends TestCase
             // Scripts left where the previous layout put them: var/tmp stays unshipped.
             'var/tmp/other-app/di/Fake_Other-.php' => "<?php\n",
         ]);
-        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $roots = PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []);
         $appDir = $this->resolved();
 
         // An output in a directory that ships: only the manifest's own exclusion keeps it out.
@@ -203,7 +203,7 @@ class PharManifestTest extends TestCase
             'modules/sibling/secrets/keys.txt' => 'PRIVATE',
         ]);
 
-        $roots = PharManifest::roots($this->appDir, 'prod-app', [new ImportApp('foo', $appName, 'app')]);
+        $roots = PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', [new ImportApp('foo', $appName, 'app')]);
         $appDir = $this->resolved();
 
         $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'public/index.php'));
@@ -227,7 +227,7 @@ class PharManifestTest extends TestCase
             'bootstrap/batch.php' => "<?php\n",
             'public-cms/index.php' => "<?php\n",
         ]);
-        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $roots = PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []);
         $appDir = $this->resolved();
 
         $shipped = $this->relativePaths(PharManifest::files($appDir, $roots, $appDir . '/app.phar', 'bootstrap/admin.php'));
@@ -250,7 +250,7 @@ class PharManifestTest extends TestCase
             $this->markTestSkipped('this platform does not let the test user create a symlink');
         }
 
-        $roots = PharManifest::roots($this->appDir, 'prod-app', []);
+        $roots = PharManifest::roots($this->appDir, $this->appDir . '/var/build/prod-app', []);
         $appDir = $this->resolved();
 
         $this->expectException(PharSymlinkedDirectoryException::class);

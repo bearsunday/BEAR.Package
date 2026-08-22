@@ -17,7 +17,6 @@ use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
-use BEAR\Package\Injector\CompiledScripts;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Injector\PackageInjector;
 use BEAR\Resource\NamedParameterInterface;
@@ -55,6 +54,7 @@ use const PHP_SAPI;
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
+ * @psalm-import-type BuildDir from Types
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type StubEntry from Types
  * @psalm-import-type CompileReport from Types
@@ -72,8 +72,7 @@ final class Compiler
     private CompileObjectGraph $compilerObjectGraph;
 
     /**
-     * What the compile was asked for: the preload worker builds the same Meta from it, and
-     * phar() takes the context and the directory it packs.
+     * What the compile was asked for: the preload worker builds the same Meta from it.
      *
      * @var array{AppName, Context, AppDir, WriteDir|null}
      */
@@ -126,14 +125,14 @@ final class Compiler
      */
     public function phar(string|null $entry = null): int
     {
-        [, $context, $appDir] = $this->preloadJob;
+        [, , $appDir] = $this->preloadJob;
         $entry ??= 'public/index.php';
         if (! is_file($appDir . '/' . $entry)) {
             throw new PharEntryNotFoundException($appDir . '/' . $entry);
         }
 
         $exitCode = 1;
-        passthru(self::pharWorkerCommand($context, $appDir, $entry), $exitCode);
+        passthru(self::pharWorkerCommand($appDir, $this->appMeta->buildDir, $entry), $exitCode);
 
         return $exitCode;
     }
@@ -189,18 +188,18 @@ final class Compiler
     }
 
     /**
-     * @param Context $context
-     * @param AppDir  $appDir
+     * @param AppDir   $appDir
+     * @param BuildDir $buildDir the compile's own, so the pack derives no path of the host's
      */
-    private static function pharWorkerCommand(string $context, string $appDir, string $entry): string
+    private static function pharWorkerCommand(string $appDir, string $buildDir, string $entry): string
     {
         return sprintf(
             // The empty argument is the worker's optional output.
             '%s -d phar.readonly=0 %s %s %s %s %s',
             escapeshellarg(self::phpBinary()),
             escapeshellarg(dirname(__DIR__) . '/bin/phar-worker.php'),
-            escapeshellarg($context),
             escapeshellarg($appDir),
+            escapeshellarg($buildDir),
             escapeshellarg($entry),
             escapeshellarg(''),
         );
@@ -221,7 +220,7 @@ final class Compiler
      */
     public function clean(): void
     {
-        $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
+        $scriptDir = $this->appMeta->buildDir . '/di';
         $this->emptyDirectory($this->appMeta->tmpDir);
         $this->emptyDirectory($scriptDir);
         $this->ensureDirectory($scriptDir);
@@ -269,12 +268,10 @@ final class Compiler
     {
         $module = (new Module())($this->appMeta, $this->context);
         $compiler = new \Ray\Compiler\Compiler();
-        $scriptDir = CompiledScripts::dir($this->appMeta->appDir, $this->context);
+        $scriptDir = $this->appMeta->buildDir . '/di';
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
-        /** @var AppDir $appDir */
-        $appDir = $this->appMeta->appDir;
-        $steps = CompileSteps::run($this->injector, $appDir, $this->context);
+        $steps = $this->injector->getInstance(CompileSteps::class)($this->appMeta->buildDir);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
         CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
 

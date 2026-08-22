@@ -60,6 +60,12 @@ class PharBuilderTest extends TestCase
         @rmdir($this->writeDir);
     }
 
+    /** @return non-empty-string */
+    private function buildDir(): string
+    {
+        return $this->appDir . '/var/build/prod-app';
+    }
+
     public function testPacksWhatTheManifestSelected(): void
     {
         $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp');
@@ -99,7 +105,7 @@ class PharBuilderTest extends TestCase
         $this->marker($this->writeDir . '/My/App/prod-app/tmp');
 
         $this->expectException(PharEntryNotFoundException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/nowhere.php');
+        (new PharBuilder())($this->appDir, $this->buildDir(), 'public/nowhere.php');
     }
 
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
@@ -135,7 +141,7 @@ class PharBuilderTest extends TestCase
         $this->entry();
 
         $this->expectException(PharNotCompiledException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
+        (new PharBuilder())($this->appDir, $this->buildDir(), 'public/index.php');
     }
 
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
@@ -146,7 +152,7 @@ class PharBuilderTest extends TestCase
         mkdir($this->appDir . '/app.phar', 0777, true);
 
         $this->expectException(PharStaleOutputException::class);
-        (new PharBuilder())('prod-app', $this->appDir, 'public/index.php');
+        (new PharBuilder())($this->appDir, $this->buildDir(), 'public/index.php');
     }
 
     /** A compile that named its own tmp directory was placed under no base, so there is none to print. */
@@ -185,7 +191,7 @@ class PharBuilderTest extends TestCase
         $cwd = getcwd();
         chdir($this->appDir);
         try {
-            (new PharBuilder())('prod-app', $this->appDir, 'public/index.php', 'vendor/app.phar');
+            (new PharBuilder())($this->appDir, $this->buildDir(), 'public/index.php', 'vendor/app.phar');
             $this->fail('a directory at the output path is a stale output');
         } catch (PharStaleOutputException $e) {
             $this->assertStringContainsString($this->norm((string) realpath($this->appDir)), $this->norm($e->getMessage()));
@@ -238,15 +244,24 @@ class PharBuilderTest extends TestCase
         $this->assertStringContainsString('usage:', implode("\n", $lines));
     }
 
+    public function testWorkerWithTheRightArgumentCountButAnEmptyBuildDirectory(): void
+    {
+        [$exitCode, $output] = $this->worker('public/index.php', '', false, '');
+
+        $this->assertSame(1, $exitCode);
+        $this->assertStringContainsString('the build directory and the entry are both required', $output);
+    }
+
     /** @return array{int, string} exit code and merged output of one worker run */
-    private function worker(string $entry, string $output = '', bool $readOnly = false): array
+    private function worker(string $entry, string $output = '', bool $readOnly = false, string|null $buildDir = null): array
     {
         $command = sprintf(
-            '%s -d phar.readonly=%d %s prod-app %s %s %s 2>&1',
+            '%s -d phar.readonly=%d %s %s %s %s %s 2>&1',
             escapeshellarg(PHP_BINARY),
             (int) $readOnly,
             escapeshellarg(self::workerScript()),
             escapeshellarg($this->appDir),
+            escapeshellarg($buildDir ?? $this->buildDir()),
             escapeshellarg($entry),
             escapeshellarg($output),
         );
