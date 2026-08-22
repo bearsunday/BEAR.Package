@@ -165,7 +165,9 @@ final class PackageInjector
     private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
     {
         $scriptDir = self::scriptDir($meta, $overrideModule);
-        ! is_dir($scriptDir) && ! @mkdir($scriptDir, 0777, true) && ! is_dir($scriptDir);
+        if (! is_dir($scriptDir)) {
+            @mkdir($scriptDir, 0777, true);
+        }
 
         return $scriptDir;
     }
@@ -209,7 +211,7 @@ final class PackageInjector
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        CompileSteps::run(new RayInjector($module, $scriptDir), $meta->buildDir);
+        (new RayInjector($module, $scriptDir))->getInstance(CompileSteps::class)($meta->buildDir);
         CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
