@@ -289,6 +289,7 @@ final class Compiler
         // meta caches all in place - so it loads what a deployed first request loads.
         $preload = self::recordPreloadInChildProcess($this->preloadJob);
 
+        $this->ensureDirectory($this->appMeta->logDir);
         $dot = ($this->compilerObjectGraph)($module);
         $start = self::getRequestTime($_SERVER['REQUEST_TIME_FLOAT'] ?? null);
         $time = number_format(microtime(true) - $start, 2);
