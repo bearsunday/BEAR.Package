@@ -14,6 +14,7 @@ final class VndErrorModule extends AbstractModule
     protected function configure(): void
     {
         $this->bind(ErrorLogger::class);
+        $this->bind(LogRefWriterInterface::class)->to(FileLogRefWriter::class);
         $this->bind(ErrorInterface::class)->to(ErrorHandler::class);
         $this->bind(ErrorPageFactoryInterface::class)->to(DevVndErrorPageFactory::class);
     }

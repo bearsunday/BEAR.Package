@@ -6,6 +6,8 @@ namespace BEAR\Package\Context;
 
 use BEAR\Package\Provide\Cache\CacheDirProvider;
 use BEAR\Package\Provide\Error\ErrorPageFactoryInterface;
+use BEAR\Package\Provide\Error\LogRefWriterInterface;
+use BEAR\Package\Provide\Error\NullLogRefWriter;
 use BEAR\Package\Provide\Error\ProdVndErrorPageFactory;
 use BEAR\Package\Provide\Logger\ProdMonologProvider;
 use BEAR\QueryRepository\ProdQueryRepositoryModule;
@@ -32,6 +34,7 @@ final class ProdModule extends AbstractModule
     protected function configure(): void
     {
         $this->bind(ErrorPageFactoryInterface::class)->to(ProdVndErrorPageFactory::class);
+        $this->bind(LogRefWriterInterface::class)->to(NullLogRefWriter::class);
         $this->bind(LoggerInterface::class)->toProvider(ProdMonologProvider::class)->in(Scope::SINGLETON);
         $this->disableOptionsMethod();
         $this->installCacheModule();
