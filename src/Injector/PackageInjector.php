@@ -14,7 +14,6 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
-use Ray\Compiler\Exception\Unbound;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
@@ -52,8 +51,9 @@ final class PackageInjector
     /**
      * Return an injector, reusing the instances this process already built.
      *
-     * The AOT scripts are asked whether they are a prod build, because assembling a module
-     * tree to find that out is the cost this path exists to avoid.
+     * A current marker means the compiled scripts are this deployment's own, so they are the
+     * injector. The module tree is built only when there is no such build to boot from - it
+     * is what compiles one.
      *
      * @param Context $context
      */
@@ -67,32 +67,11 @@ final class PackageInjector
         }
 
         $scriptDir = self::scriptDir($meta, null);
-        $injector = CompileMarker::matches($scriptDir, $meta->tmpDir) ? self::aotInjector($scriptDir) : null;
-
-        return self::$instances[$injectorId] = $injector ?? self::factory($meta, $context);
-    }
-
-    /**
-     * The compiled container, when a prod compile is what produced it.
-     *
-     * A marker can outlive the build it describes, and a tree that once compiled a
-     * per-request context keeps its var/build/{context}/di: serving that from AOT would
-     * freeze every source change behind it. DiCompileModule is what records the answer, so
-     * the scripts carry it and no module tree has to be assembled to read it.
-     *
-     * @param ScriptDir $scriptDir
-     */
-    private static function aotInjector(string $scriptDir): InjectorInterface|null
-    {
-        $injector = new CompiledInjector($scriptDir);
-        try {
-            /** @psalm-suppress ArgumentTypeCoercion, MixedAssignment */
-            $isProd = $injector->getInstance('', Compile::class);
-        } catch (Unbound) {
-            return null;
+        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
+            return self::$instances[$injectorId] = new CompiledInjector($scriptDir);
         }
 
-        return $isProd === true ? $injector : null;
+        return self::$instances[$injectorId] = self::factory($meta, $context);
     }
 
     /**
