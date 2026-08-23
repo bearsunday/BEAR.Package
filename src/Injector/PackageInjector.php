@@ -169,7 +169,7 @@ final class PackageInjector
      * broken one, and a per-request SAPI builds the injector and answers in the same process,
      * so nothing is learned earlier by walking the graph first.
      *
-     * A tree that cannot be written is told what the mismatch was instead of failing on it.
+     * A tree that can be given no build is told so, instead of failing on the write.
      *
      * Of the compile command's pipeline only the steps are mirrored here; class meta info and
      * preload are not. Steps resolve through a module injector, not the AOT one: their classes

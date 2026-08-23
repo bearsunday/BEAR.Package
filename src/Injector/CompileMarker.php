@@ -36,6 +36,16 @@ final class CompileMarker
 {
     public const FILENAME = '.bear-compile.json';
 
+    /**
+     * What a marker of this shape means.
+     *
+     * Before it, `tmpDir` recorded the directory a boot had to be given, and the boot compared
+     * it; now it records what the build's own container declared, and only the pack reads it.
+     * An older marker is not a weaker version of that, it is a different claim - so it reads as
+     * absent, and a writable tree recompiles on its next boot.
+     */
+    private const VERSION = 2;
+
     /** @codeCoverageIgnore */
     private function __construct()
     {
@@ -56,7 +66,7 @@ final class CompileMarker
 
         /** @var mixed $record */
         $record = json_decode((string) @file_get_contents($path), true);
-        if (! is_array($record)) {
+        if (! is_array($record) || ($record['version'] ?? null) !== self::VERSION) {
             return null;
         }
 
@@ -128,6 +138,7 @@ final class CompileMarker
         $path = self::path($scriptDir);
         $temp = $path . '.' . uniqid('', true);
         $content = json_encode([
+            'version' => self::VERSION,
             'app' => $appName,
             'context' => $context,
             'tmpDir' => $tmpDir,

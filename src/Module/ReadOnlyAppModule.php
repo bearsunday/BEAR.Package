@@ -21,8 +21,8 @@ use Ray\Di\AbstractModule;
 final class ReadOnlyAppModule extends AbstractModule
 {
     /**
-     * @param TmpDir $tmpDir absolute path for what a run may discard
-     * @param LogDir $logDir absolute path for what it may not
+     * @param string $tmpDir absolute path for what a run may discard
+     * @param string $logDir absolute path for what it may not
      */
     public function __construct(
         private string $tmpDir,

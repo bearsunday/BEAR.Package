@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function BEAR\Package\deleteFiles;
 use function file_put_contents;
+use function json_encode;
 use function mkdir;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -40,6 +41,24 @@ class CompileMarkerTest extends TestCase
         $this->assertSame('prod-app', $record->context);
         $this->assertSame('/write/My/App/prod-app/tmp', $record->tmpDir);
         $this->assertGreaterThan(0, $record->time);
+    }
+
+    /**
+     * A marker of the previous shape claimed something else: its tmpDir was the directory a
+     * boot had to be given, and the boot compared it. Reading it as one of these would let a
+     * build compiled for a write directory keep using it unannounced.
+     */
+    public function testAMarkerOfThePreviousShapeIsNotRead(): void
+    {
+        file_put_contents(CompileMarker::path($this->scriptDir), (string) json_encode([
+            'app' => 'My\App',
+            'context' => 'prod-app',
+            'tmpDir' => '/old/write/My/App/prod-app/tmp',
+            'time' => 1700000000,
+        ]));
+
+        $this->assertNull(CompileMarker::read($this->scriptDir));
+        $this->assertFalse(CompileMarker::matches($this->scriptDir, 'My\App', 'prod-app'));
     }
 
     public function testAMarkerThatIsNotJson(): void

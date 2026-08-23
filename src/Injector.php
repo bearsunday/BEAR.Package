@@ -55,6 +55,9 @@ final class Injector
      * override module class name, so they do not collide with Injector::getInstance()
      * for the same app+context.
      *
+     * The override module is applied after the context chain has been read, so it cannot
+     * declare where the application writes - bind AbstractAppMeta itself to move that.
+     *
      * @param AppName $appName
      * @param Context $context
      * @param AppDir  $appDir
