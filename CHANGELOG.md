@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A boot no longer resolves `AppInterface` to check a build under a marker: resolving through the injector is what reports a broken one
 - `CacheDirProvider` and the compile create the directories they write into, instead of relying on `Meta`'s constructor having made them
 - `ErrorLogger` sends the rendered exception to `LoggerInterface`, and the logref file is written by a bound `LogRefWriterInterface`: `ProdModule` binds `NullLogRefWriter`, so a production error writes nothing under `logDir` and the trace reaches `error_log` with the summary
+- A compile marker is matched on the application and the context it names, not on a writable directory, so a build boots wherever it is unpacked; the `tmpDir` it records is what the build's own container answers, and the pack reads it to refuse an application that would write inside its archive
 
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
@@ -34,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CompileRecord::$writeDir` and `PharReport::$writeDir`: the marker no longer carries the write base (#426)
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
 - The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them
+- `APP_WRITE_DIR` and `$writeDir` throughout - `Injector::getInstance()`, `Injector::getOverrideInstance()`, `Compiler::__construct()`, `PreloadRecorder::__invoke()` and `bin/preload-worker.php`; an application declares where it writes with `ReadOnlyAppModule` instead, and the declaration is compiled in
+- `WriteDirRequiredException`, and `CompiledForAnotherWriteDirException` for `NotCompiledException`: a boot that cannot compile is told there is no build here rather than which write directory the last one used
 
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)

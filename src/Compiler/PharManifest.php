@@ -37,7 +37,6 @@ use function substr;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type WriteDir from Types
  * @psalm-import-type PharPath from Types
  * @psalm-import-type StubEntry from Types
  */

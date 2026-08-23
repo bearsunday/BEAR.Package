@@ -6,7 +6,7 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Compiler\CompileSteps;
-use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
+use BEAR\Package\Exception\NotCompiledException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
@@ -59,15 +59,15 @@ final class PackageInjector
      */
     public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        // Both directories: one app+context can be booted with different writable ones, and two
-        // trees can be booted with the same one.
-        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir . "\n" . $meta->tmpDir);
+        // The tree too: two trees of one application can be booted in one process, and the
+        // scripts each boots from are its own.
+        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
 
         $scriptDir = self::scriptDir($meta, null);
-        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->name, $context)) {
             return self::$instances[$injectorId] = new CompiledInjector($scriptDir);
         }
 
@@ -82,6 +82,13 @@ final class PackageInjector
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
         $scriptDir = self::ensureScriptDir($meta, $overrideModule);
+        // Before the module tree: assembling one scans {appDir}/src for resources, which fails
+        // on its own terms inside an archive and buries the thing worth saying - that there is
+        // no build here and this tree cannot be given one.
+        if (! self::canWrite($scriptDir) && ! CompileMarker::matches($scriptDir, $meta->name, $context)) {
+            throw new NotCompiledException($scriptDir);
+        }
+
         $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
             return self::prodInjector($module, $scriptDir, $meta, $context);
@@ -175,17 +182,19 @@ final class PackageInjector
      */
     private static function prodInjector(AbstractModule $module, string $scriptDir, AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->name, $context)) {
             return new CompiledInjector($scriptDir);
         }
 
         if (! self::canWrite($scriptDir)) {
-            throw new CompiledForAnotherWriteDirException($scriptDir, CompileMarker::read($scriptDir)?->tmpDir, $meta->tmpDir);
+            throw new NotCompiledException($scriptDir);
         }
 
         (new Compiler())->compile($module, $scriptDir);
-        (new RayInjector($module, $scriptDir))->getInstance(CompileSteps::class)($meta->buildDir);
-        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
+        $moduleInjector = new RayInjector($module, $scriptDir);
+        $moduleInjector->getInstance(CompileSteps::class)($meta->buildDir);
+        $boundMeta = $moduleInjector->getInstance(AbstractAppMeta::class);
+        CompileMarker::write($scriptDir, $meta->name, $context, $boundMeta->tmpDir);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

@@ -64,13 +64,20 @@ class CompileMarkerTest extends TestCase
         $this->assertNull(CompileMarker::read($this->scriptDir));
     }
 
-    /** Only the writable directory decides whether the scripts are the ones this boot needs. */
-    public function testMatchesTheWritableDirectoryTheScriptsHold(): void
+    public function testAMarkerOfAnotherApplicationIsNotThisApplicationsBuild(): void
     {
         CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp');
 
-        $this->assertTrue(CompileMarker::matches($this->scriptDir, '/write/My/App/prod-app/tmp'));
-        $this->assertFalse(CompileMarker::matches($this->scriptDir, '/other/My/App/prod-app/tmp'));
+        $this->assertTrue(CompileMarker::matches($this->scriptDir, 'My\App', 'prod-app'));
+        $this->assertFalse(CompileMarker::matches($this->scriptDir, 'Other\App', 'prod-app'));
+    }
+
+    public function testAMarkerOfAnotherContextIsNotThisContextsBuild(): void
+    {
+        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp');
+
+        $this->assertTrue(CompileMarker::matches($this->scriptDir, 'My\App', 'prod-app'));
+        $this->assertFalse(CompileMarker::matches($this->scriptDir, 'My\App', 'prod-hal-app'));
     }
 
     private function marker(string $content): void

@@ -31,7 +31,6 @@ use const JSON_THROW_ON_ERROR;
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type TmpDir from Types
- * @psalm-import-type WriteDir from Types
  */
 final class CompileMarker
 {
@@ -99,10 +98,21 @@ final class CompileMarker
         return new CompileRecord($appName, $context, $tmpDir, $time);
     }
 
-    /** Scripts here were compiled for $tmpDir, the writable directory their bindings hold. */
-    public static function matches(string $scriptDir, string $tmpDir): bool
+    /**
+     * Whether the scripts here are this application's build of this context.
+     *
+     * Not where they write. The recorded tmpDir is what the build's own container answers,
+     * which is a fact about the build and travels with it - comparing it to the boot's was
+     * what stopped an archive starting anywhere but the machine that packed it.
+     *
+     * @param AppName $appName
+     * @param Context $context
+     */
+    public static function matches(string $scriptDir, string $appName, string $context): bool
     {
-        return self::read($scriptDir)?->tmpDir === $tmpDir;
+        $record = self::read($scriptDir);
+
+        return $record !== null && $record->appName === $appName && $record->context === $context;
     }
 
     /**

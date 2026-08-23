@@ -28,21 +28,19 @@ use function ob_start;
  * @psalm-import-type AppName from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
- * @psalm-import-type WriteDir from Types
  */
 final class PreloadRecorder
 {
     /**
-     * @param AppName       $appName
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param WriteDir|null $writeDir
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
      *
      * @return non-empty-string the generated preload.php
      *
      * @throws PreloadRecordException
      */
-    public function __invoke(string $appName, string $context, string $appDir, string|null $writeDir): string
+    public function __invoke(string $appName, string $context, string $appDir): string
     {
         $tracker = ClassTracker::fromAppDir($appDir);
         $tracker->register();
@@ -55,12 +53,12 @@ final class PreloadRecorder
             require $compileStub;
         }
 
-        $meta = Meta::create($appName, $context, $appDir, $writeDir);
+        $meta = new Meta($appName, $context, $appDir);
         $scriptDir = $meta->buildDir . '/di';
-        // Without a current marker the boot below compiles on demand and the recording
-        // measures that compile - the very error this pipeline removes.
-        if (! CompileMarker::matches($scriptDir, $meta->tmpDir)) {
-            throw PreloadRecordException::scriptsNotCurrent($scriptDir, $meta->tmpDir);
+        // Without a marker the boot below compiles on demand and the recording measures that
+        // compile - the very error this pipeline removes.
+        if (! CompileMarker::matches($scriptDir, $meta->name, $context)) {
+            throw PreloadRecordException::scriptsNotCurrent($scriptDir, $context);
         }
 
         // factory(), not the cached facade: recording must not warm the runtime cache

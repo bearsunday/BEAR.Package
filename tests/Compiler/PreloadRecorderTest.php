@@ -14,8 +14,6 @@ use function file_get_contents;
 use function is_dir;
 use function mkdir;
 use function preg_match_all;
-use function sys_get_temp_dir;
-use function uniqid;
 use function unlink;
 
 class PreloadRecorderTest extends TestCase
@@ -25,15 +23,15 @@ class PreloadRecorderTest extends TestCase
     private const CONTEXT = 'prod-app';
 
     /**
-     * A boot without current scripts compiles on demand, and recording that would write the
+     * A boot with no build to read compiles on demand, and recording that would write the
      * compiler into preload.php - the error the recorder exists to remove. It must not guess.
      */
-    public function testRefusesScriptsCompiledForAnotherWritableDirectory(): void
+    public function testRefusesWhenThereIsNoCompiledBuildToRecord(): void
     {
-        $writeDir = sys_get_temp_dir() . '/bear-preload-recorder-' . uniqid('', true);
+        @unlink(CompileMarker::path(self::APP_DIR . '/var/build/' . self::CONTEXT . '/di'));
+
         $this->expectException(PreloadRecordException::class);
-        $this->expectExceptionMessage('needs the compiled scripts');
-        (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, self::APP_DIR, $writeDir);
+        (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, self::APP_DIR);
     }
 
     /**
@@ -43,7 +41,7 @@ class PreloadRecorderTest extends TestCase
     public function testRefusesAContextThatAssemblesPerRequest(): void
     {
         $context = 'app';
-        $meta = Meta::create(self::APP_NAME, $context, self::APP_DIR, null);
+        $meta = new Meta(self::APP_NAME, $context, self::APP_DIR);
         $scriptDir = self::APP_DIR . '/var/build/' . $context . '/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir);
@@ -51,7 +49,7 @@ class PreloadRecorderTest extends TestCase
         try {
             $this->expectException(PreloadRecordException::class);
             $this->expectExceptionMessage('assembles the container on each request');
-            (new PreloadRecorder())(self::APP_NAME, $context, self::APP_DIR, null);
+            (new PreloadRecorder())(self::APP_NAME, $context, self::APP_DIR);
         } finally {
             // A marker for a per-request context is this fixture's fiction: left behind, it
             // tells every later boot of "app" that there is a build to boot from.
@@ -69,7 +67,7 @@ class PreloadRecorderTest extends TestCase
     {
         (new Compiler(self::APP_NAME, self::CONTEXT, self::APP_DIR))->compile();
 
-        $preload = (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, self::APP_DIR, null);
+        $preload = (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, self::APP_DIR);
 
         $this->assertFileExists($preload);
         $contents = (string) file_get_contents($preload);
