@@ -10,11 +10,8 @@ use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Package\Injector\PackageInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
-use Ray\PsrCacheModule\LocalCacheProvider;
-use Symfony\Contracts\Cache\CacheInterface;
 
 use function preg_match;
-use function str_replace;
 
 /**
  * @see PackageInjector
@@ -31,14 +28,17 @@ final class Injector
     }
 
     /**
+     * The $cache slot holds the position $writeDir is passed in; both go together.
+     *
      * @param AppName       $appName
      * @param Context       $context
      * @param AppDir        $appDir
+     * @param null          $cache    the compiled scripts are the cache; nothing else is read
      * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
      */
-    public static function getInstance(string $appName, string $context, string $appDir, CacheInterface|null $cache = null, string|null $writeDir = null): InjectorInterface
+    public static function getInstance(string $appName, string $context, string $appDir, null $cache = null, string|null $writeDir = null): InjectorInterface
     {
-        return self::fromMeta(self::meta($appName, $context, $appDir, $writeDir), $context, $cache);
+        return self::fromMeta(self::meta($appName, $context, $appDir, $writeDir), $context);
     }
 
     /**
@@ -50,12 +50,9 @@ final class Injector
      *
      * @param Context $context
      */
-    public static function fromMeta(AbstractAppMeta $meta, string $context, CacheInterface|null $cache = null): InjectorInterface
+    public static function fromMeta(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        $cacheNamespace = str_replace('\\', '_', $meta->name) . $context;
-        $cache ??= (new LocalCacheProvider($meta->tmpDir . '/injector', $cacheNamespace))->get();
-
-        return PackageInjector::getInstance($meta, $context, $cache);
+        return PackageInjector::getInstance($meta, $context);
     }
 
     /**

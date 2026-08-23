@@ -14,15 +14,11 @@ use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
 use Ray\Compiler\Compiler;
-use Ray\Compiler\ScriptInjectorInterface;
+use Ray\Compiler\Exception\Unbound;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Throwable;
 
-use function assert;
 use function dirname;
 use function error_log;
 use function file_exists;
@@ -30,13 +26,9 @@ use function hash;
 use function is_dir;
 use function is_writable;
 use function mkdir;
-use function serialize;
 use function sprintf;
 use function str_replace;
 use function str_starts_with;
-use function trigger_error;
-
-use const E_USER_WARNING;
 
 /**
  * @psalm-import-type AppDir from Types
@@ -58,11 +50,14 @@ final class PackageInjector
     }
 
     /**
-     * Return an injector, reusing in-memory instances and cached compiled injectors.
+     * Return an injector, reusing the instances this process already built.
+     *
+     * The AOT scripts are asked whether they are a prod build, because assembling a module
+     * tree to find that out is the cost this path exists to avoid.
      *
      * @param Context $context
      */
-    public static function getInstance(AbstractAppMeta $meta, string $context, CacheInterface|null $cache): InjectorInterface
+    public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
         // Both directories: one app+context can be booted with different writable ones, and two
         // trees can be booted with the same one.
@@ -71,33 +66,33 @@ final class PackageInjector
             return self::$instances[$injectorId];
         }
 
-        // Prod: restore compiled injector from cache
-        assert($cache instanceof AdapterInterface);
-        /** @psalm-suppress MixedAssignment */
-        $injector = $cache->getItem($injectorId)->get();
-        // A restored injector reads the shared scripts lazily: reuse it only while they are still
-        // the ones compiled for this writable directory.
-        if ($injector instanceof ScriptInjectorInterface && CompileMarker::matches(self::scriptDir($meta, null), $meta->tmpDir)) {
-            self::$instances[$injectorId] = $injector;
+        $scriptDir = self::scriptDir($meta, null);
+        $injector = CompileMarker::matches($scriptDir, $meta->tmpDir) ? self::aotInjector($scriptDir) : null;
 
-            return $injector;
+        return self::$instances[$injectorId] = $injector ?? self::factory($meta, $context);
+    }
+
+    /**
+     * The compiled container, when a prod compile is what produced it.
+     *
+     * A marker can outlive the build it describes, and a tree that once compiled a
+     * per-request context keeps its var/build/{context}/di: serving that from AOT would
+     * freeze every source change behind it. DiCompileModule is what records the answer, so
+     * the scripts carry it and no module tree has to be assembled to read it.
+     *
+     * @param ScriptDir $scriptDir
+     */
+    private static function aotInjector(string $scriptDir): InjectorInterface|null
+    {
+        $injector = new CompiledInjector($scriptDir);
+        try {
+            /** @psalm-suppress ArgumentTypeCoercion, MixedAssignment */
+            $isProd = $injector->getInstance('', Compile::class);
+        } catch (Unbound) {
+            return null;
         }
 
-        // Dev: always build fresh injector (no FileUpdate check)
-        $injector = self::factory($meta, $context);
-
-        // Prod: cache the compiled injector
-        if ($injector instanceof ScriptInjectorInterface) {
-            $cacheItem = $cache->getItem($injectorId);
-            $cache->save($cacheItem->set($injector));
-            if ($cache->getItem($injectorId)->get() === null) {
-                trigger_error(self::diagnoseCacheFailure($injector, $injectorId), E_USER_WARNING);
-            }
-        }
-
-        self::$instances[$injectorId] = $injector;
-
-        return $injector;
+        return $isProd === true ? $injector : null;
     }
 
     /**
@@ -269,17 +264,6 @@ final class PackageInjector
         }
 
         return $scriptDir;
-    }
-
-    private static function diagnoseCacheFailure(InjectorInterface $injector, string $injectorId): string
-    {
-        try {
-            serialize($injector);
-        } catch (Throwable $e) {
-            return sprintf('Failed to cache the injector(%s). Serialization failed: %s', $injectorId, $e->getMessage());
-        }
-
-        return sprintf('Failed to cache the injector(%s). The cache adapter could not store the item. See https://github.com/bearsunday/BEAR.Package/issues/418', $injectorId);
     }
 
     /**

@@ -273,7 +273,11 @@ final class Compiler
         $compiler->compile($module, $scriptDir);
         $steps = $this->injector->getInstance(CompileSteps::class)($this->appMeta->buildDir);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
-        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
+        // Only for a context that boots from them - a marker is what lets a boot return the
+        // scripts without assembling a module tree, and a per-request context must not.
+        if (PackageInjector::isCompiled($this->appMeta, $this->context)) {
+            CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
+        }
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();

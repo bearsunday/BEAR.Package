@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Requires bear/app-meta ^1.13: an invalid application directory is refused with `WriteDirNotAbsoluteException` (a `LogicException`) before any compile work, instead of a late `RuntimeException` (#482)
 - An imported application writes under the host's tmp and log (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base (#426)
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
+- A boot with a current compile marker returns the compiled scripts without assembling a module tree first
+- `Compiler::compile()` writes the compile marker only for a context that boots from the scripts
 
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
@@ -26,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - compile both with the same one; a mismatch fails the boot's marker check instead (#426)
 - `CompileRecord::$writeDir` and `PharReport::$writeDir`: the marker no longer carries the write base (#426)
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
+- The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them
 
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)

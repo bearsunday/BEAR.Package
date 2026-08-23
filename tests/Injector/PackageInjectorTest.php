@@ -10,7 +10,6 @@ use BEAR\Package\Exception\DirectoryNotWritableException;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
-use Exception;
 use FakeVendor\HelloWorld\FakeCompileStepException;
 use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\FakeDep2;
@@ -21,10 +20,8 @@ use PHPUnit\Framework\TestCase;
 use Ray\Compiler\CompiledInjector;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
-use Ray\Di\InjectorInterface;
 use ReflectionMethod;
 use ReflectionProperty;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Throwable;
 
 use function assert;
@@ -41,18 +38,13 @@ use function ini_set;
 use function is_int;
 use function is_string;
 use function mkdir;
-use function restore_error_handler;
 use function rmdir;
-use function set_error_handler;
-use function str_contains;
 use function str_ends_with;
 use function sys_get_temp_dir;
 use function time;
 use function touch;
 use function uniqid;
 use function unlink;
-
-use const E_USER_WARNING;
 
 class PackageInjectorTest extends TestCase
 {
@@ -157,37 +149,6 @@ class PackageInjectorTest extends TestCase
         $page = $resource->newInstance('page://self/injection');
         assert($page instanceof Injection);
         $this->assertInstanceOf(FakeDep::class, $page->foo);
-    }
-
-    public function testDiagnoseCacheFailureForSerializationError(): void
-    {
-        $diagnoseCacheFailure = new ReflectionMethod(PackageInjector::class, 'diagnoseCacheFailure');
-        $message = $diagnoseCacheFailure->invoke(null, new ThrowOnSerializeInjector(), 'injector-id');
-        assert(is_string($message));
-
-        $this->assertStringContainsString('Serialization failed: serialize failed', $message);
-    }
-
-    public function testCacheStorageFailureMessage(): void
-    {
-        (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
-
-        // Only the cache diagnostic is asserted here, whatever else may be reported.
-        set_error_handler(static function (int $errno, string $errstr): bool {
-            if (! str_contains($errstr, 'Failed to cache the injector')) {
-                return true;
-            }
-
-            throw new Exception($errstr, $errno);
-        }, E_USER_WARNING);
-
-        try {
-            $this->expectExceptionMessage('The cache adapter could not store the item.');
-            $injector = PackageInjector::getInstance(new Meta('FakeVendor\MinApp', 'prod-app'), 'prod-app', new NullAdapter());
-            $this->assertInstanceOf(InjectorInterface::class, $injector);
-        } finally {
-            restore_error_handler();
-        }
     }
 
     public function testScriptDirWithoutOverride(): void
