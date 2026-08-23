@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
 - A boot with a current compile marker returns the compiled scripts without assembling a module tree first
 - `Compiler::compile()` writes the compile marker only for a context that boots from the scripts
+- A compile empties the whole build directory, so a compile step dropped from the module tree stops shipping the artifacts of the run that still had it
+- A boot no longer resolves `AppInterface` to check a build under a marker: resolving through the injector is what reports a broken one
 
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)

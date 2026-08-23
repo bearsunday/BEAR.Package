@@ -18,11 +18,11 @@ use FakeVendor\HelloWorld\Resource\Page\Injection;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Compiler\CompiledInjector;
+use Ray\Compiler\Exception\Unbound;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use ReflectionMethod;
 use ReflectionProperty;
-use Throwable;
 
 use function assert;
 use function dirname;
@@ -261,7 +261,12 @@ class PackageInjectorTest extends TestCase
         }
     }
 
-    public function testProdFactoryThrowsWhenMarkerPresentButScriptsBroken(): void
+    /**
+     * A marker over a broken build is a deploy error. The boot hands back the build it was
+     * told about - it must not quietly compile a replacement - and resolving through it is
+     * what reports the breakage.
+     */
+    public function testProdFactoryDoesNotRebuildWhenMarkerPresentButScriptsBroken(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
         $appDir = dirname(__DIR__) . '/Fake/fake-app';
@@ -275,13 +280,12 @@ class PackageInjectorTest extends TestCase
             unlink($file);
         }
 
-        // Marker present but scripts corrupted — a deploy error, not a
-        // recoverable one. Must throw instead of silently rebuilding.
         try {
-            PackageInjector::factory($meta, 'prod-app');
-            $this->fail('A broken marker-present boot was expected to throw.');
-        } catch (Throwable $e) {
-            $this->assertStringContainsString('AppInterface', $e->getMessage());
+            $injector = PackageInjector::factory($meta, 'prod-app');
+            $this->assertSame([], glob($scriptDir . '/*.php'), 'the broken build was rebuilt');
+
+            $this->expectException(Unbound::class);
+            $injector->getInstance(AppInterface::class);
         } finally {
             // Leave the script dir uncompiled so later tests start cold again.
             self::cleanProdDi($scriptDir);

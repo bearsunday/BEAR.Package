@@ -215,6 +215,9 @@ final class Compiler
     /**
      * Empty both directories, then recreate the script directory.
      *
+     * The whole build directory, not only the DI scripts: a compile step dropped from the
+     * module tree would otherwise keep shipping the artifacts of the run that still had it.
+     *
      * preload.php, autoload.php and app.phar stay: each is replaced by whatever writes it, at
      * the moment it writes, so a compile that dies partway leaves the last one's files alone.
      */
@@ -222,7 +225,7 @@ final class Compiler
     {
         $scriptDir = $this->appMeta->buildDir . '/di';
         $this->emptyDirectory($this->appMeta->tmpDir);
-        $this->emptyDirectory($scriptDir);
+        $this->emptyDirectory($this->appMeta->buildDir);
         $this->ensureDirectory($scriptDir);
     }
 

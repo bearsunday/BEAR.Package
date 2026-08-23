@@ -179,8 +179,11 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * Broken scripts under a marker are left to throw: a deploy error, not a cold start. A
-     * tree that cannot be written is told what the mismatch was instead of failing on it.
+     * A build under a marker is returned as it is. Resolving through it is what reports a
+     * broken one, and a per-request SAPI builds the injector and answers in the same process,
+     * so nothing is learned earlier by walking the graph first.
+     *
+     * A tree that cannot be written is told what the mismatch was instead of failing on it.
      *
      * Of the compile command's pipeline only the steps are mirrored here; class meta info and
      * preload are not. Steps resolve through a module injector, not the AOT one: their classes
@@ -194,11 +197,7 @@ final class PackageInjector
     private static function prodInjector(AbstractModule $module, string $scriptDir, AbstractAppMeta $meta, string $context): InjectorInterface
     {
         if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
-            $injector = new CompiledInjector($scriptDir);
-            /** @psalm-suppress InvalidArgument */
-            $injector->getInstance(AppInterface::class);
-
-            return $injector;
+            return new CompiledInjector($scriptDir);
         }
 
         if (! self::canWrite($scriptDir)) {
