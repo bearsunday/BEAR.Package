@@ -10,6 +10,7 @@ use BEAR\Sunday\Compile\CompileStepInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Override;
 use Ray\Di\AbstractModule;
+use Ray\Di\Instance;
 use Ray\Di\MultiBinder;
 use Ray\Di\Scope;
 
@@ -41,12 +42,49 @@ class AppMetaModule extends AbstractModule
     #[Override]
     protected function configure(): void
     {
-        $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
+        $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta());
         $appClass = $this->appMeta->name . '\Module\App';
         assert(class_exists($appClass));
         $this->bind(AppInterface::class)->to($appClass)->in(Scope::SINGLETON);
         $this->bind()->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
         // Declared empty: an app that installs no step still injects a Map, not Unbound.
         MultiBinder::newInstance($this, CompileStepInterface::class);
+    }
+
+    /**
+     * The Meta to bind: the one this module was built with, or the same one writing where the
+     * chain said it does.
+     *
+     * Only tmp and log are the declaration's to give. Which application, which context and
+     * which tree the compile already settled, and an archive that moves has its appDir
+     * re-pointed on unserialize, which leaves a declared directory outside appDir alone.
+     */
+    private function appMeta(): AbstractAppMeta
+    {
+        $dirs = $this->declaredWriteDirs();
+        if ($dirs === null) {
+            return $this->appMeta;
+        }
+
+        $meta = clone $this->appMeta;
+        $meta->tmpDir = $dirs->tmpDir;
+        $meta->logDir = $dirs->logDir;
+
+        return $meta;
+    }
+
+    /**
+     * Read by index: resolving would construct whatever else the chain bound, and this runs
+     * before any binding of this module's own exists.
+     */
+    private function declaredWriteDirs(): WriteDirs|null
+    {
+        if (! $this->lastModule instanceof AbstractModule) {
+            return null;
+        }
+
+        $dependency = $this->lastModule->getContainer()->getContainer()[WriteDirs::class . '-'] ?? null;
+
+        return $dependency instanceof Instance && $dependency->value instanceof WriteDirs ? $dependency->value : null;
     }
 }

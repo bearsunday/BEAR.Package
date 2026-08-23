@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Compile steps a module contributes through `MultiBinder` for `CompileStepInterface` now run, each into `{appDir}/var/build/{context}/{binding key}`
+- `ReadOnlyAppModule($tmpDir, $logDir)`, installed from the application's own `ProdModule`, says where the application writes when its tree is read-only; both paths are named because the archive carries what it declares
 
 ### Changed
 - Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)

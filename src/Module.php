@@ -33,9 +33,9 @@ final class Module
             $module = $this->installContextModule($appMeta, $contextItem, $module);
         }
 
-        $module->override(new AppMetaModule($appMeta));
-
-        return $module;
+        // Wrapped, not override()d: AppMetaModule still wins for what it declares, but the
+        // chain keeps an AbstractAppMeta binding of its own where it made one.
+        return new AppMetaModule($appMeta, $module);
     }
 
     private function installContextModule(AbstractAppMeta $appMeta, string $contextItem, AbstractModule $module): AbstractModule
