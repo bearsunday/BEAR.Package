@@ -6,6 +6,7 @@ namespace BEAR\Package\Compiler;
 
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PharNotCompiledException;
+use BEAR\Package\Exception\PharPreloadForAnotherBuildException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Injector\CompileMarker;
 use Phar;
@@ -106,6 +107,30 @@ class PharBuilderTest extends TestCase
 
         $this->expectException(PharEntryNotFoundException::class);
         (new PharBuilder())($this->appDir, $this->buildDir(), 'public/nowhere.php');
+    }
+
+    /** One is written per compile at a fixed path, so the loop over contexts reaches this. */
+    public function testPreloadLeftBehindByAnotherContext(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->entry();
+        file_put_contents($this->appDir . '/preload.php', "<?php\n\n// prod-hal-app preload\n");
+
+        $this->expectException(PharPreloadForAnotherBuildException::class);
+        (new PharBuilder())($this->appDir, $this->buildDir(), 'public/index.php');
+    }
+
+    public function testPreloadOfThisContextShips(): void
+    {
+        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->entry();
+        $this->vendor();
+        file_put_contents($this->appDir . '/preload.php', "<?php\n\n// prod-app preload\n");
+
+        [$exitCode, $output] = $this->worker('public/index.php');
+
+        $this->assertSame(0, $exitCode, $output);
+        $this->assertTrue(isset((new Phar($this->appDir . '/app.phar'))['preload.php']));
     }
 
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */

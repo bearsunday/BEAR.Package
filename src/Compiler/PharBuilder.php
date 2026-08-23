@@ -9,6 +9,7 @@ use BEAR\Package\Exception\PharEntryNotPackedException;
 use BEAR\Package\Exception\PharImportOutsideTreeException;
 use BEAR\Package\Exception\PharImportsUnreadableException;
 use BEAR\Package\Exception\PharNotCompiledException;
+use BEAR\Package\Exception\PharPreloadForAnotherBuildException;
 use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Exception\PharWritesInsideArchiveException;
 use BEAR\Package\Injector\CompileMarker;
@@ -21,12 +22,14 @@ use function clearstatcache;
 use function count;
 use function dirname;
 use function file_exists;
+use function file_get_contents;
 use function filesize;
 use function is_file;
 use function mkdir;
 use function preg_match;
 use function realpath;
 use function sprintf;
+use function str_contains;
 use function unlink;
 use function var_export;
 
@@ -79,6 +82,8 @@ final class PharBuilder
             throw new PharNotCompiledException($hostDir);
         }
 
+        self::preloadMatchesTheBuild($appDirReal, $hostRecord->context);
+
         $roots = PharManifest::roots($appDirReal, $buildDir, ImportedApps::of($hostDir));
         $output ??= $appDirReal . '/app.phar';
         @mkdir(dirname($output), 0777, true);
@@ -92,6 +97,28 @@ final class PharBuilder
         }
 
         return self::pack($appDirReal, $roots, $entry, $output); // @codeCoverageIgnore
+    }
+
+    /**
+     * @param AppDir  $appDir
+     * @param Context $context
+     *
+     * @throws PharPreloadForAnotherBuildException
+     */
+    private static function preloadMatchesTheBuild(string $appDir, string $context): void
+    {
+        $preload = $appDir . '/preload.php';
+        if (! is_file($preload)) {
+            return;
+        }
+
+        $header = sprintf('// %s preload', $context);
+        $contents = (string) file_get_contents($preload);
+        if (str_contains($contents, $header)) {
+            return;
+        }
+
+        throw new PharPreloadForAnotherBuildException($preload, $header);
     }
 
     /**
