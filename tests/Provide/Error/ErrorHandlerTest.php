@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Error;
 
-use BEAR\AppMeta\AppMeta;
 use BEAR\Package\FakeLogger;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
 use BEAR\Sunday\Extension\Router\RouterMatch;
@@ -29,7 +28,7 @@ class ErrorHandlerTest extends TestCase
 
         $this->responder = new FakeHttpResponder(new Header(), new ConditionalResponse());
         $this->logger = new FakeLogger();
-        $this->handler = new ErrorHandler($this->responder, new ErrorLogger($this->logger, new AppMeta('FakeVendor\HelloWorld')), new ProdVndErrorPageFactory());
+        $this->handler = new ErrorHandler($this->responder, new ErrorLogger($this->logger, new NullLogRefWriter()), new ProdVndErrorPageFactory());
     }
 
     public function testHandleError(): ErrorHandler

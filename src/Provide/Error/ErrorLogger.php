@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Provide\Error;
 
-use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -15,7 +14,7 @@ final class ErrorLogger
 {
     public function __construct(
         private LoggerInterface $logger,
-        private AbstractAppMeta $appMeta,
+        private LogRefWriterInterface $logRefWriter,
     ) {
     }
 
@@ -23,9 +22,11 @@ final class ErrorLogger
     {
         $isError = $e->getCode() >= 500;
         $logRef = new LogRef($e);
-        $logRef->log($e, $request, $this->appMeta);
+        $detail = (string) new ExceptionAsString($e, $request);
+        $this->logRefWriter->write($logRef, $detail);
         $message = sprintf('req:"%s" code:%s e:%s(%s) logref:%s', (string) $request, $e->getCode(), $e::class, $e->getMessage(), (string) $logRef);
         $this->log($isError, $message);
+        $this->log($isError, $detail);
 
         return (string) $logRef;
     }
