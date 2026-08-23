@@ -11,6 +11,7 @@ use BEAR\Package\Exception\PharStaleOutputException;
 use BEAR\Package\Injector\CompileMarker;
 use Phar;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 use function BEAR\Package\deleteFiles;
 use function chdir;
@@ -107,6 +108,18 @@ class PharBuilderTest extends TestCase
 
         $this->expectException(PharEntryNotFoundException::class);
         (new PharBuilder())($this->appDir, $this->buildDir(), 'public/nowhere.php');
+    }
+
+    /** The header the compile writes is what the pack matches, so a matching one passes. */
+    public function testPreloadOfTheContextBeingPacked(): void
+    {
+        mkdir($this->appDir, 0777, true);
+        file_put_contents($this->appDir . '/preload.php', "<?php\n\n// prod-app preload\n");
+        $guard = new ReflectionMethod(PharBuilder::class, 'preloadMatchesTheBuild');
+
+        $guard->invoke(null, $this->appDir, 'prod-app');
+
+        $this->assertFileExists($this->appDir . '/preload.php');
     }
 
     /** One is written per compile at a fixed path, so the loop over contexts reaches this. */
