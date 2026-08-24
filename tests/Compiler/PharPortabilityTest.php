@@ -37,8 +37,8 @@ use const PHP_EOL;
 
 /**
  * What .github/workflows/phar.yml checks with grep: an archive Compiler::phar() packs
- * boots from another directory with the build tree deleted, and refuses a write
- * directory it was not compiled for.
+ * boots from another directory with the build tree deleted, and boots again under
+ * another temp directory.
  *
  * The archive is built from a self-contained application assembled under tests/tmp:
  * the repository's vendor, with this checkout's sources where a composer install of
@@ -58,34 +58,34 @@ class PharPortabilityTest extends TestCase
         $paths = self::builtArchive();
         deleteFiles($paths['app']);
         @rmdir($paths['app']);
-        deleteFiles($paths['write']);
-        @rmdir($paths['write']);
         $this->assertDirectoryDoesNotExist($paths['app']);
 
-        [$code, $output] = self::boot($paths['phar'], $paths['write']);
+        [$code, $output] = self::boot($paths['phar']);
 
         $this->assertSame(0, $code, $output);
         $this->assertStringContainsString('200 OK', $output);
         $this->assertStringContainsString('Hello BEAR.Sunday', $output);
     }
 
-    public function testRefusesABootCompiledForAnotherWriteDir(): void
+    /** The archive names no directory to write in, so the machine that boots answers it. */
+    public function testBootsUnderAnotherTempDirectory(): void
     {
         $paths = self::builtArchive();
+        $elsewhere = dirname(__DIR__) . '/tmp/phar/elsewhere';
+        @mkdir($elsewhere, 0777, true);
 
-        [$code, $output] = self::boot($paths['phar'], $paths['write'] . '-elsewhere');
+        [$code, $output] = self::boot($paths['phar'], $elsewhere);
 
-        $this->assertNotSame(0, $code);
-        $this->assertStringContainsString('CompiledForAnotherWriteDirException', $output);
+        $this->assertSame(0, $code, $output);
+        $this->assertStringContainsString('200 OK', $output);
     }
 
-    /** @return array{app: string, write: string, phar: string} */
+    /** @return array{app: string, phar: string} */
     private static function builtArchive(): array
     {
         $base = dirname(__DIR__) . '/tmp/phar';
         $paths = [
             'app' => $base . '/app',
-            'write' => $base . '/write',
             'phar' => $base . '/moved/app.phar',
         ];
         if (is_file($paths['phar'])) {
@@ -93,7 +93,7 @@ class PharPortabilityTest extends TestCase
         }
 
         self::assemble($paths['app']);
-        self::compile($paths['app'], $paths['write']);
+        self::compile($paths['app']);
         @mkdir(dirname($paths['phar']), 0777, true);
         if (! @copy($paths['app'] . '/app.phar', $paths['phar'])) {
             throw new RuntimeException('the compile left no app.phar to move');
@@ -115,6 +115,7 @@ class PharPortabilityTest extends TestCase
         self::copyDir($root . '/src-deprecated', $app . '/vendor/bear/package/src-deprecated');
         self::copyDir($root . '/bin', $app . '/vendor/bear/package/bin');
         self::appFile($app . '/src/Module/AppModule.php', self::appModule());
+        self::appFile($app . '/src/Module/ProdModule.php', self::prodModule());
         self::appFile($app . '/src/Module/App.php', self::app());
         self::appFile($app . '/src/Resource/Page/Index.php', self::index());
         self::appFile($app . '/public/index.php', self::entry());
@@ -136,21 +137,25 @@ class PharPortabilityTest extends TestCase
         }
     }
 
-    private static function compile(string $app, string $write): void
+    private static function compile(string $app): void
     {
         $command = sprintf('%s -d memory_limit=-1 %s', escapeshellarg(PHP_BINARY), escapeshellarg($app . '/bin/compile.php'));
-        [$code, $output] = self::spawn($command, $app, ['CONTEXT' => self::CONTEXT, 'APP_WRITE_DIR' => $write]);
+        [$code, $output] = self::spawn($command, $app, ['CONTEXT' => self::CONTEXT]);
         if ($code !== 0) {
             throw new RuntimeException(sprintf('compile and pack failed (%d):%s%s', $code, PHP_EOL, $output));
         }
     }
 
     /** @return array{int, string} exit code and merged output of one boot */
-    private static function boot(string $phar, string $write): array
+    private static function boot(string $phar, string|null $elsewhere = null): array
     {
         $command = sprintf('%s %s get /index', escapeshellarg(PHP_BINARY), escapeshellarg($phar));
+        $env = ['CONTEXT' => self::CONTEXT];
+        if ($elsewhere !== null) {
+            $env['TMPDIR'] = $elsewhere;
+        }
 
-        return self::spawn($command, dirname($phar), ['CONTEXT' => self::CONTEXT, 'APP_WRITE_DIR' => $write]);
+        return self::spawn($command, dirname($phar), $env);
     }
 
     /**
@@ -239,6 +244,34 @@ class PharPortabilityTest extends TestCase
             PHP;
     }
 
+    /**
+     * ReadOnlyAppModule with neither directory named: the machine that boots answers both,
+     * so the archive carries no path of the build machine's and writes nowhere inside itself.
+     */
+    private static function prodModule(): string
+    {
+        return <<<'PHP'
+            <?php
+
+            declare(strict_types=1);
+
+            namespace FakeVendor\PharApp\Module;
+
+            use BEAR\Package\Context\ProdModule as PackageProdModule;
+            use BEAR\Package\Module\ReadOnlyAppModule;
+            use Ray\Di\AbstractModule;
+
+            class ProdModule extends AbstractModule
+            {
+                protected function configure(): void
+                {
+                    $this->install(new ReadOnlyAppModule());
+                    $this->install(new PackageProdModule());
+                }
+            }
+            PHP;
+    }
+
     private static function app(): string
     {
         return <<<'PHP'
@@ -312,9 +345,8 @@ class PharPortabilityTest extends TestCase
             require dirname(__DIR__) . '/vendor/autoload.php';
 
             $context = getenv('CONTEXT') ?: (PHP_SAPI === 'cli' ? 'cli-hal-app' : 'hal-app');
-            $writeDir = getenv('APP_WRITE_DIR') ?: null;
 
-            $app = Injector::getInstance('FakeVendor\PharApp', $context, dirname(__DIR__), writeDir: $writeDir)->getInstance(AppInterface::class);
+            $app = Injector::getInstance('FakeVendor\PharApp', $context, dirname(__DIR__))->getInstance(AppInterface::class);
             assert($app instanceof App);
             // match() throws BadRequestException on client input it cannot read.
             $request = new NullMatch();
@@ -345,9 +377,8 @@ class PharPortabilityTest extends TestCase
             ini_set('memory_limit', '-1');
 
             $context = getenv('CONTEXT') ?: 'prod-cli-hal-app';
-            $writeDir = getenv('APP_WRITE_DIR') ?: null;
 
-            $compiler = new Compiler('FakeVendor\PharApp', $context, dirname(__DIR__), $writeDir);
+            $compiler = new Compiler('FakeVendor\PharApp', $context, dirname(__DIR__));
             $code = $compiler();
             exit($code === 0 ? $compiler->phar() : $code);
             PHP;
