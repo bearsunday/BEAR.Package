@@ -27,7 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CacheDirProvider` and the compile create the directories they write into, instead of relying on `Meta`'s constructor having made them
 - `ErrorLogger` sends the rendered exception to `LoggerInterface`, and the logref file is written by a bound `LogRefWriterInterface`: `ProdModule` binds `NullLogRefWriter`, so a production error writes nothing under `logDir` and the trace reaches `error_log` with the summary
 - A compile marker is matched on the application and the context it names, not on a writable directory, so a build boots wherever it is unpacked; the `tmpDir` it records is what the build's own container answers, and the pack reads it to refuse an application that would write inside its archive
-- The marker carries a format version, so a build compiled for an `APP_WRITE_DIR` reads as absent instead of being accepted with the directory baked into it: recompile after upgrading, as a writable tree does by itself on its next boot
 - A compile resolves the application's own container, so a declared directory has to be creatable on the build machine, and what a compile writes there is not emptied between runs the way `{appDir}/var/tmp` is
 
 ### Removed

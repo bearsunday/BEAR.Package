@@ -36,12 +36,6 @@ final class CompileMarker
 {
     public const FILENAME = '.bear-compile.json';
 
-    /**
-     * A marker of another shape makes a different claim about its own tmpDir, so it reads as
-     * absent rather than as a weaker version of this one.
-     */
-    private const VERSION = 2;
-
     /** @codeCoverageIgnore */
     private function __construct()
     {
@@ -62,7 +56,7 @@ final class CompileMarker
 
         /** @var mixed $record */
         $record = json_decode((string) @file_get_contents($path), true);
-        if (! is_array($record) || ($record['version'] ?? null) !== self::VERSION) {
+        if (! is_array($record)) {
             return null;
         }
 
@@ -130,7 +124,6 @@ final class CompileMarker
         $path = self::path($scriptDir);
         $temp = $path . '.' . uniqid('', true);
         $content = json_encode([
-            'version' => self::VERSION,
             'app' => $appName,
             'context' => $context,
             'tmpDir' => $tmpDir,
