@@ -72,17 +72,35 @@ class ImportAppModuleTest extends TestCase
     }
 
     /**
+     * A host that leaves its directories to the machine hands the machine's answer down: the
+     * import is compiled where the host is, so a directory resolved then would be the build's.
+     */
+    public function testImportUnderAHostThatAsksTheMachine(): void
+    {
+        $injector = new Injector($this->module([new ImportApp('baz', 'Import\HelloWorld', 'app')], null, null, true));
+
+        $resource = $injector->getInstance(ResourceInterface::class);
+        assert($resource instanceof ResourceInterface);
+        $ro = $resource->get('page://baz/dirs');
+        assert($ro instanceof Dirs);
+
+        $host = sys_get_temp_dir() . '/FakeVendor/HelloWorld/app';
+        $this->assertSame($host . '/tmp/Import/HelloWorld/app/tmp', $ro->body['tmpDir']);
+        $this->assertSame($host . '/log/Import/HelloWorld/app/log', $ro->body['logDir']);
+    }
+
+    /**
      * @param list<ImportApp>       $imports
      * @param non-empty-string|null $tmpDir
      * @param non-empty-string|null $logDir
      */
-    private function module(array $imports, string|null $tmpDir = null, string|null $logDir = null): AbstractModule
+    private function module(array $imports, string|null $tmpDir = null, string|null $logDir = null, bool $askMachine = false): AbstractModule
     {
-        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', $tmpDir, $logDir);
-        $module = new ResourceModule('FakeVendor\HelloWorld');
-        $module->override(new AppMetaModule($meta));
-        $module->override(new ImportAppModule($imports));
+        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+        $chain = new ResourceModule('FakeVendor\HelloWorld');
+        $chain->override(new ImportAppModule($imports));
+        $declared = $tmpDir === null && ! $askMachine ? $chain : new ReadOnlyAppModule($tmpDir, $logDir, $chain);
 
-        return $module;
+        return new AppMetaModule($meta, 'app', $declared);
     }
 }

@@ -19,17 +19,17 @@ final class WriteDirs
     /** A leading slash, a UNC share, a drive letter, or a stream scheme. */
     private const ABSOLUTE = '#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#';
 
-    /** @var TmpDir */
-    public readonly string $tmpDir;
+    /** @var TmpDir|null */
+    public readonly string|null $tmpDir;
 
-    /** @var LogDir */
-    public readonly string $logDir;
+    /** @var LogDir|null */
+    public readonly string|null $logDir;
 
     /** @throws DeclaredWriteDirException */
-    public function __construct(string $tmpDir, string $logDir)
+    public function __construct(string|null $tmpDir, string|null $logDir)
     {
-        $this->tmpDir = self::absolute($tmpDir);
-        $this->logDir = self::absolute($logDir);
+        $this->tmpDir = $tmpDir === null ? null : self::absolute($tmpDir);
+        $this->logDir = $logDir === null ? null : self::absolute($logDir);
     }
 
     /**

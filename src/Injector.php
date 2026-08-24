@@ -7,6 +7,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Injector\PackageInjector;
+use BEAR\Package\Module\WriteRule;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
 
@@ -42,9 +43,9 @@ final class Injector
      *
      * @param Context $context
      */
-    public static function fromMeta(AbstractAppMeta $meta, string $context): InjectorInterface
+    public static function fromMeta(AbstractAppMeta $meta, string $context, WriteRule|null $parent = null): InjectorInterface
     {
-        return PackageInjector::getInstance($meta, $context);
+        return PackageInjector::getInstance($meta, $context, $parent);
     }
 
     /**

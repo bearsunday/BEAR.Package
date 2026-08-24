@@ -15,13 +15,13 @@ class PsrLoggerModuleTest extends TestCase
 {
     public function testPsrLoggerModule(): void
     {
-        $logger = (new Injector(new PsrLoggerModule(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld')))))->getInstance(LoggerInterface::class);
+        $logger = (new Injector(new PsrLoggerModule(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'), 'app'))))->getInstance(LoggerInterface::class);
         $this->assertInstanceOf(LoggerInterface::class, $logger);
     }
 
     public function testProdPsrLoggerModule(): void
     {
-        $logger = (new Injector(new ProdModule(new PsrLoggerModule(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'))))))->getInstance(LoggerInterface::class);
+        $logger = (new Injector(new ProdModule(new PsrLoggerModule(new AppMetaModule(new AppMeta('FakeVendor\HelloWorld'), 'app')))))->getInstance(LoggerInterface::class);
         $this->assertInstanceOf(LoggerInterface::class, $logger);
     }
 }

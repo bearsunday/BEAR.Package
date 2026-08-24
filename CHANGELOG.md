@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Compile steps a module contributes through `MultiBinder` for `CompileStepInterface` now run, each into `{appDir}/var/build/{context}/{binding key}`
-- `ReadOnlyAppModule($tmpDir, $logDir)`, installed from the application's own `ProdModule`, says where the application writes when its tree is read-only; both paths are named because the archive carries what it declares, and a relative or empty one is refused with `DeclaredWriteDirException`
+- `ReadOnlyAppModule($tmpDir, $logDir)`, installed from the application's own `ProdModule`, says where the application writes when its tree is read-only; a named path is compiled in, and a relative or empty one is refused with `DeclaredWriteDirException`
+- Either directory may be omitted, and the machine that boots answers it, under its temp directory keyed by application and context: a value resolved while compiling would be the build machine's, and the archive would carry it
 
 ### Changed
 - Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
@@ -18,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 - Requires bear/app-meta ^1.13: an invalid application directory is refused with `WriteDirNotAbsoluteException` (a `LogicException`) before any compile work, instead of a late `RuntimeException` (#482)
-- An imported application writes under the host's tmp and log (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base (#426)
+- An imported application writes under whatever the host answers (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base, and it is the host's rule that travels rather than the directory the host's build resolved - so a host that leaves its directories to the machine hands the machine's answer down (#426)
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
 - A boot with a current compile marker returns the compiled scripts without assembling a module tree first
 - `Compiler::compile()` writes the compile marker only for a context that boots from the scripts

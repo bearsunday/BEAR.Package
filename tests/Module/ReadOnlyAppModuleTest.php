@@ -57,6 +57,35 @@ class ReadOnlyAppModuleTest extends TestCase
         $this->assertSame($this->edge->buildDir, $meta->buildDir);
     }
 
+    /** Omitted, the machine that boots answers - under a directory named for the application. */
+    public function testOmittedDirectoriesAreResolvedUnderTheSystemTemp(): void
+    {
+        $meta = $this->resolve(new ReadOnlyAppModule());
+        $base = sys_get_temp_dir() . '/FakeVendor/HelloWorld/prod-app';
+
+        $this->assertSame($base . '/tmp', $meta->tmpDir);
+        $this->assertSame($base . '/log', $meta->logDir);
+    }
+
+    /** Naming one leaves the other to the machine. */
+    public function testOneDirectoryNamedAndOneOmitted(): void
+    {
+        $meta = $this->resolve(new ReadOnlyAppModule(logDir: $this->declared . '/log'));
+
+        $this->assertSame(sys_get_temp_dir() . '/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
+        $this->assertSame($this->declared . '/log', $meta->logDir);
+    }
+
+    /** A resolved directory is the boot's, so the application it names still has to be its own. */
+    public function testAResolvedMetaKeepsTheApplicationItWasBuiltFor(): void
+    {
+        $meta = $this->resolve(new ReadOnlyAppModule());
+
+        $this->assertSame($this->edge->name, $meta->name);
+        $this->assertSame($this->edge->appDir, $meta->appDir);
+        $this->assertSame($this->edge->buildDir, $meta->buildDir);
+    }
+
     /** Nothing installed: the Meta the boot resolved is the one the container gets. */
     public function testWithoutTheModuleTheBootsMetaIsBound(): void
     {
@@ -88,7 +117,7 @@ class ReadOnlyAppModuleTest extends TestCase
             }
         };
 
-        $module = new AppMetaModule($this->edge, new ProdModule($app));
+        $module = new AppMetaModule($this->edge, 'prod-app', new ProdModule($app));
         $meta = (new Injector($module))->getInstance(AbstractAppMeta::class);
         $this->assertInstanceOf(AbstractAppMeta::class, $meta);
 

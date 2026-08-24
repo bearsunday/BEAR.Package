@@ -12,7 +12,7 @@ class ProdModule extends AbstractModule
 {
     protected function configure(): void
     {
-        $this->install(new ReadOnlyAppModule('/tmp/bear-demo/tmp', '/tmp/bear-demo/log'));
+        $this->install(new ReadOnlyAppModule());
         $this->install(new PackageProdModule());
     }
 }

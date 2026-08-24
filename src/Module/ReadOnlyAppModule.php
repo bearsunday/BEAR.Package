@@ -9,9 +9,11 @@ use Override;
 use Ray\Di\AbstractModule;
 
 /**
- * Install it from the application's own ProdModule. Both directories are named rather than
- * worked out: a value resolved while compiling would be the build machine's, and the archive
- * would carry it.
+ * Install it from the application's own ProdModule.
+ *
+ * A named directory is compiled in as given, so it must be one every machine that boots the
+ * build can write to. An omitted one is answered by the machine, under its temp directory,
+ * keyed by application and context.
  *
  * @psalm-import-type LogDir from Types
  * @psalm-import-type TmpDir from Types
@@ -19,12 +21,12 @@ use Ray\Di\AbstractModule;
 final class ReadOnlyAppModule extends AbstractModule
 {
     /**
-     * @param string $tmpDir absolute path for what a run may discard
-     * @param string $logDir absolute path for what it may not
+     * @param string|null $tmpDir absolute path for what a run may discard
+     * @param string|null $logDir absolute path for what it may not
      */
     public function __construct(
-        private string $tmpDir,
-        private string $logDir,
+        private string|null $tmpDir = null,
+        private string|null $logDir = null,
         AbstractModule|null $module = null,
     ) {
         parent::__construct($module);

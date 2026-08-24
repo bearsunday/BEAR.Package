@@ -25,7 +25,7 @@ class NewAppTest extends TestCase
 {
     public function testGetInstanceByHand(): AppInterface
     {
-        $module = new AppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule())));
+        $module = new AppMetaModule(new Meta('FakeVendor\HelloWorld'), 'prod-cli-app', new ProdModule(new CliModule(new AppModule())));
         $module->override(new class extends AbstractModule{
             protected function configure(): void
             {
