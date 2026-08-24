@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
+use BEAR\AppMeta\Exception\AppDirNotAbsoluteException;
 use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\ComposerLoaderNotFoundException;
 use BEAR\Package\Exception\InvalidContextException;
@@ -459,7 +459,7 @@ class CompilerTest extends TestCase
 
     public function testWrongAppDir(): void
     {
-        $this->expectException(WriteDirNotAbsoluteException::class);
+        $this->expectException(AppDirNotAbsoluteException::class);
         (new Compiler(self::APP_NAME, 'app', '__invalid__'))->compile();
     }
 
