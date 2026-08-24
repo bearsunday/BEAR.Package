@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 - Requires bear/app-meta ^1.13: an invalid application directory is refused with `WriteDirNotAbsoluteException` (a `LogicException`) before any compile work, instead of a late `RuntimeException` (#482)
+- Requires bear/sunday ^1.9: `CompileStepInterface`, the binding a compile step declares (#501)
 - An imported application writes under whatever the host answers (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base, and it is the host's rule that travels rather than the directory the host's build resolved - so a host that leaves its directories to the machine hands the machine's answer down (#426)
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
 - A boot with a current compile marker returns the compiled scripts without assembling a module tree first
