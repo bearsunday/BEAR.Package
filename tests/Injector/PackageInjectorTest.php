@@ -334,6 +334,18 @@ class PackageInjectorTest extends TestCase
         }
     }
 
+    /**
+     * The guard sits above the module tree because a tree inside an archive fails on its own terms
+     * first, and what it says has nothing to do with the build being absent.
+     */
+    public function testFactoryRefusesBeforeAssemblingTheTree(): void
+    {
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', 'phar:///deploy/app.phar');
+
+        $this->expectException(NotCompiledException::class);
+        PackageInjector::factory($meta, 'prod-app');
+    }
+
     /** An archive that is not there has no ancestor to ask, and the working directory does not answer for it. */
     public function testBootWhoseScriptDirHasNoExistingAncestor(): void
     {

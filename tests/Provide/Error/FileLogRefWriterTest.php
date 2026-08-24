@@ -80,10 +80,10 @@ class FileLogRefWriterTest extends TestCase
 
     private function file(LogRef $logRef): string
     {
-        return sprintf('%s/logref.%s.log', $this->logDir, (string) $logRef);
+        return self::forwardSlashed(sprintf('%s/logref.%s.log', $this->logDir, (string) $logRef));
     }
 
-    /** readlink() spells a link with the platform separator; the paths it is compared to do not. */
+    /** A temp directory and a readlink() each spell the platform separator; a comparison needs one. */
     private static function forwardSlashed(string $path): string
     {
         return str_replace('\\', '/', $path);

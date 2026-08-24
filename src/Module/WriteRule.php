@@ -25,19 +25,27 @@ final class WriteRule
 
     public function needsBoot(): bool
     {
-        return $this->declared?->tmpDir === null || $this->declared->logDir === null;
+        if ($this->declared === null) {
+            return true;
+        }
+
+        return $this->declared->tmpDir === null || $this->declared->logDir === null;
     }
 
     /** @return non-empty-string */
     public function tmpDir(): string
     {
-        return $this->declared->tmpDir ?? $this->base('tmp');
+        $declared = $this->declared?->tmpDir;
+
+        return $declared ?? $this->base('tmp');
     }
 
     /** @return non-empty-string */
     public function logDir(): string
     {
-        return $this->declared->logDir ?? $this->base('log');
+        $declared = $this->declared?->logDir;
+
+        return $declared ?? $this->base('log');
     }
 
     /** @return non-empty-string */

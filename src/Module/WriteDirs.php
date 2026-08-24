@@ -46,6 +46,10 @@ final class WriteDirs
         $trimmed = rtrim($dir, '/\\');
 
         // One directory, one spelling - except at a root, which is all separator.
-        return preg_match(self::ABSOLUTE, $trimmed) ? $trimmed : $dir;
+        if ($trimmed === '' || ! preg_match(self::ABSOLUTE, $trimmed)) {
+            return $dir;
+        }
+
+        return $trimmed;
     }
 }
