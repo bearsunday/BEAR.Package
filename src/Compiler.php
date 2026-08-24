@@ -211,8 +211,8 @@ final class Compiler
     /**
      * Empty both directories, then recreate the script directory.
      *
-     * The whole build directory, not only the DI scripts: a compile step dropped from the
-     * module tree would otherwise keep shipping the artifacts of the run that still had it.
+     * The whole build directory: a step dropped from the module tree would otherwise keep
+     * shipping its artifacts.
      *
      * preload.php, autoload.php and app.phar stay: each is replaced by whatever writes it, at
      * the moment it writes, so a compile that dies partway leaves the last one's files alone.
@@ -272,11 +272,8 @@ final class Compiler
         $compiler->compile($module, $scriptDir);
         $steps = $this->injector->getInstance(CompileSteps::class)($this->appMeta->buildDir);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
-        // Only for a context that boots from them - a marker is what lets a boot return the
-        // scripts without assembling a module tree, and a per-request context must not.
-        //
-        // The container's tmpDir, not this compile's: the pack reads it to refuse a
-        // declaration that points inside the archive.
+        // Only for a context that boots from these scripts, and with the tmpDir the container
+        // declares, which is what the pack reads to refuse a declaration inside the archive.
         if (PackageInjector::isCompiled($this->appMeta, $this->context)) {
             $boundMeta = $this->injector->getInstance(AbstractAppMeta::class);
             CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $boundMeta->tmpDir);

@@ -55,8 +55,6 @@ final class PreloadRecorder
 
         $meta = new Meta($appName, $context, $appDir);
         $scriptDir = $meta->buildDir . '/di';
-        // Without a marker the boot below compiles on demand and the recording measures that
-        // compile - the very error this pipeline removes.
         if (! CompileMarker::matches($scriptDir, $meta->name, $context)) {
             throw PreloadRecordException::scriptsNotCurrent($scriptDir, $context);
         }

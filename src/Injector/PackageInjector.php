@@ -48,11 +48,7 @@ final class PackageInjector
     {
     }
 
-    /**
-     * The module tree is built only when there is no build to boot from: it is what compiles one.
-     *
-     * @param Context $context
-     */
+    /** @param Context $context */
     public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
         $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir);
@@ -76,9 +72,7 @@ final class PackageInjector
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
         $scriptDir = self::ensureScriptDir($meta, $overrideModule);
-        // Before the module tree: assembling one scans {appDir}/src for resources, which fails
-        // on its own terms inside an archive and buries the thing worth saying - that there is
-        // no build here and this tree cannot be given one.
+        // Before the module tree, whose own failure inside an archive would mask this one.
         if (! self::canWrite($scriptDir) && ! CompileMarker::matches($scriptDir, $meta->name, $context)) {
             throw new NotCompiledException($scriptDir);
         }
@@ -159,8 +153,7 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * A build under a marker is returned unwalked: the request resolves through it in the same
-     * process, so nothing is learned by walking it here.
+     * A build under a marker is returned unwalked: the request resolves through it anyway.
      *
      * Of the compile command's pipeline only the steps are mirrored here; class meta info and
      * preload are not. Steps resolve through a module injector, not the AOT one: their classes

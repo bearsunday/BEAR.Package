@@ -70,8 +70,7 @@ class AppMetaModule extends AbstractModule
     }
 
     /**
-     * Read by index: resolving would construct whatever else the chain bound, and this runs
-     * before any binding of this module's own exists.
+     * Read by index: resolving would construct whatever else the chain bound.
      */
     private function declaredWriteDirs(): WriteDirs|null
     {

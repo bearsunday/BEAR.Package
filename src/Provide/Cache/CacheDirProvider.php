@@ -26,8 +26,8 @@ final class CacheDirProvider implements ProviderInterface
     public function get(): string
     {
         $cacheDir = $this->appMeta->tmpDir . self::CACHE_DIRNAME;
-        // Created only when absent, so a directory that exists and cannot be written is
-        // refused rather than mistaken for one a concurrent process just made.
+        // Created only when absent: one that exists and cannot be written is refused, not
+        // mistaken for a lost race.
         if (! is_dir($cacheDir)) {
             @mkdir($cacheDir, 0777, true);
         }

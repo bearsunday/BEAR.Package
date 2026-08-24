@@ -11,8 +11,6 @@ use function preg_match;
 use function rtrim;
 
 /**
- * Where an application writes, as the application itself declares it.
- *
  * @psalm-import-type LogDir from Types
  * @psalm-import-type TmpDir from Types
  */
