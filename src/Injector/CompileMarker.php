@@ -37,12 +37,8 @@ final class CompileMarker
     public const FILENAME = '.bear-compile.json';
 
     /**
-     * What a marker of this shape means.
-     *
-     * Before it, `tmpDir` recorded the directory a boot had to be given, and the boot compared
-     * it; now it records what the build's own container declared, and only the pack reads it.
-     * An older marker is not a weaker version of that, it is a different claim - so it reads as
-     * absent, and a writable tree recompiles on its next boot.
+     * A marker of another shape makes a different claim about its own tmpDir, so it reads as
+     * absent rather than as a weaker version of this one.
      */
     private const VERSION = 2;
 
@@ -111,9 +107,8 @@ final class CompileMarker
     /**
      * Whether the scripts here are this application's build of this context.
      *
-     * Not where they write. The recorded tmpDir is what the build's own container answers,
-     * which is a fact about the build and travels with it - comparing it to the boot's was
-     * what stopped an archive starting anywhere but the machine that packed it.
+     * Not where they write: the recorded tmpDir is the build's own answer, and only the pack
+     * reads it.
      *
      * @param AppName $appName
      * @param Context $context

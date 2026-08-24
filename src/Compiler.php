@@ -275,8 +275,8 @@ final class Compiler
         // Only for a context that boots from them - a marker is what lets a boot return the
         // scripts without assembling a module tree, and a per-request context must not.
         //
-        // The container's tmpDir, not this compile's: an application declares where it writes,
-        // and the pack refuses a declaration that points inside the archive.
+        // The container's tmpDir, not this compile's: the pack reads it to refuse a
+        // declaration that points inside the archive.
         if (PackageInjector::isCompiled($this->appMeta, $this->context)) {
             $boundMeta = $this->injector->getInstance(AbstractAppMeta::class);
             CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $boundMeta->tmpDir);

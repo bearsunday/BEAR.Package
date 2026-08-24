@@ -52,12 +52,8 @@ class AppMetaModule extends AbstractModule
     }
 
     /**
-     * The Meta to bind: the one this module was built with, or the same one writing where the
-     * chain said it does.
-     *
-     * Only tmp and log are the declaration's to give. Which application, which context and
-     * which tree the compile already settled, and an archive that moves has its appDir
-     * re-pointed on unserialize, which leaves a declared directory outside appDir alone.
+     * Cloned, not rebuilt: an archive that moves has its appDir re-pointed on unserialize, and
+     * only tmp and log are the declaration's to give.
      */
     private function appMeta(): AbstractAppMeta
     {

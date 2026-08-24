@@ -51,16 +51,12 @@ final class PackageInjector
     /**
      * Return an injector, reusing the instances this process already built.
      *
-     * A current marker means the compiled scripts are this deployment's own, so they are the
-     * injector. The module tree is built only when there is no such build to boot from - it
-     * is what compiles one.
+     * The module tree is built only when there is no build to boot from: it is what compiles one.
      *
      * @param Context $context
      */
     public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        // The tree too: two trees of one application can be booted in one process, and the
-        // scripts each boots from are its own.
         $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
@@ -165,11 +161,8 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * A build under a marker is returned as it is. Resolving through it is what reports a
-     * broken one, and a per-request SAPI builds the injector and answers in the same process,
-     * so nothing is learned earlier by walking the graph first.
-     *
-     * A tree that can be given no build is told so, instead of failing on the write.
+     * A build under a marker is returned unwalked: a per-request SAPI builds the injector and
+     * answers in the same process, so resolving it here reports a broken one no earlier.
      *
      * Of the compile command's pipeline only the steps are mirrored here; class meta info and
      * preload are not. Steps resolve through a module injector, not the AOT one: their classes
