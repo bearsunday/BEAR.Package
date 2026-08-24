@@ -14,6 +14,7 @@ use Ray\Di\Injector;
 
 use function dirname;
 use function mkdir;
+use function str_replace;
 use function sys_get_temp_dir;
 use function uniqid;
 
@@ -61,7 +62,7 @@ class ReadOnlyAppModuleTest extends TestCase
     public function testOmittedDirectoriesAreResolvedUnderTheSystemTemp(): void
     {
         $meta = $this->resolve(new ReadOnlyAppModule());
-        $base = sys_get_temp_dir() . '/FakeVendor/HelloWorld/prod-app';
+        $base = str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app';
 
         $this->assertSame($base . '/tmp', $meta->tmpDir);
         $this->assertSame($base . '/log', $meta->logDir);
@@ -72,7 +73,7 @@ class ReadOnlyAppModuleTest extends TestCase
     {
         $meta = $this->resolve(new ReadOnlyAppModule(logDir: $this->declared . '/log'));
 
-        $this->assertSame(sys_get_temp_dir() . '/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
+        $this->assertSame(str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
         $this->assertSame($this->declared . '/log', $meta->logDir);
     }
 

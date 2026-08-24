@@ -20,6 +20,7 @@ use ReflectionProperty;
 use function assert;
 use function BEAR\Package\deleteFiles;
 use function dirname;
+use function str_replace;
 use function sys_get_temp_dir;
 use function uniqid;
 
@@ -84,7 +85,7 @@ class ImportAppModuleTest extends TestCase
         $ro = $resource->get('page://baz/dirs');
         assert($ro instanceof Dirs);
 
-        $host = sys_get_temp_dir() . '/FakeVendor/HelloWorld/app';
+        $host = str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/app';
         $this->assertSame($host . '/tmp/Import/HelloWorld/app/tmp', $ro->body['tmpDir']);
         $this->assertSame($host . '/log/Import/HelloWorld/app/log', $ro->body['logDir']);
     }

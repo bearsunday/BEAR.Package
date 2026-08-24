@@ -13,7 +13,7 @@
         "php": "^8.2",
         "ext-hash": "*",
         "aura/cli": "^2.2",
-        "bear/app-meta": "^1.13.1",
+        "bear/app-meta": "^1.13",
         "bear/query-repository": "^1.13",
         "bear/resource": "^1.31",
         "bear/streamer": "^1.4",

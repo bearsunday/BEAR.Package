@@ -50,10 +50,21 @@ final class WriteRule
         }
 
         if ($this->declared === null) {
-            return AbstractAppMeta::appDir($this->app->name) . '/var/' . $dir . '/' . $this->app->context;
+            return self::forwardSlashed(AbstractAppMeta::appDir($this->app->name)) . '/var/' . $dir . '/' . $this->app->context;
         }
 
-        return sys_get_temp_dir() . '/' . $this->key() . '/' . $dir;
+        return self::forwardSlashed(sys_get_temp_dir()) . '/' . $this->key() . '/' . $dir;
+    }
+
+    /**
+     * Meta spells a directory forward-slashed whatever the platform, and a declaration reaches
+     * it unchanged: a resolved one has to arrive the same way or the two disagree on Windows.
+     *
+     * @return non-empty-string
+     */
+    private static function forwardSlashed(string $dir): string
+    {
+        return str_replace('\\', '/', $dir) ?: '/';
     }
 
     /** @return non-empty-string */

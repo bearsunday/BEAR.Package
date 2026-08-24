@@ -8,12 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 use function dirname;
 use function serialize;
+use function str_replace;
 use function sys_get_temp_dir;
 use function unserialize;
 
 class WriteRuleTest extends TestCase
 {
     private AppId $app;
+
+    /** Meta and WriteRule both spell a resolved directory forward-slashed. */
+    private static function slashed(string $dir): string
+    {
+        return str_replace('\\', '/', $dir);
+    }
 
     protected function setUp(): void
     {
@@ -26,7 +33,7 @@ class WriteRuleTest extends TestCase
     public function testNoDeclaration(): void
     {
         $rule = new WriteRule($this->app);
-        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $appDir = self::slashed(dirname(__DIR__)) . '/Fake/fake-app';
 
         $this->assertSame($appDir . '/var/tmp/prod-app', $rule->tmpDir());
         $this->assertSame($appDir . '/var/log/prod-app', $rule->logDir());
@@ -46,7 +53,7 @@ class WriteRuleTest extends TestCase
     public function testOmittedBoth(): void
     {
         $rule = new WriteRule($this->app, new WriteDirs(null, null));
-        $base = sys_get_temp_dir() . '/FakeVendor/HelloWorld/prod-app';
+        $base = self::slashed(sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app';
 
         $this->assertSame($base . '/tmp', $rule->tmpDir());
         $this->assertSame($base . '/log', $rule->logDir());
@@ -58,7 +65,7 @@ class WriteRuleTest extends TestCase
     {
         $rule = new WriteRule($this->app, new WriteDirs(null, '/var/log/named'));
 
-        $this->assertSame(sys_get_temp_dir() . '/FakeVendor/HelloWorld/prod-app/tmp', $rule->tmpDir());
+        $this->assertSame(self::slashed(sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app/tmp', $rule->tmpDir());
         $this->assertSame('/var/log/named', $rule->logDir());
         $this->assertTrue($rule->needsBoot());
     }
@@ -79,7 +86,7 @@ class WriteRuleTest extends TestCase
         $parent = new WriteRule(new AppId('Host\App', 'prod-app'), new WriteDirs(null, null));
         $rule = new WriteRule(new AppId('Guest\App', 'app'), null, $parent);
 
-        $this->assertSame(sys_get_temp_dir() . '/Host/App/prod-app/tmp/Guest/App/app/tmp', $rule->tmpDir());
+        $this->assertSame(self::slashed(sys_get_temp_dir()) . '/Host/App/prod-app/tmp/Guest/App/app/tmp', $rule->tmpDir());
         $this->assertTrue($rule->needsBoot());
     }
 
@@ -102,7 +109,7 @@ class WriteRuleTest extends TestCase
         $parent = new WriteRule(new AppId('Host\App', 'prod-app'), new WriteDirs(null, null));
         $rule = new WriteRule($this->app, null, $parent);
 
-        $this->assertStringNotContainsString(sys_get_temp_dir(), serialize($rule));
+        $this->assertStringNotContainsString(self::slashed(sys_get_temp_dir()), serialize($rule));
         $restored = unserialize(serialize($rule));
         $this->assertInstanceOf(WriteRule::class, $restored);
         $this->assertSame($rule->tmpDir(), $restored->tmpDir());
