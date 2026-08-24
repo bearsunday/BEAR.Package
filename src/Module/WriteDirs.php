@@ -41,11 +41,13 @@ final class WriteDirs
      */
     private static function absolute(string $dir): string
     {
-        $dir = rtrim($dir, '/\\');
         if ($dir === '' || ! preg_match(self::ABSOLUTE, $dir)) {
             throw new DeclaredWriteDirException($dir);
         }
 
-        return $dir;
+        $trimmed = rtrim($dir, '/\\');
+
+        // One directory, one spelling - except at a root, which is all separator.
+        return preg_match(self::ABSOLUTE, $trimmed) ? $trimmed : $dir;
     }
 }

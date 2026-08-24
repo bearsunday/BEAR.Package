@@ -36,6 +36,21 @@ class WriteDirsTest extends TestCase
         $this->assertSame('s3://bucket/tmp', $dirs->tmpDir);
     }
 
+    /** A root is all separator, so trimming it away would leave nothing to name. */
+    #[DataProvider('rootProvider')]
+    public function testARootIsKeptWhole(string $root): void
+    {
+        $dirs = new WriteDirs($root, $root);
+
+        $this->assertSame($root, $dirs->tmpDir);
+    }
+
+    /** @return array<string, array{0: string}> */
+    public static function rootProvider(): array
+    {
+        return ['posix' => ['/'], 'drive' => ['C:\\'], 'unc' => ['\\\\share']];
+    }
+
     /**
      * A relative path names whatever directory the process started from, which a compile, a
      * request under fpm and a CLI run each answer differently - and the pack cannot tell that
@@ -56,7 +71,6 @@ class WriteDirsTest extends TestCase
             'relative log' => ['/var/app/tmp', 'var/log'],
             'empty tmp' => ['', '/var/log/app'],
             'empty log' => ['/var/app/tmp', ''],
-            'separators only' => ['/', '/var/log/app'],
             'dot relative' => ['./var/tmp', '/var/log/app'],
         ];
     }
