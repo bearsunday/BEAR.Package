@@ -40,7 +40,7 @@ class CacheDirProviderTest extends TestCase
         parent::tearDown();
     }
 
-    /** The directory is created on the way, under whatever spelling Meta answers. */
+    /** Meta answers the spelling: asserting the test's own breaks under a Meta that resolves it. */
     public function testAnAbsentCacheDirectory(): void
     {
         $meta = $this->meta();
@@ -48,7 +48,7 @@ class CacheDirProviderTest extends TestCase
         $this->assertSame($meta->tmpDir . '/cache', (new CacheDirProvider($meta))->get());
     }
 
-    /** Nothing has made tmpDir, so mkdir() has to reach through it. */
+    /** mkdir() has to reach through a parent that is not there either. */
     public function testAnAbsentTmpDirectory(): void
     {
         $meta = $this->meta();
