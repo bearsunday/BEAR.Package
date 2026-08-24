@@ -26,14 +26,14 @@ final class CacheDirProvider implements ProviderInterface
     public function get(): string
     {
         $cacheDir = $this->appMeta->tmpDir . self::CACHE_DIRNAME;
-        if (is_writable($cacheDir)) {
-            return $cacheDir;
+        // Created only when absent, so a directory that exists and cannot be written is
+        // refused rather than mistaken for one a concurrent process just made.
+        if (! is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0777, true);
         }
 
-        if (! @mkdir($cacheDir, 0777, true) && ! is_dir($cacheDir)) {
-            // @codeCoverageIgnoreStart
+        if (! is_writable($cacheDir)) {
             throw new DirectoryNotWritableException($cacheDir);
-            // @codeCoverageIgnoreEnd
         }
 
         return $cacheDir;

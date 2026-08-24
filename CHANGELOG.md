@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
 - `WriteDirMismatchException`, `DelegatedCompileException` and `bin/compile-worker.php`, with the delegated compile they served (#482)
-- `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - compile both with the same one; a mismatch fails the boot's marker check instead (#426)
+- `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - an imported application writes under the host's, derived from what the host declared (#426)
 - `CompileRecord::$writeDir` and `PharReport::$writeDir`: the marker no longer carries the write base (#426)
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
 - The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them

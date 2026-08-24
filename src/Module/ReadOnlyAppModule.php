@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module;
 
-use BEAR\AppMeta\Types;
+use BEAR\Package\Types;
 use Override;
 use Ray\Di\AbstractModule;
 
 /**
- * Say where an application writes, for a tree it cannot write to.
- *
  * Install it from the application's own ProdModule. Both directories are named rather than
- * worked out: the archive carries whatever this declares, and a value resolved while
- * compiling would be the build machine's, which the deployment has no reason to have.
+ * worked out: a value resolved while compiling would be the build machine's, and the archive
+ * would carry it.
  *
  * @psalm-import-type LogDir from Types
  * @psalm-import-type TmpDir from Types

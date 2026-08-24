@@ -49,8 +49,6 @@ final class PackageInjector
     }
 
     /**
-     * Return an injector, reusing the instances this process already built.
-     *
      * The module tree is built only when there is no build to boot from: it is what compiles one.
      *
      * @param Context $context
@@ -161,8 +159,8 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * A build under a marker is returned unwalked: a per-request SAPI builds the injector and
-     * answers in the same process, so resolving it here reports a broken one no earlier.
+     * A build under a marker is returned unwalked: the request resolves through it in the same
+     * process, so nothing is learned by walking it here.
      *
      * Of the compile command's pipeline only the steps are mirrored here; class meta info and
      * preload are not. Steps resolve through a module injector, not the AOT one: their classes

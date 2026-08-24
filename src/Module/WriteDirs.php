@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\Package\Module;
 
-use BEAR\AppMeta\Types;
 use BEAR\Package\Exception\DeclaredWriteDirException;
+use BEAR\Package\Types;
 
 use function preg_match;
 use function rtrim;
@@ -27,11 +27,7 @@ final class WriteDirs
     /** @var LogDir */
     public readonly string $logDir;
 
-    /**
-     * Takes what an application wrote, which nothing has checked yet.
-     *
-     * @throws DeclaredWriteDirException
-     */
+    /** @throws DeclaredWriteDirException */
     public function __construct(string $tmpDir, string $logDir)
     {
         $this->tmpDir = self::absolute($tmpDir);

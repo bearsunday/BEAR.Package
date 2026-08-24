@@ -33,9 +33,8 @@ final class Module
             $module = $this->installContextModule($appMeta, $contextItem, $module);
         }
 
-        // Wrapped, not override()d - the resolved bindings are the same either way. What
-        // wrapping adds is that AppMetaModule can read the chain, which is how a declared
-        // write directory reaches it.
+        // Wrapped, not override()d: wrapping is what lets AppMetaModule read the chain, and a
+        // declared write directory reaches it no other way.
         return new AppMetaModule($appMeta, $module);
     }
 

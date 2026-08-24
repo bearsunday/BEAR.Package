@@ -7,9 +7,8 @@ namespace BEAR\Package\Exception;
 /**
  * A declared write directory that no deployment can resolve.
  *
- * The declaration is compiled in and read again wherever the build runs, so it has to name the
- * same place every time. A relative path names whatever directory the process happens to be
- * started from, which a compile, a request under fpm and a CLI run each answer differently.
+ * The declaration is compiled in and read wherever the build runs, so it names one place. A
+ * relative path names wherever the process started, which a compile and a request disagree on.
  *
  * @see \BEAR\Package\Module\ReadOnlyAppModule
  */

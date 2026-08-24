@@ -18,6 +18,7 @@ use function mkdir;
 use function readlink;
 use function rmdir;
 use function sprintf;
+use function str_replace;
 use function sys_get_temp_dir;
 
 class FileLogRefWriterTest extends TestCase
@@ -62,7 +63,7 @@ class FileLogRefWriterTest extends TestCase
 
         $link = $this->logDir . '/last.logref.log';
         $this->assertTrue(is_link($link));
-        $this->assertSame($this->file($logRef), readlink($link));
+        $this->assertSame($this->file($logRef), self::forwardSlashed((string) readlink($link)));
     }
 
     /** symlink() refuses an existing name, so the link would otherwise be stuck on the first error seen. */
@@ -74,11 +75,17 @@ class FileLogRefWriterTest extends TestCase
         $this->writer->write($first, 'first detail');
         $this->writer->write($second, 'second detail');
 
-        $this->assertSame($this->file($second), readlink($this->logDir . '/last.logref.log'));
+        $this->assertSame($this->file($second), self::forwardSlashed((string) readlink($this->logDir . '/last.logref.log')));
     }
 
     private function file(LogRef $logRef): string
     {
         return sprintf('%s/logref.%s.log', $this->logDir, (string) $logRef);
+    }
+
+    /** readlink() spells a link with the platform separator; the paths it is compared to do not. */
+    private static function forwardSlashed(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 }

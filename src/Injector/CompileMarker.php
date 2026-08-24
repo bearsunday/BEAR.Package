@@ -105,10 +105,7 @@ final class CompileMarker
     }
 
     /**
-     * Whether the scripts here are this application's build of this context.
-     *
-     * Not where they write: the recorded tmpDir is the build's own answer, and only the pack
-     * reads it.
+     * Not where they write: the recorded tmpDir is the build's own answer, read only by the pack.
      *
      * @param AppName $appName
      * @param Context $context
