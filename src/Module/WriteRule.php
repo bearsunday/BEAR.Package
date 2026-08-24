@@ -65,8 +65,8 @@ final class WriteRule
     }
 
     /**
-     * Meta spells a directory forward-slashed whatever the platform, and a declaration reaches
-     * it unchanged: a resolved one has to arrive the same way or the two disagree on Windows.
+     * Meta keeps a write directory exactly as it arrives, so the spelling is settled here:
+     * concatenating onto a Windows temp directory mixes both separators into one path.
      *
      * @return non-empty-string
      */
