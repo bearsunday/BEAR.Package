@@ -45,6 +45,14 @@ final class PharManifest
     /** The only top-level directories an archive carries. */
     private const SHIPPED_DIRS = ['src', 'public', 'bin', 'vendor', 'var'];
 
+    /**
+     * The one root file that is the artifact's, not the project's.
+     *
+     * Its requires are written relative to the directory it sits in, so they resolve inside
+     * the archive and nowhere else: `opcache.preload` has to name it there.
+     */
+    private const SHIPPED_ROOT_FILES = ['preload.php'];
+
     /** Ray.Compiler noise: written beside what it produced, read by no boot. */
     private const BUILD_NOISE = ['compile.lock', '_bindings.log', 'bindings.md'];
 
@@ -162,11 +170,15 @@ final class PharManifest
             }
 
             $path = self::normalize($file->getPathname());
-            if (self::normalize($file->getPath()) === $base && ! $file->isDir()) {
+            if ($path === $excludedOutput) {
                 return false;
             }
 
-            if ($path === $excludedOutput || ! self::shipsFromRoot($path, $roots, $base, $entryDir)) {
+            if (self::normalize($file->getPath()) === $base && ! $file->isDir()) {
+                return in_array($name, self::SHIPPED_ROOT_FILES, true);
+            }
+
+            if (! self::shipsFromRoot($path, $roots, $base, $entryDir)) {
                 return false;
             }
 
