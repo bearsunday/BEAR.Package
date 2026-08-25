@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Requires bear/app-meta ^1.14, whose `Meta` creates no directory and resolves none of the paths it is given: an application whose tree is read-only can have one, and a directory that is not there is named by whatever first needs it (#482)
 - Requires bear/sunday ^1.9: `CompileStepInterface`, the binding a compile step declares (#501)
 - An imported application declares where it writes like any other application, and writes in its own tree when it declares nothing: it no longer inherits the host's directories, so an archive that carries one needs a declaration in the import's own `ProdModule` (#426)
-- `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
+- `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::__invoke()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
 - A boot with a current compile marker returns the compiled scripts without assembling a module tree first
 - `Compiler::compile()` writes the compile marker only for a context that boots from the scripts
 - A compile empties the whole build directory, so a compile step dropped from the module tree stops shipping the artifacts of the run that still had it

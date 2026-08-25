@@ -167,16 +167,16 @@ class PharPortabilityTest extends TestCase
     {
         $pipes = [];
         $process = proc_open(
-            $command,
-            [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+            // stderr into stdout: one pipe read to EOF cannot stall on another filling up
+            $command . ' 2>&1',
+            [1 => ['pipe', 'w']],
             $pipes,
             $cwd,
             $env === [] ? null : array_merge(getenv(), $env),
         );
         assert(is_resource($process));
-        $output = (string) stream_get_contents($pipes[1]) . (string) stream_get_contents($pipes[2]);
+        $output = (string) stream_get_contents($pipes[1]);
         fclose($pipes[1]);
-        fclose($pipes[2]);
         $code = proc_close($process);
 
         return [$code, $output];

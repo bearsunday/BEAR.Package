@@ -11,7 +11,9 @@ use BEAR\Package\Injector\CompileMarker;
 use PHPUnit\Framework\TestCase;
 
 use function file_get_contents;
+use function file_put_contents;
 use function is_dir;
+use function is_file;
 use function mkdir;
 use function preg_match_all;
 use function unlink;
@@ -28,10 +30,17 @@ class PreloadRecorderTest extends TestCase
      */
     public function testRefusesWhenThereIsNoCompiledBuildToRecord(): void
     {
-        @unlink(CompileMarker::path(self::APP_DIR . '/var/build/' . self::CONTEXT . '/di'));
+        // The fixture is shared, so a marker that was there has to be there afterwards
+        $marker = CompileMarker::path(self::APP_DIR . '/var/build/' . self::CONTEXT . '/di');
+        $recorded = is_file($marker) ? (string) file_get_contents($marker) : null;
+        @unlink($marker);
 
-        $this->expectException(PreloadRecordException::class);
-        (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, self::APP_DIR);
+        try {
+            $this->expectException(PreloadRecordException::class);
+            (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, self::APP_DIR);
+        } finally {
+            $recorded === null || file_put_contents($marker, $recorded);
+        }
     }
 
     /**

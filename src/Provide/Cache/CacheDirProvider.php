@@ -32,7 +32,8 @@ final class CacheDirProvider implements ProviderInterface
             @mkdir($cacheDir, 0777, true);
         }
 
-        if (! is_writable($cacheDir)) {
+        // is_writable() answers for a file too, and a file here is not a lost race
+        if (! is_dir($cacheDir) || ! is_writable($cacheDir)) {
             throw new DirectoryNotWritableException($cacheDir);
         }
 
