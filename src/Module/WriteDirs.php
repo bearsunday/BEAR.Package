@@ -33,20 +33,31 @@ final class WriteDirs
     }
 
     /**
+     * A directory the boot must resolve was left relative, which a declared one can never be.
+     *
+     * @psalm-assert-if-true non-empty-string $dir
+     * @phpstan-assert-if-true non-empty-string $dir
+     */
+    public static function isAbsolute(string $dir): bool
+    {
+        return $dir !== '' && (bool) preg_match(self::ABSOLUTE, $dir);
+    }
+
+    /**
      * @return non-empty-string
      *
      * @throws DeclaredWriteDirException
      */
     private static function absolute(string $dir): string
     {
-        if ($dir === '' || ! preg_match(self::ABSOLUTE, $dir)) {
+        if (! self::isAbsolute($dir)) {
             throw new DeclaredWriteDirException($dir);
         }
 
         $trimmed = rtrim($dir, '/\\');
 
         // One directory, one spelling - except at a root, which is all separator.
-        if ($trimmed === '' || ! preg_match(self::ABSOLUTE, $trimmed)) {
+        if (! self::isAbsolute($trimmed)) {
             return $dir;
         }
 

@@ -18,6 +18,7 @@ use Ray\Di\Scope;
 
 use function assert;
 use function class_exists;
+use function str_replace;
 
 /**
  * Provides AbstractAppMeta and derived bindings
@@ -39,7 +40,6 @@ class AppMetaModule extends AbstractModule
         private AbstractAppMeta $appMeta,
         private string $context,
         AbstractModule|null $module = null,
-        private WriteRule|null $parent = null,
     ) {
         parent::__construct($module);
     }
@@ -60,31 +60,38 @@ class AppMetaModule extends AbstractModule
     }
 
     /**
-     * A declared application is built from the appDir this boot resolved, not from a fresh
-     * reflection: an archive that moved has had it re-pointed on unserialize, and two trees of
-     * one application in one process each keep their own. Anything the machine has a say in
-     * cannot be a value at all.
+     * Declaring nothing leaves the Meta this boot resolved, whose paths __wakeup() re-points when
+     * the tree has moved. A declaration replaces tmp and log with what it named, and whatever it
+     * left out stays relative until the machine that boots prefixes its own temp directory.
      */
     private function bindAppMeta(): void
     {
         $dirs = $this->declaredWriteDirs();
-        $rule = new WriteRule($this->appMeta->name, $this->context, $dirs, $this->parent);
-        $this->bind(WriteRule::class)->toInstance($rule);
-
-        if ($dirs === null && $this->parent === null) {
+        if ($dirs === null) {
             $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
 
             return;
         }
 
-        if (! $rule->needsBoot()) {
-            $meta = new Meta($this->appMeta->name, $this->context, $this->appMeta->appDir, $rule->tmpDir(), $rule->logDir());
-            $this->bind(AbstractAppMeta::class)->toInstance($meta);
+        if ($dirs->tmpDir !== null && $dirs->logDir !== null) {
+            $this->bind(AbstractAppMeta::class)->toInstance($this->writing($dirs->tmpDir, $dirs->logDir));
 
             return;
         }
 
+        $key = str_replace('\\', '/', $this->appMeta->name) . '/' . $this->context;
+        $template = $this->writing($dirs->tmpDir ?? $key . '/tmp', $dirs->logDir ?? $key . '/log');
+        $this->bind(AbstractAppMeta::class)->annotatedWith(AppMetaProvider::TEMPLATE)->toInstance($template);
         $this->bind(AbstractAppMeta::class)->toProvider(AppMetaProvider::class)->in(Scope::SINGLETON);
+    }
+
+    /**
+     * @param non-empty-string $tmpDir
+     * @param non-empty-string $logDir
+     */
+    private function writing(string $tmpDir, string $logDir): Meta
+    {
+        return new Meta($this->appMeta->name, $this->context, $this->appMeta->appDir, $tmpDir, $logDir);
     }
 
     /**

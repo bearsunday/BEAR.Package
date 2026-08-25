@@ -23,7 +23,6 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
         private array $importAppConfig,
         #[Named('original')]
         private SchemeCollectionInterface $schemeCollection,
-        private WriteRule $rule,
     ) {
     }
 
@@ -34,7 +33,7 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
     public function get(): SchemeCollectionInterface
     {
         foreach ($this->importAppConfig as $app) {
-            $injector = Injector::fromMeta($this->importMeta($app), $app->context, $this->rule);
+            $injector = Injector::fromMeta($this->importMeta($app), $app->context);
             $adapter = new AppAdapter($injector, $app->appName);
             $this->schemeCollection
                 ->scheme('page')->host($app->host)->toAdapter($adapter)
@@ -44,7 +43,7 @@ final class ImportSchemeCollectionProvider implements ProviderInterface
         return $this->schemeCollection;
     }
 
-    /** The rule, not the directories: an import's own tree may be an archive nothing can write into. */
+    /** An imported application is an application: it declares where it writes, or writes in its own tree. */
     private function importMeta(ImportApp $app): Meta
     {
         return new Meta($app->appName, $app->context, $app->appDir());

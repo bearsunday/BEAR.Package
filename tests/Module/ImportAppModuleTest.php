@@ -20,7 +20,6 @@ use ReflectionProperty;
 use function assert;
 use function BEAR\Package\deleteFiles;
 use function dirname;
-use function str_replace;
 use function sys_get_temp_dir;
 use function uniqid;
 
@@ -53,41 +52,22 @@ class ImportAppModuleTest extends TestCase
     }
 
     /**
-     * An imported application is a separate application with its own Meta, and it writes under
-     * the host's tmp and log: the directories come from the host's container, not from its own tree.
+     * An imported application is an application: it writes in its own tree, where __wakeup() can
+     * re-point it, and the host's declaration is not its business.
      */
-    public function testImportAppWritesUnderTheHostsDirectories(): void
+    public function testImportAppWritesInItsOwnTree(): void
     {
         $host = sys_get_temp_dir() . '/bear-import-host-' . uniqid();
-        $hostTmp = $host . '/tmp';
-        $hostLog = $host . '/log';
-        $injector = new Injector($this->module([new ImportApp('bar', 'Import\HelloWorld', 'app')], $hostTmp, $hostLog));
+        $injector = new Injector($this->module([new ImportApp('bar', 'Import\HelloWorld', 'app')], $host . '/tmp', $host . '/log'));
 
         $resource = $injector->getInstance(ResourceInterface::class);
         assert($resource instanceof ResourceInterface);
         $ro = $resource->get('page://bar/dirs');
         assert($ro instanceof Dirs);
 
-        $this->assertSame($hostTmp . '/Import/HelloWorld/app/tmp', $ro->body['tmpDir']);
-        $this->assertSame($hostLog . '/Import/HelloWorld/app/log', $ro->body['logDir']);
-    }
-
-    /**
-     * A host that leaves its directories to the machine hands the machine's answer down: the
-     * import is compiled where the host is, so a directory resolved then would be the build's.
-     */
-    public function testImportUnderAHostThatAsksTheMachine(): void
-    {
-        $injector = new Injector($this->module([new ImportApp('baz', 'Import\HelloWorld', 'app')], null, null, true));
-
-        $resource = $injector->getInstance(ResourceInterface::class);
-        assert($resource instanceof ResourceInterface);
-        $ro = $resource->get('page://baz/dirs');
-        assert($ro instanceof Dirs);
-
-        $host = str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/app';
-        $this->assertSame($host . '/tmp/Import/HelloWorld/app/tmp', $ro->body['tmpDir']);
-        $this->assertSame($host . '/log/Import/HelloWorld/app/log', $ro->body['logDir']);
+        $own = dirname(__DIR__) . '/Fake/import-app';
+        $this->assertSame($own . '/var/tmp/app', $ro->body['tmpDir']);
+        $this->assertSame($own . '/var/log/app', $ro->body['logDir']);
     }
 
     /**
@@ -95,12 +75,12 @@ class ImportAppModuleTest extends TestCase
      * @param non-empty-string|null $tmpDir
      * @param non-empty-string|null $logDir
      */
-    private function module(array $imports, string|null $tmpDir = null, string|null $logDir = null, bool $askMachine = false): AbstractModule
+    private function module(array $imports, string|null $tmpDir = null, string|null $logDir = null): AbstractModule
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
         $chain = new ResourceModule('FakeVendor\HelloWorld');
         $chain->override(new ImportAppModule($imports));
-        $declared = $tmpDir === null && ! $askMachine ? $chain : new ReadOnlyAppModule($tmpDir, $logDir, $chain);
+        $declared = $tmpDir === null ? $chain : new ReadOnlyAppModule($tmpDir, $logDir, $chain);
 
         return new AppMetaModule($meta, 'app', $declared);
     }

@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 - Requires bear/app-meta ^1.14, whose `Meta` creates no directory and resolves none of the paths it is given: an application whose tree is read-only can have one, and a directory that is not there is named by whatever first needs it (#482)
 - Requires bear/sunday ^1.9: `CompileStepInterface`, the binding a compile step declares (#501)
-- An imported application writes under whatever the host answers (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base, and it is the host's rule that travels rather than the directory the host's build resolved - so a host that leaves its directories to the machine hands the machine's answer down (#426)
+- An imported application declares where it writes like any other application, and writes in its own tree when it declares nothing: it no longer inherits the host's directories, so an archive that carries one needs a declaration in the import's own `ProdModule` (#426)
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
 - A boot with a current compile marker returns the compiled scripts without assembling a module tree first
 - `Compiler::compile()` writes the compile marker only for a context that boots from the scripts
@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
 - `WriteDirMismatchException`, `DelegatedCompileException` and `bin/compile-worker.php`, with the delegated compile they served (#482)
-- `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - an imported application writes under the host's, derived from what the host declared (#426)
+- `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - each application answers for itself, and one that would write inside the archive is refused by `PharWritesInsideArchiveException` naming it (#426)
 - `CompileRecord::$writeDir` and `PharReport::$writeDir`: the marker no longer carries the write base (#426)
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
 - The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them

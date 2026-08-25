@@ -7,7 +7,6 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Module\AppMetaModule;
-use BEAR\Package\Module\WriteRule;
 use Ray\Di\AbstractModule;
 use Ray\Di\AssistedModule;
 
@@ -26,7 +25,7 @@ final class Module
      *
      * @param Context $context
      */
-    public function __invoke(AbstractAppMeta $appMeta, string $context, WriteRule|null $parent = null): AbstractModule
+    public function __invoke(AbstractAppMeta $appMeta, string $context): AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $context));
         $module = new AssistedModule();
@@ -36,7 +35,7 @@ final class Module
 
         // Wrapped, not override()d: wrapping is what lets AppMetaModule read the chain, and a
         // declared write directory reaches it no other way.
-        return new AppMetaModule($appMeta, $context, $module, $parent);
+        return new AppMetaModule($appMeta, $context, $module);
     }
 
     private function installContextModule(AbstractAppMeta $appMeta, string $contextItem, AbstractModule $module): AbstractModule

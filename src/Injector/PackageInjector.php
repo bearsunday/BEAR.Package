@@ -9,7 +9,6 @@ use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Exception\NotCompiledException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
-use BEAR\Package\Module\WriteRule;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
@@ -50,7 +49,7 @@ final class PackageInjector
     }
 
     /** @param Context $context */
-    public static function getInstance(AbstractAppMeta $meta, string $context, WriteRule|null $parent = null): InjectorInterface
+    public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
         $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir);
         if (isset(self::$instances[$injectorId])) {
@@ -62,7 +61,7 @@ final class PackageInjector
             return self::$instances[$injectorId] = new CompiledInjector($scriptDir);
         }
 
-        return self::$instances[$injectorId] = self::factory($meta, $context, null, $parent);
+        return self::$instances[$injectorId] = self::factory($meta, $context);
     }
 
     /**
@@ -70,7 +69,7 @@ final class PackageInjector
      *
      * @param Context $context
      */
-    public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null, WriteRule|null $parent = null): InjectorInterface
+    public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
         $scriptDir = self::ensureScriptDir($meta, $overrideModule);
         // Before the module tree, whose own failure inside an archive would mask this one.
@@ -78,7 +77,7 @@ final class PackageInjector
             throw new NotCompiledException($scriptDir);
         }
 
-        $module = self::module($meta, $context, $overrideModule, $parent);
+        $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
             return self::prodInjector($module, $scriptDir, $meta, $context);
         }
@@ -99,7 +98,7 @@ final class PackageInjector
     public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
     {
         $scriptDir = self::ensureScriptDir($meta, null);
-        $module = self::module($meta, $context, null, null);
+        $module = self::module($meta, $context, null);
         if (self::isProd($module)) {
             (new Compiler())->compile($module, $scriptDir);
         }
@@ -114,13 +113,13 @@ final class PackageInjector
      */
     public static function isCompiled(AbstractAppMeta $meta, string $context): bool
     {
-        return self::isProd(self::module($meta, $context, null, null));
+        return self::isProd(self::module($meta, $context, null));
     }
 
     /** @param Context $context */
-    private static function module(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule, WriteRule|null $parent): AbstractModule
+    private static function module(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): AbstractModule
     {
-        $module = (new Module())($meta, $context, $parent);
+        $module = (new Module())($meta, $context);
         if ($overrideModule instanceof AbstractModule) {
             $module->override($overrideModule);
         }

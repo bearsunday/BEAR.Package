@@ -5,22 +5,30 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\Meta;
 use Override;
+use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
+use function str_replace;
+use function sys_get_temp_dir;
+
 /**
- * A rule that needs the machine is asked here, in the process that boots.
+ * The one hook a compiled container runs at boot, which is the only place a machine can answer.
  *
- * The application directory is left for Meta to resolve: an archive and a moved tree each
- * answer it from where their classes load.
+ * The template carries a relative directory wherever the declaration left one out. Nothing else
+ * is passed: the application and the context the key names are already spelled into that path,
+ * as Meta spells them into its own.
  *
  * @implements ProviderInterface<AbstractAppMeta>
  */
 final class AppMetaProvider implements ProviderInterface
 {
-    public function __construct(private WriteRule $rule)
-    {
+    public const TEMPLATE = 'bear_package_write_template';
+
+    public function __construct(
+        #[Named(self::TEMPLATE)]
+        private AbstractAppMeta $template,
+    ) {
     }
 
     /**
@@ -29,12 +37,24 @@ final class AppMetaProvider implements ProviderInterface
     #[Override]
     public function get(): AbstractAppMeta
     {
-        return new Meta(
-            $this->rule->name,
-            $this->rule->context,
-            '',
-            $this->rule->tmpDir(),
-            $this->rule->logDir(),
-        );
+        $meta = clone $this->template;
+        $meta->tmpDir = self::resolved($meta->tmpDir);
+        $meta->logDir = self::resolved($meta->logDir);
+
+        return $meta;
+    }
+
+    /**
+     * @param non-empty-string $dir
+     *
+     * @return non-empty-string
+     */
+    private static function resolved(string $dir): string
+    {
+        if (WriteDirs::isAbsolute($dir)) {
+            return $dir;
+        }
+
+        return str_replace('\\', '/', sys_get_temp_dir()) . '/' . $dir;
     }
 }
