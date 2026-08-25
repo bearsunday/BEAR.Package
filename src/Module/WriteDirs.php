@@ -17,8 +17,8 @@ final class WriteDirs
      * @param LogDir|null $logDir
      */
     public function __construct(
-        public readonly string|null $tmpDir = null,
-        public readonly string|null $logDir = null,
+        public readonly string|null $tmpDir,
+        public readonly string|null $logDir,
     ) {
     }
 }
