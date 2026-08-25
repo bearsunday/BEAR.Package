@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\AppMeta\Meta;
-use BEAR\Package\Types;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -18,7 +16,6 @@ use Ray\Di\Scope;
 
 use function assert;
 use function class_exists;
-use function str_replace;
 
 /**
  * Provides AbstractAppMeta and derived bindings
@@ -30,15 +27,12 @@ use function str_replace;
  * :AppName
  * Set<CompileStepInterface>
  *
- * @psalm-import-type Context from Types
  * @psalm-suppress ClassMustBeFinal
  */
 class AppMetaModule extends AbstractModule
 {
-    /** @param Context $context */
     public function __construct(
         private AbstractAppMeta $appMeta,
-        private string $context,
         AbstractModule|null $module = null,
     ) {
         parent::__construct($module);
@@ -60,9 +54,9 @@ class AppMetaModule extends AbstractModule
     }
 
     /**
-     * Declaring nothing leaves the Meta this boot resolved, whose paths __wakeup() re-points when
-     * the tree has moved. A declaration replaces tmp and log with what it named, and whatever it
-     * left out stays relative until the machine that boots prefixes its own temp directory.
+     * Declaring nothing leaves the Meta this boot resolved. A declaration replaces the two
+     * directories on a clone of it - the application it names and where its build sits are the
+     * compile's, not the declaration's - and one it left out waits for the machine that boots.
      */
     private function bindAppMeta(): void
     {
@@ -73,25 +67,17 @@ class AppMetaModule extends AbstractModule
             return;
         }
 
-        if ($dirs->tmpDir !== null && $dirs->logDir !== null) {
-            $this->bind(AbstractAppMeta::class)->toInstance($this->writing($dirs->tmpDir, $dirs->logDir));
+        if ($dirs->tmpDir === null || $dirs->logDir === null) {
+            $this->bind(AbstractAppMeta::class)->annotatedWith(AppMetaProvider::IN_THE_TREE)->toInstance($this->appMeta);
+            $this->bind(AbstractAppMeta::class)->toProvider(AppMetaProvider::class)->in(Scope::SINGLETON);
 
             return;
         }
 
-        $key = str_replace('\\', '/', $this->appMeta->name) . '/' . $this->context;
-        $template = $this->writing($dirs->tmpDir ?? $key . '/tmp', $dirs->logDir ?? $key . '/log');
-        $this->bind(AbstractAppMeta::class)->annotatedWith(AppMetaProvider::TEMPLATE)->toInstance($template);
-        $this->bind(AbstractAppMeta::class)->toProvider(AppMetaProvider::class)->in(Scope::SINGLETON);
-    }
-
-    /**
-     * @param non-empty-string $tmpDir
-     * @param non-empty-string $logDir
-     */
-    private function writing(string $tmpDir, string $logDir): Meta
-    {
-        return new Meta($this->appMeta->name, $this->context, $this->appMeta->appDir, $tmpDir, $logDir);
+        $meta = clone $this->appMeta;
+        $meta->tmpDir = $dirs->tmpDir;
+        $meta->logDir = $dirs->logDir;
+        $this->bind(AbstractAppMeta::class)->toInstance($meta);
     }
 
     /**

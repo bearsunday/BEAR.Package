@@ -58,14 +58,14 @@ class ReadOnlyAppModuleTest extends TestCase
         $this->assertSame($this->edge->buildDir, $meta->buildDir);
     }
 
-    /** Omitted, the machine that boots answers - under a directory named for the application. */
+    /** Omitted, the machine that boots answers - keeping the shape the tree would have had. */
     public function testOmittedDirectoriesAreResolvedUnderTheSystemTemp(): void
     {
         $meta = $this->resolve(new ReadOnlyAppModule());
-        $base = str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app';
+        $base = str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/var';
 
-        $this->assertSame($base . '/tmp', $meta->tmpDir);
-        $this->assertSame($base . '/log', $meta->logDir);
+        $this->assertSame($base . '/tmp/prod-app', $meta->tmpDir);
+        $this->assertSame($base . '/log/prod-app', $meta->logDir);
     }
 
     /** Naming one leaves the other to the machine. */
@@ -73,7 +73,7 @@ class ReadOnlyAppModuleTest extends TestCase
     {
         $meta = $this->resolve(new ReadOnlyAppModule(logDir: $this->declared . '/log'));
 
-        $this->assertSame(str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
+        $this->assertSame(str_replace('\\', '/', sys_get_temp_dir()) . '/FakeVendor/HelloWorld/var/tmp/prod-app', $meta->tmpDir);
         $this->assertSame($this->declared . '/log', $meta->logDir);
     }
 
@@ -118,7 +118,7 @@ class ReadOnlyAppModuleTest extends TestCase
             }
         };
 
-        $module = new AppMetaModule($this->edge, 'prod-app', new ProdModule($app));
+        $module = new AppMetaModule($this->edge, new ProdModule($app));
         $meta = (new Injector($module))->getInstance(AbstractAppMeta::class);
         $this->assertInstanceOf(AbstractAppMeta::class, $meta);
 

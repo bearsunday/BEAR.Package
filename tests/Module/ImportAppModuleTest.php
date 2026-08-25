@@ -89,6 +89,6 @@ class ImportAppModuleTest extends TestCase
         $chain->override(new ImportAppModule($imports));
         $declared = $tmpDir === null ? $chain : new ReadOnlyAppModule($tmpDir, $logDir, $chain);
 
-        return new AppMetaModule($meta, 'app', $declared);
+        return new AppMetaModule($meta, $declared);
     }
 }

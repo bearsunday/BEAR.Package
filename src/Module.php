@@ -35,7 +35,7 @@ final class Module
 
         // Wrapped, not override()d: wrapping is what lets AppMetaModule read the chain, and a
         // declared write directory reaches it no other way.
-        return new AppMetaModule($appMeta, $context, $module);
+        return new AppMetaModule($appMeta, $module);
     }
 
     private function installContextModule(AbstractAppMeta $appMeta, string $contextItem, AbstractModule $module): AbstractModule

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Compile steps a module contributes through `MultiBinder` for `CompileStepInterface` now run, each into `{appDir}/var/build/{context}/{binding key}`
 - `ReadOnlyAppModule($tmpDir, $logDir)`, installed from the application's own `ProdModule`, says where the application writes when its tree is read-only; a named path is compiled in, and a relative or empty one is refused with `DeclaredWriteDirException`
-- Either directory may be omitted, and the machine that boots answers it, under its temp directory keyed by application and context: a value resolved while compiling would be the build machine's, and the archive would carry it
+- Either directory may be omitted, and the machine that boots answers it: the same place the application would have written inside its own tree, moved under the machine's temp directory. A value resolved while compiling would be the build machine's, and the archive would carry it
 - `preload.php` ships in the archive, so `opcache.preload` can name it there (`phar:///path/app.phar/preload.php`): its requires are written relative to the directory it sits in, so they resolve inside the archive and nowhere else
 - The pack refuses a `preload.php` another context left behind, naming the header it looked for: one is written per compile at a fixed path, and the last compile wins
 
