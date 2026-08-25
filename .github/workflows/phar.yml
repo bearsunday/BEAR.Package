@@ -78,5 +78,6 @@ jobs:
       # The archive holds no write directory, so the machine that boots answers it.
       - name: Boot the same archive under another temp directory
         run: |
-          CONTEXT=prod-cli-hal-app TMPDIR=/tmp/elsewhere php /tmp/app.phar get /index | tee /tmp/elsewhere
-          grep -q '200 OK' /tmp/elsewhere
+          CONTEXT=prod-cli-hal-app TMPDIR=/tmp/other-temp php /tmp/app.phar get /index | tee /tmp/other-response
+          grep -q '200 OK' /tmp/other-response
+          test -d /tmp/other-temp/MyVendor/MyProject/prod-cli-hal-app/tmp
