@@ -15,6 +15,7 @@ use FakeVendor\HelloWorld\FakeDep;
 use FakeVendor\HelloWorld\FakeDep2;
 use FakeVendor\HelloWorld\FakeDepInterface;
 use FakeVendor\HelloWorld\Resource\Page\Injection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Ray\Compiler\CompiledInjector;
@@ -311,54 +312,25 @@ class PackageInjectorTest extends TestCase
     }
 
     /**
-     * A boot that cannot rewrite the scripts is told what the mismatch was, instead of failing
-     * on the write: an archive, an immutable image, or here a path nothing can be created under.
+     * The refusal sits above the module tree because a tree inside an archive fails on its own
+     * terms first, and what it says has nothing to do with the build being absent.
      */
-    public function testBootThatCannotReplaceTheScripts(): void
+    #[DataProvider('scriptDirNoBootCanWriteTo')]
+    public function testABootIsRefusedWhereNothingCanBeCompiled(string $appDir): void
     {
-        $inTheWay = sys_get_temp_dir() . '/bear-not-a-dir-' . uniqid('', true);
-        file_put_contents($inTheWay, 'not a directory');
-        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', dirname(__DIR__) . '/Fake/fake-app');
-        $module = new class extends AbstractModule {
-            protected function configure(): void
-            {
-            }
-        };
-
-        try {
-            $this->expectException(NotCompiledException::class);
-            (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
-                ->invoke(null, $module, $inTheWay . '/di', $meta, 'prod-app');
-        } finally {
-            @unlink($inTheWay);
-        }
-    }
-
-    /**
-     * The guard sits above the module tree because a tree inside an archive fails on its own terms
-     * first, and what it says has nothing to do with the build being absent.
-     */
-    public function testFactoryRefusesBeforeAssemblingTheTree(): void
-    {
-        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', 'phar:///deploy/app.phar');
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
 
         $this->expectException(NotCompiledException::class);
         PackageInjector::factory($meta, 'prod-app');
     }
 
-    /** An archive that is not there has no ancestor to ask, and the working directory does not answer for it. */
-    public function testBootWhoseScriptDirHasNoExistingAncestor(): void
+    /** @return array<string, array{0: string}> */
+    public static function scriptDirNoBootCanWriteTo(): array
     {
-        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', dirname(__DIR__) . '/Fake/fake-app');
-        $module = new class extends AbstractModule {
-            protected function configure(): void
-            {
-            }
-        };
+        $inTheWay = sys_get_temp_dir() . '/bear-not-a-dir-' . uniqid('', true);
+        file_put_contents($inTheWay, 'not a directory');
 
-        $this->expectException(NotCompiledException::class);
-        (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
-            ->invoke(null, $module, 'phar:///deploy/app.phar/var/build/prod-app/di', $meta, 'prod-app');
+        return ['an archive that is not there' => ['phar:///deploy/app.phar'], 'a file where the tree should be' => [$inTheWay]];
     }
 
     /** A marker that cannot be persisted makes every later boot recompile, so it must not be swallowed. */

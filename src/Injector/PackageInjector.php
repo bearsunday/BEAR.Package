@@ -170,10 +170,6 @@ final class PackageInjector
             return new CompiledInjector($scriptDir);
         }
 
-        if (! self::canWrite($scriptDir)) {
-            throw new NotCompiledException($scriptDir);
-        }
-
         (new Compiler())->compile($module, $scriptDir);
         $moduleInjector = new RayInjector($module, $scriptDir);
         $moduleInjector->getInstance(CompileSteps::class)($meta->buildDir);
