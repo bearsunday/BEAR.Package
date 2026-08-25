@@ -26,13 +26,11 @@ final class CacheDirProvider implements ProviderInterface
     public function get(): string
     {
         $cacheDir = $this->appMeta->tmpDir . self::CACHE_DIRNAME;
-        // Created only when absent: one that exists and cannot be written is refused, not
-        // mistaken for a lost race.
         if (! is_dir($cacheDir)) {
             @mkdir($cacheDir, 0777, true);
         }
 
-        // is_writable() answers for a file too, and a file here is not a lost race
+        // Asked again rather than trusting mkdir(): false is a lost race, a file, or a refusal
         if (! is_dir($cacheDir) || ! is_writable($cacheDir)) {
             throw new DirectoryNotWritableException($cacheDir);
         }

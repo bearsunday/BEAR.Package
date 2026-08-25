@@ -12,9 +12,8 @@ use Ray\Di\AbstractModule;
  * Install it from the application's own ProdModule.
  *
  * A named directory is compiled in as given, so it must be one every machine that boots the
- * build can write to - and whether it can is the filesystem's answer, at the moment something
- * writes. An omitted one is answered by the machine, under its temp directory, keeping the shape
- * the application would have used inside its own tree.
+ * build can write to. An omitted one is answered by the machine, under its temp directory,
+ * keeping the shape the application would have used inside its own tree.
  *
  * @psalm-import-type LogDir from Types
  * @psalm-import-type TmpDir from Types

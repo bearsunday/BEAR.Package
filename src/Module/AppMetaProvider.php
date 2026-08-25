@@ -17,10 +17,6 @@ use function sys_get_temp_dir;
 /**
  * The one hook a compiled container runs at boot, which is the only place a machine can answer.
  *
- * A directory the declaration left out keeps the shape the application would have used inside
- * its own tree, moved under the machine's temp directory. Nothing is recorded to work that out:
- * the name is the Meta's, and the rest is the part of its path below its own appDir.
- *
  * @implements ProviderInterface<AbstractAppMeta>
  */
 final class AppMetaProvider implements ProviderInterface
