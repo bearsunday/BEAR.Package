@@ -12,8 +12,9 @@ use Ray\Di\AbstractModule;
  * Install it from the application's own ProdModule.
  *
  * A named directory is compiled in as given, so it must be one every machine that boots the
- * build can write to. An omitted one is answered by the machine, under its temp directory,
- * keyed by application and context.
+ * build can write to - and whether it can is the filesystem's answer, at the moment something
+ * writes. An omitted one is answered by the machine, under its temp directory, keeping the shape
+ * the application would have used inside its own tree.
  *
  * @psalm-import-type LogDir from Types
  * @psalm-import-type TmpDir from Types
@@ -21,8 +22,8 @@ use Ray\Di\AbstractModule;
 final class ReadOnlyAppModule extends AbstractModule
 {
     /**
-     * @param string|null $tmpDir absolute path for what a run may discard
-     * @param string|null $logDir absolute path for what it may not
+     * @param TmpDir|null $tmpDir absolute path for what a run may discard
+     * @param LogDir|null $logDir absolute path for what it may not
      */
     public function __construct(
         private string|null $tmpDir = null,
