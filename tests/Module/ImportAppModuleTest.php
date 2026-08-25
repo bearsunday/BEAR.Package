@@ -20,6 +20,7 @@ use ReflectionProperty;
 use function assert;
 use function BEAR\Package\deleteFiles;
 use function dirname;
+use function str_replace;
 use function sys_get_temp_dir;
 use function uniqid;
 
@@ -65,9 +66,15 @@ class ImportAppModuleTest extends TestCase
         $ro = $resource->get('page://bar/dirs');
         assert($ro instanceof Dirs);
 
-        $own = dirname(__DIR__) . '/Fake/import-app';
-        $this->assertSame($own . '/var/tmp/app', $ro->body['tmpDir']);
-        $this->assertSame($own . '/var/log/app', $ro->body['logDir']);
+        // Meta spells appDir with the platform separator and its own tail with a slash
+        $own = self::forwardSlashed(dirname(__DIR__) . '/Fake/import-app');
+        $this->assertSame($own . '/var/tmp/app', self::forwardSlashed($ro->body['tmpDir']));
+        $this->assertSame($own . '/var/log/app', self::forwardSlashed($ro->body['logDir']));
+    }
+
+    private static function forwardSlashed(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 
     /**
