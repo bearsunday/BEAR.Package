@@ -83,4 +83,4 @@ jobs:
         run: |
           CONTEXT=prod-cli-hal-app TMPDIR=/tmp/other-temp php /tmp/app.phar get /index | tee /tmp/other-response
           grep -q '200 OK' /tmp/other-response
-          test -d /tmp/other-temp/MyVendor/MyProject/prod-cli-hal-app/tmp
+          test -d /tmp/other-temp/MyVendor/MyProject/var/tmp/prod-cli-hal-app
