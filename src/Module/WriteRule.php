@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Types;
 
 use function str_replace;
 use function sys_get_temp_dir;
@@ -13,11 +14,19 @@ use function sys_get_temp_dir;
  * Only names, contexts and declared paths are held, so one rule serves every machine that boots
  * the build. An application nested under another names its parent here, and the parent's own
  * rule is asked at the same moment.
+ *
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
  */
 final class WriteRule
 {
+    /**
+     * @param AppName $name
+     * @param Context $context
+     */
     public function __construct(
-        public readonly AppId $app,
+        public readonly string $name,
+        public readonly string $context,
         public readonly WriteDirs|null $declared = null,
         public readonly WriteRule|null $parent = null,
     ) {
@@ -58,7 +67,7 @@ final class WriteRule
         }
 
         if ($this->declared === null) {
-            return self::forwardSlashed(AbstractAppMeta::appDir($this->app->name)) . '/var/' . $dir . '/' . $this->app->context;
+            return self::forwardSlashed(AbstractAppMeta::appDir($this->name)) . '/var/' . $dir . '/' . $this->context;
         }
 
         return self::forwardSlashed(sys_get_temp_dir()) . '/' . $this->key() . '/' . $dir;
@@ -78,6 +87,6 @@ final class WriteRule
     /** @return non-empty-string */
     private function key(): string
     {
-        return str_replace('\\', '/', $this->app->name) . '/' . $this->app->context;
+        return str_replace('\\', '/', $this->name) . '/' . $this->context;
     }
 }

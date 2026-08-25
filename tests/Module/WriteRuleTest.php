@@ -14,7 +14,8 @@ use function unserialize;
 
 class WriteRuleTest extends TestCase
 {
-    private AppId $app;
+    private const APP = 'FakeVendor\\HelloWorld';
+    private const CONTEXT = 'prod-app';
 
     /** Meta and WriteRule both spell a resolved directory forward-slashed. */
     private static function slashed(string $dir): string
@@ -22,17 +23,10 @@ class WriteRuleTest extends TestCase
         return str_replace('\\', '/', $dir);
     }
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->app = new AppId('FakeVendor\HelloWorld', 'prod-app');
-    }
-
     /** Declaring nothing keeps an application in its own tree, where a boot resolves the root. */
     public function testNoDeclaration(): void
     {
-        $rule = new WriteRule($this->app);
+        $rule = new WriteRule(self::APP, self::CONTEXT);
         $appDir = self::slashed(dirname(__DIR__)) . '/Fake/fake-app';
 
         $this->assertSame($appDir . '/var/tmp/prod-app', $rule->tmpDir());
@@ -42,7 +36,7 @@ class WriteRuleTest extends TestCase
     /** A named directory is the declaration's to give, and nothing resolves it again. */
     public function testFullDeclaration(): void
     {
-        $rule = new WriteRule($this->app, new WriteDirs('/var/tmp/named', '/var/log/named'));
+        $rule = new WriteRule(self::APP, self::CONTEXT, new WriteDirs('/var/tmp/named', '/var/log/named'));
 
         $this->assertSame('/var/tmp/named', $rule->tmpDir());
         $this->assertSame('/var/log/named', $rule->logDir());
@@ -52,7 +46,7 @@ class WriteRuleTest extends TestCase
     /** Omitting both asks the machine, under a directory named for the application. */
     public function testOmittedBoth(): void
     {
-        $rule = new WriteRule($this->app, new WriteDirs(null, null));
+        $rule = new WriteRule(self::APP, self::CONTEXT, new WriteDirs(null, null));
         $base = self::slashed(sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app';
 
         $this->assertSame($base . '/tmp', $rule->tmpDir());
@@ -63,7 +57,7 @@ class WriteRuleTest extends TestCase
     /** One of the two can be named on its own. */
     public function testOneOmitted(): void
     {
-        $rule = new WriteRule($this->app, new WriteDirs(null, '/var/log/named'));
+        $rule = new WriteRule(self::APP, self::CONTEXT, new WriteDirs(null, '/var/log/named'));
 
         $this->assertSame(self::slashed(sys_get_temp_dir()) . '/FakeVendor/HelloWorld/prod-app/tmp', $rule->tmpDir());
         $this->assertSame('/var/log/named', $rule->logDir());
@@ -73,8 +67,8 @@ class WriteRuleTest extends TestCase
     /** An application nested under another hangs off whatever the parent answers. */
     public function testNestedUnderANamedParent(): void
     {
-        $parent = new WriteRule(new AppId('Host\App', 'prod-app'), new WriteDirs('/var/tmp/host', '/var/log/host'));
-        $rule = new WriteRule(new AppId('Guest\App', 'app'), null, $parent);
+        $parent = new WriteRule('Host\App', 'prod-app', new WriteDirs('/var/tmp/host', '/var/log/host'));
+        $rule = new WriteRule('Guest\App', 'app', null, $parent);
 
         $this->assertSame('/var/tmp/host/Guest/App/app/tmp', $rule->tmpDir());
         $this->assertSame('/var/log/host/Guest/App/app/log', $rule->logDir());
@@ -83,8 +77,8 @@ class WriteRuleTest extends TestCase
     /** The parent's own answer is asked at the same moment, so a machine's reaches the nested one. */
     public function testNestedUnderAParentThatAsksTheMachine(): void
     {
-        $parent = new WriteRule(new AppId('Host\App', 'prod-app'), new WriteDirs(null, null));
-        $rule = new WriteRule(new AppId('Guest\App', 'app'), null, $parent);
+        $parent = new WriteRule('Host\App', 'prod-app', new WriteDirs(null, null));
+        $rule = new WriteRule('Guest\App', 'app', null, $parent);
 
         $this->assertSame(self::slashed(sys_get_temp_dir()) . '/Host/App/prod-app/tmp/Guest/App/app/tmp', $rule->tmpDir());
         $this->assertTrue($rule->needsBoot());
@@ -93,8 +87,8 @@ class WriteRuleTest extends TestCase
     /** A nested application that names its own directories keeps them. */
     public function testNestedWithItsOwnDeclaration(): void
     {
-        $parent = new WriteRule(new AppId('Host\App', 'prod-app'), new WriteDirs('/var/tmp/host', '/var/log/host'));
-        $rule = new WriteRule(new AppId('Guest\App', 'app'), new WriteDirs('/var/tmp/guest', '/var/log/guest'), $parent);
+        $parent = new WriteRule('Host\App', 'prod-app', new WriteDirs('/var/tmp/host', '/var/log/host'));
+        $rule = new WriteRule('Guest\App', 'app', new WriteDirs('/var/tmp/guest', '/var/log/guest'), $parent);
 
         $this->assertSame('/var/tmp/guest', $rule->tmpDir());
         $this->assertSame('/var/log/guest', $rule->logDir());
@@ -106,8 +100,8 @@ class WriteRuleTest extends TestCase
      */
     public function testWhatACompiledContainerCarries(): void
     {
-        $parent = new WriteRule(new AppId('Host\App', 'prod-app'), new WriteDirs(null, null));
-        $rule = new WriteRule($this->app, null, $parent);
+        $parent = new WriteRule('Host\App', 'prod-app', new WriteDirs(null, null));
+        $rule = new WriteRule(self::APP, self::CONTEXT, null, $parent);
 
         $this->assertStringNotContainsString(self::slashed(sys_get_temp_dir()), serialize($rule));
         $restored = unserialize(serialize($rule));

@@ -68,7 +68,7 @@ class AppMetaModule extends AbstractModule
     private function bindAppMeta(): void
     {
         $dirs = $this->declaredWriteDirs();
-        $rule = new WriteRule(new AppId($this->appMeta->name, $this->context), $dirs, $this->parent);
+        $rule = new WriteRule($this->appMeta->name, $this->context, $dirs, $this->parent);
         $this->bind(WriteRule::class)->toInstance($rule);
 
         if ($dirs === null && $this->parent === null) {

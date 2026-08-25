@@ -30,8 +30,8 @@ final class AppMetaProvider implements ProviderInterface
     public function get(): AbstractAppMeta
     {
         return new Meta(
-            $this->rule->app->name,
-            $this->rule->app->context,
+            $this->rule->name,
+            $this->rule->context,
             '',
             $this->rule->tmpDir(),
             $this->rule->logDir(),

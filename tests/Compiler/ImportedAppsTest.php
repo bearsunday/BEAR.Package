@@ -7,7 +7,6 @@ namespace BEAR\Package\Compiler;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Exception\PharImportsUnreadableException;
-use BEAR\Package\Module\AppId;
 use BEAR\Package\Module\Import\ImportApp;
 use BEAR\Package\Module\ImportAppModule;
 use BEAR\Package\Module\WriteRule;
@@ -93,7 +92,7 @@ class ImportedAppsTest extends TestCase
             protected function configure(): void
             {
                 $this->bind(AbstractAppMeta::class)->toInstance($this->meta);
-                $this->bind(WriteRule::class)->toInstance(new WriteRule(new AppId($this->meta->name, 'app')));
+                $this->bind(WriteRule::class)->toInstance(new WriteRule($this->meta->name, 'app'));
             }
         };
     }
