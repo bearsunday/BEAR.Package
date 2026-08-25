@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\AppMeta\Meta;
 use BEAR\Package\Types;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Compile\CompileStepInterface;
@@ -59,9 +60,10 @@ class AppMetaModule extends AbstractModule
     }
 
     /**
-     * A fully declared application is cloned in, not rebuilt: an archive that moves has its
-     * appDir re-pointed on unserialize, and only tmp and log are the declaration's to give.
-     * Anything the machine has a say in cannot be a value at all.
+     * A declared application is built from the appDir this boot resolved, not from a fresh
+     * reflection: an archive that moved has had it re-pointed on unserialize, and two trees of
+     * one application in one process each keep their own. Anything the machine has a say in
+     * cannot be a value at all.
      */
     private function bindAppMeta(): void
     {
@@ -76,9 +78,7 @@ class AppMetaModule extends AbstractModule
         }
 
         if (! $rule->needsBoot()) {
-            $meta = clone $this->appMeta;
-            $meta->tmpDir = $rule->tmpDir();
-            $meta->logDir = $rule->logDir();
+            $meta = new Meta($this->appMeta->name, $this->context, $this->appMeta->appDir, $rule->tmpDir(), $rule->logDir());
             $this->bind(AbstractAppMeta::class)->toInstance($meta);
 
             return;
