@@ -147,6 +147,8 @@ class PharManifestTest extends TestCase
             'var/conf/aura.route.php' => "<?php\n",
             'var/json_schema/user.json' => '{}',
             'var/templates/index.html.twig' => 'hi',
+            // The artifact's own, so it ships.
+            'preload.php' => "<?php\n",
             // Not named, so not carried.
             'vendor-bin/tools/vendor/phpstan.php' => "<?php\n",
             'build/coverage/index.html' => '<html></html>',
@@ -154,9 +156,8 @@ class PharManifestTest extends TestCase
             'tests/AppTest.php' => "<?php\n",
             'legacy/.env.local' => 'SECRET=3',
             '.github/workflows/ci.yml' => 'on: push',
-            // Nothing directly at the root.
+            // Nothing else directly at the root.
             'autoload.php' => "<?php\n",
-            'preload.php' => "<?php\n",
             'app.phar' => 'the archive of an earlier run',
             'composer.json' => '{}',
             'env.json' => '{"SECRET": 3}',
@@ -177,6 +178,7 @@ class PharManifestTest extends TestCase
 
         $this->assertSame([
             'bin/app.php',
+            'preload.php',
             'public/index.php',
             'src/App.php',
             'var/build/prod-app/di/' . CompileMarker::FILENAME,

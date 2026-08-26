@@ -198,6 +198,8 @@ class CompilerTest extends TestCase
         // Preload belongs to a process that is reused: a CLI one compiles the list, serves its
         // single request and throws it away.
         $this->assertStringContainsString("if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {", $preload);
+        // The pack reads this line to refuse a preload another context left behind.
+        $this->assertStringContainsString('// prod-app preload', $preload);
 
         foreach (
             [
