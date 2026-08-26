@@ -16,6 +16,7 @@ use function file_put_contents;
 use function is_dir;
 use function mkdir;
 use function preg_match_all;
+use function rmdir;
 use function sprintf;
 use function sys_get_temp_dir;
 use function uniqid;
@@ -48,6 +49,7 @@ class PreloadRecorderTest extends TestCase
             (new PreloadRecorder())(self::APP_NAME, self::CONTEXT, $appDir);
         } finally {
             deleteFiles($appDir);
+            rmdir($appDir);
         }
     }
 

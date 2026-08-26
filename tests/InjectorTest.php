@@ -18,6 +18,7 @@ use function assert;
 use function mkdir;
 use function passthru;
 use function realpath;
+use function rmdir;
 use function spl_object_hash;
 use function sprintf;
 use function sys_get_temp_dir;
@@ -93,11 +94,15 @@ class InjectorTest extends TestCase
         $appDir = __DIR__ . '/Fake/fake-app';
         $otherTree = sys_get_temp_dir() . '/bear-tree-' . uniqid();
         mkdir($otherTree . '/src/Resource', 0777, true);
-        $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir);
-        $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $otherTree);
-        $this->assertSame(realpath($appDir), $first->getInstance(AbstractAppMeta::class)->appDir);
-        $this->assertSame(realpath($otherTree), $second->getInstance(AbstractAppMeta::class)->appDir);
-        deleteFiles($otherTree);
+        try {
+            $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir);
+            $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $otherTree);
+            $this->assertSame(realpath($appDir), $first->getInstance(AbstractAppMeta::class)->appDir);
+            $this->assertSame(realpath($otherTree), $second->getInstance(AbstractAppMeta::class)->appDir);
+        } finally {
+            deleteFiles($otherTree);
+            rmdir($otherTree);
+        }
     }
 
     public function testGetOverrideInstance(): void
