@@ -52,7 +52,7 @@ final class ReadOnlyAppModule extends AbstractModule
     /** @throws WriteDirNotAbsoluteException */
     private function refuseRelative(string|null $dir): void
     {
-        if ($dir === null || preg_match('#^(/|[A-Za-z]:[\\\\/])#', $dir) === 1) {
+        if ($dir === null || preg_match('#^(/|\\\\{2}|[A-Za-z]:[\\\\/])#', $dir) === 1) {
             return;
         }
 

@@ -39,6 +39,14 @@ class ReadOnlyAppModuleTest extends TestCase
         new ReadOnlyAppModule('/data/app/tmp', 'var/log');
     }
 
+    /** A UNC path names its own root: absolute, though no slash or drive letter starts it. */
+    public function testAcceptsAWindowsUncPath(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        new ReadOnlyAppModule('\\\\server\\share\\tmp', '\\\\server\\share\\log');
+    }
+
     public function testTheApplicationsInstallWins(): void
     {
         $tmpDir = sys_get_temp_dir() . '/bear-readonly-tmp';
