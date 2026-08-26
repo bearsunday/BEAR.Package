@@ -39,8 +39,8 @@ final class AppMetaProvider implements ProviderInterface
     public function get(): AbstractAppMeta
     {
         $meta = clone $this->asCompiled;
-        $meta->tmpDir = $this->dirs->tmpDir ?? $this->underMachineTemp($this->shape->tmp);
-        $meta->logDir = $this->dirs->logDir ?? $this->underMachineTemp($this->shape->log);
+        $meta->tmpDir = $this->dirs->tmpDir ?? $this->machineTempDir($this->shape->tmp);
+        $meta->logDir = $this->dirs->logDir ?? $this->machineTempDir($this->shape->log);
 
         return $meta;
     }
@@ -52,7 +52,7 @@ final class AppMetaProvider implements ProviderInterface
      *
      * @return non-empty-string
      */
-    private function underMachineTemp(string $shape): string
+    private function machineTempDir(string $shape): string
     {
         return sprintf(
             '%s/%s/%s/%s',
