@@ -13,8 +13,6 @@ use function assert;
 /**
  * Where a compiled container writes, asked of the container itself.
  *
- * The marker does not record write directories; they are settled at boot.
- *
  * @psalm-import-type ScriptDir from Types
  * @psalm-import-type TmpDir from Types
  */
