@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Annotation\AsCompiled;
 use Override;
-use Ray\Di\Di\Named;
 use Ray\Di\ProviderInterface;
 
 use function hash;
@@ -22,10 +22,8 @@ use function sys_get_temp_dir;
  */
 final class AppMetaProvider implements ProviderInterface
 {
-    public const AS_COMPILED = 'bear_package_app_meta_as_compiled';
-
     public function __construct(
-        #[Named(self::AS_COMPILED)]
+        #[AsCompiled]
         private AbstractAppMeta $asCompiled,
         private WriteDirs $dirs,
         private WriteShape $shape,

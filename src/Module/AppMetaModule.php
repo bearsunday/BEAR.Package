@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Annotation\AsCompiled;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -44,7 +45,7 @@ class AppMetaModule extends AbstractModule
     #[Override]
     protected function configure(): void
     {
-        $this->bind(AbstractAppMeta::class)->annotatedWith(AppMetaProvider::AS_COMPILED)->toInstance($this->appMeta);
+        $this->bind(AbstractAppMeta::class)->annotatedWith(AsCompiled::class)->toInstance($this->appMeta);
         $this->bind(AbstractAppMeta::class)->toProvider(AppMetaProvider::class)->in(Scope::SINGLETON);
         $appClass = $this->appMeta->name . '\Module\App';
         assert(class_exists($appClass));
