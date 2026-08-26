@@ -426,6 +426,14 @@ class CompilerTest extends TestCase
         }
     }
 
+    public function testCompileAfterCleanBuildsFromTheScriptsCleanLeft(): void
+    {
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
+        $compiler->clean();
+
+        $this->assertGreaterThan(0, $compiler->compile()['compiled']);
+    }
+
     public function testEmptyDirectoryWhenMissingIsNoOp(): void
     {
         $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);

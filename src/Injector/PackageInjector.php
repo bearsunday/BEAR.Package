@@ -85,37 +85,6 @@ final class PackageInjector
         return self::rayInjector($module, $scriptDir);
     }
 
-    /**
-     * Injector for the compile pipeline: never the AOT branch.
-     *
-     * factory() would take prodInjector()'s runtime cold path, logging an on-demand compile
-     * and writing the marker mid-build. The compile here is not the pass in
-     * Compiler::compile(): it populates the scripts FakeRun resolves through, the later pass
-     * re-emits them after AOP weaving.
-     *
-     * @param Context $context
-     */
-    public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
-    {
-        $scriptDir = self::ensureScriptDir($meta, null);
-        $module = self::module($meta, $context, null);
-        if (self::isProd($module)) {
-            (new Compiler())->compile($module, $scriptDir);
-        }
-
-        return self::rayInjector($module, $scriptDir);
-    }
-
-    /**
-     * Whether $context boots from compiled scripts rather than assembling per request.
-     *
-     * @param Context $context
-     */
-    public static function isCompiled(AbstractAppMeta $meta, string $context): bool
-    {
-        return self::isProd(self::module($meta, $context, null));
-    }
-
     /** @param Context $context */
     private static function module(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule): AbstractModule
     {

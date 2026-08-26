@@ -42,10 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them
 - `APP_WRITE_DIR` and `$writeDir` throughout - `Injector::getInstance()`, `Injector::getOverrideInstance()`, `Compiler::__construct()`, `PreloadRecorder::__invoke()` and `bin/preload-worker.php`; an application declares where it writes with `ReadOnlyAppModule` instead, and the declaration is compiled in
 - `WriteDirRequiredException`, and `CompiledForAnotherWriteDirException` for `NotCompiledException`: a boot that cannot compile is told there is no build here rather than which write directory the last one used
+- `PackageInjector::compileInjector()` and `PackageInjector::isCompiled()`: the compile pipeline's injector belongs to `Compiler`, which is the only thing that ever asked for it
 
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
 - A compile refuses a context that assembles its container per request before `clean()` runs, and `clean()` no longer removes `preload.php`, `autoload.php` or `app.phar`: a compile that fails leaves the last one's files where they were (#426)
+- `Compiler::clean()` followed by `Compiler::compile()` no longer fatals with `Unbound`: the injector is built when a compile asks for it, from the scripts on disk then, so one full container compile per run is gone
 - A directory holding an imported application carries that application only: what sits beside it no longer ships (#426)
 - The demo tests run in CI, and the demo asserts the `int` its resource declares
 - The object graph diagram renders to SVG again: a path fragment pasted into the `which dot` probe had disabled it since 1.10.7
