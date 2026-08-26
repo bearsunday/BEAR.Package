@@ -326,8 +326,7 @@ class PackageInjectorTest extends TestCase
 
         try {
             $this->expectException(NotCompiledException::class);
-            (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
-                ->invoke(null, $module, $inTheWay . '/di', $meta, 'prod-app');
+            ProdInjector::create($module, $inTheWay . '/di', $meta, 'prod-app');
         } finally {
             @unlink($inTheWay);
         }
@@ -344,8 +343,7 @@ class PackageInjectorTest extends TestCase
         };
 
         $this->expectException(NotCompiledException::class);
-        (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
-            ->invoke(null, $module, 'phar:///deploy/app.phar/var/build/prod-app/di', $meta, 'prod-app');
+        ProdInjector::create($module, 'phar:///deploy/app.phar/var/build/prod-app/di', $meta, 'prod-app');
     }
 
     /** A marker that cannot be persisted makes every later boot recompile, so it must not be swallowed. */
