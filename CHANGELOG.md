@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
 
 ### Fixed
+- Holds bear/app-meta at `~1.13.0`: 1.14 removed `Meta::create()`, which `Compiler`, `Injector` and `PreloadRecorder` call, so `^1.13` resolved to an app-meta this release cannot run on
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
 - A compile refuses a context that assembles its container per request before `clean()` runs, and `clean()` no longer removes `preload.php`, `autoload.php` or `app.phar`: a compile that fails leaves the last one's files where they were (#426)
 - A directory holding an imported application carries that application only: what sits beside it no longer ships (#426)
