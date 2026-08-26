@@ -27,7 +27,6 @@ final class FileLogRefWriter implements LogRefWriterInterface
     public function write(LogRef $logRef, string $detail): void
     {
         $logDir = $this->appMeta->logDir;
-        // ErrorLogger calls this before the logger writes, so in a fresh tree nothing has made logDir yet.
         is_dir($logDir) || @mkdir($logDir, 0777, true);
         $logRefFile = sprintf('%s/logref.%s.log', $logDir, (string) $logRef);
         @file_put_contents($logRefFile, $detail);
