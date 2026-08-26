@@ -9,6 +9,7 @@ use BEAR\Package\Exception\DirectoryNotWritableException;
 use Override;
 use Ray\Di\ProviderInterface;
 
+use function is_dir;
 use function is_writable;
 use function mkdir;
 
@@ -25,10 +26,14 @@ final class CacheDirProvider implements ProviderInterface
     public function get(): string
     {
         $cacheDir = $this->appMeta->tmpDir . self::CACHE_DIRNAME;
-        if (! is_writable($cacheDir) && ! @mkdir($cacheDir)) {
-            // @codeCoverageIgnoreStart
+        // Created only when absent: one that exists and cannot be written is refused, not
+        // mistaken for a lost race.
+        if (! is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0777, true);
+        }
+
+        if (! is_writable($cacheDir)) {
             throw new DirectoryNotWritableException($cacheDir);
-            // @codeCoverageIgnoreEnd
         }
 
         return $cacheDir;
