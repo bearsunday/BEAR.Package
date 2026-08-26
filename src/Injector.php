@@ -35,6 +35,8 @@ final class Injector
      * @param AppDir        $appDir
      * @param null          $cache    the compiled scripts are the cache; nothing else is read
      * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public static function getInstance(string $appName, string $context, string $appDir, null $cache = null, string|null $writeDir = null): InjectorInterface
     {
