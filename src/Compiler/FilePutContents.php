@@ -8,9 +8,12 @@ use ArrayObject;
 use BEAR\Package\Exception\PartialWriteException;
 use BEAR\Package\Types;
 
+use function dirname;
 use function file_exists;
 use function file_put_contents;
 use function in_array;
+use function is_dir;
+use function mkdir;
 use function strlen;
 
 /** @psalm-import-type OverwrittenFiles from Types */
@@ -29,6 +32,9 @@ final class FilePutContents
             /** @psalm-suppress NullArgument */
             $this->overwritten[] = $fileName;
         }
+
+        $dir = dirname($fileName);
+        is_dir($dir) || @mkdir($dir, 0777, true);
 
         // A full disk writes some of the bytes and reports no error. The compile would then
         // ship a truncated preload.php or autoload.php, which is a parse error on every boot.

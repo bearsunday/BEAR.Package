@@ -6,7 +6,7 @@ namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Compiler\CompileSteps;
-use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
+use BEAR\Package\Exception\NotCompiledException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
@@ -59,15 +59,14 @@ final class PackageInjector
      */
     public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        // Both directories: one app+context can be booted with different writable ones, and two
-        // trees can be booted with the same one.
-        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir . "\n" . $meta->tmpDir);
+        // Keyed by appDir: two checkouts of one application must not share an injector.
+        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
 
         $scriptDir = self::scriptDir($meta, null);
-        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->name, $context)) {
             return self::$instances[$injectorId] = new CompiledInjector($scriptDir);
         }
 
@@ -158,15 +157,10 @@ final class PackageInjector
     /**
      * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
      *
-     * A build under a marker is returned as it is. Resolving through it is what reports a
-     * broken one, and a per-request SAPI builds the injector and answers in the same process,
-     * so nothing is learned earlier by walking the graph first.
-     *
-     * A tree that cannot be written is told what the mismatch was instead of failing on it.
-     *
-     * Of the compile command's pipeline only the steps are mirrored here; class meta info and
-     * preload are not. Steps resolve through a module injector, not the AOT one: their classes
-     * are compile-time collaborators and no script is emitted for them.
+     * A marked build is returned unverified; resolving through it is what reports a broken one.
+     * An unwritable tree is treated as holding no build rather than failing the compile.
+     * Of the compile command's pipeline only the steps are mirrored here (not class meta info
+     * or preload); steps resolve through a module injector, as no script is emitted for them.
      *
      * @param ScriptDir $scriptDir
      * @param Context   $context
@@ -175,17 +169,17 @@ final class PackageInjector
      */
     private static function prodInjector(AbstractModule $module, string $scriptDir, AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->name, $context)) {
             return new CompiledInjector($scriptDir);
         }
 
         if (! self::canWrite($scriptDir)) {
-            throw new CompiledForAnotherWriteDirException($scriptDir, CompileMarker::read($scriptDir)?->tmpDir, $meta->tmpDir);
+            throw new NotCompiledException($scriptDir);
         }
 
         (new Compiler())->compile($module, $scriptDir);
         (new RayInjector($module, $scriptDir))->getInstance(CompileSteps::class)($meta->buildDir);
-        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
+        CompileMarker::write($scriptDir, $meta->name, $context);
         $injector = new CompiledInjector($scriptDir);
         /** @psalm-suppress InvalidArgument */
         $injector->getInstance(AppInterface::class);

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
 use BEAR\Package\Exception\DirectoryNotWritableException;
+use BEAR\Package\Exception\NotCompiledException;
 use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -294,16 +294,15 @@ class PackageInjectorTest extends TestCase
 
     public function testCompileMarkerEdgeCases(): void
     {
-        $tmpDir = '/var/cache/app/tmp';
         $missingDir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
-        $this->assertFalse(CompileMarker::matches($missingDir, $tmpDir));
+        $this->assertFalse(CompileMarker::matches($missingDir, 'FakeVendor\HelloWorld', 'prod-app'));
 
         $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
         @mkdir($dir, 0777, true);
         try {
-            $this->assertFalse(CompileMarker::matches($dir, $tmpDir));
-            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', $tmpDir);
-            $this->assertTrue(CompileMarker::matches($dir, $tmpDir));
+            $this->assertFalse(CompileMarker::matches($dir, 'FakeVendor\HelloWorld', 'prod-app'));
+            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app');
+            $this->assertTrue(CompileMarker::matches($dir, 'FakeVendor\HelloWorld', 'prod-app'));
         } finally {
             @unlink(CompileMarker::path($dir));
             @rmdir($dir);
@@ -311,25 +310,7 @@ class PackageInjectorTest extends TestCase
     }
 
     /**
-     * The script directory is keyed by app and context, but the scripts hold the writable
-     * directory. Booting with another one must recompile instead of answering with the old paths.
-     */
-    public function testMarkerOfAnotherWritableDirIsNotReused(): void
-    {
-        $dir = sys_get_temp_dir() . '/bear-marker-' . uniqid('', true);
-        @mkdir($dir, 0777, true);
-        try {
-            CompileMarker::write($dir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/a/tmp');
-            $this->assertFalse(CompileMarker::matches($dir, '/var/cache/b/tmp'));
-            $this->assertTrue(CompileMarker::matches($dir, '/var/cache/a/tmp'));
-        } finally {
-            @unlink(CompileMarker::path($dir));
-            @rmdir($dir);
-        }
-    }
-
-    /**
-     * A boot that cannot rewrite the scripts is told what the mismatch was, instead of failing
+     * A boot that cannot rewrite the scripts is told the tree holds no build, instead of failing
      * on the write: an archive, an immutable image, or here a path nothing can be created under.
      */
     public function testBootThatCannotReplaceTheScripts(): void
@@ -344,7 +325,7 @@ class PackageInjectorTest extends TestCase
         };
 
         try {
-            $this->expectException(CompiledForAnotherWriteDirException::class);
+            $this->expectException(NotCompiledException::class);
             (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
                 ->invoke(null, $module, $inTheWay . '/di', $meta, 'prod-app');
         } finally {
@@ -362,7 +343,7 @@ class PackageInjectorTest extends TestCase
             }
         };
 
-        $this->expectException(CompiledForAnotherWriteDirException::class);
+        $this->expectException(NotCompiledException::class);
         (new ReflectionMethod(PackageInjector::class, 'prodInjector'))
             ->invoke(null, $module, 'phar:///deploy/app.phar/var/build/prod-app/di', $meta, 'prod-app');
     }
@@ -372,7 +353,7 @@ class PackageInjectorTest extends TestCase
     {
         $missingDir = sys_get_temp_dir() . '/bear-marker-missing-' . uniqid('', true);
         $this->expectException(DirectoryNotWritableException::class);
-        CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app', '/var/cache/app/tmp');
+        CompileMarker::write($missingDir, 'FakeVendor\HelloWorld', 'prod-app');
     }
 
     /** The on-demand branch mirrors the compile command's steps, so a first boot has the same build output. */

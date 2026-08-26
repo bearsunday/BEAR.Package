@@ -80,7 +80,7 @@ class ImportedAppsTest extends TestCase
 
     private function meta(): AbstractModule
     {
-        $meta = Meta::create('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', null);
+        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
 
         return new class ($meta) extends AbstractModule {
             public function __construct(private AbstractAppMeta $meta)

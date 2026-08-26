@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\Package;
 
-use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\ComposerLoaderNotFoundException;
 use BEAR\Package\Exception\InvalidContextException;
@@ -44,6 +43,7 @@ use function ob_start;
 use function passthru;
 use function preg_match_all;
 use function preg_quote;
+use function putenv;
 use function realpath;
 use function rmdir;
 use function sprintf;
@@ -250,33 +250,32 @@ class CompilerTest extends TestCase
     }
 
     /**
-     * A writeDir takes the writable directories, one place per app and context. Compiled scripts
-     * are not among them: they ship in the deployment artifact, under appDir.
+     * The module tree names the write directories, and the compile writes there too. Compiled
+     * scripts are not among them: they ship in the deployment artifact, under appDir.
      */
-    public function testConstructorWritesUnderWriteDirAndKeepsScriptsUnderAppDir(): void
+    public function testCompileWritesWhereTheModuleTreeSaysAndKeepsScriptsUnderAppDir(): void
     {
         $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir);
-        $this->assertSame(0, $compiler());
-        $app = $writeDir . '/FakeVendor/HelloWorld/prod-cli-app';
-        $this->assertFileExists(self::APP_DIR . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
-        $this->assertFileExists($app . '/log/module.dot');
-        $this->assertDirectoryExists($app . '/tmp');
-        $this->assertFileDoesNotExist($app . '/tmp/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        putenv('FAKE_READONLY_TMP=' . $writeDir . '/tmp');
+        putenv('FAKE_READONLY_LOG=' . $writeDir . '/log');
+        try {
+            $compiler = new Compiler(self::APP_NAME, 'prod-readonly-cli-app', self::APP_DIR);
+            $this->assertSame(0, $compiler());
+        } finally {
+            putenv('FAKE_READONLY_TMP');
+            putenv('FAKE_READONLY_LOG');
+        }
+
+        $this->assertFileExists(self::APP_DIR . '/var/build/prod-readonly-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
+        $this->assertFileExists($writeDir . '/log/module.dot');
+        $this->assertDirectoryExists($writeDir . '/tmp');
+        $this->assertFileDoesNotExist($writeDir . '/tmp/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
     }
 
-    /** A relative or empty write directory resolves against the current directory, which differs between compile and request. */
-    public function testWriteDirMustBeAbsolute(): void
+    /** A boot after a compile reuses the scripts instead of writing them again. */
+    public function testBootAfterCompileDoesNotRewriteScripts(): void
     {
-        $this->expectException(WriteDirNotAbsoluteException::class);
-        new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, 'relative/dir');
-    }
-
-    /** A boot after a compile with the same writeDir reuses the scripts instead of writing them again. */
-    public function testBootAfterCompileWithSameWriteDirDoesNotRewriteScripts(): void
-    {
-        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
-        $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir))());
+        $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))());
         $scriptDir = self::APP_DIR . '/var/build/prod-cli-app/di';
         $scripts = glob($scriptDir . '/*.php');
         $this->assertNotFalse($scripts);
@@ -286,24 +285,24 @@ class CompilerTest extends TestCase
             $inodes[$file] = fileinode($file);
         }
 
-        $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR, null, $writeDir);
+        $injector = Injector::getInstance(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         $injector->getInstance(AppInterface::class);
         foreach ($inodes as $file => $inode) {
             $this->assertSame($inode, fileinode($file), $file . ' was rewritten');
         }
     }
 
+    /** ReadOnlyAppModule with nothing named: the machine's temp answers, so the archive holds no write path. */
     public function testPharPacksTheCompiledScripts(): void
     {
-        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, $writeDir);
+        $compiler = new Compiler(self::APP_NAME, 'prod-readonly-cli-app', self::APP_DIR);
         $this->assertSame(0, $compiler());
         $this->assertSame(0, $compiler->phar());
 
         $phar = self::APP_DIR . '/app.phar';
         $this->assertFileExists($phar);
-        $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-cli-app/di/' . CompileMarker::FILENAME));
-        $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php'));
+        $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-readonly-cli-app/di/' . CompileMarker::FILENAME));
+        $this->assertTrue(file_exists('phar://' . $phar . '/var/build/prod-readonly-cli-app/di/FakeVendor_HelloWorld_Resource_Page_Index-.php'));
         $this->assertTrue(file_exists('phar://' . $phar . '/src/Module/AppModule.php'));
         $this->assertFalse(file_exists('phar://' . $phar . '/autoload.php'));
         $this->assertFalse(file_exists('phar://' . $phar . '/app.phar'), 'the archive packed itself');
@@ -312,7 +311,7 @@ class CompilerTest extends TestCase
     /** The stub would require a path that is not there, so the entry is checked before the worker starts. */
     public function testPharEntryThatDoesNotExist(): void
     {
-        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR, sys_get_temp_dir() . '/bear-package-write-' . uniqid());
+        $compiler = new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
 
         $this->expectException(PharEntryNotFoundException::class);
         $compiler->phar('public/nowhere.php');
@@ -460,12 +459,6 @@ class CompilerTest extends TestCase
         } finally {
             @unlink($file);
         }
-    }
-
-    public function testWrongAppDir(): void
-    {
-        $this->expectException(WriteDirNotAbsoluteException::class);
-        (new Compiler(self::APP_NAME, 'app', '__invalid__'))->compile();
     }
 
     public function testMissingVendorAutoload(): void

@@ -15,7 +15,7 @@ class ModuleTest extends TestCase
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'cli-app');
         $module = (new Module())($meta, 'cli-app');
-        $this->assertStringContainsString('BEAR\AppMeta\AbstractAppMeta- => (object) BEAR\AppMeta\Meta', (string) $module);
+        $this->assertStringContainsString('BEAR\AppMeta\AbstractAppMeta- => (provider) (dependency) BEAR\Package\Module\AppMetaProvider', (string) $module);
     }
 
     public function testAppMetaInjection(): void

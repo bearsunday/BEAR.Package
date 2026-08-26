@@ -55,7 +55,6 @@ use const PHP_SAPI;
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type WriteDir from Types
  * @psalm-import-type StubEntry from Types
  * @psalm-import-type CompileReport from Types
  */
@@ -74,20 +73,19 @@ final class Compiler
     /**
      * What the compile was asked for: the preload worker builds the same Meta from it.
      *
-     * @var array{AppName, Context, AppDir, WriteDir|null}
+     * @var array{AppName, Context, AppDir}
      */
     private array $preloadJob;
 
     /**
-     * @param AppName       $appName  application name "MyVendor|MyProject"
-     * @param Context       $context  application context "prod-app"
-     * @param AppDir        $appDir   application path
-     * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
+     * @param AppName $appName application name "MyVendor|MyProject"
+     * @param Context $context application context "prod-app"
+     * @param AppDir  $appDir  application path
      */
-    public function __construct(string $appName, string $context, string $appDir, string|null $writeDir = null)
+    public function __construct(string $appName, string $context, string $appDir)
     {
-        $meta = Meta::create($appName, $context, $appDir, $writeDir);
-        $this->preloadJob = [$meta->name, $context, $appDir, $writeDir];
+        $meta = new Meta($appName, $context, $appDir);
+        $this->preloadJob = [$meta->name, $context, $appDir];
         $this->prepare($context, $appDir, $meta);
         $this->wire(PackageInjector::compileInjector($meta, $context));
     }
@@ -144,7 +142,7 @@ final class Compiler
      * and it loaded the boot path itself before the tracker was installed. Only a process
      * that does nothing but boot the application knows what a request loads.
      *
-     * @param array{AppName, Context, AppDir, WriteDir|null} $job
+     * @param array{AppName, Context, AppDir} $job
      *
      * @return non-empty-string the generated preload.php
      *
@@ -152,8 +150,8 @@ final class Compiler
      */
     private static function recordPreloadInChildProcess(array $job): string
     {
-        [$appName, $context, $appDir, $writeDir] = $job;
-        $command = self::workerCommand('preload-worker.php', $appName, $context, $appDir, $writeDir);
+        [$appName, $context, $appDir] = $job;
+        $command = self::workerCommand('preload-worker.php', $appName, $context, $appDir);
         $appDirRealpath = realpath($appDir);
         assert($appDirRealpath !== false);
         $preload = $appDirRealpath . '/preload.php';
@@ -169,21 +167,19 @@ final class Compiler
     }
 
     /**
-     * @param AppName       $appName
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param WriteDir|null $writeDir
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
      */
-    private static function workerCommand(string $worker, string $appName, string $context, string $appDir, string|null $writeDir): string
+    private static function workerCommand(string $worker, string $appName, string $context, string $appDir): string
     {
         return sprintf(
-            '%s %s %s %s %s %s',
+            '%s %s %s %s %s',
             escapeshellarg(self::phpBinary()),
             escapeshellarg(dirname(__DIR__) . '/bin/' . $worker),
             escapeshellarg($appName),
             escapeshellarg($context),
             escapeshellarg($appDir),
-            escapeshellarg((string) $writeDir),
         );
     }
 
@@ -279,7 +275,7 @@ final class Compiler
         // Only for a context that boots from them - a marker is what lets a boot return the
         // scripts without assembling a module tree, and a per-request context must not.
         if (PackageInjector::isCompiled($this->appMeta, $this->context)) {
-            CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
+            CompileMarker::write($scriptDir, $this->appMeta->name, $this->context);
         }
 
         // Compile class meta info (annotations and named parameters)
@@ -360,6 +356,8 @@ final class Compiler
     private function wire(InjectorInterface $injector): void
     {
         $this->injector = $injector;
+        // The module tree, not the constructor Meta, settles where this compile writes.
+        $this->appMeta = $injector->getInstance(AbstractAppMeta::class);
         /** @var AppDir $appDir */
         $appDir = $this->appMeta->appDir;
         /** @var ArrayObject<int, string> $overWritten */

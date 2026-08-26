@@ -7,6 +7,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Exception\InvalidContextException;
 use BEAR\Package\Module\AppMetaModule;
+use BEAR\Package\Module\WriteModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\AssistedModule;
 
@@ -28,7 +29,7 @@ final class Module
     public function __invoke(AbstractAppMeta $appMeta, string $context): AbstractModule
     {
         $contextsArray = array_reverse(explode('-', $context));
-        $module = new AssistedModule();
+        $module = new AssistedModule(new WriteModule($appMeta, $context));
         foreach ($contextsArray as $contextItem) {
             $module = $this->installContextModule($appMeta, $contextItem, $module);
         }

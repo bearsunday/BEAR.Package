@@ -31,20 +31,19 @@ class CompileMarkerTest extends TestCase
 
     public function testWhatWasWrittenIsWhatIsRead(): void
     {
-        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp');
+        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app');
 
         $record = CompileMarker::read($this->scriptDir);
 
         $this->assertInstanceOf(CompileRecord::class, $record);
         $this->assertSame('My\App', $record->appName);
         $this->assertSame('prod-app', $record->context);
-        $this->assertSame('/write/My/App/prod-app/tmp', $record->tmpDir);
         $this->assertGreaterThan(0, $record->time);
     }
 
     public function testAMarkerThatIsNotJson(): void
     {
-        $this->marker('/write/My/App/prod-app/tmp');
+        $this->marker('not json at all');
 
         $this->assertNull(CompileMarker::read($this->scriptDir));
     }
@@ -52,25 +51,26 @@ class CompileMarkerTest extends TestCase
     /** The 1.22 marker was a text file, so an upgraded deployment recompiles once. */
     public function testAMarkerMissingTheFieldsThisVersionNeeds(): void
     {
-        $this->marker('{"context":"prod-app","tmpDir":"/write/My/App/prod-app/tmp"}');
+        $this->marker('{"context":"prod-app"}');
 
         $this->assertNull(CompileMarker::read($this->scriptDir));
     }
 
     public function testAMarkerWithAnEmptyField(): void
     {
-        $this->marker('{"app":"","context":"prod-app","tmpDir":"/write/My/App/prod-app/tmp"}');
+        $this->marker('{"app":"","context":"prod-app"}');
 
         $this->assertNull(CompileMarker::read($this->scriptDir));
     }
 
-    /** Only the writable directory decides whether the scripts are the ones this boot needs. */
-    public function testMatchesTheWritableDirectoryTheScriptsHold(): void
+    /** Which build the scripts are, and nothing about where that build writes. */
+    public function testMatchesTheApplicationAndContextTheScriptsHold(): void
     {
-        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app', '/write/My/App/prod-app/tmp');
+        CompileMarker::write($this->scriptDir, 'My\App', 'prod-app');
 
-        $this->assertTrue(CompileMarker::matches($this->scriptDir, '/write/My/App/prod-app/tmp'));
-        $this->assertFalse(CompileMarker::matches($this->scriptDir, '/other/My/App/prod-app/tmp'));
+        $this->assertTrue(CompileMarker::matches($this->scriptDir, 'My\App', 'prod-app'));
+        $this->assertFalse(CompileMarker::matches($this->scriptDir, 'My\App', 'prod-hal-app'));
+        $this->assertFalse(CompileMarker::matches($this->scriptDir, 'Other\App', 'prod-app'));
     }
 
     private function marker(string $content): void

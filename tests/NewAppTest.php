@@ -7,6 +7,7 @@ namespace BEAR\Package;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Context\CliModule;
 use BEAR\Package\Module\AppMetaModule;
+use BEAR\Package\Module\WriteModule;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\AppModule;
 use FakeVendor\HelloWorld\Module\ProdModule;
@@ -25,7 +26,8 @@ class NewAppTest extends TestCase
 {
     public function testGetInstanceByHand(): AppInterface
     {
-        $module = new AppMetaModule(new Meta('FakeVendor\HelloWorld'), new ProdModule(new CliModule(new AppModule())));
+        $meta = new Meta('FakeVendor\HelloWorld');
+        $module = new AppMetaModule($meta, new ProdModule(new CliModule(new AppModule(new WriteModule($meta, 'prod-cli-app')))));
         $module->override(new class extends AbstractModule{
             protected function configure(): void
             {

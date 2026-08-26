@@ -30,8 +30,6 @@ use const JSON_THROW_ON_ERROR;
  * @see https://github.com/bearsunday/BEAR.Package/issues/483
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
- * @psalm-import-type TmpDir from Types
- * @psalm-import-type WriteDir from Types
  */
 final class CompileMarker
 {
@@ -67,7 +65,6 @@ final class CompileMarker
         return self::record(
             self::field($record, 'app'),
             self::field($record, 'context'),
-            self::field($record, 'tmpDir'),
             is_int($time) ? $time : 0,
         );
     }
@@ -88,39 +85,39 @@ final class CompileMarker
     /**
      * @param AppName|null $appName
      * @param Context|null $context
-     * @param TmpDir|null  $tmpDir
      */
-    private static function record(string|null $appName, string|null $context, string|null $tmpDir, int $time): CompileRecord|null
+    private static function record(string|null $appName, string|null $context, int $time): CompileRecord|null
     {
-        if ($appName === null || $context === null || $tmpDir === null) {
+        if ($appName === null || $context === null) {
             return null;
         }
 
-        return new CompileRecord($appName, $context, $tmpDir, $time);
+        return new CompileRecord($appName, $context, $time);
     }
 
-    /** Scripts here were compiled for $tmpDir, the writable directory their bindings hold. */
-    public static function matches(string $scriptDir, string $tmpDir): bool
+    /**
+     * @param AppName $appName
+     * @param Context $context
+     */
+    public static function matches(string $scriptDir, string $appName, string $context): bool
     {
-        return self::read($scriptDir)?->tmpDir === $tmpDir;
+        $record = self::read($scriptDir);
+
+        return $record !== null && $record->appName === $appName && $record->context === $context;
     }
 
     /**
      * Written through a temporary file: a concurrent boot must not read a half-written marker.
      *
-     * Takes plain strings - a Meta hands them over as such - and read() is where a record
-     * has to be valid to exist.
-     *
      * @throws DirectoryNotWritableException A marker that cannot be persisted makes every later boot recompile.
      */
-    public static function write(string $scriptDir, string $appName, string $context, string $tmpDir): void
+    public static function write(string $scriptDir, string $appName, string $context): void
     {
         $path = self::path($scriptDir);
         $temp = $path . '.' . uniqid('', true);
         $content = json_encode([
             'app' => $appName,
             'context' => $context,
-            'tmpDir' => $tmpDir,
             'time' => time(),
         ], JSON_THROW_ON_ERROR) . "\n";
         if (@file_put_contents($temp, $content) !== false && @rename($temp, $path)) {

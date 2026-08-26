@@ -10,18 +10,18 @@ declare(strict_types=1);
  * it has the compiler and the module tree in memory already. This script is not a public
  * API; it is spawned only by BEAR\Package\Compiler.
  *
- * usage: php preload-worker.php <appName> <context> <appDir> <writeDir>
+ * usage: php preload-worker.php <appName> <context> <appDir>
  */
 
 use BEAR\Package\Compiler\PreloadRecorder;
 use BEAR\Package\Exception\PreloadRecordException;
 
-if ($argc !== 5) {
-    echo 'usage: preload-worker.php <appName> <context> <appDir> <writeDir>' . PHP_EOL;
+if ($argc !== 4) {
+    echo 'usage: preload-worker.php <appName> <context> <appDir>' . PHP_EOL;
     exit(1);
 }
 
-[, $appName, $context, $appDir, $writeDir] = $argv;
+[, $appName, $context, $appDir] = $argv;
 // The caller builds these from a resolved Meta; empty ones would compile a different application.
 assert($appName !== '' && $context !== '' && $appDir !== '');
 
@@ -32,7 +32,7 @@ ob_start();
 require $appDir . '/vendor/autoload.php';
 
 try {
-    (new PreloadRecorder())($appName, $context, $appDir, $writeDir === '' ? null : $writeDir);
+    (new PreloadRecorder())($appName, $context, $appDir);
     ob_end_clean();
 } catch (PreloadRecordException $e) {
     // Before exit(), which runs no finally: the shutdown flush would otherwise put a half

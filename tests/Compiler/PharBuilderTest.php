@@ -70,7 +70,7 @@ class PharBuilderTest extends TestCase
 
     public function testPacksWhatTheManifestSelected(): void
     {
-        $scriptDir = $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $scriptDir = $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($scriptDir . '/Fake_App-.php', "<?php\nreturn null;\n");
         file_put_contents($scriptDir . '/compile.lock', 'noise');
         mkdir($this->appDir . '/src', 0777, true);
@@ -104,7 +104,7 @@ class PharBuilderTest extends TestCase
 
     public function testEntryThatIsNotOnDisk(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
 
         $this->expectException(PharEntryNotFoundException::class);
         (new PharBuilder())($this->appDir, $this->buildDir(), 'public/nowhere.php');
@@ -125,7 +125,7 @@ class PharBuilderTest extends TestCase
     /** One is written per compile at a fixed path, so the loop over contexts reaches this. */
     public function testPreloadLeftBehindByAnotherContext(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         file_put_contents($this->appDir . '/preload.php', "<?php\n\n// prod-hal-app preload\n");
 
@@ -135,7 +135,7 @@ class PharBuilderTest extends TestCase
 
     public function testPreloadOfThisContextShips(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         $this->vendor();
         file_put_contents($this->appDir . '/preload.php', "<?php\n\n// prod-app preload\n");
@@ -149,7 +149,7 @@ class PharBuilderTest extends TestCase
     /** An entry the manifest drops would leave a stub requiring a path the archive lacks. */
     public function testEntryThatCannotShip(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         file_put_contents($this->appDir . '/.env', 'SECRET=1');
         $this->vendor();
 
@@ -161,7 +161,7 @@ class PharBuilderTest extends TestCase
 
     public function testEntryInADirectoryOfItsOwn(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         mkdir($this->appDir . '/bootstrap', 0777, true);
         file_put_contents($this->appDir . '/bootstrap/admin.php', "<?php\n");
         $this->vendor();
@@ -185,7 +185,7 @@ class PharBuilderTest extends TestCase
     /** Packing into whatever survives at the output path would ship the last build's entries too. */
     public function testPreviousArchiveThatCannotBeRemoved(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         mkdir($this->appDir . '/app.phar', 0777, true);
 
@@ -193,23 +193,9 @@ class PharBuilderTest extends TestCase
         (new PharBuilder())($this->appDir, $this->buildDir(), 'public/index.php');
     }
 
-    /** A compile that named its own tmp directory was placed under no base, so there is none to print. */
-    public function testReportWithoutAWriteDirectory(): void
-    {
-        $this->marker($this->writeDir . '/somewhere/of/its/own');
-        $this->entry();
-        $this->vendor();
-
-        [$exitCode, $output] = $this->worker('public/index.php');
-
-        $this->assertSame(0, $exitCode, $output);
-        $this->assertStringContainsString('Phar: ', $output);
-        $this->assertStringNotContainsString('Writes: ', $output);
-    }
-
     public function testWorkerUnderAReadOnlyPharIni(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         $this->vendor();
 
@@ -222,7 +208,7 @@ class PharBuilderTest extends TestCase
     /** A relative output is resolved before anything else looks at it. */
     public function testRelativeOutputIsResolvedBeforeTheStaleCheck(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         mkdir($this->appDir . '/vendor/app.phar', 0777, true);
 
@@ -245,7 +231,7 @@ class PharBuilderTest extends TestCase
      */
     public function testRelativeOutputUnderTheApplicationTree(): void
     {
-        $this->marker($this->writeDir . '/My/App/prod-app/tmp');
+        $this->compiled($this->writeDir . '/My/App/prod-app/tmp');
         $this->entry();
         $this->vendor();
 
@@ -314,15 +300,25 @@ class PharBuilderTest extends TestCase
     }
 
     /**
+     * A build: the marker saying which one it is, and the Meta the container answers with.
+     *
      * @param non-empty-string $tmpDir
      *
-     * @return non-empty-string the script directory the marker was written to
+     * @return non-empty-string the script directory the build was written to
      */
-    private function marker(string $tmpDir): string
+    private function compiled(string $tmpDir): string
     {
         $scriptDir = $this->appDir . '/var/build/prod-app/di';
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
-        CompileMarker::write($scriptDir, 'My\App', 'prod-app', $tmpDir);
+        CompileMarker::write($scriptDir, 'My\App', 'prod-app');
+        file_put_contents(
+            $scriptDir . '/BEAR_AppMeta_AbstractAppMeta-.php',
+            sprintf(
+                "<?php\n\nreturn new \\BEAR\\AppMeta\\Meta('My\\\\App', 'prod-app', %s, %s);\n",
+                var_export($this->appDir, true),
+                var_export($tmpDir, true),
+            ),
+        );
 
         return $scriptDir;
     }
