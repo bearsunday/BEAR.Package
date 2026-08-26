@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compile steps a module contributes through `MultiBinder` for `CompileStepInterface` now run, each into `{appDir}/var/build/{context}/{binding key}`
 - `preload.php` ships in the archive, so `opcache.preload` can name it there (`phar:///path/app.phar/preload.php`): its requires are written relative to the directory it sits in, so they resolve inside the archive and nowhere else
 - The pack refuses a `preload.php` another context left behind, naming the header it looked for: one is written per compile at a fixed path, and the last compile wins
+- `ReadOnlyAppModule` — install it from the application's own `ProdModule` to name absolute write directories, compiled in as given and shared by every context whose module tree reaches the install; a relative one is refused with `WriteDirNotAbsoluteException`
 
 ### Changed
 - Compiled DI scripts move to `{appDir}/var/build/{context}/di`; the old `var/tmp/{context}/di` reads as absent, so recompile after upgrading and point any deploy step that copies it at the new path (#426)
@@ -18,9 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An archive carries named top-level directories only - `src`, `public`, `bin`, `vendor`, `var`, and wherever an imported application sits - and the build prints `Not packed:` for the rest (#426)
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
-- Requires bear/app-meta ^1.13: an invalid application directory is refused with `WriteDirNotAbsoluteException` (a `LogicException`) before any compile work, instead of a late `RuntimeException` (#482)
+- Requires bear/app-meta ^1.14: `Meta` names the application and its tree and creates no directories (#482)
+- Where an application writes is settled at boot: `ReadOnlyAppModule` with nothing named falls to the booting machine's temp directory, `{sys_temp}/{Vendor}/{Project}/{appDir hash}/var/{tmp,log}/{context}`, so two checkouts of one application on one machine never share a cache; a tree without the install writes under `{appDir}/var` as before
+- `new Compiler($appName, $context, $appDir)`, `Injector::getInstance()` and `Injector::getOverrideInstance()` take no `$writeDir`: a tree that is read-only at runtime declares it with `ReadOnlyAppModule` instead
+- `AppMetaModule` resolves `AbstractAppMeta` through `AppMetaProvider`: a module tree assembled by hand needs `WriteModule`'s bindings, which `Module` installs
+- `Compiler::clean()` empties the tmp directory only when it sits under `appDir`: one declared outside the tree is shared and possibly live
 - Requires bear/sunday ^1.9: `CompileStepInterface`, the binding a compile step declares (#501)
-- An imported application writes under the host's tmp and log (`{hostTmp}/{Vendor}/{Project}/{context}/tmp`), not beside the host under the write base (#426)
+- An imported application writes where its own module tree says, as the host's tree does for the host (#426)
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
 - A boot with a current compile marker returns the compiled scripts without assembling a module tree first
 - `Compiler::compile()` writes the compile marker only for a context that boots from the scripts
@@ -32,12 +37,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Compiler::fromInjector()` - the injector carried only the application name and directory, and booting one to read them compiled the application an extra time; a build script compiles in its own process (#482)
 - `WriteDirMismatchException`, `DelegatedCompileException` and `bin/compile-worker.php`, with the delegated compile they served (#482)
 - `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - compile both with the same one; a mismatch fails the boot's marker check instead (#426)
-- `CompileRecord::$writeDir` and `PharReport::$writeDir`: the marker no longer carries the write base (#426)
+- `CompileRecord::$writeDir`, `CompileRecord::$tmpDir` and `PharReport::$writeDir`: the marker records the application, the context and the compile time; where a build writes is answered by the compiled container (#426)
+- `CompiledForAnotherWriteDirException` and `WriteDirRequiredException`: with no write base compiled in there is nothing to mismatch or require; a read-only tree without a current build throws `NotCompiledException`
+- `bin/bear.compile` and `bin/bear.compile.php`, deprecated in 1.22.0: the wrapper emptied `{appDir}/var/tmp/{context}` for DI scripts that moved to `var/build` in this release, and fataled outright on a tree that had never compiled (#482)
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
 - The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them
+- `PackageInjector::compileInjector()` and `PackageInjector::isCompiled()`: the compile pipeline's injector belongs to `Compiler`, which is the only thing that ever asked for it
 
 ### Fixed
-- Holds bear/app-meta at `~1.13.0`: 1.14 removed `Meta::create()`, which `Compiler`, `Injector` and `PreloadRecorder` call, so `^1.13` resolved to an app-meta this release cannot run on
+- `Compiler::clean()` followed by `Compiler::compile()` no longer fatals with `Unbound`: the injector is built when a compile asks for it, from the scripts on disk then, so one full container compile per run is gone
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
 - A compile refuses a context that assembles its container per request before `clean()` runs, and `clean()` no longer removes `preload.php`, `autoload.php` or `app.phar`: a compile that fails leaves the last one's files where they were (#426)
 - A directory holding an imported application carries that application only: what sits beside it no longer ships (#426)

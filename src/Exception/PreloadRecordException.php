@@ -36,12 +36,12 @@ final class PreloadRecordException extends RuntimeException
      * Without a matching marker the boot compiles on demand, and the recording measures that
      * compile instead of a request - the exact error this pipeline exists to remove.
      */
-    public static function scriptsNotCurrent(string $scriptDir, string $tmpDir): self
+    public static function scriptsNotCurrent(string $scriptDir, string $context): self
     {
         return new self(sprintf(
             'Recording preload.php needs the compiled scripts in "%s" to be current for "%s".',
             $scriptDir,
-            $tmpDir,
+            $context,
         ));
     }
 }

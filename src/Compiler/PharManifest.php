@@ -37,7 +37,6 @@ use function substr;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type WriteDir from Types
  * @psalm-import-type PharPath from Types
  * @psalm-import-type StubEntry from Types
  */
@@ -80,7 +79,7 @@ final class PharManifest
      */
     public static function roots(string $appDir, string $buildDir, array $imports): array
     {
-        // Both spellings: a marker holds text, and var/ or current/ may be a symlink.
+        // Compare as written and as resolved: the recorded path is text, and var/ or current/ may be a symlink.
         $archiveDir = self::resolve($appDir);
         $bases = [self::normalize($appDir), $archiveDir];
 
@@ -126,16 +125,16 @@ final class PharManifest
     private static function writesOutside(array $archiveBases, string $appDir, string $buildDir): void
     {
         $scriptDir = $buildDir . '/di';
-        $record = CompileMarker::read($scriptDir);
-        if ($record === null) {
+        if (CompileMarker::read($scriptDir) === null) {
             throw new PharNotCompiledException($scriptDir);
         }
 
-        $tmpDirs = [self::normalize($record->tmpDir), self::resolve($record->tmpDir)];
+        $writeDir = CompiledWriteDir::of($scriptDir);
+        $tmpDirs = [self::normalize($writeDir), self::resolve($writeDir)];
         foreach ($archiveBases as $base) {
             foreach ($tmpDirs as $tmpDir) {
                 if (self::isUnder($tmpDir, $base)) {
-                    throw new PharWritesInsideArchiveException($appDir, $record->tmpDir);
+                    throw new PharWritesInsideArchiveException($appDir, $writeDir);
                 }
             }
         }

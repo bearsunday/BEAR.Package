@@ -36,33 +36,31 @@ class ImportAppModuleTest extends TestCase
     }
 
     /**
-     * An imported application is a separate application with its own Meta, and it writes under the
-     * host's tmp and log: the write directory comes from the container, not from the declaration.
+     * An imported application is a separate application: its own module tree answers where it
+     * writes, so nothing of it lands under the host's directories.
      */
-    public function testImportAppWritesUnderTheHostWriteDir(): void
+    public function testImportAppWritesNothingUnderTheHost(): void
     {
-        $writeDir = sys_get_temp_dir() . '/bear-import-write-' . uniqid();
-        $injector = new Injector($this->module([new ImportApp('bar', 'Import\HelloWorld', 'app')], $writeDir));
+        $hostWrite = sys_get_temp_dir() . '/bear-import-write-' . uniqid();
+        $injector = new Injector($this->module([new ImportApp('bar', 'Import\HelloWorld', 'app')], $hostWrite));
 
         $resource = $injector->getInstance(ResourceInterface::class);
         assert($resource instanceof ResourceInterface);
         $resource->get('page://bar/index');
 
-        $hostTmp = $writeDir . '/FakeVendor/HelloWorld/app/tmp';
-        $hostLog = $writeDir . '/FakeVendor/HelloWorld/app/log';
-        $this->assertDirectoryExists($hostTmp . '/Import/HelloWorld/app/tmp');
-        $this->assertDirectoryExists($hostLog . '/Import/HelloWorld/app/log');
+        $this->assertDirectoryDoesNotExist($hostWrite . '/tmp/Import');
+        $this->assertDirectoryDoesNotExist($hostWrite . '/log/Import');
     }
 
-    /**
-     * @param list<ImportApp>       $imports
-     * @param non-empty-string|null $writeDir
-     */
-    private function module(array $imports, string|null $writeDir = null): AbstractModule
+    /** @param list<ImportApp> $imports */
+    private function module(array $imports, string|null $hostWrite = null): AbstractModule
     {
-        $meta = Meta::create('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app', $writeDir);
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        $meta = $hostWrite === null
+            ? new Meta('FakeVendor\HelloWorld', 'app', $appDir)
+            : new Meta('FakeVendor\HelloWorld', 'app', $appDir, $hostWrite . '/tmp', $hostWrite . '/log');
         $module = new ResourceModule('FakeVendor\HelloWorld');
-        $module->override(new AppMetaModule($meta));
+        $module->override(new AppMetaModule($meta, new WriteModule($meta, 'app')));
         $module->override(new ImportAppModule($imports));
 
         return $module;

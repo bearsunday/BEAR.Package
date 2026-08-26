@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\Module\App;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -19,6 +18,7 @@ use function assert;
 use function mkdir;
 use function passthru;
 use function realpath;
+use function rmdir;
 use function spl_object_hash;
 use function sprintf;
 use function sys_get_temp_dir;
@@ -88,37 +88,21 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(RayInjector::class, $injector);
     }
 
-    /** The in-memory instance is keyed by the writable directory too, or the second boot gets the first one's paths. */
-    public function testWriteDirIsPartOfInjectorIdentity(): void
-    {
-        $appDir = __DIR__ . '/Fake/fake-app';
-        $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, sys_get_temp_dir() . '/bear-injector-a-' . uniqid());
-        $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, sys_get_temp_dir() . '/bear-injector-b-' . uniqid());
-        $this->assertNotSame(
-            $first->getInstance(AbstractAppMeta::class)->tmpDir,
-            $second->getInstance(AbstractAppMeta::class)->tmpDir,
-        );
-    }
-
-    /** Two trees can share one write directory, and the second must not be handed the first one's paths. */
+    /** Two trees of one application are two deployments, and the second must not be handed the first one's. */
     public function testAppDirIsPartOfInjectorIdentity(): void
     {
         $appDir = __DIR__ . '/Fake/fake-app';
         $otherTree = sys_get_temp_dir() . '/bear-tree-' . uniqid();
         mkdir($otherTree . '/src/Resource', 0777, true);
-        $writeDir = sys_get_temp_dir() . '/bear-shared-' . uniqid();
-        $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir, null, $writeDir);
-        $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $otherTree, null, $writeDir);
-        $this->assertSame(realpath($appDir), $first->getInstance(AbstractAppMeta::class)->appDir);
-        $this->assertSame(realpath($otherTree), $second->getInstance(AbstractAppMeta::class)->appDir);
-        deleteFiles($otherTree);
-    }
-
-    /** An app running from a phar has nowhere to put tmp and log unless it is told where. */
-    public function testStreamAppDirWithoutWriteDir(): void
-    {
-        $this->expectException(WriteDirRequiredException::class);
-        Injector::getInstance('FakeVendor\HelloWorld', 'app', 'phar:///tmp/fake-app.phar');
+        try {
+            $first = Injector::getInstance('FakeVendor\HelloWorld', 'app', $appDir);
+            $second = Injector::getInstance('FakeVendor\HelloWorld', 'app', $otherTree);
+            $this->assertSame(realpath($appDir), $first->getInstance(AbstractAppMeta::class)->appDir);
+            $this->assertSame(realpath($otherTree), $second->getInstance(AbstractAppMeta::class)->appDir);
+        } finally {
+            deleteFiles($otherTree);
+            rmdir($otherTree);
+        }
     }
 
     public function testGetOverrideInstance(): void
@@ -134,18 +118,20 @@ class InjectorTest extends TestCase
         $this->assertSame($fakeApp, $app);
     }
 
-    /** An override injector writes where the default one does, or a read-only tree has no home for it. */
-    public function testGetOverrideInstanceWithWriteDir(): void
+    /** An override injector writes where the default one does: it is the same application. */
+    public function testOverrideInstanceWritesWhereTheDefaultOneDoes(): void
     {
-        $writeDir = sys_get_temp_dir() . '/bear-override-' . uniqid();
-        $injector = $this->getInjector(new class implements AppInterface {
-        }, $writeDir);
+        $override = $this->getInjector(new class implements AppInterface {
+        });
+        $default = Injector::getInstance('FakeVendor\HelloWorld', 'app', __DIR__ . '/Fake/fake-app');
 
-        $this->assertSame(realpath($writeDir . '/FakeVendor/HelloWorld/app/tmp'), $injector->getInstance(AbstractAppMeta::class)->tmpDir);
+        $this->assertSame(
+            $default->getInstance(AbstractAppMeta::class)->tmpDir,
+            $override->getInstance(AbstractAppMeta::class)->tmpDir,
+        );
     }
 
-    /** @param non-empty-string|null $writeDir */
-    private function getInjector(AppInterface $fakeApp, string|null $writeDir = null): InjectorInterface
+    private function getInjector(AppInterface $fakeApp): InjectorInterface
     {
         return Injector::getOverrideInstance(
             'FakeVendor\HelloWorld',
@@ -162,7 +148,6 @@ class InjectorTest extends TestCase
                     $this->bind(AppInterface::class)->toInstance($this->app);
                 }
             },
-            $writeDir,
         );
     }
 

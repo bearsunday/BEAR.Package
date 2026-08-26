@@ -5,29 +5,20 @@ declare(strict_types=1);
 namespace BEAR\Package\Injector;
 
 use BEAR\AppMeta\AbstractAppMeta;
-use BEAR\Package\Compiler\CompileSteps;
-use BEAR\Package\Exception\CompiledForAnotherWriteDirException;
 use BEAR\Package\Module;
 use BEAR\Package\Module\ResourceObjectModule;
 use BEAR\Package\Types;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use Ray\Compiler\Annotation\Compile;
 use Ray\Compiler\CompiledInjector;
-use Ray\Compiler\Compiler;
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
-use function dirname;
-use function error_log;
-use function file_exists;
 use function hash;
 use function is_dir;
-use function is_writable;
 use function mkdir;
-use function sprintf;
 use function str_replace;
-use function str_starts_with;
 
 /**
  * @psalm-import-type AppDir from Types
@@ -59,15 +50,14 @@ final class PackageInjector
      */
     public static function getInstance(AbstractAppMeta $meta, string $context): InjectorInterface
     {
-        // Both directories: one app+context can be booted with different writable ones, and two
-        // trees can be booted with the same one.
-        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir . "\n" . $meta->tmpDir);
+        // Keyed by appDir: two checkouts of one application must not share an injector.
+        $injectorId = str_replace('\\', '_', $meta->name) . $context . '-' . hash('xxh128', $meta->appDir);
         if (isset(self::$instances[$injectorId])) {
             return self::$instances[$injectorId];
         }
 
         $scriptDir = self::scriptDir($meta, null);
-        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
+        if (CompileMarker::matches($scriptDir, $meta->name, $context)) {
             return self::$instances[$injectorId] = new CompiledInjector($scriptDir);
         }
 
@@ -84,41 +74,10 @@ final class PackageInjector
         $scriptDir = self::ensureScriptDir($meta, $overrideModule);
         $module = self::module($meta, $context, $overrideModule);
         if (self::isProd($module)) {
-            return self::prodInjector($module, $scriptDir, $meta, $context);
+            return ProdInjector::create($module, $scriptDir, $meta, $context);
         }
 
         return self::rayInjector($module, $scriptDir);
-    }
-
-    /**
-     * Injector for the compile pipeline: never the AOT branch.
-     *
-     * factory() would take prodInjector()'s runtime cold path, logging an on-demand compile
-     * and writing the marker mid-build. The compile here is not the pass in
-     * Compiler::compile(): it populates the scripts FakeRun resolves through, the later pass
-     * re-emits them after AOP weaving.
-     *
-     * @param Context $context
-     */
-    public static function compileInjector(AbstractAppMeta $meta, string $context): InjectorInterface
-    {
-        $scriptDir = self::ensureScriptDir($meta, null);
-        $module = self::module($meta, $context, null);
-        if (self::isProd($module)) {
-            (new Compiler())->compile($module, $scriptDir);
-        }
-
-        return self::rayInjector($module, $scriptDir);
-    }
-
-    /**
-     * Whether $context boots from compiled scripts rather than assembling per request.
-     *
-     * @param Context $context
-     */
-    public static function isCompiled(AbstractAppMeta $meta, string $context): bool
-    {
-        return self::isProd(self::module($meta, $context, null));
     }
 
     /** @param Context $context */
@@ -153,77 +112,6 @@ final class PackageInjector
         $injector->getInstance(AppInterface::class);
 
         return $injector;
-    }
-
-    /**
-     * Boot from AOT scripts when a compile marker is present; otherwise compile on demand.
-     *
-     * A build under a marker is returned as it is. Resolving through it is what reports a
-     * broken one, and a per-request SAPI builds the injector and answers in the same process,
-     * so nothing is learned earlier by walking the graph first.
-     *
-     * A tree that cannot be written is told what the mismatch was instead of failing on it.
-     *
-     * Of the compile command's pipeline only the steps are mirrored here; class meta info and
-     * preload are not. Steps resolve through a module injector, not the AOT one: their classes
-     * are compile-time collaborators and no script is emitted for them.
-     *
-     * @param ScriptDir $scriptDir
-     * @param Context   $context
-     *
-     * @see CompileMarker for what the marker does and does not guarantee
-     */
-    private static function prodInjector(AbstractModule $module, string $scriptDir, AbstractAppMeta $meta, string $context): InjectorInterface
-    {
-        if (CompileMarker::matches($scriptDir, $meta->tmpDir)) {
-            return new CompiledInjector($scriptDir);
-        }
-
-        if (! self::canWrite($scriptDir)) {
-            throw new CompiledForAnotherWriteDirException($scriptDir, CompileMarker::read($scriptDir)?->tmpDir, $meta->tmpDir);
-        }
-
-        (new Compiler())->compile($module, $scriptDir);
-        (new RayInjector($module, $scriptDir))->getInstance(CompileSteps::class)($meta->buildDir);
-        CompileMarker::write($scriptDir, $meta->name, $context, $meta->tmpDir);
-        $injector = new CompiledInjector($scriptDir);
-        /** @psalm-suppress InvalidArgument */
-        $injector->getInstance(AppInterface::class);
-        self::logOnDemandCompile($scriptDir);
-
-        return $injector;
-    }
-
-    /**
-     * Whether a compile could write to $dir, which a first boot has not created yet.
-     *
-     * Answered by the nearest existing ancestor, and only by an ancestor: dirname() leaves the
-     * path for the working directory once it runs out of them, and the cwd knows nothing here.
-     */
-    private static function canWrite(string $dir): bool
-    {
-        for ($path = $dir; ! file_exists($path); $path = $parent) {
-            $parent = dirname($path);
-            if (! str_starts_with($dir, $parent)) {
-                return false;
-            }
-        }
-
-        return is_dir($path) && is_writable($path);
-    }
-
-    /**
-     * Report an on-demand compile to the server's log.
-     *
-     * Not the application logger - the report is due while its container is still being built.
-     * Not trigger_error() - display_errors would put it in the response body.
-     */
-    private static function logOnDemandCompile(string $scriptDir): void
-    {
-        error_log(sprintf(
-            'Compiled DI scripts on demand in "%s". See https://bearsunday.github.io/manuals/1.0/en/production.html#compilation-recommended',
-            $scriptDir,
-        ));
     }
 
     /**

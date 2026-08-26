@@ -6,19 +6,16 @@ namespace BEAR\Package;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
-use BEAR\Package\Exception\WriteDirRequiredException;
 use BEAR\Package\Injector\PackageInjector;
+use BEAR\Package\Module\ReadOnlyAppModule;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
-
-use function preg_match;
 
 /**
  * @see PackageInjector
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
  * @psalm-import-type AppDir from Types
- * @psalm-import-type WriteDir from Types
  */
 final class Injector
 {
@@ -28,29 +25,26 @@ final class Injector
     }
 
     /**
-     * The $cache slot holds the position $writeDir is passed in; both go together.
-     *
-     * @param AppName       $appName
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param null          $cache    the compiled scripts are the cache; nothing else is read
-     * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
+     * @param null    $cache   the compiled scripts are the cache; nothing else is read
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public static function getInstance(string $appName, string $context, string $appDir, null $cache = null, string|null $writeDir = null): InjectorInterface
+    public static function getInstance(string $appName, string $context, string $appDir, null $cache = null): InjectorInterface
     {
-        return self::fromMeta(self::meta($appName, $context, $appDir, $writeDir), $context);
+        return self::fromMeta(new Meta($appName, $context, $appDir), $context);
     }
 
     /**
-     * Return an injector for an already resolved Meta.
+     * Return an injector for an application with its own AbstractAppMeta subclass.
      *
-     * For an application with its own AbstractAppMeta - a bespoke resource list, say.
-     * Overriding tmpDir/logDir is not a reason to come here: pass $writeDir to
-     * getInstance() instead, so the build and the boot derive the same paths.
+     * Not for overriding tmpDir/logDir: the module tree overwrites them.
      *
      * @param Context $context
+     *
+     * @see ReadOnlyAppModule to name the write directories
      */
     public static function fromMeta(AbstractAppMeta $meta, string $context): InjectorInterface
     {
@@ -65,32 +59,14 @@ final class Injector
      * override module class name, so they do not collide with Injector::getInstance()
      * for the same app+context.
      *
-     * @param AppName       $appName
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param WriteDir|null $writeDir writable base; defaults to {appDir}/var
+     * @param AppName $appName
+     * @param Context $context
+     * @param AppDir  $appDir
      *
      * @see PackageInjector::factory()
      */
-    public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule, string|null $writeDir = null): InjectorInterface
+    public static function getOverrideInstance(string $appName, string $context, string $appDir, AbstractModule $overrideModule): InjectorInterface
     {
-        return PackageInjector::factory(self::meta($appName, $context, $appDir, $writeDir), $context, $overrideModule);
-    }
-
-    /**
-     * @param AppName       $appName
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param WriteDir|null $writeDir
-     *
-     * @throws WriteDirRequiredException An application inside a stream URI has no writable var/ of its own.
-     */
-    private static function meta(string $appName, string $context, string $appDir, string|null $writeDir): Meta
-    {
-        if ($writeDir === null && preg_match('#^[A-Za-z][A-Za-z0-9+.\\-]*://#', $appDir)) {
-            throw new WriteDirRequiredException($appDir);
-        }
-
-        return Meta::create($appName, $context, $appDir, $writeDir);
+        return PackageInjector::factory(new Meta($appName, $context, $appDir), $context, $overrideModule);
     }
 }

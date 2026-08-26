@@ -13,7 +13,7 @@
         "php": "^8.2",
         "ext-hash": "*",
         "aura/cli": "^2.2",
-        "bear/app-meta": "~1.13.0",
+        "bear/app-meta": "^1.14",
         "bear/query-repository": "^1.13",
         "bear/resource": "^1.31",
         "bear/streamer": "^1.4",
@@ -63,10 +63,6 @@
             "tests-files/deleteFiles.php"
         ]
     },
-    "bin": [
-        "bin/bear.compile",
-        "bin/bear.compile.php"
-    ],
     "scripts": {
         "test": ["phpunit --no-coverage"],
         "tests": ["@cs", "@sa", "@test"],

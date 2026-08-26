@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
+use BEAR\Package\Annotation\AsCompiled;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -26,6 +27,9 @@ use function class_exists;
  * :AppName
  * Set<CompileStepInterface>
  *
+ * The Meta given here is the compiled one: it names the application and its source tree, and its
+ * write directories are settled at boot by {@see AppMetaProvider} from what the module tree says.
+ *
  * @psalm-suppress ClassMustBeFinal
  */
 class AppMetaModule extends AbstractModule
@@ -41,7 +45,8 @@ class AppMetaModule extends AbstractModule
     #[Override]
     protected function configure(): void
     {
-        $this->bind(AbstractAppMeta::class)->toInstance($this->appMeta);
+        $this->bind(AbstractAppMeta::class)->annotatedWith(AsCompiled::class)->toInstance($this->appMeta);
+        $this->bind(AbstractAppMeta::class)->toProvider(AppMetaProvider::class)->in(Scope::SINGLETON);
         $appClass = $this->appMeta->name . '\Module\App';
         assert(class_exists($appClass));
         $this->bind(AppInterface::class)->to($appClass)->in(Scope::SINGLETON);
