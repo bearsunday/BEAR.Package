@@ -64,7 +64,8 @@ class PharPortabilityTest extends TestCase
         @rmdir($paths['write']);
         $this->assertDirectoryDoesNotExist($paths['app']);
 
-        [$code, $output] = self::boot($paths['phar']);
+        // Handed back deleted, so the boot's writes land under tests/tmp, not the real temp.
+        [$code, $output] = self::boot($paths['phar'], $paths['write']);
 
         $this->assertSame(0, $code, $output);
         $this->assertStringContainsString('200 OK', $output);

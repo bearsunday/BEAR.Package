@@ -42,6 +42,19 @@ class AppMetaProviderTest extends TestCase
         $this->assertSame('/data/shop/log', $meta->logDir);
     }
 
+    /** Each directory falls independently: naming one does not name the other. */
+    public function testANamedTmpDirLeavesTheLogDirToTheMachineTemp(): void
+    {
+        $compiled = new Meta('FakeVendor\HelloWorld', 'prod-app', sys_get_temp_dir() . '/bear-tree-a');
+        $declared = new WriteDirs('/data/shop/tmp');
+
+        $meta = (new AppMetaProvider($compiled, $declared, $this->shape()))->get();
+
+        $this->assertSame('/data/shop/tmp', $meta->tmpDir);
+        $this->assertStringStartsWith(str_replace('\\', '/', sys_get_temp_dir()) . '/', $meta->logDir);
+        $this->assertStringEndsWith('/var/log/prod-app', $meta->logDir);
+    }
+
     private function machineTempMeta(string $appDir): AbstractAppMeta
     {
         $compiled = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);

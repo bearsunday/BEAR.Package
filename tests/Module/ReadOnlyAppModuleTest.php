@@ -47,6 +47,13 @@ class ReadOnlyAppModuleTest extends TestCase
         new ReadOnlyAppModule('\\\\server\\share\\tmp', '\\\\server\\share\\log');
     }
 
+    public function testAcceptsAWindowsDrivePath(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        new ReadOnlyAppModule('C:\\data\\app\\tmp', 'C:/data/app/log');
+    }
+
     public function testTheApplicationsInstallWins(): void
     {
         $tmpDir = sys_get_temp_dir() . '/bear-readonly-tmp';
