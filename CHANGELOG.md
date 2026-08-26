@@ -20,8 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Until now every other top-level directory shipped: a machine that had run `composer bin tools install` or taken coverage packed `vendor-bin` and `build` into the archive (#426)
 - An archive carries one build per application in the tree, the one it was packed for: other contexts stay out, as `var/log` and `var/tmp` do (#426)
 - Requires bear/app-meta ^1.14: `Meta` names the application and its tree and creates no directories (#482)
-- Where an application writes is settled at boot: left undeclared, the booting machine answers under its temp directory, `{sys_temp}/{Vendor}/{Project}/{appDir hash}/var/{tmp,log}/{context}`, so two checkouts of one application on one machine never share a cache
-- `new Compiler($appName, $context, $appDir)` and `Injector::getInstance($appName, $context, $appDir)` take no `$writeDir`: a tree that is read-only at runtime declares it with `ReadOnlyAppModule` instead
+- Where an application writes is settled at boot: `ReadOnlyAppModule` with nothing named falls to the booting machine's temp directory, `{sys_temp}/{Vendor}/{Project}/{appDir hash}/var/{tmp,log}/{context}`, so two checkouts of one application on one machine never share a cache; a tree without the install writes under `{appDir}/var` as before
+- `new Compiler($appName, $context, $appDir)`, `Injector::getInstance()` and `Injector::getOverrideInstance()` take no `$writeDir`: a tree that is read-only at runtime declares it with `ReadOnlyAppModule` instead
+- `AppMetaModule` resolves `AbstractAppMeta` through `AppMetaProvider`: a module tree assembled by hand needs `WriteModule`'s bindings, which `Module` installs
+- `Compiler::clean()` empties the tmp directory only when it sits under `appDir`: one declared outside the tree is shared and possibly live
 - Requires bear/sunday ^1.9: `CompileStepInterface`, the binding a compile step declares (#501)
 - An imported application writes where its own module tree says, as the host's tree does for the host (#426)
 - `PharManifest::roots()`, `PharBuilder::__invoke()` and `CompileSteps::run()` take the build directory a compile wrote, not the application directory and context to work one out from; `PackageInjector` and the phar worker no longer take a context at all (#501)
