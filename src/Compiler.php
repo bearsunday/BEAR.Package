@@ -189,7 +189,7 @@ final class Compiler
 
     /**
      * @param AppDir   $appDir
-     * @param BuildDir $buildDir the compile's own, so the pack derives no path of the host's
+     * @param BuildDir $buildDir settled by this compile's module tree; the worker derives no paths itself
      */
     private static function pharWorkerCommand(string $appDir, string $buildDir, string $entry): string
     {

@@ -66,8 +66,8 @@ final class ProdInjector
     /**
      * Whether a compile could write to $dir, which a first boot has not created yet.
      *
-     * Answered by the nearest existing ancestor, and only by an ancestor: dirname() leaves the
-     * path for the working directory once it runs out of them, and the cwd knows nothing here.
+     * Answered by the nearest existing ancestor, and only by an ancestor: on a relative path
+     * dirname() bottoms out at `.`, and the working directory says nothing about $dir.
      */
     private static function canWrite(string $dir): bool
     {

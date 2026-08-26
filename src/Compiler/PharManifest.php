@@ -130,7 +130,6 @@ final class PharManifest
         }
 
         $writeDir = CompiledWriteDir::of($scriptDir);
-        // Compare as written and as resolved: the recorded path is text, and var/ or current/ may be a symlink.
         $tmpDirs = [self::normalize($writeDir), self::resolve($writeDir)];
         foreach ($archiveBases as $base) {
             foreach ($tmpDirs as $tmpDir) {
