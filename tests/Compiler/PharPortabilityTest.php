@@ -143,12 +143,12 @@ class PharPortabilityTest extends TestCase
         }
     }
 
-    /** TMPDIR scopes the compile machine's temp under tests/tmp, so a test can delete it. */
+    /** The machine temp is scoped under tests/tmp, so a test can delete it. */
     private static function compile(string $app, string $write): void
     {
         @mkdir($write, 0777, true);
         $command = sprintf('%s -d memory_limit=-1 %s', escapeshellarg(PHP_BINARY), escapeshellarg($app . '/bin/compile.php'));
-        [$code, $output] = self::spawn($command, $app, ['CONTEXT' => self::CONTEXT, 'TMPDIR' => $write]);
+        [$code, $output] = self::spawn($command, $app, ['CONTEXT' => self::CONTEXT] + self::tempEnv($write));
         if ($code !== 0) {
             throw new RuntimeException(sprintf('compile and pack failed (%d):%s%s', $code, PHP_EOL, $output));
         }
@@ -160,10 +160,20 @@ class PharPortabilityTest extends TestCase
         $command = sprintf('%s %s get /index', escapeshellarg(PHP_BINARY), escapeshellarg($phar));
         $env = ['CONTEXT' => self::CONTEXT];
         if ($tmpDir !== null) {
-            $env['TMPDIR'] = $tmpDir;
+            $env += self::tempEnv($tmpDir);
         }
 
         return self::spawn($command, dirname($phar), $env);
+    }
+
+    /**
+     * TMPDIR for POSIX, TMP and TEMP for Windows: whichever sys_get_temp_dir() reads.
+     *
+     * @return array<string, string>
+     */
+    private static function tempEnv(string $dir): array
+    {
+        return ['TMPDIR' => $dir, 'TMP' => $dir, 'TEMP' => $dir];
     }
 
     /**
