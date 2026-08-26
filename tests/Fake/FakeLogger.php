@@ -11,6 +11,9 @@ class FakeLogger extends AbstractLogger
 {
     public string $called = '';
 
+    /** @var array<string, list<string>> */
+    public array $messages = [];
+
     public function emergency($message, array $context = []): void
     {
     }
@@ -22,6 +25,7 @@ class FakeLogger extends AbstractLogger
     public function error($message, array $context = []): void
     {
         $this->called = __FUNCTION__;
+        $this->messages[__FUNCTION__][] = (string) $message;
     }
 
     public function warning($message, array $context = []): void
@@ -31,6 +35,7 @@ class FakeLogger extends AbstractLogger
     public function debug($message, array $context = []): void
     {
         $this->called = __FUNCTION__;
+        $this->messages[__FUNCTION__][] = (string) $message;
     }
 
     public function log($level, $message, array $context = []): void
