@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `APP_WRITE_DIR` and `$writeDir` throughout - `Injector::getInstance()`, `Injector::getOverrideInstance()`, `Compiler::__construct()`, `PreloadRecorder::__invoke()` and `bin/preload-worker.php`; an application declares where it writes with `ReadOnlyAppModule` instead, and the declaration is compiled in
 - `WriteDirRequiredException`, and `CompiledForAnotherWriteDirException` for `NotCompiledException`: a boot that cannot compile is told there is no build here rather than which write directory the last one used
 - `PackageInjector::compileInjector()` and `PackageInjector::isCompiled()`: the compile pipeline's injector belongs to `Compiler`, which is the only thing that ever asked for it
+- `bin/bear.compile` and `bin/bear.compile.php`, deprecated in 1.22.0: the wrapper emptied `{appDir}/var/tmp/{context}` for DI scripts that moved to `var/build` in this release, and fataled outright on a tree that had never compiled (#482)
 
 ### Fixed
 - The directory holding `$entry` ships, so `Compiler::phar('bootstrap/admin.php')` packs an entry outside `public/` instead of refusing it (#426)
