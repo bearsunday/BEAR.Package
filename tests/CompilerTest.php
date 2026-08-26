@@ -272,6 +272,25 @@ class CompilerTest extends TestCase
         $this->assertFileDoesNotExist($writeDir . '/tmp/di/FakeVendor_HelloWorld_Resource_Page_Index-.php');
     }
 
+    /** The compile does not reach into a declared directory: another context may be living off it. */
+    public function testCompileKeepsWhatADeclaredTmpDirAlreadyHolds(): void
+    {
+        $writeDir = sys_get_temp_dir() . '/bear-package-write-' . uniqid();
+        mkdir($writeDir . '/tmp', 0777, true);
+        file_put_contents($writeDir . '/tmp/live.txt', 'another context cache');
+        putenv('FAKE_READONLY_TMP=' . $writeDir . '/tmp');
+        putenv('FAKE_READONLY_LOG=' . $writeDir . '/log');
+        try {
+            $this->assertSame(0, (new Compiler(self::APP_NAME, 'prod-readonly-cli-app', self::APP_DIR))());
+            $this->assertFileExists($writeDir . '/tmp/live.txt');
+        } finally {
+            putenv('FAKE_READONLY_TMP');
+            putenv('FAKE_READONLY_LOG');
+            deleteFiles($writeDir);
+            rmdir($writeDir);
+        }
+    }
+
     /** A boot after a compile reuses the scripts instead of writing them again. */
     public function testBootAfterCompileDoesNotRewriteScripts(): void
     {

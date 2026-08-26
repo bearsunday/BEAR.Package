@@ -47,6 +47,8 @@ use function printf;
 use function realpath;
 use function rmdir;
 use function sprintf;
+use function str_replace;
+use function str_starts_with;
 use function unlink;
 
 use const PHP_BINARY;
@@ -211,10 +213,14 @@ final class Compiler
     }
 
     /**
-     * Empty both directories, then recreate the script directory.
+     * Empty what the compile owns, then recreate the script directory.
      *
      * The whole build directory, not only the DI scripts: a compile step dropped from the
      * module tree would otherwise keep shipping the artifacts of the run that still had it.
+     *
+     * The tmp directory only when it sits in the tree, where the deployment artifact would
+     * carry its stale caches. One outside is the runtime's: shared by every context whose
+     * module tree reaches the declaring install, and possibly live while this compile runs.
      *
      * preload.php, autoload.php and app.phar stay: each is replaced by whatever writes it, at
      * the moment it writes, so a compile that dies partway leaves the last one's files alone.
@@ -222,10 +228,21 @@ final class Compiler
     public function clean(): void
     {
         $scriptDir = $this->appMeta->buildDir . '/di';
-        $this->emptyDirectory($this->appMeta->tmpDir);
+        if ($this->writesInTree()) {
+            $this->emptyDirectory($this->appMeta->tmpDir);
+        }
+
         $this->emptyDirectory($this->appMeta->buildDir);
         $this->ensureDirectory($scriptDir);
         $this->injector = null;
+    }
+
+    private function writesInTree(): bool
+    {
+        return str_starts_with(
+            str_replace('\\', '/', $this->appMeta->tmpDir),
+            str_replace('\\', '/', $this->appMeta->appDir) . '/',
+        );
     }
 
     private function emptyDirectory(string $dir): void
