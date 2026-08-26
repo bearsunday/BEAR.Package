@@ -215,6 +215,9 @@ final class Compiler
     /**
      * Empty both directories, then recreate the script directory.
      *
+     * The whole build directory, not only the DI scripts: a compile step dropped from the
+     * module tree would otherwise keep shipping the artifacts of the run that still had it.
+     *
      * preload.php, autoload.php and app.phar stay: each is replaced by whatever writes it, at
      * the moment it writes, so a compile that dies partway leaves the last one's files alone.
      */
@@ -222,7 +225,7 @@ final class Compiler
     {
         $scriptDir = $this->appMeta->buildDir . '/di';
         $this->emptyDirectory($this->appMeta->tmpDir);
-        $this->emptyDirectory($scriptDir);
+        $this->emptyDirectory($this->appMeta->buildDir);
         $this->ensureDirectory($scriptDir);
     }
 
@@ -273,7 +276,11 @@ final class Compiler
         $compiler->compile($module, $scriptDir);
         $steps = $this->injector->getInstance(CompileSteps::class)($this->appMeta->buildDir);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
-        CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
+        // Only for a context that boots from them - a marker is what lets a boot return the
+        // scripts without assembling a module tree, and a per-request context must not.
+        if (PackageInjector::isCompiled($this->appMeta, $this->context)) {
+            CompileMarker::write($scriptDir, $this->appMeta->name, $this->context, $this->appMeta->tmpDir);
+        }
 
         // Compile class meta info (annotations and named parameters)
         $compiled = $this->compileClassMetaInfo();

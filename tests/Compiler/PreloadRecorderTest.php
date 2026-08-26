@@ -16,6 +16,7 @@ use function mkdir;
 use function preg_match_all;
 use function sys_get_temp_dir;
 use function uniqid;
+use function unlink;
 
 class PreloadRecorderTest extends TestCase
 {
@@ -47,9 +48,15 @@ class PreloadRecorderTest extends TestCase
         ! is_dir($scriptDir) && mkdir($scriptDir, 0777, true);
         CompileMarker::write($scriptDir, self::APP_NAME, $context, $meta->tmpDir);
 
-        $this->expectException(PreloadRecordException::class);
-        $this->expectExceptionMessage('assembles the container on each request');
-        (new PreloadRecorder())(self::APP_NAME, $context, self::APP_DIR, null);
+        try {
+            $this->expectException(PreloadRecordException::class);
+            $this->expectExceptionMessage('assembles the container on each request');
+            (new PreloadRecorder())(self::APP_NAME, $context, self::APP_DIR, null);
+        } finally {
+            // A marker for a per-request context is this fixture's fiction: left behind, it
+            // tells every later boot of "app" that there is a build to boot from.
+            @unlink(CompileMarker::path($scriptDir));
+        }
     }
 
     /**
