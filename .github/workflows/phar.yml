@@ -76,3 +76,13 @@ jobs:
           rm -rf /tmp/MyVendor
           CONTEXT=prod-cli-hal-app php /tmp/app.phar get /index | tee /tmp/response
           grep -q '200 OK' /tmp/response
+
+      # The same answer from any path: no location was baked in at compile time,
+      # and nothing the previous location accumulated is needed.
+      - name: Move the archive and boot it again
+        run: |
+          mkdir /tmp/elsewhere
+          mv /tmp/app.phar /tmp/elsewhere/app.phar
+          rm -rf /tmp/MyVendor
+          CONTEXT=prod-cli-hal-app php /tmp/elsewhere/app.phar get /index | tee /tmp/response2
+          diff /tmp/response /tmp/response2
