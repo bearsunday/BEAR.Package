@@ -63,10 +63,6 @@
             "tests-files/deleteFiles.php"
         ]
     },
-    "bin": [
-        "bin/bear.compile",
-        "bin/bear.compile.php"
-    ],
     "scripts": {
         "test": ["phpunit --no-coverage"],
         "tests": ["@cs", "@sa", "@test"],

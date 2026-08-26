@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PharWriteDirMismatchException`: pack no longer checks that an imported application shares the host's write directory - compile both with the same one; a mismatch fails the boot's marker check instead (#426)
 - `CompileRecord::$writeDir`, `CompileRecord::$tmpDir` and `PharReport::$writeDir`: the marker records the application, the context and the compile time; where a build writes is answered by the compiled container (#426)
 - `CompiledForAnotherWriteDirException` and `WriteDirRequiredException`: with no write base compiled in there is nothing to mismatch or require; a read-only tree without a current build throws `NotCompiledException`
+- `bin/bear.compile` and `bin/bear.compile.php`, deprecated in 1.22.0: the wrapper emptied `{appDir}/var/tmp/{context}` for DI scripts that moved to `var/build` in this release, and fataled outright on a tree that had never compiled (#482)
 - `CompiledScripts` - `AbstractAppMeta::$buildDir` says where a build is, a caller holding no Meta is handed it, and the DI scripts sit at `/di` under it (#501)
 - The injector cache under `{tmpDir}/injector`, with `Injector::getInstance()`'s and `Injector::fromMeta()`'s `$cache`: the compiled scripts are the cache, and a boot no longer needs a writable directory to reuse them
 
