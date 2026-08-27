@@ -6,6 +6,7 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Package\FakeLogger;
 use BEAR\Package\FakeLogRefWriter;
+use BEAR\Resource\Exception\BadRequestException;
 use BEAR\Resource\Exception\MethodNotAllowedException;
 use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
@@ -70,6 +71,29 @@ class ErrorLoggerTest extends TestCase
         $this->assertSame([], $this->logger->messages['debug'] ?? []);
         $this->assertCount(2, $this->logger->messages['error']);
         $this->assertArrayHasKey((string) new LogRef($e), $this->writer->written);
+    }
+
+    /** Status reads the exception's own code first: a 5xx BadRequestException is a server fault. */
+    public function testLogsServerCodedBadRequestExceptionAtError(): void
+    {
+        $e = new BadRequestException('msg', 503);
+
+        ($this->errorLogger)($e, self::request());
+
+        $this->assertSame([], $this->logger->messages['debug'] ?? []);
+        $this->assertCount(2, $this->logger->messages['error']);
+        $this->assertArrayHasKey((string) new LogRef($e), $this->writer->written);
+    }
+
+    /** Neither BadRequest nor Runtime is a 500: code 0 still logs at error. */
+    public function testLogsLogicExceptionWithCodeZeroAtError(): void
+    {
+        $e = new LogicException('msg');
+
+        ($this->errorLogger)($e, self::request());
+
+        $this->assertSame([], $this->logger->messages['debug'] ?? []);
+        $this->assertCount(2, $this->logger->messages['error']);
     }
 
     /** Below 500 both lines drop together: a logger filtered to errors keeps neither. */
