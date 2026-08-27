@@ -24,7 +24,12 @@ if ($argc !== 4) {
 }
 
 [, $appName, $context, $appDir] = $argv;
-$dir = (string) realpath($appDir);
+$dir = realpath($appDir);
+if ($dir === false || ! is_file($dir . '/vendor/autoload.php')) {
+    fwrite(STDERR, 'error: vendor/autoload.php not found in ' . $appDir . PHP_EOL);
+    exit(1);
+}
+
 require $dir . '/vendor/autoload.php';
 
 exit((new Compiler($appName, $context, $dir))());

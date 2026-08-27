@@ -33,6 +33,20 @@ class BearCompileBinTest extends TestCase
         $this->assertStringContainsString('Deprecated: bear.compile', $joined);
     }
 
+    public function testInvalidAppDir(): void
+    {
+        $command = sprintf(
+            '%s %s %s prod-cli-app %s 2>&1',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg(self::BIN),
+            escapeshellarg('FakeVendor\HelloWorld'),
+            escapeshellarg(self::APP_DIR . '/no-such-dir'),
+        );
+        exec($command, $output, $exitCode);
+        $this->assertSame(1, $exitCode);
+        $this->assertStringContainsString('vendor/autoload.php not found', implode("\n", $output));
+    }
+
     public function testUsageOnWrongArgc(): void
     {
         exec(sprintf('%s %s 2>&1', escapeshellarg(PHP_BINARY), escapeshellarg(self::BIN)), $output, $exitCode);
