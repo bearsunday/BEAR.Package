@@ -6,13 +6,13 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Package\FakeLogger;
 use BEAR\Package\Provide\Transfer\FakeHttpResponder;
+use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use BEAR\Sunday\Provide\Transfer\ConditionalResponse;
 use BEAR\Sunday\Provide\Transfer\Header;
 use LogicException;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 use function assert;
 
@@ -59,7 +59,7 @@ class ErrorHandlerTest extends TestCase
 
     public function testHandleDebug(): void
     {
-        $e = new RuntimeException('msg', 0);
+        $e = new ResourceNotFoundException('/__not_found__');
         $request = new RouterMatch();
         $this->handler->handle($e, $request);
         $this->assertSame('debug', $this->logger->called);
