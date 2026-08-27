@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * BEAR/Sunday application compiler
+ *
+ * @deprecated Prefer the application's own `bin/compile.php`
+ * @see https://github.com/bearsunday/BEAR.Package/issues/482
+ *
+ * Usage: bear.compile 'MyVendor\MyProject' prod-app <app_dir>
+ */
+
+use BEAR\Package\Compiler;
+
+fwrite(
+    STDERR,
+    'Deprecated: bear.compile is deprecated. Create bin/compile.php in your application. See https://github.com/bearsunday/BEAR.Package/issues/482' . PHP_EOL,
+);
+if ($argc !== 4) {
+    echo 'usage: bear.compile <MyVendor\MyProject> <prod-app> <app_dir>' . PHP_EOL;
+    exit(1);
+}
+
+[, $appName, $context, $appDir] = $argv;
+$dir = (string) realpath($appDir);
+require $dir . '/vendor/autoload.php';
+
+exit((new Compiler($appName, $context, $dir))());
