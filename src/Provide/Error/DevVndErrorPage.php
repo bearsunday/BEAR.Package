@@ -46,9 +46,12 @@ final class DevVndErrorPage extends ResourceObject
     /** @return array<string, string> */
     private function getResponseBody(Throwable $e, RouterMatch $request, Status $status): array
     {
-        return [
-            'message' => $status->text,
-            'logref' => (string) new LogRef($e),
+        $body = ['message' => $status->text];
+        if ($status->code >= 500) {
+            $body['logref'] = (string) new LogRef($e);
+        }
+
+        return $body + [
             'request' => (string) $request,
             'exceptions' => sprintf('%s(%s)', $e::class, $e->getMessage()),
             'file' => sprintf('%s(%s)', $e->getFile(), $e->getLine()),

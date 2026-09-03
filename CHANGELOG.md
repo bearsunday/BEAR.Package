@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- ErrorLogger classifies with Status, as the error page does: an uncaught server fault logs at error even with exception code 0
+- logref is created for server errors (5xx) only; a 4xx logs without a logref field
+- DevVndErrorPage names a logref for server errors only, matching what ErrorLogger writes
+
+### Changed
+- ErrorLogger::__invoke() returns void; the logref string it returned had no consumer
+
 ## [1.24.1] - 2026-08-27
 
 ### Added

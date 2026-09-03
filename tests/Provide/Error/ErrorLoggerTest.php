@@ -6,10 +6,15 @@ namespace BEAR\Package\Provide\Error;
 
 use BEAR\Package\FakeLogger;
 use BEAR\Package\FakeLogRefWriter;
+use BEAR\Resource\Exception\BadRequestException;
+use BEAR\Resource\Exception\MethodNotAllowedException;
+use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Sunday\Extension\Router\RouterMatch;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Throwable;
 
 use function array_keys;
 
@@ -36,9 +41,9 @@ class ErrorLoggerTest extends TestCase
     {
         $e = new LogicException('msg', 500);
 
-        $logRef = ($this->errorLogger)($e, self::request());
+        ($this->errorLogger)($e, self::request());
 
-        $detail = $this->writer->written[$logRef];
+        $detail = $this->writer->written[(string) new LogRef($e)];
         $this->assertStringContainsString($e->getTraceAsString(), $detail);
         $this->assertContains($detail, $this->logger->messages['error']);
         $this->assertSame([], $this->logger->messages['debug'] ?? []);
@@ -48,34 +53,77 @@ class ErrorLoggerTest extends TestCase
     {
         $e = new LogicException('msg', 500);
 
-        $logRef = ($this->errorLogger)($e, self::request());
+        ($this->errorLogger)($e, self::request());
 
-        $this->assertSame((string) new LogRef($e), $logRef);
         $this->assertContains(
-            'req:"get /" code:500 e:LogicException(msg) logref:' . $logRef,
+            'req:"get /" code:500 e:LogicException(msg) logref:' . new LogRef($e),
             $this->logger->messages['error'],
         );
     }
 
-    /** Below 500 both lines drop together: a logger filtered to errors keeps neither. */
-    public function testLogsBothLinesAtDebugWhenNotAnError(): void
+    /** The page reports 503 for any RuntimeException, so the log level matches even with code 0. */
+    public function testLogsUncaughtRuntimeExceptionAtError(): void
     {
         $e = new RuntimeException('msg', 0);
 
-        $logRef = ($this->errorLogger)($e, self::request());
+        ($this->errorLogger)($e, self::request());
+
+        $this->assertSame([], $this->logger->messages['debug'] ?? []);
+        $this->assertCount(2, $this->logger->messages['error']);
+        $this->assertArrayHasKey((string) new LogRef($e), $this->writer->written);
+    }
+
+    /** Status reads the exception's own code first: a 5xx BadRequestException is a server fault. */
+    public function testLogsServerCodedBadRequestExceptionAtError(): void
+    {
+        $e = new BadRequestException('msg', 503);
+
+        ($this->errorLogger)($e, self::request());
+
+        $this->assertSame([], $this->logger->messages['debug'] ?? []);
+        $this->assertCount(2, $this->logger->messages['error']);
+        $this->assertArrayHasKey((string) new LogRef($e), $this->writer->written);
+    }
+
+    /** Neither BadRequest nor Runtime is a 500: code 0 still logs at error. */
+    public function testLogsLogicExceptionWithCodeZeroAtError(): void
+    {
+        $e = new LogicException('msg');
+
+        ($this->errorLogger)($e, self::request());
+
+        $this->assertSame([], $this->logger->messages['debug'] ?? []);
+        $this->assertCount(2, $this->logger->messages['error']);
+    }
+
+    /** Below 500 both lines drop together: a logger filtered to errors keeps neither. */
+    #[DataProvider('clientErrorProvider')]
+    public function testLogsClientErrorAtDebugWithoutLogRef(Throwable $e): void
+    {
+        ($this->errorLogger)($e, self::request());
 
         $this->assertSame([], $this->logger->messages['error'] ?? []);
         $this->assertCount(2, $this->logger->messages['debug']);
-        $this->assertContains($this->writer->written[$logRef], $this->logger->messages['debug']);
+        $this->assertStringNotContainsString('logref:', $this->logger->messages['debug'][0]);
+        $this->assertSame([], $this->writer->written);
+    }
+
+    /** @return array<string, array{Throwable}> */
+    public static function clientErrorProvider(): array
+    {
+        return [
+            'not found' => [new ResourceNotFoundException('/__not_found__')],
+            'method not allowed' => [new MethodNotAllowedException('post', 405)],
+        ];
     }
 
     public function testHandsTheWriterTheRenderingUnderTheLogRef(): void
     {
         $e = new LogicException('msg', 500);
 
-        $logRef = ($this->errorLogger)($e, self::request());
+        ($this->errorLogger)($e, self::request());
 
-        $this->assertSame([$logRef], array_keys($this->writer->written));
+        $this->assertSame([(string) new LogRef($e)], array_keys($this->writer->written));
     }
 
     private static function request(): RouterMatch

@@ -18,33 +18,26 @@ final class ErrorLogger
     ) {
     }
 
-    public function __invoke(Throwable $e, RouterMatch $request): string
-    {
-        $isError = $e->getCode() >= 500;
-        $logRef = new LogRef($e);
-        $detail = (string) new ExceptionAsString($e, $request);
-        $this->logRefWriter->write($logRef, $detail);
-        $message = sprintf('req:"%s" code:%s e:%s(%s) logref:%s', (string) $request, $e->getCode(), $e::class, $e->getMessage(), (string) $logRef);
-        $this->log($isError, $message);
-        $this->log($isError, $detail);
-
-        return (string) $logRef;
-    }
-
     /**
-     * Log with method
+     * Log at the level the error page reports: Status decides 4xx or 5xx for both
      *
-     * monolog has different log level constants(200,400) than psr/logger,
-     * and those constants change from version to version.
+     * Explicit debug()/error() calls because monolog has different log level
+     * constants(200,400) than psr/logger, and those constants change from version to version.
      */
-    private function log(bool $isError, string $message): void
+    public function __invoke(Throwable $e, RouterMatch $request): void
     {
-        if ($isError) {
-            $this->logger->error($message);
+        $detail = (string) new ExceptionAsString($e, $request);
+        $summary = sprintf('req:"%s" code:%s e:%s(%s)', (string) $request, $e->getCode(), $e::class, $e->getMessage());
+        if ((new Status($e))->code < 500) {
+            $this->logger->debug($summary);
+            $this->logger->debug($detail);
 
             return;
         }
 
-        $this->logger->debug($message);
+        $logRef = new LogRef($e);
+        $this->logRefWriter->write($logRef, $detail);
+        $this->logger->error(sprintf('%s logref:%s', $summary, (string) $logRef));
+        $this->logger->error($detail);
     }
 }
