@@ -78,6 +78,7 @@ class CompileStepsTest extends TestCase
 
             protected function configure(): void
             {
+                $this->bind(CompileSteps::class);
                 $binder = MultiBinder::newInstance($this, CompileStepInterface::class);
                 foreach ($this->steps as $key => $step) {
                     $binder->addBinding($key)->toInstance($step);

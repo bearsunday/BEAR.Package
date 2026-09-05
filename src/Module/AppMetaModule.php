@@ -6,6 +6,7 @@ namespace BEAR\Package\Module;
 
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Annotation\AsCompiled;
+use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Resource\Annotation\AppName;
 use BEAR\Sunday\Compile\CompileStepInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
@@ -26,6 +27,7 @@ use function class_exists;
  * AppInterface
  * :AppName
  * Set<CompileStepInterface>
+ * CompileSteps
  *
  * The Meta given here is the compiled one: it names the application and its source tree, and its
  * write directories are settled at boot by {@see AppMetaProvider} from what the module tree says.
@@ -53,5 +55,6 @@ class AppMetaModule extends AbstractModule
         $this->bind()->annotatedWith(AppName::class)->toInstance($this->appMeta->name);
         // Declared empty: an app that installs no step still injects a Map, not Unbound.
         MultiBinder::newInstance($this, CompileStepInterface::class);
+        $this->bind(CompileSteps::class);
     }
 }
