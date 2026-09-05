@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.25.0] - 2026-09-05
+
 ### Fixed
 - ErrorLogger classifies with Status, as the error page does: an uncaught server fault logs at error even with exception code 0
 - logref is created for server errors (5xx) only; a 4xx logs without a logref field
 - DevVndErrorPage names a logref for server errors only, matching what ErrorLogger writes
+- `CompileSteps` is bound explicitly: without it the development `Injector` bound it just in time, which `CompiledInjector` cannot do
 
 ### Changed
 - ErrorLogger::__invoke() returns void; the logref string it returned had no consumer
