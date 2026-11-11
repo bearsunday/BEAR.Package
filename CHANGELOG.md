@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Allows `symfony/cache` ^8.0 (PHP 8.4 or later), alongside ^6.4 and ^7.2
+- Raises the `bear/query-repository` floor to ^1.20 (requires `ray/di` ^2.23, already the floor here, and `koriym/semantic-logger` ^0.11)
+
 ## [1.25.0] - 2026-09-05
 
 ### Fixed
