@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Allows `symfony/cache` ^8.0 (PHP 8.4 or later), alongside ^6.4 and ^7.2, and requires `ray/psr-cache-module` ^1.6, the first version that supports it. `psr/cache` is `^2.0 || ^3.0`, the versions every allowed `symfony/cache` accepts
+- Allows `symfony/cache` 8 (PHP 8.4 or later) and requires `ray/psr-cache-module` ^1.6, the first version that supports it. Each `symfony/cache` line starts at its first release fixed for CVE-2026-45073: 6.4.40, 7.4.12 and 8.0.12
 - Requires `bear/query-repository` ^1.20 (was ^1.13), which brings its behaviour changes: a `#[Cacheable]` body that does not serialize fails the request, and a `#[Cacheable]` response without a lifetime carries `Cache-Control: max-age=0`. Read QueryRepository's 1.20.0 CHANGELOG before upgrading
+- Raises the `psr/cache`, `psr/log`, `monolog/monolog` and `bear/resource` floors to versions an install can reach; what an application resolves does not change
 
 ## [1.25.0] - 2026-09-05
 
