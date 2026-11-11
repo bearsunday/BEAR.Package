@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Allows `symfony/cache` ^8.0 (PHP 8.4 or later), alongside ^6.4 and ^7.2
-- Raises the `bear/query-repository` floor to ^1.20 (requires `ray/di` ^2.23, already the floor here, and `koriym/semantic-logger` ^0.11)
+- Requires `bear/query-repository` ^1.20 (was ^1.13), which brings its behaviour changes: a `#[Cacheable]` body that does not serialize fails the request, and a `#[Cacheable]` response without a lifetime carries `Cache-Control: max-age=0`. Read QueryRepository's 1.20.0 CHANGELOG before upgrading
 
 ## [1.25.0] - 2026-09-05
 
