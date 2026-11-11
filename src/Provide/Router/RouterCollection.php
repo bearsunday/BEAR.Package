@@ -17,7 +17,7 @@ use function is_string;
 
 final class RouterCollection implements RouterInterface
 {
-    private const ROUTE_NOT_FOUND = 'page://self/__route_not_found';
+    private const string ROUTE_NOT_FOUND = 'page://self/__route_not_found';
 
     /** @param RouterInterface[] $routers */
     public function __construct(

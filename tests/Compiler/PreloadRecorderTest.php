@@ -25,9 +25,9 @@ use function var_export;
 
 class PreloadRecorderTest extends TestCase
 {
-    private const APP_NAME = 'FakeVendor\HelloWorld';
-    private const APP_DIR = __DIR__ . '/../Fake/fake-app';
-    private const CONTEXT = 'prod-app';
+    private const string APP_NAME = 'FakeVendor\HelloWorld';
+    private const string APP_DIR = __DIR__ . '/../Fake/fake-app';
+    private const string CONTEXT = 'prod-app';
 
     /**
      * A boot without current scripts compiles on demand, and recording that would write the

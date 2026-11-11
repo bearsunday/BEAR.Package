@@ -30,10 +30,10 @@ use const JSON_ERROR_NONE;
  */
 final class HttpMethodParams implements HttpMethodParamsInterface
 {
-    public const CONTENT_TYPE = 'CONTENT_TYPE';
-    public const HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
-    public const FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
-    public const APPLICATION_JSON = 'application/json';
+    public const string CONTENT_TYPE = 'CONTENT_TYPE';
+    public const string HTTP_CONTENT_TYPE = 'HTTP_CONTENT_TYPE';
+    public const string FORM_URL_ENCODE = 'application/x-www-form-urlencoded';
+    public const string APPLICATION_JSON = 'application/json';
 
     public function __construct(
         #[StdIn]

@@ -51,8 +51,8 @@ use const PHP_EOL;
  */
 class PharPortabilityTest extends TestCase
 {
-    private const CONTEXT = 'prod-cli-hal-app';
-    private const APP_NAME = 'FakeVendor\PharApp';
+    private const string CONTEXT = 'prod-cli-hal-app';
+    private const string APP_NAME = 'FakeVendor\PharApp';
 
     public function testBootsFromAnotherDirectoryWithTheBuildTreeDeleted(): void
     {

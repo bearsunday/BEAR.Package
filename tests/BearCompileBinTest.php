@@ -15,8 +15,8 @@ use const PHP_BINARY;
 
 class BearCompileBinTest extends TestCase
 {
-    private const BIN = __DIR__ . '/../bin/bear.compile';
-    private const APP_DIR = __DIR__ . '/Fake/fake-app';
+    private const string BIN = __DIR__ . '/../bin/bear.compile';
+    private const string APP_DIR = __DIR__ . '/Fake/fake-app';
 
     public function testCompile(): void
     {
