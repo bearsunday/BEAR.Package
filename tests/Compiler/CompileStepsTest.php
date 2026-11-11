@@ -36,7 +36,7 @@ use const PHP_OS_FAMILY;
 
 class CompileStepsTest extends TestCase
 {
-    private const CONTEXT = 'prod-app';
+    private const string CONTEXT = 'prod-app';
 
     /** @var non-empty-string */
     private string $appDir;

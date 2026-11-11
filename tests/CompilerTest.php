@@ -63,9 +63,9 @@ use const PHP_BINARY;
 
 class CompilerTest extends TestCase
 {
-    private const APP_NAME = 'FakeVendor\HelloWorld';
-    private const APP_DIR = __DIR__ . '/Fake/fake-app';
-    private const INDEX_RESOURCE_PATH = 'Resource' . DIRECTORY_SEPARATOR . 'Page' . DIRECTORY_SEPARATOR . 'Index.php';
+    private const string APP_NAME = 'FakeVendor\HelloWorld';
+    private const string APP_DIR = __DIR__ . '/Fake/fake-app';
+    private const string INDEX_RESOURCE_PATH = 'Resource' . DIRECTORY_SEPARATOR . 'Page' . DIRECTORY_SEPARATOR . 'Index.php';
 
     public function testInvoke(): void
     {

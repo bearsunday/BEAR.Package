@@ -33,7 +33,7 @@ use const JSON_THROW_ON_ERROR;
  */
 final class CompileMarker
 {
-    public const FILENAME = '.bear-compile.json';
+    public const string FILENAME = '.bear-compile.json';
 
     /** @codeCoverageIgnore */
     private function __construct()

@@ -16,7 +16,7 @@ use function mkdir;
 /** @implements ProviderInterface<string> */
 final class CacheDirProvider implements ProviderInterface
 {
-    private const CACHE_DIRNAME = '/cache';
+    private const string CACHE_DIRNAME = '/cache';
 
     public function __construct(private AbstractAppMeta $appMeta)
     {

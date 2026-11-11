@@ -48,7 +48,7 @@ use function var_export;
 final class PharBuilder
 {
     /** A leading slash, a UNC share, or a drive letter - the spellings realpath() would not change. */
-    private const ABSOLUTE = '#^(/|\\\\|[A-Za-z]:[/\\\\])#';
+    private const string ABSOLUTE = '#^(/|\\\\|[A-Za-z]:[/\\\\])#';
 
     /**
      * @param AppDir        $appDir
