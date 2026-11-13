@@ -104,6 +104,25 @@ class CliRouterTest extends TestCase
         $this->assertSame(['name' => 'bear'], $request->query);
     }
 
+    public function testMatchWithFragmentAppendsItToPath(): void
+    {
+        $server = [
+            'argv' => [
+                'php',
+                'get',
+                'page://self/user?id=1#link=self:blog',
+            ],
+            'argc' => 3,
+        ];
+        $globals = [
+            '_GET' => [],
+            '_POST' => [],
+        ];
+        $request = $this->router->match($globals, $server); // @phpstan-ignore-line
+        $this->assertSame('page://self/user#link=self:blog', $request->path);
+        $this->assertSame(['id' => '1'], $request->query);
+    }
+
     public function testOption(): void
     {
         $server = [
