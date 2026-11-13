@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `CliRouter` carries a `#link=type:rel` fragment from the argv URI onto the matched `RouterMatch::path`, so `php bin/app.php get '/user?id=1#link=self:blog'` follows the link; a fragment-less request is unchanged. On error, the request appears in logs and the dev error page via `RouterMatch::__toString()`; without a `bear/sunday` fixing that to put the query before the fragment, a fragment-carrying request's string there shows the query stuck after the fragment (diagnostics only — link-following itself does not call `__toString()`).
+- The console follows the links in the URI fragment: `php bin/app.php get '/user?id=1#link=self:blog'`. It needs bear/resource with links in the URI.
+
+### Changed
+- **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
 
 ## [1.26.0] - 2026-11-11
 
