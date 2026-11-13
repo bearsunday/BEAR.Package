@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- The console follows the links in the URI fragment: `php bin/app.php get '/user?id=1#link=self:blog'`. It needs bear/resource with links in the URI.
+
+### Changed
+- **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
+
 ## [1.26.0] - 2026-11-11
 
 ### Changed
