@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- A 201 response whose `Location` has a fragment (`/post?id=1#comments`) returns the created resource and sends `Location` with the fragment as written. A reverse-routed `Location` lost the fragment, and with bear/resource 1.36 the response was a 500
+
 ## [1.26.0] - 2026-11-11
 
 ### Changed

@@ -17,6 +17,8 @@ use function is_string;
 use function parse_str;
 use function parse_url;
 use function sprintf;
+use function strpos;
+use function substr;
 
 use const PHP_URL_HOST;
 use const PHP_URL_PATH;
@@ -28,6 +30,8 @@ use const PHP_URL_SCHEME;
  */
 final class CreatedResourceRenderer implements RenderInterface
 {
+    private const string FRAGMENT_SEPARATOR = '#';
+
     public function __construct(
         private RouterInterface $router,
         private ResourceInterface $resource,
@@ -42,7 +46,8 @@ final class CreatedResourceRenderer implements RenderInterface
     {
         $urlSchema = (string) parse_url((string) $ro->uri, PHP_URL_SCHEME);
         $urlHost = (string) parse_url((string) $ro->uri, PHP_URL_HOST);
-        $locationUri = sprintf('%s://%s%s', $urlSchema, $urlHost, $ro->headers['Location']);
+        [$location, $fragment] = $this->splitFragment($ro->headers['Location']);
+        $locationUri = sprintf('%s://%s%s', $urlSchema, $urlHost, $location);
         try {
             $locatedResource = $this->resource->uri($locationUri)();
         } catch (Throwable $e) {
@@ -52,7 +57,7 @@ final class CreatedResourceRenderer implements RenderInterface
             throw new LocationHeaderRequestException($locationUri, 0, $e);
         }
 
-        $this->updateHeaders($ro);
+        $this->updateHeaders($ro, $location, $fragment);
         $ro->view = $locatedResource->toString();
 
         return $ro->view;
@@ -76,15 +81,20 @@ final class CreatedResourceRenderer implements RenderInterface
         return $uri;
     }
 
-    private function updateHeaders(ResourceObject $ro): void
+    /** @return array{string, string} the URI without its fragment, and the fragment with its separator ('' if none) */
+    private function splitFragment(string $uri): array
     {
-        $ro->headers['content-type'] = 'application/hal+json';
-        if (! isset($ro->headers['Location'])) {
-            // @codeCoverageIgnoreStart
-            return;
-            // @codeCoverageIgnoreEnd
+        $separatorPosition = strpos($uri, self::FRAGMENT_SEPARATOR);
+        if ($separatorPosition === false) {
+            return [$uri, ''];
         }
 
-        $ro->headers['Location'] = $this->getReverseMatchedLink($ro->headers['Location']);
+        return [substr($uri, 0, $separatorPosition), substr($uri, $separatorPosition)];
+    }
+
+    private function updateHeaders(ResourceObject $ro, string $location, string $fragment): void
+    {
+        $ro->headers['content-type'] = 'application/hal+json';
+        $ro->headers['Location'] = $this->getReverseMatchedLink($location) . $fragment;
     }
 }

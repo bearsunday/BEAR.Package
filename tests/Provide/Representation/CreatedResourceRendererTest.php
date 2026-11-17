@@ -8,17 +8,21 @@ use BEAR\Package\Injector;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
 use FakeVendor\HelloWorld\Resource\App\Post;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
 use function assert;
 use function dirname;
+use function is_array;
 use function is_string;
+use function json_decode;
 
 class CreatedResourceRendererTest extends TestCase
 {
     private CreatedResourceRenderer $renderer;
+    private ResourceInterface $resource;
     private Post $ro;
 
     protected function setUp(): void
@@ -29,6 +33,7 @@ class CreatedResourceRendererTest extends TestCase
         $post = $resource->post('app://self/post');
         assert($post instanceof Post);
         $this->ro = $post;
+        $this->resource = $resource;
         $this->renderer = new CreatedResourceRenderer(new FakeRouter(), $resource);
     }
 
@@ -75,5 +80,39 @@ class CreatedResourceRendererTest extends TestCase
         $result = $getReverseMatchedLink->invoke($this->renderer, $uri);
         assert(is_string($result));
         $this->assertSame($uri, $result);
+    }
+
+    /** @return array<string, array{string, string, string}> */
+    public static function fragmentProvider(): array
+    {
+        return [
+            'location as written' => ['/post#top', 'user_10', '/post#top'],
+            'reverse routed location' => ['/post?id=1#top', 'user_1', '/task/1#top'],
+        ];
+    }
+
+    #[DataProvider('fragmentProvider')]
+    public function testLocationFragmentIsKept(string $location, string $expectedName, string $expectedLocation): void
+    {
+        $ro = $this->resource->post('app://self/post', ['uri' => $location]);
+
+        $body = json_decode($this->renderer->render($ro), true);
+
+        assert(is_array($body));
+        $this->assertSame(201, $ro->code);
+        $this->assertSame($expectedName, $body['name']);
+        $this->assertSame($expectedLocation, $ro->headers['Location']);
+    }
+
+    public function testLinkFragmentIsNotFollowed(): void
+    {
+        $ro = $this->resource->post('app://self/post', ['uri' => '/user?id=1#link=self:friend']);
+
+        $body = json_decode($this->renderer->render($ro), true);
+
+        assert(is_array($body));
+        $this->assertSame(201, $ro->code);
+        $this->assertSame('f1', $body['friend_id']);
+        $this->assertSame('/task/1#link=self:friend', $ro->headers['Location']);
     }
 }
