@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Requires `bear/resource` ^1.36, which reads the links from the URI fragment. Read its 1.36.0 CHANGELOG before upgrading.
 - **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
 
+### Fixed
+- A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
+
 ## [1.26.0] - 2026-11-11
 
 ### Changed
