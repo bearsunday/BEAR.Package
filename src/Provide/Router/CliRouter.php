@@ -27,6 +27,7 @@ use function strtoupper;
 use function unlink;
 
 use const PHP_SAPI;
+use const PHP_URL_FRAGMENT;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
@@ -102,11 +103,17 @@ final class CliRouter implements RouterInterface
         $this->validateArgs($server['argc'], $server['argv']);
         // covert console $_SERVER to web $_SERVER $GLOBALS
         /** @psalm-suppress InvalidArgument */
-        [$method, $query, $server] = $this->parseServer($server);
+        [$method, $query, $server, $fragment] = $this->parseServer($server);
         /** @psalm-suppress MixedArgumentTypeCoercion */
         [$webGlobals, $webServer] = $this->addQuery($method, $query, $globals, $server);
 
-        return $this->router->match($webGlobals, $webServer);
+        $routerMatch = $this->router->match($webGlobals, $webServer);
+        if ($fragment !== '') {
+            // bear/resource reads links back from the URI fragment; an invalid one is rejected there, not here
+            $routerMatch->path .= '#' . $fragment;
+        }
+
+        return $routerMatch;
     }
 
     /**
@@ -200,11 +207,11 @@ final class CliRouter implements RouterInterface
     // @codeCoverageIgnoreEnd
 
     /**
-     * Return $method, $query, $server from $server
+     * Return $method, $query, $server, $fragment from $server
      *
      * @param Server $server
      *
-     * @return array{string, QueryParams, Server}
+     * @return array{string, QueryParams, Server, string}
      */
     private function parseServer(array $server): array
     {
@@ -212,6 +219,7 @@ final class CliRouter implements RouterInterface
         [, $method, $uri] = $server['argv'];
         $urlQuery = (string) parse_url($uri, PHP_URL_QUERY);
         $urlPath = (string) parse_url($uri, PHP_URL_PATH);
+        $fragment = (string) parse_url($uri, PHP_URL_FRAGMENT);
         $query = [];
         if ($urlQuery !== '') {
             parse_str($urlQuery, $query);
@@ -224,6 +232,6 @@ final class CliRouter implements RouterInterface
 
         $query = QueryParamNormalizer::normalize($query);
 
-        return [$method, $query, $server];
+        return [$method, $query, $server, $fragment];
     }
 }

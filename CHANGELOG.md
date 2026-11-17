@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- The console follows the links in the URI fragment: `php bin/app.php get '/user?id=1#link=self:blog'`.
+
+### Changed
+- Requires `bear/resource` ^1.36, which reads the links from the URI fragment. Read its 1.36.0 CHANGELOG before upgrading.
+- **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
+
 ### Fixed
 - A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
 
