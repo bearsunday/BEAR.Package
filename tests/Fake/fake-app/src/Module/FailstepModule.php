@@ -16,5 +16,6 @@ class FailstepModule extends AbstractModule
     {
         MultiBinder::newInstance($this, CompileStepInterface::class)
             ->addBinding('failing')->to(FakeFailingStep::class);
+        $this->bind(FakeFailingStep::class);
     }
 }
