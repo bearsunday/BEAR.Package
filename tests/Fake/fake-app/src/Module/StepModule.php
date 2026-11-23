@@ -19,5 +19,7 @@ class StepModule extends AbstractModule
             ->addBinding('alpha')->to(FakeAlphaStep::class);
         MultiBinder::newInstance($this, CompileStepInterface::class)
             ->addBinding('beta')->to(FakeBetaStep::class);
+        $this->bind(FakeAlphaStep::class);
+        $this->bind(FakeBetaStep::class);
     }
 }
