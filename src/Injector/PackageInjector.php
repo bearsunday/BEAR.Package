@@ -133,9 +133,8 @@ final class PackageInjector
             return $scriptDir;
         }
 
-        // An anonymous class name ends in a counter that differs per entry point. A dev override
-        // drops it: its AOP files are named by their bindings. A prod override keeps it: it
-        // compiles here, and the compile marker cannot tell two overrides apart.
+        // Dev drops the per-entry-point counter: its AOP files are named by their bindings.
+        // Prod keeps it: it compiles here, and the compile marker cannot tell overrides apart.
         $class = $overrideModule::class;
         $key = $isProd ? $class : (string) preg_replace(self::ANONYMOUS_CLASS_COUNTER, '', $class);
 
