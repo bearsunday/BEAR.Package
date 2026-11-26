@@ -17,7 +17,7 @@
         "bear/query-repository": "^1.20",
         "bear/resource": "^1.37",
         "bear/streamer": "^1.4",
-        "bear/sunday": "^1.9",
+        "bear/sunday": "^1.10",
         "monolog/monolog": "^2.3.3 || ^3.0",
         "ray/aop": "^2.20",
         "ray/di": "^2.23",

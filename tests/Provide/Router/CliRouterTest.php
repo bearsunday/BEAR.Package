@@ -121,6 +121,7 @@ class CliRouterTest extends TestCase
         $request = $this->router->match($globals, $server); // @phpstan-ignore-line
         $this->assertSame('page://self/user#link=self:blog', $request->path);
         $this->assertSame(['id' => '1'], $request->query);
+        $this->assertSame('get page://self/user?id=1#link=self:blog', (string) $request);
     }
 
     public function testOption(): void

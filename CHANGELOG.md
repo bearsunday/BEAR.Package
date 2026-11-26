@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Requires `bear/resource` ^1.37, which reads the links and their queries from the URI fragment. Read its 1.36.0 CHANGELOG before upgrading.
+- Requires `bear/sunday` ^1.10, whose `RouterMatch::__toString()` puts the query before the fragment in error output.
 - **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
 - `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs; delete `.compile.php` after reading [the manual](https://bearsunday.github.io/manuals/1.0/en/production.html#compile-php)
 - The compile no longer requests the resource a `#[ResourceParam]` names, so `autoload.php` no longer lists the classes only that evaluation loaded, such as `#[Input]` objects; Composer loads them as before
