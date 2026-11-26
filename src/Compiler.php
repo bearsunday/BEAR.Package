@@ -30,13 +30,13 @@ use RuntimeException;
 use SplFileInfo;
 
 use function assert;
-use function class_exists;
 use function dirname;
 use function escapeshellarg;
 use function file_exists;
 use function is_dir;
 use function is_file;
 use function is_float;
+use function iterator_count;
 use function memory_get_peak_usage;
 use function microtime;
 use function mkdir;
@@ -300,8 +300,7 @@ final class Compiler
             CompileMarker::write($scriptDir, $this->appMeta->name, $this->context);
         }
 
-        // Compile class meta info (annotations and named parameters)
-        $compiled = $this->compileClassMetaInfo();
+        $compiled = iterator_count($this->appMeta->getResourceListGenerator());
 
         // Preload last: the worker boots from the finished artifact - scripts, marker and
         // meta caches all in place - so it loads what a deployed first request loads.
@@ -340,20 +339,6 @@ final class Compiler
         }
 
         return 0.0;
-    }
-
-    private function compileClassMetaInfo(): int
-    {
-        $resources = $this->appMeta->getResourceListGenerator();
-        $count = 0;
-        foreach ($resources as $resource) {
-            [$className] = $resource;
-            // Loaded so autoload.php lists it; not run: a #[ResourceParam] would request another resource.
-            class_exists($className);
-            $count++;
-        }
-
-        return $count;
     }
 
     /**

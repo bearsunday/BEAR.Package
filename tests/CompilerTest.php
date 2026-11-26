@@ -15,6 +15,7 @@ use FakeVendor\HelloWorld\FakeCompileStepException;
 use FakeVendor\HelloWorld\Resource\App\ParamSource;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 use RecursiveDirectoryIterator;
@@ -92,6 +93,7 @@ class CompilerTest extends TestCase
     }
 
     /** A stub a leftover .compile.php declares would shape the scripts production boots from. */
+    #[IgnoreDeprecations]
     public function testLeftoverCompileScriptIsNotLoaded(): void
     {
         $compileScript = self::APP_DIR . '/.compile.php';

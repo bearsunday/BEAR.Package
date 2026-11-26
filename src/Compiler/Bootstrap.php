@@ -7,6 +7,7 @@ namespace BEAR\Package\Compiler;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
 use BEAR\Package\Types;
+use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Resource\Method;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
@@ -17,6 +18,7 @@ use Ray\Di\InjectorInterface;
 use Throwable;
 
 use function assert;
+use function explode;
 use function file_put_contents;
 use function sprintf;
 
@@ -32,9 +34,11 @@ final class Bootstrap
 {
     private string $appDir;
 
+    /** @param string|null $failureLog where a failed request is reported; null reports nothing */
     public function __construct(
         AbstractAppMeta $meta,
         private InjectorInterface|null $injector = null,
+        private string|null $failureLog = null,
     ) {
         $this->appDir = $meta->appDir;
     }
@@ -69,9 +73,16 @@ final class Bootstrap
             assert($resource instanceof ResourceInterface);
 
             return $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
+        } catch (ResourceNotFoundException) {
+            // An application with nothing at the path has nothing to record there.
+            $injector->getInstance(TransferInterface::class);
+
+            return null;
         } catch (Throwable $e) {
-            // The compile goes on; what the rest of the request would have loaded misses preload.php.
-            file_put_contents('php://stderr', sprintf("%s %s failed while recording preload.php: %s: %s\n", $request->method, $request->path, $e::class, $e->getMessage()));
+            if ($this->failureLog !== null) {
+                file_put_contents($this->failureLog, sprintf("%s %s failed while recording preload.php: %s: %s\n", $request->method, $request->path, $e::class, explode("\n", $e->getMessage())[0]));
+            }
+
             $injector->getInstance(TransferInterface::class);
 
             return null;
