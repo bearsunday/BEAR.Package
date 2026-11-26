@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
 - The compiled DI scripts follow the real classes: since 1.22 a `.compile.php` stub with another constructor compiled cleanly and failed in production, and one without a method attribute ran without its interceptor
 - A CLI context's compile requests `/` through the CLI router: since 1.12.4 the request named `page:://self/`, which never resolved, so `preload.php` lacked what the page at `/` loads. An application whose CLI scheme host has no page at `/` still records none
-- An anonymous override module gets one script directory under `var/build/{context}/di/` from every entry point, so test and dev entry points no longer add a directory each
+- A dev anonymous override module gets one script directory under `var/build/{context}/di/` from every entry point, so test and dev entry points no longer add a directory each
 
 ## [1.26.0] - 2026-11-11
 

@@ -14,7 +14,9 @@ for ($i = 0; $i < (int) $argv[1]; $i++) {
 
 $module = require __DIR__ . '/override-module.php';
 $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
+$scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
 echo json_encode([
     'class' => $module::class,
-    'scriptDir' => (new ReflectionMethod(PackageInjector::class, 'scriptDir'))->invoke(null, $meta, $module),
+    'devDir' => $scriptDir->invoke(null, $meta, $module, false),
+    'prodDir' => $scriptDir->invoke(null, $meta, $module, true),
 ]);

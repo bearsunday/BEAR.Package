@@ -59,7 +59,7 @@ final class PackageInjector
             return self::$instances[$injectorId];
         }
 
-        $scriptDir = self::scriptDir($meta, null);
+        $scriptDir = self::scriptDir($meta, null, false);
         if (CompileMarker::matches($scriptDir, $meta->name, $context)) {
             return self::$instances[$injectorId] = new CompiledInjector($scriptDir);
         }
@@ -74,9 +74,10 @@ final class PackageInjector
      */
     public static function factory(AbstractAppMeta $meta, string $context, AbstractModule|null $overrideModule = null): InjectorInterface
     {
-        $scriptDir = self::ensureScriptDir($meta, $overrideModule);
         $module = self::module($meta, $context, $overrideModule);
-        if (self::isProd($module)) {
+        $isProd = self::isProd($module);
+        $scriptDir = self::ensureScriptDir($meta, $overrideModule, $isProd);
+        if ($isProd) {
             return ProdInjector::create($module, $scriptDir, $meta, $context);
         }
 
@@ -98,9 +99,9 @@ final class PackageInjector
     }
 
     /** @return ScriptDir */
-    private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    private static function ensureScriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule, bool $isProd): string
     {
-        $scriptDir = self::scriptDir($meta, $overrideModule);
+        $scriptDir = self::scriptDir($meta, $overrideModule, $isProd);
         if (! is_dir($scriptDir)) {
             @mkdir($scriptDir, 0777, true);
         }
@@ -121,19 +122,24 @@ final class PackageInjector
      * Resolve the script directory for AOP proxies / compiled container.
      *
      * Override injectors use a subdirectory keyed on the override module's class so they never
-     * share on-disk artifacts with the default injector for the same app+context (#478). An
-     * anonymous class name ends in a counter that differs per entry point; the key leaves it out.
+     * share on-disk artifacts with the default injector for the same app+context (#478).
      *
      * @return ScriptDir
      */
-    private static function scriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule): string
+    private static function scriptDir(AbstractAppMeta $meta, AbstractModule|null $overrideModule, bool $isProd): string
     {
         $scriptDir = $meta->buildDir . '/di';
-        if ($overrideModule instanceof AbstractModule) {
-            $scriptDir .= '/' . hash('xxh128', (string) preg_replace(self::ANONYMOUS_CLASS_COUNTER, '', $overrideModule::class));
+        if (! $overrideModule instanceof AbstractModule) {
+            return $scriptDir;
         }
 
-        return $scriptDir;
+        // An anonymous class name ends in a counter that differs per entry point. A dev override
+        // drops it: its AOP files are named by their bindings. A prod override keeps it: it
+        // compiles here, and the compile marker cannot tell two overrides apart.
+        $class = $overrideModule::class;
+        $key = $isProd ? $class : (string) preg_replace(self::ANONYMOUS_CLASS_COUNTER, '', $class);
+
+        return $scriptDir . '/' . hash('xxh128', $key);
     }
 
     /**

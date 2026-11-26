@@ -35,13 +35,13 @@ use function filemtime;
 use function glob;
 use function ini_get;
 use function ini_set;
-use function is_array;
 use function is_int;
 use function is_string;
 use function json_decode;
 use function mkdir;
 use function rmdir;
 use function shell_exec;
+use function sprintf;
 use function str_ends_with;
 use function sys_get_temp_dir;
 use function time;
@@ -108,7 +108,7 @@ class PackageInjectorTest extends TestCase
         $overrideDir = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($overrideInjector);
         assert(is_string($overrideDir));
 
-        $this->assertNotSame($defaultDir, $overrideDir);
+        $this->assertSame($defaultDir, dirname($overrideDir));
     }
 
     public function testDifferentOverrideModulesUseDifferentScriptDirs(): void
@@ -156,18 +156,34 @@ class PackageInjectorTest extends TestCase
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
-        $this->assertSame($meta->appDir . '/var/build/app/di', $scriptDir->invoke(null, $meta, null));
+        $this->assertSame($meta->appDir . '/var/build/app/di', $scriptDir->invoke(null, $meta, null, false));
     }
 
-    public function testOverrideScriptDirIsTheSameFromEveryEntryPoint(): void
+    public function testOverrideScriptDirAcrossEntryPoints(): void
     {
-        $script = dirname(__DIR__) . '/script/override-script-dir.php';
-        $plain = json_decode((string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' 0'), true);
-        $later = json_decode((string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' 3'), true);
-        assert(is_array($plain) && is_array($later));
+        $plain = $this->overrideScriptDirs(0);
+        $later = $this->overrideScriptDirs(3);
 
         $this->assertNotSame($plain['class'], $later['class']);
-        $this->assertSame($plain['scriptDir'], $later['scriptDir']);
+        $this->assertSame($plain['devDir'], $later['devDir']);
+        $this->assertNotSame($plain['prodDir'], $later['prodDir']);
+    }
+
+    /**
+     * Builds one override module in a fresh process after compiling $anonymousBefore anonymous classes
+     *
+     * @return array{class: string, devDir: string, prodDir: string}
+     */
+    private function overrideScriptDirs(int $anonymousBefore): array
+    {
+        $script = dirname(__DIR__) . '/script/override-script-dir.php';
+        // A cached compile would freeze the anonymous class counter
+        $command = sprintf('%s -d opcache.enable_cli=0 %s %d', escapeshellarg(PHP_BINARY), escapeshellarg($script), $anonymousBefore);
+        $dirs = json_decode((string) shell_exec($command), true);
+        $this->assertIsArray($dirs);
+
+        /** @var array{class: string, devDir: string, prodDir: string} $dirs */
+        return $dirs;
     }
 
     public function testProdFactoryReusesAotScriptsWhenMarkerPresent(): void
