@@ -427,6 +427,6 @@ final class Compiler
             return;
         }
 
-        trigger_error(sprintf('%s is no longer loaded; delete it. The object graph built at boot must build without stubs.', $compileScript), E_USER_DEPRECATED);
+        trigger_error(sprintf('%s is no longer loaded; delete it. See https://bearsunday.github.io/manuals/1.0/en/production.html#compile-php', $compileScript), E_USER_DEPRECATED);
     }
 }

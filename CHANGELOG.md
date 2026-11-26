@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs: a service that connects while it is built needs its store reachable from the compile, or to connect on first use (for `StorageRedisDsnModule`, `['lazy' => true]`). Then delete `.compile.php`
+- `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs; delete `.compile.php` after reading [the manual](https://bearsunday.github.io/manuals/1.0/en/production.html#compile-php)
 - The compile no longer requests the resource a `#[ResourceParam]` names, so `autoload.php` no longer lists the classes only that evaluation loaded, such as `#[Input]` objects; Composer loads them as before
 - A request to `/` that fails while the compile records `preload.php` is reported on STDERR as `get <uri> failed while recording preload.php: <exception>: <first line of its message>`, the URI taking the context's scheme host (`page://self/`, `app://self/`); the classes the rest of that request would load are missing from `preload.php`. A missing page at `/` is not reported
 
