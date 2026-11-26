@@ -12,6 +12,7 @@ use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\FakeCompileStepException;
+use FakeVendor\HelloWorld\Resource\App\ParamSource;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
@@ -79,6 +80,29 @@ class CompilerTest extends TestCase
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
+    }
+
+    /** A compile machine may not reach what a #[ResourceParam] target reads. */
+    public function testCompileDoesNotRequestResourceParamTargets(): void
+    {
+        ParamSource::$requested = false;
+        (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $this->assertFalse(ParamSource::$requested);
+    }
+
+    /** A stub a leftover .compile.php declares would shape the scripts production boots from. */
+    public function testLeftoverCompileScriptIsNotLoaded(): void
+    {
+        $compileScript = self::APP_DIR . '/.compile.php';
+        file_put_contents($compileScript, "<?php\n\$GLOBALS['fakeAppCompileScriptLoaded'] = true;\n");
+        try {
+            new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
+        } finally {
+            unlink($compileScript);
+        }
+
+        $this->assertArrayNotHasKey('fakeAppCompileScriptLoaded', $GLOBALS);
     }
 
     /** Routing the build through factory() would compile an extra time and log an on-demand compile. */
@@ -165,8 +189,6 @@ class CompilerTest extends TestCase
         $this->assertStringContainsString('require ', $contents);
         $this->assertStringNotContainsString('require_once', $contents);
         $this->assertStringNotContainsString('phpunit', $contents);
-        $this->assertStringNotContainsString('compile-stub', $contents);
-        $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
         $this->assertPreloadHoldsBootNotCompiler($contents);
         $this->assertPreloadCompilesLoadedScripts($contents);
         $this->assertPreloadBodyRuns($preload);

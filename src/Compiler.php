@@ -9,7 +9,6 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
-use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Compiler\DotCommand;
@@ -19,7 +18,6 @@ use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Module\ResourceObjectModule;
-use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FilesystemIterator;
 use Ray\Compiler\Annotation\Compile;
@@ -32,9 +30,11 @@ use RuntimeException;
 use SplFileInfo;
 
 use function assert;
+use function class_exists;
 use function dirname;
 use function escapeshellarg;
 use function file_exists;
+use function file_put_contents;
 use function is_dir;
 use function is_file;
 use function is_float;
@@ -343,15 +343,12 @@ final class Compiler
 
     private function compileClassMetaInfo(): int
     {
-        $namedParams = $this->injector()->getInstance(NamedParameterInterface::class);
-        assert($namedParams instanceof NamedParameterInterface);
-
-        $compileClassMetaInfo = new CompileClassMetaInfo();
         $resources = $this->appMeta->getResourceListGenerator();
         $count = 0;
         foreach ($resources as $resource) {
             [$className] = $resource;
-            $compileClassMetaInfo($namedParams, $className);
+            // Loaded so autoload.php lists it; not run: a #[ResourceParam] would request another resource.
+            class_exists($className);
             $count++;
         }
 
@@ -359,8 +356,7 @@ final class Compiler
     }
 
     /**
-     * Install the class tracker and the `.compile.php` stubs before any injector is built:
-     * an injector loads the application, and stubs that arrive after it never apply.
+     * Install the class tracker before any injector is built: an injector loads the application.
      *
      * @param Context $context
      * @param AppDir  $appDir
@@ -375,7 +371,7 @@ final class Compiler
         $this->context = $context;
         $this->appMeta = $appMeta;
         $tracker->register();
-        $this->hookNullObjectClass($appDir);
+        $this->warnUnusedCompileScript($appDir);
     }
 
     /**
@@ -438,17 +434,13 @@ final class Compiler
         return (bool) $module->getContainer()->getInstance('', Compile::class);
     }
 
-    private function hookNullObjectClass(string $appDir): void
+    private function warnUnusedCompileScript(string $appDir): void
     {
-        $appDirRealpath = realpath($appDir);
-        assert($appDirRealpath !== false);
-        $compileScript = $appDirRealpath . '/.compile.php';
+        $compileScript = $appDir . '/.compile.php';
         if (! file_exists($compileScript)) {
-            // @codeCoverageIgnoreStart
             return;
-            // @codeCoverageIgnoreEnd
         }
 
-        require $compileScript;
+        file_put_contents('php://stderr', sprintf("%s is not loaded: the object graph built at boot must not perform I/O.\n", $compileScript));
     }
 }
