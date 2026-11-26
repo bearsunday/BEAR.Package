@@ -14,6 +14,7 @@ use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Compiler\DotCommand;
 use BEAR\Package\Compiler\FakeRun;
 use BEAR\Package\Compiler\FilePutContents;
+use BEAR\Package\Compiler\WorkerGlobals;
 use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
@@ -29,19 +30,15 @@ use RecursiveIteratorIterator;
 use RuntimeException;
 use SplFileInfo;
 
-use function array_key_exists;
 use function assert;
 use function class_exists;
 use function dirname;
 use function escapeshellarg;
 use function file_exists;
 use function getenv;
-use function in_array;
 use function is_dir;
 use function is_file;
 use function is_float;
-use function is_scalar;
-use function is_string;
 use function json_encode;
 use function memory_get_peak_usage;
 use function microtime;
@@ -86,9 +83,6 @@ final class Compiler
      * @var array{AppName, Context, AppDir}
      */
     private array $preloadJob;
-
-    /** Keys a PHP process sets for itself; the worker keeps its own. */
-    private const array PROCESS_SERVER_KEYS = ['argc', 'PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED', 'DOCUMENT_ROOT', 'REQUEST_TIME', 'REQUEST_TIME_FLOAT'];
     private bool $hasCompileStubs = false;
 
     /**
@@ -376,8 +370,7 @@ final class Compiler
      */
     private function compileScriptsWithoutStubs(string $scriptDir): void
     {
-        $processEnv = getenv();
-        $globals = ['server' => $this->setInProcess($_SERVER, $processEnv), 'env' => $this->setInProcess($_ENV, $processEnv)];
+        $globals = (new WorkerGlobals())($_SERVER, $_ENV, getenv());
         [$appName, $context, $appDir] = $this->preloadJob;
         $command = sprintf(
             '%s %s %s',
@@ -390,30 +383,6 @@ final class Compiler
         if ($exitCode !== 0) {
             throw new RuntimeException(sprintf('Compiling the DI scripts without .compile.php failed with exit code %d', $exitCode));
         }
-    }
-
-    /**
-     * @param array<array-key, mixed> $globals
-     * @param array<string, string>   $processEnv
-     *
-     * @return array<string, scalar>
-     */
-    private function setInProcess(array $globals, array $processEnv): array
-    {
-        $set = [];
-        foreach ($globals as $key => $value) {
-            if (! is_string($key) || ! is_scalar($value) || in_array($key, self::PROCESS_SERVER_KEYS, true)) {
-                continue;
-            }
-
-            if (array_key_exists($key, $processEnv) && $processEnv[$key] === (string) $value) {
-                continue;
-            }
-
-            $set[$key] = $value;
-        }
-
-        return $set;
     }
 
     /**
