@@ -38,11 +38,25 @@ class BootstrapTest extends TestCase
         $this->assertSame("get page://self/fails failed while recording preload.php: RuntimeException: store unreachable\n", file_get_contents($this->failureLog));
     }
 
+    /** A page that cannot be built fails the request the same way. */
+    public function testAPageThatFailsToBuildIsReported(): void
+    {
+        $this->assertNull($this->request('/fails-to-build'));
+        $this->assertSame("get page://self/fails-to-build failed while recording preload.php: RuntimeException: store unreachable while built\n", file_get_contents($this->failureLog));
+    }
+
     /** An application with nothing at the path, such as an API-only one at "/", has nothing to report. */
-    public function testAMissingResourceIsNotReported(): void
+    public function testAMissingPageIsNotReported(): void
     {
         $this->assertNull($this->request('/no-such-page'));
         $this->assertSame('', file_get_contents($this->failureLog));
+    }
+
+    /** A resource the page requests being missing is a failure of the page. */
+    public function testAMissingResourceThePageRequestsIsReported(): void
+    {
+        $this->assertNull($this->request('/nested-missing'));
+        $this->assertSame("get page://self/nested-missing failed while recording preload.php: BEAR\\Resource\\Exception\\ResourceNotFoundException: app://self/no-such-resource\n", file_get_contents($this->failureLog));
     }
 
     private function request(string $path): mixed

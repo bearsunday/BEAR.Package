@@ -71,21 +71,31 @@ final class Bootstrap
         try {
             $resource = $injector->getInstance(ResourceInterface::class);
             assert($resource instanceof ResourceInterface);
-
-            return $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
+            $pageRequest = $resource->newRequest(Method::from($request->method), $request->path, $request->query);
         } catch (ResourceNotFoundException) {
             // An application with nothing at the path has nothing to record there.
-            $injector->getInstance(TransferInterface::class);
-
-            return null;
+            return $this->noResponse($injector);
         } catch (Throwable $e) {
-            if ($this->failureLog !== null) {
-                file_put_contents($this->failureLog, sprintf("%s %s failed while recording preload.php: %s: %s\n", $request->method, $request->path, $e::class, explode("\n", $e->getMessage())[0]));
-            }
-
-            $injector->getInstance(TransferInterface::class);
-
-            return null;
+            return $this->noResponse($injector, sprintf('%s %s', $request->method, $request->path), $e);
         }
+
+        try {
+            return $pageRequest();
+        } catch (Throwable $e) {
+            // A resource the page requests can be missing too; only an absent page is not a failure.
+            return $this->noResponse($injector, sprintf('%s %s', $request->method, $request->path), $e);
+        }
+    }
+
+    /** The compile goes on; what the rest of the request would have loaded misses preload.php. */
+    private function noResponse(InjectorInterface $injector, string $request = '', Throwable|null $failure = null): null
+    {
+        if ($failure !== null && $this->failureLog !== null) {
+            file_put_contents($this->failureLog, sprintf("%s failed while recording preload.php: %s: %s\n", $request, $failure::class, explode("\n", $failure->getMessage())[0]));
+        }
+
+        $injector->getInstance(TransferInterface::class);
+
+        return null;
     }
 }

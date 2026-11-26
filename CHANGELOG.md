@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs: a service that connects while it is built needs its store reachable from the compile, or to connect on first use (for `StorageRedisDsnModule`, `['lazy' => true]`). Then delete `.compile.php`
-- The compile no longer requests the resource a `#[ResourceParam]` names
-- A `GET /` that fails while the compile records `preload.php` is reported on STDERR; the classes the rest of that request would load are missing from `preload.php`
+- The compile no longer requests the resource a `#[ResourceParam]` names, so `autoload.php` no longer lists the classes only that evaluation loaded, such as `#[Input]` objects; Composer loads them as before
+- A request to `/` that fails while the compile records `preload.php` is reported on STDERR as `get page://self/ failed while recording preload.php: <exception>: <message>`; the classes the rest of that request would load are missing from `preload.php`. A missing page at `/` is not reported
 
 ### Deprecated
 - `.compile.php`: it is not loaded, see Changed
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
 - The compiled DI scripts follow the real classes: since 1.22 a `.compile.php` stub with another constructor compiled cleanly and failed in production, and one without a method attribute ran without its interceptor
-- A CLI context's compile requests its page: since 1.12.4 the request named `page:://self/`, which never resolved, so `preload.php` lacked what the page loads
+- A CLI context's compile requests `/` through the CLI router: since 1.12.4 the request named `page:://self/`, which never resolved, so `preload.php` lacked what the page at `/` loads. An application whose CLI scheme host has no page at `/` still records none
 
 ## [1.26.0] - 2026-11-11
 
