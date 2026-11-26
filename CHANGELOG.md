@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- The console follows the links in the URI fragment, with their queries: `php bin/app.php get '/order?id=1#link=self:payment?card=1234'`.
+
 ### Changed
+- **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
 - `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs; delete `.compile.php` after reading [the manual](https://bearsunday.github.io/manuals/1.0/en/production.html#compile-php)
 - The compile no longer requests the resource a `#[ResourceParam]` names, so `autoload.php` no longer lists the classes only that evaluation loaded, such as `#[Input]` objects; Composer loads them as before
 - A request to `/` that fails while the compile records `preload.php` is reported on STDERR as `get <uri> failed while recording preload.php: <exception>: <first line of its message>`, the URI taking the context's scheme host (`page://self/`, `app://self/`); the classes the rest of that request would load are missing from `preload.php`. A missing page at `/` is not reported
