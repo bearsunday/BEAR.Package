@@ -109,7 +109,7 @@ final class CliRouter implements RouterInterface
 
         $routerMatch = $this->router->match($webGlobals, $webServer);
         if ($fragment !== '') {
-            // bear/resource reads links back from the URI fragment; an invalid one is rejected there, not here
+            // bear/resource reads the links from the fragment and rejects any other fragment
             $routerMatch->path .= '#' . $fragment;
         }
 
