@@ -54,7 +54,7 @@ final class FakeRun
      */
     public function __invoke(): void
     {
-        // Reported from the preload worker's recording only: that is the run whose output a failure thins.
+        // dumpAutoload() runs the same request; only the preload worker reports its failure.
         $bootstrap = new Bootstrap($this->appMeta, $this->injector, $this->transfersResponse ? 'php://stderr' : null);
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';

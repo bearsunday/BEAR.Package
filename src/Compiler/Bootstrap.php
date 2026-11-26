@@ -82,12 +82,10 @@ final class Bootstrap
         try {
             return $pageRequest();
         } catch (Throwable $e) {
-            // A resource the page requests can be missing too; only an absent page is not a failure.
             return $this->noResponse($injector, sprintf('%s %s', $request->method, $request->path), $e);
         }
     }
 
-    /** The compile goes on; what the rest of the request would have loaded misses preload.php. */
     private function noResponse(InjectorInterface $injector, string $request = '', Throwable|null $failure = null): null
     {
         if ($failure !== null && $this->failureLog !== null) {
