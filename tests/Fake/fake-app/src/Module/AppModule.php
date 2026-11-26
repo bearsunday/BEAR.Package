@@ -12,6 +12,9 @@ use FakeVendor\HelloWorld\FakeFoo;
 use FakeVendor\HelloWorld\Module\Provider\AuthProvider;
 use FakeVendor\HelloWorld\NullInterceptor;
 use FakeVendor\HelloWorld\Resource\Page\Dep;
+use FakeVendor\HelloWorld\StubbedRepository;
+use FakeVendor\HelloWorld\StubbedTx;
+use FakeVendor\HelloWorld\StubbedTxInterceptor;
 use Ray\Di\AbstractModule;
 
 class AppModule extends AbstractModule
@@ -35,5 +38,13 @@ class AppModule extends AbstractModule
         $this->bind(FakeFoo::class);
         $this->bind(FakeDep::class);
         $this->bind(Auth::class)->toProvider(AuthProvider::class);
+        $this->bind(StubbedRepository::class);
+        $this->bindInterceptor(
+            $this->matcher->subclassesOf(StubbedRepository::class),
+            $this->matcher->annotatedWith(StubbedTx::class),
+            [StubbedTxInterceptor::class],
+        );
+        // .compile.php sets it; a build-time value the compiled scripts keep.
+        $this->bind()->annotatedWith('compile_env')->toInstance((string) ($_SERVER['FAKE_APP_COMPILE_ENV'] ?? ''));
     }
 }

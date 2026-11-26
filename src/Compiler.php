@@ -9,7 +9,6 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
-use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Compiler\DotCommand;
@@ -19,7 +18,6 @@ use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Module\ResourceObjectModule;
-use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FilesystemIterator;
 use Ray\Compiler\Annotation\Compile;
@@ -31,13 +29,20 @@ use RecursiveIteratorIterator;
 use RuntimeException;
 use SplFileInfo;
 
+use function array_key_exists;
 use function assert;
+use function class_exists;
 use function dirname;
 use function escapeshellarg;
 use function file_exists;
+use function getenv;
+use function in_array;
 use function is_dir;
 use function is_file;
 use function is_float;
+use function is_scalar;
+use function is_string;
+use function json_encode;
 use function memory_get_peak_usage;
 use function microtime;
 use function mkdir;
@@ -51,6 +56,7 @@ use function str_replace;
 use function str_starts_with;
 use function unlink;
 
+use const JSON_THROW_ON_ERROR;
 use const PHP_BINARY;
 use const PHP_BINDIR;
 use const PHP_EOL;
@@ -80,6 +86,10 @@ final class Compiler
      * @var array{AppName, Context, AppDir}
      */
     private array $preloadJob;
+
+    /** Keys a PHP process sets for itself; the worker keeps its own. */
+    private const array PROCESS_SERVER_KEYS = ['argc', 'PHP_SELF', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PATH_TRANSLATED', 'DOCUMENT_ROOT', 'REQUEST_TIME', 'REQUEST_TIME_FLOAT'];
+    private bool $hasCompileStubs = false;
 
     /**
      * @param AppName $appName application name "MyVendor|MyProject"
@@ -291,6 +301,11 @@ final class Compiler
         $scriptDir = $this->appMeta->buildDir . '/di';
         $this->ensureDirectory($scriptDir);
         $compiler->compile($module, $scriptDir);
+        if ($this->hasCompileStubs) {
+            // Scripts written here follow the classes .compile.php replaced, not the real ones.
+            $this->compileScriptsWithoutStubs($scriptDir);
+        }
+
         $steps = $injector->getInstance(CompileSteps::class)($this->appMeta->buildDir);
         // Marker after the DI scripts and the steps: it claims the whole build is on disk (#483).
         // Only for a context that boots from them - a marker is what lets a boot return the
@@ -343,19 +358,62 @@ final class Compiler
 
     private function compileClassMetaInfo(): int
     {
-        $namedParams = $this->injector()->getInstance(NamedParameterInterface::class);
-        assert($namedParams instanceof NamedParameterInterface);
-
-        $compileClassMetaInfo = new CompileClassMetaInfo();
         $resources = $this->appMeta->getResourceListGenerator();
         $count = 0;
         foreach ($resources as $resource) {
             [$className] = $resource;
-            $compileClassMetaInfo($namedParams, $className);
+            // Loaded so autoload.php lists it; not run: a #[ResourceParam] would request another resource.
+            class_exists($className);
             $count++;
         }
 
         return $count;
+    }
+
+    /**
+     * The worker gets the $_SERVER and $_ENV values this process set (.compile.php's among them),
+     * so the values the modules read bake in as they would here.
+     */
+    private function compileScriptsWithoutStubs(string $scriptDir): void
+    {
+        $processEnv = getenv();
+        $globals = ['server' => $this->setInProcess($_SERVER, $processEnv), 'env' => $this->setInProcess($_ENV, $processEnv)];
+        [$appName, $context, $appDir] = $this->preloadJob;
+        $command = sprintf(
+            '%s %s %s',
+            self::workerCommand('di-worker.php', $appName, $context, $appDir),
+            escapeshellarg($scriptDir),
+            escapeshellarg(json_encode($globals, JSON_THROW_ON_ERROR)),
+        );
+        $exitCode = 1;
+        passthru($command, $exitCode);
+        if ($exitCode !== 0) {
+            throw new RuntimeException(sprintf('Compiling the DI scripts without .compile.php failed with exit code %d', $exitCode));
+        }
+    }
+
+    /**
+     * @param array<array-key, mixed> $globals
+     * @param array<string, string>   $processEnv
+     *
+     * @return array<string, scalar>
+     */
+    private function setInProcess(array $globals, array $processEnv): array
+    {
+        $set = [];
+        foreach ($globals as $key => $value) {
+            if (! is_string($key) || ! is_scalar($value) || in_array($key, self::PROCESS_SERVER_KEYS, true)) {
+                continue;
+            }
+
+            if (array_key_exists($key, $processEnv) && $processEnv[$key] === (string) $value) {
+                continue;
+            }
+
+            $set[$key] = $value;
+        }
+
+        return $set;
     }
 
     /**
@@ -450,5 +508,6 @@ final class Compiler
         }
 
         require $compileScript;
+        $this->hasCompileStubs = true;
     }
 }

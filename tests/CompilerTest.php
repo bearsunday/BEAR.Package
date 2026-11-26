@@ -12,6 +12,8 @@ use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\FakeCompileStepException;
+use FakeVendor\HelloWorld\FakeFoo;
+use FakeVendor\HelloWorld\Resource\App\ParamSource;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
@@ -37,6 +39,7 @@ use function ini_get;
 use function ini_set;
 use function is_dir;
 use function is_float;
+use function json_decode;
 use function mkdir;
 use function ob_get_clean;
 use function ob_start;
@@ -79,6 +82,30 @@ class CompilerTest extends TestCase
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
+    }
+
+    /** A class .compile.php replaces must not lend its constructor or interceptor bindings to production. */
+    public function testScriptsFollowTheRealClassAStubReplaces(): void
+    {
+        (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $output = [];
+        $exitCode = 1;
+        exec(sprintf('%s %s prod-cli-app 2>&1', escapeshellarg(PHP_BINARY), escapeshellarg(__DIR__ . '/script/resolve-stubbed.php')), $output, $exitCode);
+        $this->assertSame(0, $exitCode, implode("\n", $output));
+        $this->assertSame(
+            ['foo' => FakeFoo::class, 'store' => 'tx(stored)', 'env' => 'from-compile-php'],
+            json_decode(implode('', $output), true),
+        );
+    }
+
+    /** A compile machine may not reach what a #[ResourceParam] target reads. */
+    public function testCompileDoesNotRequestResourceParamTargets(): void
+    {
+        ParamSource::$requested = false;
+        (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $this->assertFalse(ParamSource::$requested);
     }
 
     /** Routing the build through factory() would compile an extra time and log an on-demand compile. */

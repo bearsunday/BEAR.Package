@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
+- A class `.compile.php` replaces no longer lends its constructor, setters or interceptor bindings to the compiled DI scripts; they follow the real class. Recompile: since 1.22 a stub with another shape compiled cleanly and failed in production, or ran without its interceptors
+- The compile no longer requests the resource a `#[ResourceParam]` names, so that request needs no `.compile.php` stub
 
 ## [1.26.0] - 2026-11-11
 
