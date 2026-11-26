@@ -186,6 +186,35 @@ class PackageInjectorTest extends TestCase
         return $dirs;
     }
 
+    public function testFactoryKeysAnOverrideDirectoryByWhetherItIsProd(): void
+    {
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        // One declaration, a fresh instance per factory: override() takes over the module's container
+        $newModule = static fn (): AbstractModule => new class extends AbstractModule {
+            protected function configure(): void
+            {
+            }
+        };
+        $module = $newModule();
+        $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
+        $devMeta = new Meta('FakeVendor\HelloWorld', 'app', $appDir);
+        $prodMeta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
+
+        $dev = PackageInjector::factory($devMeta, 'app', $module);
+        $errorLog = sys_get_temp_dir() . '/bear-errorlog-' . uniqid('', true) . '.log';
+        $previous = (string) ini_get('error_log');
+        ini_set('error_log', $errorLog);
+        try {
+            $prod = PackageInjector::factory($prodMeta, 'prod-app', $newModule());
+        } finally {
+            ini_set('error_log', $previous);
+            @unlink($errorLog);
+        }
+
+        $this->assertSame($scriptDir->invoke(null, $devMeta, $module, false), (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($dev));
+        $this->assertSame($scriptDir->invoke(null, $prodMeta, $module, true), (new ReflectionProperty(CompiledInjector::class, 'scriptDir'))->getValue($prod));
+    }
+
     public function testProdFactoryReusesAotScriptsWhenMarkerPresent(): void
     {
         (new ReflectionProperty(PackageInjector::class, 'instances'))->setValue([]);
