@@ -356,8 +356,9 @@ final class Compiler
         $this->classes = $tracker->classes();
         $this->context = $context;
         $this->appMeta = $appMeta;
-        $tracker->register();
+        // Before the tracker: an error handler that throws on the deprecation leaves the autoloaders as they were.
         $this->warnUnusedCompileScript($appDir);
+        $tracker->register();
     }
 
     /**

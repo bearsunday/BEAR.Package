@@ -97,15 +97,24 @@ class CompilerTest extends TestCase
     public function testLeftoverCompileScriptIsNotLoaded(): void
     {
         $compileScript = self::APP_DIR . '/.compile.php';
-        file_put_contents($compileScript, "<?php\n\$GLOBALS['fakeAppCompileScriptLoaded'] = true;\n");
+        // Loaded by the compile or by the preload worker, it fails the build.
+        file_put_contents($compileScript, "<?php\nthrow new LogicException('.compile.php was loaded');\n");
         $this->expectUserDeprecationMessageMatches('/\.compile\.php is no longer loaded/');
         try {
-            new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
+            $report = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
         } finally {
             unlink($compileScript);
         }
 
-        $this->assertArrayNotHasKey('fakeAppCompileScriptLoaded', $GLOBALS);
+        $this->assertGreaterThan(0, $report['compiled']);
+    }
+
+    /** The CLI router reads the fake request, so a CLI context records its page in preload.php. */
+    public function testCliContextRecordsItsPage(): void
+    {
+        (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $this->assertStringContainsString('FakeVendor_HelloWorld_Resource_Page_Index-.php', (string) file_get_contents(self::APP_DIR . '/preload.php'));
     }
 
     /** Routing the build through factory() would compile an extra time and log an on-demand compile. */
