@@ -34,7 +34,6 @@ use function class_exists;
 use function dirname;
 use function escapeshellarg;
 use function file_exists;
-use function file_put_contents;
 use function is_dir;
 use function is_file;
 use function is_float;
@@ -49,8 +48,10 @@ use function rmdir;
 use function sprintf;
 use function str_replace;
 use function str_starts_with;
+use function trigger_error;
 use function unlink;
 
+use const E_USER_DEPRECATED;
 use const PHP_BINARY;
 use const PHP_BINDIR;
 use const PHP_EOL;
@@ -441,6 +442,6 @@ final class Compiler
             return;
         }
 
-        file_put_contents('php://stderr', sprintf("%s is not loaded: the object graph built at boot must not perform I/O.\n", $compileScript));
+        trigger_error(sprintf('%s is no longer loaded; delete it. The object graph built at boot must build without stubs.', $compileScript), E_USER_DEPRECATED);
     }
 }

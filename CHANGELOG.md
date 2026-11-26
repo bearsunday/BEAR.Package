@@ -8,11 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- `.compile.php` is no longer loaded, and the compile prints a notice when it finds one. The object graph built at boot must not perform I/O: make such a service connect on first use (for `StorageRedisDsnModule`, pass `['lazy' => true]`), then delete `.compile.php`
+- `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs: a service that connects while it is built needs its store reachable from the compile, or to connect on first use (for `StorageRedisDsnModule`, `['lazy' => true]`). Then delete `.compile.php`
 - The compile no longer requests the resource a `#[ResourceParam]` names
 - A `GET /` that fails while the compile records `preload.php` is reported on STDERR; the classes the rest of that request would load are missing from `preload.php`
 
 ### Deprecated
+- `.compile.php`: it is not loaded, see Changed
 - `Compiler\CompileClassMetaInfo`; the compile no longer uses it
 
 ### Fixed

@@ -96,6 +96,7 @@ class CompilerTest extends TestCase
     {
         $compileScript = self::APP_DIR . '/.compile.php';
         file_put_contents($compileScript, "<?php\n\$GLOBALS['fakeAppCompileScriptLoaded'] = true;\n");
+        $this->expectUserDeprecationMessageMatches('/\.compile\.php is no longer loaded/');
         try {
             new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR);
         } finally {
