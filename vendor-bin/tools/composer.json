@@ -2,7 +2,7 @@
     "require-dev": {
         "phpstan/phpstan": "^2.1",
         "doctrine/coding-standard": "^14.0",
-        "phpmd/phpmd": "^2.13",
+        "phpmd/phpmd": "^3.0",
         "phpmetrics/phpmetrics": "^2.8",
         "squizlabs/php_codesniffer": "^4.0",
         "vimeo/psalm": "^6.13"
