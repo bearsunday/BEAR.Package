@@ -26,25 +26,30 @@ use ReflectionProperty;
 
 use function assert;
 use function dirname;
+use function escapeshellarg;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function fileinode;
 use function filemtime;
 use function glob;
-use function hash;
 use function ini_get;
 use function ini_set;
+use function is_array;
 use function is_int;
 use function is_string;
+use function json_decode;
 use function mkdir;
 use function rmdir;
+use function shell_exec;
 use function str_ends_with;
 use function sys_get_temp_dir;
 use function time;
 use function touch;
 use function uniqid;
 use function unlink;
+
+use const PHP_BINARY;
 
 class PackageInjectorTest extends TestCase
 {
@@ -103,8 +108,6 @@ class PackageInjectorTest extends TestCase
         $overrideDir = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($overrideInjector);
         assert(is_string($overrideDir));
 
-        $expectedSuffix = '/di/' . hash('xxh128', $overrideModule::class);
-        $this->assertTrue(str_ends_with($overrideDir, $expectedSuffix));
         $this->assertNotSame($defaultDir, $overrideDir);
     }
 
@@ -134,8 +137,6 @@ class PackageInjectorTest extends TestCase
         assert(is_string($dirB));
 
         $this->assertNotSame($dirA, $dirB);
-        $this->assertTrue(str_ends_with($dirA, '/di/' . hash('xxh128', $moduleA::class)));
-        $this->assertTrue(str_ends_with($dirB, '/di/' . hash('xxh128', $moduleB::class)));
     }
 
     #[Depends('testGetOverrideInstance')]
@@ -158,19 +159,15 @@ class PackageInjectorTest extends TestCase
         $this->assertSame($meta->appDir . '/var/build/app/di', $scriptDir->invoke(null, $meta, null));
     }
 
-    public function testScriptDirWithOverride(): void
+    public function testOverrideScriptDirIsTheSameFromEveryEntryPoint(): void
     {
-        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
-        $module = new class extends AbstractModule {
-            protected function configure(): void
-            {
-            }
-        };
-        $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
-        $this->assertSame(
-            $meta->appDir . '/var/build/app/di/' . hash('xxh128', $module::class),
-            $scriptDir->invoke(null, $meta, $module),
-        );
+        $script = dirname(__DIR__) . '/script/override-script-dir.php';
+        $plain = json_decode((string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' 0'), true);
+        $later = json_decode((string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' 3'), true);
+        assert(is_array($plain) && is_array($later));
+
+        $this->assertNotSame($plain['class'], $later['class']);
+        $this->assertSame($plain['scriptDir'], $later['scriptDir']);
     }
 
     public function testProdFactoryReusesAotScriptsWhenMarkerPresent(): void

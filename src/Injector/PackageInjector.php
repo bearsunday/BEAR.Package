@@ -18,6 +18,7 @@ use Ray\Di\InjectorInterface;
 use function hash;
 use function is_dir;
 use function mkdir;
+use function preg_replace;
 use function str_replace;
 
 /**
@@ -27,6 +28,8 @@ use function str_replace;
  */
 final class PackageInjector
 {
+    private const string ANONYMOUS_CLASS_COUNTER = '/\$[0-9a-f]+$/';
+
     /**
      * Serialized injector instances
      *
@@ -117,8 +120,9 @@ final class PackageInjector
     /**
      * Resolve the script directory for AOP proxies / compiled container.
      *
-     * Override injectors use a class-name hash subdirectory so they never share
-     * on-disk artifacts with the default injector for the same app+context (#478).
+     * Override injectors use a subdirectory keyed on the override module's class so they never
+     * share on-disk artifacts with the default injector for the same app+context (#478). An
+     * anonymous class name ends in a counter that differs per entry point; the key leaves it out.
      *
      * @return ScriptDir
      */
@@ -126,7 +130,7 @@ final class PackageInjector
     {
         $scriptDir = $meta->buildDir . '/di';
         if ($overrideModule instanceof AbstractModule) {
-            $scriptDir .= '/' . hash('xxh128', $overrideModule::class);
+            $scriptDir .= '/' . hash('xxh128', (string) preg_replace(self::ANONYMOUS_CLASS_COUNTER, '', $overrideModule::class));
         }
 
         return $scriptDir;
