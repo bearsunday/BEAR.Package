@@ -13,9 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Requires `bear/resource` ^1.36, which reads the links from the URI fragment. Read its 1.36.0 CHANGELOG before upgrading.
 - **Behaviour change**: a console URI with any other fragment, such as `#section`, fails with `UriException`; the fragment was ignored.
+- `.compile.php` is no longer loaded, and the compile raises `E_USER_DEPRECATED` when it finds one. The object graph built at boot must build without its stubs; delete `.compile.php` after reading [the manual](https://bearsunday.github.io/manuals/1.0/en/production.html#compile-php)
+- The compile no longer requests the resource a `#[ResourceParam]` names, so `autoload.php` no longer lists the classes only that evaluation loaded, such as `#[Input]` objects; Composer loads them as before
+- A request to `/` that fails while the compile records `preload.php` is reported on STDERR as `get <uri> failed while recording preload.php: <exception>: <first line of its message>`, the URI taking the context's scheme host (`page://self/`, `app://self/`); the classes the rest of that request would load are missing from `preload.php`. A missing page at `/` is not reported
+
+### Deprecated
+- `.compile.php`: it is not loaded, see Changed
+- `Compiler\CompileClassMetaInfo`; the compile no longer uses it
 
 ### Fixed
 - A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
+- The compiled DI scripts follow the real classes: since 1.22 a `.compile.php` stub with another constructor compiled cleanly and failed in production, and one without a method attribute ran without its interceptor
+- A CLI context's compile requests `/` through the CLI router: since 1.12.4 the request named `page:://self/`, which never resolved, so `preload.php` lacked what the page at `/` loads. An application whose CLI scheme host has no page at `/` still records none
 
 ## [1.26.0] - 2026-11-11
 

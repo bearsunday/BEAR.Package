@@ -12,7 +12,6 @@ use BEAR\Package\Injector\PackageInjector;
 use BEAR\Package\Types;
 use Ray\Compiler\ScriptInjectorInterface;
 
-use function is_file;
 use function ob_end_clean;
 use function ob_start;
 
@@ -44,15 +43,6 @@ final class PreloadRecorder
     {
         $tracker = ClassTracker::fromAppDir($appDir);
         $tracker->register();
-        // Same stubs the parent compile honours: .compile.php replaces the providers that
-        // cannot run on a build machine. Without it this boot would run the real ones - the
-        // recording would write to databases and send mail. Stub classes drop out of the
-        // list anyway, their declaring file does not match the Composer map (#486).
-        $compileStub = $appDir . '/.compile.php';
-        if (is_file($compileStub)) {
-            require $compileStub;
-        }
-
         $meta = new Meta($appName, $context, $appDir);
         $scriptDir = $meta->buildDir . '/di';
         // Without a current marker the boot below compiles on demand and the recording

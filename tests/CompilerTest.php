@@ -12,8 +12,10 @@ use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FakeVendor\HelloWorld\FakeCompileStepException;
+use FakeVendor\HelloWorld\Resource\App\ParamSource;
 use FilesystemIterator;
 use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 use RecursiveDirectoryIterator;
@@ -79,6 +81,40 @@ class CompilerTest extends TestCase
         $compiler->dumpAutoload();
         $this->assertFileExists($compiledFile1);
         $this->assertFileExists($compiledFile3);
+    }
+
+    /** A compile machine may not reach what a #[ResourceParam] target reads. */
+    public function testCompileDoesNotRequestResourceParamTargets(): void
+    {
+        ParamSource::$requested = false;
+        (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $this->assertFalse(ParamSource::$requested);
+    }
+
+    /** A stub a leftover .compile.php declares would shape the scripts production boots from. */
+    #[IgnoreDeprecations]
+    public function testLeftoverCompileScriptIsNotLoaded(): void
+    {
+        $compileScript = self::APP_DIR . '/.compile.php';
+        // Loaded by the compile or by the preload worker, it fails the build.
+        file_put_contents($compileScript, "<?php\nthrow new LogicException('.compile.php was loaded');\n");
+        $this->expectUserDeprecationMessageMatches('/\.compile\.php is no longer loaded/');
+        try {
+            $report = (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+        } finally {
+            unlink($compileScript);
+        }
+
+        $this->assertGreaterThan(0, $report['compiled']);
+    }
+
+    /** The CLI router reads the fake request, so a CLI context records its page in preload.php. */
+    public function testCliContextRecordsItsPage(): void
+    {
+        (new Compiler(self::APP_NAME, 'prod-cli-app', self::APP_DIR))->compile();
+
+        $this->assertStringContainsString('FakeVendor_HelloWorld_Resource_Page_Index-.php', (string) file_get_contents(self::APP_DIR . '/preload.php'));
     }
 
     /** Routing the build through factory() would compile an extra time and log an on-demand compile. */
@@ -165,8 +201,6 @@ class CompilerTest extends TestCase
         $this->assertStringContainsString('require ', $contents);
         $this->assertStringNotContainsString('require_once', $contents);
         $this->assertStringNotContainsString('phpunit', $contents);
-        $this->assertStringNotContainsString('compile-stub', $contents);
-        $this->assertStringNotContainsString('compile-stub', (string) file_get_contents($autoload));
         $this->assertPreloadHoldsBootNotCompiler($contents);
         $this->assertPreloadCompilesLoadedScripts($contents);
         $this->assertPreloadBodyRuns($preload);

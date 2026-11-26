@@ -54,12 +54,13 @@ final class FakeRun
      */
     public function __invoke(): void
     {
-        $bootstrap = new Bootstrap($this->appMeta, $this->injector);
+        // dumpAutoload() runs the same request; only the preload worker reports its failure.
+        $bootstrap = new Bootstrap($this->appMeta, $this->injector, $this->transfersResponse ? 'php://stderr' : null);
         $_SERVER['HTTP_IF_NONE_MATCH'] = '0';
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['argc'] = 3;
-        $_SERVER['argv'] = ['', 'get', 'page:://self/'];
+        $_SERVER['argv'] = ['', 'get', 'page://self/'];
         /** @psalm-suppress ArgumentTypeCoercion, InvalidArgument */
         $response = ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         // Transfer what the request produced: rendering is where the response format loads its

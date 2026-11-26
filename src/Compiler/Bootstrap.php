@@ -7,6 +7,7 @@ namespace BEAR\Package\Compiler;
 use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\Package\Injector;
 use BEAR\Package\Types;
+use BEAR\Resource\Exception\ResourceNotFoundException;
 use BEAR\Resource\Method;
 use BEAR\Resource\ResourceInterface;
 use BEAR\Resource\ResourceObject;
@@ -17,6 +18,9 @@ use Ray\Di\InjectorInterface;
 use Throwable;
 
 use function assert;
+use function explode;
+use function file_put_contents;
+use function sprintf;
 
 /**
  * @psalm-import-type Globals from RouterInterface
@@ -30,9 +34,11 @@ final class Bootstrap
 {
     private string $appDir;
 
+    /** @param string|null $failureLog where a failed request is reported; null reports nothing */
     public function __construct(
         AbstractAppMeta $meta,
         private InjectorInterface|null $injector = null,
+        private string|null $failureLog = null,
     ) {
         $this->appDir = $meta->appDir;
     }
@@ -65,12 +71,29 @@ final class Bootstrap
         try {
             $resource = $injector->getInstance(ResourceInterface::class);
             assert($resource instanceof ResourceInterface);
-
-            return $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
-        } catch (Throwable) {
-            $injector->getInstance(TransferInterface::class);
-
-            return null;
+            $pageRequest = $resource->newRequest(Method::from($request->method), $request->path, $request->query);
+        } catch (ResourceNotFoundException) {
+            // An application with nothing at the path has nothing to record there.
+            return $this->noResponse($injector);
+        } catch (Throwable $e) {
+            return $this->noResponse($injector, sprintf('%s %s', $request->method, $request->path), $e);
         }
+
+        try {
+            return $pageRequest();
+        } catch (Throwable $e) {
+            return $this->noResponse($injector, sprintf('%s %s', $request->method, $request->path), $e);
+        }
+    }
+
+    private function noResponse(InjectorInterface $injector, string $request = '', Throwable|null $failure = null): null
+    {
+        if ($failure !== null && $this->failureLog !== null) {
+            file_put_contents($this->failureLog, sprintf("%s failed while recording preload.php: %s: %s\n", $request, $failure::class, explode("\n", $failure->getMessage())[0]));
+        }
+
+        $injector->getInstance(TransferInterface::class);
+
+        return null;
     }
 }
