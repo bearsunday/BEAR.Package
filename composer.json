@@ -76,7 +76,7 @@
         "clean": ["phpstan clear-result-cache", "psalm --clear-cache", "rm -rf tests/tmp/*.php"],
         "sa": ["psalm --show-info=true", "phpstan analyse --no-ansi --no-progress -c phpstan.neon --memory-limit=-1"],
         "metrics": ["phpmetrics --report-html=build/metrics --exclude=Exception --junit=build/junit.xml src"],
-        "phpmd": ["phpmd --exclude src/Annotation src text ./phpmd.xml"],
+        "phpmd": ["phpmd analyze src --exclude src/Annotation --format text --ruleset ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"],
         "compile": "php tests/Fake/fake-app/bin/compile.php prod-app",
         "baseline": "phpstan analyse -configuration -c phpstan.neon --generate-baseline  --memory-limit=-1 ;psalm --set-baseline=psalm-baseline.xml",
