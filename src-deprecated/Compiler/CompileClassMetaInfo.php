@@ -13,6 +13,7 @@ use function is_callable;
 use function sprintf;
 use function str_starts_with;
 
+/** @deprecated The compile no longer evaluates named parameters */
 final class CompileClassMetaInfo
 {
     /**

@@ -82,7 +82,7 @@ These types are imported via `@psalm-import-type` throughout the codebase.
 **Compiler**
 - Compilation process that generates optimized autoload, preload, DI scripts, and object graphs
 - `Compiler::compile()`: Main compilation orchestrator
-- Sub-compilers: `CompileAutoload`, `CompilePreload`, `CompileObjectGraph`, `CompileClassMetaInfo`
+- Sub-compilers: `CompileAutoload`, `CompilePreload`, `CompileObjectGraph`
 - Tracks loaded classes during compilation for preload generation
 - Uses Ray.Compiler to compile DI container to PHP scripts
 

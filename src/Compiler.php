@@ -9,7 +9,6 @@ use BEAR\AppMeta\AbstractAppMeta;
 use BEAR\AppMeta\Meta;
 use BEAR\Package\Compiler\ClassTracker;
 use BEAR\Package\Compiler\CompileAutoload;
-use BEAR\Package\Compiler\CompileClassMetaInfo;
 use BEAR\Package\Compiler\CompileObjectGraph;
 use BEAR\Package\Compiler\CompileSteps;
 use BEAR\Package\Compiler\DotCommand;
@@ -19,7 +18,6 @@ use BEAR\Package\Exception\PharEntryNotFoundException;
 use BEAR\Package\Exception\PreloadRecordException;
 use BEAR\Package\Injector\CompileMarker;
 use BEAR\Package\Module\ResourceObjectModule;
-use BEAR\Resource\NamedParameterInterface;
 use BEAR\Sunday\Extension\Application\AppInterface;
 use FilesystemIterator;
 use Ray\Compiler\Annotation\Compile;
@@ -38,6 +36,7 @@ use function file_exists;
 use function is_dir;
 use function is_file;
 use function is_float;
+use function iterator_count;
 use function memory_get_peak_usage;
 use function microtime;
 use function mkdir;
@@ -49,8 +48,10 @@ use function rmdir;
 use function sprintf;
 use function str_replace;
 use function str_starts_with;
+use function trigger_error;
 use function unlink;
 
+use const E_USER_DEPRECATED;
 use const PHP_BINARY;
 use const PHP_BINDIR;
 use const PHP_EOL;
@@ -299,8 +300,7 @@ final class Compiler
             CompileMarker::write($scriptDir, $this->appMeta->name, $this->context);
         }
 
-        // Compile class meta info (annotations and named parameters)
-        $compiled = $this->compileClassMetaInfo();
+        $compiled = iterator_count($this->appMeta->getResourceListGenerator());
 
         // Preload last: the worker boots from the finished artifact - scripts, marker and
         // meta caches all in place - so it loads what a deployed first request loads.
@@ -341,26 +341,8 @@ final class Compiler
         return 0.0;
     }
 
-    private function compileClassMetaInfo(): int
-    {
-        $namedParams = $this->injector()->getInstance(NamedParameterInterface::class);
-        assert($namedParams instanceof NamedParameterInterface);
-
-        $compileClassMetaInfo = new CompileClassMetaInfo();
-        $resources = $this->appMeta->getResourceListGenerator();
-        $count = 0;
-        foreach ($resources as $resource) {
-            [$className] = $resource;
-            $compileClassMetaInfo($namedParams, $className);
-            $count++;
-        }
-
-        return $count;
-    }
-
     /**
-     * Install the class tracker and the `.compile.php` stubs before any injector is built:
-     * an injector loads the application, and stubs that arrive after it never apply.
+     * Install the class tracker before any injector is built: an injector loads the application.
      *
      * @param Context $context
      * @param AppDir  $appDir
@@ -374,8 +356,8 @@ final class Compiler
         $this->classes = $tracker->classes();
         $this->context = $context;
         $this->appMeta = $appMeta;
+        $this->warnUnusedCompileScript($appDir);
         $tracker->register();
-        $this->hookNullObjectClass($appDir);
     }
 
     /**
@@ -438,17 +420,13 @@ final class Compiler
         return (bool) $module->getContainer()->getInstance('', Compile::class);
     }
 
-    private function hookNullObjectClass(string $appDir): void
+    private function warnUnusedCompileScript(string $appDir): void
     {
-        $appDirRealpath = realpath($appDir);
-        assert($appDirRealpath !== false);
-        $compileScript = $appDirRealpath . '/.compile.php';
+        $compileScript = $appDir . '/.compile.php';
         if (! file_exists($compileScript)) {
-            // @codeCoverageIgnoreStart
             return;
-            // @codeCoverageIgnoreEnd
         }
 
-        require $compileScript;
+        trigger_error(sprintf('%s is no longer loaded; delete it. See https://bearsunday.github.io/manuals/1.0/en/production.html#compile-php', $compileScript), E_USER_DEPRECATED);
     }
 }
