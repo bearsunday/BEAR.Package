@@ -59,7 +59,7 @@ final class FakeRun
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['argc'] = 3;
-        $_SERVER['argv'] = ['', 'get', 'page:://self/'];
+        $_SERVER['argv'] = ['', 'get', 'page://self/'];
         /** @psalm-suppress ArgumentTypeCoercion, InvalidArgument */
         $response = ($bootstrap)($this->appMeta->name, $this->context, $GLOBALS, $_SERVER); // @phpstan-ignore-line
         // Transfer what the request produced: rendering is where the response format loads its

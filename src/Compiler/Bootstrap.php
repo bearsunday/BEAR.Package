@@ -17,6 +17,8 @@ use Ray\Di\InjectorInterface;
 use Throwable;
 
 use function assert;
+use function file_put_contents;
+use function sprintf;
 
 /**
  * @psalm-import-type Globals from RouterInterface
@@ -67,7 +69,9 @@ final class Bootstrap
             assert($resource instanceof ResourceInterface);
 
             return $resource->newRequest(Method::from($request->method), $request->path, $request->query)();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            // The compile goes on; what the rest of the request would have loaded misses preload.php.
+            file_put_contents('php://stderr', sprintf("%s %s failed while recording preload.php: %s: %s\n", $request->method, $request->path, $e::class, $e->getMessage()));
             $injector->getInstance(TransferInterface::class);
 
             return null;

@@ -7,8 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `.compile.php` is no longer loaded, and the compile prints a notice when it finds one. The object graph built at boot must not perform I/O: make such a service connect on first use (for `StorageRedisDsnModule`, pass `['lazy' => true]`), then delete `.compile.php`
+- The compile no longer requests the resource a `#[ResourceParam]` names
+- A `GET /` that fails while the compile records `preload.php` is reported on STDERR; the classes the rest of that request would load are missing from `preload.php`
+
+### Deprecated
+- `Compiler\CompileClassMetaInfo`; the compile no longer uses it
+
 ### Fixed
 - A 201 `Location` with a fragment (`#comments`) keeps it, and the created resource is still returned.
+- The compiled DI scripts follow the real classes: since 1.22 a `.compile.php` stub with another constructor compiled cleanly and failed in production, and one without a method attribute ran without its interceptor
+- A CLI context's compile requests `GET /` again: the request named `page:://self/`, which never resolved, so `preload.php` lacked what that page loads
 
 ## [1.26.0] - 2026-11-11
 
