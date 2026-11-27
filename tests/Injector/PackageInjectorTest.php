@@ -39,6 +39,7 @@ use function is_int;
 use function is_string;
 use function json_decode;
 use function mkdir;
+use function realpath;
 use function rmdir;
 use function shell_exec;
 use function sprintf;
@@ -212,7 +213,11 @@ class PackageInjectorTest extends TestCase
         }
 
         $this->assertSame($scriptDir->invoke(null, $devMeta, $module, false), (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($dev));
-        $this->assertSame($scriptDir->invoke(null, $prodMeta, $module, true), (new ReflectionProperty(CompiledInjector::class, 'scriptDir'))->getValue($prod));
+        $prodDir = $scriptDir->invoke(null, $prodMeta, $module, true);
+        $compiledDir = (new ReflectionProperty(CompiledInjector::class, 'scriptDir'))->getValue($prod);
+        assert(is_string($prodDir) && is_string($compiledDir));
+        // CompiledInjector keeps the directory with the platform's separators
+        $this->assertSame(realpath($prodDir), realpath($compiledDir));
     }
 
     public function testProdFactoryReusesAotScriptsWhenMarkerPresent(): void
