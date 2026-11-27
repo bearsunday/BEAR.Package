@@ -26,25 +26,31 @@ use ReflectionProperty;
 
 use function assert;
 use function dirname;
+use function escapeshellarg;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function fileinode;
 use function filemtime;
 use function glob;
-use function hash;
 use function ini_get;
 use function ini_set;
 use function is_int;
 use function is_string;
+use function json_decode;
 use function mkdir;
+use function realpath;
 use function rmdir;
+use function shell_exec;
+use function sprintf;
 use function str_ends_with;
 use function sys_get_temp_dir;
 use function time;
 use function touch;
 use function uniqid;
 use function unlink;
+
+use const PHP_BINARY;
 
 class PackageInjectorTest extends TestCase
 {
@@ -103,9 +109,7 @@ class PackageInjectorTest extends TestCase
         $overrideDir = (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($overrideInjector);
         assert(is_string($overrideDir));
 
-        $expectedSuffix = '/di/' . hash('xxh128', $overrideModule::class);
-        $this->assertTrue(str_ends_with($overrideDir, $expectedSuffix));
-        $this->assertNotSame($defaultDir, $overrideDir);
+        $this->assertSame($defaultDir, dirname($overrideDir));
     }
 
     public function testDifferentOverrideModulesUseDifferentScriptDirs(): void
@@ -134,8 +138,6 @@ class PackageInjectorTest extends TestCase
         assert(is_string($dirB));
 
         $this->assertNotSame($dirA, $dirB);
-        $this->assertTrue(str_ends_with($dirA, '/di/' . hash('xxh128', $moduleA::class)));
-        $this->assertTrue(str_ends_with($dirB, '/di/' . hash('xxh128', $moduleB::class)));
     }
 
     #[Depends('testGetOverrideInstance')]
@@ -155,22 +157,67 @@ class PackageInjectorTest extends TestCase
     {
         $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
-        $this->assertSame($meta->appDir . '/var/build/app/di', $scriptDir->invoke(null, $meta, null));
+        $this->assertSame($meta->appDir . '/var/build/app/di', $scriptDir->invoke(null, $meta, null, false));
     }
 
-    public function testScriptDirWithOverride(): void
+    public function testOverrideScriptDirAcrossEntryPoints(): void
     {
-        $meta = new Meta('FakeVendor\HelloWorld', 'app', dirname(__DIR__) . '/Fake/fake-app');
-        $module = new class extends AbstractModule {
+        $plain = $this->overrideScriptDirs(0);
+        $later = $this->overrideScriptDirs(3);
+
+        $this->assertNotSame($plain['class'], $later['class']);
+        $this->assertSame($plain['devDir'], $later['devDir']);
+        $this->assertNotSame($plain['prodDir'], $later['prodDir']);
+    }
+
+    /**
+     * Builds one override module in a fresh process after compiling $anonymousBefore anonymous classes
+     *
+     * @return array{class: string, devDir: string, prodDir: string}
+     */
+    private function overrideScriptDirs(int $anonymousBefore): array
+    {
+        $script = dirname(__DIR__) . '/script/override-script-dir.php';
+        // A cached compile would freeze the anonymous class counter
+        $command = sprintf('%s -d opcache.enable_cli=0 %s %d', escapeshellarg(PHP_BINARY), escapeshellarg($script), $anonymousBefore);
+        $dirs = json_decode((string) shell_exec($command), true);
+        $this->assertIsArray($dirs);
+
+        /** @var array{class: string, devDir: string, prodDir: string} $dirs */
+        return $dirs;
+    }
+
+    public function testFactoryKeysAnOverrideDirectoryByWhetherItIsProd(): void
+    {
+        $appDir = dirname(__DIR__) . '/Fake/fake-app';
+        // One declaration, a fresh instance per factory: override() takes over the module's container
+        $newModule = static fn (): AbstractModule => new class extends AbstractModule {
             protected function configure(): void
             {
             }
         };
+        $module = $newModule();
         $scriptDir = new ReflectionMethod(PackageInjector::class, 'scriptDir');
-        $this->assertSame(
-            $meta->appDir . '/var/build/app/di/' . hash('xxh128', $module::class),
-            $scriptDir->invoke(null, $meta, $module),
-        );
+        $devMeta = new Meta('FakeVendor\HelloWorld', 'app', $appDir);
+        $prodMeta = new Meta('FakeVendor\HelloWorld', 'prod-app', $appDir);
+
+        $dev = PackageInjector::factory($devMeta, 'app', $module);
+        $errorLog = sys_get_temp_dir() . '/bear-errorlog-' . uniqid('', true) . '.log';
+        $previous = (string) ini_get('error_log');
+        ini_set('error_log', $errorLog);
+        try {
+            $prod = PackageInjector::factory($prodMeta, 'prod-app', $newModule());
+        } finally {
+            ini_set('error_log', $previous);
+            @unlink($errorLog);
+        }
+
+        $this->assertSame($scriptDir->invoke(null, $devMeta, $module, false), (new ReflectionProperty(RayInjector::class, 'classDir'))->getValue($dev));
+        $prodDir = $scriptDir->invoke(null, $prodMeta, $module, true);
+        $compiledDir = (new ReflectionProperty(CompiledInjector::class, 'scriptDir'))->getValue($prod);
+        assert(is_string($prodDir) && is_string($compiledDir));
+        // CompiledInjector keeps the directory with the platform's separators
+        $this->assertSame(realpath($prodDir), realpath($compiledDir));
     }
 
     public function testProdFactoryReusesAotScriptsWhenMarkerPresent(): void
