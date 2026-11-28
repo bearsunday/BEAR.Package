@@ -9,6 +9,8 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    allow:
+      - dependency-type: "production"
     ignore:
       - dependency-name: "*" # Ignore all dependencies for specific update types
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
@@ -18,6 +20,8 @@ updates:
     directory: "/demo"
     schedule:
       interval: "weekly"
+    allow:
+      - dependency-type: "production"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
@@ -25,6 +29,8 @@ updates:
     directory: "/tests/Fake/fake-app"
     schedule:
       interval: "weekly"
+    allow:
+      - dependency-type: "production"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
